@@ -2940,4 +2940,26 @@ body.sl-viewer-open { overflow: hidden; }
   opacity: 1;
 }
 
+/* Ideiglenes piros sziv kozepen a nyitooldalon */
+body.home::before,
+body.front-page::before {
+  content: "❤";
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(64px, 12vw, 160px);
+  color: #e00000;
+  line-height: 1;
+  z-index: 99999;
+  pointer-events: none;
+  text-shadow: 0 8px 24px rgba(0,0,0,.25);
+  animation: va-heart-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes va-heart-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.12); }
+}
+
 /* ═════════════════════════════════════ EOF ═════════════════════════════════════ */
