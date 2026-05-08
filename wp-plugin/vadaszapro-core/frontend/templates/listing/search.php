@@ -151,15 +151,7 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
             <?php endforeach; ?>
         </div>
 
-        <?php if ( ! empty( $top_model_links ) ) : ?>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <?php foreach ( $top_model_links as $model_link ): ?>
-                <a href="<?php echo esc_url( add_query_arg( [ 'brand' => $url_brand, 'model' => (string) $model_link ], $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,0,0,.28);color:#fff;text-decoration:none;background:rgba(255,0,0,.08);">
-                    <?php echo esc_html( (string) $model_link ); ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
+
 
 
     </section>
