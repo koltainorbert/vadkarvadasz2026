@@ -161,17 +161,7 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
         </div>
         <?php endif; ?>
 
-        <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);max-width:920px;">
-            <h2 style="margin:0 0 10px;font-size:clamp(18px,2.6vw,26px);line-height:1.2;color:#fff;"><?php echo esc_html( $landing_seo_heading ); ?></h2>
-            <p style="margin:0;color:rgba(255,255,255,.72);line-height:1.7;"><?php echo esc_html( $landing_seo_text ); ?></p>
-            <?php if ( ! empty( $landing_seo_points ) ) : ?>
-                <ul style="margin:14px 0 0;padding-left:18px;color:rgba(255,255,255,.82);line-height:1.7;">
-                    <?php foreach ( $landing_seo_points as $landing_point ) : ?>
-                        <li><?php echo esc_html( (string) $landing_point ); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </div>
+
     </section>
 
     <!-- Szűrő sáv -->
