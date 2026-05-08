@@ -139,22 +139,7 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
 <div class="va-wrap">
     <?php va_display_flash(); ?>
 
-    <section class="va-search-landing" style="margin-bottom:22px;padding:18px 20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));">
-        <h1 style="margin:0 0 8px;font-size:clamp(24px,4vw,38px);line-height:1.1;color:#fff;"><?php echo esc_html( $landing_title ); ?></h1>
-        <p style="margin:0 0 16px;color:rgba(255,255,255,.72);max-width:860px;"><?php echo esc_html( $landing_intro ); ?></p>
 
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <?php foreach ( $top_brand_links as $brand_link ): ?>
-                <a href="<?php echo esc_url( add_query_arg( 'brand', (string) $brand_link, $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:#fff;text-decoration:none;background:rgba(255,255,255,.03);">
-                    <?php echo esc_html( (string) $brand_link ); ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
-
-
-
-
-    </section>
 
     <!-- Szűrő sáv -->
     <div class="va-filter-bar">
