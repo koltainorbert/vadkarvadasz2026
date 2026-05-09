@@ -730,8 +730,17 @@
       OverlayScrollbars(sidebarEl, scrollbarOptions);
     }
 
-    // .va-dashboard__nav maradjon natív scrollbaron, mert Firefox alatt
-    // ez ad stabil, következetes vastagságot.
+    // .va-dashboard__nav: Firefox alatt OverlayScrollbars, mashol natív.
+    var dashNavEl = document.querySelector('.va-dashboard__nav');
+    if (dashNavEl) {
+      var isFirefox = /firefox/i.test(window.navigator.userAgent || '');
+      if (isFirefox) {
+        OverlayScrollbars(dashNavEl, scrollbarOptions);
+        dashNavEl.classList.add('va-dashboard__nav--os');
+      } else {
+        dashNavEl.classList.remove('va-dashboard__nav--os');
+      }
+    }
   }
 
   // Várakozás OverlayScrollbars betöltésére (ha async kezelés szükséges)
