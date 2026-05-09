@@ -1243,42 +1243,6 @@ class VA_Settings_Page {
             if ( get_option( $key ) === false ) update_option( $key, $default );
         }
 
-        /* SEO */
-        $seo_opts = [
-            // Alap meta
-            'va_seo_home_title'       => '',
-            'va_seo_home_description' => '',
-            'va_seo_title_suffix'     => ' | Weingartner Autó',
-            // Noindex
-            'va_seo_noindex_search'   => '1',
-            'va_seo_noindex_404'      => '1',
-            'va_seo_noindex_paginated'=> '0',
-            // OG / Social
-            'va_seo_og_default_image' => '',
-            'va_seo_fb_app_id'        => '',
-            'va_seo_twitter_handle'   => '',
-            // NAP – LocalBusiness schema
-            'va_nap_phone'            => '',
-            'va_nap_address_street'   => '',
-            'va_nap_address_city'     => '',
-            'va_nap_address_zip'      => '',
-            'va_nap_address_country'  => 'HU',
-            'va_nap_open_hours'       => '',
-            'va_nap_geo_lat'          => '',
-            'va_nap_geo_lng'          => '',
-            // Sitemap
-            'va_seo_sitemap_enabled'  => '1',
-            'va_seo_sitemap_per_page' => '100',
-            // Google / Bing verifáció
-            'va_seo_google_verify'    => '',
-            'va_seo_bing_verify'      => '',
-        ];
-        foreach ( $seo_opts as $key => $default ) {
-            self::$defaults[ $key ] = $default;
-            register_setting( 'va_seo_settings', $key, [ 'sanitize_callback' => 'sanitize_text_field' ] );
-            if ( get_option( $key ) === false ) update_option( $key, $default );
-        }
-
         /* Custom kód (CSS, JS, Head) */
         $custom_code_keys = [
             'va_custom_css'  => '',
@@ -10037,84 +10001,6 @@ class VA_Settings_Page {
             });
         })();
         </script>
-        <?php
-    }
-
-    /* ══ SEO beállítások oldal ══════════════════════════════ */
-    public static function render_seo(): void {
-        if ( ! current_user_can( 'manage_options' ) ) return;
-        ?>
-        <div class="wrap va-admin-wrap">
-            <h1>🔍 SEO / Schema beállítások</h1>
-            <?php settings_errors( 'va_seo_settings' ); ?>
-            <form method="post" action="options.php">
-                <?php settings_fields( 'va_seo_settings' ); ?>
-                <table class="form-table">
-
-                    <!-- ── Alap meta ─────────────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:0;"><h2 style="margin:0;">📝 Alap meta adatok</h2></th></tr>
-
-                    <?php self::field_text( 'va_seo_home_title',       'Főoldal title tag (ha üres: WP alapértelmezett)' ); ?>
-                    <?php self::field_text( 'va_seo_home_description', 'Főoldal meta description' ); ?>
-                    <?php self::field_text( 'va_seo_title_suffix',     'Title utótag (pl. " | Weingartner Autó")' ); ?>
-
-                    <!-- ── Noindex ────────────────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">🚫 Noindex szabályok</h2></th></tr>
-                    <tr><td colspan="2"><p style="color:#aaa;margin:0 0 8px;">Ezek az oldalak ne jelenjenek meg a Google-ben (keröljék az indexelést).</p></td></tr>
-
-                    <?php self::field_toggle( 'va_seo_noindex_search',    'Keresési eredmény oldalak (szűrt listák)' ); ?>
-                    <?php self::field_toggle( 'va_seo_noindex_404',       '404 hibaoldalak' ); ?>
-                    <?php self::field_toggle( 'va_seo_noindex_paginated', 'Lapozott oldalak (2. oldaltól)' ); ?>
-
-                    <!-- ── Open Graph / Social ─────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">📣 Open Graph / Social Media</h2></th></tr>
-                    <tr><td colspan="2"><p style="color:#aaa;margin:0 0 8px;">Facebook, LinkedIn, Twitter megosztáshoz használt adatok.</p></td></tr>
-
-                    <?php self::field_media( 'va_seo_og_default_image', 'Alapértelmezett OG kép (ha a hirdetésnek nincs képe)' ); ?>
-                    <?php self::field_text(  'va_seo_fb_app_id',        'Facebook App ID (opcionális)' ); ?>
-                    <?php self::field_text(  'va_seo_twitter_handle',   'Twitter/X handle (pl. @weingartnerauto)' ); ?>
-
-                    <!-- ── LocalBusiness / NAP ────────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">📍 Vállalkozás adatai – LocalBusiness schema</h2></th></tr>
-                    <tr><td colspan="2"><p style="color:#aaa;margin:0 0 8px;">Ezek az adatok a Google helyi keresési eredményeiben és a JSON-LD sémában jelennek meg. Töltsd ki pontosan a Google Business Profile-hoz is használni kívánt adatokkal.</p></td></tr>
-
-                    <?php self::field_text( 'va_nap_phone',           '📞 Telefonszám (pl. +36-20-943-8636)' ); ?>
-                    <?php self::field_text( 'va_nap_address_street',  '🏠 Utca, házszám (pl. Alsó-Újsor utca 31.)' ); ?>
-                    <?php self::field_text( 'va_nap_address_city',    '🏙️ Város (pl. Veszprém)' ); ?>
-                    <?php self::field_text( 'va_nap_address_zip',     '📮 Irányítószám (pl. 8412)' ); ?>
-                    <?php self::field_text( 'va_nap_address_country', '🌍 Ország kód (pl. HU)' ); ?>
-                    <?php self::field_text( 'va_nap_open_hours',      '🕐 Nyitvatartás schema-formátumban (pl. Mo-Fr 08:00-17:00, Sa 08:00-12:00)' ); ?>
-                    <?php self::field_text( 'va_nap_geo_lat',         '🗺️ GPS szélességi fok (pl. 47.1028)' ); ?>
-                    <?php self::field_text( 'va_nap_geo_lng',         '🗺️ GPS hosszúsági fok (pl. 17.9099)' ); ?>
-
-                    <!-- ── Sitemap ────────────────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">🗺️ XML Sitemap</h2></th></tr>
-
-                    <?php self::field_toggle( 'va_seo_sitemap_enabled',  'XML sitemap engedélyezése (/sitemap.xml)' ); ?>
-                    <?php self::field_num(    'va_seo_sitemap_per_page', 'Hirdetések száma sitemapnként', 10, 100 ); ?>
-
-                    <!-- ── Keresőmotor verifíció ──────────────────────────────────────── -->
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">✅ Keresőmotor verifíció</h2></th></tr>
-                    <tr><td colspan="2"><p style="color:#aaa;margin:0 0 8px;">Google/Bing Search Console meta tag verifíciós kód (csak a content="..." értéke).</p></td></tr>
-
-                    <?php self::field_text( 'va_seo_google_verify', 'Google Search Console verifíciós kód' ); ?>
-                    <?php self::field_text( 'va_seo_bing_verify',   'Bing Webmaster Tools verifíciós kód' ); ?>
-
-                </table>
-                <?php submit_button( 'Mentés' ); ?>
-            </form>
-
-            <!-- Gyors ellenőrzők -->
-            <hr style="margin:32px 0 16px;">
-            <h2 style="margin:0 0 12px;">🔗 Gyors SEO eszközök</h2>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                <a href="https://search.google.com/test/rich-results?url=<?php echo urlencode(home_url('/')); ?>" target="_blank" class="button button-secondary">🧪 Rich Results Test</a>
-                <a href="https://www.google.com/webmasters/tools/submit-url" target="_blank" class="button button-secondary">📤 URL beküldés Google-nek</a>
-                <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>" target="_blank" class="button button-secondary">🗺️ Sitemap megtekintése</a>
-                <a href="https://pagespeed.web.dev/report?url=<?php echo urlencode(home_url('/')); ?>" target="_blank" class="button button-secondary">⚡ PageSpeed Insights</a>
-                <a href="https://search.google.com/search-console" target="_blank" class="button button-secondary">📊 Google Search Console</a>
-            </div>
-        </div>
         <?php
     }
 }

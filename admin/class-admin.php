@@ -261,10 +261,10 @@ class VA_Admin {
 
                 <?php self::sb_item( "📊", "Irányítópult", admin_url( "admin.php?page=vadaszapro-dashboard" ), $page === "vadaszapro-dashboard" ); ?>
 
-                <?php self::sb_item( "📋", "Hirdetések", admin_url( "admin.php?page=vadaszapro-listings" ), $page === "vadaszapro-listings" || $page === "vadaszapro-listing-edit" || $pt === "va_listing" || strpos( (string) $scr_id, "va_listing" ) !== false, $pending > 0 ? (int)$pending : 0 ); ?>
+                <?php self::sb_item( "📋", "Hirdetések", admin_url( "admin.php?page=vadaszapro-listings" ), $page === "vadaszapro-listings" || $page === "vadaszapro-listing-edit" || $pt === "va_listing" || str_contains( $scr_id, "va_listing" ), $pending > 0 ? (int)$pending : 0 ); ?>
 
                 <?php if ( $auctions_enabled ): ?>
-                <?php self::sb_item( "🔨", "Aukciók", admin_url( "edit.php?post_type=va_auction" ), $pt === "va_auction" || strpos( (string) $scr_id, "va_auction" ) !== false ); ?>
+                <?php self::sb_item( "🔨", "Aukciók", admin_url( "edit.php?post_type=va_auction" ), $pt === "va_auction" || str_contains( $scr_id, "va_auction" ) ); ?>
                 <?php endif; ?>
 
                 <?php self::sb_item( "👥", "Felhasználók", admin_url( "admin.php?page=vadaszapro-users" ), $page === "vadaszapro-users" ); ?>
@@ -393,7 +393,6 @@ class VA_Admin {
         add_submenu_page( "vadaszapro", "Admin Panel",      "🖥️ Admin Panel",      "manage_options", "vadaszapro-adminpanel",  [ VA_Settings_Page::class, "render_adminpanel"        ] );
         add_submenu_page( "vadaszapro", "Termékoldal",      "📦 Termékoldal",      "manage_options", "vadaszapro-single-designer", [ VA_Settings_Page::class, "render_single_designer" ] );
         add_submenu_page( "vadaszapro", "Social Media",     "🌐 Social Media",     "manage_options", "vadaszapro-social",      [ VA_Settings_Page::class, "render_social"            ] );
-        add_submenu_page( "vadaszapro", "SEO",              "🔍 SEO / Schema",      "manage_options", "vadaszapro-seo",         [ VA_Settings_Page::class, "render_seo"               ] );
         add_submenu_page( "vadaszapro", "Csomagok",         "💼 Csomagok",         "manage_options", "vadaszapro-plans",       [ VA_Settings_Page::class, "render_plans"             ] );
         add_submenu_page( "vadaszapro", "Árkártyák",        "💳 Árkártyák",        "manage_options", "vadaszapro-arkartyak",   [ VA_Settings_Page::class, "render_price_cards"       ] );
         add_submenu_page( "vadaszapro", "Statisztika",      "📈 Statisztika",      "manage_options", "vadaszapro-stats",       [ VA_Settings_Page::class, "render_stats"             ] );

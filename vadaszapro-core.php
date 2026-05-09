@@ -3,7 +3,7 @@
  * Plugin Name: VadászApró Core
  * Plugin URI:  https://vadaszapro.net
  * Description: Vadászati apróhirdetési rendszer – hirdetés, aukció, felhasználói fiók, reklámzónák.
- * Version:     1.1.5
+ * Version:     1.0.1
  * Author:      SDH
  * Text Domain: vadaszapro
  * Domain Path: /languages

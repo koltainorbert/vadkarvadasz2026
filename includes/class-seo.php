@@ -1039,10 +1039,6 @@ class VA_SEO {
         echo '<meta property="og:description" content="' . esc_attr( $social_desc ) . '">' . "\n";
         echo '<meta property="og:url" content="' . esc_url( $url ) . '">' . "\n";
         echo '<meta property="og:site_name" content="' . esc_attr( $site ) . '">' . "\n";
-        // OG kép: ha nincs saját, használja az adminban beállított alapértelmezettet
-        if ( $img === '' ) {
-            $img = trim( (string) get_option( 'va_seo_og_default_image', '' ) );
-        }
         if ( $img !== '' ) {
             echo '<meta property="og:image" content="' . esc_url( $img ) . '">' . "\n";
         }
@@ -1055,31 +1051,6 @@ class VA_SEO {
 
         echo '<link rel="alternate" href="' . esc_url( $url ) . '" hreflang="hu-HU">' . "\n";
         echo '<link rel="alternate" href="' . esc_url( $url ) . '" hreflang="x-default">' . "\n";
-
-        // Facebook App ID
-        $fb_app_id = trim( (string) get_option( 'va_seo_fb_app_id', '' ) );
-        if ( $fb_app_id !== '' ) {
-            echo '<meta property="fb:app_id" content="' . esc_attr( $fb_app_id ) . '">' . "\n";
-        }
-
-        // Twitter handle
-        $tw_handle = trim( (string) get_option( 'va_seo_twitter_handle', '' ) );
-        if ( $tw_handle !== '' ) {
-            $tw_handle = ltrim( $tw_handle, '@' );
-            echo '<meta name="twitter:site" content="@' . esc_attr( $tw_handle ) . '">' . "\n";
-        }
-
-        // Google Search Console verifikáció
-        $g_verify = trim( (string) get_option( 'va_seo_google_verify', '' ) );
-        if ( $g_verify !== '' ) {
-            echo '<meta name="google-site-verification" content="' . esc_attr( $g_verify ) . '">' . "\n";
-        }
-
-        // Bing Webmaster verifikáció
-        $b_verify = trim( (string) get_option( 'va_seo_bing_verify', '' ) );
-        if ( $b_verify !== '' ) {
-            echo '<meta name="msvalidate.01" content="' . esc_attr( $b_verify ) . '">' . "\n";
-        }
     }
 
     private static function breadcrumb_graph(): array {

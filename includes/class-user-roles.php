@@ -103,7 +103,7 @@ class VA_User_Roles {
      * Ha a va_plan user meta változik, azonnal enforce-olja a limitet.
      * Ez elkapja az admin-mentést, webhookokat, WC-integrációt egyaránt.
      */
-    public static function on_plan_meta_updated( int $meta_id, int $user_id, string $meta_key, $meta_value ): void {
+    public static function on_plan_meta_updated( int $meta_id, int $user_id, string $meta_key, mixed $meta_value ): void {
         if ( $meta_key !== 'va_plan' ) return;
         // Cache flush hogy az új plan érvényes legyen
         self::flush_plan_cache();
@@ -114,7 +114,7 @@ class VA_User_Roles {
     /**
      * Ha a va_listing_credits user meta nő, enforce-olja a limitet (felold visszafelfüggesztetteket).
      */
-    public static function on_credits_meta_updated( int $meta_id, int $user_id, string $meta_key, $meta_value ): void {
+    public static function on_credits_meta_updated( int $meta_id, int $user_id, string $meta_key, mixed $meta_value ): void {
         if ( $meta_key !== 'va_listing_credits' ) return;
         delete_transient( 'va_enforce_ok_' . $user_id );
         self::enforce_plan_limits( $user_id );

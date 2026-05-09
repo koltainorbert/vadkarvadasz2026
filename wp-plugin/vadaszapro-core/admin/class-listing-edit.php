@@ -247,7 +247,7 @@ class VA_Listing_Edit {
             $admin_fields = VA_Form_Builder::get_fields( 'va_admin_listing_edit' );
             foreach ( $admin_fields as $aff ) {
                 $akey = (string)( $aff['key'] ?? '' );
-                if ( strncmp( $akey, 'custom_', 7 ) !== 0 ) continue;
+                if ( ! str_starts_with( $akey, 'custom_' ) ) continue;
                 if ( empty( $aff['enabled'] ) ) continue;
                 $atype = (string)( $aff['type'] ?? 'text' );
                 if ( $atype === 'checkbox' ) {
@@ -615,7 +615,7 @@ class VA_Listing_Edit {
         $fb_ph  = static fn( $k, $default ) => ( isset( $fb[ $k ]['placeholder'] ) && $fb[ $k ]['placeholder'] !== '' ) ? esc_attr( $fb[ $k ]['placeholder'] ) : $default;
 
         // Egyedi (custom_*) mezők gyűjtése
-        $custom_fields = array_filter( $fb_raw, static fn( $ff ) => strncmp( (string)( $ff['key'] ?? '' ), 'custom_', 7 ) === 0 && ! empty( $ff['enabled'] ) );
+        $custom_fields = array_filter( $fb_raw, static fn( $ff ) => str_starts_with( (string)( $ff['key'] ?? '' ), 'custom_' ) && ! empty( $ff['enabled'] ) );
         $site_type        = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
         $brands_list      = class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_brands() : [];
         $brand_models_list= class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_brand_models() : [];
