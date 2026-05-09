@@ -696,4 +696,41 @@
     va_load_listings(1);
   }
 
+  // ── OverlayScrollbars inicializálás ──────────────────────
+  function va_init_overlay_scrollbars() {
+    if (typeof OverlayScrollbars === 'undefined') {
+      return;
+    }
+
+    var scrollbarOptions = {
+      scrollbars: {
+        autoHide: 'move',
+        clickScroll: false
+      },
+      update: {
+        elementEvents: ['cloned', 'added', 'removed'],
+        debounce: [0, 33]
+      }
+    };
+
+    // #va-sidebar (admin)
+    var sidebarEl = document.getElementById('va-sidebar');
+    if (sidebarEl) {
+      OverlayScrollbars(sidebarEl, scrollbarOptions);
+    }
+
+    // .va-dashboard__nav (frontend dashboard)
+    var dashNavEl = document.querySelector('.va-dashboard__nav');
+    if (dashNavEl) {
+      OverlayScrollbars(dashNavEl, scrollbarOptions);
+    }
+  }
+
+  // Várakozás OverlayScrollbars betöltésére (ha async kezelés szükséges)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', va_init_overlay_scrollbars);
+  } else {
+    va_init_overlay_scrollbars();
+  }
+
 })(jQuery);
