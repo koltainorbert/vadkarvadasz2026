@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 05. 09. – Session #276 (deploy atallas production-only modra)
+
+### Mit csinaltunk [x]
+- [x] A LocalWP-fuggo deploy scriptek atallitva production-first mukodesre
+- [x] Erintett fajlok: `.vscode/deploy.ps1`, `.vscode/deploy-plugin.ps1`, `.vscode/deploy-theme.ps1`
+- [x] `Deploy All` task tesztelve LocalWP nelkul: nem hibazik, sikeresen kilep es jelzi a push+GitHub Actions FTP deploy flow-t
+
+### Eredmeny
+Nincs tobbe LocalWP hard dependency. Az eles deploy folyamat egyertelmu: `Push` a `main` branch-re, majd a GitHub workflow (`.github/workflows/deploy.yml`) intezi az FTP feltoltest.
+
+---
+
 ## 2026. 05. 09. – Session #275 (merge utani szeteses audit + mirror szinkron hotfix)
 
 ### Mit csinaltunk [x]
