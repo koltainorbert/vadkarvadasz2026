@@ -2,6 +2,32 @@
 
 ---
 
+## 2026. 05. 09. – Session #295 (SEO stabilizalas: min CSS + H1 live verifikacio)
+
+### Mi volt a problema
+- SEO auditban tovabbra is piros pontok maradtak: H1 inkonzisztencia cache miatt, minify CSS/JS figyelmeztetes
+
+### Mit javitottunk [x]
+- [x] Valodi minifikalt CSS file-ok generalva:
+  - `style.min.css`
+  - `frontend/css/frontend.min.css`
+  - `wp-theme/vadaszapro-theme/style.min.css`
+  - `wp-plugin/vadaszapro-core/frontend/css/frontend.min.css`
+- [x] Enqueue logika atallitva min CSS preferenciara, biztonsagos fallbackgel sima CSS-re:
+  - `functions.php` + theme mirror
+  - `includes/class-shortcodes.php` + plugin mirror
+- [x] Google Translate script statikus betoltese megszunt, lazy-load logika kerult be:
+  - nyelvvaltasnal/toggle-ra tolti
+  - meglvo `googtrans` cookie eseten automatikusan tolti
+- [x] Elo ellenorzes: cache-bypass URL alatt a homepage mar tartalmaz H1-et, es min CSS URL-ek toltenek
+
+### Eredmeny
+- A H1 hiba cache-frissulessel konzisztensen javul
+- A CSS minify jelzeshez celzott technikai alap javitva
+- A JS minify jelzes terhe csokkent (GT script mar nem kotelezoen statikus minden betoltesen)
+
+---
+
 ## 2026. 05. 09. – Session #294 (SEO gyorsjavitas: H1 + broken-link fail-safe)
 
 ### Mi volt a problema
