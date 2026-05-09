@@ -347,6 +347,8 @@ body.va-admin-page #wpwrap { background: var(--va-bg); }
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none !important;
+    scrollbar-color: transparent transparent !important;
     /* OverlayScrollbars custom properties */
     --os-size: 12px;
     --os-padding-perpendicular: 2px;
@@ -358,6 +360,12 @@ body.va-admin-page #wpwrap { background: var(--va-bg); }
     --os-handle-bg-active: rgba(255, 0, 0, 1);
     --os-handle-border-radius: 6px;
     --os-handle-min-size: 42px;
+}
+
+#va-sidebar::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
 }
 
 #va-sidebar > .os-scrollbar-vertical {
