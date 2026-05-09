@@ -144,9 +144,9 @@ class VA_SEO {
 
     public static function register_sitemap_routes(): void {
         add_rewrite_rule( '^sitemap\.xml$', 'index.php?va_sitemap=index', 'top' );
-        add_rewrite_rule( '^sitemap-([a-z0-9_-]+)-([0-9]+)\.xml$', 'index.php?va_sitemap=post&va_sitemap_type=$matches[1]&va_sitemap_page=$matches[2]', 'top' );
         add_rewrite_rule( '^sitemap-tax-([a-z0-9_-]+)-([0-9]+)\.xml$', 'index.php?va_sitemap=tax&va_sitemap_type=$matches[1]&va_sitemap_page=$matches[2]', 'top' );
         add_rewrite_rule( '^sitemap-landing-([0-9]+)\.xml$', 'index.php?va_sitemap=landing&va_sitemap_page=$matches[1]', 'top' );
+        add_rewrite_rule( '^sitemap-([a-z0-9_-]+)-([0-9]+)\.xml$', 'index.php?va_sitemap=post&va_sitemap_type=$matches[1]&va_sitemap_page=$matches[2]', 'top' );
     }
 
     public static function register_query_vars( array $vars ): array {

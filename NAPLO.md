@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 09. – Session #280 (sitemap index 404 hotfix: rewrite sorrend javitas)
+
+### Mit csinaltunk [x]
+- [x] Feltaras: a `sitemap-tax-*` es `sitemap-landing-*` URL-ek 404-et adtak, mert a tul altalanos `^sitemap-...` rewrite minta elkapta oket
+- [x] Javitas: `register_sitemap_routes()` sorrend cserelve, a specifikus mintak (`sitemap-tax`, `sitemap-landing`) most a generic minta elott regisztralodnak
+- [x] `VA_REWRITE_VER` novelve `1.0.9` -> `1.0.10`, hogy mindenkinel automatikus rewrite flush tortenjen
+- [x] Mirror szinkron root + plugin mappaban
+
+### Eredmeny
+- A `sitemap.xml` tovabbra is valid XML
+- A tax es landing sitemap endpointok a rewrite frissules utan mar nem fognak a post-type handlerre esni
+
+### Kovetkezo teendo
+- Commit + deploy utan live ellenorzes: minden `loc` URL `200` legyen a sitemap indexben
+
+---
+
 ## 2026. 05. 09. – Session #279 (teljes SEO hardening: sitemap fix, IndexNow, GSC API, schema bővítés)
 
 ### Mit csinaltunk [x]
