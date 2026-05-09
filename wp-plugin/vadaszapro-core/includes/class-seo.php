@@ -15,7 +15,6 @@ class VA_SEO {
 
     public static function init(): void {
         if ( is_admin() ) {
-            add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 99999, 2 );
             return;
         }
 
