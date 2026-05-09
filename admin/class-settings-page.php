@@ -4083,21 +4083,60 @@ class VA_Settings_Page {
 
     public static function render_seo() {
         if ( ! current_user_can( 'manage_options' ) ) return;
+
+        if ( isset( $_POST['va_seo_save'] ) && check_admin_referer( 'va_seo_save' ) ) {
+            $json = sanitize_textarea_field( wp_unslash( $_POST['va_gsc_service_account'] ?? '' ) );
+            update_option( 'va_gsc_service_account', $json );
+            echo '<div class="notice notice-success"><p>SEO beállítások elmentve.</p></div>';
+        }
+
+        $current_json = (string) get_option( 'va_gsc_service_account', '' );
+        $is_set = $current_json !== '';
         ?>
         <div class="wrap va-admin-wrap">
             <h1>📈 SEO beállítások</h1>
-            <p class="description">Ez egy előkészített SEO menüpont. A részletes opciók a következő fejlesztési körben kerülnek ide.</p>
 
             <div class="va-settings-grid">
+
                 <div class="va-settings-card">
                     <div class="va-settings-card__head">
-                        <span class="va-settings-card__icon">🚧</span>
-                        <span class="va-settings-card__title">SEO modul előkészítve</span>
+                        <span class="va-settings-card__icon">🔍</span>
+                        <span class="va-settings-card__title">Google Search Console – Indexing API</span>
                     </div>
                     <div class="va-settings-card__body">
-                        <p style="margin:0;">Jelenleg ez egy placeholder oldal. Innen lesznek kezelhetők a későbbi SEO kapcsolók (meta, sitemap, schema, robots, stb.).</p>
+                        <p style="margin:0 0 12px;">Új hirdetés publikálásakor automatikusan beküldi az URL-t a Google Indexing API-nak, hogy azonnali crawlolást kérjen.</p>
+                        <p style="margin:0 0 16px;font-size:12px;color:#aaa;">
+                            Szükséges: Google Cloud projekt → Indexing API engedélyezve → Service Account JSON kulcs letöltve → Service Account email hozzáadva a Google Search Console-ban <strong>tulajdonosként</strong>.
+                        </p>
+                        <form method="post">
+                            <?php wp_nonce_field( 'va_seo_save' ); ?>
+                            <table class="form-table" style="margin:0;">
+                                <tr>
+                                    <th style="padding:8px 0;width:180px;color:#ccc;">Service Account JSON</th>
+                                    <td style="padding:8px 0;">
+                                        <textarea name="va_gsc_service_account" rows="8" style="width:100%;font-family:monospace;font-size:11px;background:#111;color:#eee;border:1px solid #444;padding:8px;"><?php echo esc_textarea( $current_json ); ?></textarea>
+                                        <p style="margin:6px 0 0;font-size:11px;color:<?php echo $is_set ? '#4caf50' : '#ff9800'; ?>;">
+                                            <?php echo $is_set ? '✅ Service Account be van állítva.' : '⚠️ Nincs beállítva – az Indexing API nem aktív.'; ?>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p><button type="submit" name="va_seo_save" class="button button-primary">Mentés</button></p>
+                        </form>
                     </div>
                 </div>
+
+                <div class="va-settings-card">
+                    <div class="va-settings-card__head">
+                        <span class="va-settings-card__icon">⚡</span>
+                        <span class="va-settings-card__title">IndexNow – Bing / Yandex</span>
+                    </div>
+                    <div class="va-settings-card__body">
+                        <p style="margin:0 0 8px;">✅ <strong>Aktív</strong> – Minden új hirdetés publikálásakor automatikusan beküldésre kerül.</p>
+                        <p style="margin:0;font-size:12px;color:#aaa;">Kulcs: <code>b873c945f60ea2d1bc78a3f254901e6d</code></p>
+                    </div>
+                </div>
+
             </div>
         </div>
         <?php
