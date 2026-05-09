@@ -558,6 +558,147 @@ function va_is_listing_expired( int $post_id ): bool {
     return strtotime( $expires ) < time();
 }
 
+function va_listing_seo_minimums(): array {
+    $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
+    $default_min_desc = $site_type === 'jarmu' ? 220 : 120;
+    $default_min_images = $site_type === 'jarmu' ? 3 : 1;
+
+    return [
+        'site_type' => $site_type,
+        'min_desc_chars' => max( 80, absint( get_option( 'va_seo_min_desc_chars', $default_min_desc ) ) ),
+        'min_images' => max( 1, absint( get_option( 'va_seo_min_images', $default_min_images ) ) ),
+    ];
+}
+
+function va_validate_listing_quality_input( array $data ): array {
+    $rules = va_listing_seo_minimums();
+
+    $title = trim( (string) ( $data['title'] ?? '' ) );
+    $description_plain = trim( wp_strip_all_tags( (string) ( $data['description'] ?? '' ) ) );
+    $image_count = max( 0, (int) ( $data['image_count'] ?? 0 ) );
+
+    $desc_len = function_exists( 'mb_strlen' )
+        ? (int) mb_strlen( $description_plain, 'UTF-8' )
+        : strlen( $description_plain );
+
+    if ( $title === '' ) {
+        return [ 'ok' => false, 'message' => 'A cím kötelező.' ];
+    }
+
+    if ( $desc_len < (int) $rules['min_desc_chars'] ) {
+        return [
+            'ok' => false,
+            'message' => 'A leírás túl rövid. Minimum ' . (int) $rules['min_desc_chars'] . ' karakter szükséges.',
+        ];
+    }
+
+    if ( $image_count < (int) $rules['min_images'] ) {
+        return [
+            'ok' => false,
+            'message' => 'Legalább ' . (int) $rules['min_images'] . ' kép kötelező a közzétételhez.',
+        ];
+    }
+
+    if ( $rules['site_type'] === 'jarmu' ) {
+        $price = (float) ( $data['price'] ?? 0 );
+        $price_type = sanitize_key( (string) ( $data['price_type'] ?? 'fixed' ) );
+        $year = (int) ( $data['year'] ?? 0 );
+        $mileage = (int) ( $data['mileage'] ?? 0 );
+        $current_year = (int) gmdate( 'Y' ) + 1;
+
+        $required_text = [
+            'Márka' => (string) ( $data['brand'] ?? '' ),
+            'Modell' => (string) ( $data['model'] ?? '' ),
+            'Üzemanyag' => (string) ( $data['fuel_type'] ?? '' ),
+            'Váltó' => (string) ( $data['transmission'] ?? '' ),
+            'Helység' => (string) ( $data['location'] ?? '' ),
+        ];
+
+        foreach ( $required_text as $label => $value ) {
+            if ( trim( $value ) === '' ) {
+                return [ 'ok' => false, 'message' => $label . ' megadása kötelező a közzétételhez.' ];
+            }
+        }
+
+        if ( in_array( $price_type, [ 'fixed', 'negotiable' ], true ) && $price <= 0 ) {
+            return [ 'ok' => false, 'message' => 'Adj meg érvényes árat a közzétételhez.' ];
+        }
+
+        if ( $year < 1950 || $year > $current_year ) {
+            return [ 'ok' => false, 'message' => 'Adj meg érvényes évjáratot a közzétételhez.' ];
+        }
+
+        if ( $mileage <= 0 ) {
+            return [ 'ok' => false, 'message' => 'Adj meg érvényes futásteljesítményt a közzétételhez.' ];
+        }
+    }
+
+    return [ 'ok' => true, 'message' => '' ];
+}
+
+function va_count_listing_gallery_images( int $post_id ): int {
+    $gallery_raw = (string) get_post_meta( $post_id, 'va_gallery_ids', true );
+    $gallery_ids = array_values( array_unique( array_filter( array_map( 'absint', explode( ',', $gallery_raw ) ) ) ) );
+    $thumb_id = (int) get_post_thumbnail_id( $post_id );
+    if ( $thumb_id > 0 && ! in_array( $thumb_id, $gallery_ids, true ) ) {
+        $gallery_ids[] = $thumb_id;
+    }
+    return count( $gallery_ids );
+}
+
+function va_validate_listing_post_for_publish( int $post_id ): array {
+    $post = get_post( $post_id );
+    if ( ! $post || $post->post_type !== 'va_listing' ) {
+        return [ 'ok' => false, 'message' => 'Érvénytelen hirdetés.' ];
+    }
+
+    return va_validate_listing_quality_input( [
+        'title'        => (string) $post->post_title,
+        'description'  => (string) $post->post_content,
+        'image_count'  => va_count_listing_gallery_images( $post_id ),
+        'price'        => get_post_meta( $post_id, 'va_price', true ),
+        'price_type'   => get_post_meta( $post_id, 'va_price_type', true ),
+        'year'         => get_post_meta( $post_id, 'va_year', true ),
+        'mileage'      => get_post_meta( $post_id, 'va_mileage', true ),
+        'brand'        => get_post_meta( $post_id, 'va_brand', true ),
+        'model'        => get_post_meta( $post_id, 'va_model', true ),
+        'fuel_type'    => get_post_meta( $post_id, 'va_fuel_type', true ),
+        'transmission' => get_post_meta( $post_id, 'va_transmission', true ),
+        'location'     => get_post_meta( $post_id, 'va_location', true ),
+    ] );
+}
+
+add_action( 'template_redirect', function() {
+    if ( ! is_singular( 'va_listing' ) ) {
+        return;
+    }
+
+    $post_id = get_queried_object_id();
+    if ( $post_id < 1 || ! va_is_listing_expired( $post_id ) ) {
+        return;
+    }
+
+    $behavior = sanitize_key( (string) get_option( 'va_expired_listing_behavior', '410' ) );
+    if ( $behavior === 'redirect' ) {
+        $brand = trim( (string) get_post_meta( $post_id, 'va_brand', true ) );
+        $model = trim( (string) get_post_meta( $post_id, 'va_model', true ) );
+        $target = home_url( '/va-hirdetes-kereses/' );
+        if ( $brand !== '' || $model !== '' ) {
+            $target = add_query_arg( [
+                'brand' => $brand,
+                'model' => $model,
+            ], $target );
+        }
+        wp_safe_redirect( $target, 301 );
+        exit;
+    }
+
+    status_header( 410 );
+    nocache_headers();
+    header( 'X-Robots-Tag: noindex, follow', true );
+    wp_die( 'A hirdetés lejárt, ezért már nem érhető el.', 'Hirdetés lejárt', [ 'response' => 410 ] );
+}, 2 );
+
 /* ── Aukció lejárt-e ──────────────────────────────────── */
 function va_is_auction_over( int $post_id ): bool {
     $end = get_post_meta( $post_id, 'va_auction_end', true );
