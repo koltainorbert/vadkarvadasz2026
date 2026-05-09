@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 09. – Session #276 (SEO hardening: minosegkapu + lejart URL + szuro noindex)
+
+### Mit csinaltunk [x]
+- [x] Uj kozos hirdetes minoseg-validator kerult be (`va_validate_listing_quality_input`)
+- [x] Publish minimumok bevezetve: min. leirashossz, min. kepszam, jarmu oldalon kotelezo kulcsmezok (marka, modell, uzemanyag, valto, ar, evjarat, futasteljesitmeny, helyseg)
+- [x] Frontend AJAX submit + update flow mar a mentes elott blokkolja a gyenge hirdeteseket
+- [x] Admin mentes + jovahagyas (publish) elott is fut a minosegkapu, hiba eseten konkret uzenettel all meg
+- [x] Lejart hirdetes template_redirect kezeles: default 410 + noindex fejléc, opcionális redirect mod tamogatva (`va_expired_listing_behavior`)
+- [x] Keresooldali szuro URL SEO-strategia: csak brand/model landing marad indexelheto, egyeb query kombinaciok noindex + canonical landing/base keresooldalra
+- [x] Source + plugin mirror szinkronban (helpers, class-ajax, class-seo, admin/class-listing-edit)
+
+### Eredmeny
+A rendszer most mar nem csak gyorsabban jelzi az uj URL-eket Google fele, hanem a gyenge minosegu hirdetesek publikaciojat is megfogja. Emellett a szuro URL-ek indexhigitasat noindex/canonical szabaly kezeli, a lejart URL-ek pedig SEO-biztosan kezeltek (410 vagy redirect).
+
+---
+
 ## 2026. 05. 09. – Session #275 (automata gyors felfedezes uj hirdetes publikacio utan)
 
 ### Mit csinaltunk [x]

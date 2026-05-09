@@ -171,6 +171,57 @@ class VA_SEO {
         return trim( $model );
     }
 
+    private static function is_listing_search_page(): bool {
+        return function_exists( 'va_is_page' ) && va_is_page( 'va-hirdetes-kereses' );
+    }
+
+    private static function has_non_landing_search_filters(): bool {
+        if ( ! self::is_listing_search_page() ) {
+            return false;
+        }
+
+        $allowed = [ 'brand', 'model' ];
+        $ignored = [ 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid' ];
+
+        foreach ( (array) $_GET as $raw_key => $raw_value ) {
+            $key = sanitize_key( (string) $raw_key );
+            if ( $key === '' || in_array( $key, $ignored, true ) ) {
+                continue;
+            }
+
+            $value_source = is_array( $raw_value )
+                ? implode( ',', array_map( 'strval', $raw_value ) )
+                : (string) $raw_value;
+            $value = trim( sanitize_text_field( wp_unslash( $value_source ) ) );
+
+            if ( $value === '' ) {
+                continue;
+            }
+
+            if ( ! in_array( $key, $allowed, true ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function should_noindex_current_page(): bool {
+        if ( is_404() ) {
+            return true;
+        }
+
+        if ( is_search() ) {
+            return true;
+        }
+
+        if ( self::has_non_landing_search_filters() ) {
+            return true;
+        }
+
+        return false;
+    }
+
     private static function is_listing_search_landing(): bool {
         return function_exists( 'va_is_page' )
             && va_is_page( 'va-hirdetes-kereses' )
@@ -644,9 +695,15 @@ class VA_SEO {
     }
 
     public static function filter_wp_robots( array $robots ): array {
-        if ( is_search() || is_404() ) {
+        if ( self::should_noindex_current_page() ) {
             $robots['noindex'] = true;
-            $robots['nofollow'] = true;
+            if ( is_404() ) {
+                $robots['nofollow'] = true;
+                unset( $robots['follow'] );
+            } else {
+                $robots['follow'] = true;
+                unset( $robots['nofollow'] );
+            }
         }
         return $robots;
     }
@@ -667,8 +724,19 @@ class VA_SEO {
     }
 
     private static function current_canonical(): string {
+        if ( self::is_listing_search_page() && self::has_non_landing_search_filters() ) {
+            if ( self::requested_brand() !== '' || self::requested_model() !== '' ) {
+                return self::landing_url( self::requested_brand(), self::requested_model() );
+            }
+            return self::listing_search_page_url();
+        }
+
         if ( self::is_listing_search_landing() ) {
             return self::landing_url( self::requested_brand(), self::requested_model() );
+        }
+
+        if ( self::is_listing_search_page() ) {
+            return self::listing_search_page_url();
         }
 
         if ( is_singular() ) {
@@ -944,7 +1012,9 @@ class VA_SEO {
         $url   = self::current_canonical();
         $img   = self::meta_image_url();
         $site  = get_bloginfo( 'name' );
-        $robots = ( is_search() || is_404() ) ? 'noindex, nofollow, max-image-preview:large' : 'index, follow, max-image-preview:large';
+        $robots = self::should_noindex_current_page()
+            ? ( is_404() ? 'noindex, nofollow, max-image-preview:large' : 'noindex, follow, max-image-preview:large' )
+            : 'index, follow, max-image-preview:large';
 
         echo "\n";
         echo '<meta name="description" content="' . esc_attr( $desc ) . '">' . "\n";
