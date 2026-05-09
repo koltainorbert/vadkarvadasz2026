@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #291 (Sidebar non-hover scrollbar parity)
+
+### Mit csinaltunk [x]
+- [x] A dashboard bal nav es az admin sidebar alap scrollbar szinei fel lettek huzva a hover allapot szintjere
+- [x] Direkt `.os-scrollbar-vertical` override kerult mindket hostra root + plugin mirror CSS-ben
+- [x] A non-hover allapotnak is fix `4px` lathato thumb es teljes lathatosag lett beallitva
+
+### Eredmeny
+- A bal oldali scrollbarnak Firefoxban hover nelkul is kozel ugyanugy kell kinezni, mint ravitt egernel
+- A javitas mar nem a body viewport scrollra, hanem kifejezetten a kepen lathato sidebar / dashboard nav scrollbarra celzott
+
+---
+
 ## 2026. 05. 09. – Session #290 (Firefox non-hover body scrollbar fix)
 
 ### Mit csinaltunk [x]
