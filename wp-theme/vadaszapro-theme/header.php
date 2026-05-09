@@ -59,7 +59,17 @@
     if ( $header_search_placeholder === '' ) {
         $header_search_placeholder = 'keresés…';
     }
+    $header_register_text = trim( (string) get_option( 'va_hf_header_register_text', 'Regisztráció' ) );
+    if ( $header_register_text === '' ) {
+        $header_register_text = 'Regisztráció';
+    }
+    $header_login_text = trim( (string) get_option( 'va_hf_header_login_text', 'Bejelentkezés' ) );
+    if ( $header_login_text === '' ) {
+        $header_login_text = 'Bejelentkezés';
+    }
     $header_show_buy_button = get_option( 'va_hf_header_show_buy_button', '1' ) === '1';
+    $login_enabled = get_option( 'va_enable_login', '1' ) === '1';
+    $register_enabled = get_option( 'va_enable_register', '1' ) === '1';
     if ( $hero_logo === '' ) {
         $hero_logo = $header_logo;
     }
@@ -87,7 +97,6 @@
                         ['url' => home_url('/va-hirdetes-kereses'), 'label' => 'Hirdetések',       'class' => '', 'enabled' => true],
                         ['url' => home_url('/kategoria'),           'label' => 'Kategóriák',       'class' => '', 'enabled' => true],
                         ['url' => home_url('/kapcsolat'),           'label' => 'Kapcsolat',        'class' => '', 'enabled' => true],
-                        ['url' => 'https://www.weingartnertrans.hu','label' => 'Weingartner Trans','class' => '', 'enabled' => true],
                     ];
                     $json = get_option('va_nav_items_json', '');
                     if (!$json) return $default;
@@ -102,10 +111,7 @@
                         }
                         $result[] = ['url' => $url, 'label' => $item['label'], 'class' => ''];
                     }
-                    $result = $result ?: $default;
-                    // Fix menüpont mindig a végén
-                    $result[] = ['url' => 'https://www.weingartnertrans.hu', 'label' => 'Weingartner Trans', 'class' => ''];
-                    return $result;
+                    return $result ?: $default;
                 })());
                 foreach ( $nav_items as $item ):
                     $cls = 'va-nav__item' . ( $item['class'] ? ' ' . $item['class'] : '' );
@@ -241,17 +247,29 @@
                 <?php if ( is_user_logged_in() ):
                     $user        = wp_get_current_user();
                     $dashboard   = get_page_by_path('va-fiok');
+                    $login_page  = get_page_by_path('va-bejelentkezes');
+                    $register_page = get_page_by_path('va-regisztracio');
                     $buy_page    = get_page_by_path('va-kredit-vasarlas');
                     $buy_url     = $buy_page ? get_permalink( $buy_page ) : home_url('/va-kredit-vasarlas/');
+                    $login_url   = $login_page ? get_permalink( $login_page ) : wp_login_url();
+                    $register_url = $register_page ? get_permalink( $register_page ) : wp_registration_url();
                 ?>
                     <?php if ( $header_show_buy_button ): ?>
                         <a href="<?php echo esc_url( $buy_url ); ?>" class="va-header__user-login">Vásárlás</a>
+                    <?php endif; ?>
+                    <?php if ( $login_enabled ): ?>
+                        <a href="<?php echo esc_url( $login_url ); ?>" class="va-header__user-login"><?php echo esc_html( $header_login_text ); ?></a>
+                    <?php endif; ?>
+                    <?php if ( $register_enabled ): ?>
+                        <a href="<?php echo esc_url( $register_url ); ?>" class="va-header__submit-btn"><?php echo esc_html( $header_register_text ); ?></a>
                     <?php endif; ?>
                     <a href="<?php echo esc_url( $dashboard ? get_permalink($dashboard) : home_url() ); ?>" class="va-header__user">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                         <?php echo esc_html( $user->display_name ); ?>
                     </a>
                 <?php else:
+                    $login_page    = get_page_by_path('va-bejelentkezes');
+                    $register_page = get_page_by_path('va-regisztracio');
                     $buy_page      = get_page_by_path('va-kredit-vasarlas');
                     $buy_url       = $buy_page ? get_permalink( $buy_page ) : home_url('/va-kredit-vasarlas/');
                     $login_url     = $login_page ? get_permalink( $login_page ) : wp_login_url();
@@ -260,15 +278,12 @@
                     <?php if ( $header_show_buy_button ): ?>
                         <a href="<?php echo esc_url( wp_login_url( $buy_url ) ); ?>" class="va-header__user-login">Vásárlás</a>
                     <?php endif; ?>
-<<<<<<< HEAD
-=======
                     <?php if ( $login_enabled ): ?>
                         <a href="<?php echo esc_url( $login_url ); ?>" class="va-header__user-login"><?php echo esc_html( $header_login_text ); ?></a>
                     <?php endif; ?>
                     <?php if ( $register_enabled ): ?>
                         <a href="<?php echo esc_url( $register_url ); ?>" class="va-header__submit-btn"><?php echo esc_html( $header_register_text ); ?></a>
                     <?php endif; ?>
->>>>>>> 36eea85 (Auto_2026.05.09_23.02)
                 <?php endif; ?>
                 <?php if ( get_option('va_social_header_show','1') === '1' && function_exists('va_social_bar') ):
                     $hdr_style = get_option('va_social_header_style','icons');
