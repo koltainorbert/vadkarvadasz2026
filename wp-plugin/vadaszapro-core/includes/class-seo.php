@@ -842,41 +842,10 @@ class VA_SEO {
     }
 
     private static function listing_social_title( int $post_id ): string {
-        $title = self::listing_base_title( $post_id );
-        $price_raw = get_post_meta( $post_id, 'va_price', true );
-        $price_type = (string) get_post_meta( $post_id, 'va_price_type', true );
-        $sale_raw = get_post_meta( $post_id, 'va_sale_price', true );
-        $sale_end_raw = (string) get_post_meta( $post_id, 'va_sale_price_end', true );
-
-        $base_price_txt = '';
-        if ( is_numeric( $price_raw ) && $price_type !== 'ask' ) {
-            $base_price_txt = number_format( (float) $price_raw, 0, ',', ' ' ) . ' Ft';
-        }
-
-        $sale_active = false;
-        if ( is_numeric( $sale_raw ) && (float) $sale_raw > 0 ) {
-            $sale_active = true;
-            if ( $sale_end_raw !== '' ) {
-                $sale_end_ts = strtotime( $sale_end_raw . ' 23:59:59' );
-                if ( $sale_end_ts && $sale_end_ts < current_time( 'timestamp' ) ) {
-                    $sale_active = false;
-                }
-            }
-        }
-
-        if ( $sale_active ) {
-            $sale_price_txt = number_format( (float) $sale_raw, 0, ',', ' ' ) . ' Ft';
-            if ( $base_price_txt !== '' ) {
-                return $title . ' | Eladó | Akciós ár: ' . $sale_price_txt . ' (eredeti: ' . $base_price_txt . ')';
-            }
-            return $title . ' | Eladó | Akciós ár: ' . $sale_price_txt;
-        }
-
-        if ( $base_price_txt !== '' ) {
-            return $title . ' | Eladó | Ár: ' . $base_price_txt;
-        }
-
-        return $title . ' | Eladó';
+        $base_title = self::listing_base_title( $post_id );
+        // CTR optimalizálás: ár + év + km hozzáadása
+        $title_with_meta = self::listing_title_with_meta( $base_title, $post_id );
+        return $title_with_meta . ' | Eladó';
     }
 
     private static function listing_social_description( int $post_id ): string {
@@ -886,9 +855,12 @@ class VA_SEO {
     private static function listing_browser_title( int $post_id ): string {
         $exact_title = wp_strip_all_tags( (string) get_the_title( $post_id ) );
         if ( $exact_title !== '' ) {
-            return $exact_title . ' | Weingartner Autó';
+            // Ár + év + km hozzáadása CTR optimalizáláshoz
+            $title_with_meta = self::listing_title_with_meta( $exact_title, $post_id );
+            return $title_with_meta . ' | Weingartner Autó';
         }
-        return self::listing_base_title( $post_id ) . ' | Weingartner Autó';
+        $title_with_meta = self::listing_title_with_meta( self::listing_base_title( $post_id ), $post_id );
+        return $title_with_meta . ' | Weingartner Autó';
     }
 
     private static function listing_base_title( int $post_id ): string {
@@ -912,7 +884,48 @@ class VA_SEO {
             $base .= ' (' . $year . ')';
         }
 
-        return trim( preg_replace( '/\s+/', ' ', $base ) ?: $base );
+        return trim( preg_replace( '/\s+/', ' ', $base ?: $base ) );
+    }
+
+    private static function listing_title_with_meta( string $base_title, int $post_id ): string {
+        $price_raw    = get_post_meta( $post_id, 'va_price', true );
+        $price_type   = (string) get_post_meta( $post_id, 'va_price_type', true );
+        $year         = trim( (string) get_post_meta( $post_id, 'va_year', true ) );
+        $mileage      = trim( (string) get_post_meta( $post_id, 'va_mileage', true ) );
+
+        $meta_parts = [];
+
+        // Ár megjelenítése (M Ft formátum: 2.9M = 2.900.000)
+        if ( is_numeric( $price_raw ) && $price_type !== 'ask' ) {
+            $price_num = (float) $price_raw;
+            if ( $price_num >= 1000000 ) {
+                $price_m = round( $price_num / 1000000, 1 );
+                $meta_parts[] = number_format( $price_m, 1, ',', '' ) . 'M Ft';
+            } elseif ( $price_num >= 1000 ) {
+                $meta_parts[] = number_format( $price_num / 1000, 0, ',', '' ) . 'k Ft';
+            }
+        }
+
+        // Év
+        if ( $year !== '' ) {
+            $meta_parts[] = $year;
+        }
+
+        // Kilométer
+        if ( $mileage !== '' && is_numeric( $mileage ) ) {
+            $km_num = (int) $mileage;
+            if ( $km_num >= 1000 ) {
+                $meta_parts[] = number_format( $km_num / 1000, 0, ',', '' ) . 'k km';
+            } else {
+                $meta_parts[] = $km_num . ' km';
+            }
+        }
+
+        if ( ! empty( $meta_parts ) ) {
+            return $base_title . ' • ' . implode( ' • ', $meta_parts );
+        }
+
+        return $base_title;
     }
 
     private static function listing_meta_description( int $post_id ): string {
