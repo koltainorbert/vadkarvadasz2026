@@ -299,8 +299,8 @@ get_header();
             hogy melyik oldalon és milyen lépés után akadtál el, annál gyorsabban tudunk segíteni.
             <div class="va-help-link-row">
                 <a href="<?php echo esc_url( home_url( '/kapcsolat' ) ); ?>">Üzenet küldése</a>
-                <a href="<?php echo esc_url( home_url( '/aszf' ) ); ?>">ÁSZF</a>
-                <a href="<?php echo esc_url( home_url( '/adatvedelmi-nyilatkozat' ) ); ?>">Adatvédelmi tájékoztató</a>
+                <a href="<?php echo esc_url( home_url( '/etika' ) ); ?>">ÁSZF</a>
+                <a href="<?php echo esc_url( home_url( '/adatkezeles' ) ); ?>">Adatvédelmi tájékoztató</a>
             </div>
         </div>
     </div>
