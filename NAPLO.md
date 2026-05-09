@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #301 (Header login/regisztracio/vasarlas + deploy helyreallitas)
+
+### Mi tortent [x]
+- [x] Headerben eltavolitva a Weingartner Trans fix menupont
+- [x] Header jobb oldalon a `Bejelentkezes` + `Regisztracio` + `Vasarlas` linkek allandoan latszanak (belepve es kijelentkezve is)
+- [x] Push kozben non-fast-forward es rebase konfliktusok feloldva (`header.php`, `wp-theme/vadaszapro-theme/header.php`)
+- [x] A remote-ban levo mukodo FTP workflow megorizve (`.github/workflows/deploy.yml`)
+- [x] Valtozasok pusholva `main` branchre, ezzel az FTP Action triggerelve lett
+
+### Hol tartunk
+A javitasok fent vannak GitHubon, a deploy Action futasa utan a `vadkarvadasz.hu` oldalon latszodnia kell a 3 linknek.
+
+---
+
 ## 2026. 05. 09. – Session #300 (Munkafolyamat preferencia: auto repo push + biztonsag)
 
 ### Mi tortent
