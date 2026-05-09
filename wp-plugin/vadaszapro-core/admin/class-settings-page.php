@@ -4161,6 +4161,12 @@ class VA_Settings_Page {
                                 </tr>
                             </table>
                             <p><button type="submit" name="va_seo_test" class="button">Google kapcsolat teszt</button></p>
+                            <?php if ( is_array( $test_result ) ) : ?>
+                                <p style="margin:8px 0 0;font-size:12px;color:<?php echo ! empty( $test_result['ok'] ) ? '#4caf50' : '#ff6b6b'; ?>;">
+                                    <strong><?php echo ! empty( $test_result['ok'] ) ? '✅ Teszt sikeres:' : '❌ Teszt hiba:'; ?></strong>
+                                    <?php echo esc_html( (string) ( $test_result['message'] ?? '' ) ); ?>
+                                </p>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>
