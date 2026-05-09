@@ -15,7 +15,7 @@ class VA_SEO {
 
     public static function init(): void {
         if ( is_admin() ) {
-            add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 999, 2 );
+            add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 99999, 2 );
             return;
         }
 
@@ -28,7 +28,9 @@ class VA_SEO {
         add_action( 'wp_head', [ __CLASS__, 'render_schema' ], 90 );
 
         add_filter( 'wp_robots', [ __CLASS__, 'filter_wp_robots' ] );
-        add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 999, 2 );
+        add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 99999, 2 );
+        // Rank Math saját sitemap sorát letiltjuk – a mi sitemap.xml-ünk elegendő.
+        add_filter( 'rank_math/sitemap/robots_txt', '__return_false' );
         add_filter( 'document_title_parts', [ __CLASS__, 'filter_document_title_parts' ] );
 
         // Rank Math felülírhatja az OG/Twitter title-t, ezért közvetlenül ide is bekötjük.
