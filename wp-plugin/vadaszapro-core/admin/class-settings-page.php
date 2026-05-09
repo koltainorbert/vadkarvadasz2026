@@ -4081,6 +4081,28 @@ class VA_Settings_Page {
         <?php
     }
 
+    public static function render_seo() {
+        if ( ! current_user_can( 'manage_options' ) ) return;
+        ?>
+        <div class="wrap va-admin-wrap">
+            <h1>📈 SEO beállítások</h1>
+            <p class="description">Ez egy előkészített SEO menüpont. A részletes opciók a következő fejlesztési körben kerülnek ide.</p>
+
+            <div class="va-settings-grid">
+                <div class="va-settings-card">
+                    <div class="va-settings-card__head">
+                        <span class="va-settings-card__icon">🚧</span>
+                        <span class="va-settings-card__title">SEO modul előkészítve</span>
+                    </div>
+                    <div class="va-settings-card__body">
+                        <p style="margin:0;">Jelenleg ez egy placeholder oldal. Innen lesznek kezelhetők a későbbi SEO kapcsolók (meta, sitemap, schema, robots, stb.).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
     public static function render_listing_search_designer(): void {
         if ( ! current_user_can( 'manage_options' ) ) return;
         ?>
