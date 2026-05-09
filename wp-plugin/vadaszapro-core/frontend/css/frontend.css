@@ -1116,13 +1116,32 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   scrollbar-color: rgba(255,0,0,.92) rgba(255,255,255,.18);
 }
 
+.va-dashboard__nav [data-overlayscrollbars-viewport],
+.va-dashboard__nav .os-viewport {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: auto !important;
+  scrollbar-color: rgba(255,0,0,.92) rgba(255,255,255,.18) !important;
+}
+
 .va-dashboard__nav::-webkit-scrollbar {
   width: 6px;
+}
+
+.va-dashboard__nav [data-overlayscrollbars-viewport]::-webkit-scrollbar,
+.va-dashboard__nav .os-viewport::-webkit-scrollbar {
+  width: 6px !important;
 }
 
 .va-dashboard__nav::-webkit-scrollbar-track {
   background: rgba(255,255,255,.18);
   border-radius: 999px;
+}
+
+.va-dashboard__nav [data-overlayscrollbars-viewport]::-webkit-scrollbar-track,
+.va-dashboard__nav .os-viewport::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.18) !important;
+  border-radius: 999px !important;
 }
 
 .va-dashboard__nav::-webkit-scrollbar-thumb {
@@ -1131,33 +1150,16 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   border: 1px solid rgba(255,255,255,.18);
 }
 
+.va-dashboard__nav [data-overlayscrollbars-viewport]::-webkit-scrollbar-thumb,
+.va-dashboard__nav .os-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255,0,0,.92) !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+}
+
 .va-dashboard__nav::-webkit-scrollbar-thumb:hover,
 .va-dashboard__nav::-webkit-scrollbar-thumb:active {
   background: rgba(255,0,0,1);
-}
-
-.va-dashboard__nav.va-dashboard__nav--os {
-  scrollbar-width: none !important;
-  scrollbar-color: transparent transparent !important;
-  --os-size: 10px;
-  --os-padding-perpendicular: 2px;
-  --os-padding-axis: 2px;
-  --os-track-bg: rgba(255,255,255,.14);
-  --os-track-bg-hover: rgba(255,255,255,.18);
-  --os-handle-bg: rgba(255,0,0,.92);
-  --os-handle-bg-hover: rgba(255,0,0,.96);
-  --os-handle-bg-active: rgba(255,0,0,1);
-  --os-handle-border-radius: 999px;
-  --os-handle-perpendicular-size: 6px;
-  --os-handle-perpendicular-size-hover: 6px;
-  --os-handle-perpendicular-size-active: 6px;
-  --os-handle-min-size: 42px;
-}
-
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical {
-  width: 10px !important;
-  opacity: 1 !important;
-  visibility: visible !important;
 }
 
 @supports (-moz-appearance: none) {
@@ -1166,9 +1168,10 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
     scrollbar-color: rgba(255,0,0,.95) rgba(255,255,255,.18) !important;
   }
 
-  .va-dashboard__nav.va-dashboard__nav--os {
-    scrollbar-width: none !important;
-    scrollbar-color: transparent transparent !important;
+  .va-dashboard__nav [data-overlayscrollbars-viewport],
+  .va-dashboard__nav .os-viewport {
+    scrollbar-width: auto !important;
+    scrollbar-color: rgba(255,0,0,.95) rgba(255,255,255,.18) !important;
   }
 }
 .admin-bar .va-dashboard__nav {
