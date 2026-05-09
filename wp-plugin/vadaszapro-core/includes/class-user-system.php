@@ -51,6 +51,42 @@ class VA_User_System {
         add_action( 'login_form_resetpass',[ __CLASS__, 'redirect_wp_resetpass' ] );
     }
 
+    private static function async_get( string $url ): void {
+        if ( $url === '' ) return;
+
+        wp_remote_get( $url, [
+            'timeout'  => 1,
+            'blocking' => false,
+            'headers'  => [
+                'User-Agent' => 'VA-Discovery-Bot/1.0',
+            ],
+        ] );
+    }
+
+    private static function trigger_listing_discovery_boost( int $post_id ): void {
+        if ( $post_id < 1 ) return;
+
+        $permalink = get_permalink( $post_id );
+        if ( ! $permalink ) return;
+
+        $urls = [
+            home_url( '/' ),
+            home_url( '/hirdetes/' ),
+            home_url( '/sitemap.xml' ),
+            home_url( '/sitemap-va_listing-1.xml' ),
+            $permalink,
+        ];
+
+        foreach ( array_unique( $urls ) as $url ) {
+            self::async_get( $url );
+        }
+
+        // Google nem támogat publikus "request indexing" API-t általános tartalomra,
+        // de Bing sitemap pinggel gyorsabban felveheti a friss URL-eket.
+        $bing_ping = add_query_arg( 'sitemap', rawurlencode( home_url( '/sitemap.xml' ) ), 'https://www.bing.com/ping' );
+        self::async_get( $bing_ping );
+    }
+
     /* ── URL átirányítások ─────────────────────────────── */
     public static function custom_login_url( $url, $redirect, $force_reauth ) {
         // Admin redirect esetén mindig az eredeti wp-login.php maradjon
@@ -779,6 +815,9 @@ class VA_User_System {
     public static function notify_listing_published( string $new_status, string $old_status, \WP_Post $post ): void {
         if ( $new_status !== 'publish' || $old_status === 'publish' ) return;
         if ( $post->post_type !== 'va_listing' ) return;
+
+        self::trigger_listing_discovery_boost( (int) $post->ID );
+
         if ( get_option( 'va_email_listing_enabled', '1' ) !== '1' ) return;
         if ( ! class_exists( 'VA_Mailer' ) ) return;
 
