@@ -1,3 +1,4 @@
+# VA-static-v1
 User-agent: *
 Disallow: /wp-admin/
 Allow: /wp-admin/admin-ajax.php
