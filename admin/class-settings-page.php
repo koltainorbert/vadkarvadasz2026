@@ -8413,6 +8413,7 @@ class VA_Settings_Page {
             'badge_boost_radius'    => 20,
             'badge_boost_size'      => 11,
             // Watchlist gomb
+            'watchlist_enabled'     => 1,
             'watchlist_color'       => '#ff2a2a',
             'watchlist_bg'          => 'rgba(0,0,0,.62)',
             'watchlist_border'      => 'rgba(255,0,0,.45)',
@@ -8449,6 +8450,9 @@ class VA_Settings_Page {
         echo ".va-card__badge--featured{background:{$d['badge_featured_bg']};color:{$d['badge_featured_color']};border-color:{$d['badge_featured_border']};border-radius:{$d['badge_featured_radius']}px;font-size:{$d['badge_featured_size']}px;}\n";
         echo ".va-card__badge--boost{background:{$d['badge_boost_bg']};color:{$d['badge_boost_color']};border-color:{$d['badge_boost_border']};border-radius:{$d['badge_boost_radius']}px;font-size:{$d['badge_boost_size']}px;}\n";
         echo ".va-card__watchlist{color:{$d['watchlist_color']};background:{$d['watchlist_bg']};border-color:{$d['watchlist_border']};width:{$d['watchlist_size']}px;height:{$d['watchlist_size']}px;}\n";
+        if ( empty( $d['watchlist_enabled'] ) ) {
+            echo ".va-card__watchlist{display:none !important;}\n";
+        }
         echo "</style>\n";
     }
 
@@ -8858,6 +8862,13 @@ class VA_Settings_Page {
                             </div>
                             <div class="vacd__section-body">
                                 <div class="vacd__row">
+                                    <span class="vacd__label">Megjelenítés</span>
+                                    <label style="display:inline-flex;align-items:center;gap:8px;color:#fff;font-size:12px;">
+                                        <input type="checkbox" class="vacd-field" data-prop="watchlist_enabled" value="1" <?php checked( ! empty( $d['watchlist_enabled'] ) ); ?>>
+                                        Szívecske gomb megjelenítése
+                                    </label>
+                                </div>
+                                <div class="vacd__row">
                                     <span class="vacd__label">Szívecske szín</span>
                                     <?php vacd_color_field('watchlist_color', $d['watchlist_color']); ?>
                                 </div>
@@ -8895,6 +8906,10 @@ class VA_Settings_Page {
                 document.querySelectorAll('#vacd-editor .vacd-field').forEach(function(el) {
                     var prop = el.dataset.prop;
                     if (!prop) return;
+                    if (el.type === 'checkbox') {
+                        out[prop] = el.checked ? 1 : 0;
+                        return;
+                    }
                     if (el.type === 'range') {
                         out[prop] = parseFloat(el.value) || parseInt(el.value) || 0;
                     } else if (el.tagName === 'SELECT') {
@@ -8979,12 +8994,16 @@ class VA_Settings_Page {
                     bdg.style.fontSize    = c.badge_featured_size+'px';
                 }
                 if(wl) {
-                    wl.style.color       = c.watchlist_color;
-                    wl.style.background  = c.watchlist_bg;
-                    wl.style.borderColor = c.watchlist_border;
-                    wl.style.borderStyle = 'solid';
-                    wl.style.width       = c.watchlist_size+'px';
-                    wl.style.height      = c.watchlist_size+'px';
+                    var wlEnabled = String(c.watchlist_enabled) !== '0';
+                    wl.style.display     = wlEnabled ? 'flex' : 'none';
+                    if (wlEnabled) {
+                        wl.style.color       = c.watchlist_color;
+                        wl.style.background  = c.watchlist_bg;
+                        wl.style.borderColor = c.watchlist_border;
+                        wl.style.borderStyle = 'solid';
+                        wl.style.width       = c.watchlist_size+'px';
+                        wl.style.height      = c.watchlist_size+'px';
+                    }
                 }
             }
             // Hover border preview: inline :hover nem lehetséges, <style> injekcióval
@@ -9077,7 +9096,7 @@ class VA_Settings_Page {
                     if(!prop || this.type === 'range') return;
                     // va-color-input: a jQuery handler kezeli, ide ne kerljön
                     if(this.classList.contains('va-color-input')) return;
-                    current[prop] = this.value;
+                    current[prop] = this.type === 'checkbox' ? (this.checked ? 1 : 0) : this.value;
                     updatePreview(); saveJson();
                 });
             });
@@ -9091,7 +9110,11 @@ class VA_Settings_Page {
                     var prop = el.dataset.prop;
                     if(!prop || current[prop] === undefined) return;
                     if(el.classList.contains('va-color-input')) return; // picker alább kezeli
-                    el.value = current[prop];
+                    if (el.type === 'checkbox') {
+                        el.checked = String(current[prop]) !== '0';
+                    } else {
+                        el.value = current[prop];
+                    }
                     var lbl = document.getElementById('lbl-'+prop);
                     if(lbl) lbl.textContent = current[prop] + (el.type==='range' && prop.indexOf('clamp')<0 ? 'px' : '');
                 });
