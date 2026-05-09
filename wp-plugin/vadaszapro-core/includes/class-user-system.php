@@ -87,6 +87,9 @@ class VA_User_System {
 
         // IndexNow – azonnali indexelés Bing + Yandex + egyéb résztvevőknél
         self::indexnow_submit( $permalink );
+
+        // Google Search Console Indexing API (ha be van állítva a service account)
+        self::gsc_indexing_submit( $permalink );
     }
 
     private static function indexnow_submit( string $url ): void {
@@ -106,6 +109,57 @@ class VA_User_System {
             'blocking'    => false,
             'headers'     => [ 'Content-Type' => 'application/json; charset=utf-8' ],
             'body'        => $payload,
+        ] );
+    }
+
+    private static function gsc_indexing_submit( string $url ): void {
+        $sa_json = (string) get_option( 'va_gsc_service_account', '' );
+        if ( $sa_json === '' ) return;
+
+        $sa = json_decode( $sa_json, true );
+        if ( ! is_array( $sa ) || empty( $sa['private_key'] ) || empty( $sa['client_email'] ) ) return;
+        if ( ! function_exists( 'openssl_sign' ) ) return;
+
+        // JWT összeállítása
+        $now    = time();
+        $header = rtrim( strtr( base64_encode( (string) wp_json_encode( [ 'alg' => 'RS256', 'typ' => 'JWT' ] ) ), '+/', '-_' ), '=' );
+        $claims = rtrim( strtr( base64_encode( (string) wp_json_encode( [
+            'iss'   => $sa['client_email'],
+            'scope' => 'https://www.googleapis.com/auth/indexing',
+            'aud'   => 'https://oauth2.googleapis.com/token',
+            'exp'   => $now + 3600,
+            'iat'   => $now,
+        ] ) ), '+/', '-_' ), '=' );
+
+        $sig_input = $header . '.' . $claims;
+        $signature = '';
+        openssl_sign( $sig_input, $signature, $sa['private_key'], 'SHA256' );
+        $jwt = $sig_input . '.' . rtrim( strtr( base64_encode( $signature ), '+/', '-_' ), '=' );
+
+        // Access token lekérése
+        $token_resp = wp_remote_post( 'https://oauth2.googleapis.com/token', [
+            'timeout'  => 10,
+            'blocking' => true,
+            'body'     => [
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion'  => $jwt,
+            ],
+        ] );
+
+        if ( is_wp_error( $token_resp ) ) return;
+
+        $token_data = json_decode( wp_remote_retrieve_body( $token_resp ), true );
+        if ( empty( $token_data['access_token'] ) ) return;
+
+        // URL beküldése a Google Indexing API-nak
+        wp_remote_post( 'https://indexing.googleapis.com/v3/urlNotifications:publish', [
+            'timeout'  => 5,
+            'blocking' => false,
+            'headers'  => [
+                'Authorization' => 'Bearer ' . $token_data['access_token'],
+                'Content-Type'  => 'application/json',
+            ],
+            'body'     => (string) wp_json_encode( [ 'url' => $url, 'type' => 'URL_UPDATED' ] ),
         ] );
     }
 
