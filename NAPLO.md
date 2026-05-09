@@ -2,7 +2,30 @@
 
 ---
 
-## 2026. 05. 09. – Session #278 (biztonsagos SEO hardening, robots sitemap canonical)
+## 2026. 05. 09. – Session #279 (teljes SEO hardening: sitemap fix, IndexNow, GSC API, schema bővítés)
+
+### Mit csinaltunk [x]
+- [x] **robots.txt statikus fájl** → `wp-root/robots.txt` FTP-n deployolva a web root-ba, egyetlen `sitemap.xml` sor
+- [x] **Cloudflare Page Rule** → `robots.txt` cache bypass beállítva a CF dashboardban
+- [x] **CF auto-purge** → deploy workflow bővítve `purge-cloudflare-cache` jobbal (robots.txt + sitemap.xml + sitemap_index.xml)
+- [x] **CF credentials** → `CF_API_TOKEN` + `CF_ZONE_ID` GitHub secrets hozzáadva
+- [x] **IndexNow API** → `class-user-system.php` új hirdetés publikálásakor elküldi az URL-t az `api.indexnow.org`-nak (Bing + Yandex azonnali indexelés)
+- [x] **Google GSC Indexing API** → JWT/OAuth2-alapú implementation, service account JSON-t WP optionból olvassa (`va_gsc_service_account`)
+- [x] **SEO admin panel** → `render_seo()` valódi tartalommal: GSC service account JSON textarea + IndexNow státusz kártya
+- [x] **Car schema bővítés** → `vehicleEngine` (hengerűrtartalom), `numberOfDoors`, `driveWheelConfiguration`, `vehicleIdentificationNumber`, `itemCondition: UsedCondition`, `seller: AutoDealer` mind a Car és az Offer objectben
+- [x] **do_robots action** → priority 1-en átvesszük a kontrollt (Rank Math kiiktatása)
+- [x] Mirror szinkron root + plugin mappában minden fájlban
+
+### Eredmény
+- robots.txt: egyetlen `Sitemap: /sitemap.xml` sor (live)
+- IndexNow: aktív, kulcs live: `b873c945f60ea2d1bc78a3f254901e6d.txt`
+- GSC API: kód kész, service account JSON-t az admin SEO fülén lehet beállítani
+- Car schema: jelentősen bővebb (motor, ajtók, hajtás, VIN, állapot, eladó)
+
+### Következő teendő
+- GSC service account létrehozása Google Cloud-ban → JSON feltöltése az admin SEO fülén
+
+---
 
 ### Mit csinaltunk [x]
 - [x] `class-seo.php` robots szuroben sitemap canonicalizalas (duplikalt `Sitemap:` sorok kiszurese, egyetlen `/sitemap.xml` sor)
