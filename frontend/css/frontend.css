@@ -189,6 +189,21 @@ body::-webkit-scrollbar-thumb:hover {
   background: #ff3000;
 }
 
+html[data-overlayscrollbars-body] > body,
+body[data-overlayscrollbars] {
+  --os-size: 14px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-bg: rgba(255,255,255,.12);
+  --os-track-bg-hover: rgba(255,255,255,.18);
+  --os-track-border-radius: 999px;
+  --os-handle-bg: rgba(255,48,0,.82);
+  --os-handle-bg-hover: rgba(255,72,0,.96);
+  --os-handle-bg-active: rgba(255,92,0,1);
+  --os-handle-border-radius: 999px;
+  --os-handle-min-size: 48px;
+}
+
 /* ── Globális reset (a téma alá) ──────────────────── */
 .va-wrap, .va-wrap * { box-sizing: border-box; }
 .va-wrap {

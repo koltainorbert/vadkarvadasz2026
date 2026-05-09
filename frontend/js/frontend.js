@@ -707,11 +707,22 @@
         autoHide: 'never',
         clickScroll: false
       },
+      overflow: {
+        x: 'hidden',
+        y: 'scroll'
+      },
       update: {
         elementEvents: ['cloned', 'added', 'removed'],
         debounce: [0, 33]
       }
     };
+
+    // Teljes oldal scrollja is menjen custom scrollbaron, kulonben Firefox
+    // a natív vékony csíkot rajzolja a viewport jobb szélén.
+    if (document.body && !document.body.hasAttribute('data-va-body-scrollbars-init')) {
+      OverlayScrollbars(document.body, scrollbarOptions);
+      document.body.setAttribute('data-va-body-scrollbars-init', '1');
+    }
 
     // #va-sidebar (admin)
     var sidebarEl = document.getElementById('va-sidebar');

@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #288 (Frontend body scroll Firefox override)
+
+### Mit csinaltunk [x]
+- [x] A frontend `OverlayScrollbars` init mar a teljes `document.body` elemre is lefut
+- [x] Kulon body-s custom scrollbar tema kerult be a plugin frontend CSS-be
+- [x] Firefox natív viewport scrollbarja helyett custom scrollbar kerul hasznalatba a dashboard/frontend oldalakon
+
+### Eredmeny
+- A Firefoxban megjeleno jobb oldali vekony natív viewport scrollbar helyett vastagabb, testreszabott scrollbar jelenhet meg
+- A javitas ugyanabba az iranyba megy, mint ami Chrome/Edge alatt mar jo eredmenyt adott
+
+---
+
 ## 2026. 05. 09. – Session #287 (Globalis Firefox scrollbar erosites)
 
 ### Mit csinaltunk [x]
