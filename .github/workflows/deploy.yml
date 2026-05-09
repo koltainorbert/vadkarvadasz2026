@@ -36,10 +36,33 @@ jobs:
           local-dir: wp-theme/vadaszapro-theme/
           server-dir: ${{ secrets.FTP_THEME_PATH }}/
 
+  deploy-root:
+    name: Deploy Root Files (robots.txt)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Derive web root path from plugin path
+        id: paths
+        run: |
+          ROOT=$(echo "${{ secrets.FTP_PLUGIN_PATH }}" | sed 's|wp-content/plugins/vadaszapro-core.*||')
+          echo "root=$ROOT" >> $GITHUB_OUTPUT
+
+      - name: Upload robots.txt via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: wp-root/
+          server-dir: ${{ steps.paths.outputs.root }}
+          exclude: |
+            **/.git*
+
   purge-cloudflare-cache:
     name: Purge Cloudflare Cache
     runs-on: ubuntu-latest
-    needs: [deploy-plugin, deploy-theme]
+    needs: [deploy-plugin, deploy-theme, deploy-root]
     steps:
       - name: Purge robots.txt and sitemap cache
         run: |
