@@ -272,7 +272,22 @@
                             }, 'google_translate_element');
                         }
 
+                        function vaEnsureTranslateScript() {
+                            if (window.__vaGtScriptLoaded) return;
+                            window.__vaGtScriptLoaded = true;
+                            var s = document.createElement('script');
+                            s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                            s.defer = true;
+                            document.head.appendChild(s);
+                        }
+
+                        function vaGetCookie(name){
+                            var m = document.cookie.match('(?:^|;)\\s*' + name + '=([^;]*)');
+                            return m ? decodeURIComponent(m[1]) : '';
+                        }
+
                         function vaSetLang(code) {
+                            vaEnsureTranslateScript();
                             if (code === 'hu') {
                                 document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
                                 document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=.' + location.hostname;
@@ -314,6 +329,7 @@
                             var dropdown = document.getElementById('va-lang-dropdown');
                             if (!toggle) return;
                             toggle.addEventListener('click', function(e){
+                                vaEnsureTranslateScript();
                                 e.stopPropagation();
                                 var open = !dropdown.hidden;
                                 dropdown.hidden = open;
@@ -324,8 +340,15 @@
                                 toggle.setAttribute('aria-expanded','false');
                             });
                         })();
+
+                        // Ha korabbi nyelvvaltas mar beallitotta a cookie-t, toltsuk be a fordito scriptet.
+                        (function(){
+                            var gt = vaGetCookie('googtrans');
+                            if (gt && gt !== '/hu/hu') {
+                                vaEnsureTranslateScript();
+                            }
+                        })();
                         </script>
-                        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
                     <?php endif;
                 endif; ?>
             </div>

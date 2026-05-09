@@ -780,16 +780,28 @@ add_action( 'widgets_init', function () {
 
 /* ── Enqueue ──────────────────────────────────────── */
 add_action( 'wp_enqueue_scripts', function () {
-    $theme_style_path = get_stylesheet_directory() . '/style.css';
-    $theme_style_ver  = file_exists( $theme_style_path ) ? (string) filemtime( $theme_style_path ) : '3.0.2';
+    $theme_style_rel  = '/style.min.css';
+    $theme_style_path = get_stylesheet_directory() . $theme_style_rel;
+    $theme_style_uri  = get_stylesheet_directory_uri() . $theme_style_rel;
+    if ( ! file_exists( $theme_style_path ) ) {
+        $theme_style_rel  = '/style.css';
+        $theme_style_path = get_stylesheet_directory() . $theme_style_rel;
+        $theme_style_uri  = get_stylesheet_directory_uri() . $theme_style_rel;
+    }
+    $theme_style_ver = file_exists( $theme_style_path ) ? (string) filemtime( $theme_style_path ) : '3.0.2';
 
-    wp_enqueue_style( 'va-theme', get_stylesheet_uri(), [], $theme_style_ver );
+    wp_enqueue_style( 'va-theme', $theme_style_uri, [], $theme_style_ver );
 
     // Egységes kártya/stílus az egész oldalon (archívum, kereső, kategória stb.)
     if ( defined( 'VA_PLUGIN_URL' ) ) {
-        $frontend_css_path = defined( 'VA_PLUGIN_DIR' ) ? VA_PLUGIN_DIR . 'frontend/css/frontend.css' : '';
+        $frontend_css_rel  = 'frontend/css/frontend.min.css';
+        $frontend_css_path = defined( 'VA_PLUGIN_DIR' ) ? VA_PLUGIN_DIR . $frontend_css_rel : '';
+        if ( ! $frontend_css_path || ! file_exists( $frontend_css_path ) ) {
+            $frontend_css_rel  = 'frontend/css/frontend.css';
+            $frontend_css_path = defined( 'VA_PLUGIN_DIR' ) ? VA_PLUGIN_DIR . $frontend_css_rel : '';
+        }
         $frontend_css_ver  = ( $frontend_css_path && file_exists( $frontend_css_path ) ) ? (string) filemtime( $frontend_css_path ) : VA_VERSION;
-        wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [ 'va-theme' ], $frontend_css_ver );
+        wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . $frontend_css_rel, [ 'va-theme' ], $frontend_css_ver );
 
         // A kartya interakciokhoz (kedvencek, szuro, pagination) mindenhol elerheto frontend JS.
         $frontend_js_path = defined( 'VA_PLUGIN_DIR' ) ? VA_PLUGIN_DIR . 'frontend/js/frontend.js' : '';

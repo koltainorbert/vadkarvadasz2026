@@ -157,15 +157,18 @@ class VA_Shortcodes {
         $os_js_ver = file_exists( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
             ? (string) filemtime( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
             : VA_VERSION;
-        $frontend_css_ver = file_exists( VA_PLUGIN_DIR . 'frontend/css/frontend.css' )
-            ? (string) filemtime( VA_PLUGIN_DIR . 'frontend/css/frontend.css' )
+        $frontend_css_rel = file_exists( VA_PLUGIN_DIR . 'frontend/css/frontend.min.css' )
+            ? 'frontend/css/frontend.min.css'
+            : 'frontend/css/frontend.css';
+        $frontend_css_ver = file_exists( VA_PLUGIN_DIR . $frontend_css_rel )
+            ? (string) filemtime( VA_PLUGIN_DIR . $frontend_css_rel )
             : VA_VERSION;
         $frontend_js_ver = file_exists( VA_PLUGIN_DIR . 'frontend/js/frontend.js' )
             ? (string) filemtime( VA_PLUGIN_DIR . 'frontend/js/frontend.js' )
             : VA_VERSION;
 
         wp_enqueue_style(  'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.min.css', [], $os_css_ver );
-        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [ 'overlayscrollbars' ], $frontend_css_ver );
+        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . $frontend_css_rel, [ 'overlayscrollbars' ], $frontend_css_ver );
         wp_enqueue_script( 'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.browser.es5.min.js', [], $os_js_ver, false );
         wp_enqueue_script( 'va-frontend',  VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery', 'overlayscrollbars' ], $frontend_js_ver, true );
         wp_localize_script( 'va-frontend', 'VA_Data', [
