@@ -710,6 +710,46 @@ function va_is_auction_over( int $post_id ): bool {
 function va_auction_countdown( int $post_id ): string {
     $end = get_post_meta( $post_id, 'va_auction_end', true );
     if ( ! $end ) return '';
+}
+
+/* ── Image SEO: Alt-text generálás ──────────────────────── */
+function va_generate_image_alt_text( int $post_id, int $image_order = 1 ): string {
+    $title = wp_strip_all_tags( (string) get_the_title( $post_id ) );
+    $brand = trim( (string) get_post_meta( $post_id, 'va_brand', true ) );
+    $model = trim( (string) get_post_meta( $post_id, 'va_model', true ) );
+    $year  = trim( (string) get_post_meta( $post_id, 'va_year', true ) );
+    $mileage = trim( (string) get_post_meta( $post_id, 'va_mileage', true ) );
+
+    $parts = [];
+    
+    // Elsősorban a title
+    if ( $title !== '' ) {
+        $parts[] = $title;
+    } else {
+        // Fallback: brand + model
+        if ( $brand !== '' ) {
+            $parts[] = $brand;
+            if ( $model !== '' ) {
+                $parts[] = $model;
+            }
+        }
+    }
+
+    // Meta információk
+    if ( $year !== '' ) {
+        $parts[] = $year;
+    }
+    if ( $mileage !== '' && is_numeric( $mileage ) ) {
+        $parts[] = number_format( (int) $mileage, 0, ',', ' ' ) . ' km';
+    }
+
+    // Képsorrend jelzés (ha nem az első)
+    if ( $image_order > 1 ) {
+        $parts[] = '(' . $image_order . '. kép)';
+    }
+
+    return wp_strip_all_tags( implode( ', ', $parts ) );
+}
     return '<span class="va-countdown" data-end="' . esc_attr( strtotime( $end ) ) . '"></span>';
 }
 
