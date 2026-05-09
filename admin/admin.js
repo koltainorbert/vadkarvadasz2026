@@ -496,5 +496,32 @@
         }, 3500);
     };
 
+    // ── OverlayScrollbars inicializálás ──────────────────────
+    function va_init_admin_overlay_scrollbars() {
+        if (typeof OverlayScrollbars === 'undefined') {
+            return;
+        }
+
+        var scrollbarOptions = {
+            scrollbars: {
+                autoHide: 'move',
+                clickScroll: false
+            }
+        };
+
+        // #va-sidebar (admin left panel)
+        var sidebarEl = document.getElementById('va-sidebar');
+        if (sidebarEl) {
+            OverlayScrollbars(sidebarEl, scrollbarOptions);
+        }
+    }
+
+    // Inicializálás betöltéskor
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', va_init_admin_overlay_scrollbars);
+    } else {
+        va_init_admin_overlay_scrollbars();
+    }
+
 }(jQuery));
 
