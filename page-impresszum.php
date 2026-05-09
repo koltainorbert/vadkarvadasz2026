@@ -169,7 +169,7 @@ get_header();
             <div class="va-impresszum-row"><span class="label">Nyilvántartási szám:</span><span>5640360</span></div>
             <div class="va-impresszum-row"><span class="label">Statisztikai számjel:</span><span>53988124494123119</span></div>
             <div class="va-impresszum-row"><span class="label">Adószám:</span><span>53988124-2-39</span></div>
-            <div class="va-impresszum-row"><span class="label">Telefonszám:</span><span><a href="tel:+3620943 8636">+36 20 9438636</a></span></div>
+            <div class="va-impresszum-row"><span class="label">Telefonszám:</span><span><a href="tel:+36209438636">+36 20 9438636</a></span></div>
             <div class="va-impresszum-row"><span class="label">E-mail:</span><span><a href="mailto:weingartnerauto@gmail.com">weingartnerauto@gmail.com</a></span></div>
             <div class="va-impresszum-row"><span class="label">Weboldal:</span><span><a href="https://www.weingartnerauto.hu" target="_blank" rel="noopener">https://www.weingartnerauto.hu</a></span></div>
         </div>
