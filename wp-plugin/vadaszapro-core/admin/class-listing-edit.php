@@ -247,7 +247,7 @@ class VA_Listing_Edit {
             $admin_fields = VA_Form_Builder::get_fields( 'va_admin_listing_edit' );
             foreach ( $admin_fields as $aff ) {
                 $akey = (string)( $aff['key'] ?? '' );
-                if ( ! str_starts_with( $akey, 'custom_' ) ) continue;
+                if ( strncmp( $akey, 'custom_', 7 ) !== 0 ) continue;
                 if ( empty( $aff['enabled'] ) ) continue;
                 $atype = (string)( $aff['type'] ?? 'text' );
                 if ( $atype === 'checkbox' ) {
