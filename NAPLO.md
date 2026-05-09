@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 09. – Session #296 (SEO maradek hiba fix: focus keyword + broken link)
+
+### Mi volt a problema
+- Rank Math szerint maradt a "Fókusz Kulcsszavak" hiba (tobb elemnel nem volt beallitva)
+- Rank Math szerint maradt legalabb 1 broken link
+
+### Mit javitottunk [x]
+- [x] Broken link javitas: impresszum oldalon hibas `tel:` URI (szokozzel) normalizalva
+  - `tel:+3620943 8636` -> `tel:+36209438636`
+  - root + theme mirror szinkronban
+- [x] Rank Math focus keyword auto-seed logika bevezetve (`VA_SEO`):
+  - egyszeri admin oldali batch seed hianyzo elemekre (100-as lapozott batch, `no_found_rows => true`)
+  - uj / szerkesztett tartalomnal automatikus seed `save_post` hookon, ha hianyzik a fokusz kulcsszo
+  - celzott post type-ok: `post`, `page`, `va_listing`, `va_auction`
+  - egyszeri futast opcio flag zarja (`va_rankmath_focus_seed_v1`)
+
+### Eredmeny
+- A maradek SEO piros pontokhoz celzott, tartos technikai javitas keszult
+- A focus keyword hiany visszaeses nelkul, automatikusan kezelve lesz
+
+---
+
 ## 2026. 05. 09. – Session #295 (SEO stabilizalas: min CSS + H1 live verifikacio)
 
 ### Mi volt a problema

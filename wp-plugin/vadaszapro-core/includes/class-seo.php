@@ -12,9 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class VA_SEO {
 
     const SITEMAP_PER_PAGE = 100;
+    const RM_FOCUS_META_KEY = 'rank_math_focus_keyword';
+    const RM_FOCUS_SEED_OPTION = 'va_rankmath_focus_seed_v1';
 
     public static function init(): void {
+        add_action( 'save_post', [ __CLASS__, 'maybe_seed_rankmath_focus_keyword_on_save' ], 20, 3 );
+
         if ( is_admin() ) {
+            add_action( 'admin_init', [ __CLASS__, 'seed_missing_rankmath_focus_keywords' ] );
             return;
         }
 
@@ -38,6 +43,95 @@ class VA_SEO {
         add_filter( 'rank_math/opengraph/twitter/description', [ __CLASS__, 'rank_math_social_description' ] );
         add_filter( 'rank_math/frontend/title', [ __CLASS__, 'rank_math_social_title' ] );
         add_filter( 'rank_math/frontend/description', [ __CLASS__, 'rank_math_social_description' ] );
+    }
+
+    private static function rankmath_focus_target_post_types(): array {
+        return [ 'post', 'page', 'va_listing', 'va_auction' ];
+    }
+
+    private static function build_focus_keyword_from_post( WP_Post $post ): string {
+        $title = trim( wp_strip_all_tags( (string) $post->post_title ) );
+        if ( $title === '' ) {
+            return '';
+        }
+
+        // Rank Math a vesszovel tagolt listat var, de mar egyetlen kulcsszo is eleg.
+        return mb_substr( $title, 0, 191 );
+    }
+
+    public static function maybe_seed_rankmath_focus_keyword_on_save( int $post_id, WP_Post $post, bool $update ): void {
+        if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+            return;
+        }
+
+        if ( ! in_array( $post->post_type, self::rankmath_focus_target_post_types(), true ) ) {
+            return;
+        }
+
+        $existing = trim( (string) get_post_meta( $post_id, self::RM_FOCUS_META_KEY, true ) );
+        if ( $existing !== '' ) {
+            return;
+        }
+
+        $keyword = self::build_focus_keyword_from_post( $post );
+        if ( $keyword !== '' ) {
+            update_post_meta( $post_id, self::RM_FOCUS_META_KEY, $keyword );
+        }
+    }
+
+    public static function seed_missing_rankmath_focus_keywords(): void {
+        if ( get_option( self::RM_FOCUS_SEED_OPTION ) ) {
+            return;
+        }
+
+        $post_types = self::rankmath_focus_target_post_types();
+        $paged = 1;
+        $processed = 0;
+
+        do {
+            $q = new WP_Query([
+                'post_type'      => $post_types,
+                'post_status'    => [ 'publish', 'future', 'draft', 'pending', 'private' ],
+                'fields'         => 'ids',
+                'posts_per_page' => 100,
+                'paged'          => $paged,
+                'orderby'        => 'ID',
+                'order'          => 'ASC',
+                'no_found_rows'  => true,
+            ]);
+
+            if ( empty( $q->posts ) ) {
+                break;
+            }
+
+            foreach ( $q->posts as $post_id ) {
+                $post_id = (int) $post_id;
+                $existing = trim( (string) get_post_meta( $post_id, self::RM_FOCUS_META_KEY, true ) );
+                if ( $existing !== '' ) {
+                    continue;
+                }
+
+                $post = get_post( $post_id );
+                if ( ! $post instanceof WP_Post ) {
+                    continue;
+                }
+
+                $keyword = self::build_focus_keyword_from_post( $post );
+                if ( $keyword !== '' ) {
+                    update_post_meta( $post_id, self::RM_FOCUS_META_KEY, $keyword );
+                    $processed++;
+                }
+            }
+
+            $count = count( $q->posts );
+            wp_reset_postdata();
+            $paged++;
+        } while ( $count === 100 );
+
+        update_option( self::RM_FOCUS_SEED_OPTION, [
+            'done_at'   => gmdate( 'c' ),
+            'processed' => $processed,
+        ], false );
     }
 
     public static function rank_math_social_title( $title ): string {
