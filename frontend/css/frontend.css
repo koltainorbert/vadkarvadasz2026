@@ -192,7 +192,7 @@ body::-webkit-scrollbar-thumb:hover {
 html[data-overlayscrollbars-body],
 html[data-overlayscrollbars-body] > body,
 body[data-overlayscrollbars] {
-  --os-size: 12px;
+  --os-size: 14px;
   --os-padding-perpendicular: 4px;
   --os-padding-axis: 2px;
   --os-track-bg: rgba(255,255,255,.12);
@@ -1122,14 +1122,14 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
   --os-handle-bg-active: rgba(255, 0, 0, 1);
   --os-handle-border-radius: 6px;
-  --os-handle-perpendicular-size: 6px;
-  --os-handle-perpendicular-size-hover: 6px;
-  --os-handle-perpendicular-size-active: 6px;
+  --os-handle-perpendicular-size: 8px;
+  --os-handle-perpendicular-size-hover: 8px;
+  --os-handle-perpendicular-size-active: 8px;
   --os-handle-min-size: 42px;
 }
 
 .va-dashboard__nav .os-scrollbar-vertical {
-  width: 12px !important;
+  width: 14px !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -1142,7 +1142,7 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 .va-dashboard__nav .os-scrollbar-vertical .os-scrollbar-handle,
 .va-dashboard__nav .os-scrollbar-vertical:hover .os-scrollbar-handle,
 .va-dashboard__nav .os-scrollbar-vertical:active .os-scrollbar-handle {
-  width: 6px !important;
+  width: 8px !important;
   background: rgba(255,0,0,.96) !important;
   border-radius: 999px !important;
 }
