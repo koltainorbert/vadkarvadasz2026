@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 05. 09. – Session #275 (automata gyors felfedezes uj hirdetes publikacio utan)
+
+### Mit csinaltunk [x]
+- [x] A `notify_listing_published()` flow kibovitve: uj `va_listing` publish eseten automatikus discovery boost indul
+- [x] Uj aszinkron helper kerult be: `async_get()` nem-blokkolo HTTP hivassal
+- [x] Uj publish utani gyorsito rutin: `trigger_listing_discovery_boost()`
+- [x] Publish utan automatikusan meghivott URL-ek: fooldal, hirdetes archive, `sitemap.xml`, `sitemap-va_listing-1.xml`, konkret uj hirdetes URL
+- [x] Opcionális Bing sitemap ping beiktatva (`https://www.bing.com/ping?sitemap=...`)
+- [x] Source + plugin mirror szinkronban (`includes/class-user-system.php` mindket helyen)
+
+### Eredmeny
+Uj hirdetes publikaciokor az oldal azonnal technikai jelzest ad a crawlhoz es sitemap felfedezeshez, ami gyorsitja az uj URL-ek felveteli eselyet. Google oldalon tovabbra sincs altalanos publikus "request indexing" API, ezert a maximalis gyorsitas sitemap + belso link + crawl warmup kombinacioval tortenik.
+
+---
+
 ## 2026. 05. 09. – Session #274 (production hotfix: CSS elrejtes plugin hiba mellett is)
 
 ### Mit csinaltunk [x]
