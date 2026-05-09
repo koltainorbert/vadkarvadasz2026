@@ -22,9 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Updater {
 
-    private static string $repo  = VA_GITHUB_REPO ?? '';
-    private static string $token = VA_GITHUB_TOKEN ?? '';
-    private static string $slug  = 'vadaszapro-core/vadaszapro-core.php';
+    private static $repo  = VA_GITHUB_REPO ?? '';
+    private static $token = VA_GITHUB_TOKEN ?? '';
+    private static $slug  = 'vadaszapro-core/vadaszapro-core.php';
 
     public static function init(): void {
         if ( empty( self::$repo ) ) return;
@@ -120,7 +120,7 @@ class VA_Updater {
     }
 
     /* ── Plugin info popup (Részletek gomb) ─────────── */
-    public static function plugin_info( mixed $result, string $action, object $args ): mixed {
+    public static function plugin_info( $result, string $action, object $args ) {
         if ( $action !== 'plugin_information' ) return $result;
         if ( ( $args->slug ?? '' ) !== 'vadaszapro-core' ) return $result;
 
