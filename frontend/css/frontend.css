@@ -192,8 +192,6 @@ body::-webkit-scrollbar-thumb:hover {
 html[data-overlayscrollbars-body],
 html[data-overlayscrollbars-body] > body,
 body[data-overlayscrollbars] {
-  scrollbar-width: none !important;
-  scrollbar-color: transparent transparent !important;
   --os-size: 12px;
   --os-padding-perpendicular: 4px;
   --os-padding-axis: 2px;
@@ -209,15 +207,6 @@ body[data-overlayscrollbars] {
   --os-handle-perpendicular-size-active: 4px;
   --os-handle-interactive-area-offset: 6px;
   --os-handle-min-size: 48px;
-}
-
-html[data-overlayscrollbars-body]::-webkit-scrollbar,
-html[data-overlayscrollbars-body] > body::-webkit-scrollbar,
-body[data-overlayscrollbars]::-webkit-scrollbar,
-.va-dashboard__nav::-webkit-scrollbar {
-  width: 0 !important;
-  height: 0 !important;
-  display: none !important;
 }
 
 body > .os-scrollbar-vertical,
@@ -1123,8 +1112,6 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: none !important;
-  scrollbar-color: transparent transparent !important;
   /* OverlayScrollbars custom properties */
   --os-size: 12px;
   --os-padding-perpendicular: 2px;
