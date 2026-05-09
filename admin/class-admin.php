@@ -393,7 +393,7 @@ class VA_Admin {
         add_submenu_page( "vadaszapro", "Admin Panel",      "🖥️ Admin Panel",      "manage_options", "vadaszapro-adminpanel",  [ VA_Settings_Page::class, "render_adminpanel"        ] );
         add_submenu_page( "vadaszapro", "Termékoldal",      "📦 Termékoldal",      "manage_options", "vadaszapro-single-designer", [ VA_Settings_Page::class, "render_single_designer" ] );
         add_submenu_page( "vadaszapro", "Social Media",     "🌐 Social Media",     "manage_options", "vadaszapro-social",      [ VA_Settings_Page::class, "render_social"            ] );
-        add_submenu_page( "vadaszapro", "SEO",              "🔍 SEO",              "manage_options", "vadaszapro-seo",         [ VA_Settings_Page::class, "render_seo"               ] );
+        add_submenu_page( "vadaszapro", "SEO",              "🔍 SEO / Schema",      "manage_options", "vadaszapro-seo",         [ VA_Settings_Page::class, "render_seo"               ] );
         add_submenu_page( "vadaszapro", "Csomagok",         "💼 Csomagok",         "manage_options", "vadaszapro-plans",       [ VA_Settings_Page::class, "render_plans"             ] );
         add_submenu_page( "vadaszapro", "Árkártyák",        "💳 Árkártyák",        "manage_options", "vadaszapro-arkartyak",   [ VA_Settings_Page::class, "render_price_cards"       ] );
         add_submenu_page( "vadaszapro", "Statisztika",      "📈 Statisztika",      "manage_options", "vadaszapro-stats",       [ VA_Settings_Page::class, "render_stats"             ] );

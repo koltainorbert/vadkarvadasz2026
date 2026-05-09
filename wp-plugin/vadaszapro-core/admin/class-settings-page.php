@@ -10045,7 +10045,7 @@ class VA_Settings_Page {
         if ( ! current_user_can( 'manage_options' ) ) return;
         ?>
         <div class="wrap va-admin-wrap">
-            <h1>🔍 SEO beállítások</h1>
+            <h1>🔍 SEO / Schema beállítások</h1>
             <?php settings_errors( 'va_seo_settings' ); ?>
             <form method="post" action="options.php">
                 <?php settings_fields( 'va_seo_settings' ); ?>
