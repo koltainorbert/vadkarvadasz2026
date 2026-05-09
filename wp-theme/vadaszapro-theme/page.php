@@ -13,6 +13,11 @@ get_header(); ?>
 <div class="<?php echo esc_attr( $wrap_class ); ?>">
         <?php
         $content = trim( (string) get_the_content() );
+        $has_h1  = stripos( $content, '<h1' ) !== false;
+
+        if ( ! $has_h1 ) {
+            echo '<h1 class="screen-reader-text">' . esc_html( get_the_title() ) . '</h1>';
+        }
 
         // Fail-safe: ha a kereső oldal tartalma üres, akkor is jelenjen meg a kereső modul.
         if ( is_page( 'va-hirdetes-kereses' ) && $content === '' ) {

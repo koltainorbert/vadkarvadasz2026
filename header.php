@@ -138,7 +138,7 @@
                             + '</span>'
                             + '<span class="va-sd__badge va-sd__badge--'+r.type+'">'+(r.type==='va_auction'?'Aukció':r.type==='category'?'Kategória':r.type==='user'?'Felhasználó':'Hirdetés')+'</span>'
                             + '</a>';
-                    }).join('') + '<a class="va-sd__all" href="#" id="va-sd-all-link">Összes találat →</a>';
+                    }).join('') + '<a class="va-sd__all" href="<?php echo esc_url( home_url('/va-hirdetes-kereses') ); ?>" id="va-sd-all-link">Összes találat →</a>';
                     // "Összes találat" link prioritás: kategória → aukció → user → kulcsszó
                     var catItem     = items.find(function(r){ return r.type === 'category'; });
                     var auctionItem = items.find(function(r){ return r.type === 'va_auction'; });
