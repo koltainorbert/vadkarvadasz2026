@@ -3319,3 +3319,40 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
 })();
 </script>
+
+<script>
+(function(){
+    function vaHardForceNavScrollbar() {
+        var nav = document.querySelector('.va-dashboard__nav');
+        if (!nav) return;
+
+        if (typeof OverlayScrollbars !== 'undefined') {
+            try {
+                var existing = OverlayScrollbars(nav);
+                if (existing && typeof existing.destroy === 'function') {
+                    existing.destroy();
+                }
+            } catch (e) {}
+
+            try {
+                OverlayScrollbars(nav, {
+                    scrollbars: { autoHide: 'never', clickScroll: false },
+                    overflow: { x: 'hidden', y: 'scroll' }
+                });
+                nav.classList.add('va-nav-inline-os');
+            } catch (e) {}
+        }
+    }
+
+    vaHardForceNavScrollbar();
+    document.addEventListener('DOMContentLoaded', vaHardForceNavScrollbar);
+    window.addEventListener('load', vaHardForceNavScrollbar);
+
+    var runs = 0;
+    var t = setInterval(function(){
+        vaHardForceNavScrollbar();
+        runs++;
+        if (runs >= 24) clearInterval(t);
+    }, 250);
+})();
+</script>
