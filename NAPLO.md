@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 05. 09. – Session #275 (merge utani szeteses audit + mirror szinkron hotfix)
+
+### Mit csinaltunk [x]
+- [x] Teljes gyorsaudit: git allapot, VS Code error panel, friss commitok atnezese
+- [x] Ellenorzes: Google talalat elonezet fajl megvan (`assets/demo/google-preview.html`)
+- [x] Feltaras: root es plugin mirror kozott 5 kritikus elteres volt
+- [x] Root oldalon PHP7-kompatibilis visszaszinkron a stabil mirror verziokra
+- [x] Eltetesek megszuntetve (`MIRROR_OK`), hibakontroll rendben
+- [x] Auto commit rogzitve: `440cdff`
+
+### Eredmeny
+A merge utani szeteses egyik fo kockazata (root vs deploy mirror elteres, PHP8-only elemekkel) megszunt. A source es plugin mirror jelenleg ujra szinkronban van.
+
+---
+
 ## 2026. 05. 09. – Session #274 (production hotfix: CSS elrejtes plugin hiba mellett is)
 
 ### Mit csinaltunk [x]
