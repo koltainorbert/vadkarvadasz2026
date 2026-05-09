@@ -2,19 +2,17 @@
 
 ---
 
-## 2026. 05. 09. – Session #300 (Munkafolyamat preferencia: auto repo push)
+## 2026. 05. 09. – Session #300 (Munkafolyamat preferencia: auto repo push + biztonsag)
 
 ### Mi tortent
 - Felhasznalo kerte, hogy minden kod valtozas utan automatikusan frissitsuk a repot (commit + push)
 - A preferencia el lett mentve tartosan a Copilot user memoryjaba
 - Innentol minden session-ben ez az alapmagatartas: modositas → repo frissites
 
-### FONTOS BIZTONSAGI MEGJEGYZES
-- Session soran megnyitva volt egy Google Service Account JSON fajl (Indexing API kulcs)
-- Az ilyen private key fajlokat NE tedd a repoba, NE osztd meg nyiltan
-- Ha veletlenul nyilvanos lett, azonnal visszavonas szukseges a Google Cloud Console-ban:
-  - IAM & Admin → Service Accounts → kulcs torlese → uj kulcs generalasa
-- A fajl helye: `c:\Users\Andi\Downloads\` – ne keruljon a projekt mappaba
+### Biztonsag
+- Google Service Account JSON fajl (Indexing API privat kulcs) a Downloads mappaban volt megnyitva
+- A felhasznalo torolta a fajlt
+- Ajanlott: Google Cloud Console-ban a kulcs visszavonasa es uj kulcs generalasa, ha barki mas is lathatta
 
 ---
 
