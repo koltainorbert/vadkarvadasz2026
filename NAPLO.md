@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #286 (Firefox scrollbar: mindig lathato allapot)
+
+### Mit csinaltunk [x]
+- [x] Az OverlayScrollbars `autoHide` modja `move` helyett `never` lett root + plugin mirror JS-ben
+- [x] Az admin sidebar es a dashboard bal nav scrollbar alapallapota erosítve lett
+- [x] Vastagabb scrollbar (`12px`), lathato track es erosebb piros thumb beallitva
+- [x] Firefox hover nelkuli allapot javitva, hogy ne csak ravitt egernel nezzen ki jol
+
+### Eredmeny
+- Firefoxban a scrollbar mar alapallapotban is lathato marad
+- A hover csak erositi a megjelenest, nem attol valik hasznalhatova
+
+---
+
 ## 2026. 05. 09. – Session #285 (Firefox scrollbar UX fix)
 
 ### Mit csinaltunk [x]

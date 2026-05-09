@@ -348,13 +348,16 @@ body.va-admin-page #wpwrap { background: var(--va-bg); }
     overflow-y: auto;
     overflow-x: hidden;
     /* OverlayScrollbars custom properties */
-    --os-size: 10px;
+    --os-size: 12px;
     --os-padding-perpendicular: 2px;
     --os-padding-axis: 2px;
-    --os-handle-bg: rgba(255, 0, 0, 0.55);
-    --os-handle-bg-hover: rgba(255, 0, 0, 0.9);
+    --os-track-bg: rgba(255, 255, 255, 0.12);
+    --os-track-bg-hover: rgba(255, 255, 255, 0.18);
+    --os-handle-bg: rgba(255, 0, 0, 0.78);
+    --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
     --os-handle-bg-active: rgba(255, 0, 0, 1);
     --os-handle-border-radius: 6px;
+    --os-handle-min-size: 42px;
 }
 .admin-bar #va-sidebar { top: 32px; height: calc(100vh - 32px); }
 @media screen and (max-width: 782px) { .admin-bar #va-sidebar { top: 46px; height: calc(100vh - 46px); } }

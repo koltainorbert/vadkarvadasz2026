@@ -704,7 +704,7 @@
 
     var scrollbarOptions = {
       scrollbars: {
-        autoHide: 'move',
+        autoHide: 'never',
         clickScroll: false
       },
       update: {
