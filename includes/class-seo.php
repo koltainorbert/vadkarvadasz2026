@@ -1318,6 +1318,51 @@ class VA_SEO {
         }
         $graph[] = $org;
 
+        // AutoDealer / LocalBusiness schema – ha van NAP adat
+        $nap_phone   = trim( (string) get_option( 'va_nap_phone', '' ) );
+        $nap_street  = trim( (string) get_option( 'va_nap_address_street', '' ) );
+        $nap_city    = trim( (string) get_option( 'va_nap_address_city', '' ) );
+        $nap_zip     = trim( (string) get_option( 'va_nap_address_zip', '' ) );
+        $nap_country = trim( (string) get_option( 'va_nap_address_country', 'HU' ) );
+        $nap_hours   = trim( (string) get_option( 'va_nap_open_hours', '' ) );
+        $nap_lat     = trim( (string) get_option( 'va_nap_geo_lat', '' ) );
+        $nap_lng     = trim( (string) get_option( 'va_nap_geo_lng', '' ) );
+
+        if ( $nap_phone !== '' || $nap_street !== '' ) {
+            $dealer = [
+                '@type' => [ 'AutoDealer', 'LocalBusiness' ],
+                '@id'   => $home . '#autodealer',
+                'name'  => $site_name,
+                'url'   => $home,
+            ];
+            if ( $logo !== '' ) {
+                $dealer['image'] = $logo;
+            }
+            if ( $nap_phone !== '' ) {
+                $dealer['telephone'] = $nap_phone;
+            }
+            if ( $nap_street !== '' || $nap_city !== '' ) {
+                $dealer['address'] = array_filter( [
+                    '@type'           => 'PostalAddress',
+                    'streetAddress'   => $nap_street,
+                    'addressLocality' => $nap_city,
+                    'postalCode'      => $nap_zip,
+                    'addressCountry'  => $nap_country,
+                ] );
+            }
+            if ( $nap_hours !== '' ) {
+                $dealer['openingHours'] = $nap_hours;
+            }
+            if ( $nap_lat !== '' && $nap_lng !== '' ) {
+                $dealer['geo'] = [
+                    '@type'     => 'GeoCoordinates',
+                    'latitude'  => $nap_lat,
+                    'longitude' => $nap_lng,
+                ];
+            }
+            $graph[] = $dealer;
+        }
+
         $graph[] = self::breadcrumb_graph();
 
         $frontpage_list = self::itemlist_graph_for_frontpage();
