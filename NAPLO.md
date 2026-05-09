@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 09. – Session #298 (Mobile Speed hiba diagnosztika)
+
+### Mi volt a problema
+- Rank Math SEO analizisban a "Mobile Speed" sor tovabbra is: "Test execution failed"
+
+### Mit ellenoriztunk [x]
+- [x] Kozvetlen Google PageSpeed API hivas mobil strategyvel
+- [x] Kozvetlen Google PageSpeed API hivas desktop strategyvel
+
+### Eredmeny
+- Mindket hivas 429 "Too Many Requests" hibaval tért vissza
+- A hiba kulso API kvota/ratelimit jellegu, nem konkret template vagy frontend parse hiba
+
+### Kovetkezo lepes
+- Ujraprobalas kesobb (kvota reset utan) vagy sajat API key hasznalat
+
+---
+
 ## 2026. 05. 09. – Session #297 (Broken Links vegleges javitas + legacy redirect)
 
 ### Mi volt a problema
