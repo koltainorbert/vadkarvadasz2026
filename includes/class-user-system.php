@@ -160,6 +160,127 @@ class VA_User_System {
         ] );
     }
 
+    public static function gsc_indexing_test( string $url = '' ): array {
+        $test_url = trim( $url );
+        if ( $test_url === '' ) {
+            $test_url = home_url( '/' );
+        }
+
+        $sa_json = (string) get_option( 'va_gsc_service_account', '' );
+        if ( $sa_json === '' ) {
+            return [
+                'ok'      => false,
+                'message' => 'Nincs Service Account JSON megadva.',
+                'status'  => 0,
+            ];
+        }
+
+        $sa = json_decode( $sa_json, true );
+        if ( ! is_array( $sa ) || empty( $sa['private_key'] ) || empty( $sa['client_email'] ) ) {
+            return [
+                'ok'      => false,
+                'message' => 'A Service Account JSON hibás vagy hiányos (private_key / client_email).',
+                'status'  => 0,
+            ];
+        }
+
+        if ( ! function_exists( 'openssl_sign' ) ) {
+            return [
+                'ok'      => false,
+                'message' => 'OpenSSL PHP extension nem elérhető a szerveren.',
+                'status'  => 0,
+            ];
+        }
+
+        $now    = time();
+        $header = rtrim( strtr( base64_encode( (string) wp_json_encode( [ 'alg' => 'RS256', 'typ' => 'JWT' ] ) ), '+/', '-_' ), '=' );
+        $claims = rtrim( strtr( base64_encode( (string) wp_json_encode( [
+            'iss'   => $sa['client_email'],
+            'scope' => 'https://www.googleapis.com/auth/indexing',
+            'aud'   => 'https://oauth2.googleapis.com/token',
+            'exp'   => $now + 3600,
+            'iat'   => $now,
+        ] ) ), '+/', '-_' ), '=' );
+
+        $sig_input = $header . '.' . $claims;
+        $signature = '';
+        openssl_sign( $sig_input, $signature, $sa['private_key'], 'SHA256' );
+        $jwt = $sig_input . '.' . rtrim( strtr( base64_encode( $signature ), '+/', '-_' ), '=' );
+
+        $token_resp = wp_remote_post( 'https://oauth2.googleapis.com/token', [
+            'timeout'  => 12,
+            'blocking' => true,
+            'body'     => [
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion'  => $jwt,
+            ],
+        ] );
+
+        if ( is_wp_error( $token_resp ) ) {
+            return [
+                'ok'      => false,
+                'message' => 'Token kérés hiba: ' . $token_resp->get_error_message(),
+                'status'  => 0,
+            ];
+        }
+
+        $token_code = (int) wp_remote_retrieve_response_code( $token_resp );
+        $token_data = json_decode( wp_remote_retrieve_body( $token_resp ), true );
+        if ( $token_code < 200 || $token_code >= 300 || empty( $token_data['access_token'] ) ) {
+            $detail = '';
+            if ( is_array( $token_data ) && ! empty( $token_data['error_description'] ) ) {
+                $detail = (string) $token_data['error_description'];
+            } elseif ( is_array( $token_data ) && ! empty( $token_data['error'] ) ) {
+                $detail = is_array( $token_data['error'] ) ? wp_json_encode( $token_data['error'] ) : (string) $token_data['error'];
+            }
+
+            return [
+                'ok'      => false,
+                'message' => 'Google token kérés sikertelen (HTTP ' . $token_code . '). ' . $detail,
+                'status'  => $token_code,
+            ];
+        }
+
+        $submit_resp = wp_remote_post( 'https://indexing.googleapis.com/v3/urlNotifications:publish', [
+            'timeout'  => 12,
+            'blocking' => true,
+            'headers'  => [
+                'Authorization' => 'Bearer ' . $token_data['access_token'],
+                'Content-Type'  => 'application/json',
+            ],
+            'body'     => (string) wp_json_encode( [ 'url' => $test_url, 'type' => 'URL_UPDATED' ] ),
+        ] );
+
+        if ( is_wp_error( $submit_resp ) ) {
+            return [
+                'ok'      => false,
+                'message' => 'Indexing API hívás hiba: ' . $submit_resp->get_error_message(),
+                'status'  => 0,
+            ];
+        }
+
+        $submit_code = (int) wp_remote_retrieve_response_code( $submit_resp );
+        if ( $submit_code >= 200 && $submit_code < 300 ) {
+            return [
+                'ok'      => true,
+                'message' => 'Sikeres kapcsolat: URL beküldve (' . esc_url_raw( $test_url ) . ').',
+                'status'  => $submit_code,
+            ];
+        }
+
+        $submit_data = json_decode( wp_remote_retrieve_body( $submit_resp ), true );
+        $detail      = '';
+        if ( is_array( $submit_data ) && ! empty( $submit_data['error'] ) ) {
+            $detail = is_array( $submit_data['error'] ) ? wp_json_encode( $submit_data['error'] ) : (string) $submit_data['error'];
+        }
+
+        return [
+            'ok'      => false,
+            'message' => 'Indexing API válasz hiba (HTTP ' . $submit_code . '). ' . $detail,
+            'status'  => $submit_code,
+        ];
+    }
+
     /* ── URL átirányítások ─────────────────────────────── */
     public static function custom_login_url( $url, $redirect, $force_reauth ) {
         // Admin redirect esetén mindig az eredeti wp-login.php maradjon
