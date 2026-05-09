@@ -1122,9 +1122,9 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
   --os-handle-bg-active: rgba(255, 0, 0, 1);
   --os-handle-border-radius: 6px;
-  --os-handle-perpendicular-size: 4px;
-  --os-handle-perpendicular-size-hover: 4px;
-  --os-handle-perpendicular-size-active: 4px;
+  --os-handle-perpendicular-size: 6px;
+  --os-handle-perpendicular-size-hover: 6px;
+  --os-handle-perpendicular-size-active: 6px;
   --os-handle-min-size: 42px;
 }
 
@@ -1142,7 +1142,7 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 .va-dashboard__nav .os-scrollbar-vertical .os-scrollbar-handle,
 .va-dashboard__nav .os-scrollbar-vertical:hover .os-scrollbar-handle,
 .va-dashboard__nav .os-scrollbar-vertical:active .os-scrollbar-handle {
-  width: 4px !important;
+  width: 6px !important;
   background: rgba(255,0,0,.96) !important;
   border-radius: 999px !important;
 }
