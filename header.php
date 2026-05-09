@@ -192,9 +192,7 @@
                     $buy_page    = get_page_by_path('va-kredit-vasarlas');
                     $buy_url     = $buy_page ? get_permalink( $buy_page ) : home_url('/va-kredit-vasarlas/');
                 ?>
-                    <?php if ( $header_show_buy_button ): ?>
-                        <a href="<?php echo esc_url( $buy_url ); ?>" class="va-header__user-login">Vásárlás</a>
-                    <?php endif; ?>
+                    <a href="<?php echo esc_url( $buy_url ); ?>" class="va-header__user-login">Vásárlás</a>
                     <a href="<?php echo esc_url( $dashboard ? get_permalink($dashboard) : home_url() ); ?>" class="va-header__user">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                         <?php echo esc_html( $user->display_name ); ?>
@@ -207,9 +205,7 @@
                     $login_url     = $login_page ? get_permalink( $login_page ) : wp_login_url();
                     $register_url  = $register_page ? get_permalink( $register_page ) : wp_registration_url();
                 ?>
-                    <?php if ( $header_show_buy_button ): ?>
-                        <a href="<?php echo esc_url( wp_login_url( $buy_url ) ); ?>" class="va-header__user-login">Vásárlás</a>
-                    <?php endif; ?>
+                    <a href="<?php echo esc_url( wp_login_url( $buy_url ) ); ?>" class="va-header__user-login">Vásárlás</a>
                     <?php if ( $login_enabled ): ?>
                         <a href="<?php echo esc_url( $login_url ); ?>" class="va-header__user-login"><?php echo esc_html( $header_login_text ); ?></a>
                     <?php endif; ?>
