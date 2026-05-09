@@ -11,8 +11,13 @@ $va_show_moon_widget   = get_option( 'va_show_moon_widget', '1' ) === '1';
 $va_show_weather_widget = get_option( 'va_show_weather_widget', '1' ) === '1';
 $va_show_home_hunting_calendar = get_option( 'va_show_home_hunting_calendar', '1' ) === '1';
 $va_home_cards_per_row = max( 2, min( 10, (int) get_option( 'va_layout_grid_cols_desktop', 4 ) ) );
+$va_home_h1 = trim( wp_strip_all_tags( (string) get_option( 'va_home_hero_title', '' ) ) );
+if ( $va_home_h1 === '' ) {
+  $va_home_h1 = trim( wp_strip_all_tags( get_bloginfo( 'name' ) ) );
+}
 ?>
 <div class="va-home-layout">
+<h1 class="screen-reader-text"><?php echo esc_html( $va_home_h1 ); ?></h1>
 
 <!-- ═══ BAL SIDEBAR ═════════════════════════════════════════════ -->
 <aside class="va-home-sidebar">
