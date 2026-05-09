@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #274 (production hotfix: CSS elrejtes plugin hiba mellett is)
+
+### Mit csinaltunk [x]
+- [x] A keresooldali SEO landing blokk theme CSS szinten is elrejtve (`.va-search-landing { display:none !important; }`)
+- [x] Modositott fajlok: `style.css` + `wp-theme/vadaszapro-theme/style.css`
+- [x] Deploy All lefutott
+- [x] Push lefutott (`a46998a`)
+
+### Eredmeny
+A blokk akkor sem latszik a frontenden, ha a plugin deploy job hibazik, mert a theme oldali CSS felulirja a megjelenitest.
+
+---
+
 ## 2026. 05. 09. – Session #273 (keresooldali SEO blokk elrejtese)
 
 ### Mit csinaltunk [x]
