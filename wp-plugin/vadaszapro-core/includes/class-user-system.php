@@ -81,10 +81,32 @@ class VA_User_System {
             self::async_get( $url );
         }
 
-        // Google nem támogat publikus "request indexing" API-t általános tartalomra,
-        // de Bing sitemap pinggel gyorsabban felveheti a friss URL-eket.
+        // Bing sitemap ping
         $bing_ping = add_query_arg( 'sitemap', rawurlencode( home_url( '/sitemap.xml' ) ), 'https://www.bing.com/ping' );
         self::async_get( $bing_ping );
+
+        // IndexNow – azonnali indexelés Bing + Yandex + egyéb résztvevőknél
+        self::indexnow_submit( $permalink );
+    }
+
+    private static function indexnow_submit( string $url ): void {
+        $key      = 'b873c945f60ea2d1bc78a3f254901e6d';
+        $key_url  = home_url( '/' . $key . '.txt' );
+        $endpoint = 'https://api.indexnow.org/indexnow';
+
+        $payload = wp_json_encode( [
+            'host'    => wp_parse_url( home_url(), PHP_URL_HOST ),
+            'key'     => $key,
+            'keyLocation' => $key_url,
+            'urlList' => [ $url ],
+        ] );
+
+        wp_remote_post( $endpoint, [
+            'timeout'     => 5,
+            'blocking'    => false,
+            'headers'     => [ 'Content-Type' => 'application/json; charset=utf-8' ],
+            'body'        => $payload,
+        ] );
     }
 
     /* ── URL átirányítások ─────────────────────────────── */
