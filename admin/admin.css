@@ -351,13 +351,32 @@ body.va-admin-page #wpwrap { background: var(--va-bg); }
     --os-size: 12px;
     --os-padding-perpendicular: 2px;
     --os-padding-axis: 2px;
-    --os-track-bg: rgba(255, 255, 255, 0.12);
+    --os-track-bg: rgba(255, 255, 255, 0.18);
     --os-track-bg-hover: rgba(255, 255, 255, 0.18);
-    --os-handle-bg: rgba(255, 0, 0, 0.78);
+    --os-handle-bg: rgba(255, 0, 0, 0.96);
     --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
     --os-handle-bg-active: rgba(255, 0, 0, 1);
     --os-handle-border-radius: 6px;
     --os-handle-min-size: 42px;
+}
+
+#va-sidebar > .os-scrollbar-vertical {
+    width: 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+#va-sidebar > .os-scrollbar-vertical .os-scrollbar-track {
+    background: rgba(255,255,255,.18) !important;
+    border-radius: 999px !important;
+}
+
+#va-sidebar > .os-scrollbar-vertical .os-scrollbar-handle,
+#va-sidebar > .os-scrollbar-vertical:hover .os-scrollbar-handle,
+#va-sidebar > .os-scrollbar-vertical:active .os-scrollbar-handle {
+    width: 4px !important;
+    background: rgba(255,0,0,.96) !important;
+    border-radius: 999px !important;
 }
 .admin-bar #va-sidebar { top: 32px; height: calc(100vh - 32px); }
 @media screen and (max-width: 782px) { .admin-bar #va-sidebar { top: 46px; height: calc(100vh - 46px); } }
