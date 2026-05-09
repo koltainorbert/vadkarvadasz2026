@@ -615,7 +615,7 @@ class VA_Listing_Edit {
         $fb_ph  = static fn( $k, $default ) => ( isset( $fb[ $k ]['placeholder'] ) && $fb[ $k ]['placeholder'] !== '' ) ? esc_attr( $fb[ $k ]['placeholder'] ) : $default;
 
         // Egyedi (custom_*) mezők gyűjtése
-        $custom_fields = array_filter( $fb_raw, static fn( $ff ) => str_starts_with( (string)( $ff['key'] ?? '' ), 'custom_' ) && ! empty( $ff['enabled'] ) );
+        $custom_fields = array_filter( $fb_raw, static fn( $ff ) => strncmp( (string)( $ff['key'] ?? '' ), 'custom_', 7 ) === 0 && ! empty( $ff['enabled'] ) );
         $site_type        = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
         $brands_list      = class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_brands() : [];
         $brand_models_list= class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_brand_models() : [];
