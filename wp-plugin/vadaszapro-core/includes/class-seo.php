@@ -28,9 +28,8 @@ class VA_SEO {
         add_action( 'wp_head', [ __CLASS__, 'render_schema' ], 90 );
 
         add_filter( 'wp_robots', [ __CLASS__, 'filter_wp_robots' ] );
-        add_filter( 'robots_txt', [ __CLASS__, 'filter_robots_txt' ], 99999, 2 );
-        // Rank Math saját sitemap sorát letiltjuk – a mi sitemap.xml-ünk elegendő.
-        add_filter( 'rank_math/sitemap/robots_txt', '__return_false' );
+        // Teljes robots.txt kontroll: priority 1-en futunk, mielőtt bárki más (WP core, Rank Math) outputolna.
+        add_action( 'do_robots', [ __CLASS__, 'output_robots_txt' ], 1 );
         add_filter( 'document_title_parts', [ __CLASS__, 'filter_document_title_parts' ] );
 
         // Rank Math felülírhatja az OG/Twitter title-t, ezért közvetlenül ide is bekötjük.
@@ -653,23 +652,19 @@ class VA_SEO {
         return $robots;
     }
 
-    public static function filter_robots_txt( string $output, bool $public ): string {
-        $sitemap_line = "Sitemap: " . home_url( '/sitemap.xml' );
+    public static function output_robots_txt(): void {
+        // Átvesszük az összes do_robots hook-ot (WP core + Rank Math),
+        // így csak a mi sitemap.xml-ünk szerepel.
+        remove_all_actions( 'do_robots' );
 
-        // Egységes sitemap jelzés: minden meglévő Sitemap sort eltávolítunk,
-        // majd egyetlen kanonikus sort hagyunk meg.
-        $lines = preg_split( '/\r\n|\r|\n/', (string) $output );
-        $clean = [];
-        foreach ( $lines as $line ) {
-            $trim = trim( (string) $line );
-            if ( stripos( $trim, 'Sitemap:' ) === 0 ) {
-                continue;
-            }
-            $clean[] = (string) $line;
-        }
-
-        $clean[] = $sitemap_line;
-        return rtrim( implode( "\n", $clean ) ) . "\n";
+        header( 'Content-Type: text/plain; charset=utf-8' );
+        $sitemap = esc_url( home_url( '/sitemap.xml' ) );
+        echo "User-agent: *\n";
+        echo "Disallow: /wp-admin/\n";
+        echo "Allow: /wp-admin/admin-ajax.php\n";
+        echo "\n";
+        echo "Sitemap: {$sitemap}\n";
+        exit;
     }
 
     private static function should_render_meta(): bool {
