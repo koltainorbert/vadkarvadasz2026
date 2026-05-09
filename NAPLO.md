@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #277 (SEO admin menupont placeholder)
+
+### Mit csinaltunk [x]
+- [x] Uj `SEO` admin menupont/almenu hozzaadva a `Vadaszapro` admin ala (`vadaszapro-seo`)
+- [x] Uj oldalsav elem hozzaadva: `📈 SEO`
+- [x] Uj placeholder oldal letrehozva a settings oldalon: `render_seo()`
+- [x] Mirror szinkron frissitve root + plugin mappaban
+
+### Eredmeny
+Az adminban mar elerheto a SEO ful: `wp-admin/admin.php?page=vadaszapro-seo`.
+Jelenleg ez egy ures/elokeszitett oldal, a reszletes SEO kapcsolok kovetkezo korben adhatok hozza.
+
+---
+
 ## 2026. 05. 09. – Session #276 (deploy atallas production-only modra)
 
 ### Mit csinaltunk [x]
