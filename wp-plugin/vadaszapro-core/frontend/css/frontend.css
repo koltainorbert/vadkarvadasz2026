@@ -1112,39 +1112,28 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  /* OverlayScrollbars custom properties */
-  --os-size: 12px;
-  --os-padding-perpendicular: 2px;
-  --os-padding-axis: 2px;
-  --os-track-bg: rgba(255, 255, 255, 0.18);
-  --os-track-bg-hover: rgba(255, 255, 255, 0.18);
-  --os-handle-bg: rgba(255, 0, 0, 0.96);
-  --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
-  --os-handle-bg-active: rgba(255, 0, 0, 1);
-  --os-handle-border-radius: 6px;
-  --os-handle-perpendicular-size: 8px;
-  --os-handle-perpendicular-size-hover: 8px;
-  --os-handle-perpendicular-size-active: 8px;
-  --os-handle-min-size: 42px;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255,0,0,.96) rgba(255,255,255,.18);
 }
 
-.va-dashboard__nav .os-scrollbar-vertical {
-  width: 14px !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+.va-dashboard__nav::-webkit-scrollbar {
+  width: 14px;
 }
 
-.va-dashboard__nav .os-scrollbar-vertical .os-scrollbar-track {
-  background: rgba(255,255,255,.18) !important;
-  border-radius: 999px !important;
+.va-dashboard__nav::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
 }
 
-.va-dashboard__nav .os-scrollbar-vertical .os-scrollbar-handle,
-.va-dashboard__nav .os-scrollbar-vertical:hover .os-scrollbar-handle,
-.va-dashboard__nav .os-scrollbar-vertical:active .os-scrollbar-handle {
-  width: 8px !important;
-  background: rgba(255,0,0,.96) !important;
-  border-radius: 999px !important;
+.va-dashboard__nav::-webkit-scrollbar-thumb {
+  background: rgba(255,0,0,.96);
+  border-radius: 999px;
+  border: 3px solid rgba(255,255,255,.18);
+}
+
+.va-dashboard__nav::-webkit-scrollbar-thumb:hover,
+.va-dashboard__nav::-webkit-scrollbar-thumb:active {
+  background: rgba(255,0,0,1);
 }
 .admin-bar .va-dashboard__nav {
   top: calc(var(--nav, 66px) + 16px + 32px);
