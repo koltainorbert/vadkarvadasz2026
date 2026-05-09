@@ -171,57 +171,6 @@ class VA_SEO {
         return trim( $model );
     }
 
-    private static function is_listing_search_page(): bool {
-        return function_exists( 'va_is_page' ) && va_is_page( 'va-hirdetes-kereses' );
-    }
-
-    private static function has_non_landing_search_filters(): bool {
-        if ( ! self::is_listing_search_page() ) {
-            return false;
-        }
-
-        $allowed = [ 'brand', 'model' ];
-        $ignored = [ 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid' ];
-
-        foreach ( (array) $_GET as $raw_key => $raw_value ) {
-            $key = sanitize_key( (string) $raw_key );
-            if ( $key === '' || in_array( $key, $ignored, true ) ) {
-                continue;
-            }
-
-            $value_source = is_array( $raw_value )
-                ? implode( ',', array_map( 'strval', $raw_value ) )
-                : (string) $raw_value;
-            $value = trim( sanitize_text_field( wp_unslash( $value_source ) ) );
-
-            if ( $value === '' ) {
-                continue;
-            }
-
-            if ( ! in_array( $key, $allowed, true ) ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static function should_noindex_current_page(): bool {
-        if ( is_404() ) {
-            return true;
-        }
-
-        if ( is_search() ) {
-            return true;
-        }
-
-        if ( self::has_non_landing_search_filters() ) {
-            return true;
-        }
-
-        return false;
-    }
-
     private static function is_listing_search_landing(): bool {
         return function_exists( 'va_is_page' )
             && va_is_page( 'va-hirdetes-kereses' )
@@ -695,15 +644,9 @@ class VA_SEO {
     }
 
     public static function filter_wp_robots( array $robots ): array {
-        if ( self::should_noindex_current_page() ) {
+        if ( is_search() || is_404() ) {
             $robots['noindex'] = true;
-            if ( is_404() ) {
-                $robots['nofollow'] = true;
-                unset( $robots['follow'] );
-            } else {
-                $robots['follow'] = true;
-                unset( $robots['nofollow'] );
-            }
+            $robots['nofollow'] = true;
         }
         return $robots;
     }
@@ -724,19 +667,8 @@ class VA_SEO {
     }
 
     private static function current_canonical(): string {
-        if ( self::is_listing_search_page() && self::has_non_landing_search_filters() ) {
-            if ( self::requested_brand() !== '' || self::requested_model() !== '' ) {
-                return self::landing_url( self::requested_brand(), self::requested_model() );
-            }
-            return self::listing_search_page_url();
-        }
-
         if ( self::is_listing_search_landing() ) {
             return self::landing_url( self::requested_brand(), self::requested_model() );
-        }
-
-        if ( self::is_listing_search_page() ) {
-            return self::listing_search_page_url();
         }
 
         if ( is_singular() ) {
@@ -842,10 +774,41 @@ class VA_SEO {
     }
 
     private static function listing_social_title( int $post_id ): string {
-        $base_title = self::listing_base_title( $post_id );
-        // CTR optimalizálás: ár + év + km hozzáadása
-        $title_with_meta = self::listing_title_with_meta( $base_title, $post_id );
-        return $title_with_meta . ' | Eladó';
+        $title = self::listing_base_title( $post_id );
+        $price_raw = get_post_meta( $post_id, 'va_price', true );
+        $price_type = (string) get_post_meta( $post_id, 'va_price_type', true );
+        $sale_raw = get_post_meta( $post_id, 'va_sale_price', true );
+        $sale_end_raw = (string) get_post_meta( $post_id, 'va_sale_price_end', true );
+
+        $base_price_txt = '';
+        if ( is_numeric( $price_raw ) && $price_type !== 'ask' ) {
+            $base_price_txt = number_format( (float) $price_raw, 0, ',', ' ' ) . ' Ft';
+        }
+
+        $sale_active = false;
+        if ( is_numeric( $sale_raw ) && (float) $sale_raw > 0 ) {
+            $sale_active = true;
+            if ( $sale_end_raw !== '' ) {
+                $sale_end_ts = strtotime( $sale_end_raw . ' 23:59:59' );
+                if ( $sale_end_ts && $sale_end_ts < current_time( 'timestamp' ) ) {
+                    $sale_active = false;
+                }
+            }
+        }
+
+        if ( $sale_active ) {
+            $sale_price_txt = number_format( (float) $sale_raw, 0, ',', ' ' ) . ' Ft';
+            if ( $base_price_txt !== '' ) {
+                return $title . ' | Eladó | Akciós ár: ' . $sale_price_txt . ' (eredeti: ' . $base_price_txt . ')';
+            }
+            return $title . ' | Eladó | Akciós ár: ' . $sale_price_txt;
+        }
+
+        if ( $base_price_txt !== '' ) {
+            return $title . ' | Eladó | Ár: ' . $base_price_txt;
+        }
+
+        return $title . ' | Eladó';
     }
 
     private static function listing_social_description( int $post_id ): string {
@@ -855,12 +818,9 @@ class VA_SEO {
     private static function listing_browser_title( int $post_id ): string {
         $exact_title = wp_strip_all_tags( (string) get_the_title( $post_id ) );
         if ( $exact_title !== '' ) {
-            // Ár + év + km hozzáadása CTR optimalizáláshoz
-            $title_with_meta = self::listing_title_with_meta( $exact_title, $post_id );
-            return $title_with_meta . ' | Weingartner Autó';
+            return $exact_title . ' | Weingartner Autó';
         }
-        $title_with_meta = self::listing_title_with_meta( self::listing_base_title( $post_id ), $post_id );
-        return $title_with_meta . ' | Weingartner Autó';
+        return self::listing_base_title( $post_id ) . ' | Weingartner Autó';
     }
 
     private static function listing_base_title( int $post_id ): string {
@@ -884,48 +844,7 @@ class VA_SEO {
             $base .= ' (' . $year . ')';
         }
 
-        return trim( preg_replace( '/\s+/', ' ', $base ?: $base ) );
-    }
-
-    private static function listing_title_with_meta( string $base_title, int $post_id ): string {
-        $price_raw    = get_post_meta( $post_id, 'va_price', true );
-        $price_type   = (string) get_post_meta( $post_id, 'va_price_type', true );
-        $year         = trim( (string) get_post_meta( $post_id, 'va_year', true ) );
-        $mileage      = trim( (string) get_post_meta( $post_id, 'va_mileage', true ) );
-
-        $meta_parts = [];
-
-        // Ár megjelenítése (M Ft formátum: 2.9M = 2.900.000)
-        if ( is_numeric( $price_raw ) && $price_type !== 'ask' ) {
-            $price_num = (float) $price_raw;
-            if ( $price_num >= 1000000 ) {
-                $price_m = round( $price_num / 1000000, 1 );
-                $meta_parts[] = number_format( $price_m, 1, ',', '' ) . 'M Ft';
-            } elseif ( $price_num >= 1000 ) {
-                $meta_parts[] = number_format( $price_num / 1000, 0, ',', '' ) . 'k Ft';
-            }
-        }
-
-        // Év
-        if ( $year !== '' ) {
-            $meta_parts[] = $year;
-        }
-
-        // Kilométer
-        if ( $mileage !== '' && is_numeric( $mileage ) ) {
-            $km_num = (int) $mileage;
-            if ( $km_num >= 1000 ) {
-                $meta_parts[] = number_format( $km_num / 1000, 0, ',', '' ) . 'k km';
-            } else {
-                $meta_parts[] = $km_num . ' km';
-            }
-        }
-
-        if ( ! empty( $meta_parts ) ) {
-            return $base_title . ' • ' . implode( ' • ', $meta_parts );
-        }
-
-        return $base_title;
+        return trim( preg_replace( '/\s+/', ' ', $base ) ?: $base );
     }
 
     private static function listing_meta_description( int $post_id ): string {
@@ -1025,9 +944,7 @@ class VA_SEO {
         $url   = self::current_canonical();
         $img   = self::meta_image_url();
         $site  = get_bloginfo( 'name' );
-        $robots = self::should_noindex_current_page()
-            ? ( is_404() ? 'noindex, nofollow, max-image-preview:large' : 'noindex, follow, max-image-preview:large' )
-            : 'index, follow, max-image-preview:large';
+        $robots = ( is_search() || is_404() ) ? 'noindex, nofollow, max-image-preview:large' : 'index, follow, max-image-preview:large';
 
         echo "\n";
         echo '<meta name="description" content="' . esc_attr( $desc ) . '">' . "\n";
@@ -1317,51 +1234,6 @@ class VA_SEO {
             ];
         }
         $graph[] = $org;
-
-        // AutoDealer / LocalBusiness schema – ha van NAP adat
-        $nap_phone   = trim( (string) get_option( 'va_nap_phone', '' ) );
-        $nap_street  = trim( (string) get_option( 'va_nap_address_street', '' ) );
-        $nap_city    = trim( (string) get_option( 'va_nap_address_city', '' ) );
-        $nap_zip     = trim( (string) get_option( 'va_nap_address_zip', '' ) );
-        $nap_country = trim( (string) get_option( 'va_nap_address_country', 'HU' ) );
-        $nap_hours   = trim( (string) get_option( 'va_nap_open_hours', '' ) );
-        $nap_lat     = trim( (string) get_option( 'va_nap_geo_lat', '' ) );
-        $nap_lng     = trim( (string) get_option( 'va_nap_geo_lng', '' ) );
-
-        if ( $nap_phone !== '' || $nap_street !== '' ) {
-            $dealer = [
-                '@type' => [ 'AutoDealer', 'LocalBusiness' ],
-                '@id'   => $home . '#autodealer',
-                'name'  => $site_name,
-                'url'   => $home,
-            ];
-            if ( $logo !== '' ) {
-                $dealer['image'] = $logo;
-            }
-            if ( $nap_phone !== '' ) {
-                $dealer['telephone'] = $nap_phone;
-            }
-            if ( $nap_street !== '' || $nap_city !== '' ) {
-                $dealer['address'] = array_filter( [
-                    '@type'           => 'PostalAddress',
-                    'streetAddress'   => $nap_street,
-                    'addressLocality' => $nap_city,
-                    'postalCode'      => $nap_zip,
-                    'addressCountry'  => $nap_country,
-                ] );
-            }
-            if ( $nap_hours !== '' ) {
-                $dealer['openingHours'] = $nap_hours;
-            }
-            if ( $nap_lat !== '' && $nap_lng !== '' ) {
-                $dealer['geo'] = [
-                    '@type'     => 'GeoCoordinates',
-                    'latitude'  => $nap_lat,
-                    'longitude' => $nap_lng,
-                ];
-            }
-            $graph[] = $dealer;
-        }
 
         $graph[] = self::breadcrumb_graph();
 

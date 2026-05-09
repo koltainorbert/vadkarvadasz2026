@@ -50,9 +50,6 @@ if ( ! in_array( $tax_hero_align, [ 'left', 'center', 'right' ], true ) ) {
             ]); ?>
         </div>
 
-        <!-- Utolsó hirdetések widget -->
-        <?php echo do_shortcode( '[va_recent_listings limit="6" title="Friss ajánlatok" show_title="1"]' ); ?>
-
     <?php else: ?>
         <div class="va-empty">
             <div class="va-empty__icon">🔍</div>

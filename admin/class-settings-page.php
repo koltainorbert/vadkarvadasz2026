@@ -45,15 +45,6 @@ class VA_Settings_Page {
             'va_enable_auctions'     => '1',
             'va_enable_login'        => '1',
             'va_enable_register'     => '1',
-            // NAP (Name, Address, Phone) – LocalBusiness schema
-            'va_nap_phone'           => '',
-            'va_nap_address_street'  => '',
-            'va_nap_address_city'    => '',
-            'va_nap_address_zip'     => '',
-            'va_nap_address_country' => 'HU',
-            'va_nap_open_hours'      => '',  // pl. Mo-Fr 08:00-17:00
-            'va_nap_geo_lat'         => '',
-            'va_nap_geo_lng'         => '',
             'va_header_logo_height'  => 36,
             'va_hero_logo_height'    => 72,
             'va_hero_logo_position'  => 'left',
@@ -1301,16 +1292,6 @@ class VA_Settings_Page {
                     <?php self::field_text(  'va_site_name',           'Oldal neve' ); ?>
                     <?php self::field_text(  'va_site_description',     'Oldal alcíme / leírás' ); ?>
                     <?php self::field_email( 'va_contact_email',        'Kapcsolati e-mail' ); ?>
-                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">📍 Vállalkozás adatai (LocalBusiness schema)</h2></th></tr>
-                    <tr><td colspan="2"><p style="color:#aaa;margin:0 0 8px;">Ezek az adatok a Google keresési eredményben és a Google Business Profile-hoz lesznek használva. Kötelező kitölteni a helyi keresési megjelenéshez.</p></td></tr>
-                    <?php self::field_text( 'va_nap_phone',           '📞 Telefonszám (pl. +36-20-123-4567)' ); ?>
-                    <?php self::field_text( 'va_nap_address_street',  '🏠 Utca, házszám' ); ?>
-                    <?php self::field_text( 'va_nap_address_city',    '🏙️ Város' ); ?>
-                    <?php self::field_text( 'va_nap_address_zip',     '📮 Irányítószám' ); ?>
-                    <?php self::field_text( 'va_nap_address_country', '🌍 Ország kód (pl. HU)' ); ?>
-                    <?php self::field_text( 'va_nap_open_hours',      '🕐 Nyitvatartás (pl. Mo-Fr 08:00-17:00)' ); ?>
-                    <?php self::field_text( 'va_nap_geo_lat',         '🗺️ GPS szélességi fok (pl. 47.4979)' ); ?>
-                    <?php self::field_text( 'va_nap_geo_lng',         '🗺️ GPS hosszúsági fok (pl. 19.0402)' ); ?>
                     <?php self::field_media( 'va_brand_icon_url',       'Ikon (automata favicon, ajánlott: négyzetes PNG)' ); ?>
                     <?php self::field_media( 'va_header_logo_url',      'Fejléc logó' ); ?>
                     <?php self::field_num(   'va_header_logo_height',   'Fejléc logó magasság (px)', 20, 120 ); ?>

@@ -314,7 +314,4 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
 
     <!-- Pagination -->
     <div id="va-pagination" class="va-pagination"></div>
-
-    <!-- Utolsó hirdetések widget -->
-    <?php echo do_shortcode( '[va_recent_listings limit="6" title="Friss ajánlatok" show_title="1"]' ); ?>
 </div>

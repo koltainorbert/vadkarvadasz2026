@@ -140,44 +140,6 @@ class VA_Listing_Edit {
             'post_author'  => (int)( $_POST['va_author'] ?? get_current_user_id() ),
         ];
 
-        if ( $status === 'publish' && function_exists( 'va_validate_listing_quality_input' ) ) {
-            $raw_gids = sanitize_text_field( wp_unslash( $_POST['va_gallery_ids'] ?? '' ) );
-            $gids = array_values( array_unique( array_filter( array_map( 'intval', $raw_gids !== '' ? explode( ',', $raw_gids ) : [] ) ) ) );
-            $thumbnail_id = (int)( $_POST['va_thumbnail_id'] ?? 0 );
-            if ( $thumbnail_id > 0 && ! in_array( $thumbnail_id, $gids, true ) ) {
-                $gids[] = $thumbnail_id;
-            }
-
-            $quality = va_validate_listing_quality_input( [
-                'title'        => (string) $post_data['post_title'],
-                'description'  => (string) $post_data['post_content'],
-                'image_count'  => count( $gids ),
-                'price'        => sanitize_text_field( wp_unslash( $_POST['va_price'] ?? '0' ) ),
-                'price_type'   => sanitize_key( $_POST['va_price_type'] ?? 'fixed' ),
-                'year'         => intval( $_POST['va_year'] ?? 0 ),
-                'mileage'      => intval( $_POST['va_mileage'] ?? 0 ),
-                'brand'        => sanitize_text_field( wp_unslash( $_POST['va_brand'] ?? '' ) ),
-                'model'        => sanitize_text_field( wp_unslash( $_POST['va_model'] ?? '' ) ),
-                'fuel_type'    => sanitize_key( $_POST['va_fuel_type'] ?? '' ),
-                'transmission' => sanitize_key( $_POST['va_transmission'] ?? '' ),
-                'location'     => sanitize_text_field( wp_unslash( $_POST['va_location'] ?? '' ) ),
-            ] );
-
-            if ( empty( $quality['ok'] ) ) {
-                $redirect = add_query_arg(
-                    [
-                        'page' => 'vadaszapro-listing-edit',
-                        'id' => max( 0, $post_id ),
-                        'va_error' => 'quality',
-                        'va_msg' => rawurlencode( (string) ( $quality['message'] ?? 'A hirdetés nem felel meg a közzétételi minimumoknak.' ) ),
-                    ],
-                    admin_url( 'admin.php' )
-                );
-                wp_safe_redirect( $redirect );
-                exit;
-            }
-        }
-
         if ( $post_id > 0 ) {
             $post_data['ID'] = $post_id;
             $result = wp_update_post( $post_data, true );
@@ -267,23 +229,6 @@ class VA_Listing_Edit {
         $id = (int)( $_GET['id'] ?? 0 );
         check_admin_referer( 'va_listing_approve_' . $id );
         if ( ! current_user_can( 'edit_post', $id ) ) wp_die( 'Nincs jogosultság.' );
-
-        if ( function_exists( 'va_validate_listing_post_for_publish' ) ) {
-            $quality = va_validate_listing_post_for_publish( $id );
-            if ( empty( $quality['ok'] ) ) {
-                $redirect = add_query_arg(
-                    [
-                        'page' => 'vadaszapro-listings',
-                        'va_error' => 'quality',
-                        'va_msg' => rawurlencode( (string) ( $quality['message'] ?? 'A hirdetés nem felel meg a közzétételi minimumoknak.' ) ),
-                    ],
-                    admin_url( 'admin.php' )
-                );
-                wp_safe_redirect( $redirect );
-                exit;
-            }
-        }
-
         wp_update_post( [ 'ID' => $id, 'post_status' => 'publish' ] );
         wp_safe_redirect( admin_url( 'admin.php?page=vadaszapro-listings&va_approved=1' ) );
         exit;
@@ -338,12 +283,7 @@ class VA_Listing_Edit {
         $notices = [];
         if ( isset( $_GET['va_approved'] ) ) $notices[] = ['success','✅ Hirdetés közzétéve!'];
         if ( isset( $_GET['va_trashed']  ) ) $notices[] = ['success','🗑️ Hirdetés a kukába került.'];
-        if ( isset( $_GET['va_error']    ) ) {
-            $msg = isset( $_GET['va_msg'] )
-                ? sanitize_text_field( wp_unslash( rawurldecode( (string) $_GET['va_msg'] ) ) )
-                : 'Hiba történt a mentés során.';
-            $notices[] = [ 'error', '❌ ' . $msg ];
-        }
+        if ( isset( $_GET['va_error']    ) ) $notices[] = ['error','❌ Hiba történt a mentés során.'];
 
         $tabs = [
             'all'     => [ 'Összes',    (int)($counts->publish??0) + (int)($counts->pending??0) + (int)($counts->draft??0) ],
@@ -633,7 +573,7 @@ class VA_Listing_Edit {
             <?php if (isset($_GET['va_saved'])): ?>
             <div class="va-le-notice va-le-notice--success">✅ Hirdetés sikeresen mentve!</div>
             <?php elseif (isset($_GET['va_error'])): ?>
-            <div class="va-le-notice va-le-notice--error">❌ <?php echo esc_html( isset($_GET['va_msg']) ? sanitize_text_field( wp_unslash( rawurldecode( (string) $_GET['va_msg'] ) ) ) : 'Hiba történt a mentés során, próbáld újra.' ); ?></div>
+            <div class="va-le-notice va-le-notice--error">❌ Hiba történt a mentés során, próbáld újra.</div>
             <?php endif; ?>
 
             <!-- Szerkesztő fejléc -->

@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: wp-plugin/vadaszapro-core/
-          server-dir: /WeingartnerAuto/wp-content/plugins/vadaszapro-core/
+          server-dir: ${{ secrets.FTP_PLUGIN_PATH }}/
 
   deploy-theme:
     name: Deploy Theme
