@@ -36,9 +36,20 @@
         $f_copy_text = 'weingartnerauto.hu - Minden jog fenntartva.';
     }
     $f_contact_phone_href = preg_replace( '/[^0-9\+]/', '', $f_contact_phone );
+    $legacy_legal_map = [
+        '/adatvedelmi-nyilatkozat' => '/adatkezeles',
+        '/aszf'                    => '/etika',
+    ];
+    $map_legacy_legal_url = static function( string $url ) use ( $legacy_legal_map ): string {
+        $clean = trim( $url );
+        if ( isset( $legacy_legal_map[ $clean ] ) ) {
+            return $legacy_legal_map[ $clean ];
+        }
+        return $clean;
+    };
     $f_legal_items = [
-        [ 'label' => 'Adatvédelem',                         'url' => trim( (string) get_option( 'va_legal_url_adatvedelem', '/adatvedelmi-nyilatkozat' ) ) ],
-        [ 'label' => 'ÁSZF',                                'url' => trim( (string) get_option( 'va_legal_url_aszf', '/aszf' ) ) ],
+        [ 'label' => 'Adatvédelem',                         'url' => $map_legacy_legal_url( trim( (string) get_option( 'va_legal_url_adatvedelem', '/adatkezeles' ) ) ) ],
+        [ 'label' => 'ÁSZF',                                'url' => $map_legacy_legal_url( trim( (string) get_option( 'va_legal_url_aszf', '/etika' ) ) ) ],
         [ 'label' => 'Impresszum',                          'url' => trim( (string) get_option( 'va_legal_url_impresszum', '' ) ) ],
         [ 'label' => 'Etika és Üzleti Magatartási Kódex',   'url' => trim( (string) get_option( 'va_legal_url_etika', '' ) ) ],
         [ 'label' => 'Sütik',                               'url' => trim( (string) get_option( 'va_legal_url_sutik', '' ) ) ],

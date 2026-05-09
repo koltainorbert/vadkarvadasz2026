@@ -425,8 +425,8 @@ class VA_Settings_Page {
             'va_hf_footer_link_help'               => 'Súgó',
             'va_hf_footer_copy_text'               => 'weingartnerauto.hu - Minden jog fenntartva.',
             'va_hf_footer_privacy_text'            => 'Adatvédelem',
-            'va_legal_url_adatvedelem'             => '/adatvedelmi-nyilatkozat',
-            'va_legal_url_aszf'                    => '/aszf',
+            'va_legal_url_adatvedelem'             => '/adatkezeles',
+            'va_legal_url_aszf'                    => '/etika',
             'va_legal_url_impresszum'              => '',
             'va_legal_url_etika'                   => '',
             'va_legal_url_sutik'                   => '',
@@ -6078,8 +6078,8 @@ class VA_Settings_Page {
             'va-fiok',
             'va-aukciok',
             'va-kredit-vasarlas',
-            'aszf',
-            'adatvedelmi-nyilatkozat',
+            'etika',
+            'adatkezeles',
             'sugo',
         ];
 
@@ -6236,8 +6236,8 @@ class VA_Settings_Page {
 
     private static function get_legal_page_map(): array {
         return [
-            [ 'title' => 'Adatvédelem', 'slug' => 'adatvedelmi-nyilatkozat', 'url_opt' => 'va_legal_url_adatvedelem', 'cnt_opt' => 'va_legal_content_adatvedelem' ],
-            [ 'title' => 'ÁSZF', 'slug' => 'aszf', 'url_opt' => 'va_legal_url_aszf', 'cnt_opt' => 'va_legal_content_aszf' ],
+            [ 'title' => 'Adatvédelem', 'slug' => 'adatkezeles', 'url_opt' => 'va_legal_url_adatvedelem', 'cnt_opt' => 'va_legal_content_adatvedelem' ],
+            [ 'title' => 'ÁSZF', 'slug' => 'etika', 'url_opt' => 'va_legal_url_aszf', 'cnt_opt' => 'va_legal_content_aszf' ],
             [ 'title' => 'Impresszum', 'slug' => 'impresszum', 'url_opt' => 'va_legal_url_impresszum', 'cnt_opt' => 'va_legal_content_impresszum' ],
             [ 'title' => 'Etika és Üzleti Magatartási Kódex', 'slug' => 'etika-es-uzleti-magatartasi-kodex', 'url_opt' => 'va_legal_url_etika', 'cnt_opt' => 'va_legal_content_etika' ],
             [ 'title' => 'Sütik', 'slug' => 'sutik', 'url_opt' => 'va_legal_url_sutik', 'cnt_opt' => 'va_legal_content_sutik' ],

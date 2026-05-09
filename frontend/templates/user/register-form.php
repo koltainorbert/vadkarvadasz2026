@@ -95,7 +95,7 @@ $register_enabled = get_option( 'va_enable_register', '1' ) === '1';
                 <div class="va-form-group va-register-field va-register-field--full">
                     <label class="va-check-label">
                         <input type="checkbox" name="terms_accept"<?php echo $rreq_attr; ?>>
-                        <?php echo esc_html( $rlabel ); ?> – <a href="<?php echo esc_url( home_url('/aszf') ); ?>" style="color:#ff0000;">ÁSZF</a>
+                        <?php echo esc_html( $rlabel ); ?> – <a href="<?php echo esc_url( home_url('/etika') ); ?>" style="color:#ff0000;">ÁSZF</a>
                     </label>
                 </div>
 

@@ -816,6 +816,25 @@ add_action( 'wp_enqueue_scripts', function () {
 
 });
 
+add_action( 'template_redirect', function () {
+    if ( is_admin() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return;
+    }
+
+    $request_path = wp_parse_url( home_url( add_query_arg( [], $GLOBALS['wp']->request ?? '' ) ), PHP_URL_PATH );
+    $request_path = '/' . trim( (string) $request_path, '/' );
+
+    $legacy_map = [
+        '/aszf'                    => '/etika/',
+        '/adatvedelmi-nyilatkozat' => '/adatkezeles/',
+    ];
+
+    if ( isset( $legacy_map[ $request_path ] ) ) {
+        wp_redirect( home_url( $legacy_map[ $request_path ] ), 301 );
+        exit;
+    }
+}, 1 );
+
 function va_design_font_map(): array {
     return [
         // ── Rendszer / web-safe (nem tölt Google-t) ─────────────────
