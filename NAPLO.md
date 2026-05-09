@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #273 (keresooldali SEO blokk elrejtese)
+
+### Mit csinaltunk [x]
+- [x] A `va-hirdetes-kereses` oldalon a landing/SEO blokk vizualisan elrejtve, hogy a hirdetes lista azonnal latszodjon
+- [x] A blokk kodja bent maradt a templateben, de `display:none` + `aria-hidden` allapotban van
+- [x] Source + plugin mirror szinkronban
+- [x] Hibakontroll rendben, Deploy All sikeres
+
+### Eredmeny
+A keresooldal tetejen a latogato mar azonnal a hirdetesekkel es szurokkel talalkozik, a korabbi nagy bevezeto blokk nem tolja le az elso talalatokat.
+
+---
+
 ## 2026. 05. 08. – Session #272 (checkpoint holnapi folytatáshoz)
 
 ### Hol tartunk most

@@ -139,7 +139,40 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
 <div class="va-wrap">
     <?php va_display_flash(); ?>
 
+    <section class="va-search-landing" style="display:none !important;margin-bottom:22px;padding:18px 20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));" aria-hidden="true">
+        <h1 style="margin:0 0 8px;font-size:clamp(24px,4vw,38px);line-height:1.1;color:#fff;"><?php echo esc_html( $landing_title ); ?></h1>
+        <p style="margin:0 0 16px;color:rgba(255,255,255,.72);max-width:860px;"><?php echo esc_html( $landing_intro ); ?></p>
 
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <?php foreach ( $top_brand_links as $brand_link ): ?>
+                <a href="<?php echo esc_url( add_query_arg( 'brand', (string) $brand_link, $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:#fff;text-decoration:none;background:rgba(255,255,255,.03);">
+                    <?php echo esc_html( (string) $brand_link ); ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if ( ! empty( $top_model_links ) ) : ?>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <?php foreach ( $top_model_links as $model_link ): ?>
+                <a href="<?php echo esc_url( add_query_arg( [ 'brand' => $url_brand, 'model' => (string) $model_link ], $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,0,0,.28);color:#fff;text-decoration:none;background:rgba(255,0,0,.08);">
+                    <?php echo esc_html( (string) $model_link ); ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);max-width:920px;">
+            <h2 style="margin:0 0 10px;font-size:clamp(18px,2.6vw,26px);line-height:1.2;color:#fff;"><?php echo esc_html( $landing_seo_heading ); ?></h2>
+            <p style="margin:0;color:rgba(255,255,255,.72);line-height:1.7;"><?php echo esc_html( $landing_seo_text ); ?></p>
+            <?php if ( ! empty( $landing_seo_points ) ) : ?>
+                <ul style="margin:14px 0 0;padding-left:18px;color:rgba(255,255,255,.82);line-height:1.7;">
+                    <?php foreach ( $landing_seo_points as $landing_point ) : ?>
+                        <li><?php echo esc_html( (string) $landing_point ); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </section>
 
     <!-- Szűrő sáv -->
     <div class="va-filter-bar">
