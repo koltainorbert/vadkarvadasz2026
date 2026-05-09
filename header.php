@@ -76,7 +76,6 @@
                 <?php else: ?>
                     <span class="va-logo__icon">🦌</span>
                 <?php endif; ?>
-                <span class="va-logo__text"><?php echo esc_html( $brand_name ); ?></span>
             </a>
 
             <!-- Navigáció -->
@@ -197,10 +196,21 @@
                 <?php else:
                     $buy_page      = get_page_by_path('va-kredit-vasarlas');
                     $buy_url       = $buy_page ? get_permalink( $buy_page ) : home_url('/va-kredit-vasarlas/');
+                    $login_url     = $login_page ? get_permalink( $login_page ) : wp_login_url();
+                    $register_url  = $register_page ? get_permalink( $register_page ) : wp_registration_url();
                 ?>
                     <?php if ( $header_show_buy_button ): ?>
                         <a href="<?php echo esc_url( wp_login_url( $buy_url ) ); ?>" class="va-header__user-login">Vásárlás</a>
                     <?php endif; ?>
+<<<<<<< HEAD
+=======
+                    <?php if ( $login_enabled ): ?>
+                        <a href="<?php echo esc_url( $login_url ); ?>" class="va-header__user-login"><?php echo esc_html( $header_login_text ); ?></a>
+                    <?php endif; ?>
+                    <?php if ( $register_enabled ): ?>
+                        <a href="<?php echo esc_url( $register_url ); ?>" class="va-header__submit-btn"><?php echo esc_html( $header_register_text ); ?></a>
+                    <?php endif; ?>
+>>>>>>> 36eea85 (Auto_2026.05.09_23.02)
                 <?php endif; ?>
                 <?php if ( get_option('va_social_header_show','1') === '1' && function_exists('va_social_bar') ):
                     $hdr_style = get_option('va_social_header_style','icons');
