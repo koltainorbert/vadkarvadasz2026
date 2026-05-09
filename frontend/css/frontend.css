@@ -211,7 +211,7 @@ body[data-overlayscrollbars] {
 
 body > .os-scrollbar-vertical,
 html > .os-scrollbar-vertical {
-  width: 12px !important;
+  width: 8px !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
@@ -228,7 +228,7 @@ body > .os-scrollbar-vertical:hover .os-scrollbar-handle,
 html > .os-scrollbar-vertical:hover .os-scrollbar-handle,
 body > .os-scrollbar-vertical:active .os-scrollbar-handle,
 html > .os-scrollbar-vertical:active .os-scrollbar-handle {
-  width: 4px !important;
+  width: 3px !important;
   background: rgba(255,48,0,.92) !important;
   border-radius: 999px !important;
 }
@@ -1136,10 +1136,39 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   background: rgba(255,0,0,1);
 }
 
+.va-dashboard__nav.va-dashboard__nav--os {
+  scrollbar-width: none !important;
+  scrollbar-color: transparent transparent !important;
+  --os-size: 10px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-bg: rgba(255,255,255,.14);
+  --os-track-bg-hover: rgba(255,255,255,.18);
+  --os-handle-bg: rgba(255,0,0,.92);
+  --os-handle-bg-hover: rgba(255,0,0,.96);
+  --os-handle-bg-active: rgba(255,0,0,1);
+  --os-handle-border-radius: 999px;
+  --os-handle-perpendicular-size: 6px;
+  --os-handle-perpendicular-size-hover: 6px;
+  --os-handle-perpendicular-size-active: 6px;
+  --os-handle-min-size: 42px;
+}
+
+.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical {
+  width: 10px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 @supports (-moz-appearance: none) {
   .va-dashboard__nav {
     scrollbar-width: auto !important;
     scrollbar-color: rgba(255,0,0,.95) rgba(255,255,255,.18) !important;
+  }
+
+  .va-dashboard__nav.va-dashboard__nav--os {
+    scrollbar-width: none !important;
+    scrollbar-color: transparent transparent !important;
   }
 }
 .admin-bar .va-dashboard__nav {

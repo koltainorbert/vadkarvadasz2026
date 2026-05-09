@@ -730,7 +730,13 @@
       OverlayScrollbars(sidebarEl, scrollbarOptions);
     }
 
-    // .va-dashboard__nav maradjon natív scrollbaron.
+    // .va-dashboard__nav (frontend dashboard) - egyseges custom scrollbar
+    // minden bongeszoben, hogy Firefox alatt se essen vissza 1px natívra.
+    var dashNavEl = document.querySelector('.va-dashboard__nav');
+    if (dashNavEl) {
+      OverlayScrollbars(dashNavEl, scrollbarOptions);
+      dashNavEl.classList.add('va-dashboard__nav--os');
+    }
   }
 
   // Várakozás OverlayScrollbars betöltésére (ha async kezelés szükséges)
