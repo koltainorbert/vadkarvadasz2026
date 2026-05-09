@@ -4089,7 +4089,6 @@ class VA_Settings_Page {
         if ( isset( $_POST['va_seo_save'] ) && check_admin_referer( 'va_seo_save' ) ) {
             $json = sanitize_textarea_field( wp_unslash( $_POST['va_gsc_service_account'] ?? '' ) );
             update_option( 'va_gsc_service_account', $json );
-            update_option( 'va_gsc_indexing_enabled', isset( $_POST['va_gsc_indexing_enabled'] ) ? '1' : '0' );
             echo '<div class="notice notice-success"><p>SEO beállítások elmentve.</p></div>';
         }
 
@@ -4100,7 +4099,6 @@ class VA_Settings_Page {
 
         $current_json = (string) get_option( 'va_gsc_service_account', '' );
         $is_set = $current_json !== '';
-        $gsc_enabled = get_option( 'va_gsc_indexing_enabled', '0' ) === '1';
         $service_email = '';
         if ( $is_set ) {
             $parsed = json_decode( $current_json, true );
@@ -4134,16 +4132,6 @@ class VA_Settings_Page {
                             <?php wp_nonce_field( 'va_seo_save' ); ?>
                             <table class="form-table" style="margin:0;">
                                 <tr>
-                                    <th style="padding:8px 0;width:180px;color:#ccc;">Google Indexing API</th>
-                                    <td style="padding:8px 0;">
-                                        <label style="display:inline-flex;align-items:center;gap:8px;">
-                                            <input type="checkbox" name="va_gsc_indexing_enabled" value="1" <?php checked( $gsc_enabled ); ?>>
-                                            <span>Bekapcsolva (ha nem megy a Search Console jogosítás, hagyd kikapcsolva)</span>
-                                        </label>
-                                        <p style="margin:6px 0 0;font-size:11px;color:#aaa;">Kikapcsolt állapotban a Google API hívások nem futnak, az IndexNow és sitemap működés változatlan marad.</p>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th style="padding:8px 0;width:180px;color:#ccc;">Service Account JSON</th>
                                     <td style="padding:8px 0;">
                                         <textarea name="va_gsc_service_account" rows="8" style="width:100%;font-family:monospace;font-size:11px;background:#111;color:#eee;border:1px solid #444;padding:8px;"><?php echo esc_textarea( $current_json ); ?></textarea>
@@ -4152,9 +4140,6 @@ class VA_Settings_Page {
                                         </p>
                                         <?php if ( $service_email !== '' ) : ?>
                                             <p style="margin:4px 0 0;font-size:11px;color:#9ecbff;">Service Account email: <strong><?php echo esc_html( $service_email ); ?></strong></p>
-                                        <?php endif; ?>
-                                        <?php if ( ! $gsc_enabled ) : ?>
-                                            <p style="margin:4px 0 0;font-size:11px;color:#ffb74d;">ℹ️ A Google Indexing API jelenleg opcionális módban kikapcsolva van.</p>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -4171,11 +4156,11 @@ class VA_Settings_Page {
                                     <th style="padding:8px 0;width:180px;color:#ccc;">Teszt URL</th>
                                     <td style="padding:8px 0;">
                                         <input type="url" name="va_gsc_test_url" value="<?php echo esc_attr( home_url( '/' ) ); ?>" style="width:100%;max-width:640px;">
-                                        <p style="margin:6px 0 0;font-size:11px;color:#aaa;">A teszt gomb token-t kér, majd URL_UPDATED kérést küld a Google Indexing API felé (ha a funkció be van kapcsolva).</p>
+                                        <p style="margin:6px 0 0;font-size:11px;color:#aaa;">A teszt gomb azonnal token-t kér, majd URL_UPDATED kérést küld a Google Indexing API felé.</p>
                                     </td>
                                 </tr>
                             </table>
-                            <p><button type="submit" name="va_seo_test" class="button" <?php disabled( ! $gsc_enabled ); ?>>Google kapcsolat teszt</button></p>
+                            <p><button type="submit" name="va_seo_test" class="button">Google kapcsolat teszt</button></p>
                             <?php if ( is_array( $test_result ) ) : ?>
                                 <p style="margin:8px 0 0;font-size:12px;color:<?php echo ! empty( $test_result['ok'] ) ? '#4caf50' : '#ff6b6b'; ?>;">
                                     <strong><?php echo ! empty( $test_result['ok'] ) ? '✅ Teszt sikeres:' : '❌ Teszt hiba:'; ?></strong>

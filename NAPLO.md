@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #284 (SEO UI cleanup: Google kapcsolo eltavolitasa)
+
+### Mit csinaltunk [x]
+- [x] A megtévesztő `Google Indexing API` kapcsoló eltávolítva a SEO admin felületről
+- [x] A Google teszt gomb ismét egyértelmű, közvetlen működésre visszaállítva
+- [x] Kísérő szövegek visszaállítva kapcsoló nélküli, tiszta megfogalmazásra
+- [x] Mirror szinkron root + plugin mappában
+
+### Eredmeny
+- A SEO panel egyszerűbb és félreértésmentes
+- Nincs több megtévesztő kapcsolóállapot a Google blokkban
+
+---
+
 ## 2026. 05. 09. – Session #283 (Google Indexing API fallback: opcionális mód)
 
 ### Mit csinaltunk [x]
