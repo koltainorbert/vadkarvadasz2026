@@ -14,6 +14,10 @@
 - Firefoxban a scrollbar mar nem vékony, csunya csiknak tunik
 - Hover allapot vizualisan kozel azonos lett Chromium es Firefox kozott
 
+### Utolagos finomitas
+- Hover nelkuli allapot tovabberositve: magasabb kontraszt, 8px vastagsag, lathato track
+- Firefox specifikus felulirasok erosítve (`scrollbar-width/scrollbar-color !important`) a biztos alap megjelenesert
+
 ---
 
 ## 2026. 05. 09. – Session #284 (SEO UI cleanup: Google kapcsolo eltavolitasa)
