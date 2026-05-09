@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #289 (Firefox body scrollbar minimum 4px)
+
+### Mit csinaltunk [x]
+- [x] A frontend body-s OverlayScrollbars tema explicit 4px lathato thumb szelesseget kapott
+- [x] A body/html selector kibovitve lett, hogy a Firefox viewport-scroll host variacioit is lefedje
+- [x] A scrollbar interaktiv terulete kulon megnovelve maradt, hogy a vekonyebb lathato vonal ellenere jol foghato legyen
+
+### Eredmeny
+- Firefoxban a lathato piros scrollbar resz minimum 4px-re lett celozva
+- A valtozas csak a frontend body-scroll custom scrollbarjat finomitja, a tobbi bongeszo jo iranyat nem rontja vissza
+
+---
+
 ## 2026. 05. 09. – Session #288 (Frontend body scroll Firefox override)
 
 ### Mit csinaltunk [x]
