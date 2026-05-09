@@ -2690,6 +2690,52 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 .va-trust-badge svg { width:14px;height:14px; }
 .va-trust-badge.active { color:#fff;border-color:rgba(0,200,80,.4);background:rgba(0,200,80,.09); }
 .va-trust-badge.active svg { stroke:#00c850; }
+
+/* Emergency nav-scroll fix (cache- and load-order safe) */
+.va-dashboard__nav {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255,0,0,.92) rgba(255,255,255,.16) !important;
+}
+.va-dashboard__nav::-webkit-scrollbar { width: 5px !important; }
+.va-dashboard__nav::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.16) !important;
+    border-radius: 999px !important;
+}
+.va-dashboard__nav::-webkit-scrollbar-thumb {
+    background: rgba(255,0,0,.92) !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+}
+.va-dashboard__nav::-webkit-scrollbar-thumb:hover,
+.va-dashboard__nav::-webkit-scrollbar-thumb:active { background: rgba(255,0,0,1) !important; }
+
+.va-dashboard__nav.va-nav-inline-os {
+    scrollbar-width: none !important;
+    scrollbar-color: transparent transparent !important;
+    --os-size: 8px;
+    --os-padding-perpendicular: 2px;
+    --os-padding-axis: 1px;
+    --os-track-bg: rgba(255,255,255,.14);
+    --os-track-bg-hover: rgba(255,255,255,.18);
+    --os-handle-bg: rgba(255,0,0,.92);
+    --os-handle-bg-hover: rgba(255,0,0,.96);
+    --os-handle-bg-active: rgba(255,0,0,1);
+    --os-handle-border-radius: 999px;
+    --os-handle-perpendicular-size: 5px;
+    --os-handle-perpendicular-size-hover: 5px;
+    --os-handle-perpendicular-size-active: 5px;
+    --os-handle-min-size: 36px;
+}
+.va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical {
+    width: 8px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical .os-scrollbar-handle {
+    width: 5px !important;
+    background: rgba(255,0,0,.92) !important;
+    border-radius: 999px !important;
+}
 </style>
 
 <script>
@@ -3239,6 +3285,37 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     if (saleNormal) saleNormal.addEventListener('input', refreshSalePreview);
     if (salePrice) salePrice.addEventListener('input', refreshSalePreview);
     if (saleEnd) saleEnd.addEventListener('change', refreshSalePreview);
+
+    function vaForceDashboardNavScrollbar() {
+        var nav = document.querySelector('.va-dashboard__nav');
+        if (!nav) return;
+
+        if (typeof OverlayScrollbars !== 'undefined') {
+            var existing = OverlayScrollbars(nav);
+            if (existing && typeof existing.destroy === 'function') {
+                existing.destroy();
+            }
+            OverlayScrollbars(nav, {
+                scrollbars: { autoHide: 'never', clickScroll: false },
+                overflow: { x: 'hidden', y: 'scroll' }
+            });
+            nav.classList.add('va-nav-inline-os');
+        } else {
+            nav.classList.remove('va-nav-inline-os');
+        }
+    }
+
+    vaForceDashboardNavScrollbar();
+    window.addEventListener('load', vaForceDashboardNavScrollbar);
+
+    var vaNavForceRuns = 0;
+    var vaNavForceTimer = setInterval(function() {
+        vaForceDashboardNavScrollbar();
+        vaNavForceRuns += 1;
+        if (vaNavForceRuns >= 20) {
+            clearInterval(vaNavForceTimer);
+        }
+    }, 250);
 
 })();
 </script>
