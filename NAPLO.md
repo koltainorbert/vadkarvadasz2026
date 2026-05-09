@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #287 (Globalis Firefox scrollbar erosites)
+
+### Mit csinaltunk [x]
+- [x] A globalis frontend scrollbar Firefox szabalyai erosítve lettek a plugin frontend CSS-ben
+- [x] A tema globalis `style.css` is kapott Firefox-kompatibilis vastagabb scrollbar beallitast
+- [x] A teljes oldalscroll `thin` helyett `auto` lett, erosebb piros thumbbal es lathato trackkel
+- [x] WebKit oldalon is vastagabb, kontrasztosabb globalis scrollbar kerult be, hogy minden frontend felulet egyseges legyen
+
+### Eredmeny
+- Firefoxban a teljes oldal scrollbarja mar nem hajszalvekony, halvany csikra van allitva
+- A modositas nem csak a dashboard / shortcode feluleteket, hanem a theme altal renderelt sima oldalakat is lefedi
+
+---
+
 ## 2026. 05. 09. – Session #286 (Firefox scrollbar: mindig lathato allapot)
 
 ### Mit csinaltunk [x]
