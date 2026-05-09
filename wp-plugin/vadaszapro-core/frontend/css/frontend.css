@@ -167,25 +167,26 @@
 
 /* ── Globális scrollbar (függőleges görgetéshez) ─────────────── */
 html, body {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,0,0,.24) rgba(6,6,6,.96);
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255,48,0,.82) rgba(255,255,255,.12);
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  width: 7px;
+  width: 12px;
 }
 html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track {
-  background: rgba(6,6,6,.96);
+  background: rgba(255,255,255,.12);
 }
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
-  background: rgba(255,0,0,.24);
-  border-radius: 4px;
+  background: rgba(255,48,0,.82);
+  border-radius: 999px;
+  border: 2px solid rgba(6,6,6,.94);
 }
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
-  background: #ff0000;
+  background: #ff3000;
 }
 
 /* ── Globális reset (a téma alá) ──────────────────── */
