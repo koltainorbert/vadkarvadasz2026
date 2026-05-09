@@ -1814,6 +1814,20 @@ A Sugo oldal most teljes, atfogo es ugyfelbarat hasznalati utmutato, amely csak 
 
 ---
 
+## 2026. 05. 09. – Session #180 (Header: auth + vásárlás linkek mindig láthatók)
+
+### Mit csinaltunk [x]
+- [x] A bejelentkezett állapot header ágába is bekerült a `Bejelentkezés` link
+- [x] A bejelentkezett állapot header ágába is bekerült a `Regisztráció` link
+- [x] A `Vásárlás` link mindkét állapotban megmaradt láthatónak
+- [x] Módosítás tükrözve source + theme mirror fájlokban
+- [x] Hibavizsgálat lefuttatva, nincs új hiba
+
+### Hol tartunk
+A headerben most minden állapotban látszik a `Bejelentkezés`, `Regisztráció` és `Vásárlás`.
+
+---
+
 ## 2026. 05. 03. – Session #178 (ÉLES SZERVER – SITE ÉL + HOLNAPI TERV)
 
 ### Mit csinaltunk [x]

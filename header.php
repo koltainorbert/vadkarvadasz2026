@@ -189,6 +189,10 @@
                 <?php if ( is_user_logged_in() ):
                     $user        = wp_get_current_user();
                     $dashboard   = get_page_by_path('va-fiok');
+<<<<<<< HEAD
+=======
+                    $submit_page = get_page_by_path('va-hirdetes-feladas');
+>>>>>>> 0dd33f2 (Mentes_2026.05.09_23.08)
                     $login_page  = get_page_by_path('va-bejelentkezes');
                     $register_page = get_page_by_path('va-regisztracio');
                     $buy_page    = get_page_by_path('va-kredit-vasarlas');
