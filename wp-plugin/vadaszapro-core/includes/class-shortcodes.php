@@ -151,10 +151,23 @@ class VA_Shortcodes {
         }
 
         ob_start();
-        wp_enqueue_style(  'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.min.css', [], VA_VERSION );
-        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [ 'overlayscrollbars' ], VA_VERSION );
-        wp_enqueue_script( 'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.browser.es5.min.js', [], VA_VERSION, false );
-        wp_enqueue_script( 'va-frontend',  VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery', 'overlayscrollbars' ], VA_VERSION, true );
+        $os_css_ver = file_exists( VA_PLUGIN_DIR . 'assets/overlayscrollbars.min.css' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'assets/overlayscrollbars.min.css' )
+            : VA_VERSION;
+        $os_js_ver = file_exists( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
+            : VA_VERSION;
+        $frontend_css_ver = file_exists( VA_PLUGIN_DIR . 'frontend/css/frontend.css' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'frontend/css/frontend.css' )
+            : VA_VERSION;
+        $frontend_js_ver = file_exists( VA_PLUGIN_DIR . 'frontend/js/frontend.js' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'frontend/js/frontend.js' )
+            : VA_VERSION;
+
+        wp_enqueue_style(  'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.min.css', [], $os_css_ver );
+        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [ 'overlayscrollbars' ], $frontend_css_ver );
+        wp_enqueue_script( 'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.browser.es5.min.js', [], $os_js_ver, false );
+        wp_enqueue_script( 'va-frontend',  VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery', 'overlayscrollbars' ], $frontend_js_ver, true );
         wp_localize_script( 'va-frontend', 'VA_Data', [
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce'    => $nonce,

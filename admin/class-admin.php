@@ -440,10 +440,24 @@ class VA_Admin {
 
         wp_enqueue_media();
         wp_enqueue_style(  "wp-color-picker" );
-        wp_enqueue_style(  "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.min.css", [], VA_VERSION );
-        wp_enqueue_style(  "va-admin", VA_PLUGIN_URL . "admin/admin.css", [ "wp-color-picker", "overlayscrollbars" ], VA_VERSION );
-        wp_enqueue_script( "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.browser.es5.min.js", [], VA_VERSION, false );
-        wp_enqueue_script( "va-admin", VA_PLUGIN_URL . "admin/admin.js", [ "jquery", "wp-color-picker", "overlayscrollbars" ], VA_VERSION, true );
+
+        $os_css_ver = file_exists( VA_PLUGIN_DIR . 'assets/overlayscrollbars.min.css' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'assets/overlayscrollbars.min.css' )
+            : VA_VERSION;
+        $os_js_ver = file_exists( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'assets/overlayscrollbars.browser.es5.min.js' )
+            : VA_VERSION;
+        $admin_css_ver = file_exists( VA_PLUGIN_DIR . 'admin/admin.css' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'admin/admin.css' )
+            : VA_VERSION;
+        $admin_js_ver = file_exists( VA_PLUGIN_DIR . 'admin/admin.js' )
+            ? (string) filemtime( VA_PLUGIN_DIR . 'admin/admin.js' )
+            : VA_VERSION;
+
+        wp_enqueue_style(  "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.min.css", [], $os_css_ver );
+        wp_enqueue_style(  "va-admin", VA_PLUGIN_URL . "admin/admin.css", [ "wp-color-picker", "overlayscrollbars" ], $admin_css_ver );
+        wp_enqueue_script( "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.browser.es5.min.js", [], $os_js_ver, false );
+        wp_enqueue_script( "va-admin", VA_PLUGIN_URL . "admin/admin.js", [ "jquery", "wp-color-picker", "overlayscrollbars" ], $admin_js_ver, true );
 
         // Google Font – wp_enqueue_style is betölti (dupla fallback)
         $ap_font = sanitize_key( (string) ( get_option( 'va_ap_font', 'montserrat' ) ?: 'montserrat' ) );
