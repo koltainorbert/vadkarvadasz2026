@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 09. – Session #297 (Broken Links vegleges javitas + legacy redirect)
+
+### Mi volt a problema
+- Rank Math tovabbra is broken link hibakat jelzett
+- Ellenorzes alapjan a `/aszf` es `/adatvedelmi-nyilatkozat` URL-ek 404-et adtak
+
+### Mit javitottunk [x]
+- [x] Frontend hardcoded linkek cserelve elo URL-ekre:
+  - Súgó: `/aszf` -> `/etika`, `/adatvedelmi-nyilatkozat` -> `/adatkezeles`
+  - Regisztráció: ASZF link `/etika`-ra cserelve
+- [x] Footer legal link rendernel legacy URL normalizalas kerult be:
+  - ha opcioban regi slug van, automatikusan ujra iranyitjuk rendernel (`/etika`, `/adatkezeles`)
+- [x] Legacy slugokra 301 redirect kerult:
+  - `/aszf` -> `/etika/`
+  - `/adatvedelmi-nyilatkozat` -> `/adatkezeles/`
+  - root + theme mirror `functions.php`
+- [x] Admin default legal URL-ek/slugs frissitve, hogy uj beallitasnal se termelodjon vissza a regi 404 URL
+
+### Eredmeny
+- A fennmarado broken link jelzeshez talalt konkret 404 URL-ek mar kezelve vannak
+- A regi URL-ek is biztonsagosan atterelve maradnak 301-gyel
+
+---
+
 ## 2026. 05. 09. – Session #296 (SEO maradek hiba fix: focus keyword + broken link)
 
 ### Mi volt a problema
