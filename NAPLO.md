@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 09. – Session #294 (SEO gyorsjavitas: H1 + broken-link fail-safe)
+
+### Mi volt a problema
+- SEO audit H1 hianyokat jelzett (foleg homepage + normal page template-ek)
+- Broken link jelzes jelent meg a live search dropdown `href="#"` fallback miatt
+
+### Mit javitottunk [x]
+- [x] Homepage fail-safe H1 bekerult (`index.php` + theme mirror)
+- [x] `page.php` fail-safe H1 logika bekerult: ha contentben nincs `<h1>`, automatikusan kirakja az oldalcimet
+- [x] Live search dropdown "Osszes talalat" link fallback `#` helyett valos URL-re lett cserelve (`/va-hirdetes-kereses`)
+
+### Eredmeny
+- A template-ek SEO szempontbol stabilabbak: H1 es fallback link hibaturobb
+- A valtozasok commitolva/pusholva (main)
+
+---
+
 ## 2026. 05. 09. – Session #293 (Cache-busting asset verziozas)
 
 ### Mi volt a problema
