@@ -55,6 +55,29 @@ add_action( 'template_redirect', function () {
     exit;
 }, 0 );
 
+// Garantalt publikus Kapcsolat URL: /kapcsolat
+add_action( 'template_redirect', function () {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+    $path = trim( (string) parse_url( $request_uri, PHP_URL_PATH ), '/' );
+    if ( $path !== 'kapcsolat' ) {
+        return;
+    }
+
+    $template = locate_template( 'page-kapcsolat.php' );
+    if ( ! $template || ! file_exists( $template ) ) {
+        return;
+    }
+
+    status_header( 200 );
+    nocache_headers();
+    include $template;
+    exit;
+}, 0 );
+
 // Garantalt publikus Etika URL: /etika
 add_action( 'template_redirect', function () {
     if ( is_admin() || wp_doing_ajax() ) {
