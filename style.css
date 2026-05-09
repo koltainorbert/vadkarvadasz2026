@@ -61,7 +61,6 @@ html, body {
   scrollbar-width: auto;
   scrollbar-color: rgba(255,48,0,.82) rgba(255,255,255,.12);
 }
-::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar { width: 12px; height: 12px; }
 ::-webkit-scrollbar-track { background: rgba(255,255,255,.12); }
 ::-webkit-scrollbar-thumb { background: rgba(255,48,0,.82); border-radius: 999px; border: 2px solid rgba(6,6,6,.94); }
