@@ -96,7 +96,7 @@
                     $default = [
                         ['url' => home_url('/va-hirdetes-kereses'), 'label' => 'Hirdetések',       'class' => '', 'enabled' => true],
                         ['url' => home_url('/kategoria'),           'label' => 'Kategóriák',       'class' => '', 'enabled' => true],
-                        ['url' => home_url('/kapcsolat'),           'label' => 'Kapcsolat',        'class' => '', 'enabled' => true],
+                        ['url' => function_exists('va_get_contact_page_url') ? va_get_contact_page_url() : home_url('/kapcsolat/'), 'label' => 'Kapcsolat', 'class' => '', 'enabled' => true],
                     ];
                     $json = get_option('va_nav_items_json', '');
                     if (!$json) return $default;
