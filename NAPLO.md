@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #292 (Native Firefox scrollbar hidden on custom hosts)
+
+### Mit csinaltunk [x]
+- [x] A body-s, dashboard nav-os es admin sidebaros custom scrollbar hostokon a natív scrollbar direkt el lett rejtve
+- [x] `scrollbar-width: none` + transzparens native szinek kerultek a custom-host elemekre
+- [x] WebKit oldalon is nullazva lett a natív scrollbar, hogy csak a custom layer maradjon
+
+### Eredmeny
+- Firefoxban a non-hover allapotban latszo vekony natív scrollbar nem szolhat bele a megjelenesbe
+- A custom `4px` thumbnak onmagaban kell latszania a host elemeken
+
+---
+
 ## 2026. 05. 09. – Session #291 (Sidebar non-hover scrollbar parity)
 
 ### Mit csinaltunk [x]
