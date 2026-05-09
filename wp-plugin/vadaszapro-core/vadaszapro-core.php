@@ -87,9 +87,13 @@ add_action( 'plugins_loaded', function () {
  * Emberi beavatkozás nem kell.
 ────────────────────────────────────────────────── */
 add_action( 'init', function () {
-    if ( get_option( 'va_rewrite_ver' ) !== VA_REWRITE_VER ) {
+    // Rewrite flush: VA_REWRITE_VER változásakor VAGY plugin verzió változásakor (pl. FTP deploy után)
+    $needs_flush = get_option( 'va_rewrite_ver' ) !== VA_REWRITE_VER
+                || get_option( 'va_plugin_ver' )  !== VA_VERSION;
+    if ( $needs_flush ) {
         flush_rewrite_rules( false );
         update_option( 'va_rewrite_ver', VA_REWRITE_VER );
+        update_option( 'va_plugin_ver',  VA_VERSION );
     }
 }, 999 );
 
