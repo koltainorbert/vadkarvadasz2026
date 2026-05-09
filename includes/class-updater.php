@@ -120,7 +120,7 @@ class VA_Updater {
     }
 
     /* ── Plugin info popup (Részletek gomb) ─────────── */
-    public static function plugin_info( mixed $result, string $action, object $args ): mixed {
+    public static function plugin_info( $result, string $action, object $args ) {
         if ( $action !== 'plugin_information' ) return $result;
         if ( ( $args->slug ?? '' ) !== 'vadaszapro-core' ) return $result;
 

@@ -1268,13 +1268,16 @@ class VA_Ajax {
         $is_price_sort = in_array( $sort, [ 'price_asc', 'price_desc' ], true );
         $order_prefix  = $is_price_sort ? '' : $boost_order_prefix;
 
-        $order_sql = $order_prefix . match ( $sort ) {
-            // Ár rendezésnél legyen tiszta ár szerinti sorrend
-            'price_asc'  => 'lm.price ASC,  p.post_date DESC',
-            'price_desc' => 'lm.price DESC, p.post_date DESC',
-            'views'      => 'lm.featured DESC, lm.views DESC, p.post_date DESC',
-            default      => 'lm.featured DESC, p.post_date DESC',
-        };
+        // PHP7 kompatibilis rendezés (match helyett)
+        if ( $sort === 'price_asc' ) {
+            $order_sql = $order_prefix . 'lm.price ASC,  p.post_date DESC';
+        } elseif ( $sort === 'price_desc' ) {
+            $order_sql = $order_prefix . 'lm.price DESC, p.post_date DESC';
+        } elseif ( $sort === 'views' ) {
+            $order_sql = $order_prefix . 'lm.featured DESC, lm.views DESC, p.post_date DESC';
+        } else {
+            $order_sql = $order_prefix . 'lm.featured DESC, p.post_date DESC';
+        }
 
         // ── Összesített szám (lapozáshoz) ─────────────────
         $count_sql = $wpdb->prepare(

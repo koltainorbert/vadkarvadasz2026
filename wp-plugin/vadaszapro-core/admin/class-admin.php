@@ -261,10 +261,10 @@ class VA_Admin {
 
                 <?php self::sb_item( "📊", "Irányítópult", admin_url( "admin.php?page=vadaszapro-dashboard" ), $page === "vadaszapro-dashboard" ); ?>
 
-                <?php self::sb_item( "📋", "Hirdetések", admin_url( "admin.php?page=vadaszapro-listings" ), $page === "vadaszapro-listings" || $page === "vadaszapro-listing-edit" || $pt === "va_listing" || str_contains( $scr_id, "va_listing" ), $pending > 0 ? (int)$pending : 0 ); ?>
+                <?php self::sb_item( "📋", "Hirdetések", admin_url( "admin.php?page=vadaszapro-listings" ), $page === "vadaszapro-listings" || $page === "vadaszapro-listing-edit" || $pt === "va_listing" || strpos( (string) $scr_id, "va_listing" ) !== false, $pending > 0 ? (int)$pending : 0 ); ?>
 
                 <?php if ( $auctions_enabled ): ?>
-                <?php self::sb_item( "🔨", "Aukciók", admin_url( "edit.php?post_type=va_auction" ), $pt === "va_auction" || str_contains( $scr_id, "va_auction" ) ); ?>
+                <?php self::sb_item( "🔨", "Aukciók", admin_url( "edit.php?post_type=va_auction" ), $pt === "va_auction" || strpos( (string) $scr_id, "va_auction" ) !== false ); ?>
                 <?php endif; ?>
 
                 <?php self::sb_item( "👥", "Felhasználók", admin_url( "admin.php?page=vadaszapro-users" ), $page === "vadaszapro-users" ); ?>
