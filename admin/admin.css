@@ -347,13 +347,17 @@ body.va-admin-page #wpwrap { background: var(--va-bg); }
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,.08) transparent;
+    scrollbar-width: auto;
+    scrollbar-color: rgba(255,0,0,.35) rgba(255,255,255,.06);
+}
+#va-sidebar:hover {
+    scrollbar-color: rgba(255,0,0,.75) rgba(255,255,255,.10);
 }
 .admin-bar #va-sidebar { top: 32px; height: calc(100vh - 32px); }
 @media screen and (max-width: 782px) { .admin-bar #va-sidebar { top: 46px; height: calc(100vh - 46px); } }
 #va-sidebar::-webkit-scrollbar { width: 4px; }
-#va-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+#va-sidebar::-webkit-scrollbar-thumb { background: rgba(255,0,0,.35); border-radius: 6px; }
+#va-sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,0,0,.8); }
 
 .va-sb-logo {
     display: flex;

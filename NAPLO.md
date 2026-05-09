@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 09. – Session #285 (Firefox scrollbar UX fix)
+
+### Mit csinaltunk [x]
+- [x] Firefox scrollbar javitas admin oldali bal savban (`#va-sidebar`)
+- [x] Firefox scrollbar javitas frontend dashboard bal navban (`.va-dashboard__nav`)
+- [x] Alap + hover allapotok kontrasztja emelve, vastagabb/olvashatobb thumb megjelenes
+- [x] Mirror szinkron root + plugin mappaban
+
+### Eredmeny
+- Firefoxban a scrollbar mar nem vékony, csunya csiknak tunik
+- Hover allapot vizualisan kozel azonos lett Chromium es Firefox kozott
+
+---
+
 ## 2026. 05. 09. – Session #284 (SEO UI cleanup: Google kapcsolo eltavolitasa)
 
 ### Mit csinaltunk [x]

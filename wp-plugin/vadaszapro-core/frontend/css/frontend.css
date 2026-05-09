@@ -1067,11 +1067,15 @@ body::-webkit-scrollbar-thumb:hover {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,0,0,.3) transparent;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255,0,0,.35) rgba(255,255,255,.06);
+}
+.va-dashboard__nav:hover {
+  scrollbar-color: rgba(255,0,0,.8) rgba(255,255,255,.10);
 }
 .va-dashboard__nav::-webkit-scrollbar { width: 4px; }
-.va-dashboard__nav::-webkit-scrollbar-thumb { background: rgba(255,0,0,.2); border-radius: 2px; }
+.va-dashboard__nav::-webkit-scrollbar-thumb { background: rgba(255,0,0,.35); border-radius: 6px; }
+.va-dashboard__nav::-webkit-scrollbar-thumb:hover { background: rgba(255,0,0,.8); }
 .admin-bar .va-dashboard__nav {
   top: calc(var(--nav, 66px) + 16px + 32px);
   height: calc(100vh - var(--nav, 66px) - 24px - 32px);
