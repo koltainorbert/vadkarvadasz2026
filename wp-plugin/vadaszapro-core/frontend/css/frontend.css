@@ -189,10 +189,11 @@ body::-webkit-scrollbar-thumb:hover {
   background: #ff3000;
 }
 
+html[data-overlayscrollbars-body],
 html[data-overlayscrollbars-body] > body,
 body[data-overlayscrollbars] {
-  --os-size: 14px;
-  --os-padding-perpendicular: 2px;
+  --os-size: 12px;
+  --os-padding-perpendicular: 4px;
   --os-padding-axis: 2px;
   --os-track-bg: rgba(255,255,255,.12);
   --os-track-bg-hover: rgba(255,255,255,.18);
@@ -201,6 +202,10 @@ body[data-overlayscrollbars] {
   --os-handle-bg-hover: rgba(255,72,0,.96);
   --os-handle-bg-active: rgba(255,92,0,1);
   --os-handle-border-radius: 999px;
+  --os-handle-perpendicular-size: 4px;
+  --os-handle-perpendicular-size-hover: 4px;
+  --os-handle-perpendicular-size-active: 4px;
+  --os-handle-interactive-area-offset: 6px;
   --os-handle-min-size: 48px;
 }
 
