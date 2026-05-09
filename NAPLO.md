@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #278 (biztonsagos SEO hardening, robots sitemap canonical)
+
+### Mit csinaltunk [x]
+- [x] `class-seo.php` robots szuroben sitemap canonicalizalas (duplikalt `Sitemap:` sorok kiszurese, egyetlen `/sitemap.xml` sor)
+- [x] Szuro prioritas emelve (`robots_txt` priority 999), hogy a vegso kimenetet tisztitsa
+- [x] Mirror szinkron root + plugin mappaban
+- [x] Deploy + push sikeres
+
+### Megfigyeles
+Az eles `robots.txt` tovabbra is 2 sitemap sort mutat (`/sitemap_index.xml` + `/sitemap.xml`), valoszinuleg edge/CDN vagy kulso SEO reteg miatt. A WP kod oldalon a canonicalizalas aktiv, de a vegso kimenetet egy kulso reteg felulirhatja.
+
+---
+
 ## 2026. 05. 09. – Session #277 (SEO admin menupont placeholder)
 
 ### Mit csinaltunk [x]
