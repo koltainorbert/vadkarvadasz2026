@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 09. – Session #290 (Firefox non-hover body scrollbar fix)
+
+### Mit csinaltunk [x]
+- [x] A body-s OverlayScrollbars generalt fuggoleges scrollbar elemeire direkt CSS kenyszerites kerult
+- [x] Hover nelkul is fix `4px` lathato thumb szelesseg lett beallitva
+- [x] A body/html szintu generalt scrollbar reteg `opacity` es `visibility` oldalon is direkt lathatora lett kenyszeritve
+
+### Eredmeny
+- Firefoxban a non-hover allapotnak is ugyanazt a vastagsagi szintet kell tartania, nem csak ravitt egernel
+- A javitas mar nem kozvetett variable tuning, hanem konkret generated scrollbar selector override
+
+---
+
 ## 2026. 05. 09. – Session #289 (Firefox body scrollbar minimum 4px)
 
 ### Mit csinaltunk [x]

@@ -209,6 +209,30 @@ body[data-overlayscrollbars] {
   --os-handle-min-size: 48px;
 }
 
+body > .os-scrollbar-vertical,
+html > .os-scrollbar-vertical {
+  width: 12px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body > .os-scrollbar-vertical .os-scrollbar-track,
+html > .os-scrollbar-vertical .os-scrollbar-track {
+  background: rgba(255,255,255,.12) !important;
+  border-radius: 999px !important;
+}
+
+body > .os-scrollbar-vertical .os-scrollbar-handle,
+html > .os-scrollbar-vertical .os-scrollbar-handle,
+body > .os-scrollbar-vertical:hover .os-scrollbar-handle,
+html > .os-scrollbar-vertical:hover .os-scrollbar-handle,
+body > .os-scrollbar-vertical:active .os-scrollbar-handle,
+html > .os-scrollbar-vertical:active .os-scrollbar-handle {
+  width: 4px !important;
+  background: rgba(255,48,0,.92) !important;
+  border-radius: 999px !important;
+}
+
 /* ── Globális reset (a téma alá) ──────────────────── */
 .va-wrap, .va-wrap * { box-sizing: border-box; }
 .va-wrap {
