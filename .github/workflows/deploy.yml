@@ -35,3 +35,16 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: wp-theme/vadaszapro-theme/
           server-dir: ${{ secrets.FTP_THEME_PATH }}/
+
+  purge-cloudflare-cache:
+    name: Purge Cloudflare Cache
+    runs-on: ubuntu-latest
+    needs: [deploy-plugin, deploy-theme]
+    steps:
+      - name: Purge robots.txt and sitemap cache
+        run: |
+          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"files":["https://www.weingartnerauto.hu/robots.txt","https://www.weingartnerauto.hu/sitemap.xml","https://www.weingartnerauto.hu/sitemap_index.xml"]}' \
+            | grep -o '"success":[a-z]*'
