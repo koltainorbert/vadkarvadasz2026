@@ -2736,6 +2736,21 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     background: rgba(255,0,0,.92) !important;
     border-radius: 999px !important;
 }
+
+.va-firefox .va-dashboard__nav.va-nav-inline-os {
+    --os-size: 16px !important;
+    --os-handle-perpendicular-size: 10px !important;
+    --os-handle-perpendicular-size-hover: 10px !important;
+    --os-handle-perpendicular-size-active: 10px !important;
+}
+.va-firefox .va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical {
+    width: 16px !important;
+}
+.va-firefox .va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical .os-scrollbar-handle,
+.va-firefox .va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical:hover .os-scrollbar-handle,
+.va-firefox .va-dashboard__nav.va-nav-inline-os .os-scrollbar-vertical:active .os-scrollbar-handle {
+    width: 10px !important;
+}
 </style>
 
 <script>
@@ -3322,6 +3337,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
 <script>
 (function(){
+    document.documentElement.classList.toggle('va-firefox', /firefox/i.test(navigator.userAgent || ''));
+
     function vaHardForceNavScrollbar() {
         var nav = document.querySelector('.va-dashboard__nav');
         if (!nav) return;
