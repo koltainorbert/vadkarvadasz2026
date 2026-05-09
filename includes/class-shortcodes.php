@@ -287,6 +287,65 @@ class VA_Shortcodes {
         return ob_get_clean();
     }
 
+    public static function render_recent_listings( $atts ) {
+        $atts = shortcode_atts( [
+            'limit'    => 6,
+            'exclude'  => '',
+            'title'    => 'Utolsó hirdetések',
+            'show_title' => '1',
+        ], $atts );
+
+        $limit = max( 1, min( 50, (int) $atts['limit'] ) );
+        $title = sanitize_text_field( (string) $atts['title'] );
+        $show_title = $atts['show_title'] === '1';
+        $exclude = [];
+        if ( (string) $atts['exclude'] !== '' ) {
+            $exclude = array_filter( array_map( 'absint', explode( ',', (string) $atts['exclude'] ) ) );
+        }
+
+        $args = [
+            'post_type'      => 'va_listing',
+            'post_status'    => 'publish',
+            'posts_per_page' => $limit,
+            'no_found_rows'  => true,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ];
+
+        if ( ! empty( $exclude ) ) {
+            $args['post__not_in'] = $exclude;
+        }
+
+        // Ha egy konkrét hirdetésen vagyunk, kizárjuk azt
+        if ( is_singular( 'va_listing' ) ) {
+            $current_post_id = get_the_ID();
+            $args['post__not_in'] = array_merge( $args['post__not_in'] ?? [], [ $current_post_id ] );
+        }
+
+        $recent = new WP_Query( $args );
+
+        if ( ! $recent->have_posts() ) {
+            return '';
+        }
+
+        ob_start();
+        ?>
+        <div class="va-recent-listings-widget" style="margin:24px 0;">
+            <?php if ( $show_title ): ?>
+                <div style="margin-bottom:14px;">
+                    <div class="sl__card-title"><?php echo esc_html( $title ); ?></div>
+                </div>
+            <?php endif; ?>
+            <div class="va-grid">
+                <?php while ( $recent->have_posts() ): $recent->the_post(); ?>
+                    <?php va_template( 'listing/card', [ 'post' => get_post() ] ); ?>
+                <?php endwhile; wp_reset_postdata(); ?>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
     /* ── Plan SVG ikon ──────────────────────────────────────── */
     private static function get_plan_icon( string $slug ): string {
         $icons = [
