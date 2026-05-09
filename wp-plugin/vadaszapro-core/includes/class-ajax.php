@@ -77,6 +77,21 @@ class VA_Ajax {
         return false;
     }
 
+    private static function count_uploaded_images( array $files ): int {
+        if ( empty( $files ) || empty( $files['name'] ) ) {
+            return 0;
+        }
+
+        $names = is_array( $files['name'] ) ? $files['name'] : [ $files['name'] ];
+        $count = 0;
+        foreach ( $names as $name ) {
+            if ( is_string( $name ) && trim( $name ) !== '' ) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
     /* ── Hirdetés szerkesztés (frontend) ──────────────── */
     public static function update_listing() {
         check_ajax_referer( 'va_update_listing', 'nonce' );
@@ -107,6 +122,9 @@ class VA_Ajax {
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']    ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']    ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
+        $fuel_type   = sanitize_key( (string) ( $_POST['fuel_type'] ?? '' ) );
+        $transmission = sanitize_key( (string) ( $_POST['transmission'] ?? '' ) );
+        $mileage     = intval( $_POST['mileage'] ?? 0 );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
         $category    = intval( $_POST['category'] ?? 0 );
@@ -115,6 +133,31 @@ class VA_Ajax {
 
         if ( empty( $title ) ) {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
+        }
+
+        $keep_raw = sanitize_text_field( wp_unslash( $_POST['keep_images'] ?? '' ) );
+        $keep_ids = array_filter( array_map( 'absint', explode( ',', $keep_raw ) ) );
+        $new_image_count = self::count_uploaded_images( (array) ( $_FILES['listing_images'] ?? [] ) );
+
+        $quality = function_exists( 'va_validate_listing_quality_input' )
+            ? va_validate_listing_quality_input( [
+                'title'        => $title,
+                'description'  => $description,
+                'image_count'  => count( $keep_ids ) + $new_image_count,
+                'price'        => $price,
+                'price_type'   => $price_type,
+                'year'         => $year,
+                'mileage'      => $mileage,
+                'brand'        => $brand,
+                'model'        => $model,
+                'fuel_type'    => $fuel_type,
+                'transmission' => $transmission,
+                'location'     => $location,
+            ] )
+            : [ 'ok' => true, 'message' => '' ];
+
+        if ( empty( $quality['ok'] ) ) {
+            wp_send_json_error( [ 'message' => (string) ( $quality['message'] ?? 'A hirdetés nem felel meg a közzétételi minimumoknak.' ) ] );
         }
 
         wp_update_post( [
@@ -186,9 +229,6 @@ class VA_Ajax {
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
         // Megtartandó meglévő képek
-        $keep_raw = sanitize_text_field( wp_unslash( $_POST['keep_images'] ?? '' ) );
-        $keep_ids = array_filter( array_map( 'absint', explode( ',', $keep_raw ) ) );
-
         // Töröljük azokat a galériában lévő képeket amiket nem tartanak meg
         $old_gallery_str = get_post_meta( $post_id, 'va_gallery_ids', true );
         $old_gallery = array_filter( array_map( 'absint', explode( ',', (string) $old_gallery_str ) ) );
@@ -265,6 +305,9 @@ class VA_Ajax {
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']  ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']  ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
+        $fuel_type   = sanitize_key( (string) ( $_POST['fuel_type'] ?? '' ) );
+        $transmission = sanitize_key( (string) ( $_POST['transmission'] ?? '' ) );
+        $mileage     = intval( $_POST['mileage'] ?? 0 );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
         $category    = intval( $_POST['category'] ?? 0 );
@@ -273,6 +316,28 @@ class VA_Ajax {
 
         if ( empty( $title ) ) {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
+        }
+
+        $new_image_count = self::count_uploaded_images( (array) ( $_FILES['listing_images'] ?? [] ) );
+        $quality = function_exists( 'va_validate_listing_quality_input' )
+            ? va_validate_listing_quality_input( [
+                'title'        => $title,
+                'description'  => $description,
+                'image_count'  => $new_image_count,
+                'price'        => $price,
+                'price_type'   => $price_type,
+                'year'         => $year,
+                'mileage'      => $mileage,
+                'brand'        => $brand,
+                'model'        => $model,
+                'fuel_type'    => $fuel_type,
+                'transmission' => $transmission,
+                'location'     => $location,
+            ] )
+            : [ 'ok' => true, 'message' => '' ];
+
+        if ( empty( $quality['ok'] ) ) {
+            wp_send_json_error( [ 'message' => (string) ( $quality['message'] ?? 'A hirdetés nem felel meg a közzétételi minimumoknak.' ) ] );
         }
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
