@@ -4084,17 +4084,37 @@ class VA_Settings_Page {
     public static function render_seo() {
         if ( ! current_user_can( 'manage_options' ) ) return;
 
+        $test_result = null;
+
         if ( isset( $_POST['va_seo_save'] ) && check_admin_referer( 'va_seo_save' ) ) {
             $json = sanitize_textarea_field( wp_unslash( $_POST['va_gsc_service_account'] ?? '' ) );
             update_option( 'va_gsc_service_account', $json );
             echo '<div class="notice notice-success"><p>SEO beállítások elmentve.</p></div>';
         }
 
+        if ( isset( $_POST['va_seo_test'] ) && check_admin_referer( 'va_seo_test' ) ) {
+            $test_url = esc_url_raw( wp_unslash( $_POST['va_gsc_test_url'] ?? '' ) );
+            $test_result = VA_User_System::gsc_indexing_test( $test_url );
+        }
+
         $current_json = (string) get_option( 'va_gsc_service_account', '' );
         $is_set = $current_json !== '';
+        $service_email = '';
+        if ( $is_set ) {
+            $parsed = json_decode( $current_json, true );
+            if ( is_array( $parsed ) && ! empty( $parsed['client_email'] ) ) {
+                $service_email = (string) $parsed['client_email'];
+            }
+        }
         ?>
         <div class="wrap va-admin-wrap">
             <h1>📈 SEO beállítások</h1>
+
+            <?php if ( is_array( $test_result ) ) : ?>
+                <div class="notice <?php echo ! empty( $test_result['ok'] ) ? 'notice-success' : 'notice-error'; ?>">
+                    <p><strong>Google Indexing API teszt:</strong> <?php echo esc_html( (string) ( $test_result['message'] ?? '' ) ); ?></p>
+                </div>
+            <?php endif; ?>
 
             <div class="va-settings-grid">
 
@@ -4118,10 +4138,29 @@ class VA_Settings_Page {
                                         <p style="margin:6px 0 0;font-size:11px;color:<?php echo $is_set ? '#4caf50' : '#ff9800'; ?>;">
                                             <?php echo $is_set ? '✅ Service Account be van állítva.' : '⚠️ Nincs beállítva – az Indexing API nem aktív.'; ?>
                                         </p>
+                                        <?php if ( $service_email !== '' ) : ?>
+                                            <p style="margin:4px 0 0;font-size:11px;color:#9ecbff;">Service Account email: <strong><?php echo esc_html( $service_email ); ?></strong></p>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             </table>
                             <p><button type="submit" name="va_seo_save" class="button button-primary">Mentés</button></p>
+                        </form>
+
+                        <hr style="border-color:#222;margin:16px 0;">
+
+                        <form method="post">
+                            <?php wp_nonce_field( 'va_seo_test' ); ?>
+                            <table class="form-table" style="margin:0;">
+                                <tr>
+                                    <th style="padding:8px 0;width:180px;color:#ccc;">Teszt URL</th>
+                                    <td style="padding:8px 0;">
+                                        <input type="url" name="va_gsc_test_url" value="<?php echo esc_attr( home_url( '/' ) ); ?>" style="width:100%;max-width:640px;">
+                                        <p style="margin:6px 0 0;font-size:11px;color:#aaa;">A teszt gomb azonnal token-t kér, majd URL_UPDATED kérést küld a Google Indexing API felé.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p><button type="submit" name="va_seo_test" class="button">Google kapcsolat teszt</button></p>
                         </form>
                     </div>
                 </div>

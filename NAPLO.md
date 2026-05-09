@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 09. – Session #281 (Google Indexing API admin teszt + diagnosztika)
+
+### Mit csinaltunk [x]
+- [x] SEO admin oldalon uj teszt funkcio: `Google kapcsolat teszt` gomb
+- [x] Beallithato teszt URL mező (alapertelmezett: nyitolap)
+- [x] Azonnali statusz visszajelzes a feluleten (siker / hiba)
+- [x] Service Account email megjelenitese a mentett JSON-bol
+- [x] `VA_User_System::gsc_indexing_test()` uj metodus: token kerest es URL_UPDATED submitot is blokkoltan tesztel, reszletes hibaokkal
+- [x] Mirror szinkron root + plugin mappaban
+
+### Eredmeny
+- A Google Indexing API bekotes mar nem "fekete doboz": adminbol 1 kattintasos ellenorzes elerheto
+- Hibak es auth problemak konkrét uzenetben latszanak a SEO beallitas oldalon
+
+### Kovetkezo teendo
+- Google Cloud oldali szolgaltatasfiok/hozzaferes beallitasa utan a teszt gombbal ellenorizni a kapcsolatot
+
+---
+
 ## 2026. 05. 09. – Session #280 (sitemap index 404 hotfix: rewrite sorrend javitas)
 
 ### Mit csinaltunk [x]
