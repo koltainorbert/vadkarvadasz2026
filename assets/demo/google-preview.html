@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Google találat előnézet</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f1f3f4; padding: 30px; }
+  .search-box { background:#fff; border-radius:24px; padding:12px 20px; width:600px; font-size:16px; color:#333; box-shadow:0 2px 5px rgba(0,0,0,.2); margin-bottom:30px; }
+  .result { background:#fff; border-radius:8px; padding:20px 24px; width:600px; box-shadow:0 1px 3px rgba(0,0,0,.1); margin-bottom:16px; }
+  .site-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .favicon { width:18px; height:18px; border-radius:50%; background:#e84118; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; font-weight:bold; }
+  .site-name { font-size:14px; color:#202124; }
+  .site-url { font-size:12px; color:#4d5156; }
+  .title { font-size:20px; color:#1a0dab; text-decoration:none; cursor:pointer; line-height:1.3; margin:4px 0; display:block; }
+  .title:hover { text-decoration:underline; }
+  .desc { font-size:14px; color:#4d5156; line-height:1.5; margin-top:4px; }
+  .sitelinks { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; border-top:1px solid #e8eaed; padding-top:12px; }
+  .sitelink { padding:8px 10px; border-radius:6px; border:1px solid #e8eaed; }
+  .sitelink:hover { background:#f8f9fa; }
+  .sitelink-title { font-size:14px; color:#1a0dab; text-decoration:none; font-weight:500; display:block; }
+  .sitelink-desc { font-size:12px; color:#4d5156; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .car-card { display:flex; gap:12px; align-items:flex-start; padding:10px; border:1px solid #e8eaed; border-radius:8px; }
+  .car-img { width:80px; height:56px; background:#e8eaed; border-radius:4px; object-fit:cover; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#9aa0a6; font-size:11px; }
+  .car-info .car-title { font-size:14px; color:#1a0dab; font-weight:500; }
+  .car-info .car-price { font-size:13px; color:#188038; font-weight:600; margin-top:2px; }
+  .car-info .car-detail { font-size:12px; color:#4d5156; }
+  .cars-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:12px; border-top:1px solid #e8eaed; padding-top:12px; }
+  h3 { font-size:12px; color:#4d5156; font-weight:normal; margin:0 0 8px 0; text-transform:uppercase; letter-spacing:.5px; }
+  .badge { display:inline-block; background:#e8f5e9; color:#188038; font-size:11px; padding:2px 6px; border-radius:4px; margin-top:4px; }
+</style>
+</head>
+<body>
+
+<div class="search-box">🔍 &nbsp;weingartner autó</div>
+
+<!-- FŐOLDAL TALÁLAT – jelenlegi állapot -->
+<div style="color:#5f6368; font-size:13px; margin-bottom:8px;">▼ JELENLEGI (most így néz ki)</div>
+<div class="result">
+  <div class="site-row">
+    <div class="favicon">W</div>
+    <div>
+      <div class="site-name">weingartnerauto.hu</div>
+      <div class="site-url">https://www.weingartnerauto.hu</div>
+    </div>
+  </div>
+  <a class="title">Weingartner Autó</a>
+  <div class="desc">Cím: 8412 Veszprém, Alsó-Újsor utca 31. Telefon: 06209438636 Email: weingartnertrans@gmail.com. Nyelvek. HU.</div>
+</div>
+
+<!-- CÉL ÁLLAPOT -->
+<div style="color:#188038; font-size:13px; margin-bottom:8px; margin-top:24px;">▼ CÉL ÁLLAPOT (2–8 hét múlva, ha Google kiindexeli)</div>
+<div class="result">
+  <div class="site-row">
+    <div class="favicon">W</div>
+    <div>
+      <div class="site-name">weingartnerauto.hu</div>
+      <div class="site-url">https://www.weingartnerauto.hu</div>
+    </div>
+  </div>
+  <a class="title">Weingartner Autó – Eladó használt autók Veszprém</a>
+  <div class="desc">Megbízható használt autók Veszprémből. Mercedes-Benz, Volkswagen, BMW és egyéb márkák. Garantált műszaki vizsgával, kedvező áron.</div>
+
+  <!-- 3 friss autó linkek -->
+  <div class="cars-grid">
+    <div class="car-card">
+      <div class="car-img">📷 fotó</div>
+      <div class="car-info">
+        <div class="car-title">Mercedes-Benz E 280 CDI Avantgarde</div>
+        <div class="car-price">2 900 000 Ft</div>
+        <div class="car-detail">2006 · 187 000 km</div>
+      </div>
+    </div>
+    <div class="car-card">
+      <div class="car-img">📷 fotó</div>
+      <div class="car-info">
+        <div class="car-title">Volkswagen Golf 1.6 TDI Comfortline</div>
+        <div class="car-price">1 890 000 Ft</div>
+        <div class="car-detail">2014 · 142 000 km</div>
+      </div>
+    </div>
+    <div class="car-card">
+      <div class="car-img">📷 fotó</div>
+      <div class="car-info">
+        <div class="car-title">BMW 320d xDrive Sport</div>
+        <div class="car-price">3 450 000 Ft</div>
+        <div class="car-detail">2018 · 98 000 km</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigációs sitelinks -->
+  <div class="sitelinks">
+    <div class="sitelink">
+      <a class="sitelink-title">Hirdetések</a>
+      <div class="sitelink-desc">Összes eladó autó</div>
+    </div>
+    <div class="sitelink">
+      <a class="sitelink-title">Kapcsolat</a>
+      <div class="sitelink-desc">Elérhetőségek</div>
+    </div>
+    <div class="sitelink">
+      <a class="sitelink-title">Mercedes-Benz</a>
+      <div class="sitelink-desc">Eladó Mercedes autók</div>
+    </div>
+  </div>
+</div>
+
+<!-- HIRDETÉS OLDAL TALÁLAT -->
+<div style="color:#5f6368; font-size:13px; margin-bottom:8px; margin-top:24px;">▼ EGYEDI HIRDETÉS – Car schema rich result</div>
+<div class="result">
+  <div class="site-row">
+    <div class="favicon">W</div>
+    <div>
+      <div class="site-name">weingartnerauto.hu › hirdetes</div>
+      <div class="site-url">https://www.weingartnerauto.hu/hirdetes/mercedes-e280-cdi/</div>
+    </div>
+  </div>
+  <a class="title">MERCEDES-BENZ E 280 CDI Avantgarde | Weingartner Autó</a>
+  <div class="desc">MERCEDES-BENZ E 280 CDI Avantgarde eladó Veszprémben. 2006-os évjárat, 187 000 km, dízel, automata váltó. Ár: 2 900 000 Ft.</div>
+  <span class="badge">🚗 Autó · 2 900 000 Ft · Készleten</span>
+</div>
+
+<div style="font-size:12px; color:#9aa0a6; margin-top:20px;">
+  * Az autók és árak illusztrációk. A tényleges megjelenés a Google döntésétől függ.
+</div>
+
+</body>
+</html>
