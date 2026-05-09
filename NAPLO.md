@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 09. – Session #299 (Kartyaszerkeszto: Kedvenc szivecske ki/be toggle)
+
+### Mi volt a problema
+- A `vadaszapro-cards` oldalon nem volt kulon kapcsolo a kartyan levo kedvenc (szivecske) gomb teljes ki/be allitasara
+
+### Mit javitottunk [x]
+- [x] Uj `watchlist_enabled` beallitas kerult a kartya stilus defaultok koze
+- [x] A Kartyaszerkeszto / `Kedvenc gomb (Watchlist)` blokkban uj checkbox kapcsolo kerult be: `Szivecske gomb megjelenitese`
+- [x] A live preview mar azonnal koveti a kapcsolot (kikapcsolva eltunik a szivecske)
+- [x] A mentes/reset JavaScript kezeli a checkbox tipusu mezot is (0/1)
+- [x] Frontenden a listing kartya template mar nem rendereli a watchlist gombot, ha a kapcsolo ki van kapcsolva
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+
+### Eredmeny
+- A szivecske gomb mostantol egyetlen admin kapcsoloval globalisan ki/bekapcsolhato a hirdetes kartyakon
+
+---
+
 ## 2026. 05. 09. – Session #298 (Mobile Speed hiba diagnosztika)
 
 ### Mi volt a problema

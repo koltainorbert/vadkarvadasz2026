@@ -45,8 +45,18 @@ $show_views    = get_option( 'va_card_meta_show_views', '0' ) === '1';
 $show_author   = get_option( 'va_card_meta_show_author', '0' ) === '1';
 $show_date     = get_option( 'va_card_meta_show_date', '1' ) === '1';
 
+static $va_card_styles_cache = null;
+if ( $va_card_styles_cache === null ) {
+    $va_raw_card_styles = (string) get_option( 'va_card_styles', '' );
+    $va_card_styles_cache = $va_raw_card_styles ? json_decode( $va_raw_card_styles, true ) : [];
+    if ( ! is_array( $va_card_styles_cache ) ) {
+        $va_card_styles_cache = [];
+    }
+}
+$watchlist_enabled = ! isset( $va_card_styles_cache['watchlist_enabled'] ) || (string) $va_card_styles_cache['watchlist_enabled'] !== '0';
+
 $watchlist_button_html = '';
-if ( is_user_logged_in() ) {
+if ( $watchlist_enabled && is_user_logged_in() ) {
     $watchlist_nonce = wp_create_nonce( 'va_user_nonce' );
     $watchlist_ajax_url = admin_url( 'admin-ajax.php' );
     $watchlist_button_html = '<button class="va-card__watchlist' . ( $watching ? ' active' : '' ) . '" data-post-id="' . esc_attr( $post_id ) . '" data-nonce="' . esc_attr( $watchlist_nonce ) . '" data-ajax-url="' . esc_url( $watchlist_ajax_url ) . '" title="' . esc_attr( $watching ? 'Eltávolítás kedvencekből' : 'Hozzáadás kedvencekhez' ) . '">'
