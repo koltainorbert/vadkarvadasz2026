@@ -1010,6 +1010,56 @@ class VA_SEO {
         ];
     }
 
+    private static function itemlist_graph_for_frontpage(): ?array {
+        if ( ! is_front_page() ) return null;
+
+        $q = new WP_Query( [
+            'post_type'              => 'va_listing',
+            'post_status'            => 'publish',
+            'posts_per_page'         => 3,
+            'no_found_rows'          => true,
+            'ignore_sticky_posts'    => true,
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => false,
+        ] );
+
+        if ( empty( $q->posts ) ) return null;
+
+        $elements = [];
+        $i = 1;
+        foreach ( $q->posts as $p ) {
+            $thumb = get_the_post_thumbnail_url( $p->ID, 'medium' );
+            $price = get_post_meta( $p->ID, 'va_price', true );
+            $elem = [
+                '@type'    => 'ListItem',
+                'position' => $i++,
+                'url'      => get_permalink( $p ),
+                'name'     => get_the_title( $p ),
+            ];
+            if ( $thumb ) {
+                $elem['image'] = $thumb;
+            }
+            if ( is_numeric( $price ) && $price > 0 ) {
+                $elem['offers'] = [
+                    '@type'         => 'Offer',
+                    'priceCurrency' => 'HUF',
+                    'price'         => (float) $price,
+                    'availability'  => 'https://schema.org/InStock',
+                ];
+            }
+            $elements[] = $elem;
+        }
+        wp_reset_postdata();
+
+        return [
+            '@type'           => 'ItemList',
+            'name'            => 'Legfrissebb autó hirdetések',
+            'description'     => 'Weingartner Autó legújabb eladó autói',
+            'url'             => home_url( '/' ),
+            'itemListElement' => $elements,
+        ];
+    }
+
     private static function itemlist_graph_for_archive(): ?array {
         if ( ! is_post_type_archive( 'va_listing' ) && ! is_tax( 'va_category' ) ) return null;
 
@@ -1061,7 +1111,7 @@ class VA_SEO {
         $color = trim( (string) get_post_meta( $id, 'va_color', true ) );
 
         $graph = [
-            '@type' => 'Product',
+            '@type' => 'Car',
             'name' => self::listing_base_title( $id ),
             'url' => get_permalink( $id ),
             'description' => self::listing_meta_description( $id ),
@@ -1186,6 +1236,9 @@ class VA_SEO {
         $graph[] = $org;
 
         $graph[] = self::breadcrumb_graph();
+
+        $frontpage_list = self::itemlist_graph_for_frontpage();
+        if ( $frontpage_list ) $graph[] = $frontpage_list;
 
         $itemlist = self::itemlist_graph_for_archive();
         if ( $itemlist ) $graph[] = $itemlist;
