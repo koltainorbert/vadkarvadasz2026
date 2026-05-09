@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 05. 09. – Session #282 (SEO admin UX hotfix: teszt eredmeny lathatosaga)
+
+### Mit csinaltunk [x]
+- [x] A Google Indexing API teszt eredmenye mar nem csak felul notice-kent jelenik meg
+- [x] Uj inline visszajelzes kerult a `Google kapcsolat teszt` gomb ala (siker/hiba szinnel)
+- [x] Mirror szinkron root + plugin mappaban
+
+### Eredmeny
+- A teszt gomb kattintas utan azonnal ugyanott latszik a valasz, nem tunik ugy, mintha csak frissult volna az oldal
+
+---
+
 ## 2026. 05. 09. – Session #281 (Google Indexing API admin teszt + diagnosztika)
 
 ### Mit csinaltunk [x]
