@@ -151,8 +151,10 @@ class VA_Shortcodes {
         }
 
         ob_start();
-        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [], VA_VERSION );
-        wp_enqueue_script( 'va-frontend',  VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery' ], VA_VERSION, true );
+        wp_enqueue_style(  'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.min.css', [], VA_VERSION );
+        wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [ 'overlayscrollbars' ], VA_VERSION );
+        wp_enqueue_script( 'overlayscrollbars', VA_PLUGIN_URL . 'assets/overlayscrollbars.browser.es5.min.js', [], VA_VERSION, false );
+        wp_enqueue_script( 'va-frontend',  VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery', 'overlayscrollbars' ], VA_VERSION, true );
         wp_localize_script( 'va-frontend', 'VA_Data', [
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce'    => $nonce,

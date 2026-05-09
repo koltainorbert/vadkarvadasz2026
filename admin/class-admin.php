@@ -440,8 +440,10 @@ class VA_Admin {
 
         wp_enqueue_media();
         wp_enqueue_style(  "wp-color-picker" );
-        wp_enqueue_style(  "va-admin", VA_PLUGIN_URL . "admin/admin.css", [ "wp-color-picker" ], VA_VERSION );
-        wp_enqueue_script( "va-admin", VA_PLUGIN_URL . "admin/admin.js", [ "jquery", "wp-color-picker" ], VA_VERSION, true );
+        wp_enqueue_style(  "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.min.css", [], VA_VERSION );
+        wp_enqueue_style(  "va-admin", VA_PLUGIN_URL . "admin/admin.css", [ "wp-color-picker", "overlayscrollbars" ], VA_VERSION );
+        wp_enqueue_script( "overlayscrollbars", VA_PLUGIN_URL . "assets/overlayscrollbars.browser.es5.min.js", [], VA_VERSION, false );
+        wp_enqueue_script( "va-admin", VA_PLUGIN_URL . "admin/admin.js", [ "jquery", "wp-color-picker", "overlayscrollbars" ], VA_VERSION, true );
 
         // Google Font – wp_enqueue_style is betölti (dupla fallback)
         $ap_font = sanitize_key( (string) ( get_option( 'va_ap_font', 'montserrat' ) ?: 'montserrat' ) );
