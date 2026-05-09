@@ -199,12 +199,6 @@
                     <?php if ( $header_show_buy_button ): ?>
                         <a href="<?php echo esc_url( $buy_url ); ?>" class="va-header__user-login">Vásárlás</a>
                     <?php endif; ?>
-                    <?php if ( $login_enabled ): ?>
-                        <a href="<?php echo esc_url( $login_url ); ?>" class="va-header__user-login"><?php echo esc_html( $header_login_text ); ?></a>
-                    <?php endif; ?>
-                    <?php if ( $register_enabled ): ?>
-                        <a href="<?php echo esc_url( $register_url ); ?>" class="va-header__submit-btn"><?php echo esc_html( $header_register_text ); ?></a>
-                    <?php endif; ?>
                     <a href="<?php echo esc_url( $dashboard ? get_permalink($dashboard) : home_url() ); ?>" class="va-header__user">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                         <?php echo esc_html( $user->display_name ); ?>
