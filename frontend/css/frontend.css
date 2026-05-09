@@ -1112,12 +1112,12 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   z-index: 200;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,0,0,.88) rgba(255,255,255,.14);
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255,0,0,.92) rgba(255,255,255,.18);
 }
 
 .va-dashboard__nav::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .va-dashboard__nav::-webkit-scrollbar-track {
@@ -1126,7 +1126,7 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 }
 
 .va-dashboard__nav::-webkit-scrollbar-thumb {
-  background: rgba(255,0,0,.88);
+  background: rgba(255,0,0,.92);
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.18);
 }
@@ -1136,41 +1136,11 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   background: rgba(255,0,0,1);
 }
 
-.va-dashboard__nav.va-dashboard__nav--os {
-  scrollbar-width: none;
-  scrollbar-color: transparent transparent;
-  --os-size: 14px;
-  --os-padding-perpendicular: 2px;
-  --os-padding-axis: 2px;
-  --os-track-bg: rgba(255, 255, 255, 0.18);
-  --os-track-bg-hover: rgba(255, 255, 255, 0.18);
-  --os-handle-bg: rgba(255, 0, 0, 0.96);
-  --os-handle-bg-hover: rgba(255, 0, 0, 0.96);
-  --os-handle-bg-active: rgba(255, 0, 0, 1);
-  --os-handle-border-radius: 6px;
-  --os-handle-perpendicular-size: 8px;
-  --os-handle-perpendicular-size-hover: 8px;
-  --os-handle-perpendicular-size-active: 8px;
-  --os-handle-min-size: 42px;
-}
-
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical {
-  width: 14px !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical .os-scrollbar-track {
-  background: rgba(255,255,255,.18) !important;
-  border-radius: 999px !important;
-}
-
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical .os-scrollbar-handle,
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical:hover .os-scrollbar-handle,
-.va-dashboard__nav.va-dashboard__nav--os .os-scrollbar-vertical:active .os-scrollbar-handle {
-  width: 8px !important;
-  background: rgba(255,0,0,.96) !important;
-  border-radius: 999px !important;
+@supports (-moz-appearance: none) {
+  .va-dashboard__nav {
+    scrollbar-width: auto !important;
+    scrollbar-color: rgba(255,0,0,.95) rgba(255,255,255,.18) !important;
+  }
 }
 .admin-bar .va-dashboard__nav {
   top: calc(var(--nav, 66px) + 16px + 32px);
