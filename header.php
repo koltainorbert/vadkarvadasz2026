@@ -189,12 +189,8 @@
                 <?php if ( is_user_logged_in() ):
                     $user        = wp_get_current_user();
                     $dashboard   = get_page_by_path('va-fiok');
-                    $login_page  = get_page_by_path('va-bejelentkezes');
-                    $register_page = get_page_by_path('va-regisztracio');
                     $buy_page    = get_page_by_path('va-kredit-vasarlas');
                     $buy_url     = $buy_page ? get_permalink( $buy_page ) : home_url('/va-kredit-vasarlas/');
-                    $login_url   = $login_page ? get_permalink( $login_page ) : wp_login_url();
-                    $register_url = $register_page ? get_permalink( $register_page ) : wp_registration_url();
                 ?>
                     <?php if ( $header_show_buy_button ): ?>
                         <a href="<?php echo esc_url( $buy_url ); ?>" class="va-header__user-login">Vásárlás</a>
