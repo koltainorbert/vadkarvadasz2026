@@ -851,6 +851,19 @@ class VA_Ajax {
 
         $editor->set_quality( $quality );
         $editor->save( $file_path ); // helyben felülírja
+
+        // WebP konverzió (ha támogatott)
+        if ( function_exists( 'wp_get_image_editor' ) ) {
+            $webp_path = preg_replace( '/\.(jpg|jpeg|png)$/i', '.webp', $file_path );
+            if ( $webp_path !== $file_path ) {
+                $webp_editor = wp_get_image_editor( $file_path );
+                if ( ! is_wp_error( $webp_editor ) ) {
+                    $webp_editor->set_quality( $quality );
+                    $webp_result = $webp_editor->save( $webp_path, 'image/webp' );
+                    // WebP létrehozása nem kötelező, ha hiba van, a JPG/PNG marad
+                }
+            }
+        }
     }
 
     /* ── Képfeltöltés ──────────────────────────────────── */
@@ -921,6 +934,12 @@ class VA_Ajax {
                     // Thumbnail-ek újragenerálása a módosított fájlból
                     wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $file_path ) );
                 }
+
+                // Alt-text beállítása (Image SEO)
+                $image_order = $count + 1;
+                $alt_text = va_generate_image_alt_text( $post_id, $image_order );
+                update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt_text ) );
+
                 $attachment_ids[] = $attachment_id;
                 $count++;
             }
