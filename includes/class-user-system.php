@@ -63,6 +63,10 @@ class VA_User_System {
         ] );
     }
 
+    private static function is_gsc_indexing_enabled(): bool {
+        return get_option( 'va_gsc_indexing_enabled', '0' ) === '1';
+    }
+
     private static function trigger_listing_discovery_boost( int $post_id ): void {
         if ( $post_id < 1 ) return;
 
@@ -88,8 +92,10 @@ class VA_User_System {
         // IndexNow – azonnali indexelés Bing + Yandex + egyéb résztvevőknél
         self::indexnow_submit( $permalink );
 
-        // Google Search Console Indexing API (ha be van állítva a service account)
-        self::gsc_indexing_submit( $permalink );
+        // Google Search Console Indexing API opcionális, csak bekapcsolt állapotban fut.
+        if ( self::is_gsc_indexing_enabled() ) {
+            self::gsc_indexing_submit( $permalink );
+        }
     }
 
     private static function indexnow_submit( string $url ): void {
@@ -161,6 +167,14 @@ class VA_User_System {
     }
 
     public static function gsc_indexing_test( string $url = '' ): array {
+        if ( ! self::is_gsc_indexing_enabled() ) {
+            return [
+                'ok'      => true,
+                'message' => 'A Google Indexing API jelenleg kikapcsolt (opcionális mód).',
+                'status'  => 0,
+            ];
+        }
+
         $test_url = trim( $url );
         if ( $test_url === '' ) {
             $test_url = home_url( '/' );

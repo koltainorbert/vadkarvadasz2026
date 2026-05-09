@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 09. – Session #283 (Google Indexing API fallback: opcionális mód)
+
+### Mit csinaltunk [x]
+- [x] Uj SEO kapcsolo: `Google Indexing API` bekapcsolas/kikapcsolas
+- [x] Alapertelmezett fallback logika: ha ki van kapcsolva, a Google hivasok nem futnak
+- [x] `trigger_listing_discovery_boost()` mar csak bekapcsolt Google módnal kuld Indexing API hívast
+- [x] Teszt endpoint is figyelembe veszi a kapcsolot, kikapcsolt modban nem jelez piros hibát
+- [x] SEO oldalon egyertelmu UX szoveg: Google opcionális, IndexNow+sitemap ettol fuggetlenul megy
+- [x] Mirror szinkron root + plugin mappaban
+
+### Eredmeny
+- A Search Console service account jogosítási blokkolás mar nem akadályozza az oldal SEO folyamatait
+- Az automatikus IndexNow + sitemap alapu indexeles stabilan aktiv marad
+
+---
+
 ## 2026. 05. 09. – Session #282 (SEO admin UX hotfix: teszt eredmeny lathatosaga)
 
 ### Mit csinaltunk [x]
