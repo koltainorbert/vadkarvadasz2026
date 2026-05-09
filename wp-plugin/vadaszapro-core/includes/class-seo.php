@@ -653,10 +653,21 @@ class VA_SEO {
 
     public static function filter_robots_txt( string $output, bool $public ): string {
         $sitemap_line = "Sitemap: " . home_url( '/sitemap.xml' );
-        if ( strpos( $output, $sitemap_line ) === false ) {
-            $output = trim( $output ) . "\n" . $sitemap_line . "\n";
+
+        // Egységes sitemap jelzés: minden meglévő Sitemap sort eltávolítunk,
+        // majd egyetlen kanonikus sort hagyunk meg.
+        $lines = preg_split( '/\r\n|\r|\n/', (string) $output );
+        $clean = [];
+        foreach ( $lines as $line ) {
+            $trim = trim( (string) $line );
+            if ( stripos( $trim, 'Sitemap:' ) === 0 ) {
+                continue;
+            }
+            $clean[] = (string) $line;
         }
-        return $output;
+
+        $clean[] = $sitemap_line;
+        return rtrim( implode( "\n", $clean ) ) . "\n";
     }
 
     private static function should_render_meta(): bool {
