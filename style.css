@@ -2693,6 +2693,11 @@ body.sl-viewer-open { overflow: hidden; }
   padding: 6px 0 4px;
 }
 
+/* Hotfix: keresőoldali SEO landing blokk vizuális elrejtése */
+.va-search-landing {
+  display: none !important;
+}
+
 
 .vcc {
   /* Magasságot a CSS grid sor kezeli — minden kártya egy sorban egyenlő magas */

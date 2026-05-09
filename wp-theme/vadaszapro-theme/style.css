@@ -2778,6 +2778,11 @@ body.sl-viewer-open { overflow: hidden; }
   padding: 6px 0 4px;
 }
 
+/* Hotfix: keresőoldali SEO landing blokk vizuális elrejtése */
+.va-search-landing {
+  display: none !important;
+}
+
 
 .vcc {
   /* MagassĂˇgot a CSS grid sor kezeli â€” minden kĂˇrtya egy sorban egyenlĹ‘ magas */
