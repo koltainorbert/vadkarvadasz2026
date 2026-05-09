@@ -1119,10 +1119,16 @@ class VA_SEO {
         $color = trim( (string) get_post_meta( $id, 'va_color', true ) );
 
         $graph = [
-            '@type' => 'Car',
-            'name' => self::listing_base_title( $id ),
-            'url' => get_permalink( $id ),
-            'description' => self::listing_meta_description( $id ),
+            '@type'         => 'Car',
+            'name'          => self::listing_base_title( $id ),
+            'url'           => get_permalink( $id ),
+            'description'   => self::listing_meta_description( $id ),
+            'itemCondition' => 'https://schema.org/UsedCondition',
+            'seller'        => [
+                '@type' => 'AutoDealer',
+                'name'  => get_bloginfo( 'name' ),
+                'url'   => home_url( '/' ),
+            ],
         ];
 
         if ( $image ) {
@@ -1140,8 +1146,8 @@ class VA_SEO {
         }
         if ( $mileage !== '' && is_numeric( $mileage ) ) {
             $graph['mileageFromOdometer'] = [
-                '@type' => 'QuantitativeValue',
-                'value' => (float) $mileage,
+                '@type'    => 'QuantitativeValue',
+                'value'    => (float) $mileage,
                 'unitCode' => 'KMT',
             ];
         }
@@ -1158,13 +1164,46 @@ class VA_SEO {
             $graph['color'] = $color;
         }
 
+        $engine_size = trim( (string) get_post_meta( $id, 'va_engine_size', true ) );
+        if ( $engine_size !== '' && is_numeric( $engine_size ) ) {
+            $graph['vehicleEngine'] = [
+                '@type'              => 'EngineSpecification',
+                'engineDisplacement' => [
+                    '@type'    => 'QuantitativeValue',
+                    'value'    => (float) $engine_size,
+                    'unitCode' => 'CMQ',
+                ],
+            ];
+        }
+
+        $doors = trim( (string) get_post_meta( $id, 'va_doors', true ) );
+        if ( $doors !== '' && is_numeric( $doors ) ) {
+            $graph['numberOfDoors'] = (int) $doors;
+        }
+
+        $drive = trim( (string) get_post_meta( $id, 'va_drive', true ) );
+        if ( $drive !== '' ) {
+            $graph['driveWheelConfiguration'] = $drive;
+        }
+
+        $vin = trim( (string) get_post_meta( $id, 'va_vin', true ) );
+        if ( $vin !== '' ) {
+            $graph['vehicleIdentificationNumber'] = $vin;
+        }
+
         if ( is_numeric( $price ) && $price_type !== 'ask' ) {
             $graph['offers'] = [
-                '@type' => 'Offer',
+                '@type'         => 'Offer',
                 'priceCurrency' => 'HUF',
-                'price' => (float) $price,
-                'availability' => 'https://schema.org/InStock',
-                'url' => get_permalink( $id ),
+                'price'         => (float) $price,
+                'availability'  => 'https://schema.org/InStock',
+                'itemCondition' => 'https://schema.org/UsedCondition',
+                'url'           => get_permalink( $id ),
+                'seller'        => [
+                    '@type' => 'AutoDealer',
+                    'name'  => get_bloginfo( 'name' ),
+                    'url'   => home_url( '/' ),
+                ],
             ];
         }
 
