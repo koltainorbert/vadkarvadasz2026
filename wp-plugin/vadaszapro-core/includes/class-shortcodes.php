@@ -268,9 +268,15 @@ class VA_Shortcodes {
                     <?php elseif ( $is_free ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--free" disabled><?php echo esc_html( $card['btn_text'] ); ?></button>
                     <?php else: ?>
-                    <button type="button" class="va-pkg-buy-btn" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
+                    <?php $fallback_checkout_url = add_query_arg([
+                        'va_buy_credits_start' => '1',
+                        'qty'                  => $qty,
+                        'return_to'            => $return_to,
+                        'nonce'                => wp_create_nonce( 'va_buy_credits' ),
+                    ], home_url( '/' ) ); ?>
+                    <a href="<?php echo esc_url( $fallback_checkout_url ); ?>" class="va-pkg-buy-btn" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
                         <?php echo esc_html( $card['btn_text'] ); ?>
-                    </button>
+                    </a>
                     <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
