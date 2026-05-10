@@ -1121,7 +1121,7 @@ class VA_Ajax {
         }
 
         if ( $retried_huf_scale ) {
-            update_transient( 'va_stripe_huf_scaled_' . $token, 1, HOUR_IN_SECONDS );
+            set_transient( 'va_stripe_huf_scaled_' . $token, 1, HOUR_IN_SECONDS );
         }
 
         return $url;

@@ -28,6 +28,10 @@
 - [x] A pontos hiba `error_log`-ba kerul (`VA buy credits start fatal guard: ...`), igy kovetkezo korben celzottan javithato a gyokerok
 - [x] Ideiglenes frontend diagnosztika: a flash uzenet most roviditett kivetel-reszletet is mutat (`[ok: ... @line]`)
 
+### Gyokerok javitasa
+- [x] Konkret hiba: `Call to undefined function update_transient()` a Stripe session URL letrehozasnal
+- [x] Javitas: `update_transient(...)` -> `set_transient(...)` mindket mirror file-ban
+
 ## 2026. 05. 09. – Session #301 (Header login/regisztracio/vasarlas + deploy helyreallitas)
 
 ### Mi tortent [x]
