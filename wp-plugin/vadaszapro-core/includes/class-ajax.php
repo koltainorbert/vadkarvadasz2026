@@ -1011,24 +1011,28 @@ class VA_Ajax {
 
         $amount_huf = absint( $amount );
         $qty = max( 1, absint( $qty ) );
-        $huf_min = 175;
+        // Stripe ezen a fiókon HUF-ot fillérként kezeli (*100), ezért a minimum 2 Ft (= 175 fillér / 100).
+        $huf_min_ft = 2;
 
-        // Ha valamilyen admin árbeállítás formátumhiba miatt túl kicsi összeg jönne,
-        // próbáljuk újraszámolni az alap egységárból.
-        if ( $amount_huf < $huf_min ) {
+        // Ha admin árbeállítás formátumhiba miatt túl kicsi jönne, számoljuk újra.
+        if ( $amount_huf < $huf_min_ft ) {
             $base_price = max( 0, absint( get_option( 'va_listing_price_after_free', 1990 ) ) );
             $recalc = $base_price * $qty;
-            if ( $recalc >= $huf_min ) {
+            if ( $recalc >= $huf_min_ft ) {
                 $amount_huf = $recalc;
             }
         }
 
-        if ( $amount_huf < $huf_min ) {
+        if ( $amount_huf < $huf_min_ft ) {
             return new WP_Error(
                 'va_stripe_amount_too_small_local',
-                'A fizetési összeg túl alacsony Stripe-hoz. Aktuális: ' . $amount_huf . ' Ft, minimum: ' . $huf_min . ' Ft. Állítsd a csomagárat legalább ' . $huf_min . ' Ft értékre.'
+                'A fizetési összeg túl alacsony. Aktuális: ' . $amount_huf . ' Ft. Állítsd a csomagárat legalább ' . $huf_min_ft . ' Ft értékre.'
             );
         }
+
+        // Ezen a Stripe fiókon a HUF 2 tizedes-alapú (fillér szintű) egységként értelmezett,
+        // ezért mindig *100-al küldjük: 1500 Ft → 150000 egység → Stripe 1500,00 Ft-ot számol.
+        $stripe_unit_amount = $amount_huf * 100;
 
         $body = [
             'mode'                                            => 'payment',
@@ -1040,7 +1044,7 @@ class VA_Ajax {
             'metadata[purpose]'                               => 'credit_purchase',
             'metadata[qty]'                                   => (string) $qty,
             'line_items[0][price_data][currency]'             => 'huf',
-            'line_items[0][price_data][unit_amount]'          => $amount_huf,
+            'line_items[0][price_data][unit_amount]'          => $stripe_unit_amount,
             'line_items[0][price_data][product_data][name]'   => $qty . ' kredit csomag',
             'line_items[0][quantity]'                         => 1,
         ];
@@ -1060,36 +1064,6 @@ class VA_Ajax {
 
         $code = (int) wp_remote_retrieve_response_code( $response );
         $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
-
-        // Egyes Stripe API verzióknál a HUF 2 decimálissal értelmeződik.
-        // Ha ezért amount_too_small jön vissza, megpróbáljuk *100-al.
-        $retried_huf_scale = false;
-        if ( $code >= 400 && is_array( $json ) && isset( $json['error']['code'] ) ) {
-            $err_code = (string) $json['error']['code'];
-            if ( $err_code === 'amount_too_small' && $amount_huf >= $huf_min ) {
-                $scaled_body = $body;
-                $scaled_body['line_items[0][price_data][unit_amount]'] = $amount_huf * 100;
-
-                $retry_response = wp_remote_post( 'https://api.stripe.com/v1/checkout/sessions', [
-                    'timeout' => 45,
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $secret_key,
-                        'Content-Type'  => 'application/x-www-form-urlencoded',
-                    ],
-                    'body'    => $scaled_body,
-                ] );
-
-                if ( ! is_wp_error( $retry_response ) ) {
-                    $retry_code = (int) wp_remote_retrieve_response_code( $retry_response );
-                    $retry_json = json_decode( (string) wp_remote_retrieve_body( $retry_response ), true );
-                    if ( $retry_code >= 200 && $retry_code < 300 && is_array( $retry_json ) ) {
-                        $code = $retry_code;
-                        $json = $retry_json;
-                        $retried_huf_scale = true;
-                    }
-                }
-            }
-        }
 
         if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
             $details = '';
@@ -1112,17 +1086,13 @@ class VA_Ajax {
                     $details = ' (' . implode( ' | ', $parts ) . ')';
                 }
             }
-            $details .= ' [sent_unit_amount=' . $amount_huf . ' huf]';
+            $details .= ' [sent_unit_amount=' . $stripe_unit_amount . ' (huf_ft=' . $amount_huf . ')]';
             return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' . $details );
         }
 
         $url = isset( $json['url'] ) ? esc_url_raw( (string) $json['url'] ) : '';
         if ( $url === '' ) {
             return new WP_Error( 'va_stripe_missing_url', 'Stripe nem adott vissza fizetési URL-t.' );
-        }
-
-        if ( $retried_huf_scale ) {
-            set_transient( 'va_stripe_huf_scaled_' . $token, 1, HOUR_IN_SECONDS );
         }
 
         return $url;
