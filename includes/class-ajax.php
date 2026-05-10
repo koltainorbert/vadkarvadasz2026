@@ -731,6 +731,7 @@ class VA_Ajax {
 
         if ( $state === 'success' ) {
             $provider = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+            $stripe_diag = '';
 
             if ( $provider === 'stripe' ) {
                 $session_id = isset( $_GET['session_id'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['session_id'] ) ) : '';
@@ -746,6 +747,17 @@ class VA_Ajax {
                     self::redirect_buy_credits_page();
                     return;
                 }
+
+                if ( is_array( $verify ) ) {
+                    $sid = sanitize_text_field( (string) ( $verify['session_id'] ?? '' ) );
+                    $pid = sanitize_text_field( (string) ( $verify['payment_intent'] ?? '' ) );
+                    $parts = [];
+                    if ( $sid !== '' ) $parts[] = 'session: ' . $sid;
+                    if ( $pid !== '' ) $parts[] = 'payment: ' . $pid;
+                    if ( ! empty( $parts ) ) {
+                        $stripe_diag = ' [' . implode( ' | ', $parts ) . ']';
+                    }
+                }
             }
 
             $finalize = self::finalize_credit_purchase( $token, $data );
@@ -757,9 +769,9 @@ class VA_Ajax {
 
             $qty = absint( $finalize['qty'] ?? 0 );
             if ( ! empty( $finalize['already'] ) ) {
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $stripe_diag );
             } else {
-                va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' );
+                va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' . $stripe_diag );
             }
             if ( $return_to === 'submit' ) {
                 self::redirect_submit_page();
@@ -1143,7 +1155,12 @@ class VA_Ajax {
             return new WP_Error( 'va_stripe_not_paid', 'A Stripe fizetés még nincs sikeresen lezárva.' );
         }
 
-        return true;
+        return [
+            'session_id'     => sanitize_text_field( (string) ( $json['id'] ?? $session_id ) ),
+            'payment_intent' => sanitize_text_field( (string) ( $json['payment_intent'] ?? '' ) ),
+            'amount_total'   => absint( $json['amount_total'] ?? 0 ),
+            'currency'       => sanitize_key( (string) ( $json['currency'] ?? '' ) ),
+        ];
     }
 
     private static function parse_stripe_webhook_event( string $payload, string $signature ) {
