@@ -378,6 +378,7 @@
     e.preventDefault();
 
     var qty = parseInt($btn.data('qty') || 0, 10);
+    var fallbackUrl = ($btn.attr('href') || '').toString();
     var $wrap = $btn.closest('.va-wrap');
     var nonce = ($wrap.data('vaBuyNonce') || '').toString();
     var returnTo = ($wrap.data('vaBuyReturnTo') || 'buy').toString();
@@ -404,6 +405,14 @@
       $notice.html('<div class="va-notice va-notice--warning">Fizetés előkészítése...</div>');
     }
 
+    // Ha az AJAX bármiért elakad (pl. cache/WAF/network), essünk vissza a szerveroldali linkre.
+    var finished = false;
+    var fallbackTimer = setTimeout(function() {
+      if (!finished && fallbackUrl) {
+        window.location.href = fallbackUrl;
+      }
+    }, 1800);
+
     $.post(ajaxUrl, {
       action: 'va_buy_credits',
       nonce: nonce,
@@ -411,6 +420,8 @@
       return_to: returnTo
     }).done(function(res) {
       if (res && res.success && res.data && res.data.checkout_url) {
+        finished = true;
+        clearTimeout(fallbackTimer);
         window.location.href = res.data.checkout_url;
         return;
       }
@@ -419,11 +430,26 @@
       if ($notice.length) {
         $notice.html('<div class="va-notice va-notice--error">' + vaEscapeHtml(message) + '</div>');
       }
+
+      // Hiba esetén is próbáljuk a fallback route-ot.
+      if (fallbackUrl) {
+        finished = true;
+        clearTimeout(fallbackTimer);
+        window.location.href = fallbackUrl;
+      }
     }).fail(function() {
       if ($notice.length) {
         $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Kérjük, próbáld újra.</div>');
       }
+
+      if (fallbackUrl) {
+        finished = true;
+        clearTimeout(fallbackTimer);
+        window.location.href = fallbackUrl;
+      }
     }).always(function() {
+      finished = true;
+      clearTimeout(fallbackTimer);
       $btn.prop('disabled', false).removeClass('is-loading').text(originalLabel);
     });
   });
