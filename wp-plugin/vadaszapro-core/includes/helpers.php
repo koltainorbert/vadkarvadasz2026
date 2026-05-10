@@ -500,12 +500,35 @@ function va_template( string $name, array $data = [] ): void {
 function va_set_flash( string $type, string $message ): void {
     if ( ! session_id() ) session_start();
     $_SESSION['va_flash'][] = [ 'type' => $type, 'message' => $message ];
+
+    // Stripe redirect után a PHP session elveszhet, ezért user-szintű fallback is kell.
+    $uid = get_current_user_id();
+    if ( $uid > 0 ) {
+        $key = 'va_flash_user_' . $uid;
+        $bag = get_transient( $key );
+        if ( ! is_array( $bag ) ) {
+            $bag = [];
+        }
+        $bag[] = [ 'type' => $type, 'message' => $message ];
+        set_transient( $key, $bag, 10 * MINUTE_IN_SECONDS );
+    }
 }
 
 function va_get_flash(): array {
     if ( ! session_id() ) session_start();
     $messages = $_SESSION['va_flash'] ?? [];
     unset( $_SESSION['va_flash'] );
+
+    $uid = get_current_user_id();
+    if ( $uid > 0 ) {
+        $key = 'va_flash_user_' . $uid;
+        $bag = get_transient( $key );
+        if ( is_array( $bag ) && ! empty( $bag ) ) {
+            $messages = array_merge( $messages, $bag );
+        }
+        delete_transient( $key );
+    }
+
     return $messages;
 }
 
