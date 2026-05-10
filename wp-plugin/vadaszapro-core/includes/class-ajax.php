@@ -769,16 +769,8 @@ class VA_Ajax {
             exit;
         } catch ( Throwable $e ) {
             $raw_message = (string) $e->getMessage();
-            $diag_message = sanitize_text_field( $raw_message );
-            if ( function_exists( 'mb_substr' ) ) {
-                $diag_message = mb_substr( $diag_message, 0, 180 );
-            } else {
-                $diag_message = substr( $diag_message, 0, 180 );
-            }
-            $diag = ' [ok: ' . $diag_message . ' @' . absint( $e->getLine() ) . ']';
-
             error_log( 'VA buy credits start fatal guard: ' . $raw_message . ' @ ' . $e->getFile() . ':' . $e->getLine() );
-            va_set_flash( 'error', 'Technikai hiba történt a fizetés indításakor.' . $diag );
+            va_set_flash( 'error', 'Technikai hiba történt a fizetés indításakor. Kérjük próbáld újra.' );
             self::redirect_buy_credits_page();
             return;
         }
@@ -1253,7 +1245,8 @@ class VA_Ajax {
                 }
             }
             $details .= ' [sent_unit_amount=' . $stripe_unit_amount . ' (huf_ft=' . $amount_huf . ')]';
-            return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' . $details );
+            error_log( 'VA Stripe create session error: code=' . $code . $details );
+            return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen. Kérjük próbáld újra később.' );
         }
 
         $url = isset( $json['url'] ) ? esc_url_raw( (string) $json['url'] ) : '';
@@ -1331,6 +1324,22 @@ class VA_Ajax {
         $v1_list   = isset( $parts['v1'] ) && is_array( $parts['v1'] ) ? $parts['v1'] : [];
         if ( $timestamp === '' || empty( $v1_list ) ) {
             return new WP_Error( 'va_stripe_bad_signature_header', 'Stripe-Signature fejléc érvénytelen.' );
+        }
+
+        if ( ! ctype_digit( $timestamp ) ) {
+            return new WP_Error( 'va_stripe_bad_timestamp', 'Stripe-Signature timestamp érvénytelen.' );
+        }
+
+        $ts = (int) $timestamp;
+        $tolerance = absint( get_option( 'va_stripe_webhook_tolerance_sec', 300 ) );
+        if ( $tolerance < 30 ) {
+            $tolerance = 30;
+        }
+        if ( $tolerance > 3600 ) {
+            $tolerance = 3600;
+        }
+        if ( abs( time() - $ts ) > $tolerance ) {
+            return new WP_Error( 'va_stripe_sig_too_old', 'Stripe webhook időbélyeg túl régi vagy túl jövőbeli.' );
         }
 
         $signed_payload = $timestamp . '.' . $payload;

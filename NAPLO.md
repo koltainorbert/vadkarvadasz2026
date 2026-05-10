@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 05. 10. – Session #304 (Stripe hardening: user-safe hibauzenet + webhook replay vedelem)
+
+### Mit erositettem [x]
+- [x] A felhasznalonak mutatott technikai exception diagnosztika eltavolitva a fizetes inditas hibagabol
+- [x] Stripe session create hiba reszletes technikai resze mar csak `error_log`-ba megy, user oldalon generikus hiba marad
+- [x] Stripe webhook signature ellenorzesnel timestamp validacio bekerult
+- [x] Replay/clock-skew vedelem: `va_stripe_webhook_tolerance_sec` opcio (default 300 mp, clamp: 30..3600)
+
+### Fajlok
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
 ## 2026. 05. 10. – Session #303 (Csomagvasarlasi szabaly: csak magasabb rang aktiv csomag mellett)
 
 ### Uj uzleti szabaly [x]
