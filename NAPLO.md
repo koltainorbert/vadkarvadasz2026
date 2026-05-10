@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 10. – Session #303 (Csomagvasarlasi szabaly: csak magasabb rang aktiv csomag mellett)
+
+### Uj uzleti szabaly [x]
+- [x] Aktiv csomag mellett csak magasabb rang vasarolhato
+- [x] Lejart csomag utan barmelyik rang vasarolhato ujra
+- [x] Egyszerre csak egy aktiv termek logika ervenyesul (uj, magasabb rang felulirja a jelenlegit)
+
+### Technikai modositasok [x]
+- [x] `VA_User_Roles::get_user_plan()` lejárat-tudatos lett (`va_plan_expires_at`)
+- [x] Uj rang-seged: `VA_User_Roles::get_plan_rank()`
+- [x] `VA_Ajax` szerveroldali vasarlasi vedelmet kapott:
+  - target plan meghatarozas qty alapjan
+  - aktiv plan + lejarat ellenorzes
+  - tiltott vasarlas eseteben warning/error visszajelzes
+- [x] Sikeres vasarlasnal a plan lejárat mentese bevezetve (`va_plan_duration_days`, default: 30 nap)
+- [x] UI oldalon a tiltott csomagok gombja letiltva: `Csak magasabb csomag veheto`
+- [x] Hero blokkban aktiv csomag lejárat kijelzese
+
+### Szinkron
+- [x] Root es plugin mirror fajlok szinkronban frissitve:
+  - `includes/class-ajax.php`
+  - `includes/class-shortcodes.php`
+  - `includes/class-user-roles.php`
+
 ## 2026. 05. 10. – Session #302 (Stripe HUF amount_too_small kompatibilitas fix)
 
 ### Mi volt a problema
