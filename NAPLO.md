@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 10. – Session #306 (Holnapi munkahelyi folytatas / elesitesi checklist)
+
+### Kontextus atadas holnapra [x]
+- [x] Stripe teszt flow mukodik (session + payment intent ID visszajelzes van)
+- [x] Kredit jovairas + rangfrissites mukodik
+- [x] Csomagvasarlasi lock szabaly aktiv (aktiv csomagnal csak magasabb vasarolhato)
+- [x] Biztonsagi hardening bent (webhook timestamp tolerancia + user-safe hiba uzenetek)
+
+### Holnapi elesitesi beallitas lista (lepj vegig sorrendben)
+1. Stripe business verification es payout (bankszamla) keszre allitasa
+2. WP adminban test kulcsok cserelese live kulcsokra:
+  - `pk_live_...`
+  - `sk_live_...`
+3. Stripe LIVE webhook endpoint letrehozasa (`checkout.session.completed`)
+4. LIVE webhook secret (`whsec_...`) bemasolasa WP-be
+5. Csomagarak vegso ellenorzese adminban (0/ures ar ne maradjon nem ingyenes csomagnal)
+6. HTTPS + success/cancel visszairanyitas domain ellenorzes
+7. 1 db kis osszegu valos live proba fizetes
+8. Eredmenyellenorzes:
+  - Stripe payment sikeres
+  - kredit no
+  - aktiv rang helyes
+  - visszairanyitas rendben
+
+### Fontos
+- Test es Live kulcsok + webhook secret kulonbozo, ne keverd ossze.
+- Ha 1 kredites csomag 100 Ft kell legyen, az admin ar mezoben tenylegesen `100` legyen.
+- Repo frissitve lett a session vegere, holnap innen lehet tovabb menni.
+
 ## 2026. 05. 10. – Session #305 (Aktiv csomag jeloles + lock javitas legacy lejárat nelkul)
 
 ### Hiba
