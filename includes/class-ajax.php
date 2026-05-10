@@ -699,6 +699,29 @@ class VA_Ajax {
         if ( ! $data ) {
             $paid = get_transient( 'va_credit_paid_' . $token );
             if ( is_array( $paid ) && isset( $paid['user_id'] ) && (int) $paid['user_id'] === get_current_user_id() ) {
+                if ( $state === 'success' ) {
+                    $provider_expected = sanitize_key( (string) ( $paid['provider'] ?? get_option( 'va_payment_provider', 'none' ) ) );
+                    $has_stripe_ids = ! empty( $paid['stripe_session_id'] ) || ! empty( $paid['stripe_payment_intent'] );
+
+                    if ( $provider_expected === 'stripe' && ! $has_stripe_ids ) {
+                        $session_id = isset( $_GET['session_id'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['session_id'] ) ) : '';
+                        if ( $session_id !== '' ) {
+                            $verify = self::verify_stripe_checkout_payment( $session_id, $token );
+                            if ( is_array( $verify ) ) {
+                                $sid = sanitize_text_field( (string) ( $verify['session_id'] ?? '' ) );
+                                $pid = sanitize_text_field( (string) ( $verify['payment_intent'] ?? '' ) );
+                                if ( $sid !== '' ) {
+                                    $paid['stripe_session_id'] = $sid;
+                                }
+                                if ( $pid !== '' ) {
+                                    $paid['stripe_payment_intent'] = $pid;
+                                }
+                                set_transient( 'va_credit_paid_' . $token, $paid, WEEK_IN_SECONDS );
+                            }
+                        }
+                    }
+                }
+
                 $paid_diag_parts = [];
                 if ( ! empty( $paid['stripe_session_id'] ) ) {
                     $paid_diag_parts[] = 'session: ' . sanitize_text_field( (string) $paid['stripe_session_id'] );
@@ -852,6 +875,9 @@ class VA_Ajax {
                 $fallback = [
                     'user_id'   => absint( $metadata['user_id'] ?? 0 ),
                     'qty'       => absint( $metadata['qty'] ?? 0 ),
+                    'provider'  => 'stripe',
+                    'stripe_session_id' => sanitize_text_field( (string) ( $object['id'] ?? '' ) ),
+                    'stripe_payment_intent' => sanitize_text_field( (string) ( $object['payment_intent'] ?? '' ) ),
                     'return_to' => 'buy',
                 ];
                 self::finalize_credit_purchase( $token, $fallback );
@@ -1247,6 +1273,7 @@ class VA_Ajax {
         $user_id   = absint( $data['user_id'] ?? 0 );
         $qty       = absint( $data['qty'] ?? 0 );
         $return_to = isset( $data['return_to'] ) && $data['return_to'] === 'submit' ? 'submit' : 'buy';
+        $provider  = sanitize_key( (string) ( $data['provider'] ?? get_option( 'va_payment_provider', 'none' ) ) );
         $stripe_session_id     = sanitize_text_field( (string) ( $data['stripe_session_id'] ?? '' ) );
         $stripe_payment_intent = sanitize_text_field( (string) ( $data['stripe_payment_intent'] ?? '' ) );
 
@@ -1277,6 +1304,7 @@ class VA_Ajax {
         $paid_data = [
             'user_id'   => $user_id,
             'qty'       => $qty,
+            'provider'  => $provider,
             'return_to' => $return_to,
         ];
         if ( $stripe_session_id !== '' ) {
