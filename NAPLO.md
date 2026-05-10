@@ -2,6 +2,27 @@
 
 ---
 
+## 2026. 05. 10. – Session #305 (Aktiv csomag jeloles + lock javitas legacy lejárat nelkul)
+
+### Hiba
+- Platinum usernel tovabbra is vasarolhato maradt alacsonyabb csomag
+- Az aktiv csomag badge nem jelent meg
+- Oka: `va_plan_expires_at` hianyzo legacy usereknel a logika nem tekintette aktivnak a csomagot
+
+### Javitas [x]
+- [x] `VA_User_Roles::get_user_plan()` legacy migracio: ha nem basic plan es nincs lejárat, automatikusan beallit egy default lejáratot (`va_plan_duration_days`, default 30 nap)
+- [x] Szerveroldali vasarlasi lock (`enforce_credit_package_purchase_rule`) aktivnak tekinti a nem basic plan-t akkor is, ha legacy lejárat hianyzott
+- [x] UI-ban az aktiv csomag jeloles visszaallitva (`is_active = slug == user_plan`)
+- [x] Hero info lejárat szoveg biztonsagos fallbacket kapott (`nincs beallitva`)
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
 ## 2026. 05. 10. – Session #304 (Stripe hardening: user-safe hibauzenet + webhook replay vedelem)
 
 ### Mit erositettem [x]
