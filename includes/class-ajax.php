@@ -17,6 +17,7 @@ class VA_Ajax {
         // Kredit csomag vásárlás
         add_action( 'wp_ajax_va_buy_credits',        [ __CLASS__, 'buy_credits' ] );
         add_action( 'template_redirect',             [ __CLASS__, 'handle_credit_payment_callback' ] );
+        add_action( 'init',                          [ __CLASS__, 'handle_stripe_webhook' ] );
 
         // Watchlist
         add_action( 'wp_ajax_va_toggle_watchlist', [ __CLASS__, 'toggle_watchlist' ] );
@@ -496,7 +497,7 @@ class VA_Ajax {
             'amount'     => $total,
             'return_to'  => $return_to,
             'created_at' => time(),
-        ], 3600 );
+        ], DAY_IN_SECONDS );
 
         $return_url = $return_to === 'submit'
             ? self::get_submit_page_url()
@@ -560,8 +561,25 @@ class VA_Ajax {
         if ( $token === '' || ! is_user_logged_in() ) return;
 
         $data = get_transient( 'va_credit_token_' . $token );
-        if ( ! $data || (int) $data['user_id'] !== get_current_user_id() ) {
+        if ( ! $data ) {
+            $paid = get_transient( 'va_credit_paid_' . $token );
+            if ( is_array( $paid ) && isset( $paid['user_id'] ) && (int) $paid['user_id'] === get_current_user_id() ) {
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
+                $return_to = ( isset( $paid['return_to'] ) && $paid['return_to'] === 'submit' ) ? 'submit' : 'buy';
+                if ( $return_to === 'submit' ) {
+                    self::redirect_submit_page();
+                }
+                self::redirect_buy_credits_page();
+                return;
+            }
+
             va_set_flash( 'error', 'A fizetési session érvénytelen vagy lejárt.' );
+            self::redirect_buy_credits_page();
+            return;
+        }
+
+        if ( (int) ( $data['user_id'] ?? 0 ) !== get_current_user_id() ) {
+            va_set_flash( 'error', 'A fizetési session nem ehhez a felhasználóhoz tartozik.' );
             self::redirect_buy_credits_page();
             return;
         }
@@ -597,24 +615,90 @@ class VA_Ajax {
                 }
             }
 
-            $qty     = absint( $data['qty'] );
-            $user_id = (int) $data['user_id'];
-            $current = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
-            update_user_meta( $user_id, 'va_listing_credits', $current + $qty );
-            delete_transient( 'va_credit_token_' . $token );
-
-            // Felfüggesztett hirdetések visszakapcsolása ha most van elég keret
-            if ( class_exists( 'VA_User_Roles' ) ) {
-                delete_transient( 'va_enforce_ok_' . $user_id );
-                VA_User_Roles::enforce_plan_limits( $user_id );
+            $finalize = self::finalize_credit_purchase( $token, $data );
+            if ( is_wp_error( $finalize ) ) {
+                va_set_flash( 'error', $finalize->get_error_message() );
+                self::redirect_buy_credits_page();
+                return;
             }
 
-            va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' );
+            $qty = absint( $finalize['qty'] ?? 0 );
+            if ( ! empty( $finalize['already'] ) ) {
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
+            } else {
+                va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' );
+            }
             if ( $return_to === 'submit' ) {
                 self::redirect_submit_page();
             }
             self::redirect_buy_credits_page();
         }
+    }
+
+    public static function handle_stripe_webhook(): void {
+        $flag = isset( $_GET['va_stripe_webhook'] ) ? sanitize_key( (string) wp_unslash( $_GET['va_stripe_webhook'] ) ) : '';
+        if ( $flag !== '1' ) {
+            return;
+        }
+
+        if ( strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) !== 'POST' ) {
+            status_header( 405 );
+            echo 'Method Not Allowed';
+            exit;
+        }
+
+        $provider = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+        if ( $provider !== 'stripe' ) {
+            status_header( 400 );
+            echo 'Stripe provider is not active';
+            exit;
+        }
+
+        $payload   = file_get_contents( 'php://input' );
+        $signature = isset( $_SERVER['HTTP_STRIPE_SIGNATURE'] ) ? sanitize_text_field( (string) wp_unslash( $_SERVER['HTTP_STRIPE_SIGNATURE'] ) ) : '';
+
+        $event = self::parse_stripe_webhook_event( (string) $payload, $signature );
+        if ( is_wp_error( $event ) ) {
+            status_header( 400 );
+            echo $event->get_error_message();
+            exit;
+        }
+
+        $event_id = isset( $event['id'] ) ? sanitize_text_field( (string) $event['id'] ) : '';
+        if ( $event_id !== '' ) {
+            if ( get_transient( 'va_stripe_evt_' . $event_id ) ) {
+                status_header( 200 );
+                echo 'ok';
+                exit;
+            }
+            set_transient( 'va_stripe_evt_' . $event_id, 1, WEEK_IN_SECONDS );
+        }
+
+        $type   = isset( $event['type'] ) ? (string) $event['type'] : '';
+        $object = isset( $event['data']['object'] ) && is_array( $event['data']['object'] ) ? $event['data']['object'] : [];
+
+        if ( $type === 'checkout.session.completed' ) {
+            $status         = (string) ( $object['status'] ?? '' );
+            $payment_status = (string) ( $object['payment_status'] ?? '' );
+            $token          = (string) ( $object['client_reference_id'] ?? '' );
+            $metadata       = isset( $object['metadata'] ) && is_array( $object['metadata'] ) ? $object['metadata'] : [];
+            if ( $token === '' && isset( $metadata['token'] ) ) {
+                $token = (string) $metadata['token'];
+            }
+
+            if ( $token !== '' && $status === 'complete' && $payment_status === 'paid' ) {
+                $fallback = [
+                    'user_id'   => absint( $metadata['user_id'] ?? 0 ),
+                    'qty'       => absint( $metadata['qty'] ?? 0 ),
+                    'return_to' => 'buy',
+                ];
+                self::finalize_credit_purchase( $token, $fallback );
+            }
+        }
+
+        status_header( 200 );
+        echo 'ok';
+        exit;
     }
 
     /* ── Kredit csomagok definíciója ───────────────────── */
@@ -881,6 +965,98 @@ class VA_Ajax {
         }
 
         return true;
+    }
+
+    private static function parse_stripe_webhook_event( string $payload, string $signature ) {
+        $secret = trim( (string) get_option( 'va_payment_webhook_secret', '' ) );
+        if ( $secret === '' ) {
+            return new WP_Error( 'va_stripe_missing_webhook_secret', 'Stripe webhook secret hiányzik.' );
+        }
+        if ( $signature === '' ) {
+            return new WP_Error( 'va_stripe_missing_signature', 'Stripe-Signature fejléc hiányzik.' );
+        }
+
+        $parts = [];
+        foreach ( explode( ',', $signature ) as $chunk ) {
+            $pair = explode( '=', trim( $chunk ), 2 );
+            if ( count( $pair ) === 2 ) {
+                $parts[ $pair[0] ][] = $pair[1];
+            }
+        }
+
+        $timestamp = isset( $parts['t'][0] ) ? (string) $parts['t'][0] : '';
+        $v1_list   = isset( $parts['v1'] ) && is_array( $parts['v1'] ) ? $parts['v1'] : [];
+        if ( $timestamp === '' || empty( $v1_list ) ) {
+            return new WP_Error( 'va_stripe_bad_signature_header', 'Stripe-Signature fejléc érvénytelen.' );
+        }
+
+        $signed_payload = $timestamp . '.' . $payload;
+        $expected       = hash_hmac( 'sha256', $signed_payload, $secret );
+        $valid          = false;
+        foreach ( $v1_list as $candidate ) {
+            if ( hash_equals( $expected, (string) $candidate ) ) {
+                $valid = true;
+                break;
+            }
+        }
+
+        if ( ! $valid ) {
+            return new WP_Error( 'va_stripe_sig_mismatch', 'Stripe webhook aláírás ellenőrzés sikertelen.' );
+        }
+
+        $event = json_decode( $payload, true );
+        if ( ! is_array( $event ) ) {
+            return new WP_Error( 'va_stripe_invalid_json', 'Stripe webhook JSON érvénytelen.' );
+        }
+
+        return $event;
+    }
+
+    private static function finalize_credit_purchase( string $token, array $fallback_data = [] ) {
+        $paid_key = 'va_credit_paid_' . $token;
+        $paid     = get_transient( $paid_key );
+        if ( is_array( $paid ) && ! empty( $paid['user_id'] ) && ! empty( $paid['qty'] ) ) {
+            return [
+                'already'   => true,
+                'user_id'   => (int) $paid['user_id'],
+                'qty'       => (int) $paid['qty'],
+                'return_to' => (string) ( $paid['return_to'] ?? 'buy' ),
+            ];
+        }
+
+        $data = get_transient( 'va_credit_token_' . $token );
+        if ( ! is_array( $data ) ) {
+            $data = $fallback_data;
+        }
+
+        $user_id   = absint( $data['user_id'] ?? 0 );
+        $qty       = absint( $data['qty'] ?? 0 );
+        $return_to = isset( $data['return_to'] ) && $data['return_to'] === 'submit' ? 'submit' : 'buy';
+
+        if ( $user_id <= 0 || $qty <= 0 ) {
+            return new WP_Error( 'va_credit_missing_payload', 'A fizetés adatai hiányosak, kredit nem írható jóvá.' );
+        }
+
+        $current = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
+        update_user_meta( $user_id, 'va_listing_credits', $current + $qty );
+        set_transient( $paid_key, [
+            'user_id'   => $user_id,
+            'qty'       => $qty,
+            'return_to' => $return_to,
+        ], WEEK_IN_SECONDS );
+        delete_transient( 'va_credit_token_' . $token );
+
+        if ( class_exists( 'VA_User_Roles' ) ) {
+            delete_transient( 'va_enforce_ok_' . $user_id );
+            VA_User_Roles::enforce_plan_limits( $user_id );
+        }
+
+        return [
+            'already'   => false,
+            'user_id'   => $user_id,
+            'qty'       => $qty,
+            'return_to' => $return_to,
+        ];
     }
 
     private static function redirect_submit_page(): void {

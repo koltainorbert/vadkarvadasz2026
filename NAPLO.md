@@ -4859,3 +4859,24 @@ A vásárlás oldal WooCommerce nélkül, natív Stripe Checkout-ra képes. A kr
 
 ---
 
+## 2026. 05. 10. – Session: Stripe webhook + idempotens kreditjóváírás
+
+### Mit csináltunk [x]
+- [x] Új webhook endpoint bevezetése: `?va_stripe_webhook=1`
+- [x] Stripe aláírás ellenőrzés (`Stripe-Signature`, HMAC SHA256)
+- [x] `checkout.session.completed` esemény kezelése
+- [x] Idempotencia hozzáadása: esemény és token alapú dupla feldolgozás védelem
+- [x] Közös `finalize_credit_purchase()` jóváíró logika bevezetése
+- [x] Visszairányításos flow robusztusabb: ha webhook már jóváírta, nem lesz hiba
+- [x] Token session TTL növelve 1 óráról 24 órára
+
+### Hol tartunk
+A Stripe fizetés most két csatornán is biztonságosan működik: visszairányításos ellenőrzéssel és webhook eseményből is. Dupla kreditjóváírás ellen védelem aktív.
+
+### TODO
+- [ ] Stripe Dashboardban webhook endpoint felvétele teszt módban
+- [ ] `checkout.session.completed` esemény bekötése
+- [ ] Webhook signing secret bemásolása adminba (`va_payment_webhook_secret`)
+
+---
+
