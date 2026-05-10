@@ -529,6 +529,22 @@ function va_get_flash(): array {
         delete_transient( $key );
     }
 
+    if ( ! empty( $messages ) ) {
+        $seen = [];
+        $deduped = [];
+        foreach ( $messages as $msg ) {
+            $type = sanitize_key( (string) ( $msg['type'] ?? 'info' ) );
+            $text = sanitize_text_field( (string) ( $msg['message'] ?? '' ) );
+            $sig = $type . '|' . $text;
+            if ( isset( $seen[ $sig ] ) ) {
+                continue;
+            }
+            $seen[ $sig ] = true;
+            $deduped[] = [ 'type' => $type, 'message' => $text ];
+        }
+        $messages = $deduped;
+    }
+
     return $messages;
 }
 
