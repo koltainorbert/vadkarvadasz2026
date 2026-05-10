@@ -368,6 +368,59 @@
     });
   });
 
+  // ── Kredit csomag vásárlás (defer/CSP-biztos külső handler) ──────
+  $(document).on('click', '.va-pkg-buy-btn', function(e) {
+    var $btn = $(this);
+    if ($btn.prop('disabled') || $btn.hasClass('va-pkg-buy-btn--current') || $btn.hasClass('va-pkg-buy-btn--free')) {
+      return;
+    }
+
+    e.preventDefault();
+
+    var qty = parseInt($btn.data('qty') || 0, 10);
+    var $wrap = $btn.closest('.va-wrap');
+    var nonce = ($wrap.data('vaBuyNonce') || '').toString();
+    var returnTo = ($wrap.data('vaBuyReturnTo') || 'buy').toString();
+    var ajaxUrl = ($wrap.data('vaBuyAjax') || '').toString();
+    var $notice = $('#va-buy-notice');
+
+    if (!ajaxUrl && typeof VA_Data !== 'undefined' && VA_Data.ajax_url) {
+      ajaxUrl = VA_Data.ajax_url;
+    }
+
+    if (!qty || !nonce || !ajaxUrl) {
+      if ($notice.length) {
+        $notice.html('<div class="va-notice va-notice--error">Hiányzó fizetési beállítás. Kérjük frissítsd az oldalt.</div>');
+      }
+      return;
+    }
+
+    $btn.prop('disabled', true).addClass('is-loading');
+
+    $.post(ajaxUrl, {
+      action: 'va_buy_credits',
+      nonce: nonce,
+      qty: qty,
+      return_to: returnTo
+    }).done(function(res) {
+      if (res && res.success && res.data && res.data.checkout_url) {
+        window.location.href = res.data.checkout_url;
+        return;
+      }
+
+      var message = (res && res.data && res.data.message) ? res.data.message : 'Sikertelen fizetés indítás.';
+      if ($notice.length) {
+        $notice.html('<div class="va-notice va-notice--error">' + vaEscapeHtml(message) + '</div>');
+      }
+    }).fail(function() {
+      if ($notice.length) {
+        $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Kérjük, próbáld újra.</div>');
+      }
+    }).always(function() {
+      $btn.prop('disabled', false).removeClass('is-loading');
+    });
+  });
+
   // ── Teljes kártya kattintható (szív/gomb/link kivételével) ──
   $(document).on('click', '.va-card', function(e) {
     if ($(e.target).closest('a, button, input, select, textarea, label').length) {

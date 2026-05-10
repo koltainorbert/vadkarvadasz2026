@@ -178,7 +178,7 @@ class VA_Shortcodes {
         $all_plan_cfg = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_all_plan_configs() : [];
         $user_plan    = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
         ?>
-        <div class="va-wrap">
+        <div class="va-wrap" data-va-buy-nonce="<?php echo esc_attr( $nonce ); ?>" data-va-buy-return-to="<?php echo esc_attr( $return_to ); ?>" data-va-buy-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>">
             <?php va_display_flash(); ?>
             <div id="va-buy-notice"></div>
 
@@ -277,57 +277,6 @@ class VA_Shortcodes {
             </div>
         </div>
 
-        <script>
-        (function(){
-            var NONCE      = '<?php echo esc_js( $nonce ); ?>';
-            var RETURN_TO  = '<?php echo esc_js( $return_to ); ?>';
-            var AJAX_URL   = (window.VA_Data && VA_Data.ajax_url) ? VA_Data.ajax_url : '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ); ?>';
-            var noticeWrap = document.getElementById('va-buy-notice');
-
-            function showError(message) {
-                if (!noticeWrap) return;
-                noticeWrap.innerHTML = '<div class="va-notice va-notice--error">' + message + '</div>';
-            }
-
-            function doCheckout(qty) {
-                var body = new URLSearchParams();
-                body.set('action', 'va_buy_credits');
-                body.set('nonce', NONCE);
-                body.set('qty', String(qty));
-                body.set('return_to', RETURN_TO);
-
-                fetch(AJAX_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-                    body: body.toString()
-                })
-                .then(function(response){ return response.json(); })
-                .then(function(res){
-                    if (res && res.success && res.data && res.data.checkout_url) {
-                        window.location.href = res.data.checkout_url;
-                        return;
-                    }
-                    var msg = (res && res.data && res.data.message) ? res.data.message : 'Hiba';
-                    showError(msg);
-                })
-                .catch(function(){
-                    showError('Hálózati hiba. Kérjük, próbáld újra.');
-                });
-            }
-
-            document.addEventListener('click', function(e){
-                var btn = e.target.closest('.va-pkg-buy-btn');
-                if (!btn || btn.disabled) return;
-
-                var qty = parseInt(btn.getAttribute('data-qty') || '0', 10);
-                if (!Number.isFinite(qty) || qty < 1) {
-                    showError('Érvénytelen csomag.');
-                    return;
-                }
-                doCheckout(qty);
-            });
-        })();
-        </script>
         <?php
         return ob_get_clean();
     }
