@@ -527,23 +527,38 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => 'Érvénytelen mennyiség.' ] );
         }
 
+        $packages = self::get_credit_packages();
+        $allowed_qtys = [];
+        foreach ( $packages as $p ) {
+            $pq = absint( $p['qty'] ?? 0 );
+            if ( $pq > 0 ) {
+                $allowed_qtys[] = $pq;
+            }
+        }
+        if ( ! in_array( $qty, $allowed_qtys, true ) ) {
+            wp_send_json_error( [ 'message' => 'Érvénytelen csomag választás.' ] );
+        }
+
         $purchase_check = self::enforce_credit_package_purchase_rule( $user_id, $qty );
         if ( is_wp_error( $purchase_check ) ) {
             wp_send_json_error( [ 'message' => $purchase_check->get_error_message() ] );
         }
 
-        $packages = self::get_credit_packages();
-        // Legolcsóbb egységár-logika: a legmagasabb darabszámú csomag ami <= $qty
+        // Pontosan a választott csomag ára számít, manipulált qty nem fogadható el.
         $unit_price = (int) get_option( 'va_listing_price_after_free', 1990 );
         $total      = $unit_price * $qty;
 
-        // Keresünk matching csomagot
-        foreach ( array_reverse( $packages ) as $pkg ) {
-            if ( $qty >= $pkg['qty'] ) {
+        $matched = false;
+        foreach ( $packages as $pkg ) {
+            if ( $qty === (int) ( $pkg['qty'] ?? 0 ) ) {
                 $unit_price = $pkg['unit_price'];
                 $total      = $pkg['total'];
+                $matched    = true;
                 break;
             }
+        }
+        if ( ! $matched ) {
+            wp_send_json_error( [ 'message' => 'A választott csomag nem elérhető.' ] );
         }
 
         $payment_url = trim( (string) get_option( 'va_listing_payment_url', '' ) );
@@ -642,6 +657,20 @@ class VA_Ajax {
                 return;
             }
 
+            $packages = self::get_credit_packages();
+            $allowed_qtys = [];
+            foreach ( $packages as $p ) {
+                $pq = absint( $p['qty'] ?? 0 );
+                if ( $pq > 0 ) {
+                    $allowed_qtys[] = $pq;
+                }
+            }
+            if ( ! in_array( $qty, $allowed_qtys, true ) ) {
+                va_set_flash( 'error', 'Érvénytelen csomag választás.' );
+                self::redirect_buy_credits_page();
+                return;
+            }
+
             $user_id = get_current_user_id();
             $purchase_check = self::enforce_credit_package_purchase_rule( $user_id, $qty );
             if ( is_wp_error( $purchase_check ) ) {
@@ -655,15 +684,22 @@ class VA_Ajax {
                 $return_to = 'buy';
             }
 
-            $packages = self::get_credit_packages();
             $unit_price = (int) get_option( 'va_listing_price_after_free', 1990 );
             $total      = $unit_price * $qty;
-            foreach ( array_reverse( $packages ) as $pkg ) {
-                if ( $qty >= $pkg['qty'] ) {
+
+            $matched = false;
+            foreach ( $packages as $pkg ) {
+                if ( $qty === (int) ( $pkg['qty'] ?? 0 ) ) {
                     $unit_price = $pkg['unit_price'];
                     $total      = $pkg['total'];
+                    $matched    = true;
                     break;
                 }
+            }
+            if ( ! $matched ) {
+                va_set_flash( 'error', 'A választott csomag nem elérhető.' );
+                self::redirect_buy_credits_page();
+                return;
             }
 
             $payment_url = trim( (string) get_option( 'va_listing_payment_url', '' ) );
