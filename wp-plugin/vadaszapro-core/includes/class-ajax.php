@@ -494,11 +494,11 @@ class VA_Ajax {
             : 0;
 
         $active_until = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
-        $has_active_product = ( $current_rank > 0 && $active_until > time() );
+        $has_active_product = ( $current_rank > 0 && ( $active_until <= 0 || $active_until > time() ) );
 
         // Aktív csomagnál csak magasabb rang vásárolható.
         if ( $has_active_product && $target_rank <= $current_rank ) {
-            $until_txt = wp_date( 'Y.m.d H:i', $active_until );
+            $until_txt = ( $active_until > 0 ) ? wp_date( 'Y.m.d H:i', $active_until ) : 'nincs beállítva';
             return new WP_Error(
                 'va_plan_upgrade_only',
                 'Aktív csomagod van (' . ucfirst( $current_plan ) . ') ' . $until_txt . ' időpontig. Csak magasabb rang vásárolható.'

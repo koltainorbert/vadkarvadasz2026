@@ -201,6 +201,14 @@ class VA_User_Roles {
         // Nem basic plan esetén lejárat után visszaesik basic-re.
         if ( $plan_slug !== 'basic' ) {
             $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+
+            // Legacy user migracio: ha nincs lejárat, kapjon alapértelmezett ciklust.
+            if ( $expires_at <= 0 ) {
+                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 30 ) ) );
+                $expires_at = time() + ( $duration_days * DAY_IN_SECONDS );
+                update_user_meta( $user_id, 'va_plan_expires_at', $expires_at );
+            }
+
             if ( $expires_at > 0 && $expires_at < time() ) {
                 return 'basic';
             }
