@@ -453,12 +453,69 @@ class VA_Ajax {
         self::redirect_submit_page();
     }
 
+    private static function get_target_plan_slug_for_qty( int $qty ): string {
+        $default_qtys  = [ 1 => 1, 2 => 3, 3 => 5, 4 => 10 ];
+        $default_slugs = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
+
+        for ( $n = 1; $n <= 4; $n++ ) {
+            $enabled = get_option( "va_pc_{$n}_enabled", '1' ) === '1';
+            if ( ! $enabled ) {
+                continue;
+            }
+            $cfg_qty = max( 1, (int) get_option( "va_pc_{$n}_qty", $default_qtys[ $n ] ) );
+            if ( $cfg_qty === $qty ) {
+                return sanitize_key( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ) );
+            }
+        }
+
+        if ( $qty >= 10 ) return 'platinum';
+        if ( $qty >= 5 )  return 'gold';
+        if ( $qty >= 3 )  return 'silver';
+        return 'basic';
+    }
+
+    private static function enforce_credit_package_purchase_rule( int $user_id, int $qty ) {
+        $target_plan = self::get_target_plan_slug_for_qty( $qty );
+
+        $target_rank = class_exists( 'VA_User_Roles' )
+            ? VA_User_Roles::get_plan_rank( $target_plan )
+            : 0;
+
+        if ( $target_rank <= 0 ) {
+            return true;
+        }
+
+        $current_plan = class_exists( 'VA_User_Roles' )
+            ? VA_User_Roles::get_user_plan( $user_id )
+            : sanitize_key( (string) get_user_meta( $user_id, 'va_plan', true ) );
+
+        $current_rank = class_exists( 'VA_User_Roles' )
+            ? VA_User_Roles::get_plan_rank( $current_plan )
+            : 0;
+
+        $active_until = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+        $has_active_product = ( $current_rank > 0 && $active_until > time() );
+
+        // Aktív csomagnál csak magasabb rang vásárolható.
+        if ( $has_active_product && $target_rank <= $current_rank ) {
+            $until_txt = wp_date( 'Y.m.d H:i', $active_until );
+            return new WP_Error(
+                'va_plan_upgrade_only',
+                'Aktív csomagod van (' . ucfirst( $current_plan ) . ') ' . $until_txt . ' időpontig. Csak magasabb rang vásárolható.'
+            );
+        }
+
+        return true;
+    }
+
     /* ── Kredit csomag vásárlás ────────────────────────── */
     public static function buy_credits(): void {
         check_ajax_referer( 'va_buy_credits', 'nonce' );
         if ( ! is_user_logged_in() ) {
             wp_send_json_error( [ 'message' => 'Nincs jogosultság.' ] );
         }
+
+        $user_id = get_current_user_id();
 
         $return_to = isset( $_POST['return_to'] ) ? sanitize_key( (string) wp_unslash( $_POST['return_to'] ) ) : 'buy';
         if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
@@ -468,6 +525,11 @@ class VA_Ajax {
         $qty = absint( $_POST['qty'] ?? 0 );
         if ( $qty < 1 ) {
             wp_send_json_error( [ 'message' => 'Érvénytelen mennyiség.' ] );
+        }
+
+        $purchase_check = self::enforce_credit_package_purchase_rule( $user_id, $qty );
+        if ( is_wp_error( $purchase_check ) ) {
+            wp_send_json_error( [ 'message' => $purchase_check->get_error_message() ] );
         }
 
         $packages = self::get_credit_packages();
@@ -489,7 +551,6 @@ class VA_Ajax {
         $secret_key  = trim( (string) get_option( 'va_payment_secret_key', '' ) );
 
         $token  = wp_generate_password( 32, false, false );
-        $user_id = get_current_user_id();
 
         // Token elmentése átmeneti adatban
         set_transient( 'va_credit_token_' . $token, [
@@ -581,6 +642,14 @@ class VA_Ajax {
                 return;
             }
 
+            $user_id = get_current_user_id();
+            $purchase_check = self::enforce_credit_package_purchase_rule( $user_id, $qty );
+            if ( is_wp_error( $purchase_check ) ) {
+                va_set_flash( 'warning', $purchase_check->get_error_message() );
+                self::redirect_buy_credits_page();
+                return;
+            }
+
             $return_to = isset( $_GET['return_to'] ) ? sanitize_key( (string) wp_unslash( $_GET['return_to'] ) ) : 'buy';
             if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
                 $return_to = 'buy';
@@ -601,7 +670,6 @@ class VA_Ajax {
             $provider    = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
             $secret_key  = trim( (string) get_option( 'va_payment_secret_key', '' ) );
             $token       = wp_generate_password( 32, false, false );
-            $user_id     = get_current_user_id();
 
             set_transient( 'va_credit_token_' . $token, [
                 'user_id'    => $user_id,
@@ -1284,21 +1352,19 @@ class VA_Ajax {
         $current = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
         update_user_meta( $user_id, 'va_listing_credits', $current + $qty );
 
-        // Csomag frissítése a vásárolt kredit-mennyiség alapján.
-        // A kredit-kártyák: Silver=3, Gold=5, Platinum=10 → ezeknek megfelelő plan slot.
-        $new_plan = 'basic';
-        if ( $qty >= 10 )     $new_plan = 'platinum';
-        elseif ( $qty >= 5 )  $new_plan = 'gold';
-        elseif ( $qty >= 3 )  $new_plan = 'silver';
-        if ( $new_plan !== 'basic' ) {
-            $current_plan = (string) get_user_meta( $user_id, 'va_plan', true );
-            $order = [ 'basic' => 0, 'silver' => 1, 'gold' => 2, 'platinum' => 3 ];
-            $cur_rank = $order[ $current_plan ] ?? 0;
-            $new_rank = $order[ $new_plan ]    ?? 0;
-            // Csak akkor írjuk felül, ha az új csomag magasabb szintű.
-            if ( $new_rank > $cur_rank ) {
-                update_user_meta( $user_id, 'va_plan', $new_plan );
-            }
+        // Csomag frissítése a vásárolt csomag rangja alapján, lejárattal.
+        $new_plan = self::get_target_plan_slug_for_qty( $qty );
+        $cur_plan = class_exists( 'VA_User_Roles' )
+            ? VA_User_Roles::get_user_plan( $user_id )
+            : sanitize_key( (string) get_user_meta( $user_id, 'va_plan', true ) );
+        $cur_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $cur_plan ) : 0;
+        $new_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $new_plan ) : 0;
+
+        // Egyszerre csak egy aktív termék: csak magasabb csomag írhatja felül a jelenlegit.
+        if ( $new_rank > $cur_rank ) {
+            update_user_meta( $user_id, 'va_plan', $new_plan );
+            $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 30 ) ) );
+            update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
         }
 
         $paid_data = [

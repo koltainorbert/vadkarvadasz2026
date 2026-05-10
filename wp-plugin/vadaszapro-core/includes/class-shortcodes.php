@@ -177,6 +177,9 @@ class VA_Shortcodes {
         ]);
         $all_plan_cfg = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_all_plan_configs() : [];
         $user_plan    = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
+        $plan_expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+        $has_active_product = ( $user_plan !== 'basic' && $plan_expires_at > time() );
+        $current_plan_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $user_plan ) : 0;
         ?>
         <div class="va-wrap" data-va-buy-nonce="<?php echo esc_attr( $nonce ); ?>" data-va-buy-return-to="<?php echo esc_attr( $return_to ); ?>" data-va-buy-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>">
             <?php va_display_flash(); ?>
@@ -202,6 +205,9 @@ class VA_Shortcodes {
                 <?php if ( $return_to === 'submit' ): ?>
                 <div class="va-notice va-notice--warning" style="margin:14px auto 0;max-width:860px;">A hirdetés feladás folytatásához válassz csomagot, fizetés után automatikusan visszairányítunk a feladáshoz.</div>
                 <?php endif; ?>
+                <?php if ( $has_active_product ): ?>
+                <div class="va-notice va-notice--info" style="margin:14px auto 0;max-width:860px;">Aktív csomagod van (<?php echo esc_html( ucfirst( $user_plan ) ); ?>), lejárat: <?php echo esc_html( wp_date( 'Y.m.d H:i', $plan_expires_at ) ); ?>. Jelenleg csak magasabb rang vásárolható.</div>
+                <?php endif; ?>
             </div>
 
             <div class="va-pkg-grid">
@@ -209,7 +215,9 @@ class VA_Shortcodes {
                     $slug      = $card['slug'];
                     $qty       = (int) $card['qty'];
                     $is_free   = $card['free'];
-                    $is_active = ( $slug === $user_plan );
+                    $is_active = ( $has_active_product && $slug === $user_plan );
+                    $card_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $slug ) : 0;
+                    $is_locked_by_active_plan = ( $has_active_product && $card_rank <= $current_plan_rank );
                     $cfg       = ( isset( $all_plan_cfg[ $slug ] ) && is_array( $all_plan_cfg[ $slug ] ) ) ? $all_plan_cfg[ $slug ] : [];
                     $plan_limit    = (int)    ( $cfg['monthly_limit'] ?? 0 );
                     $plan_basis    = (string) ( $cfg['basis'] ?? 'monthly' );
@@ -267,6 +275,8 @@ class VA_Shortcodes {
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Aktív csomag</button>
                     <?php elseif ( $is_free ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--free" disabled><?php echo esc_html( $card['btn_text'] ); ?></button>
+                    <?php elseif ( $is_locked_by_active_plan ): ?>
+                    <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Csak magasabb csomag vehető</button>
                     <?php else: ?>
                     <?php $fallback_checkout_url = add_query_arg([
                         'va_buy_credits_start' => '1',

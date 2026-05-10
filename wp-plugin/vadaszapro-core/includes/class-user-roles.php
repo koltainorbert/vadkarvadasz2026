@@ -179,6 +179,16 @@ class VA_User_Roles {
         return user_can( $user_id, 'administrator' );
     }
 
+    public static function get_plan_rank( string $plan ): int {
+        $order = [
+            'basic'    => 0,
+            'silver'   => 1,
+            'gold'     => 2,
+            'platinum' => 3,
+        ];
+        return $order[ sanitize_key( $plan ) ] ?? 0;
+    }
+
     public static function get_user_plan( int $user_id ): string {
         if ( self::is_admin_user( $user_id ) ) {
             return 'platinum';
@@ -186,8 +196,18 @@ class VA_User_Roles {
 
         $plan = (string) get_user_meta( $user_id, 'va_plan', true );
         $all  = self::get_all_plan_configs();
+        $plan_slug = ( isset( $all[ $plan ] ) && $plan !== '_global' ) ? $plan : 'basic';
+
+        // Nem basic plan esetén lejárat után visszaesik basic-re.
+        if ( $plan_slug !== 'basic' ) {
+            $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+            if ( $expires_at > 0 && $expires_at < time() ) {
+                return 'basic';
+            }
+        }
+
         // _global key nem plan slug
-        return ( isset( $all[ $plan ] ) && $plan !== '_global' ) ? $plan : 'basic';
+        return $plan_slug;
     }
 
     /**
