@@ -483,10 +483,8 @@ class VA_Ajax {
         }
 
         $payment_url = trim( (string) get_option( 'va_listing_payment_url', '' ) );
-
-        if ( $payment_url === '' ) {
-            wp_send_json_error( [ 'message' => 'Fizetési szolgáltató nincs beállítva. Kérjük, lépjen kapcsolatba az adminisztrátorral.' ] );
-        }
+        $provider    = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+        $secret_key  = trim( (string) get_option( 'va_payment_secret_key', '' ) );
 
         $token  = wp_generate_password( 32, false, false );
         $user_id = get_current_user_id();
@@ -508,10 +506,34 @@ class VA_Ajax {
             'va_credit_payment' => 'success',
             'token'             => rawurlencode( $token ),
         ], $return_url );
+        $success_url .= ( strpos( $success_url, '?' ) === false ? '?' : '&' ) . 'session_id={CHECKOUT_SESSION_ID}';
         $cancel_url = add_query_arg([
             'va_credit_payment' => 'cancel',
             'token'             => rawurlencode( $token ),
         ], $return_url );
+
+        // Elsődleges: közvetlen Stripe Checkout (WooCommerce nélkül).
+        if ( $provider === 'stripe' ) {
+            if ( $secret_key === '' ) {
+                wp_send_json_error( [ 'message' => 'Stripe titkos kulcs nincs beállítva az admin felületen.' ] );
+            }
+
+            $session_url = self::create_stripe_checkout_session( $token, $qty, $total, $success_url, $cancel_url, $user_id );
+            if ( is_wp_error( $session_url ) ) {
+                wp_send_json_error( [ 'message' => $session_url->get_error_message() ] );
+            }
+
+            wp_send_json_success( [
+                'checkout_url' => esc_url_raw( (string) $session_url ),
+                'total'        => $total,
+                'qty'          => $qty,
+            ] );
+        }
+
+        // Fallback: külső szolgáltató URL (legacy flow).
+        if ( $payment_url === '' ) {
+            wp_send_json_error( [ 'message' => 'Fizetési szolgáltató nincs beállítva. Kérjük, lépjen kapcsolatba az adminisztrátorral.' ] );
+        }
 
         $checkout_url = add_query_arg([
             'intent'      => 'credit_purchase',
@@ -557,6 +579,24 @@ class VA_Ajax {
         }
 
         if ( $state === 'success' ) {
+            $provider = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+
+            if ( $provider === 'stripe' ) {
+                $session_id = isset( $_GET['session_id'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['session_id'] ) ) : '';
+                if ( $session_id === '' ) {
+                    va_set_flash( 'error', 'Stripe visszaigazolás hiányzik (session_id).' );
+                    self::redirect_buy_credits_page();
+                    return;
+                }
+
+                $verify = self::verify_stripe_checkout_payment( $session_id, $token );
+                if ( is_wp_error( $verify ) ) {
+                    va_set_flash( 'error', $verify->get_error_message() );
+                    self::redirect_buy_credits_page();
+                    return;
+                }
+            }
+
             $qty     = absint( $data['qty'] );
             $user_id = (int) $data['user_id'];
             $current = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
@@ -751,6 +791,96 @@ class VA_Ajax {
     private static function get_buy_credits_page_url(): string {
         $buy_page = get_page_by_path( 'va-kredit-vasarlas' );
         return $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
+    }
+
+    private static function create_stripe_checkout_session( string $token, int $qty, int $amount, string $success_url, string $cancel_url, int $user_id ) {
+        $secret_key = trim( (string) get_option( 'va_payment_secret_key', '' ) );
+        if ( $secret_key === '' ) {
+            return new WP_Error( 'va_stripe_missing_secret', 'Stripe titkos kulcs hiányzik.' );
+        }
+
+        $body = [
+            'mode'                                            => 'payment',
+            'success_url'                                     => $success_url,
+            'cancel_url'                                      => $cancel_url,
+            'client_reference_id'                             => $token,
+            'metadata[token]'                                 => $token,
+            'metadata[user_id]'                               => (string) $user_id,
+            'metadata[purpose]'                               => 'credit_purchase',
+            'metadata[qty]'                                   => (string) $qty,
+            'line_items[0][price_data][currency]'             => 'huf',
+            'line_items[0][price_data][unit_amount]'          => max( 1, $amount ),
+            'line_items[0][price_data][product_data][name]'   => $qty . ' kredit csomag',
+            'line_items[0][quantity]'                         => 1,
+        ];
+
+        $response = wp_remote_post( 'https://api.stripe.com/v1/checkout/sessions', [
+            'timeout' => 45,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $secret_key,
+                'Content-Type'  => 'application/x-www-form-urlencoded',
+            ],
+            'body'    => $body,
+        ] );
+
+        if ( is_wp_error( $response ) ) {
+            return new WP_Error( 'va_stripe_http_error', 'Stripe kapcsolat sikertelen: ' . $response->get_error_message() );
+        }
+
+        $code = (int) wp_remote_retrieve_response_code( $response );
+        $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+
+        if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
+            return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' );
+        }
+
+        $url = isset( $json['url'] ) ? esc_url_raw( (string) $json['url'] ) : '';
+        if ( $url === '' ) {
+            return new WP_Error( 'va_stripe_missing_url', 'Stripe nem adott vissza fizetési URL-t.' );
+        }
+
+        return $url;
+    }
+
+    private static function verify_stripe_checkout_payment( string $session_id, string $expected_token ) {
+        $secret_key = trim( (string) get_option( 'va_payment_secret_key', '' ) );
+        if ( $secret_key === '' ) {
+            return new WP_Error( 'va_stripe_missing_secret', 'Stripe titkos kulcs hiányzik.' );
+        }
+
+        $response = wp_remote_get( 'https://api.stripe.com/v1/checkout/sessions/' . rawurlencode( $session_id ), [
+            'timeout' => 45,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $secret_key,
+            ],
+        ] );
+
+        if ( is_wp_error( $response ) ) {
+            return new WP_Error( 'va_stripe_http_error', 'Stripe ellenőrzés sikertelen: ' . $response->get_error_message() );
+        }
+
+        $code = (int) wp_remote_retrieve_response_code( $response );
+        $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+        if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
+            return new WP_Error( 'va_stripe_bad_response', 'Stripe fizetés ellenőrzés sikertelen.' );
+        }
+
+        $status         = (string) ( $json['status'] ?? '' );
+        $payment_status = (string) ( $json['payment_status'] ?? '' );
+        $ref_token      = (string) ( $json['client_reference_id'] ?? '' );
+        if ( $ref_token === '' && isset( $json['metadata']['token'] ) ) {
+            $ref_token = (string) $json['metadata']['token'];
+        }
+
+        if ( $ref_token !== $expected_token ) {
+            return new WP_Error( 'va_stripe_token_mismatch', 'Stripe session token eltérés.' );
+        }
+
+        if ( $status !== 'complete' || $payment_status !== 'paid' ) {
+            return new WP_Error( 'va_stripe_not_paid', 'A Stripe fizetés még nincs sikeresen lezárva.' );
+        }
+
+        return true;
     }
 
     private static function redirect_submit_page(): void {
