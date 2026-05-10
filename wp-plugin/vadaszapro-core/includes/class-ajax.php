@@ -639,7 +639,8 @@ class VA_Ajax {
                     return;
                 }
 
-                wp_safe_redirect( (string) $session_url );
+                // Stripe checkout.stripe.com külső domain – wp_safe_redirect blokkolta volna.
+                wp_redirect( esc_url_raw( (string) $session_url ), 303 );
                 exit;
             }
 
