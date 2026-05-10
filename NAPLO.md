@@ -32,6 +32,12 @@
 - [x] Konkret hiba: `Call to undefined function update_transient()` a Stripe session URL letrehozasnal
 - [x] Javitas: `update_transient(...)` -> `set_transient(...)` mindket mirror file-ban
 
+### Checkout inditas stabilizalas
+- [x] Frontend buy gomb handler egyszerusitve determinisztikusra (`frontend/js/frontend.js` + plugin mirror)
+- [x] A versenyhelyzetes AJAX + fallback timer ag eltavolitva
+- [x] Kattintas utan most mindig a szerveroldali `va_buy_credits_start=1` link indul azonnal
+- [x] Busy guard marad, hogy duplakattintas ne inditson parhuzamos folyamatot
+
 ## 2026. 05. 09. – Session #301 (Header login/regisztracio/vasarlas + deploy helyreallitas)
 
 ### Mi tortent [x]

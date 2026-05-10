@@ -372,26 +372,22 @@
   $(document).on('click', '.va-pkg-buy-btn', function(e) {
     var $btn = $(this);
     if ($btn.prop('disabled') || $btn.hasClass('va-pkg-buy-btn--current') || $btn.hasClass('va-pkg-buy-btn--free')) {
+      e.preventDefault();
       return;
     }
 
     e.preventDefault();
 
-    var qty = parseInt($btn.data('qty') || 0, 10);
     var fallbackUrl = ($btn.attr('href') || '').toString();
-    var $wrap = $btn.closest('.va-wrap');
-    var nonce = ($wrap.data('vaBuyNonce') || '').toString();
-    var returnTo = ($wrap.data('vaBuyReturnTo') || 'buy').toString();
-    var ajaxUrl = ($wrap.data('vaBuyAjax') || '').toString();
     var $notice = $('#va-buy-notice');
 
-    if (!ajaxUrl && typeof VA_Data !== 'undefined' && VA_Data.ajax_url) {
-      ajaxUrl = VA_Data.ajax_url;
+    if ($btn.data('busy')) {
+      return;
     }
 
-    if (!qty || !nonce || !ajaxUrl) {
+    if (!fallbackUrl) {
       if ($notice.length) {
-        $notice.html('<div class="va-notice va-notice--error">Hiányzó fizetési beállítás. Kérjük frissítsd az oldalt.</div>');
+        $notice.html('<div class="va-notice va-notice--error">Hiányzó fizetési link. Kérjük frissítsd az oldalt.</div>');
       }
       return;
     }
@@ -400,58 +396,20 @@
     if (!originalLabel) {
       originalLabel = 'Vásárlás';
     }
+    $btn.data('busy', true);
     $btn.prop('disabled', true).addClass('is-loading').text('Folyamatban...');
     if ($notice.length) {
       $notice.html('<div class="va-notice va-notice--warning">Fizetés előkészítése...</div>');
     }
 
-    // Ha az AJAX bármiért elakad (pl. cache/WAF/network), essünk vissza a szerveroldali linkre.
-    var finished = false;
-    var fallbackTimer = setTimeout(function() {
-      if (!finished && fallbackUrl) {
-        window.location.href = fallbackUrl;
-      }
-    }, 1800);
+    // Determinisztikus flow: mindig a szerveroldali start route indul.
+    window.location.href = fallbackUrl;
 
-    $.post(ajaxUrl, {
-      action: 'va_buy_credits',
-      nonce: nonce,
-      qty: qty,
-      return_to: returnTo
-    }).done(function(res) {
-      if (res && res.success && res.data && res.data.checkout_url) {
-        finished = true;
-        clearTimeout(fallbackTimer);
-        window.location.href = res.data.checkout_url;
-        return;
-      }
-
-      var message = (res && res.data && res.data.message) ? res.data.message : 'Sikertelen fizetés indítás.';
-      if ($notice.length) {
-        $notice.html('<div class="va-notice va-notice--error">' + vaEscapeHtml(message) + '</div>');
-      }
-
-      // Hiba esetén is próbáljuk a fallback route-ot.
-      if (fallbackUrl) {
-        finished = true;
-        clearTimeout(fallbackTimer);
-        window.location.href = fallbackUrl;
-      }
-    }).fail(function() {
-      if ($notice.length) {
-        $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Kérjük, próbáld újra.</div>');
-      }
-
-      if (fallbackUrl) {
-        finished = true;
-        clearTimeout(fallbackTimer);
-        window.location.href = fallbackUrl;
-      }
-    }).always(function() {
-      finished = true;
-      clearTimeout(fallbackTimer);
+    // Ha valamiért maradnánk az oldalon, engedjük újrapróbálni.
+    setTimeout(function() {
+      $btn.data('busy', false);
       $btn.prop('disabled', false).removeClass('is-loading').text(originalLabel);
-    });
+    }, 3500);
   });
 
   // ── Teljes kártya kattintható (szív/gomb/link kivételével) ──
