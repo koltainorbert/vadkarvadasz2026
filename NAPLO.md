@@ -4839,3 +4839,23 @@ A dashboardon az ikonok és feliratok már nem érnek össze, a vizuális ritmus
 
 ---
 
+## 2026. 05. 10. – Session: Woo nélküli Stripe Checkout kreditvásárláshoz
+
+### Mit csináltunk [x]
+- [x] Közvetlen Stripe Checkout session létrehozás a meglévő `va_buy_credits` flow-ban
+- [x] Stripe sikeres visszatérésnél `session_id` kezelés bevezetése (`{CHECKOUT_SESSION_ID}`)
+- [x] Stripe API alapú fizetés-ellenőrzés a kredit jóváírás előtt (`status=complete`, `payment_status=paid`)
+- [x] Token egyezés ellenőrzés Stripe `client_reference_id` / metadata alapján
+- [x] Legacy fallback megtartva: ha nem Stripe provider, marad a külső `va_listing_payment_url` flow
+- [x] Root + plugin mirror `class-ajax.php` szinkron frissítve
+
+### Hol tartunk
+A vásárlás oldal WooCommerce nélkül, natív Stripe Checkout-ra képes. A kredit jóváírás már nem csak URL paramétertől függ, hanem Stripe visszaellenőrzést is kér.
+
+### TODO
+- [ ] Adminban Stripe provider + secret key kitöltése éles vagy teszt kulcsokkal
+- [ ] Stripe teszt fizetés végigfuttatása (`va-kredit-vasarlas`) és jóváírás ellenőrzése
+- [ ] (Ajánlott) Webhook feldolgozás hozzáadása aszinkron biztonsági megerősítéshez
+
+---
+
