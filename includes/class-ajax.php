@@ -496,6 +496,7 @@ class VA_Ajax {
             'user_id'    => $user_id,
             'qty'        => $qty,
             'amount'     => $total,
+            'provider'   => $provider,
             'return_to'  => $return_to,
             'created_at' => time(),
         ], DAY_IN_SECONDS );
@@ -606,6 +607,7 @@ class VA_Ajax {
                 'user_id'    => $user_id,
                 'qty'        => $qty,
                 'amount'     => $total,
+                'provider'   => $provider,
                 'return_to'  => $return_to,
                 'created_at' => time(),
             ], DAY_IN_SECONDS );
@@ -697,7 +699,15 @@ class VA_Ajax {
         if ( ! $data ) {
             $paid = get_transient( 'va_credit_paid_' . $token );
             if ( is_array( $paid ) && isset( $paid['user_id'] ) && (int) $paid['user_id'] === get_current_user_id() ) {
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
+                $paid_diag_parts = [];
+                if ( ! empty( $paid['stripe_session_id'] ) ) {
+                    $paid_diag_parts[] = 'session: ' . sanitize_text_field( (string) $paid['stripe_session_id'] );
+                }
+                if ( ! empty( $paid['stripe_payment_intent'] ) ) {
+                    $paid_diag_parts[] = 'payment: ' . sanitize_text_field( (string) $paid['stripe_payment_intent'] );
+                }
+                $paid_diag = empty( $paid_diag_parts ) ? '' : ' [' . implode( ' | ', $paid_diag_parts ) . ']';
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $paid_diag );
                 $return_to = ( isset( $paid['return_to'] ) && $paid['return_to'] === 'submit' ) ? 'submit' : 'buy';
                 if ( $return_to === 'submit' ) {
                     self::redirect_submit_page();
@@ -731,9 +741,10 @@ class VA_Ajax {
 
         if ( $state === 'success' ) {
             $provider = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+            $provider_expected = sanitize_key( (string) ( $data['provider'] ?? $provider ) );
             $stripe_diag = '';
 
-            if ( $provider === 'stripe' ) {
+            if ( $provider_expected === 'stripe' ) {
                 $session_id = isset( $_GET['session_id'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['session_id'] ) ) : '';
                 if ( $session_id === '' ) {
                     va_set_flash( 'error', 'Stripe visszaigazolás hiányzik (session_id).' );
@@ -751,6 +762,12 @@ class VA_Ajax {
                 if ( is_array( $verify ) ) {
                     $sid = sanitize_text_field( (string) ( $verify['session_id'] ?? '' ) );
                     $pid = sanitize_text_field( (string) ( $verify['payment_intent'] ?? '' ) );
+                    if ( $sid !== '' ) {
+                        $data['stripe_session_id'] = $sid;
+                    }
+                    if ( $pid !== '' ) {
+                        $data['stripe_payment_intent'] = $pid;
+                    }
                     $parts = [];
                     if ( $sid !== '' ) $parts[] = 'session: ' . $sid;
                     if ( $pid !== '' ) $parts[] = 'payment: ' . $pid;
@@ -1217,6 +1234,8 @@ class VA_Ajax {
                 'user_id'   => (int) $paid['user_id'],
                 'qty'       => (int) $paid['qty'],
                 'return_to' => (string) ( $paid['return_to'] ?? 'buy' ),
+                'stripe_session_id'     => sanitize_text_field( (string) ( $paid['stripe_session_id'] ?? '' ) ),
+                'stripe_payment_intent' => sanitize_text_field( (string) ( $paid['stripe_payment_intent'] ?? '' ) ),
             ];
         }
 
@@ -1228,6 +1247,8 @@ class VA_Ajax {
         $user_id   = absint( $data['user_id'] ?? 0 );
         $qty       = absint( $data['qty'] ?? 0 );
         $return_to = isset( $data['return_to'] ) && $data['return_to'] === 'submit' ? 'submit' : 'buy';
+        $stripe_session_id     = sanitize_text_field( (string) ( $data['stripe_session_id'] ?? '' ) );
+        $stripe_payment_intent = sanitize_text_field( (string) ( $data['stripe_payment_intent'] ?? '' ) );
 
         if ( $user_id <= 0 || $qty <= 0 ) {
             return new WP_Error( 'va_credit_missing_payload', 'A fizetés adatai hiányosak, kredit nem írható jóvá.' );
@@ -1253,11 +1274,19 @@ class VA_Ajax {
             }
         }
 
-        set_transient( $paid_key, [
+        $paid_data = [
             'user_id'   => $user_id,
             'qty'       => $qty,
             'return_to' => $return_to,
-        ], WEEK_IN_SECONDS );
+        ];
+        if ( $stripe_session_id !== '' ) {
+            $paid_data['stripe_session_id'] = $stripe_session_id;
+        }
+        if ( $stripe_payment_intent !== '' ) {
+            $paid_data['stripe_payment_intent'] = $stripe_payment_intent;
+        }
+
+        set_transient( $paid_key, $paid_data, WEEK_IN_SECONDS );
         delete_transient( 'va_credit_token_' . $token );
 
         if ( class_exists( 'VA_User_Roles' ) ) {
@@ -1270,6 +1299,8 @@ class VA_Ajax {
             'user_id'   => $user_id,
             'qty'       => $qty,
             'return_to' => $return_to,
+            'stripe_session_id'     => $stripe_session_id,
+            'stripe_payment_intent' => $stripe_payment_intent,
         ];
     }
 
