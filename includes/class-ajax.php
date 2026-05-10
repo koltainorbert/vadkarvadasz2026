@@ -684,7 +684,14 @@ class VA_Ajax {
         if ( $state === '' ) return;
 
         $token = isset( $_GET['token'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['token'] ) ) : '';
-        if ( $token === '' || ! is_user_logged_in() ) return;
+        if ( $token === '' ) return;
+
+        // Ha a fizetés visszaérkezik, de a munkamenet lejárt → bejelentkezésre küldjük.
+        if ( ! is_user_logged_in() ) {
+            $current_url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            wp_safe_redirect( wp_login_url( $current_url ) );
+            exit;
+        }
 
         $data = get_transient( 'va_credit_token_' . $token );
         if ( ! $data ) {
@@ -1211,6 +1218,24 @@ class VA_Ajax {
 
         $current = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
         update_user_meta( $user_id, 'va_listing_credits', $current + $qty );
+
+        // Csomag frissítése a vásárolt kredit-mennyiség alapján.
+        // A kredit-kártyák: Silver=3, Gold=5, Platinum=10 → ezeknek megfelelő plan slot.
+        $new_plan = 'basic';
+        if ( $qty >= 10 )     $new_plan = 'platinum';
+        elseif ( $qty >= 5 )  $new_plan = 'gold';
+        elseif ( $qty >= 3 )  $new_plan = 'silver';
+        if ( $new_plan !== 'basic' ) {
+            $current_plan = (string) get_user_meta( $user_id, 'va_plan', true );
+            $order = [ 'basic' => 0, 'silver' => 1, 'gold' => 2, 'platinum' => 3 ];
+            $cur_rank = $order[ $current_plan ] ?? 0;
+            $new_rank = $order[ $new_plan ]    ?? 0;
+            // Csak akkor írjuk felül, ha az új csomag magasabb szintű.
+            if ( $new_rank > $cur_rank ) {
+                update_user_meta( $user_id, 'va_plan', $new_plan );
+            }
+        }
+
         set_transient( $paid_key, [
             'user_id'   => $user_id,
             'qty'       => $qty,
