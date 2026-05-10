@@ -555,110 +555,117 @@ class VA_Ajax {
 
     // JS fallback: közvetlen linkről is elindítható a checkout.
     public static function handle_buy_credits_start(): void {
-        $start = isset( $_GET['va_buy_credits_start'] ) ? sanitize_key( (string) wp_unslash( $_GET['va_buy_credits_start'] ) ) : '';
-        if ( $start !== '1' ) {
-            return;
-        }
-
-        if ( ! is_user_logged_in() ) {
-            wp_safe_redirect( wp_login_url( self::get_buy_credits_page_url() ) );
-            exit;
-        }
-
-        $nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['nonce'] ) ) : '';
-        if ( ! wp_verify_nonce( $nonce, 'va_buy_credits' ) ) {
-            va_set_flash( 'error', 'Érvénytelen vásárlási kérés. Kérjük frissítsd az oldalt.' );
-            self::redirect_buy_credits_page();
-            return;
-        }
-
-        $qty = isset( $_GET['qty'] ) ? absint( (string) wp_unslash( $_GET['qty'] ) ) : 0;
-        if ( $qty < 1 ) {
-            va_set_flash( 'error', 'Érvénytelen mennyiség.' );
-            self::redirect_buy_credits_page();
-            return;
-        }
-
-        $return_to = isset( $_GET['return_to'] ) ? sanitize_key( (string) wp_unslash( $_GET['return_to'] ) ) : 'buy';
-        if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
-            $return_to = 'buy';
-        }
-
-        $packages = self::get_credit_packages();
-        $unit_price = (int) get_option( 'va_listing_price_after_free', 1990 );
-        $total      = $unit_price * $qty;
-        foreach ( array_reverse( $packages ) as $pkg ) {
-            if ( $qty >= $pkg['qty'] ) {
-                $unit_price = $pkg['unit_price'];
-                $total      = $pkg['total'];
-                break;
+        try {
+            $start = isset( $_GET['va_buy_credits_start'] ) ? sanitize_key( (string) wp_unslash( $_GET['va_buy_credits_start'] ) ) : '';
+            if ( $start !== '1' ) {
+                return;
             }
-        }
 
-        $payment_url = trim( (string) get_option( 'va_listing_payment_url', '' ) );
-        $provider    = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
-        $secret_key  = trim( (string) get_option( 'va_payment_secret_key', '' ) );
-        $token       = wp_generate_password( 32, false, false );
-        $user_id     = get_current_user_id();
+            if ( ! is_user_logged_in() ) {
+                wp_safe_redirect( wp_login_url( self::get_buy_credits_page_url() ) );
+                exit;
+            }
 
-        set_transient( 'va_credit_token_' . $token, [
-            'user_id'    => $user_id,
-            'qty'        => $qty,
-            'amount'     => $total,
-            'return_to'  => $return_to,
-            'created_at' => time(),
-        ], DAY_IN_SECONDS );
-
-        $return_url = $return_to === 'submit'
-            ? self::get_submit_page_url()
-            : self::get_buy_credits_page_url();
-
-        $success_url = add_query_arg([
-            'va_credit_payment' => 'success',
-            'token'             => rawurlencode( $token ),
-        ], $return_url );
-        $success_url .= ( strpos( $success_url, '?' ) === false ? '?' : '&' ) . 'session_id={CHECKOUT_SESSION_ID}';
-
-        $cancel_url = add_query_arg([
-            'va_credit_payment' => 'cancel',
-            'token'             => rawurlencode( $token ),
-        ], $return_url );
-
-        if ( $provider === 'stripe' ) {
-            if ( $secret_key === '' ) {
-                va_set_flash( 'error', 'Stripe titkos kulcs nincs beállítva az admin felületen.' );
+            $nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( (string) wp_unslash( $_GET['nonce'] ) ) : '';
+            if ( ! wp_verify_nonce( $nonce, 'va_buy_credits' ) ) {
+                va_set_flash( 'error', 'Érvénytelen vásárlási kérés. Kérjük frissítsd az oldalt.' );
                 self::redirect_buy_credits_page();
                 return;
             }
 
-            $session_url = self::create_stripe_checkout_session( $token, $qty, $total, $success_url, $cancel_url, $user_id );
-            if ( is_wp_error( $session_url ) ) {
-                va_set_flash( 'error', $session_url->get_error_message() );
+            $qty = isset( $_GET['qty'] ) ? absint( (string) wp_unslash( $_GET['qty'] ) ) : 0;
+            if ( $qty < 1 ) {
+                va_set_flash( 'error', 'Érvénytelen mennyiség.' );
                 self::redirect_buy_credits_page();
                 return;
             }
 
-            wp_safe_redirect( (string) $session_url );
-            exit;
-        }
+            $return_to = isset( $_GET['return_to'] ) ? sanitize_key( (string) wp_unslash( $_GET['return_to'] ) ) : 'buy';
+            if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
+                $return_to = 'buy';
+            }
 
-        if ( $payment_url === '' ) {
-            va_set_flash( 'error', 'Fizetési szolgáltató nincs beállítva.' );
+            $packages = self::get_credit_packages();
+            $unit_price = (int) get_option( 'va_listing_price_after_free', 1990 );
+            $total      = $unit_price * $qty;
+            foreach ( array_reverse( $packages ) as $pkg ) {
+                if ( $qty >= $pkg['qty'] ) {
+                    $unit_price = $pkg['unit_price'];
+                    $total      = $pkg['total'];
+                    break;
+                }
+            }
+
+            $payment_url = trim( (string) get_option( 'va_listing_payment_url', '' ) );
+            $provider    = sanitize_key( (string) get_option( 'va_payment_provider', 'none' ) );
+            $secret_key  = trim( (string) get_option( 'va_payment_secret_key', '' ) );
+            $token       = wp_generate_password( 32, false, false );
+            $user_id     = get_current_user_id();
+
+            set_transient( 'va_credit_token_' . $token, [
+                'user_id'    => $user_id,
+                'qty'        => $qty,
+                'amount'     => $total,
+                'return_to'  => $return_to,
+                'created_at' => time(),
+            ], DAY_IN_SECONDS );
+
+            $return_url = $return_to === 'submit'
+                ? self::get_submit_page_url()
+                : self::get_buy_credits_page_url();
+
+            $success_url = add_query_arg([
+                'va_credit_payment' => 'success',
+                'token'             => rawurlencode( $token ),
+            ], $return_url );
+            $success_url .= ( strpos( $success_url, '?' ) === false ? '?' : '&' ) . 'session_id={CHECKOUT_SESSION_ID}';
+
+            $cancel_url = add_query_arg([
+                'va_credit_payment' => 'cancel',
+                'token'             => rawurlencode( $token ),
+            ], $return_url );
+
+            if ( $provider === 'stripe' ) {
+                if ( $secret_key === '' ) {
+                    va_set_flash( 'error', 'Stripe titkos kulcs nincs beállítva az admin felületen.' );
+                    self::redirect_buy_credits_page();
+                    return;
+                }
+
+                $session_url = self::create_stripe_checkout_session( $token, $qty, $total, $success_url, $cancel_url, $user_id );
+                if ( is_wp_error( $session_url ) ) {
+                    va_set_flash( 'error', $session_url->get_error_message() );
+                    self::redirect_buy_credits_page();
+                    return;
+                }
+
+                wp_safe_redirect( (string) $session_url );
+                exit;
+            }
+
+            if ( $payment_url === '' ) {
+                va_set_flash( 'error', 'Fizetési szolgáltató nincs beállítva.' );
+                self::redirect_buy_credits_page();
+                return;
+            }
+
+            $checkout_url = add_query_arg([
+                'intent'      => 'credit_purchase',
+                'qty'         => $qty,
+                'amount'      => $total,
+                'token'       => $token,
+                'success_url' => rawurlencode( $success_url ),
+                'cancel_url'  => rawurlencode( $cancel_url ),
+            ], $payment_url );
+
+            wp_safe_redirect( $checkout_url );
+            exit;
+        } catch ( Throwable $e ) {
+            error_log( 'VA buy credits start fatal guard: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine() );
+            va_set_flash( 'error', 'Technikai hiba történt a fizetés indításakor. Próbáld újra 1 perc múlva.' );
             self::redirect_buy_credits_page();
             return;
         }
-
-        $checkout_url = add_query_arg([
-            'intent'      => 'credit_purchase',
-            'qty'         => $qty,
-            'amount'      => $total,
-            'token'       => $token,
-            'success_url' => rawurlencode( $success_url ),
-            'cancel_url'  => rawurlencode( $cancel_url ),
-        ], $payment_url );
-
-        wp_safe_redirect( $checkout_url );
-        exit;
     }
 
     /* ── Kredit fizetés callback ───────────────────────── */

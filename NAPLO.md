@@ -22,6 +22,11 @@
 - Root + plugin mirror ujra szinkronban van a Stripe HUF kompatibilitas fix tekinteteben
 - A legutolso commit mar tartalmazza mindket file modositasat, remote: up-to-date
 
+### Utolagos gyorsjavitas (fatál guard)
+- [x] A `/?va_buy_credits_start=1...` indito utvonalon try/catch `Throwable` vedelmet kaptunk
+- [x] Hard crash helyett most flash uzenet + biztonsagos visszairanyitas tortenik
+- [x] A pontos hiba `error_log`-ba kerul (`VA buy credits start fatal guard: ...`), igy kovetkezo korben celzottan javithato a gyokerok
+
 ## 2026. 05. 09. – Session #301 (Header login/regisztracio/vasarlas + deploy helyreallitas)
 
 ### Mi tortent [x]
