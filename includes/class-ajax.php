@@ -992,6 +992,27 @@ class VA_Ajax {
             return new WP_Error( 'va_stripe_missing_secret', 'Stripe titkos kulcs hiányzik.' );
         }
 
+        $amount_huf = absint( $amount );
+        $qty = max( 1, absint( $qty ) );
+        $huf_min = 175;
+
+        // Ha valamilyen admin árbeállítás formátumhiba miatt túl kicsi összeg jönne,
+        // próbáljuk újraszámolni az alap egységárból.
+        if ( $amount_huf < $huf_min ) {
+            $base_price = max( 0, absint( get_option( 'va_listing_price_after_free', 1990 ) ) );
+            $recalc = $base_price * $qty;
+            if ( $recalc >= $huf_min ) {
+                $amount_huf = $recalc;
+            }
+        }
+
+        if ( $amount_huf < $huf_min ) {
+            return new WP_Error(
+                'va_stripe_amount_too_small_local',
+                'A fizetési összeg túl alacsony Stripe-hoz. Aktuális: ' . $amount_huf . ' Ft, minimum: ' . $huf_min . ' Ft. Állítsd a csomagárat legalább ' . $huf_min . ' Ft értékre.'
+            );
+        }
+
         $body = [
             'mode'                                            => 'payment',
             'success_url'                                     => $success_url,
@@ -1002,7 +1023,7 @@ class VA_Ajax {
             'metadata[purpose]'                               => 'credit_purchase',
             'metadata[qty]'                                   => (string) $qty,
             'line_items[0][price_data][currency]'             => 'huf',
-            'line_items[0][price_data][unit_amount]'          => max( 1, $amount ),
+            'line_items[0][price_data][unit_amount]'          => $amount_huf,
             'line_items[0][price_data][product_data][name]'   => $qty . ' kredit csomag',
             'line_items[0][quantity]'                         => 1,
         ];
