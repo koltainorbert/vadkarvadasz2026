@@ -661,8 +661,17 @@ class VA_Ajax {
             wp_safe_redirect( $checkout_url );
             exit;
         } catch ( Throwable $e ) {
-            error_log( 'VA buy credits start fatal guard: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine() );
-            va_set_flash( 'error', 'Technikai hiba történt a fizetés indításakor. Próbáld újra 1 perc múlva.' );
+            $raw_message = (string) $e->getMessage();
+            $diag_message = sanitize_text_field( $raw_message );
+            if ( function_exists( 'mb_substr' ) ) {
+                $diag_message = mb_substr( $diag_message, 0, 180 );
+            } else {
+                $diag_message = substr( $diag_message, 0, 180 );
+            }
+            $diag = ' [ok: ' . $diag_message . ' @' . absint( $e->getLine() ) . ']';
+
+            error_log( 'VA buy credits start fatal guard: ' . $raw_message . ' @ ' . $e->getFile() . ':' . $e->getLine() );
+            va_set_flash( 'error', 'Technikai hiba történt a fizetés indításakor.' . $diag );
             self::redirect_buy_credits_page();
             return;
         }
