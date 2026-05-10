@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 10. – Session #302 (Stripe HUF amount_too_small kompatibilitas fix)
+
+### Mi volt a problema
+- Stripe Checkout Session letrehozasnal tovabbra is `amount_too_small` hiba jott HUF osszegre
+- A hiba jelleg alapjan API/verzio/account oldali HUF egyseg-ertelmezes eltérés valoszinu
+
+### Mit javitottunk [x]
+- [x] A root AJAX file-ban is tukrozve lett a plugin oldali kompatibilitasi retry logika (`includes/class-ajax.php`)
+- [x] Ha az elso Session letrehozas `amount_too_small` hibaval elbukik, automatikus masodik probalkozas fut `unit_amount * 100` ertekkel
+- [x] Hibaagban reszletesebb diagnosztika marad (`sent_unit_amount`), hogy lathato legyen milyen osszeg ment ki
+- [x] Sikeres skala-retry eseten transient flag mentese megtortenik (`va_stripe_huf_scaled_{token}`)
+
+### Ellenorzes
+- `includes/class-ajax.php`: hibatlan
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`: hibatlan
+
+### Eredmeny
+- Root + plugin mirror ujra szinkronban van a Stripe HUF kompatibilitas fix tekinteteben
+- A legutolso commit mar tartalmazza mindket file modositasat, remote: up-to-date
+
 ## 2026. 05. 09. – Session #301 (Header login/regisztracio/vasarlas + deploy helyreallitas)
 
 ### Mi tortent [x]
