@@ -1044,6 +1044,36 @@ class VA_Ajax {
         $code = (int) wp_remote_retrieve_response_code( $response );
         $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 
+        // Egyes Stripe API verzióknál a HUF 2 decimálissal értelmeződik.
+        // Ha ezért amount_too_small jön vissza, megpróbáljuk *100-al.
+        $retried_huf_scale = false;
+        if ( $code >= 400 && is_array( $json ) && isset( $json['error']['code'] ) ) {
+            $err_code = (string) $json['error']['code'];
+            if ( $err_code === 'amount_too_small' && $amount_huf >= $huf_min ) {
+                $scaled_body = $body;
+                $scaled_body['line_items[0][price_data][unit_amount]'] = $amount_huf * 100;
+
+                $retry_response = wp_remote_post( 'https://api.stripe.com/v1/checkout/sessions', [
+                    'timeout' => 45,
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $secret_key,
+                        'Content-Type'  => 'application/x-www-form-urlencoded',
+                    ],
+                    'body'    => $scaled_body,
+                ] );
+
+                if ( ! is_wp_error( $retry_response ) ) {
+                    $retry_code = (int) wp_remote_retrieve_response_code( $retry_response );
+                    $retry_json = json_decode( (string) wp_remote_retrieve_body( $retry_response ), true );
+                    if ( $retry_code >= 200 && $retry_code < 300 && is_array( $retry_json ) ) {
+                        $code = $retry_code;
+                        $json = $retry_json;
+                        $retried_huf_scale = true;
+                    }
+                }
+            }
+        }
+
         if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
             $details = '';
             if ( is_array( $json ) && isset( $json['error'] ) && is_array( $json['error'] ) ) {
@@ -1065,12 +1095,17 @@ class VA_Ajax {
                     $details = ' (' . implode( ' | ', $parts ) . ')';
                 }
             }
+            $details .= ' [sent_unit_amount=' . $amount_huf . ' huf]';
             return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' . $details );
         }
 
         $url = isset( $json['url'] ) ? esc_url_raw( (string) $json['url'] ) : '';
         if ( $url === '' ) {
             return new WP_Error( 'va_stripe_missing_url', 'Stripe nem adott vissza fizetési URL-t.' );
+        }
+
+        if ( $retried_huf_scale ) {
+            update_transient( 'va_stripe_huf_scaled_' . $token, 1, HOUR_IN_SECONDS );
         }
 
         return $url;
