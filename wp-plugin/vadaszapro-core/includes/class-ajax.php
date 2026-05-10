@@ -1024,7 +1024,27 @@ class VA_Ajax {
         $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 
         if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
-            return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' );
+            $details = '';
+            if ( is_array( $json ) && isset( $json['error'] ) && is_array( $json['error'] ) ) {
+                $err = $json['error'];
+                $parts = [];
+                if ( ! empty( $err['type'] ) ) {
+                    $parts[] = 'type: ' . sanitize_text_field( (string) $err['type'] );
+                }
+                if ( ! empty( $err['code'] ) ) {
+                    $parts[] = 'code: ' . sanitize_text_field( (string) $err['code'] );
+                }
+                if ( ! empty( $err['param'] ) ) {
+                    $parts[] = 'param: ' . sanitize_text_field( (string) $err['param'] );
+                }
+                if ( ! empty( $err['message'] ) ) {
+                    $parts[] = sanitize_text_field( (string) $err['message'] );
+                }
+                if ( ! empty( $parts ) ) {
+                    $details = ' (' . implode( ' | ', $parts ) . ')';
+                }
+            }
+            return new WP_Error( 'va_stripe_bad_response', 'Stripe session létrehozás sikertelen.' . $details );
         }
 
         $url = isset( $json['url'] ) ? esc_url_raw( (string) $json['url'] ) : '';

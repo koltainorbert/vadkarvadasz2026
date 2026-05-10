@@ -395,7 +395,14 @@
       return;
     }
 
-    $btn.prop('disabled', true).addClass('is-loading');
+    var originalLabel = $.trim($btn.text());
+    if (!originalLabel) {
+      originalLabel = 'Vásárlás';
+    }
+    $btn.prop('disabled', true).addClass('is-loading').text('Folyamatban...');
+    if ($notice.length) {
+      $notice.html('<div class="va-notice va-notice--warning">Fizetés előkészítése...</div>');
+    }
 
     $.post(ajaxUrl, {
       action: 'va_buy_credits',
@@ -417,7 +424,7 @@
         $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Kérjük, próbáld újra.</div>');
       }
     }).always(function() {
-      $btn.prop('disabled', false).removeClass('is-loading');
+      $btn.prop('disabled', false).removeClass('is-loading').text(originalLabel);
     });
   });
 
