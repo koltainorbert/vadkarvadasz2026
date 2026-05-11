@@ -725,18 +725,42 @@ class VA_User_Roles {
             return false;
         }
 
-        $site_name = 'Vadkár Vadász';
-        $support_email = 'vadkarvadasz@gmail.com';
+        $site_name = trim( (string) get_option( 'va_email_brand_name', 'Vadkár Vadász' ) );
+        if ( $site_name === '' ) {
+            $site_name = 'Vadkár Vadász';
+        }
+        $support_email = sanitize_email( (string) get_option( 'va_email_contact_email', 'vadkarvadasz@gmail.com' ) );
+        if ( $support_email === '' ) {
+            $support_email = 'vadkarvadasz@gmail.com';
+        }
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
 
-        $subject = sprintf( 'Figyelmeztetés: %d nap múlva inaktív hirdetés törlés (%s)', $days_left, $site_name );
-        $message = "Kedves " . $user->display_name . "!\n\n"
-            . "Értesítünk, hogy " . $count . " db, csomaglimit miatt inaktív hirdetésed " . $days_left . " nap múlva törlésre kerülhet.\n"
-            . "Legkorábbi törlés időpontja: " . date_i18n( 'Y.m.d H:i', $earliest_delete_ts ) . "\n\n"
-            . "Meghosszabbításhoz: " . $buy_url . "\n\n"
-            . "Kapcsolat: " . $support_email . "\n\n"
-            . "Üdvözlettel,\n" . $site_name;
+        $subject_tpl = trim( (string) get_option( 'va_email_warning_subject', 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})' ) );
+        if ( $subject_tpl === '' ) {
+            $subject_tpl = 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})';
+        }
+
+        $body_tpl = (string) get_option(
+            'va_email_warning_body',
+            "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}"
+        );
+        if ( trim( $body_tpl ) === '' ) {
+            $body_tpl = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        }
+
+        $replace_map = [
+            '{name}'          => (string) $user->display_name,
+            '{count}'         => (string) $count,
+            '{days}'          => (string) $days_left,
+            '{delete_at}'     => date_i18n( 'Y.m.d H:i', $earliest_delete_ts ),
+            '{buy_url}'       => (string) $buy_url,
+            '{support_email}' => (string) $support_email,
+            '{site_name}'     => (string) $site_name,
+        ];
+
+        $subject = strtr( $subject_tpl, $replace_map );
+        $message = strtr( $body_tpl, $replace_map );
 
         return wp_mail( $user->user_email, $subject, $message );
     }
