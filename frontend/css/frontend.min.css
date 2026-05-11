@@ -1390,8 +1390,8 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
 
 .va-pkg-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
   margin: 28px 0;
   align-items: stretch;
 }
