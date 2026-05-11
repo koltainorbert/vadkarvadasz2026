@@ -17,6 +17,7 @@
 - [x] Az admin users oldalon uj `Stripe elozmenyek szinkron` gomb kerult be
 - [x] Uj vasarlasi szuro kerult be: minden / csak vasarlok / vasarlas nelkuliek
 - [x] Az utolso Stripe szinkron metaadatai megjelennek az admin feluleten
+- [x] A felhasznalonkenti Stripe tranzakcio blokk alapbol osszecsukott, kulon lenyithato lett
 - [x] Root + plugin mirror fajlok szinkronban frissitve
 
 ### Erintett fajlok
