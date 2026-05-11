@@ -801,38 +801,44 @@ class VA_Settings_Page {
 
         // 30/7/1 napos külön figyelmeztető sablonok
         register_setting( 'va_general_settings', 'va_email_warning_subject_30', [ 'sanitize_callback' => 'sanitize_text_field' ] );
-        self::$defaults['va_email_warning_subject_30'] = 'Figyelmeztetés: 30 nap múlva inaktív hirdetés törlés ({site_name})';
-        if ( get_option( 'va_email_warning_subject_30' ) === false ) {
+        self::$defaults['va_email_warning_subject_30'] = '{count} hirdetésed 30 nap múlva törlődhet';
+        $cur_sub_30 = (string) get_option( 'va_email_warning_subject_30', '' );
+        if ( $cur_sub_30 === '' || strpos( $cur_sub_30, 'Figyelmeztetés: 30 nap múlva' ) === 0 ) {
             update_option( 'va_email_warning_subject_30', self::$defaults['va_email_warning_subject_30'] );
         }
 
         register_setting( 'va_general_settings', 'va_email_warning_body_30', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
-        self::$defaults['va_email_warning_body_30'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 30 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
-        if ( get_option( 'va_email_warning_body_30' ) === false ) {
+        self::$defaults['va_email_warning_body_30'] = "Kedves {name},\n\nTájékoztatunk, hogy az alábbi, csomaglimit miatt szüneteltetett hirdetéseid {delete_at}-ig törlésre kerülnek, amennyiben addig nem frissíted előfizetésedet.\n\nMég bőven van idő, de érdemes időben gondoskodni a megújításról.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        $cur_body_30 = (string) get_option( 'va_email_warning_body_30', '' );
+        if ( $cur_body_30 === '' || strpos( $cur_body_30, 'Kedves {name}!' ) === 0 ) {
             update_option( 'va_email_warning_body_30', self::$defaults['va_email_warning_body_30'] );
         }
 
         register_setting( 'va_general_settings', 'va_email_warning_subject_7', [ 'sanitize_callback' => 'sanitize_text_field' ] );
-        self::$defaults['va_email_warning_subject_7'] = 'Figyelmeztetés: 7 nap múlva inaktív hirdetés törlés ({site_name})';
-        if ( get_option( 'va_email_warning_subject_7' ) === false ) {
+        self::$defaults['va_email_warning_subject_7'] = '7 nap múlva törlünk {count} hirdetést';
+        $cur_sub_7 = (string) get_option( 'va_email_warning_subject_7', '' );
+        if ( $cur_sub_7 === '' || strpos( $cur_sub_7, 'Figyelmeztetés: 7 nap múlva' ) === 0 ) {
             update_option( 'va_email_warning_subject_7', self::$defaults['va_email_warning_subject_7'] );
         }
 
         register_setting( 'va_general_settings', 'va_email_warning_body_7', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
-        self::$defaults['va_email_warning_body_7'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 7 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
-        if ( get_option( 'va_email_warning_body_7' ) === false ) {
+        self::$defaults['va_email_warning_body_7'] = "Kedves {name},\n\nEmlékeztetünk, hogy 7 napon belül (legkorábban {delete_at}) törlődnek az alábbi, csomaglimit miatt szüneteltetett hirdetéseid.\n\nA hirdetések visszaállításához frissítsd előfizetésedet.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        $cur_body_7 = (string) get_option( 'va_email_warning_body_7', '' );
+        if ( $cur_body_7 === '' || strpos( $cur_body_7, 'Kedves {name}!' ) === 0 ) {
             update_option( 'va_email_warning_body_7', self::$defaults['va_email_warning_body_7'] );
         }
 
         register_setting( 'va_general_settings', 'va_email_warning_subject_1', [ 'sanitize_callback' => 'sanitize_text_field' ] );
-        self::$defaults['va_email_warning_subject_1'] = 'Figyelmeztetés: 1 nap múlva inaktív hirdetés törlés ({site_name})';
-        if ( get_option( 'va_email_warning_subject_1' ) === false ) {
+        self::$defaults['va_email_warning_subject_1'] = '⚠️ Holnap törlünk {count} hirdetést';
+        $cur_sub_1 = (string) get_option( 'va_email_warning_subject_1', '' );
+        if ( $cur_sub_1 === '' || strpos( $cur_sub_1, 'Figyelmeztetés: 1 nap múlva' ) === 0 ) {
             update_option( 'va_email_warning_subject_1', self::$defaults['va_email_warning_subject_1'] );
         }
 
         register_setting( 'va_general_settings', 'va_email_warning_body_1', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
-        self::$defaults['va_email_warning_body_1'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 1 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
-        if ( get_option( 'va_email_warning_body_1' ) === false ) {
+        self::$defaults['va_email_warning_body_1'] = "Kedves {name},\n\nEz az utolsó figyelmeztetés. Holnap ({delete_at}) véglegesen törlődnek az alábbi, csomaglimit miatt inaktív hirdetéseid.\n\nA törlés csak csomagfrissítéssel előzhető meg.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        $cur_body_1 = (string) get_option( 'va_email_warning_body_1', '' );
+        if ( $cur_body_1 === '' || strpos( $cur_body_1, 'Kedves {name}!' ) === 0 ) {
             update_option( 'va_email_warning_body_1', self::$defaults['va_email_warning_body_1'] );
         }
 

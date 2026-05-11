@@ -736,18 +736,18 @@ class VA_User_Roles {
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
 
-        $subject_default = 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})';
-        $body_default    = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        $subject_default = '{count} hirdetésed {days} nap múlva törlődhet';
+        $body_default    = "Kedves {name},\n\nTájékoztatunk, hogy az alábbi, csomaglimit miatt szüneteltetett hirdetéseid {delete_at}-ig törlésre kerülnek, amennyiben addig nem frissíted előfizetésedet.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
 
         $subject_by_days = [
-            30 => trim( (string) get_option( 'va_email_warning_subject_30', '' ) ),
-            7  => trim( (string) get_option( 'va_email_warning_subject_7', '' ) ),
-            1  => trim( (string) get_option( 'va_email_warning_subject_1', '' ) ),
+            30 => trim( (string) get_option( 'va_email_warning_subject_30', '{count} hirdetésed 30 nap múlva törlődhet' ) ),
+            7  => trim( (string) get_option( 'va_email_warning_subject_7', '7 nap múlva törlünk {count} hirdetést' ) ),
+            1  => trim( (string) get_option( 'va_email_warning_subject_1', '⚠️ Holnap törlünk {count} hirdetést' ) ),
         ];
         $body_by_days = [
-            30 => (string) get_option( 'va_email_warning_body_30', '' ),
-            7  => (string) get_option( 'va_email_warning_body_7', '' ),
-            1  => (string) get_option( 'va_email_warning_body_1', '' ),
+            30 => (string) get_option( 'va_email_warning_body_30', "Kedves {name},\n\nTájékoztatunk, hogy az alábbi, csomaglimit miatt szüneteltetett hirdetéseid {delete_at}-ig törlésre kerülnek, amennyiben addig nem frissíted előfizetésedet.\n\nMég bőven van idő, de érdemes időben gondoskodni a megújításról.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}" ),
+            7  => (string) get_option( 'va_email_warning_body_7', "Kedves {name},\n\nEmlékeztetünk, hogy 7 napon belül (legkorábban {delete_at}) törlődnek az alábbi, csomaglimit miatt szüneteltetett hirdetéseid.\n\nA hirdetések visszaállításához frissítsd előfizetésedet.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}" ),
+            1  => (string) get_option( 'va_email_warning_body_1', "Kedves {name},\n\nEz az utolsó figyelmeztetés. Holnap ({delete_at}) véglegesen törlődnek az alábbi, csomaglimit miatt inaktív hirdetéseid.\n\nA törlés csak csomagfrissítéssel előzhető meg.\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}" ),
         ];
 
         $subject_tpl = $subject_by_days[ $days_left ] ?? '';
