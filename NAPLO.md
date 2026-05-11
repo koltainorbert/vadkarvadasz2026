@@ -2,6 +2,40 @@
 
 ---
 
+## 2026. 05. 11. – Session #323 (Silver 70 nap fix: kartya alap + admin manual override minden planra)
+
+### Hiba
+- A felhasznalo 70 napos silver kiemelest vart a kartya alapjan, de a rendszer 5 napot mutatott/hasznalt.
+
+### Ok
+- Vasarlasnal mar szinkronizalodott a `va_plan_boost_cooldown` user meta,
+  de a `get_plan_config()` ezt eddig csak `platinum/custom` planokra vette figyelembe.
+- Emiatt silver/gold/basic usereknel a user szintu ertek figyelmen kivul maradt.
+
+### Javitas [x]
+- [x] `includes/class-user-roles.php`:
+  - `get_plan_config()` most **minden planra** olvassa a user meta `va_plan_boost_cooldown` erteket.
+  - `monthly_limit` override tovabbra is csak `platinum/custom` planra maradt.
+- [x] `ajax_admin_set_plan()`:
+  - `custom_boost_cooldown` mentese most **minden planra** engedelyezett.
+  - Igy admin manualisan barmely usernel (Silver/Gold/Basic/Platinum/Custom) be tudja allitani.
+- [x] `admin/class-settings-page.php`:
+  - A user szerkesztoben a `Kiemelesi ujratoltes (nap)` mezo most mindig latszik.
+  - A `platinum/custom` extra blokk maradt a havi limit + rang cimke + megjegyzes mezokre.
+
+### Eredmeny
+- Alapbol: a vasarolt kartya feature sora szerinti X nap ervenyesul.
+- Admin override: barmikor felhasznalo szinten felulirhato minden planra.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `admin/class-settings-page.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 11. – Session #322 (Kartya a mervado: kiemelesi ujratoltes vasarlas utan)
 
 ### Mi volt a cel

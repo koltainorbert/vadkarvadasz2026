@@ -3454,15 +3454,18 @@ class VA_Settings_Page {
                                     <?php endforeach; ?>
                                 </select>
 
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
+                                    <label>Kiemelési újratöltés (nap):
+                                        <input type="number" class="va-upm-plat-cd" min="1" max="365"
+                                               value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:70px;">
+                                    </label>
+                                </div>
+
                                 <!-- Egyedi (Platinum + Custom) extra mezők -->
                                 <div class="va-upm-plat-extra" style="<?php echo in_array( $plan, [ 'platinum', 'custom' ], true ) ? '' : 'display:none;'; ?>">
                                     <label>Havi limit:
                                         <input type="number" class="va-upm-plat-limit" min="1" max="9999"
                                                value="<?php echo esc_attr( (string) ( $plat_limit ?: $eff_cfg['monthly_limit'] ) ); ?>" style="width:70px;">
-                                    </label>
-                                    <label>Kiemelési újratöltés (nap):
-                                        <input type="number" class="va-upm-plat-cd" min="1" max="365"
-                                               value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:60px;">
                                     </label>
                                     <label>Rang címke:
                                         <input type="text" class="va-upm-seller-label" maxlength="40"
