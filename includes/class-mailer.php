@@ -50,6 +50,9 @@ class VA_Mailer {
       if ( $logo_src === '' ) {
         $logo_src = (string) get_option( 'va_brand_icon_url', '' );
       }
+      if ( $logo_src === '' && defined( 'VA_PLUGIN_URL' ) ) {
+        $logo_src = (string) VA_PLUGIN_URL . 'assets/vadkar-vadasz-logo.svg';
+      }
       if ( $logo_src === '' && function_exists( 'get_site_icon_url' ) ) {
         $logo_src = (string) get_site_icon_url( 256 );
       }
