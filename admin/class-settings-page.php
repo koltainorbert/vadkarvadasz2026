@@ -3448,6 +3448,69 @@ class VA_Settings_Page {
                         </td>
                     </tr>
                     <?php endif; ?>
+                    <?php
+                    $email_log = get_user_meta( $user->ID, 'va_email_send_log', true );
+                    $email_log = is_array( $email_log ) ? $email_log : [];
+                    $email_log = array_reverse( $email_log ); // legújabb elöl
+                    $email_log_count = count( $email_log );
+                    if ( $email_log_count > 0 ):
+                    ?>
+                    <tr class="va-upm-history-row">
+                        <td colspan="7">
+                            <div class="va-upm-history-box">
+                                <details class="va-upm-history-disclosure">
+                                    <summary class="va-upm-history-head">
+                                        <div>
+                                            <strong>📧 Értesítési napló</strong>
+                                            <span><?php echo esc_html( (string) $email_log_count ); ?> elküldött e-mail</span>
+                                        </div>
+                                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
+                                    </summary>
+                                <div class="va-upm-history-list">
+                                    <?php foreach ( $email_log as $log_entry ):
+                                        $log_ts        = absint( $log_entry['sent_at'] ?? 0 );
+                                        $log_days      = absint( $log_entry['days_warning'] ?? 0 );
+                                        $log_count     = absint( $log_entry['post_count'] ?? 0 );
+                                        $log_del_ts    = absint( $log_entry['earliest_delete_ts'] ?? 0 );
+                                        $log_post_ids  = (array) ( $log_entry['post_ids'] ?? [] );
+                                        $log_type      = sanitize_key( (string) ( $log_entry['type'] ?? 'plan_warning' ) );
+                                        $log_type_label = $log_type === 'plan_warning' ? 'Csomag-figyelmeztető' : esc_html( $log_type );
+                                        $log_color = $log_days <= 1 ? '#ff4444' : ( $log_days <= 7 ? '#ffaa00' : '#ffd700' );
+                                    ?>
+                                    <div class="va-upm-history-item">
+                                        <div class="va-upm-history-item__top">
+                                            <span><?php echo esc_html( $log_ts > 0 ? date_i18n( 'Y.m.d H:i', $log_ts ) : '—' ); ?></span>
+                                            <span><?php echo esc_html( $log_type_label ); ?></span>
+                                            <span style="color:<?php echo esc_attr( $log_color ); ?>;font-weight:800;"><?php echo esc_html( (string) $log_days ); ?> napos figyelmeztetés</span>
+                                            <span><?php echo esc_html( (string) $log_count ); ?> hirdetés érintett</span>
+                                        </div>
+                                        <?php if ( $log_del_ts > 0 ): ?>
+                                        <div class="va-upm-history-item__meta">Legkorábbi törlés: <?php echo esc_html( date_i18n( 'Y.m.d H:i', $log_del_ts ) ); ?></div>
+                                        <?php endif; ?>
+                                        <?php if ( ! empty( $log_post_ids ) ): ?>
+                                        <div class="va-upm-history-item__meta">
+                                            Hirdetés ID-k:
+                                            <?php foreach ( $log_post_ids as $lpid ):
+                                                $lpid = (int) $lpid;
+                                                if ( $lpid <= 0 ) continue;
+                                                $lpedit = get_edit_post_link( $lpid );
+                                            ?>
+                                                <?php if ( $lpedit ): ?>
+                                                    <a href="<?php echo esc_url( $lpedit ); ?>" target="_blank" class="va-upm-history-link" style="margin-left:4px;">#<?php echo esc_html( (string) $lpid ); ?></a>
+                                                <?php else: ?>
+                                                    <span style="margin-left:4px;">#<?php echo esc_html( (string) $lpid ); ?></span>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                </details>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
