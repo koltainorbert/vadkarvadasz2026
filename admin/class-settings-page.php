@@ -1044,6 +1044,8 @@ class VA_Settings_Page {
             $price_card_opts[ "va_pc_{$n}_featured"  ] = ( $n === 3 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_free"      ] = ( $n === 1 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_btn_text"  ] = ( $n === 1 ) ? 'Mindenki számára elérhető' : 'Vásárlás →';
+            $price_card_opts[ "va_pc_{$n}_btn_url"   ] = '';
+            $price_card_opts[ "va_pc_{$n}_free_label"] = 'Ingyenes';
             $price_card_opts[ "va_pc_{$n}_theme"     ] = $default_card_themes[ $n ]  ?? 'basic';
             $price_card_opts[ "va_pc_{$n}_features" ] = $default_card_features[ $n ] ?? [];
         }
@@ -7423,8 +7425,10 @@ class VA_Settings_Page {
                     $badge    = $g( "va_pc_{$n}_badge",    $card_defaults['badges'][$n]  ?? '' );
                     $featured = $g( "va_pc_{$n}_featured", ( $n === 3 ) ? '1' : '0' ) === '1';
                     $free     = $g( "va_pc_{$n}_free",     ( $n === 1 ) ? '1' : '0' ) === '1';
-                    $btn_text = $g( "va_pc_{$n}_btn_text", $card_defaults['btns'][$n]    ?? 'Vásárlás →' );
-                    $theme    = $g( "va_pc_{$n}_theme",    $card_defaults['themes'][$n]  ?? 'basic' );
+                    $btn_text  = $g( "va_pc_{$n}_btn_text",  $card_defaults['btns'][$n]    ?? 'Vásárlás →' );
+                    $btn_url   = $g( "va_pc_{$n}_btn_url",   '' );
+                    $free_label= $g( "va_pc_{$n}_free_label",'Ingyenes' );
+                    $theme     = $g( "va_pc_{$n}_theme",    $card_defaults['themes'][$n]  ?? 'basic' );
                     $enabled  = $g( "va_pc_{$n}_enabled",  $n <= 4 ? '1' : '0' ) === '1';
                     $is_hidden = $n > $pc_count;
 
@@ -7481,7 +7485,7 @@ class VA_Settings_Page {
                         <!-- Ár preview -->
                         <div class="va-pk-card__price-preview">
                             <?php if ( $free ): ?>
-                            <div class="free-tag">Ingyenes</div>
+                            <div class="free-tag"><?php echo esc_html( $free_label ); ?></div>
                             <?php else: ?>
                             <div class="total" style="color:<?php echo esc_attr( $tc['accent'] ); ?>;">
                                 <span class="num" id="va-pk-total-<?php echo $n; ?>"><?php echo number_format( $total, 0, ',', '&nbsp;' ); ?></span><span class="currency">Ft</span>
@@ -7576,6 +7580,16 @@ class VA_Settings_Page {
                         <div class="va-pk-field">
                             <label>Gomb felirat</label>
                             <input type="text" name="va_pc_<?php echo $n; ?>_btn_text" value="<?php echo esc_attr( $btn_text ); ?>" placeholder="Vásárlás →">
+                        </div>
+
+                        <div class="va-pk-field">
+                            <label>Gomb egyedi URL <small style="opacity:.5;">(elhagyható – ha üres: normál vásárlás)</small></label>
+                            <input type="url" name="va_pc_<?php echo $n; ?>_btn_url" value="<?php echo esc_attr( $btn_url ); ?>" placeholder="https://… vagy /kapcsolat">
+                        </div>
+
+                        <div class="va-pk-field">
+                            <label>„Ingyenes" felirat szövege</label>
+                            <input type="text" name="va_pc_<?php echo $n; ?>_free_label" value="<?php echo esc_attr( $free_label ); ?>" placeholder="Ingyenes">
                         </div>
 
                         <div class="va-pk-field">

@@ -146,8 +146,10 @@ class VA_Shortcodes {
                 'badge'    => (string) get_option( "va_pc_{$n}_badge",     '' ),
                 'featured' => get_option( "va_pc_{$n}_featured", '0' ) === '1',
                 'free'     => get_option( "va_pc_{$n}_free", $n === 1 ? '1' : '0' ) === '1',
-                'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
-                'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
+                'btn_text'   => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
+                'btn_url'    => (string) get_option( "va_pc_{$n}_btn_url",   '' ),
+                'free_label' => (string) get_option( "va_pc_{$n}_free_label", 'Ingyenes' ),
+                'icon'       => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
             ];
             // Lista sorok: uj tarolas (va_pc_{n}_features), visszafele kompatibilis fallbackkel.
             $feats = get_option( "va_pc_{$n}_features", null );
