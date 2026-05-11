@@ -1462,6 +1462,40 @@ class VA_Settings_Page {
                     <?php self::field_textarea( 'va_email_warning_body_1', '1 napos figyelmeztetés szöveg', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 6 ); ?>
                     <?php self::field_text( 'va_email_warning_subject', 'Közös fallback tárgy sablon (opcionális)' ); ?>
                     <?php self::field_textarea( 'va_email_warning_body', 'Közös fallback szöveg sablon (opcionális)', 'Akkor használjuk, ha a 30/7/1 mező üres.', 5 ); ?>
+
+                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">⏳ Csomag lejárati e-mailek (egyenként szerkeszthető)</h2></th></tr>
+                    <tr><th colspan="2"><p class="description" style="margin:0 0 6px;">Változók: {name}, {user_email}, {plan_label}, {plan_slug}, {days_left}, {expires_at}, {site_name}, {support_email}, {edit_url}</p></th></tr>
+
+                    <?php self::field_text( 'va_email_plan_expiry_subject_30', 'Csomag lejárat 30 nap – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_heading_30', 'Csomag lejárat 30 nap – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_expiry_body_30', 'Csomag lejárat 30 nap – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_label_30', 'Csomag lejárat 30 nap – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_url_30', 'Csomag lejárat 30 nap – gomb link URL' ); ?>
+
+                    <?php self::field_text( 'va_email_plan_expiry_subject_7', 'Csomag lejárat 7 nap – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_heading_7', 'Csomag lejárat 7 nap – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_expiry_body_7', 'Csomag lejárat 7 nap – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_label_7', 'Csomag lejárat 7 nap – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_url_7', 'Csomag lejárat 7 nap – gomb link URL' ); ?>
+
+                    <?php self::field_text( 'va_email_plan_expiry_subject_1', 'Csomag lejárat 1 nap – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_heading_1', 'Csomag lejárat 1 nap – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_expiry_body_1', 'Csomag lejárat 1 nap – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_label_1', 'Csomag lejárat 1 nap – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_expiry_btn_url_1', 'Csomag lejárat 1 nap – gomb link URL' ); ?>
+
+                    <?php self::field_text( 'va_email_plan_expired_user_subject', 'Lejárt csomag (felhasználó) – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_user_heading', 'Lejárt csomag (felhasználó) – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_expired_user_body', 'Lejárt csomag (felhasználó) – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_user_btn_label', 'Lejárt csomag (felhasználó) – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_user_btn_url', 'Lejárt csomag (felhasználó) – gomb link URL' ); ?>
+
+                    <?php self::field_text( 'va_email_plan_expired_admin_subject', 'Lejárt csomag (admin) – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_admin_heading', 'Lejárt csomag (admin) – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_expired_admin_body', 'Lejárt csomag (admin) – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_admin_btn_label', 'Lejárt csomag (admin) – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_expired_admin_btn_url', 'Lejárt csomag (admin) – gomb link URL (üresen hagyva automatikusan user szerkesztő oldal)' ); ?>
+
                     <?php self::field_select('va_home_hero_align',      'Főoldal hero elemek igazítása', [ 'left' => 'Balra zárt', 'center' => 'Középre', 'right' => 'Jobbra zárt' ] ); ?>
                     <?php self::field_select('va_home_hero_bg_type', 'Főoldal hero háttér típusa', [
                         'video'    => '🎬 Videó',
