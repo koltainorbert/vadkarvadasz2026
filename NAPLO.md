@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 11. – Session #309 (Nyitolap logok elrejtese)
+
+### Mi volt a cel
+- A nyitolapon ne jelenjen meg logo
+
+### Mit keszitettem [x]
+- [x] Nyitolap-fuggo feltetel bekerult: `is_front_page()`
+- [x] Header logoblokk csak akkor renderelodik, ha nem nyitolap
+- [x] Hero logoblokk csak akkor renderelodik, ha nem nyitolap
+- [x] Root + theme mirror `header.php` egyarant frissitve
+- [x] Hibacheck + deploy lefutott
+
+### Erintett fajlok
+- `header.php`
+- `wp-theme/vadaszapro-theme/header.php`
+
+---
+
 ## 2026. 05. 11. – Session #308 (Admin torles-riport + E-mail kuldesi naplo)
 
 ### Mi volt a cel

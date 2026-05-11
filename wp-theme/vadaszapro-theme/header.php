@@ -82,12 +82,14 @@
     if ( $hero_logo === '' ) {
         $hero_logo = $header_logo;
     }
+    $hide_home_logo = is_front_page();
     ?>
 
     <!-- ═══ Header ══════════════════════════════════════ -->
     <header class="va-header">
         <div class="va-header__inner">
             <!-- Logo -->
+            <?php if ( ! $hide_home_logo ): ?>
             <a href="<?php echo esc_url( home_url('/') ); ?>" class="va-logo">
                 <?php if ( ! empty( $header_logo ) ): ?>
                     <img src="<?php echo esc_url( $header_logo ); ?>" class="va-logo__img va-logo__img--header" style="height:<?php echo esc_attr( $header_logo_h ); ?>px;" alt="<?php echo esc_attr( $brand_name ); ?>" loading="eager" decoding="async">
@@ -97,6 +99,7 @@
                     <span class="va-logo__icon">🦌</span>
                 <?php endif; ?>
             </a>
+            <?php endif; ?>
 
             <!-- Navigáció -->
             <nav class="va-nav" id="va-main-nav">
@@ -523,7 +526,7 @@
         <div class="vh__overlay"></div>
 
         <div class="vh__content vh__content--<?php echo esc_attr( $home_hero_align ); ?>">
-            <?php if ( ! empty( $hero_logo ) ): ?>
+            <?php if ( ! $hide_home_logo && ! empty( $hero_logo ) ): ?>
                 <img src="<?php echo esc_url( $hero_logo ); ?>" class="vh__logo vh__logo--<?php echo esc_attr( $hero_logo_pos ); ?>" style="height:<?php echo esc_attr( $hero_logo_h ); ?>px;" alt="<?php echo esc_attr( $brand_name ); ?>" loading="eager" decoding="async">
             <?php endif; ?>
             <div class="vh__badge"><span class="vcp-hero__badge-dot"></span><?php echo esc_html( $home_badge ); ?></div>
