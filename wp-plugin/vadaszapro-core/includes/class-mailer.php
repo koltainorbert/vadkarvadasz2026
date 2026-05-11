@@ -37,16 +37,27 @@ class VA_Mailer {
 
     public static function set_html_content_type(): string { return 'text/html'; }
     public static function set_from_email( string $email ): string {
-      return self::SUPPORT_EMAIL;
+      $opt = sanitize_email( (string) get_option( 'va_email_contact_email', self::SUPPORT_EMAIL ) );
+      return $opt !== '' ? $opt : self::SUPPORT_EMAIL;
     }
     public static function set_from_name( string $name ): string {
-      return self::BRAND_NAME;
+      $opt = trim( (string) get_option( 'va_email_brand_name', self::BRAND_NAME ) );
+      return $opt !== '' ? $opt : self::BRAND_NAME;
     }
 
     /* ─── HTML template builder ─────────────────────────── */
     private static function build( string $heading, string $body_html, array $button ): string {
-        $site_name  = esc_html( self::BRAND_NAME );
-        $logo_url   = esc_url( get_option( 'va_header_logo_url', '' ) );
+        $site_name_raw = trim( (string) get_option( 'va_email_brand_name', self::BRAND_NAME ) );
+        if ( $site_name_raw === '' ) {
+          $site_name_raw = self::BRAND_NAME;
+        }
+        $site_name  = esc_html( $site_name_raw );
+
+        $logo_source = (string) get_option( 'va_email_logo_url', '' );
+        if ( $logo_source === '' ) {
+          $logo_source = (string) get_option( 'va_header_logo_url', '' );
+        }
+        $logo_url   = esc_url( $logo_source );
         $site_url   = esc_url( home_url( '/' ) );
         $year       = date( 'Y' );
 

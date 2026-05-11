@@ -2,6 +2,32 @@
 
 ---
 
+## 2026. 05. 11. – Session #311 (Admin szerkesztheto e-mail sablon + mirror sync)
+
+### Mi volt a cel
+- A figyelmezteto e-mailek legyenek teljesen adminbol szerkeszthetők (brand, logo, felado, targy, torzs)
+- A valtozasok root + plugin mirror fajlokban is azonnal szinkronban legyenek
+
+### Mit keszitettem [x]
+- [x] `VA_Mailer` felado e-mailje opciobol jon: `va_email_contact_email` (fallback: `vadkarvadasz@gmail.com`)
+- [x] `VA_Mailer` felado neve opciobol jon: `va_email_brand_name` (fallback: `Vadkár Vadász`)
+- [x] E-mail fejléc logo opciobol jon: `va_email_logo_url` (fallback: `va_header_logo_url`)
+- [x] Figyelmezteto e-mail targy sablon opciobol jon: `va_email_warning_subject`
+- [x] Figyelmezteto e-mail torzs sablon opciobol jon: `va_email_warning_body`
+- [x] Token csere bevezetve: `{name}`, `{count}`, `{days}`, `{delete_at}`, `{buy_url}`, `{support_email}`, `{site_name}`
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck lefutott az erintett 6 fajlon (nincs hiba)
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `includes/class-mailer.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #310 (Fix brand + fix e-mail kenyszerites)
 
 ### Mi volt a cel

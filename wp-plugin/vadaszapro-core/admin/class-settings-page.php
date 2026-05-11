@@ -768,6 +768,37 @@ class VA_Settings_Page {
             update_option( 'va_hero_logo_url', '' );
         }
 
+        // Email branding + sablon
+        register_setting( 'va_general_settings', 'va_email_brand_name', [ 'sanitize_callback' => 'sanitize_text_field' ] );
+        self::$defaults['va_email_brand_name'] = 'Vadkár Vadász';
+        if ( get_option( 'va_email_brand_name' ) === false ) {
+            update_option( 'va_email_brand_name', 'Vadkár Vadász' );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_contact_email', [ 'sanitize_callback' => 'sanitize_email' ] );
+        self::$defaults['va_email_contact_email'] = 'vadkarvadasz@gmail.com';
+        if ( get_option( 'va_email_contact_email' ) === false ) {
+            update_option( 'va_email_contact_email', 'vadkarvadasz@gmail.com' );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_logo_url', [ 'sanitize_callback' => 'esc_url_raw' ] );
+        self::$defaults['va_email_logo_url'] = '';
+        if ( get_option( 'va_email_logo_url' ) === false ) {
+            update_option( 'va_email_logo_url', '' );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_subject', [ 'sanitize_callback' => 'sanitize_text_field' ] );
+        self::$defaults['va_email_warning_subject'] = 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})';
+        if ( get_option( 'va_email_warning_subject' ) === false ) {
+            update_option( 'va_email_warning_subject', 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})' );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_body', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+        self::$defaults['va_email_warning_body'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        if ( get_option( 'va_email_warning_body' ) === false ) {
+            update_option( 'va_email_warning_body', self::$defaults['va_email_warning_body'] );
+        }
+
         /* Reklámzónák */
         register_setting( 'va_ad_settings', 'va_ad_show_placeholder', [ 'sanitize_callback' => 'absint' ] );
         foreach ( array_keys( VA_Ad_Zones::ZONES ) as $zone ) {
@@ -1300,6 +1331,13 @@ class VA_Settings_Page {
                     <?php self::field_media( 'va_hero_logo_url',        'Hero logó (főoldal)' ); ?>
                     <?php self::field_num(   'va_hero_logo_height',     'Hero logó magasság (px)', 30, 260 ); ?>
                     <?php self::field_select('va_hero_logo_position',   'Hero logó pozíció', [ 'left' => 'Bal', 'center' => 'Közép', 'right' => 'Jobb' ] ); ?>
+
+                    <tr><th colspan="2" style="padding-top:18px;"><h2 style="margin:0;">📧 E-mail sablon (figyelmeztetések)</h2></th></tr>
+                    <?php self::field_text( 'va_email_brand_name', 'E-mail márkanév' ); ?>
+                    <?php self::field_email( 'va_email_contact_email', 'E-mail kapcsolati cím' ); ?>
+                    <?php self::field_media( 'va_email_logo_url', 'E-mail logó (ha üres, fejléc logó használata)' ); ?>
+                    <?php self::field_text( 'va_email_warning_subject', 'Figyelmeztető e-mail tárgy sablon' ); ?>
+                    <?php self::field_textarea( 'va_email_warning_body', 'Figyelmeztető e-mail szöveg sablon', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 8 ); ?>
                     <?php self::field_select('va_home_hero_align',      'Főoldal hero elemek igazítása', [ 'left' => 'Balra zárt', 'center' => 'Középre', 'right' => 'Jobbra zárt' ] ); ?>
                     <?php self::field_select('va_home_hero_bg_type', 'Főoldal hero háttér típusa', [
                         'video'    => '🎬 Videó',
