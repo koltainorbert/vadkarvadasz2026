@@ -269,7 +269,7 @@ class VA_Shortcodes {
                     </div>
                     <div class="va-pkg-price-block">
                         <?php if ( $is_free ): ?>
-                        <div class="va-pkg-price va-pkg-price--free">Ingyenes</div>
+                        <div class="va-pkg-price va-pkg-price--free"><?php echo esc_html( $card['free_label'] ); ?></div>
                         <div class="va-pkg-unit">regisztrációval</div>
                         <?php elseif ( $card['badge'] ): ?>
                         <div class="va-pkg-price"><?php echo number_format( (int) $pkg['total'], 0, ',', ' ' ); ?><span>Ft</span></div>
@@ -292,12 +292,18 @@ class VA_Shortcodes {
                     <?php elseif ( $is_locked_by_active_plan ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Csak magasabb csomag vehető</button>
                     <?php else: ?>
-                    <?php $fallback_checkout_url = add_query_arg([
-                        'va_buy_credits_start' => '1',
-                        'qty'                  => $qty,
-                        'return_to'            => $return_to,
-                        'nonce'                => wp_create_nonce( 'va_buy_credits' ),
-                    ], home_url( '/' ) ); ?>
+                    <?php
+                    if ( $card['btn_url'] !== '' ) {
+                        $fallback_checkout_url = $card['btn_url'];
+                    } else {
+                        $fallback_checkout_url = add_query_arg([
+                            'va_buy_credits_start' => '1',
+                            'qty'                  => $qty,
+                            'return_to'            => $return_to,
+                            'nonce'                => wp_create_nonce( 'va_buy_credits' ),
+                        ], home_url( '/' ) );
+                    }
+                    ?>
                     <a href="<?php echo esc_url( $fallback_checkout_url ); ?>" class="va-pkg-buy-btn" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
                         <?php echo esc_html( $card['btn_text'] ); ?>
                     </a>
