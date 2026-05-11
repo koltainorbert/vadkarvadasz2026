@@ -1681,8 +1681,19 @@ class VA_Ajax {
         // Egyszerre csak egy aktív termék: csak magasabb csomag írhatja felül a jelenlegit.
         if ( $new_rank > $cur_rank ) {
             update_user_meta( $user_id, 'va_plan', $new_plan );
-            $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 30 ) ) );
+            // Egyedi csomagoknál a per-user duration_days a mérvadó, egyébként a globális (default: 365 nap).
+            if ( $new_plan === 'custom' ) {
+                $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
+                $duration_days = $custom_dur > 0 ? $custom_dur : max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+            } else {
+                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+            }
             update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
+            // Lejárati figyelmeztető flagek törlése az új ciklus kezdetekor.
+            foreach ( [ 1, 7, 30 ] as $_t ) {
+                delete_user_meta( $user_id, 'va_plan_expiry_warned_' . $_t );
+            }
+            delete_user_meta( $user_id, 'va_plan_expired_admin_notified' );
         }
 
         // Vásárláskor a kártyán megadott kiemelési gyakoriság legyen a mérvadó.

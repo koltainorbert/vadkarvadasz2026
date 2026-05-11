@@ -111,6 +111,76 @@ add_action( 'init', function () {
     }
 }, 2 );
 
+/* ── Napi csomag lejárat-ellenőrző cron ───────────────────────────
+ * Naponta egyszer lefut: 30/7/1 nappal előre email a usernek,
+ * lejáratkor email az adminnak.
+──────────────────────────────────────────────────────────────────── */
+add_action( 'init', function () {
+    if ( ! wp_next_scheduled( 'va_check_plan_expiry' ) ) {
+        wp_schedule_event( time(), 'daily', 'va_check_plan_expiry' );
+    }
+}, 5 );
+
+add_action( 'va_check_plan_expiry', 'va_run_plan_expiry_check' );
+
+function va_run_plan_expiry_check(): void {
+    if ( ! class_exists( 'VA_Mailer' ) || ! class_exists( 'VA_User_Roles' ) ) {
+        return;
+    }
+
+    // Csak fizetős csomagos userek, basic-eket kihagyjuk
+    $users = get_users( [
+        'meta_key'     => 'va_plan_expires_at',
+        'meta_value'   => '0',
+        'meta_compare' => '>',
+        'fields'       => [ 'ID' ],
+        'number'       => 500,
+        'no_found_rows' => true,
+    ] );
+
+    $now = time();
+
+    foreach ( $users as $user ) {
+        $user_id    = (int) $user->ID;
+        $plan       = (string) get_user_meta( $user_id, 'va_plan', true );
+
+        // Basic vagy üres plan: nem érdekel
+        if ( $plan === 'basic' || $plan === '' ) {
+            continue;
+        }
+
+        $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+        if ( $expires_at <= 0 ) {
+            continue;
+        }
+
+        // Lejárt → admin email (egyszer, jelöléssel)
+        if ( $expires_at < $now ) {
+            $notified = (string) get_user_meta( $user_id, 'va_plan_expired_admin_notified', true );
+            if ( $notified !== '1' ) {
+                VA_Mailer::send_plan_expired_admin( $user_id );
+                update_user_meta( $user_id, 'va_plan_expired_admin_notified', '1' );
+            }
+            continue;
+        }
+
+        // Visszaszámláló: napok száma (felfelé kerekítve)
+        $days_left = (int) ceil( ( $expires_at - $now ) / DAY_IN_SECONDS );
+
+        // Figyelmeztetések: 30 nap, 7 nap, 1 nap – mindegyik egyszer megy ki
+        foreach ( [ 30, 7, 1 ] as $threshold ) {
+            if ( $days_left <= $threshold ) {
+                $sent_key = 'va_plan_expiry_warned_' . $threshold;
+                if ( ! get_user_meta( $user_id, $sent_key, true ) ) {
+                    VA_Mailer::send_plan_expiry_warning( $user_id, $days_left );
+                    update_user_meta( $user_id, $sent_key, '1' );
+                }
+                break; // Legszűkebb küszöb ment, nem küldjük a tágabbakat is
+            }
+        }
+    }
+}
+
 // Lokációs megtekintés tábla automatikus létrehozása/frissítése
 add_action( 'init', function () {
     $schema_ver = '1.1.0';

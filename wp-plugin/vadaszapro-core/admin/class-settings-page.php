@@ -3396,6 +3396,7 @@ class VA_Settings_Page {
                         <th>E-mail</th>
                         <th>Csomag</th>
                         <th>Kiemelési újratöltés</th>
+                        <th>Lejárat</th>
                         <th>Hirdetések</th>
                         <th>Regisztráció</th>
                         <th>Műveletek</th>
@@ -3413,6 +3414,8 @@ class VA_Settings_Page {
                     $plan_note    = (string) get_user_meta( $user->ID, 'va_plan_note', true );
                     $seller_label = (string) get_user_meta( $user->ID, 'va_seller_label', true );
                     $paid_credits = absint( get_user_meta( $user->ID, 'va_listing_credits', true ) );
+                    $expires_ts   = (int) get_user_meta( $user->ID, 'va_plan_expires_at', true );
+                    $custom_dur   = (int) get_user_meta( $user->ID, 'va_plan_custom_duration_days', true );
                     $purchase_history = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'get_credit_purchase_history' )
                         ? VA_Ajax::get_credit_purchase_history( $user->ID )
                         : [];
@@ -3470,6 +3473,21 @@ class VA_Settings_Page {
                                     <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
                                 </div>
 
+                                <!-- Egyedi (Custom) lejárati idő -->
+                                <div class="va-upm-custom-expire" style="<?php echo $plan === 'custom' ? '' : 'display:none;'; ?>">
+                                    <label>Egyedi lejárat (nap a mai napótól):
+                                        <input type="number" class="va-upm-custom-dur" min="1" max="3650"
+                                               value="<?php echo esc_attr( (string) ( $custom_dur ?: 365 ) ); ?>" style="width:90px;">
+                                        <span style="color:rgba(255,255,255,.4);font-size:11px;margin-left:6px;">
+                                            <?php
+                                            if ( $plan === 'custom' && $expires_ts > 0 ) {
+                                                echo 'Jelenlegi lejárat: ' . esc_html( date_i18n( 'Y.m.d', $expires_ts ) );
+                                            }
+                                            ?>
+                                        </span>
+                                    </label>
+                                </div>
+
                                 <!-- Egyedi (Platinum + Custom) extra mezők -->
                                 <div class="va-upm-plat-extra" style="<?php echo in_array( $plan, [ 'platinum', 'custom' ], true ) ? '' : 'display:none;'; ?>">
                                     <label>Havi limit:
@@ -3505,6 +3523,25 @@ class VA_Settings_Page {
                                 ⚡ <?php echo esc_html( (string) $eff_cfg['boost_cooldown'] ); ?> nap
                             </span>
                         </td>
+                        <td class="va-upm-td-expire">
+                        <?php
+                            if ( $plan === 'basic' || $expires_ts <= 0 ) {
+                                echo '<span style="color:rgba(255,255,255,.3)">–</span>';
+                            } else {
+                                $now_ts    = time();
+                                $days_diff = (int) ceil( ( $expires_ts - $now_ts ) / DAY_IN_SECONDS );
+                                $date_str  = date_i18n( 'Y.m.d', $expires_ts );
+                                if ( $expires_ts < $now_ts ) {
+                                    echo '<span style="color:#ff4444;font-weight:700" title="Lejárt: ' . esc_attr( $date_str ) . '">&#x26A0; Lejárt</span>';
+                                } elseif ( $days_diff <= 30 ) {
+                                    $col = $days_diff <= 7 ? '#ff8800' : '#ffcc00';
+                                    echo '<span style="color:' . esc_attr( $col ) . ';font-weight:700" title="' . esc_attr( $date_str ) . '">' . esc_html( (string) $days_diff ) . ' nap</span>';
+                                } else {
+                                    echo '<span style="color:#00c850" title="' . esc_attr( $date_str ) . '">' . esc_html( (string) $days_diff ) . ' nap</span>';
+                                }
+                            }
+                        ?>
+                        </td>
                         <td>
                             <?php if ( $auctions_enabled ): ?>
                                 <?php echo esc_html( $listings ); ?> hird. / <?php echo esc_html( $auctions ); ?> aukció
@@ -3536,7 +3573,7 @@ class VA_Settings_Page {
                     </tr>
                     <?php if ( $purchase_count > 0 ): ?>
                     <tr class="va-upm-history-row">
-                        <td colspan="7">
+                        <td colspan="8">
                             <div class="va-upm-history-box">
                                 <details class="va-upm-history-disclosure">
                                     <summary class="va-upm-history-head">
@@ -3590,7 +3627,7 @@ class VA_Settings_Page {
                     if ( $email_log_count > 0 ):
                     ?>
                     <tr class="va-upm-history-row">
-                        <td colspan="7">
+                        <td colspan="8">
                             <div class="va-upm-history-box">
                                 <details class="va-upm-history-disclosure">
                                     <summary class="va-upm-history-head">
@@ -3775,8 +3812,11 @@ class VA_Settings_Page {
             document.querySelectorAll('.va-upm-plan-sel').forEach(function(sel){
                 sel.addEventListener('change', function(){
                     var editor = this.closest('.va-upm-plan-editor');
-                    var extra = editor ? editor.querySelector('.va-upm-plat-extra') : null;
-                    if(extra) extra.style.display = (this.value === 'platinum' || this.value === 'custom') ? 'flex' : 'none';
+                    var extra        = editor ? editor.querySelector('.va-upm-plat-extra')    : null;
+                    var customExpire = editor ? editor.querySelector('.va-upm-custom-expire') : null;
+                    var plan = this.value;
+                    if(extra)        extra.style.display        = (plan === 'platinum' || plan === 'custom') ? 'flex' : 'none';
+                    if(customExpire) customExpire.style.display = (plan === 'custom') ? '' : 'none';
 
                     // Plan váltáskor a kiemelési nap alapból a kiválasztott kártya értékére áll.
                     var selected = this.options[this.selectedIndex];
@@ -3814,21 +3854,23 @@ class VA_Settings_Page {
                     var sel    = ed ? ed.querySelector('.va-upm-plan-sel') : null;
                     var plan   = sel ? sel.value : 'basic';
 
-                    var limEl = ed ? ed.querySelector('.va-upm-plat-limit') : null;
-                    var cdEl  = ed ? ed.querySelector('.va-upm-plat-cd')    : null;
-                    var noteEl = ed ? ed.querySelector('.va-upm-plat-note')    : null;
-                    var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label') : null;
-                    var creditsEl = ed ? ed.querySelector('.va-upm-credits') : null;
+                    var limEl         = ed ? ed.querySelector('.va-upm-plat-limit')    : null;
+                    var cdEl          = ed ? ed.querySelector('.va-upm-plat-cd')        : null;
+                    var noteEl        = ed ? ed.querySelector('.va-upm-plat-note')      : null;
+                    var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
+                    var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
+                    var customDurEl   = ed ? ed.querySelector('.va-upm-custom-dur')     : null;
 
                     var data = new URLSearchParams({
                         action : 'va_admin_set_user_plan',
                         nonce  : nonce,
                         user_id: uid,
                         plan   : plan,
-                        custom_limit         : limEl  ? limEl.value  : 0,
-                        custom_boost_cooldown: cdEl   ? cdEl.value   : 0,
-                        custom_credits       : creditsEl ? creditsEl.value : 0,
-                        plan_note            : noteEl ? noteEl.value : '',
+                        custom_limit         : limEl      ? limEl.value      : 0,
+                        custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
+                        custom_credits       : creditsEl  ? creditsEl.value  : 0,
+                        custom_duration_days : customDurEl ? customDurEl.value : 0,
+                        plan_note            : noteEl     ? noteEl.value     : '',
                         plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''
                     });
 
