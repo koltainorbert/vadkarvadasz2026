@@ -790,11 +790,12 @@ class VA_User_Roles {
 
         check_ajax_referer( 'va_admin_user_plan', 'nonce' );
 
-        $target_uid  = absint( $_POST['user_id'] ?? 0 );
-        $plan        = sanitize_key( $_POST['plan'] ?? 'basic' );
-        $custom_lim  = absint( $_POST['custom_limit'] ?? 0 );
-        $custom_cd   = absint( $_POST['custom_boost_cooldown'] ?? 0 );
-        $plan_note   = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
+        $target_uid   = absint( $_POST['user_id'] ?? 0 );
+        $plan         = sanitize_key( $_POST['plan'] ?? 'basic' );
+        $custom_lim   = absint( $_POST['custom_limit'] ?? 0 );
+        $custom_cd    = absint( $_POST['custom_boost_cooldown'] ?? 0 );
+        $custom_credits = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
+        $plan_note    = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
 
         $all_plans = self::get_all_plan_configs();
         if ( ! $target_uid || ! isset( $all_plans[ $plan ] ) || $plan === '_global' ) {
@@ -811,6 +812,7 @@ class VA_User_Roles {
         }
 
         update_user_meta( $target_uid, 'va_plan', $plan );
+        update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
 
         if ( $plan === 'platinum' ) {
             if ( $custom_lim > 0 ) {
@@ -829,11 +831,12 @@ class VA_User_Roles {
 
         $cfg = self::get_plan_config( $plan, $target_uid );
         wp_send_json_success( [
-            'message'   => 'Terv sikeresen frissítve!',
+            'message'   => 'Terv és kredit sikeresen frissítve!',
             'plan'      => $plan,
             'label'     => $cfg['label'],
             'icon'      => $cfg['icon'],
             'color'     => $cfg['color'],
+            'credits'   => $custom_credits,
             'suspended' => $suspended,
         ] );
     }

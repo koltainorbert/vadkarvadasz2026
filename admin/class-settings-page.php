@@ -3753,6 +3753,7 @@ class VA_Settings_Page {
                     var limEl = ed ? ed.querySelector('.va-upm-plat-limit') : null;
                     var cdEl  = ed ? ed.querySelector('.va-upm-plat-cd')    : null;
                     var noteEl= ed ? ed.querySelector('.va-upm-plat-note')  : null;
+                    var creditsEl = ed ? ed.querySelector('.va-upm-credits') : null;
 
                     var data = new URLSearchParams({
                         action : 'va_admin_set_user_plan',
@@ -3761,6 +3762,7 @@ class VA_Settings_Page {
                         plan   : plan,
                         custom_limit         : limEl  ? limEl.value  : 0,
                         custom_boost_cooldown: cdEl   ? cdEl.value   : 0,
+                        custom_credits       : creditsEl ? creditsEl.value : 0,
                         plan_note            : noteEl ? noteEl.value : ''
                     });
 
