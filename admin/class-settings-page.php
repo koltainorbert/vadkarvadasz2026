@@ -3600,6 +3600,22 @@ class VA_Settings_Page {
         .va-upm-page { background:var(--va-bg2);border:1px solid var(--va-border);border-radius:var(--va-radius-sm);padding:4px 10px;font-size:13px;color:var(--va-text);text-decoration:none; }
         .va-upm-page.active { background:var(--va-accent);border-color:var(--va-accent);color:#fff; }
         .va-upm-page:hover:not(.active) { border-color:var(--va-accent);color:var(--va-accent); }
+
+        /* ── Törlési riport ── */
+        .va-upm-report-box { margin-bottom:18px;border:1px solid rgba(255,170,0,.3);border-radius:var(--va-radius);background:rgba(255,170,0,.04);overflow:hidden; }
+        .va-upm-report-head { display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;list-style:none;font-size:13px; }
+        .va-upm-report-head::-webkit-details-marker { display:none; }
+        .va-upm-report-disc[open] .va-upm-history-toggle { color:#fff;background:var(--va-accent);border-color:var(--va-accent); }
+        .va-upm-report-disc[open] .va-upm-history-toggle::before { content:'Összecsukás'; }
+        .va-upm-report-disc:not([open]) .va-upm-history-toggle::before { content:'Lenyitás'; }
+        .va-upm-report-body { padding:0 16px 16px; }
+        .va-upm-report-group { margin-top:14px; }
+        .va-upm-report-group-title { font-size:12px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px; }
+        .va-upm-report-count { background:rgba(255,255,255,.08);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700; }
+        .va-upm-report-table { width:100%;border-collapse:collapse;font-size:12px; }
+        .va-upm-report-table th { color:var(--va-muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:4px 8px;border-bottom:1px solid var(--va-border); }
+        .va-upm-report-table td { padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle; }
+        .va-upm-report-table tr:last-child td { border-bottom:none; }
         </style>
 
         <script>
