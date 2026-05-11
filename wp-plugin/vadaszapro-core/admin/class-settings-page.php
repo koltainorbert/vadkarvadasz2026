@@ -3679,6 +3679,9 @@ class VA_Settings_Page {
                                         $purchase_amount = absint( $purchase['amount'] ?? 0 );
                                         $purchase_plan_slug = sanitize_key( (string) ( $purchase['plan_slug'] ?? '' ) );
                                         $purchase_plan_label = $plans[ $purchase_plan_slug ]['label'] ?? ( $purchase_plan_slug !== '' ? $purchase_plan_slug : 'ismeretlen csomag' );
+                                        if ( $purchase_plan_slug === 'custom' ) {
+                                            $purchase_plan_label = 'Egyedi';
+                                        }
                                         $purchase_provider = sanitize_key( (string) ( $purchase['provider'] ?? 'stripe' ) );
                                         $purchase_session = (string) ( $purchase['stripe_session_id'] ?? '' );
                                         $purchase_intent = (string) ( $purchase['stripe_payment_intent'] ?? '' );
@@ -3687,7 +3690,10 @@ class VA_Settings_Page {
                                     <div class="va-upm-history-item">
                                         <div class="va-upm-history-item__top">
                                             <span><?php echo esc_html( $purchase_ts > 0 ? date_i18n( 'Y.m.d H:i', $purchase_ts ) : 'Ismeretlen időpont' ); ?></span>
-                                            <span><?php echo esc_html( $purchase_plan_label ); ?></span>
+                                            <span style="display:inline-flex;align-items:center;gap:6px;">
+                                                <span style="display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid <?php echo esc_attr( $purchase_plan_slug === 'custom' ? '#ff4444' : '#7aa2ff' ); ?>;background:<?php echo esc_attr( $purchase_plan_slug === 'custom' ? 'rgba(255,68,68,.12)' : 'rgba(122,162,255,.12)' ); ?>;color:<?php echo esc_attr( $purchase_plan_slug === 'custom' ? '#ff6666' : '#8bb3ff' ); ?>;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;"><?php echo esc_html( $purchase_plan_slug === 'custom' ? 'Egyedi' : ( $purchase_plan_slug !== '' ? $purchase_plan_slug : 'csomag' ) ); ?></span>
+                                                <span><?php echo esc_html( $purchase_plan_label ); ?></span>
+                                            </span>
                                             <span>+<?php echo esc_html( (string) $purchase_qty ); ?> kredit</span>
                                             <span><?php echo esc_html( number_format( $purchase_amount, 0, ',', ' ' ) ); ?> Ft</span>
                                         </div>
