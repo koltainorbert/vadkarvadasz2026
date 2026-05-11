@@ -3110,8 +3110,6 @@ class VA_Settings_Page {
         $total_pages = max( 1, (int) ceil( $total_users / $per_page ) );
 
         $admin_nonce = wp_create_nonce( 'va_admin_user_plan' );
-        $purchase_export_nonce = wp_create_nonce( 'va_export_purchase_history' );
-        $purchase_sync_nonce = wp_create_nonce( 'va_sync_stripe_purchase_history' );
         $last_sync = get_option( 'va_stripe_purchase_history_last_sync', [] );
         ?>
         <div class="wrap va-admin-wrap">
@@ -3120,7 +3118,7 @@ class VA_Settings_Page {
             <?php if ( isset( $_GET['va_sync_done'] ) ): ?>
                 <div class="notice notice-<?php echo ! empty( $_GET['va_sync_ok'] ) ? 'success' : 'error'; ?> is-dismissible"><p>
                     <?php
-                    echo esc_html( (string) ( $_GET['va_sync_msg'] ?? 'Stripe szinkron lefutott.' ) );
+                    echo esc_html( sanitize_text_field( wp_unslash( $_GET['va_sync_msg'] ?? 'Stripe szinkron lefutott.' ) ) );
                     if ( isset( $_GET['va_sync_imported'], $_GET['va_sync_events'] ) ) {
                         echo ' ' . esc_html( (string) $_GET['va_sync_imported'] ) . ' új bejegyzés, ' . esc_html( (string) $_GET['va_sync_events'] ) . ' átnézett esemény.';
                     }
@@ -4715,7 +4713,7 @@ class VA_Settings_Page {
             'page'             => 'vadaszapro-users',
             'va_sync_done'     => '1',
             'va_sync_ok'       => ! empty( $result['ok'] ) ? '1' : '0',
-            'va_sync_msg'      => rawurlencode( (string) ( $result['message'] ?? '' ) ),
+            'va_sync_msg'      => sanitize_text_field( (string) ( $result['message'] ?? '' ) ),
             'va_sync_events'   => absint( $result['events'] ?? 0 ),
             'va_sync_imported' => absint( $result['imported'] ?? 0 ),
         ], admin_url( 'admin.php' ) );
