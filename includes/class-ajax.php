@@ -819,14 +819,7 @@ class VA_Ajax {
                 }
 
                 $paid_diag_parts = [];
-                if ( ! empty( $paid['stripe_session_id'] ) ) {
-                    $paid_diag_parts[] = 'session: ' . sanitize_text_field( (string) $paid['stripe_session_id'] );
-                }
-                if ( ! empty( $paid['stripe_payment_intent'] ) ) {
-                    $paid_diag_parts[] = 'payment: ' . sanitize_text_field( (string) $paid['stripe_payment_intent'] );
-                }
-                $paid_diag = empty( $paid_diag_parts ) ? '' : ' [' . implode( ' | ', $paid_diag_parts ) . ']';
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $paid_diag );
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
                 $return_to = ( isset( $paid['return_to'] ) && $paid['return_to'] === 'submit' ) ? 'submit' : 'buy';
                 if ( $return_to === 'submit' ) {
                     self::redirect_submit_page();
@@ -905,7 +898,7 @@ class VA_Ajax {
 
             $qty = absint( $finalize['qty'] ?? 0 );
             if ( ! empty( $finalize['already'] ) ) {
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $stripe_diag );
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
             } else {
                 va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' . $stripe_diag );
             }
