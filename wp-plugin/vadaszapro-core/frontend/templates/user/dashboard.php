@@ -36,6 +36,34 @@ $seller_label = get_user_meta( $user->ID, 'va_seller_label', true );
 $avatar_id    = (int) get_user_meta( $user->ID, 'va_profile_avatar_id', true );
 $avatar_url   = $avatar_id ? wp_get_attachment_image_url( $avatar_id, 'thumbnail' ) : '';
 
+$buy_credits_page = get_page_by_path( 'va-kredit-vasarlas' );
+$renew_buy_url    = $buy_credits_page ? get_permalink( $buy_credits_page ) : home_url( '/va-kredit-vasarlas/' );
+
+$plan_suspend_retention_days   = max( 1, absint( get_option( 'va_plan_suspended_retention_days', 90 ) ) );
+$plan_suspended_count          = 0;
+$plan_suspended_nearest_delete = 0;
+$plan_suspended_now            = current_time( 'timestamp' );
+
+foreach ( $listings as $l ) {
+    if ( get_post_meta( $l->ID, 'va_suspended_by_plan', true ) !== '1' ) {
+        continue;
+    }
+
+    $plan_suspended_count++;
+    $suspended_at = (int) get_post_meta( $l->ID, 'va_suspended_by_plan_at', true );
+    if ( $suspended_at <= 0 ) {
+        $suspended_at = (int) get_post_time( 'U', true, $l );
+    }
+
+    $delete_at = $suspended_at + ( $plan_suspend_retention_days * DAY_IN_SECONDS );
+    if ( $plan_suspended_nearest_delete === 0 || $delete_at < $plan_suspended_nearest_delete ) {
+        $plan_suspended_nearest_delete = $delete_at;
+    }
+}
+
+$plan_suspended_seconds_left = $plan_suspended_nearest_delete > 0 ? max( 0, $plan_suspended_nearest_delete - $plan_suspended_now ) : 0;
+$plan_suspended_days_left    = $plan_suspended_seconds_left > 0 ? (int) ceil( $plan_suspended_seconds_left / DAY_IN_SECONDS ) : 0;
+
 $va_today_local       = current_time( 'Y-m-d' );
 $va_last_welcome_seen = (string) get_user_meta( $user->ID, 'va_daily_welcome_seen', true );
 $va_show_daily_welcome = current_user_can( 'manage_options' ) && $va_last_welcome_seen !== $va_today_local;
@@ -481,6 +509,20 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         <?php endif; ?>
                     </div>
                 </div>
+
+                <?php if ( $plan_suspended_count > 0 ): ?>
+                <div class="va-plan-expiry-alert">
+                    <div class="va-plan-expiry-alert__main">
+                        <strong>Amennyiben nem szeretné előfizetését meghosszabbítani, <?php echo esc_html( (string) $plan_suspend_retention_days ); ?> nap múlva inaktív hirdetései törlődni fognak.</strong>
+                        <span>Jelenleg <?php echo esc_html( (string) $plan_suspended_count ); ?> db hirdetés áll leállítva csomaglimit miatt.</span>
+                    </div>
+                    <div class="va-plan-expiry-alert__meta">
+                        <span>Legkorábbi törlés: <strong><?php echo esc_html( $plan_suspended_nearest_delete > 0 ? date_i18n( 'Y.m.d H:i', $plan_suspended_nearest_delete ) : 'ismeretlen' ); ?></strong></span>
+                        <span>Visszaszámláló: <strong><?php echo esc_html( $plan_suspended_days_left > 0 ? $plan_suspended_days_left . ' nap' : 'ma' ); ?></strong></span>
+                    </div>
+                    <a href="<?php echo esc_url( $renew_buy_url ); ?>" class="va-plan-expiry-alert__btn">Előfizetés meghosszabbítása</a>
+                </div>
+                <?php endif; ?>
 
                 <?php
                 $can_see_stats = current_user_can( 'manage_options' ) || in_array( $user_plan, [ 'platinum', 'gold' ], true );
@@ -2381,6 +2423,50 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 .va-bulk-dropdown__item:hover { background:rgba(255,42,42,.15);color:#fff; }
 .va-bulk-dropdown__item.selected { color:#ff4444;background:rgba(255,0,0,.08); }
 .va-bulk-dropdown__item .va-ico { width:14px !important;height:14px !important;opacity:.95; }
+
+.va-plan-expiry-alert {
+    margin:-6px 0 14px;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid rgba(255,70,70,.45);
+    background:linear-gradient(135deg,rgba(255,50,50,.14),rgba(120,0,0,.14));
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+.va-plan-expiry-alert__main {
+    flex:1 1 360px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+.va-plan-expiry-alert__main strong { color:#fff; font-size:13px; }
+.va-plan-expiry-alert__main span { color:rgba(255,255,255,.75); font-size:12px; }
+.va-plan-expiry-alert__meta {
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:210px;
+    color:rgba(255,255,255,.8);
+    font-size:12px;
+}
+.va-plan-expiry-alert__meta strong { color:#fff; }
+.va-plan-expiry-alert__btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,0,0,.26);
+    color:#fff;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+}
+.va-plan-expiry-alert__btn:hover { background:rgba(255,0,0,.4); }
 
 /* ── Bulk price panel ── */
 .va-bulk-price-panel {
