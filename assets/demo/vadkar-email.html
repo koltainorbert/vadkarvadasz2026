@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vadkár Vadász - Email minta</title>
+  <style>
+    :root {
+      --bg: #060606;
+      --card: #101010;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.72);
+      --accent: #ff0000;
+      --line: rgba(255, 255, 255, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0) 0 0/20px 20px,
+        linear-gradient(180deg, #080808 0%, #060606 100%);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .frame {
+      width: 100%;
+      max-width: 760px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #0b0b0b;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    }
+
+    .head {
+      padding: 20px 24px;
+      background: linear-gradient(120deg, #000 0%, #171717 100%);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    .content {
+      padding: 28px 24px;
+      background: #fff;
+      color: #111;
+    }
+
+    .subject {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #0f0f0f;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.65;
+      color: #2e2e2e;
+      font-size: 16px;
+    }
+
+    .note {
+      margin-top: 18px;
+      background: #f8f8f8;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #383838;
+      font-size: 14px;
+    }
+
+    .cta {
+      margin-top: 20px;
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      background: var(--accent);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .foot {
+      border-top: 1px solid var(--line);
+      padding: 18px 24px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: #0b0b0b;
+    }
+
+    .foot a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255,255,255,.45);
+    }
+
+    @media (max-width: 640px) {
+      .brand { font-size: 24px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="frame">
+    <header class="head">
+      <div class="brand">Vadkár Vadász</div>
+      <div class="badge">Email minta</div>
+    </header>
+
+    <main class="content">
+      <div class="subject">Tárgy: Figyelmeztetés - 7 nap van hátra</div>
+      <h1>3 hirdetésed 7 nap múlva törlődhet</h1>
+
+      <p>Kedves Nagy János!</p>
+      <p>
+        Ez egy demo HTML levélminta. A márkanév mindenhol <strong>Vadkár Vadász</strong>,
+        a kapcsolati e-mail pedig fixen <strong>vadkarvadasz@gmail.com</strong>.
+      </p>
+      <p>
+        Ha szeretnéd, ebből készítek külön 30/7/1 napos verziókat is eltérő tartalommal.
+      </p>
+
+      <div class="note">
+        Kapcsolat: vadkarvadasz@gmail.com
+      </div>
+
+      <a class="cta" href="#">Előfizetés megújítása</a>
+    </main>
+
+    <footer class="foot">
+      <span>Vadkár Vadász</span>
+      <a href="mailto:vadkarvadasz@gmail.com">vadkarvadasz@gmail.com</a>
+    </footer>
+  </section>
+</body>
+</html>
