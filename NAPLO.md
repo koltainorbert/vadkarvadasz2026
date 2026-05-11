@@ -2,6 +2,33 @@
 
 ---
 
+## 2026. 05. 11. – Session #308 (Admin torles-riport + E-mail kuldesi naplo)
+
+### Mi volt a cel
+- Admin riport: kik vannak 30/7/1 napos torlesi kozelseges allapotban
+- E-mail kuldesi naplo: bizonyithato legyen, tenlyeg ment figyelmezto ertesites
+
+### Mit keszitettem [x]
+- [x] `cleanup_plan_suspended_listings()`-ban e-mail kuld utan a `va_email_send_log` user meta-ba mentes
+  - Mezok: `type`, `sent_at`, `days_warning`, `post_count`, `post_ids`, `earliest_delete_ts`
+  - Max 100 bejegyzes / user (auto vagas)
+- [x] Admin felhasznalok oldalon uj `Torlesi riport` szekció az eszkozsav es tabla kozott
+  - Lekerdezi az osszes `va_suspended_by_plan=1` private hirdetest
+  - 3 csoport: >=1 nap (piros), <=7 nap (narancs), <=30 nap (sarga)
+  - Tablazat: hirdetes cim, tulajdonos (email), napok hatra, torles idopontja, szerkesztes link
+  - Alap nyitva van, ha van bejegyzes
+- [x] Admin felhasznalok oldalon, minden usernes: `Ertesitesi naplo` collapsible sor
+  - Elkulott e-mailek listaja (legujabb elol), tipus + napok + hirdetes count + torlesi datum + hirdetesek linkje
+- [x] Root + plugin mirror szinkronban frissitve
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 11. – Session #307 (Stripe vasarlasi naplo: visszatoltes + szuro + CSV export)
 
 ### Mi volt a cel
