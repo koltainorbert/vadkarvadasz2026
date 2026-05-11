@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 11. – Session #318 (Extra árkártya megjelenítés fix)
+
+### Mi volt a cel
+- Az adminban hozzaadott 5-8. arkaritya is jelenjen meg a frontend vasarlasi oldalon
+
+### Mit keszitettem [x]
+- [x] A frontend kartya render mar nem fix 4-es ciklus: `va_pc_count` alapjan fut (4..8)
+- [x] A default fallbackek biztonsagosak lettek 5-8. kartyanal is (`??` fallback)
+- [x] Ikon/slug/label/qty/theme/tag/button fallbackek korrigalva extra kartyakra
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck rendben
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
+---
+
 ## 2026. 05. 11. – Session #317 (Buy Credits hero meret visszafogasa)
 
 ### Mi volt a cel
