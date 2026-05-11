@@ -3323,12 +3323,14 @@ class VA_Settings_Page {
                     <tr class="va-upm-history-row">
                         <td colspan="7">
                             <div class="va-upm-history-box">
-                                <div class="va-upm-history-head">
-                                    <div>
-                                        <strong>Stripe vásárlási előzmények</strong>
-                                        <span><?php echo esc_html( (string) $purchase_count ); ?> tranzakció · <?php echo esc_html( (string) $purchase_total_qty ); ?> kredit · <?php echo esc_html( number_format( $purchase_total_amount, 0, ',', ' ' ) ); ?> Ft</span>
-                                    </div>
-                                </div>
+                                <details class="va-upm-history-disclosure">
+                                    <summary class="va-upm-history-head">
+                                        <div>
+                                            <strong>Stripe vásárlási előzmények</strong>
+                                            <span><?php echo esc_html( (string) $purchase_count ); ?> tranzakció · <?php echo esc_html( (string) $purchase_total_qty ); ?> kredit · <?php echo esc_html( number_format( $purchase_total_amount, 0, ',', ' ' ) ); ?> Ft</span>
+                                        </div>
+                                        <span class="va-upm-history-toggle">Lenyitás</span>
+                                    </summary>
                                 <div class="va-upm-history-list">
                                     <?php foreach ( $purchase_history as $purchase ):
                                         $purchase_ts = absint( $purchase['completed_at'] ?? 0 );
@@ -3360,6 +3362,7 @@ class VA_Settings_Page {
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
+                                </details>
                             </div>
                         </td>
                     </tr>
@@ -3432,9 +3435,16 @@ class VA_Settings_Page {
 
         .va-upm-history-row td { padding-top:0; background:rgba(255,255,255,.02); }
         .va-upm-history-box { margin:0; padding:14px 16px; border-top:1px solid var(--va-border); background:rgba(255,255,255,.02); }
-        .va-upm-history-head { display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px; }
+        .va-upm-history-disclosure { display:block; }
+        .va-upm-history-disclosure summary::-webkit-details-marker { display:none; }
+        .va-upm-history-head { display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:0;cursor:pointer;list-style:none; }
         .va-upm-history-head strong { display:block;font-size:13px;color:var(--va-text);margin-bottom:3px; }
         .va-upm-history-head span { display:block;font-size:11px;color:var(--va-muted); }
+        .va-upm-history-toggle { flex-shrink:0;align-self:center;padding:5px 10px;border:1px solid var(--va-border2);border-radius:999px;font-size:11px;font-weight:700;color:var(--va-text); }
+        .va-upm-history-disclosure[open] .va-upm-history-toggle { color:#fff;background:var(--va-accent);border-color:var(--va-accent); }
+        .va-upm-history-disclosure[open] .va-upm-history-toggle::before { content:'Összecsukás'; }
+        .va-upm-history-disclosure:not([open]) .va-upm-history-toggle::before { content:'Lenyitás'; }
+        .va-upm-history-disclosure[open] .va-upm-history-list { margin-top:10px; }
         .va-upm-history-list { display:flex;flex-direction:column;gap:10px; }
         .va-upm-history-item { padding:10px 12px;border:1px solid var(--va-border);border-radius:var(--va-radius-sm);background:rgba(0,0,0,.18); }
         .va-upm-history-item__top { display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;font-weight:700;color:var(--va-text); }
