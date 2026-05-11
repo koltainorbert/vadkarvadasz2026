@@ -269,7 +269,7 @@ class VA_User_Roles {
 
             // Legacy user migracio: ha nincs lejárat, kapjon alapértelmezett ciklust.
             if ( $expires_at <= 0 ) {
-                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 30 ) ) );
+                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
                 $expires_at = time() + ( $duration_days * DAY_IN_SECONDS );
                 update_user_meta( $user_id, 'va_plan_expires_at', $expires_at );
             }
@@ -867,13 +867,14 @@ class VA_User_Roles {
 
         check_ajax_referer( 'va_admin_user_plan', 'nonce' );
 
-        $target_uid   = absint( $_POST['user_id'] ?? 0 );
-        $plan         = sanitize_key( $_POST['plan'] ?? 'basic' );
-        $custom_lim   = absint( $_POST['custom_limit'] ?? 0 );
-        $custom_cd    = absint( $_POST['custom_boost_cooldown'] ?? 0 );
-        $custom_credits = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
-        $plan_note    = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
-        $seller_label = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
+        $target_uid        = absint( $_POST['user_id'] ?? 0 );
+        $plan              = sanitize_key( $_POST['plan'] ?? 'basic' );
+        $custom_lim        = absint( $_POST['custom_limit'] ?? 0 );
+        $custom_cd         = absint( $_POST['custom_boost_cooldown'] ?? 0 );
+        $custom_credits    = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
+        $custom_dur_days   = absint( $_POST['custom_duration_days'] ?? 0 );
+        $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
+        $seller_label      = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
 
         $all_plans = self::get_all_plan_configs();
         if ( ! $target_uid || ! isset( $all_plans[ $plan ] ) || $plan === '_global' ) {
@@ -891,6 +892,27 @@ class VA_User_Roles {
 
         update_user_meta( $target_uid, 'va_plan', $plan );
         update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
+
+        // Admin által beállított lejárat (csak ha van érték és nem basic)
+        if ( $plan !== 'basic' ) {
+            if ( $plan === 'custom' && $custom_dur_days > 0 ) {
+                // Egyedi csomagnál a per-user tartam mentése
+                update_user_meta( $target_uid, 'va_plan_custom_duration_days', $custom_dur_days );
+                update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( $custom_dur_days * DAY_IN_SECONDS ) );
+            } elseif ( $plan !== 'custom' ) {
+                // Egyéb csomagoknál globális default ha nincs lejárat
+                $existing_exp = (int) get_user_meta( $target_uid, 'va_plan_expires_at', true );
+                if ( $existing_exp <= 0 ) {
+                    $dur = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+                    update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( $dur * DAY_IN_SECONDS ) );
+                }
+            }
+            // Flagek törlése ha admin megújítja a csomagot
+            foreach ( [ 1, 7, 30 ] as $_t ) {
+                delete_user_meta( $target_uid, 'va_plan_expiry_warned_' . $_t );
+            }
+            delete_user_meta( $target_uid, 'va_plan_expired_admin_notified' );
+        }
 
         // Kiemelési újratöltés felülírás minden csomagnál menthető.
         if ( $custom_cd > 0 ) {

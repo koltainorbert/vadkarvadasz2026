@@ -125,4 +125,69 @@ class VA_Mailer {
 </body>
 </html>';
     }
+
+    /* ─── Csomag lejárati figyelmeztetés a felhasználónak ───────── */
+    public static function send_plan_expiry_warning( int $user_id, int $days_left ): bool {
+        $user = get_userdata( $user_id );
+        if ( ! $user ) return false;
+
+        $plan       = (string) get_user_meta( $user_id, 'va_plan', true );
+        $plan_cfg   = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_config( $plan, $user_id ) : [];
+        $plan_label = $plan_cfg['label'] ?? $plan;
+        $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+        $date_str   = $expires_at > 0 ? wp_date( 'Y.m.d H:i', $expires_at ) : '–';
+
+        $subject = $days_left <= 1
+            ? 'Csomagod HOLNAP lejár – ' . self::BRAND_NAME
+            : sprintf( 'Csomagod %d nap múlva lejár – %s', $days_left, self::BRAND_NAME );
+
+        $heading = $days_left <= 1
+            ? 'A csomagod holnap lejár!'
+            : sprintf( 'A csomagod %d nap múlva lejár', $days_left );
+
+        $body = sprintf(
+            '<p>Kedves <strong>%s</strong>!</p>
+            <p>A <strong>%s</strong> csomagod hamarosan lejár.</p>
+            <p><strong>Lejárat időpontja:</strong> %s</p>
+            <p>Ha szeretnéd megőrizni prémium hozzáférésedet, vásárolj új csomagot még a lejárat előtt!</p>',
+            esc_html( $user->display_name ),
+            esc_html( $plan_label ),
+            esc_html( $date_str )
+        );
+
+        return self::send( $user->user_email, $subject, $heading, $body, [
+            'label' => 'Csomag vásárlás',
+            'url'   => home_url( '/csomagok/' ),
+        ] );
+    }
+
+    /* ─── Admin értesítés lejárt csomagról ──────────────────────── */
+    public static function send_plan_expired_admin( int $user_id ): bool {
+        $admin_email = (string) get_option( 'admin_email', '' );
+        if ( ! is_email( $admin_email ) ) return false;
+
+        $user     = get_userdata( $user_id );
+        $name     = $user ? esc_html( $user->display_name ) : "#{$user_id}";
+        $email    = $user ? esc_html( $user->user_email )   : '–';
+        $plan     = esc_html( (string) get_user_meta( $user_id, 'va_plan', true ) );
+        $edit_url = esc_url( get_edit_user_link( $user_id ) );
+
+        $subject = 'Lejárt csomag – ' . $name;
+        $heading = 'Felhasználói csomag lejárt';
+        $body    = sprintf(
+            '<p>A következő felhasználó csomagja <strong>lejárt</strong> és visszakerült alap (Basic) csomagra:</p>
+            <ul style="margin:12px 0;padding-left:20px;">
+                <li><strong>Felhasználó:</strong> %s</li>
+                <li><strong>E-mail:</strong> %s</li>
+                <li><strong>Volt csomag:</strong> %s</li>
+            </ul>
+            <p>Az admin felületen megújíthatod a csomagot.</p>',
+            $name, $email, $plan
+        );
+
+        return self::send( $admin_email, $subject, $heading, $body, [
+            'label' => 'Felhasználó szerkesztése',
+            'url'   => $edit_url,
+        ] );
+    }
 }
