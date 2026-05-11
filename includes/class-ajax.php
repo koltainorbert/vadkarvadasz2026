@@ -819,7 +819,14 @@ class VA_Ajax {
                 }
 
                 $paid_diag_parts = [];
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' );
+                if ( ! empty( $paid['stripe_session_id'] ) ) {
+                    $paid_diag_parts[] = 'session: ' . sanitize_text_field( (string) $paid['stripe_session_id'] );
+                }
+                if ( ! empty( $paid['stripe_payment_intent'] ) ) {
+                    $paid_diag_parts[] = 'payment: ' . sanitize_text_field( (string) $paid['stripe_payment_intent'] );
+                }
+                $paid_diag = empty( $paid_diag_parts ) ? '' : ' [' . implode( ' | ', $paid_diag_parts ) . ']';
+                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $paid_diag );
                 $return_to = ( isset( $paid['return_to'] ) && $paid['return_to'] === 'submit' ) ? 'submit' : 'buy';
                 if ( $return_to === 'submit' ) {
                     self::redirect_submit_page();
@@ -1740,8 +1747,8 @@ class VA_Ajax {
             }
         }
 
-        $entry['logged_at']   = current_time( 'mysql' );
-        $entry['logged_ts']   = current_time( 'timestamp' );
+        $entry['logged_at'] = current_time( 'mysql' );
+        $entry['logged_ts'] = current_time( 'timestamp' );
         $history[] = $entry;
 
         usort( $history, static function( array $a, array $b ): int {

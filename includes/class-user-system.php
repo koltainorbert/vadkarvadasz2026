@@ -120,6 +120,7 @@ class VA_User_System {
         if ( ! is_array( $sa ) || empty( $sa['private_key'] ) || empty( $sa['client_email'] ) ) return;
         if ( ! function_exists( 'openssl_sign' ) ) return;
 
+        // JWT összeállítása
         $now    = time();
         $header = rtrim( strtr( base64_encode( (string) wp_json_encode( [ 'alg' => 'RS256', 'typ' => 'JWT' ] ) ), '+/', '-_' ), '=' );
         $claims = rtrim( strtr( base64_encode( (string) wp_json_encode( [
@@ -135,6 +136,7 @@ class VA_User_System {
         openssl_sign( $sig_input, $signature, $sa['private_key'], 'SHA256' );
         $jwt = $sig_input . '.' . rtrim( strtr( base64_encode( $signature ), '+/', '-_' ), '=' );
 
+        // Access token lekérése
         $token_resp = wp_remote_post( 'https://oauth2.googleapis.com/token', [
             'timeout'  => 10,
             'blocking' => true,
@@ -149,6 +151,7 @@ class VA_User_System {
         $token_data = json_decode( wp_remote_retrieve_body( $token_resp ), true );
         if ( empty( $token_data['access_token'] ) ) return;
 
+        // URL beküldése a Google Indexing API-nak
         wp_remote_post( 'https://indexing.googleapis.com/v3/urlNotifications:publish', [
             'timeout'  => 5,
             'blocking' => false,

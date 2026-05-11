@@ -24,7 +24,7 @@ $is_reset_mode = ( $mode === 'resetpass' );
     <?php va_display_flash(); ?>
 
     <div class="va-auth-box">
-        <h2 class="va-auth-box__title"><?php echo $is_reset_mode ? 'Új jelszó beállítása' : ( $is_lost_mode ? 'Elfelejtett jelszó' : 'Bejelentkezés' ); ?></h2>
+        <h2 class="va-auth-box__title" style="color:#fff !important;"><?php echo $is_reset_mode ? 'Új jelszó beállítása' : ( $is_lost_mode ? 'Elfelejtett jelszó' : 'Bejelentkezés' ); ?></h2>
 
         <?php if ( ! $login_enabled ): ?>
             <div class="va-notice va-notice--warning">A bejelentkezés jelenleg ki van kapcsolva.</div>

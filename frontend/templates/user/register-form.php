@@ -19,7 +19,7 @@ $register_enabled = get_option( 'va_enable_register', '1' ) === '1';
     <?php va_display_flash(); ?>
 
     <div class="va-auth-box">
-        <h2 class="va-auth-box__title">Regisztráció</h2>
+        <h2 class="va-auth-box__title" style="color:#fff !important;">Regisztráció</h2>
 
         <?php if ( ! $register_enabled ): ?>
             <div class="va-notice va-notice--warning">A regisztráció jelenleg ki van kapcsolva.</div>

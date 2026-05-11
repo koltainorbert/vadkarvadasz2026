@@ -7341,6 +7341,16 @@ class VA_Settings_Page {
                     <h1>💳 Árkártyák szerkesztő</h1>
                     <p>Szerkeszd az árkártyák megjelenését, szövegeit és árait. A változtatások azonnal megjelennek az oldalon mentés után.</p>
                 </div>
+                <?php if ( ! empty( $plan_configs_for_sync ) ): ?>
+                <div>
+                    <button type="button" id="va-pk-sync-from-plans" class="button"
+                            data-plans="<?php echo esc_attr( wp_json_encode( $plan_configs_for_sync ) ); ?>"
+                            style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;">
+                        🔄 Szinkronizálás a Csomag beállításokból
+                    </button>
+                    <p style="font-size:11px;color:rgba(255,255,255,.4);margin:6px 0 0;">Kártyánként átírja a nevet és leírást a Csomagok oldalon beállított adatokból.</p>
+                </div>
+                <?php endif; ?>
             </div>
 
             <?php settings_errors( 'va_price_cards_settings' ); ?>
@@ -7562,6 +7572,31 @@ class VA_Settings_Page {
                         countEl.value = next;
                         if (next >= 8) addBtn.disabled = true;
                     }
+                });
+            }
+
+            // Szinkronizálás a Csomag beállításokból
+            var syncBtn = document.getElementById('va-pk-sync-from-plans');
+            if(syncBtn){
+                syncBtn.addEventListener('click', function(){
+                    var plans = {};
+                    try { plans = JSON.parse(syncBtn.dataset.plans || '{}'); } catch(e) { return; }
+                    var synced = 0;
+                    document.querySelectorAll('.va-pk-card[data-card-n]').forEach(function(card){
+                        var n = card.dataset.cardN;
+                        var slugInput = card.querySelector('[name="va_pc_'+n+'_plan_slug"]');
+                        if(!slugInput) return;
+                        var slug = slugInput.value.trim();
+                        if(!slug || !plans[slug]) return;
+                        var plan = plans[slug];
+                        var labelInput = card.querySelector('[name="va_pc_'+n+'_label"]');
+                        var descInput  = card.querySelector('[name="va_pc_'+n+'_desc"]');
+                        if(labelInput && plan.label) { labelInput.value = plan.label; }
+                        if(descInput  && plan.description) { descInput.value  = plan.description; }
+                        synced++;
+                    });
+                    syncBtn.textContent = '✅ ' + synced + ' kártya szinkronizálva – Ments el!';
+                    setTimeout(function(){ syncBtn.textContent = '🔄 Szinkronizálás a Csomag beállításokból'; }, 3000);
                 });
             }
         })();
