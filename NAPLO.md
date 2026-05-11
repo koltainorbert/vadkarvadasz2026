@@ -2,6 +2,39 @@
 
 ---
 
+## 2026. 05. 11. – Session #320 (Egyedi user kategoria + rangnev szerkesztes)
+
+### Mi volt a cel
+- A `Felhasznalok & Csomagok` admin oldalon legyen kulon `Egyedi` csomagkategoria
+- Az `Egyedi` ugyfelnel minden fo parameter egyedileg allithato legyen adminbol
+- A rang cimke (seller label) legyen szerkesztheto adminbol es az ugyfel sajat feluleterol is
+
+### Mit keszitettem [x]
+- [x] Uj plan slug felvetele: `custom` a `VA_User_Roles::PLANS` definicioba
+- [x] `custom` plan rangsor tamogatasa (`get_plan_rank`) es user-specifikus limit/cooldown override (`get_plan_config`)
+- [x] Admin users oldalon az extra mezok mar `platinum` + `custom` planra is megjelennek
+- [x] Uj admin mezo userenkent: `Rang cimke` (`va_seller_label`) a csomag editorban
+- [x] Admin AJAX mentes (`va_admin_set_user_plan`) mar menti a `plan_seller_label` erteket is
+- [x] Dashboardon a rangcimke-szerkesztes mar `custom` planra is engedelyezett
+- [x] `process_profile_label()` mar `custom` planra is mentesi jogot ad
+- [x] Hirdetes oldalon a badge felirat mar dinamikus `custom` tamogatassal jelenik meg (user label > plan seller_label > alap label)
+- [x] Root + plugin/theme mirror fajlok szinkronban frissitve
+- [x] Hibacheck rendben, deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `admin/class-settings-page.php`
+- `includes/class-user-system.php`
+- `frontend/templates/user/dashboard.php`
+- `single-va_listing.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-system.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-theme/vadaszapro-theme/single-va_listing.php`
+
+---
+
 ## 2026. 05. 11. – Session #319 (Ceges kartya: kattinthato egyedi URL + piros tema)
 
 ### Mi volt a cel
