@@ -1020,10 +1020,10 @@ class VA_Settings_Page {
         $default_card_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
 
         $default_card_features = [
-            1 => [ '', '', '', '', '' ],
-            2 => [ '', '', '', '', '' ],
-            3 => [ 'Hirdetés statisztika hozzáférés', '', '', '', '' ],
-            4 => [ 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport', '', '', '' ],
+            1 => [ 'Max 1 aktív hirdetés', 'Boost újratöltés: 7 nap' ],
+            2 => [ '5 hirdetés / hó', 'Boost újratöltés: 5 nap' ],
+            3 => [ '10 hirdetés / hó', 'Boost újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés' ],
+            4 => [ '20 hirdetés / hó', 'Boost újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport' ],
         ];
 
         $price_card_opts = [
@@ -1045,13 +1045,23 @@ class VA_Settings_Page {
             $price_card_opts[ "va_pc_{$n}_free"      ] = ( $n === 1 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_btn_text"  ] = ( $n === 1 ) ? 'Mindenki számára elérhető' : 'Vásárlás →';
             $price_card_opts[ "va_pc_{$n}_theme"     ] = $default_card_themes[ $n ]  ?? 'basic';
-            for ( $f = 1; $f <= 5; $f++ ) {
-                $price_card_opts[ "va_pc_{$n}_feat_{$f}" ] = $default_card_features[ $n ][ $f - 1 ] ?? '';
-            }
+            $price_card_opts[ "va_pc_{$n}_features" ] = $default_card_features[ $n ] ?? [];
         }
         foreach ( $price_card_opts as $key => $default ) {
             self::$defaults[ $key ] = $default;
-            $sanitize = in_array( $key, $card_int_keys, true ) || $key === 'va_pc_count' ? 'absint' : 'sanitize_text_field';
+            if ( preg_match( '/^va_pc_\d+_features$/', $key ) ) {
+                $sanitize = static function( $val ): array {
+                    if ( ! is_array( $val ) ) return [];
+                    $rows = [];
+                    foreach ( $val as $row ) {
+                        $row = trim( sanitize_text_field( (string) $row ) );
+                        if ( $row !== '' ) $rows[] = $row;
+                    }
+                    return $rows;
+                };
+            } else {
+                $sanitize = in_array( $key, $card_int_keys, true ) || $key === 'va_pc_count' ? 'absint' : 'sanitize_text_field';
+            }
             register_setting( 'va_price_cards_settings', $key, [ 'sanitize_callback' => $sanitize ] );
             if ( get_option( $key ) === false ) update_option( $key, $default );
         }
@@ -7339,6 +7349,13 @@ class VA_Settings_Page {
         .va-pk-card__price-preview .total .currency { font-size:28px; font-weight:700; opacity:.7; margin-left:3px; }
         .va-pk-card__price-preview .unit  { font-size:13px; color:rgba(255,255,255,.4); margin-top:4px; }
         .va-pk-card__price-preview .free-tag { font-size:22px; font-weight:700; color:#4ade80; }
+        .va-pk-feats { display:flex; flex-direction:column; gap:6px; }
+        .va-pk-feat-row { display:flex; gap:6px; align-items:center; }
+        .va-pk-feat-row input { margin-bottom:0 !important; }
+        .va-pk-feat-remove { border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06); color:#fff; border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:16px; line-height:1; }
+        .va-pk-feat-remove:hover { border-color:rgba(204,0,0,.6); background:rgba(204,0,0,.18); }
+        .va-pk-feat-add { margin-top:6px; border:1px dashed rgba(255,255,255,.2); background:rgba(255,255,255,.04); color:#fff; border-radius:8px; height:34px; padding:0 12px; cursor:pointer; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+        .va-pk-feat-add:hover { border-color:rgba(204,0,0,.55); background:rgba(204,0,0,.16); }
         .va-pk-save-bar { background:rgba(14,14,18,.95); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:16px 24px; display:flex; align-items:center; gap:14px; }
         .va-pk-save-bar .button-primary { background:#cc0000 !important; border-color:#cc0000 !important; color:#fff !important; padding:8px 24px !important; height:auto !important; border-radius:8px !important; font-weight:600 !important; font-size:13px !important; }
         .va-pk-save-bar .button-primary:hover { background:#aa0000 !important; border-color:#aa0000 !important; }
@@ -7413,9 +7430,32 @@ class VA_Settings_Page {
 
                     $tc       = $theme_colors[ $theme ] ?? $theme_colors['basic'];
                     $total    = $qty * $price;
-                    $feats    = [];
-                    for ( $f = 1; $f <= 5; $f++ ) {
-                        $feats[ $f ] = $g( "va_pc_{$n}_feat_{$f}", '' );
+                    $feats = get_option( "va_pc_{$n}_features", null );
+                    if ( ! is_array( $feats ) ) {
+                        $feats = [];
+                        if ( class_exists( 'VA_User_Roles' ) ) {
+                            $cfg = VA_User_Roles::get_plan_config( $slug );
+                            $plan_limit = (int) ( $cfg['monthly_limit'] ?? 0 );
+                            $plan_basis = (string) ( $cfg['basis'] ?? 'monthly' );
+                            if ( $plan_limit > 0 ) {
+                                $feats[] = $plan_basis === 'active' ? 'Max ' . $plan_limit . ' aktív hirdetés' : $plan_limit . ' hirdetés / hó';
+                            } else {
+                                $feats[] = 'Korlátlan hirdetés';
+                            }
+                            $plan_boost_cd = (int) ( $cfg['boost_cooldown'] ?? 0 );
+                            if ( $plan_boost_cd > 0 ) {
+                                $feats[] = 'Boost újratöltés: ' . $plan_boost_cd . ' nap';
+                            }
+                        }
+                        for ( $f = 1; $f <= 5; $f++ ) {
+                            $legacy_feat = trim( $g( "va_pc_{$n}_feat_{$f}", '' ) );
+                            if ( $legacy_feat !== '' && ! in_array( $legacy_feat, $feats, true ) ) {
+                                $feats[] = $legacy_feat;
+                            }
+                        }
+                    }
+                    if ( empty( $feats ) ) {
+                        $feats = [ '' ];
                     }
                 ?>
                 <div class="va-pk-card<?php echo $featured ? ' va-pk-card--featured' : ''; ?><?php echo $is_hidden ? ' va-pk-card--hidden' : ''; ?>" data-card-n="<?php echo $n; ?>"
@@ -7484,13 +7524,19 @@ class VA_Settings_Page {
                         </div>
 
                         <div class="va-pk-field">
-                            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.45);">Extra feliratok (✓ listaelemek)</label>
-                            <?php for ( $f = 1; $f <= 5; $f++ ): ?>
-                            <input type="text" name="va_pc_<?php echo $n; ?>_feat_<?php echo $f; ?>"
-                                   value="<?php echo esc_attr( $feats[ $f ] ); ?>"
-                                   placeholder="<?php echo esc_attr( $f . '. sor – üresen hagyva nem jelenik meg' ); ?>"
-                                   style="margin-bottom:5px;">
-                            <?php endfor; ?>
+                            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.45);">Listaelemek (✓) - teljesen szerkeszthető</label>
+                            <div class="va-pk-feats" data-card="<?php echo $n; ?>">
+                                <?php foreach ( $feats as $idx => $feat_line ): ?>
+                                <div class="va-pk-feat-row">
+                                    <input type="text"
+                                           name="va_pc_<?php echo $n; ?>_features[]"
+                                           value="<?php echo esc_attr( (string) $feat_line ); ?>"
+                                           placeholder="<?php echo esc_attr( ( (int) $idx + 1 ) . '. sor - uresen hagyva nem jelenik meg' ); ?>">
+                                    <button type="button" class="va-pk-feat-remove" title="Sor törlése">-</button>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <button type="button" class="va-pk-feat-add" data-card="<?php echo $n; ?>">+ Új sor</button>
                         </div>
 
                         <div class="va-pk-card__field-row">
@@ -7579,6 +7625,47 @@ class VA_Settings_Page {
                     var price = parseInt(priceEl.value)||0;
                     totalEl.textContent = formatHu(qty*price);
                     if(unitEl) unitEl.textContent = formatHu(price);
+                });
+            });
+
+            // Dinamikus listaelemek (+ / -)
+            function createFeatRow(card, value){
+                var row = document.createElement('div');
+                row.className = 'va-pk-feat-row';
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'va_pc_' + card + '_features[]';
+                input.value = value || '';
+                input.placeholder = 'Uj sor - uresen hagyva nem jelenik meg';
+                var removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'va-pk-feat-remove';
+                removeBtn.title = 'Sor torlese';
+                removeBtn.textContent = '-';
+                row.appendChild(input);
+                row.appendChild(removeBtn);
+                return row;
+            }
+            document.querySelectorAll('.va-pk-feats').forEach(function(container){
+                container.addEventListener('click', function(e){
+                    if (!e.target.classList.contains('va-pk-feat-remove')) return;
+                    var row = e.target.closest('.va-pk-feat-row');
+                    if (!row) return;
+                    container.removeChild(row);
+                    if (!container.querySelector('.va-pk-feat-row')) {
+                        container.appendChild(createFeatRow(container.dataset.card, ''));
+                    }
+                });
+            });
+            document.querySelectorAll('.va-pk-feat-add').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var card = btn.dataset.card;
+                    var container = document.querySelector('.va-pk-feats[data-card="' + card + '"]');
+                    if (!container) return;
+                    var row = createFeatRow(card, '');
+                    container.appendChild(row);
+                    var input = row.querySelector('input');
+                    if (input) input.focus();
                 });
             });
 
