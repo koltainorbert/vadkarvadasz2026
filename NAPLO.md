@@ -18,6 +18,9 @@
 - [x] Uj vasarlasi szuro kerult be: minden / csak vasarlok / vasarlas nelkuliek
 - [x] Az utolso Stripe szinkron metaadatai megjelennek az admin feluleten
 - [x] A felhasznalonkenti Stripe tranzakcio blokk alapbol osszecsukott, kulon lenyithato lett
+- [x] Dashboard figyelmeztetes bekerult: `Amennyiben nem szeretne elofizeteset meghosszabbitani...` + visszaszamlalo + hosszabbitas gomb
+- [x] A plan-limit miatt leallitott hirdeteseknel mentodik a leallitas idopontja (`va_suspended_by_plan_at`)
+- [x] Napi automata takaritas bekerult: 90 napnal regebbi, plan miatt leallitott hirdetesek vegleges torlese
 - [x] Root + plugin mirror fajlok szinkronban frissitve
 
 ### Erintett fajlok
@@ -25,6 +28,10 @@
 - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
 - `admin/class-settings-page.php`
 - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
 
 ### Ellenorzes
 - A modositott PHP fajlokon a statikus hibavizsgalat rendben lefutott
