@@ -19,6 +19,23 @@ if ( $va_home_h1 === '' ) {
 <div class="va-home-layout">
 <h1 class="screen-reader-text"><?php echo esc_html( $va_home_h1 ); ?></h1>
 
+<!-- ═══ WORKFLOW TEST: DOBOGÓ SZÍV ═════════════════════════ -->
+<div style="display:flex;justify-content:center;align-items:center;margin:40px 0;min-height:120px;">
+  <style>
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(1); }
+    }
+    .va-heartbeat {
+      font-size: 80px;
+      animation: heartbeat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255,0,0,0.7));
+    }
+  </style>
+  <div class="va-heartbeat" role="img" aria-label="Workflow test">❤️</div>
+</div>
+
 <!-- ═══ BAL SIDEBAR ═════════════════════════════════════════════ -->
 <aside class="va-home-sidebar">
 
