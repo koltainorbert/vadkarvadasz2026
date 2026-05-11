@@ -4694,6 +4694,126 @@ class VA_Settings_Page {
         <?php
     }
 
+    public static function handle_sync_stripe_purchase_history() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( 'Nincs jogosultság.' );
+        }
+        check_admin_referer( 'va_sync_stripe_purchase_history' );
+
+        $result = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'backfill_credit_purchase_history_from_stripe' )
+            ? VA_Ajax::backfill_credit_purchase_history_from_stripe()
+            : [
+                'ok'       => false,
+                'message'  => 'A Stripe szinkron modul nem elérhető.',
+                'events'   => 0,
+                'imported' => 0,
+            ];
+
+        $redirect = add_query_arg( [
+            'page'             => 'vadaszapro-users',
+            'va_sync_done'     => '1',
+            'va_sync_ok'       => ! empty( $result['ok'] ) ? '1' : '0',
+            'va_sync_msg'      => rawurlencode( (string) ( $result['message'] ?? '' ) ),
+            'va_sync_events'   => absint( $result['events'] ?? 0 ),
+            'va_sync_imported' => absint( $result['imported'] ?? 0 ),
+        ], admin_url( 'admin.php' ) );
+        wp_safe_redirect( $redirect );
+        exit;
+    }
+
+    public static function handle_export_purchase_history() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( 'Nincs jogosultság.' );
+        }
+        check_admin_referer( 'va_export_purchase_history' );
+
+        $search = sanitize_text_field( wp_unslash( $_POST['s'] ?? '' ) );
+        $filter_plan = sanitize_key( $_POST['filter_plan'] ?? '' );
+        $purchase_filter = sanitize_key( $_POST['purchase_filter'] ?? '' );
+        if ( ! in_array( $purchase_filter, [ '', 'with', 'without' ], true ) ) {
+            $purchase_filter = '';
+        }
+
+        $plans = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::PLANS : [];
+        $user_args = [
+            'number'  => -1,
+            'orderby' => 'registered',
+            'order'   => 'DESC',
+        ];
+        if ( $search !== '' ) {
+            $user_args['search'] = '*' . $search . '*';
+            $user_args['search_columns'] = [ 'user_login', 'user_email', 'display_name' ];
+        }
+
+        $meta_query = [];
+        if ( $filter_plan !== '' && isset( $plans[ $filter_plan ] ) ) {
+            $meta_query[] = [
+                'key'     => 'va_plan',
+                'value'   => $filter_plan,
+                'compare' => '=',
+            ];
+        }
+        if ( $purchase_filter === 'with' ) {
+            $meta_query[] = [ 'key' => 'va_credit_purchase_history', 'compare' => 'EXISTS' ];
+        } elseif ( $purchase_filter === 'without' ) {
+            $meta_query[] = [ 'key' => 'va_credit_purchase_history', 'compare' => 'NOT EXISTS' ];
+        }
+        if ( ! empty( $meta_query ) ) {
+            if ( count( $meta_query ) > 1 ) {
+                $meta_query['relation'] = 'AND';
+            }
+            $user_args['meta_query'] = $meta_query;
+        }
+
+        $users = get_users( $user_args );
+        $filename = 'vasarlasi-naplo-' . date_i18n( 'Y-m-d-His' ) . '.csv';
+        nocache_headers();
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename=' . $filename );
+
+        $out = fopen( 'php://output', 'w' );
+        if ( ! $out ) {
+            wp_die( 'CSV export megnyitása sikertelen.' );
+        }
+
+        fprintf( $out, chr(0xEF) . chr(0xBB) . chr(0xBF) );
+        fputcsv( $out, [ 'Felhasználó ID', 'Név', 'Felhasználónév', 'E-mail', 'Aktív csomag', 'Vásárlás dátuma', 'Kredit', 'Összeg (Ft)', 'Provider', 'Rögzített csomag', 'Stripe session', 'Stripe payment intent', 'Stripe nyugta URL', 'Token' ], ';' );
+
+        foreach ( $users as $user ) {
+            $plan = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user->ID ) : 'basic';
+            $history = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'get_credit_purchase_history' )
+                ? VA_Ajax::get_credit_purchase_history( $user->ID )
+                : [];
+
+            foreach ( $history as $entry ) {
+                $ts = absint( $entry['completed_at'] ?? 0 );
+                if ( $ts <= 0 ) {
+                    $ts = absint( $entry['logged_ts'] ?? 0 );
+                }
+
+                fputcsv( $out, [
+                    $user->ID,
+                    $user->display_name,
+                    $user->user_login,
+                    $user->user_email,
+                    $plan,
+                    $ts > 0 ? date_i18n( 'Y-m-d H:i:s', $ts ) : '',
+                    absint( $entry['qty'] ?? 0 ),
+                    absint( $entry['amount'] ?? 0 ),
+                    sanitize_key( (string) ( $entry['provider'] ?? '' ) ),
+                    sanitize_key( (string) ( $entry['plan_slug'] ?? '' ) ),
+                    sanitize_text_field( (string) ( $entry['stripe_session_id'] ?? '' ) ),
+                    sanitize_text_field( (string) ( $entry['stripe_payment_intent'] ?? '' ) ),
+                    esc_url_raw( (string) ( $entry['stripe_receipt_url'] ?? '' ) ),
+                    sanitize_text_field( (string) ( $entry['token'] ?? '' ) ),
+                ], ';' );
+            }
+        }
+
+        fclose( $out );
+        exit;
+    }
+
     public static function handle_export_settings() {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_die( 'Nincs jogosultság.' );
