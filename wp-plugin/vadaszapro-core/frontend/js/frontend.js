@@ -371,7 +371,8 @@
   // ── Kredit csomag vásárlás (defer/CSP-biztos külső handler) ──────
   $(document).on('click', '.va-pkg-buy-btn', function(e) {
     var $btn = $(this);
-    if ($btn.prop('disabled') || $btn.hasClass('va-pkg-buy-btn--current') || $btn.hasClass('va-pkg-buy-btn--free')) {
+    var hasHref = $.trim(($btn.attr('href') || '').toString()) !== '';
+    if ($btn.prop('disabled') || $btn.hasClass('va-pkg-buy-btn--current') || ($btn.hasClass('va-pkg-buy-btn--free') && !hasHref)) {
       e.preventDefault();
       return;
     }

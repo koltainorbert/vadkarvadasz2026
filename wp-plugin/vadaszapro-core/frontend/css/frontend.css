@@ -1420,10 +1420,12 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
 .va-pkg-card--silver   { --va-rank-accent: #c8d8e0; --va-rank-glow: rgba(192,220,224,.25); }
 .va-pkg-card--gold     { --va-rank-accent: #ffd34f; --va-rank-glow: rgba(255,211,79,.28);  }
 .va-pkg-card--platinum { --va-rank-accent: #d4a6ff; --va-rank-glow: rgba(212,166,255,.28); }
+.va-pkg-card--company  { --va-rank-accent: #ff2b2b; --va-rank-glow: rgba(255,43,43,.24); }
 
 /* Gold és Platinum kiemelt glow kerete */
 .va-pkg-card--gold     { border-color: rgba(255,211,79,.28); }
 .va-pkg-card--platinum { border-color: rgba(212,166,255,.28); }
+.va-pkg-card--company  { border-color: rgba(255,43,43,.34); }
 
 /* Aktív csomag kiemelés */
 .va-pkg-card--active {
@@ -1459,6 +1461,7 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
 .va-pkg-card--silver   .va-pkg-icon-wrap { background: linear-gradient(135deg, rgba(192,220,224,.22), rgba(192,220,224,.07)); }
 .va-pkg-card--gold     .va-pkg-icon-wrap { background: linear-gradient(135deg, rgba(255,211,79,.25),  rgba(255,180,0,.07)); }
 .va-pkg-card--platinum .va-pkg-icon-wrap { background: linear-gradient(135deg, rgba(212,166,255,.25), rgba(160,80,255,.07)); }
+.va-pkg-card--company  .va-pkg-icon-wrap { background: linear-gradient(135deg, rgba(255,43,43,.24), rgba(255,43,43,.07)); }
 
 .va-pkg-icon-wrap svg {
   width: 26px;
@@ -1565,6 +1568,20 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
   color: #0a0a0a;
   border-color: transparent;
   font-weight: 800;
+}
+
+.va-pkg-card--company .va-pkg-buy-btn {
+  background: linear-gradient(135deg, #ff0000, #c40000);
+  color: #fff;
+  border-color: rgba(255,45,45,.65);
+  font-weight: 800;
+}
+
+.va-pkg-card--company .va-pkg-price--free {
+  background: linear-gradient(135deg, #ff5a5a, #ff0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ── Badge (Népszerű stb.) ── */

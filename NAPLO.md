@@ -2,6 +2,34 @@
 
 ---
 
+## 2026. 05. 11. – Session #319 (Ceges kartya: kattinthato egyedi URL + piros tema)
+
+### Mi volt a cel
+- A ceges kartya gombja legyen kattinthato, ha egyedi URL van megadva
+- A ceges kartya kulon piros szint kapjon (kartya + gomb)
+
+### Mit keszitettem [x]
+- [x] Frontend JS javitas: a `.va-pkg-buy-btn--free` mar nem tiltja le a kattintast, ha van `href`
+- [x] Shortcode javitas: egyedi URL eseten kattinthato `<a>` renderelodik az ingyenes kartyan is
+- [x] Ceges slugok (`company`, `business`, `corporate`, `ceges`, `ceg`, `custom`, `egyedi`) automatikusan `company` temat kapnak
+- [x] Uj ceger ikon marad ceges slugokra
+- [x] Uj CSS tema: `.va-pkg-card--company` (piros accent, piros border, piros ikon hatter)
+- [x] Ceges gomb piros gradientet kapott
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `includes/class-shortcodes.php`
+- `frontend/js/frontend.js`
+- `frontend/css/frontend.css`
+- `frontend/css/frontend.min.css`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.css`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.min.css`
+
+---
+
 ## 2026. 05. 11. – Session #318 (Extra árkártya megjelenítés fix)
 
 ### Mi volt a cel
