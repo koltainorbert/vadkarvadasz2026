@@ -3562,25 +3562,10 @@ class VA_Settings_Page {
                                     <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
                                 </div>
 
-                                <!-- Egyedi (Custom) lejárati idő -->
-                                <div class="va-upm-custom-expire" style="<?php echo $plan_editor === 'custom' ? '' : 'display:none;'; ?>">
-                                    <label>Egyedi lejárat (nap a mai naptól):
-                                        <input type="number" class="va-upm-custom-dur" min="1" max="3650"
-                                               value="<?php echo esc_attr( (string) ( $custom_dur ?: 365 ) ); ?>" style="width:90px;">
-                                        <span style="color:rgba(255,255,255,.4);font-size:11px;margin-left:6px;">
-                                            <?php
-                                            if ( $expires_ts > 0 ) {
-                                                echo 'Jelenlegi lejárat: ' . esc_html( date_i18n( 'Y.m.d H:i', $expires_ts ) );
-                                            }
-                                            ?>
-                                        </span>
-                                    </label>
-                                </div>
-
                                 <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
                                     <label>Lejárat dátuma:
                                         <input type="datetime-local" class="va-upm-expires-at"
-                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:190px;">
+                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:190px;background:#060606;color:#fff;border:1px solid #ff0000;border-radius:8px;padding:6px 10px;accent-color:#ff0000;">
                                     </label>
                                     <span style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</span>
                                 </div>
@@ -3960,7 +3945,6 @@ class VA_Settings_Page {
                     var noteEl        = ed ? ed.querySelector('.va-upm-plat-note')      : null;
                     var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
                     var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
-                    var customDurEl   = ed ? ed.querySelector('.va-upm-custom-dur')     : null;
                     var expiresAtEl   = ed ? ed.querySelector('.va-upm-expires-at')     : null;
 
                     var data = new URLSearchParams({
@@ -3971,7 +3955,6 @@ class VA_Settings_Page {
                         custom_limit         : limEl      ? limEl.value      : 0,
                         custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
                         custom_credits       : creditsEl  ? creditsEl.value  : 0,
-                        custom_duration_days : customDurEl ? customDurEl.value : 0,
                         custom_expires_at    : expiresAtEl ? expiresAtEl.value : '',
                         plan_note            : noteEl     ? noteEl.value     : '',
                         plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''

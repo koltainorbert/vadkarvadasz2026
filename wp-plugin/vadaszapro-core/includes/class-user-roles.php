@@ -872,7 +872,6 @@ class VA_User_Roles {
         $custom_lim        = absint( $_POST['custom_limit'] ?? 0 );
         $custom_cd         = absint( $_POST['custom_boost_cooldown'] ?? 0 );
         $custom_credits    = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
-        $custom_dur_days   = absint( $_POST['custom_duration_days'] ?? 0 );
         $custom_expires_at = sanitize_text_field( wp_unslash( (string) ( $_POST['custom_expires_at'] ?? '' ) ) );
         $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
         $seller_label      = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
@@ -896,16 +895,18 @@ class VA_User_Roles {
 
         // Admin által beállított lejárat (csak ha van érték és nem basic)
         if ( $plan !== 'basic' ) {
-            if ( $plan === 'custom' && $custom_dur_days > 0 ) {
-                // Egyedi csomagnál a per-user tartam mentése
-                update_user_meta( $target_uid, 'va_plan_custom_duration_days', $custom_dur_days );
-                update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( $custom_dur_days * DAY_IN_SECONDS ) );
-            } elseif ( $plan !== 'custom' ) {
+            if ( $plan !== 'custom' ) {
                 // Egyéb csomagoknál globális default ha nincs lejárat
                 $existing_exp = (int) get_user_meta( $target_uid, 'va_plan_expires_at', true );
                 if ( $existing_exp <= 0 ) {
                     $dur = 365; // 1 éves lejárat minden csomagra
                     update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( $dur * DAY_IN_SECONDS ) );
+                }
+            } else {
+                // Egyedi csomagnál is a naptár a mérvadó; ha nincs dátum, maradjon az alap 365 napos információ.
+                $existing_exp = (int) get_user_meta( $target_uid, 'va_plan_expires_at', true );
+                if ( $existing_exp <= 0 ) {
+                    update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( 365 * DAY_IN_SECONDS ) );
                 }
             }
             // Flagek törlése ha admin megújítja a csomagot
