@@ -42,6 +42,7 @@ const SITE  = 'Vadkár Vadász';
 const SITE_URL = '#';
 const CONTACT = 'vadkarvadasz@gmail.com';
 const BUY_URL = '#';
+const LOGO_URL = '';
 const YEAR = new Date().getFullYear();
 
 const LISTINGS = [
@@ -51,7 +52,10 @@ const LISTINGS = [
 ];
 
 function logoBlock(){
-  return `<span style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">🦌 ${SITE}</span>`;
+  if (LOGO_URL && LOGO_URL.trim() !== '') {
+    return `<img src="${LOGO_URL}" alt="${SITE}" height="44" style="height:44px;max-width:240px;display:block;">`;
+  }
+  return `<span style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">${SITE}</span>`;
 }
 
 function listingList(){

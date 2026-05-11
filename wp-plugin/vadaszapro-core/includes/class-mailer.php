@@ -46,12 +46,19 @@ class VA_Mailer {
     /* ─── HTML template builder ─────────────────────────── */
     private static function build( string $heading, string $body_html, array $button ): string {
         $site_name  = esc_html( self::BRAND_NAME );
-        $logo_url   = esc_url( get_option( 'va_header_logo_url', '' ) );
+      $logo_src   = (string) get_option( 'va_header_logo_url', '' );
+      if ( $logo_src === '' ) {
+        $logo_src = (string) get_option( 'va_brand_icon_url', '' );
+      }
+      if ( $logo_src === '' && function_exists( 'get_site_icon_url' ) ) {
+        $logo_src = (string) get_site_icon_url( 256 );
+      }
+      $logo_url   = esc_url( $logo_src );
         $site_url   = esc_url( home_url( '/' ) );
         $year       = date( 'Y' );
 
         $logo_block = $logo_url
-            ? '<img src="' . $logo_url . '" alt="' . $site_name . '" height="40" style="height:40px;max-width:180px;display:block;">'
+        ? '<img src="' . $logo_url . '" alt="' . $site_name . '" height="44" style="height:44px;max-width:240px;display:block;">'
             : '<span style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">' . $site_name . '</span>';
 
         $btn_block = '';
