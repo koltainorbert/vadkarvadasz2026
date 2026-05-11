@@ -547,6 +547,18 @@ class VA_User_Roles {
             $user_id
         ) );
 
+        $preferred_id = (int) get_user_meta( $user_id, 'va_primary_listing_id', true );
+        if ( $preferred_id > 0 && ! empty( $posts ) ) {
+            foreach ( $posts as $idx => $item ) {
+                if ( (int) $item->ID === $preferred_id ) {
+                    $preferred_item = $item;
+                    unset( $posts[ $idx ] );
+                    array_unshift( $posts, $preferred_item );
+                    break;
+                }
+            }
+        }
+
         $suspended = 0;
         foreach ( $posts as $i => $post ) {
             $is_plan_suspended = get_post_meta( $post->ID, 'va_suspended_by_plan', true ) === '1';
@@ -575,59 +587,138 @@ class VA_User_Roles {
     }
 
     /**
-     * Plan limit miatt leállított hirdetések automatikus törlése.
-     * A megőrzési idő alapértelmezetten 90 nap (va_plan_suspended_retention_days option).
+     * Plan limit miatt leállított hirdetések takarítása.
+     * Lépések: figyelmeztetés (30/7/1) → kuka → végleges törlés.
      */
     public static function cleanup_plan_suspended_listings(): void {
         $retention_days = max( 1, absint( get_option( 'va_plan_suspended_retention_days', 90 ) ) );
-        $cutoff_ts      = current_time( 'timestamp' ) - ( $retention_days * DAY_IN_SECONDS );
-        $loops          = 0;
+        $trash_grace_days = max( 1, absint( get_option( 'va_plan_suspended_trash_grace_days', 7 ) ) );
+        $now_ts           = current_time( 'timestamp' );
+        $warning_points   = [ 30, 7, 1 ];
+        $mail_queue       = [];
 
-        do {
-            $q = new WP_Query([
-                'post_type'           => 'va_listing',
-                'post_status'         => 'private',
-                'fields'              => 'ids',
-                'posts_per_page'      => 100,
-                'no_found_rows'       => true,
-                'ignore_sticky_posts' => true,
-                'orderby'             => 'meta_value_num',
-                'order'               => 'ASC',
-                'meta_key'            => 'va_suspended_by_plan_at',
-                'meta_query'          => [
-                    [
-                        'key'     => 'va_suspended_by_plan',
-                        'value'   => '1',
-                        'compare' => '=',
-                    ],
-                    [
-                        'key'     => 'va_suspended_by_plan_at',
-                        'value'   => $cutoff_ts,
-                        'type'    => 'NUMERIC',
-                        'compare' => '<=',
-                    ],
+        $private_q = new WP_Query([
+            'post_type'           => 'va_listing',
+            'post_status'         => 'private',
+            'fields'              => 'ids',
+            'posts_per_page'      => 100,
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'meta_query'          => [
+                [
+                    'key'     => 'va_suspended_by_plan',
+                    'value'   => '1',
+                    'compare' => '=',
                 ],
-            ]);
+            ],
+        ]);
 
-            if ( empty( $q->posts ) ) {
-                break;
+        foreach ( $private_q->posts as $post_id ) {
+            $post_id = (int) $post_id;
+            if ( $post_id <= 0 ) {
+                continue;
             }
 
-            foreach ( $q->posts as $post_id ) {
-                $post_id = (int) $post_id;
-                if ( $post_id <= 0 ) {
+            $author_id    = (int) get_post_field( 'post_author', $post_id );
+            $suspended_at = (int) get_post_meta( $post_id, 'va_suspended_by_plan_at', true );
+            if ( $suspended_at <= 0 ) {
+                $suspended_at = $now_ts;
+                update_post_meta( $post_id, 'va_suspended_by_plan_at', $suspended_at );
+            }
+
+            $delete_at = $suspended_at + ( $retention_days * DAY_IN_SECONDS );
+            $seconds_left = max( 0, $delete_at - $now_ts );
+            $days_left = (int) ceil( $seconds_left / DAY_IN_SECONDS );
+
+            foreach ( $warning_points as $point ) {
+                $warn_key = 'va_plan_suspend_warn_' . $point;
+                if ( $days_left > $point || (int) get_post_meta( $post_id, $warn_key, true ) > 0 ) {
                     continue;
                 }
 
-                if ( class_exists( 'VA_User_System' ) && method_exists( 'VA_User_System', 'delete_listing_with_images' ) ) {
-                    VA_User_System::delete_listing_with_images( $post_id );
-                } else {
-                    wp_delete_post( $post_id, true );
+                if ( ! isset( $mail_queue[ $author_id ][ $point ] ) ) {
+                    $mail_queue[ $author_id ][ $point ] = [
+                        'count'       => 0,
+                        'earliest_ts' => $delete_at,
+                        'post_ids'    => [],
+                    ];
                 }
+                $mail_queue[ $author_id ][ $point ]['count']++;
+                $mail_queue[ $author_id ][ $point ]['post_ids'][] = $post_id;
+                $mail_queue[ $author_id ][ $point ]['earliest_ts'] = min( $mail_queue[ $author_id ][ $point ]['earliest_ts'], $delete_at );
             }
 
-            $loops++;
-        } while ( $loops < 50 );
+            if ( $now_ts >= $delete_at ) {
+                wp_trash_post( $post_id );
+                update_post_meta( $post_id, 'va_suspended_by_plan_trashed_at', $now_ts );
+            }
+        }
+
+        foreach ( $mail_queue as $user_id => $items ) {
+            foreach ( $items as $days => $payload ) {
+                if ( ! self::send_plan_suspended_warning_email( (int) $user_id, (int) $days, (int) $payload['count'], (int) $payload['earliest_ts'] ) ) {
+                    continue;
+                }
+                foreach ( $payload['post_ids'] as $post_id ) {
+                    update_post_meta( (int) $post_id, 'va_plan_suspend_warn_' . (int) $days, $now_ts );
+                }
+            }
+        }
+
+        $trash_cutoff = $now_ts - ( $trash_grace_days * DAY_IN_SECONDS );
+        $trash_q = new WP_Query([
+            'post_type'           => 'va_listing',
+            'post_status'         => 'trash',
+            'fields'              => 'ids',
+            'posts_per_page'      => 100,
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'meta_query'          => [
+                [
+                    'key'     => 'va_suspended_by_plan',
+                    'value'   => '1',
+                    'compare' => '=',
+                ],
+                [
+                    'key'     => 'va_suspended_by_plan_trashed_at',
+                    'value'   => $trash_cutoff,
+                    'type'    => 'NUMERIC',
+                    'compare' => '<=',
+                ],
+            ],
+        ]);
+
+        foreach ( $trash_q->posts as $post_id ) {
+            $post_id = (int) $post_id;
+            if ( $post_id <= 0 ) {
+                continue;
+            }
+            if ( class_exists( 'VA_User_System' ) && method_exists( 'VA_User_System', 'delete_listing_with_images' ) ) {
+                VA_User_System::delete_listing_with_images( $post_id );
+            } else {
+                wp_delete_post( $post_id, true );
+            }
+        }
+    }
+
+    private static function send_plan_suspended_warning_email( int $user_id, int $days_left, int $count, int $earliest_delete_ts ): bool {
+        $user = get_userdata( $user_id );
+        if ( ! $user || empty( $user->user_email ) ) {
+            return false;
+        }
+
+        $site_name = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+        $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
+        $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
+
+        $subject = sprintf( 'Figyelmeztetés: %d nap múlva inaktív hirdetés törlés (%s)', $days_left, $site_name );
+        $message = "Kedves " . $user->display_name . "!\n\n"
+            . "Értesítünk, hogy " . $count . " db, csomaglimit miatt inaktív hirdetésed " . $days_left . " nap múlva törlésre kerülhet.\n"
+            . "Legkorábbi törlés időpontja: " . date_i18n( 'Y.m.d H:i', $earliest_delete_ts ) . "\n\n"
+            . "Meghosszabbításhoz: " . $buy_url . "\n\n"
+            . "Üdvözlettel,\n" . $site_name;
+
+        return wp_mail( $user->user_email, $subject, $message );
     }
 
     public static function ajax_admin_set_plan(): void {
