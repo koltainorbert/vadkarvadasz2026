@@ -1019,6 +1019,13 @@ class VA_Settings_Page {
         $default_card_badges = [ 1 => '', 2 => '–10%', 3 => '–20%', 4 => '–30%' ];
         $default_card_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
 
+        $default_card_features = [
+            1 => [ '', '', '', '', '' ],
+            2 => [ '', '', '', '', '' ],
+            3 => [ 'Hirdetés statisztika hozzáférés', '', '', '', '' ],
+            4 => [ 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport', '', '', '' ],
+        ];
+
         $price_card_opts = [
             'va_pc_eyebrow'  => 'Átlátható csomagok',
             'va_pc_title'    => 'Rang Alapú Vásárlás',
@@ -1038,6 +1045,9 @@ class VA_Settings_Page {
             $price_card_opts[ "va_pc_{$n}_free"      ] = ( $n === 1 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_btn_text"  ] = ( $n === 1 ) ? 'Mindenki számára elérhető' : 'Vásárlás →';
             $price_card_opts[ "va_pc_{$n}_theme"     ] = $default_card_themes[ $n ]  ?? 'basic';
+            for ( $f = 1; $f <= 5; $f++ ) {
+                $price_card_opts[ "va_pc_{$n}_feat_{$f}" ] = $default_card_features[ $n ][ $f - 1 ] ?? '';
+            }
         }
         foreach ( $price_card_opts as $key => $default ) {
             self::$defaults[ $key ] = $default;
@@ -7403,6 +7413,10 @@ class VA_Settings_Page {
 
                     $tc       = $theme_colors[ $theme ] ?? $theme_colors['basic'];
                     $total    = $qty * $price;
+                    $feats    = [];
+                    for ( $f = 1; $f <= 5; $f++ ) {
+                        $feats[ $f ] = $g( "va_pc_{$n}_feat_{$f}", '' );
+                    }
                 ?>
                 <div class="va-pk-card<?php echo $featured ? ' va-pk-card--featured' : ''; ?><?php echo $is_hidden ? ' va-pk-card--hidden' : ''; ?>" data-card-n="<?php echo $n; ?>"
                      style="background:<?php echo esc_attr( $tc['gradient'] ); ?>; box-shadow:<?php echo $featured ? '0 8px 40px ' . esc_attr( $tc['glow'] ) : 'none'; ?>;">
@@ -7467,6 +7481,16 @@ class VA_Settings_Page {
                         <div class="va-pk-field">
                             <label>Leírás szöveg</label>
                             <input type="text" name="va_pc_<?php echo $n; ?>_desc" value="<?php echo esc_attr( $desc ); ?>">
+                        </div>
+
+                        <div class="va-pk-field">
+                            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.45);">Extra feliratok (✓ listaelemek)</label>
+                            <?php for ( $f = 1; $f <= 5; $f++ ): ?>
+                            <input type="text" name="va_pc_<?php echo $n; ?>_feat_<?php echo $f; ?>"
+                                   value="<?php echo esc_attr( $feats[ $f ] ); ?>"
+                                   placeholder="<?php echo esc_attr( $f . '. sor – üresen hagyva nem jelenik meg' ); ?>"
+                                   style="margin-bottom:5px;">
+                            <?php endfor; ?>
                         </div>
 
                         <div class="va-pk-card__field-row">
