@@ -1,178 +1,142 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vadkár Vadász - Email minta</title>
-  <style>
-    :root {
-      --bg: #060606;
-      --card: #101010;
-      --text: #ffffff;
-      --muted: rgba(255, 255, 255, 0.72);
-      --accent: #ff0000;
-      --line: rgba(255, 255, 255, 0.14);
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0) 0 0/20px 20px,
-        linear-gradient(180deg, #080808 0%, #060606 100%);
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-    }
-
-    .frame {
-      width: 100%;
-      max-width: 760px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: hidden;
-      background: #0b0b0b;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
-    }
-
-    .head {
-      padding: 20px 24px;
-      background: linear-gradient(120deg, #000 0%, #171717 100%);
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .badge {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-      background: var(--accent);
-      border-radius: 999px;
-      padding: 6px 10px;
-      white-space: nowrap;
-    }
-
-    .content {
-      padding: 28px 24px;
-      background: #fff;
-      color: #111;
-    }
-
-    .subject {
-      margin: 0 0 8px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      color: #666;
-    }
-
-    h1 {
-      margin: 0 0 16px;
-      font-size: 36px;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: #0f0f0f;
-    }
-
-    p {
-      margin: 0 0 12px;
-      line-height: 1.65;
-      color: #2e2e2e;
-      font-size: 16px;
-    }
-
-    .note {
-      margin-top: 18px;
-      background: #f8f8f8;
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 12px 14px;
-      color: #383838;
-      font-size: 14px;
-    }
-
-    .cta {
-      margin-top: 20px;
-      display: inline-block;
-      text-decoration: none;
-      color: #fff;
-      background: var(--accent);
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-weight: 800;
-    }
-
-    .foot {
-      border-top: 1px solid var(--line);
-      padding: 18px 24px;
-      color: var(--muted);
-      font-size: 13px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: #0b0b0b;
-    }
-
-    .foot a {
-      color: #fff;
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(255,255,255,.45);
-    }
-
-    @media (max-width: 640px) {
-      .brand { font-size: 24px; }
-      h1 { font-size: 30px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Email előnézet – Vadkár Vadász</title>
+<style>
+  body { margin:0; background:#1a1a1a; font-family:system-ui,-apple-system,Segoe UI,sans-serif; }
+  .tabs { display:flex; gap:0; padding:24px 24px 0; }
+  .tab { padding:10px 22px; cursor:pointer; font-size:13px; font-weight:700; border-radius:8px 8px 0 0;
+         background:#2a2a2a; color:rgba(255,255,255,.5); border:1px solid #333; border-bottom:none; }
+  .tab.active { background:#111; color:#fff; border-color:#444; }
+  .preview-area { padding:0 24px 32px; }
+  iframe { width:100%; height:700px; border:none; border-radius:0 8px 8px 8px;
+           background:#f4f4f5; display:none; }
+  iframe.active { display:block; }
+  .label-30 { color:#ffd700; }
+  .label-7  { color:#ffaa00; }
+  .label-1  { color:#ff4444; }
+</style>
 </head>
 <body>
-  <section class="frame">
-    <header class="head">
-      <div class="brand">Vadkár Vadász</div>
-      <div class="badge">Email minta</div>
-    </header>
 
-    <main class="content">
-      <div class="subject">Tárgy: Figyelmeztetés - 7 nap van hátra</div>
-      <h1>3 hirdetésed 7 nap múlva törlődhet</h1>
+<div class="tabs">
+  <div class="tab active label-30" onclick="show(0)">🟡 30 napos</div>
+  <div class="tab label-7"  onclick="show(1)">🟠 7 napos</div>
+  <div class="tab label-1"  onclick="show(2)">🔴 1 napos</div>
+</div>
+<div class="preview-area">
+  <iframe id="f0" class="active" srcdoc=""></iframe>
+  <iframe id="f1" srcdoc=""></iframe>
+  <iframe id="f2" srcdoc=""></iframe>
+</div>
 
-      <p>Kedves Nagy János!</p>
-      <p>
-        Ez egy demo HTML levélminta. A márkanév mindenhol <strong>Vadkár Vadász</strong>,
-        a kapcsolati e-mail pedig fixen <strong>vadkarvadasz@gmail.com</strong>.
-      </p>
-      <p>
-        Ha szeretnéd, ebből készítek külön 30/7/1 napos verziókat is eltérő tartalommal.
-      </p>
+<script>
+function show(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('iframe').forEach((f,i)=>f.classList.toggle('active',i===n));
+}
 
-      <div class="note">
-        Kapcsolat: vadkarvadasz@gmail.com
-      </div>
+const SITE  = 'Vadkár Vadász';
+const SITE_URL = '#';
+const CONTACT = 'vadkarvadasz@gmail.com';
+const BUY_URL = '#';
+const LOGO_URL = 'vadkar-vadasz-logo.svg';
+const YEAR = new Date().getFullYear();
 
-      <a class="cta" href="#">Előfizetés megújítása</a>
-    </main>
+const LISTINGS = [
+  'Browning B525 sörétes puska, 12/76',
+  'Leupold VX-3i 3-9×40 távcső',
+  'Swarovski EL 8×32 binokulár',
+];
 
-    <footer class="foot">
-      <span>Vadkár Vadász</span>
-      <a href="mailto:vadkarvadasz@gmail.com">vadkarvadasz@gmail.com</a>
-    </footer>
-  </section>
+function logoBlock(){
+  if (LOGO_URL && LOGO_URL.trim() !== '') {
+    return `<img src="${LOGO_URL}" alt="${SITE}" height="44" style="height:44px;max-width:240px;display:block;">`;
+  }
+  return `<span style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">${SITE}</span>`;
+}
+
+function listingList(){
+  return `<ul style="margin:12px 0 0;padding-left:20px;">${LISTINGS.map(t=>`<li style="margin:4px 0;color:#374151;">${t}</li>`).join('')}</ul>`;
+}
+
+function contactBox(){
+  return `<p style="margin:20px 0 0;padding:12px 16px;background:#f9f9f9;border-left:3px solid #cc0000;border-radius:4px;font-size:13px;color:#6b7280;">
+    Ha bármilyen kérdésed van, keress minket: <a href="mailto:${CONTACT}" style="color:#cc0000;">${CONTACT}</a>
+  </p>`;
+}
+
+function build(heading, bodyHtml, btnLabel){
+  return `<!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${heading}</title></head>
+  <body style="margin:0;padding:0;background:#f4f4f5;font-family:system-ui,-apple-system,Segoe UI,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f5;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+        <tr>
+          <td style="background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);border-radius:12px 12px 0 0;padding:24px 32px;text-align:center;">
+            <a href="${SITE_URL}" style="text-decoration:none;">${logoBlock()}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;padding:36px 40px 28px;border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;">
+            <h1 style="margin:0 0 20px;font-size:22px;font-weight:800;color:#0a0a0a;line-height:1.3;">${heading}</h1>
+            <div style="font-size:15px;line-height:1.7;color:#374151;">${bodyHtml}</div>
+            <div style="text-align:center;margin:28px 0 8px;">
+              <a href="${BUY_URL}" style="display:inline-block;background:#cc0000;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 32px;border-radius:8px;letter-spacing:0.3px;">${btnLabel}</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#0a0a0a;border-radius:0 0 12px 12px;padding:20px 32px;text-align:center;">
+            <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.45);">
+              © ${YEAR} <a href="${SITE_URL}" style="color:rgba(255,255,255,0.6);text-decoration:none;">${SITE}</a> &bull; Ezt az emailt automatikusan küldte a rendszer.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table></body></html>`;
+}
+
+// 30 napos
+document.getElementById('f0').srcdoc = build(
+  '3 hirdetésed 30 nap múlva törlődhet',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>,</p>
+   <p style="margin:0 0 14px;">Tájékoztatunk, hogy az alábbi, csomaglimit miatt szüneteltetett hirdetéseid
+   <strong>2026. június 10.</strong>-ig törlésre kerülnek, amennyiben addig nem frissíted előfizetésedet:</p>
+   ${listingList()}
+   <p style="margin:14px 0 0;">Még bőven van idő, de érdemes időben gondoskodni a megújításról.</p>
+   ${contactBox()}`,
+  '📦 Előfizetési csomagok'
+);
+
+// 7 napos
+document.getElementById('f1').srcdoc = build(
+  '7 nap múlva törlünk 3 hirdetést',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>,</p>
+   <p style="margin:0 0 14px;">Emlékeztetünk, hogy <strong>7 napon belül</strong>
+   (legkorábban <strong>2026. május 18.</strong>) törlődnek az alábbi, csomaglimit miatt szüneteltetett hirdetéseid:</p>
+   ${listingList()}
+   <p style="margin:14px 0 0;">A hirdetések visszaállításához frissítsd előfizetésedet.</p>
+   ${contactBox()}`,
+  '🔄 Előfizetés megújítása'
+);
+
+// 1 napos
+document.getElementById('f2').srcdoc = build(
+  '⚠️ Holnap törlünk 3 hirdetést',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>,</p>
+   <p style="margin:0 0 14px;">Ez az <strong style="color:#cc0000;">utolsó figyelmeztetés</strong>.
+   Holnap (<strong>2026. május 12.</strong>) véglegesen törlődnek az alábbi, csomaglimit miatt inaktív hirdetéseid:</p>
+   ${listingList()}
+   <p style="margin:14px 0 0;">A törlés csak csomagfrissítéssel előzhető meg.</p>
+   ${contactBox()}`,
+  '🔓 Csomag frissítése most'
+);
+</script>
 </body>
 </html>
