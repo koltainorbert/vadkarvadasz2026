@@ -656,7 +656,7 @@ class VA_User_Roles {
 
         foreach ( $mail_queue as $user_id => $items ) {
             foreach ( $items as $days => $payload ) {
-                if ( ! self::send_plan_suspended_warning_email( (int) $user_id, (int) $days, (int) $payload['count'], (int) $payload['earliest_ts'], $payload['post_ids'] ) ) {
+                if ( ! self::send_plan_suspended_warning_email( (int) $user_id, (int) $days, (int) $payload['count'], (int) $payload['earliest_ts'] ) ) {
                     continue;
                 }
                 // E-mail küldési napló mentése
@@ -719,79 +719,24 @@ class VA_User_Roles {
         }
     }
 
-    private static function send_plan_suspended_warning_email( int $user_id, int $days_left, int $count, int $earliest_delete_ts, array $post_ids = [] ): bool {
+    private static function send_plan_suspended_warning_email( int $user_id, int $days_left, int $count, int $earliest_delete_ts ): bool {
         $user = get_userdata( $user_id );
         if ( ! $user || empty( $user->user_email ) ) {
             return false;
         }
-        if ( ! class_exists( 'VA_Mailer' ) ) {
-            return false;
-        }
 
-        $site_name = 'Vadkár Vadász';
+        $site_name = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
-        $delete_date = date_i18n( 'Y. F j.', $earliest_delete_ts );
 
-        // Hirdetésnevek listája
-        $listing_items = '';
-        foreach ( $post_ids as $pid ) {
-            $pid   = (int) $pid;
-            $title = $pid > 0 ? get_the_title( $pid ) : '';
-            if ( $title === '' ) continue;
-            $listing_items .= '<li style="margin:4px 0;color:#374151;">' . esc_html( $title ) . '</li>';
-        }
-        $listing_block = $listing_items !== ''
-            ? '<ul style="margin:12px 0 0;padding-left:20px;">' . $listing_items . '</ul>'
-            : '';
+        $subject = sprintf( 'Figyelmeztetés: %d nap múlva inaktív hirdetés törlés (%s)', $days_left, $site_name );
+        $message = "Kedves " . $user->display_name . "!\n\n"
+            . "Értesítünk, hogy " . $count . " db, csomaglimit miatt inaktív hirdetésed " . $days_left . " nap múlva törlésre kerülhet.\n"
+            . "Legkorábbi törlés időpontja: " . date_i18n( 'Y.m.d H:i', $earliest_delete_ts ) . "\n\n"
+            . "Meghosszabbításhoz: " . $buy_url . "\n\n"
+            . "Üdvözlettel,\n" . $site_name;
 
-        // Urgency-függő tárgy + hangvétel
-        if ( $days_left <= 1 ) {
-            $subject  = '🚨 Utolsó figyelmeztetés: holnap törlődnek hirdetéseid – ' . $site_name;
-            $heading  = '⚠️ Holnap törlünk ' . $count . ' hirdetést';
-            $intro    = '<p style="margin:0 0 14px;">Kedves <strong>' . esc_html( $user->display_name ) . '</strong>,</p>'
-                . '<p style="margin:0 0 14px;">Ez az <strong style="color:#cc0000;">utolsó figyelmeztetés</strong>. '
-                . 'Holnap (<strong>' . esc_html( $delete_date ) . '</strong>) véglegesen törlődnek az alábbi, '
-                . 'csomaglimit miatt inaktív hirdetéseid:</p>'
-                . $listing_block
-                . '<p style="margin:14px 0 0;">A törlés csak csomagfrissítéssel előzhető meg.</p>';
-            $btn_label = '🔓 Csomag frissítése most';
-        } elseif ( $days_left <= 7 ) {
-            $subject  = '⚠️ ' . $days_left . ' nap van hátra — hirdetéseid törlődnek · ' . $site_name;
-            $heading  = $days_left . ' nap múlva törlünk ' . $count . ' hirdetést';
-            $intro    = '<p style="margin:0 0 14px;">Kedves <strong>' . esc_html( $user->display_name ) . '</strong>,</p>'
-                . '<p style="margin:0 0 14px;">Emlékeztetünk, hogy <strong>' . esc_html( (string) $days_left ) . ' napon belül</strong> '
-                . '(legkorábban <strong>' . esc_html( $delete_date ) . '</strong>) törlődnek '
-                . 'az alábbi, csomaglimit miatt szüneteltetett hirdetéseid:</p>'
-                . $listing_block
-                . '<p style="margin:14px 0 0;">A hirdetések visszaállításához frissítsd előfizetésedet.</p>';
-            $btn_label = '🔄 Előfizetés megújítása';
-        } else {
-            $subject  = 'Értesítés: inaktív hirdetéseid ' . $days_left . ' nap múlva törlődnek · ' . $site_name;
-            $heading  = $count . ' hirdetésed ' . $days_left . ' nap múlva törlődhet';
-            $intro    = '<p style="margin:0 0 14px;">Kedves <strong>' . esc_html( $user->display_name ) . '</strong>,</p>'
-                . '<p style="margin:0 0 14px;">Tájékoztatunk, hogy az alábbi, csomaglimit miatt szüneteltetett hirdetéseid '
-                . '<strong>' . esc_html( $delete_date ) . '</strong>-ig törlésre kerülnek, amennyiben addig nem '
-                . 'frissíted előfizetésedet:</p>'
-                . $listing_block
-                . '<p style="margin:14px 0 0;">Még bőven van idő, de érdemes időben gondoskodni a megújításról.</p>';
-            $btn_label = '📦 Előfizetési csomagok';
-        }
-
-        $support_email = 'vadkarvadasz@gmail.com';
-        $body = $intro
-            . '<p style="margin:20px 0 0;padding:12px 16px;background:#f9f9f9;border-left:3px solid #cc0000;border-radius:4px;font-size:13px;color:#6b7280;">'
-            . 'Ha bármilyen kérdésed van, keress minket: '
-            . '<a href="mailto:' . esc_attr( $support_email ) . '" style="color:#cc0000;">' . esc_html( $support_email ) . '</a>'
-            . '</p>';
-
-        return VA_Mailer::send(
-            $user->user_email,
-            $subject,
-            $heading,
-            $body,
-            [ 'label' => $btn_label, 'url' => $buy_url ]
-        );
+        return wp_mail( $user->user_email, $subject, $message );
     }
 
     public static function ajax_admin_set_plan(): void {
