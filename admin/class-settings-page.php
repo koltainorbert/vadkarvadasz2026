@@ -8511,8 +8511,10 @@ class VA_Settings_Page {
 
         <script>
         (function(){
-            var navItems = Array.prototype.slice.call(document.querySelectorAll('.va-pc-nav__item'));
-            var panels = Array.prototype.slice.call(document.querySelectorAll('.va-pc-panel'));
+            var wrap = document.querySelector('.va-pc-wrap');
+            if(!wrap){ return; }
+            var navItems = Array.prototype.slice.call(wrap.querySelectorAll('.va-pc-nav__item'));
+            var panels = Array.prototype.slice.call(wrap.querySelectorAll('.va-pc-panel'));
             var saveBtn = document.getElementById('va-pc-save-all');
             var saveStatus = document.getElementById('va-pc-save-status');
             if(!saveBtn){

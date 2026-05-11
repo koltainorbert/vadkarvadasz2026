@@ -290,7 +290,10 @@ class VA_User_Roles {
             return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0 ];
         }
 
-        $limit = $cfg['monthly_limit'];
+        // Vásárolt kreditek hozzáadása a csomaglimithez
+        $purchased_credits = (int) get_user_meta( $user_id, 'va_listing_credits', true );
+        $limit = $cfg['monthly_limit'] + $purchased_credits;
+
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
             : self::get_monthly_listing_count( $user_id );
@@ -303,7 +306,7 @@ class VA_User_Roles {
         if ( $cfg['basis'] === 'active' ) {
             $reason = "{$label} csomaggal egyszerre legfeljebb {$limit} aktív hirdetésed lehet. Töröl egy meglévőt, vagy frissítsd csomagodat!";
         } else {
-            $reason = "{$label} csomaggal havonta legfeljebb {$limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
+            $reason = "{$label} csomaggal ebben a hónapban legfeljebb {$limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
         }
 
         return [ 'can' => false, 'reason' => $reason, 'used' => $used, 'limit' => $limit ];
