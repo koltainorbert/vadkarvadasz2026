@@ -1020,10 +1020,10 @@ class VA_Settings_Page {
         $default_card_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
 
         $default_card_features = [
-            1 => [ 'Max 1 aktív hirdetés', 'Boost újratöltés: 7 nap' ],
-            2 => [ '5 hirdetés / hó', 'Boost újratöltés: 5 nap' ],
-            3 => [ '10 hirdetés / hó', 'Boost újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés' ],
-            4 => [ '20 hirdetés / hó', 'Boost újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport' ],
+            1 => [ 'Max 1 aktív hirdetés', 'Kiemelési újratöltés: 7 nap' ],
+            2 => [ '5 hirdetés / hó', 'Kiemelési újratöltés: 5 nap' ],
+            3 => [ '10 hirdetés / hó', 'Kiemelési újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés' ],
+            4 => [ '20 hirdetés / hó', 'Kiemelési újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport' ],
         ];
 
         $price_card_opts = [
@@ -3392,7 +3392,7 @@ class VA_Settings_Page {
                         <th>Felhasználó</th>
                         <th>E-mail</th>
                         <th>Csomag</th>
-                        <th>Kiemelési cooldown</th>
+                        <th>Kiemelési újratöltés</th>
                         <th>Hirdetések</th>
                         <th>Regisztráció</th>
                         <th>Műveletek</th>
@@ -3460,7 +3460,7 @@ class VA_Settings_Page {
                                         <input type="number" class="va-upm-plat-limit" min="1" max="9999"
                                                value="<?php echo esc_attr( (string) ( $plat_limit ?: $eff_cfg['monthly_limit'] ) ); ?>" style="width:70px;">
                                     </label>
-                                    <label>Cooldown (nap):
+                                    <label>Kiemelési újratöltés (nap):
                                         <input type="number" class="va-upm-plat-cd" min="1" max="365"
                                                value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:60px;">
                                     </label>
@@ -3489,7 +3489,7 @@ class VA_Settings_Page {
                             </div>
                         </td>
                         <td class="va-upm-td-cd">
-                            <span title="<?php echo esc_attr( (string) $eff_cfg['boost_cooldown'] ); ?> nap cooldown">
+                            <span title="<?php echo esc_attr( (string) $eff_cfg['boost_cooldown'] ); ?> nap kiemelési újratöltés">
                                 ⚡ <?php echo esc_html( (string) $eff_cfg['boost_cooldown'] ); ?> nap
                             </span>
                         </td>
@@ -7455,7 +7455,7 @@ class VA_Settings_Page {
                             }
                             $plan_boost_cd = (int) ( $cfg['boost_cooldown'] ?? 0 );
                             if ( $plan_boost_cd > 0 ) {
-                                $feats[] = 'Boost újratöltés: ' . $plan_boost_cd . ' nap';
+                                $feats[] = 'Kiemelési újratöltés: ' . $plan_boost_cd . ' nap';
                             }
                         }
                         for ( $f = 1; $f <= 5; $f++ ) {
@@ -7794,7 +7794,7 @@ class VA_Settings_Page {
                                 <span class="va-pc-nav__meta">
                                     <span><?php echo esc_html( $limit_label ); ?> limit</span>
                                     <span><?php echo esc_html( $basis_label ); ?></span>
-                                    <span><?php echo esc_html( (string) (int) $plan['boost_cooldown'] ); ?> nap cooldown</span>
+                                    <span><?php echo esc_html( (string) (int) $plan['boost_cooldown'] ); ?> nap kiemelési újratöltés</span>
                                 </span>
                             </button>
                             <?php endforeach; ?>
@@ -7831,7 +7831,7 @@ class VA_Settings_Page {
                             </div>
                             <div class="va-pc-mini-card">
                                 <span class="va-pc-mini-card__value"><?php echo ! empty( $global['boost_enabled'] ) ? 'ON' : 'OFF'; ?></span>
-                                <span class="va-pc-mini-card__label">Boost rendszer</span>
+                                <span class="va-pc-mini-card__label">Kiemelés rendszer</span>
                             </div>
                             <div class="va-pc-mini-card">
                                 <span class="va-pc-mini-card__value"><?php echo esc_html( (string) (int) $global['boost_badge_window'] ); ?></span>
@@ -7870,7 +7870,7 @@ class VA_Settings_Page {
                                 <span class="va-pc-token">Slug: <?php echo esc_html( $slug ); ?></span>
                                 <span class="va-pc-token" data-summary-limit><?php echo esc_html( $limit_display ); ?> limit</span>
                                 <span class="va-pc-token" data-summary-basis><?php echo esc_html( $basis_label ); ?></span>
-                                <span class="va-pc-token" data-summary-cooldown><?php echo esc_html( (string) (int) $plan['boost_cooldown'] ); ?> nap cooldown</span>
+                                <span class="va-pc-token" data-summary-cooldown><?php echo esc_html( (string) (int) $plan['boost_cooldown'] ); ?> nap kiemelési újratöltés</span>
                             </div>
                         </div>
 
@@ -7884,7 +7884,7 @@ class VA_Settings_Page {
                                 <strong class="va-pc-overview-card__value" data-summary-limit-card><?php echo esc_html( $limit_display ); ?></strong>
                             </div>
                             <div class="va-pc-overview-card">
-                                <span class="va-pc-overview-card__label">Cooldown</span>
+                                <span class="va-pc-overview-card__label">Kiemelési újratöltés</span>
                                 <strong class="va-pc-overview-card__value" data-summary-cooldown-card><?php echo esc_html( (string) (int) $plan['boost_cooldown'] ); ?> nap</strong>
                             </div>
                             <div class="va-pc-overview-card">
@@ -7965,13 +7965,13 @@ class VA_Settings_Page {
                             <section class="va-pc-card">
                                 <div class="va-pc-card__head">
                                     <div>
-                                        <h2 class="va-pc-card__title">Boost / Kiemelés</h2>
-                                        <p class="va-pc-card__text">A cooldown csomag-specifikus. A globális badge és kapcsoló a külön panelen állítható.</p>
+                                        <h2 class="va-pc-card__title">Kiemelés / Boost</h2>
+                                        <p class="va-pc-card__text">A kiemelési újratöltés csomag-specifikus. A globális badge és kapcsoló a külön panelen állítható.</p>
                                     </div>
                                 </div>
                                 <div class="va-pc-form-grid va-pc-form-grid--compact">
                                     <label class="va-pc-field">
-                                        <span class="va-pc-field__label">Cooldown</span>
+                                        <span class="va-pc-field__label">Kiemelési újratöltés</span>
                                         <span class="va-pc-field__hint">napokban mérve</span>
                                         <input type="number" class="va-pc-input va-pc-input--number" data-key="boost_cooldown" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( (string) (int) $plan['boost_cooldown'] ); ?>" min="1" max="365">
                                     </label>
