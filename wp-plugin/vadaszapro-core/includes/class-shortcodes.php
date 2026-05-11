@@ -146,8 +146,10 @@ class VA_Shortcodes {
                 'badge'    => (string) get_option( "va_pc_{$n}_badge",     '' ),
                 'featured' => get_option( "va_pc_{$n}_featured", '0' ) === '1',
                 'free'     => get_option( "va_pc_{$n}_free", $n === 1 ? '1' : '0' ) === '1',
-                'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
-                'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
+                'btn_text'   => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
+                'btn_url'    => (string) get_option( "va_pc_{$n}_btn_url",   '' ),
+                'free_label' => (string) get_option( "va_pc_{$n}_free_label", 'Ingyenes' ),
+                'icon'       => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
             ];
             // Lista sorok: uj tarolas (va_pc_{n}_features), visszafele kompatibilis fallbackkel.
             $feats = get_option( "va_pc_{$n}_features", null );
@@ -267,7 +269,7 @@ class VA_Shortcodes {
                     </div>
                     <div class="va-pkg-price-block">
                         <?php if ( $is_free ): ?>
-                        <div class="va-pkg-price va-pkg-price--free">Ingyenes</div>
+                        <div class="va-pkg-price va-pkg-price--free"><?php echo esc_html( $card['free_label'] ); ?></div>
                         <div class="va-pkg-unit">regisztrációval</div>
                         <?php elseif ( $card['badge'] ): ?>
                         <div class="va-pkg-price"><?php echo number_format( (int) $pkg['total'], 0, ',', ' ' ); ?><span>Ft</span></div>
@@ -290,12 +292,18 @@ class VA_Shortcodes {
                     <?php elseif ( $is_locked_by_active_plan ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Csak magasabb csomag vehető</button>
                     <?php else: ?>
-                    <?php $fallback_checkout_url = add_query_arg([
-                        'va_buy_credits_start' => '1',
-                        'qty'                  => $qty,
-                        'return_to'            => $return_to,
-                        'nonce'                => wp_create_nonce( 'va_buy_credits' ),
-                    ], home_url( '/' ) ); ?>
+                    <?php
+                    if ( $card['btn_url'] !== '' ) {
+                        $fallback_checkout_url = $card['btn_url'];
+                    } else {
+                        $fallback_checkout_url = add_query_arg([
+                            'va_buy_credits_start' => '1',
+                            'qty'                  => $qty,
+                            'return_to'            => $return_to,
+                            'nonce'                => wp_create_nonce( 'va_buy_credits' ),
+                        ], home_url( '/' ) );
+                    }
+                    ?>
                     <a href="<?php echo esc_url( $fallback_checkout_url ); ?>" class="va-pkg-buy-btn" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
                         <?php echo esc_html( $card['btn_text'] ); ?>
                     </a>
