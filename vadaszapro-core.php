@@ -161,10 +161,16 @@ function va_run_plan_expiry_check(): void {
             continue;
         }
 
-        // Lejárt → admin email (egyszer, jelöléssel)
+        // Lejárt → user + admin email (egyszer, jelöléssel)
         if ( $expires_at < $now ) {
-            $notified = (string) get_user_meta( $user_id, 'va_plan_expired_admin_notified', true );
-            if ( $notified !== '1' ) {
+            $user_notified = (string) get_user_meta( $user_id, 'va_plan_expired_user_notified', true );
+            if ( $user_notified !== '1' ) {
+                VA_Mailer::send_plan_expired_user( $user_id );
+                update_user_meta( $user_id, 'va_plan_expired_user_notified', '1' );
+            }
+
+            $admin_notified = (string) get_user_meta( $user_id, 'va_plan_expired_admin_notified', true );
+            if ( $admin_notified !== '1' ) {
                 VA_Mailer::send_plan_expired_admin( $user_id );
                 update_user_meta( $user_id, 'va_plan_expired_admin_notified', '1' );
             }
@@ -174,15 +180,12 @@ function va_run_plan_expiry_check(): void {
         // Visszaszámláló: napok száma (felfelé kerekítve)
         $days_left = (int) ceil( ( $expires_at - $now ) / DAY_IN_SECONDS );
 
-        // Figyelmeztetések: 30 nap, 7 nap, 1 nap – mindegyik egyszer megy ki
-        foreach ( [ 30, 7, 1 ] as $threshold ) {
-            if ( $days_left <= $threshold ) {
-                $sent_key = 'va_plan_expiry_warned_' . $threshold;
-                if ( ! get_user_meta( $user_id, $sent_key, true ) ) {
-                    VA_Mailer::send_plan_expiry_warning( $user_id, $days_left );
-                    update_user_meta( $user_id, $sent_key, '1' );
-                }
-                break; // Legszűkebb küszöb ment, nem küldjük a tágabbakat is
+        // Figyelmeztetések: pontosan 30 / 7 / 1 nappal lejárat előtt.
+        if ( in_array( $days_left, [ 30, 7, 1 ], true ) ) {
+            $sent_key = 'va_plan_expiry_warned_' . $days_left;
+            if ( ! get_user_meta( $user_id, $sent_key, true ) ) {
+                VA_Mailer::send_plan_expiry_warning( $user_id, $days_left );
+                update_user_meta( $user_id, $sent_key, '1' );
             }
         }
     }

@@ -2,6 +2,45 @@
 
 ---
 
+## 2026. 05. 11. – Session #326 (Csomag lejárati emailek: teljes paraméterezhetőség)
+
+### Igeny
+- A csomag lejárati emaileket adminból egyenként, minden paraméterrel lehessen szerkeszteni.
+- Külön kezelhető legyen: 30 nap, 7 nap, 1 nap, lejárt user, lejárt admin.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`:
+  - új optionok regisztrálva mind az 5 email típushoz:
+    - tárgy, email cím (heading), törzs, gomb felirat, gomb URL,
+  - új mezők az `Altalanos beallitasok -> E-mail sablon` szekcióban.
+
+- [x] `includes/class-mailer.php`:
+  - új template helper-ek (`get_tpl`, `tpl_replace`, `text_to_html`),
+  - `send_plan_expiry_warning()` most az adminban szerkesztett mezőkből épít,
+  - új `send_plan_expired_user()` metódus,
+  - `send_plan_expired_admin()` is teljesen option-alapú lett.
+
+- [x] `vadaszapro-core.php`:
+  - lejáratkor már user + admin értesítés megy (egyszeri flag-ekkel),
+  - figyelmeztetések pontosan a 30 / 7 / 1. napon mennek ki.
+
+- [x] `includes/class-ajax.php`, `includes/class-user-roles.php`:
+  - megújítás/csomagváltás esetén a lejárati email flag-ek törlődnek,
+  - új: `va_plan_expired_user_notified` reset.
+
+### Eredmeny
+- Az összes csomag lejárati email most már külön-külön és teljesen szerkeszthető adminból.
+- Nem fix szövegek futnak többé, minden fontos paraméter UI-ból szabályozható.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-mailer.php`
+- `vadaszapro-core.php`
+- `includes/class-ajax.php`
+- `includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #325 (Kartya az alap + userenkenti visszaallitas gomb)
 
 ### Igeny
