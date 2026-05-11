@@ -3195,6 +3195,87 @@ class VA_Settings_Page {
                 <div class="va-upm-sync-meta">Utolsó Stripe szinkron: <?php echo esc_html( (string) $last_sync['ran_at'] ); ?> · <?php echo esc_html( (string) ( $last_sync['imported'] ?? 0 ) ); ?> új rekord · <?php echo esc_html( (string) ( $last_sync['events'] ?? 0 ) ); ?> esemény</div>
             <?php endif; ?>
 
+            <!-- ── Törlési riport (30/7/1 napos státusz) ── -->
+            <?php
+            $retention_days = max( 1, absint( get_option( 'va_plan_suspended_retention_days', 90 ) ) );
+            $now_ts_rpt = current_time( 'timestamp' );
+            $rpt_q = new WP_Query([
+                'post_type'           => 'va_listing',
+                'post_status'         => 'private',
+                'fields'              => 'ids',
+                'posts_per_page'      => 100,
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'meta_query'          => [[
+                    'key'     => 'va_suspended_by_plan',
+                    'value'   => '1',
+                    'compare' => '=',
+                ]],
+            ]);
+            $rpt_buckets = [ 1 => [], 7 => [], 30 => [] ];
+            foreach ( $rpt_q->posts as $rpt_pid ) {
+                $rpt_pid   = (int) $rpt_pid;
+                $susp_at   = (int) get_post_meta( $rpt_pid, 'va_suspended_by_plan_at', true );
+                if ( $susp_at <= 0 ) continue;
+                $delete_at  = $susp_at + ( $retention_days * DAY_IN_SECONDS );
+                $secs_left  = max( 0, $delete_at - $now_ts_rpt );
+                $days_left  = (int) ceil( $secs_left / DAY_IN_SECONDS );
+                $author_id  = (int) get_post_field( 'post_author', $rpt_pid );
+                $entry = [
+                    'post_id'    => $rpt_pid,
+                    'post_title' => get_the_title( $rpt_pid ),
+                    'author_id'  => $author_id,
+                    'days_left'  => $days_left,
+                    'delete_at'  => $delete_at,
+                ];
+                if ( $days_left <= 1 ) {
+                    $rpt_buckets[1][] = $entry;
+                } elseif ( $days_left <= 7 ) {
+                    $rpt_buckets[7][] = $entry;
+                } elseif ( $days_left <= 30 ) {
+                    $rpt_buckets[30][] = $entry;
+                }
+            }
+            $rpt_total = count( $rpt_buckets[1] ) + count( $rpt_buckets[7] ) + count( $rpt_buckets[30] );
+            if ( $rpt_total > 0 ):
+            ?>
+            <div class="va-upm-report-box">
+                <details class="va-upm-report-disc" <?php echo $rpt_total > 0 ? 'open' : ''; ?>>
+                    <summary class="va-upm-report-head">
+                        <span>⚠️ <strong>Törlési riport</strong> — <?php echo esc_html( (string) $rpt_total ); ?> hirdetés közelít a törlési határidőhöz</span>
+                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
+                    </summary>
+                    <div class="va-upm-report-body">
+                    <?php
+                    $rpt_labels = [ 1 => '🔴 1 napon belül törlődik', 7 => '🟠 7 napon belül törlődik', 30 => '🟡 30 napon belül törlődik' ];
+                    foreach ( [ 1, 7, 30 ] as $threshold ):
+                        if ( empty( $rpt_buckets[ $threshold ] ) ) continue;
+                        ?>
+                        <div class="va-upm-report-group">
+                            <div class="va-upm-report-group-title"><?php echo esc_html( $rpt_labels[ $threshold ] ); ?> <span class="va-upm-report-count"><?php echo esc_html( (string) count( $rpt_buckets[ $threshold ] ) ); ?> hirdetés</span></div>
+                            <table class="va-upm-report-table">
+                                <thead><tr><th>Hirdetés</th><th>Tulajdonos</th><th>Napok hátra</th><th>Törlés időpontja</th><th></th></tr></thead>
+                                <tbody>
+                                <?php foreach ( $rpt_buckets[ $threshold ] as $rpt_entry ):
+                                    $rpt_user = get_userdata( $rpt_entry['author_id'] );
+                                ?>
+                                <tr>
+                                    <td><?php echo esc_html( $rpt_entry['post_title'] ); ?></td>
+                                    <td><?php echo $rpt_user ? esc_html( $rpt_user->display_name . ' (' . $rpt_user->user_email . ')' ) : '—'; ?></td>
+                                    <td><strong style="color:<?php echo $threshold === 1 ? '#ff4444' : ( $threshold === 7 ? '#ffaa00' : '#ffd700' ); ?>"><?php echo esc_html( (string) $rpt_entry['days_left'] ); ?> nap</strong></td>
+                                    <td style="font-size:11px;color:rgba(255,255,255,.5)"><?php echo esc_html( date_i18n( 'Y.m.d H:i', $rpt_entry['delete_at'] ) ); ?></td>
+                                    <td><a href="<?php echo esc_url( get_edit_post_link( $rpt_entry['post_id'] ) ); ?>" class="button button-small" target="_blank">Szerk.</a></td>
+                                </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                </details>
+            </div>
+            <?php endif; ?>
+
             <!-- ── Felhasználók táblázat ── -->
             <table class="va-upm-table">
                 <thead>

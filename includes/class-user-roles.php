@@ -659,6 +659,24 @@ class VA_User_Roles {
                 if ( ! self::send_plan_suspended_warning_email( (int) $user_id, (int) $days, (int) $payload['count'], (int) $payload['earliest_ts'] ) ) {
                     continue;
                 }
+                // E-mail küldési napló mentése
+                $email_log = get_user_meta( (int) $user_id, 'va_email_send_log', true );
+                if ( ! is_array( $email_log ) ) {
+                    $email_log = [];
+                }
+                $email_log[] = [
+                    'type'         => 'plan_warning',
+                    'sent_at'      => $now_ts,
+                    'days_warning' => (int) $days,
+                    'post_count'   => (int) $payload['count'],
+                    'post_ids'     => $payload['post_ids'],
+                    'earliest_delete_ts' => (int) $payload['earliest_ts'],
+                ];
+                if ( count( $email_log ) > 100 ) {
+                    $email_log = array_slice( $email_log, -100 );
+                }
+                update_user_meta( (int) $user_id, 'va_email_send_log', $email_log );
+
                 foreach ( $payload['post_ids'] as $post_id ) {
                     update_post_meta( (int) $post_id, 'va_plan_suspend_warn_' . (int) $days, $now_ts );
                 }
