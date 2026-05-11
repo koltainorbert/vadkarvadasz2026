@@ -7,6 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Mailer {
 
+  const BRAND_NAME = 'Vadkár Vadász';
+
     /**
      * HTML email küldése branded template-tel.
      *
@@ -38,12 +40,12 @@ class VA_Mailer {
         return $opt ?: $email;
     }
     public static function set_from_name( string $name ): string {
-        return get_option( 'va_site_name', 'VadászApró' );
+      return self::BRAND_NAME;
     }
 
     /* ─── HTML template builder ─────────────────────────── */
     private static function build( string $heading, string $body_html, array $button ): string {
-        $site_name  = esc_html( get_option( 'va_site_name', 'VadászApró' ) );
+        $site_name  = esc_html( self::BRAND_NAME );
         $logo_url   = esc_url( get_option( 'va_header_logo_url', '' ) );
         $site_url   = esc_url( home_url( '/' ) );
         $year       = date( 'Y' );

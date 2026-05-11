@@ -728,7 +728,7 @@ class VA_User_Roles {
             return false;
         }
 
-        $site_name = wp_specialchars_decode( get_option( 'va_site_name', get_bloginfo( 'name' ) ), ENT_QUOTES );
+        $site_name = 'Vadkár Vadász';
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
         $delete_date = date_i18n( 'Y. F j.', $earliest_delete_ts );
