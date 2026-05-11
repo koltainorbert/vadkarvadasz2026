@@ -1019,6 +1019,13 @@ class VA_Settings_Page {
         $default_card_badges = [ 1 => '', 2 => '–10%', 3 => '–20%', 4 => '–30%' ];
         $default_card_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
 
+        $default_card_features = [
+            1 => [ '', '', '', '', '' ],
+            2 => [ '', '', '', '', '' ],
+            3 => [ 'Hirdetés statisztika hozzáférés', '', '', '', '' ],
+            4 => [ 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport', '', '', '' ],
+        ];
+
         $price_card_opts = [
             'va_pc_eyebrow'  => 'Átlátható csomagok',
             'va_pc_title'    => 'Rang Alapú Vásárlás',
@@ -1038,6 +1045,9 @@ class VA_Settings_Page {
             $price_card_opts[ "va_pc_{$n}_free"      ] = ( $n === 1 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_btn_text"  ] = ( $n === 1 ) ? 'Mindenki számára elérhető' : 'Vásárlás →';
             $price_card_opts[ "va_pc_{$n}_theme"     ] = $default_card_themes[ $n ]  ?? 'basic';
+            for ( $f = 1; $f <= 5; $f++ ) {
+                $price_card_opts[ "va_pc_{$n}_feat_{$f}" ] = $default_card_features[ $n ][ $f - 1 ] ?? '';
+            }
         }
         foreach ( $price_card_opts as $key => $default ) {
             self::$defaults[ $key ] = $default;
