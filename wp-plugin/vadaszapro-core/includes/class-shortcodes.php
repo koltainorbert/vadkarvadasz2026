@@ -148,6 +148,13 @@ class VA_Shortcodes {
                 'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[$n] ),
                 'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ) ),
             ];
+            // Extra felirat sorok
+            $feats = [];
+            for ( $f = 1; $f <= 5; $f++ ) {
+                $v = trim( (string) get_option( "va_pc_{$n}_feat_{$f}", '' ) );
+                if ( $v !== '' ) $feats[] = $v;
+            }
+            $rank_cards[ array_key_last( $rank_cards ) ]['feats'] = $feats;
         }
 
         ob_start();
@@ -265,12 +272,9 @@ class VA_Shortcodes {
                         <?php if ( $plan_boost_cd > 0 ): ?>
                         <li>Boost újratöltés: <?php echo esc_html( (string) $plan_boost_cd ); ?> nap</li>
                         <?php endif; ?>
-                        <?php if ( $slug === 'gold' || $slug === 'platinum' ): ?>
-                        <li>Hirdetés statisztika hozzáférés</li>
-                        <?php endif; ?>
-                        <?php if ( $slug === 'platinum' ): ?>
-                        <li>Geo megtekintési riport</li>
-                        <?php endif; ?>
+                        <?php foreach ( $card['feats'] as $feat_item ): ?>
+                        <li><?php echo esc_html( $feat_item ); ?></li>
+                        <?php endforeach; ?>
                     </ul>
                     <?php if ( $is_active ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Aktív csomag</button>
