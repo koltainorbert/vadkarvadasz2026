@@ -68,6 +68,17 @@ class VA_User_Roles {
             'description'   => 'Egyedi feltételek – admin határozza meg',
             'seller_label'  => '',      // egyedi feladó rang címke (pl. Kereskedő)
         ],
+        'custom'   => [
+            'label'         => 'Egyedi',
+            'color'         => '#ff2b2b',
+            'bg'            => 'rgba(255,43,43,.14)',
+            'icon'          => '🏷️',
+            'monthly_limit' => 20,      // felülírja va_plan_listing_limit
+            'boost_cooldown'=> 3,       // felülírja va_plan_boost_cooldown
+            'basis'         => 'monthly',
+            'description'   => 'Ügyfélspecifikus kategória – minden paraméter egyedileg állítható',
+            'seller_label'  => '',      // egyedi feladó rang címke (pl. Céges partner)
+        ],
     ];
 
     /* ── Boot ───────────────────────────────────────────────── */
@@ -191,6 +202,7 @@ class VA_User_Roles {
             'silver'   => 1,
             'gold'     => 2,
             'platinum' => 3,
+            'custom'   => 4,
         ];
         return $order[ sanitize_key( $plan ) ] ?? 0;
     }
@@ -238,7 +250,7 @@ class VA_User_Roles {
             return $cfg;
         }
 
-        if ( $plan === 'platinum' && $user_id > 0 ) {
+        if ( in_array( $plan, [ 'platinum', 'custom' ], true ) && $user_id > 0 ) {
             $custom_limit = (int) get_user_meta( $user_id, 'va_plan_listing_limit', true );
             $custom_cd    = (int) get_user_meta( $user_id, 'va_plan_boost_cooldown', true );
             if ( $custom_limit > 0 ) $cfg['monthly_limit']  = $custom_limit;
@@ -490,7 +502,7 @@ class VA_User_Roles {
                 'price_monthly'  => sanitize_text_field( $d['price_monthly']     ?? '' ),
                 'price_yearly'   => sanitize_text_field( $d['price_yearly']      ?? '' ),
                 'badge_text'     => sanitize_text_field( $d['badge_text']        ?? '' ),
-                'seller_label'   => $slug === 'platinum' ? sanitize_text_field( $d['seller_label'] ?? '' ) : '',
+                'seller_label'   => in_array( $slug, [ 'platinum', 'custom' ], true ) ? sanitize_text_field( $d['seller_label'] ?? '' ) : '',
             ];
         }
 
@@ -799,6 +811,7 @@ class VA_User_Roles {
         $custom_cd    = absint( $_POST['custom_boost_cooldown'] ?? 0 );
         $custom_credits = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
         $plan_note    = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
+        $seller_label = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
 
         $all_plans = self::get_all_plan_configs();
         if ( ! $target_uid || ! isset( $all_plans[ $plan ] ) || $plan === '_global' ) {
@@ -817,7 +830,7 @@ class VA_User_Roles {
         update_user_meta( $target_uid, 'va_plan', $plan );
         update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
 
-        if ( $plan === 'platinum' ) {
+        if ( in_array( $plan, [ 'platinum', 'custom' ], true ) ) {
             if ( $custom_lim > 0 ) {
                 update_user_meta( $target_uid, 'va_plan_listing_limit', $custom_lim );
             }
@@ -826,7 +839,10 @@ class VA_User_Roles {
             }
             if ( $plan_note !== '' ) {
                 update_user_meta( $target_uid, 'va_plan_note', $plan_note );
+            } else {
+                delete_user_meta( $target_uid, 'va_plan_note' );
             }
+            update_user_meta( $target_uid, 'va_seller_label', $seller_label );
         }
 
         // Csomagváltás utáni limit érvényesítés (felesleges hirdetések felfüggesztése)
