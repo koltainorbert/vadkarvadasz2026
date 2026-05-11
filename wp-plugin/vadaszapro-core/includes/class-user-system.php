@@ -385,6 +385,7 @@ class VA_User_System {
             if ( $action === 'delete_listing'   ) self::process_delete_listing();
             if ( $action === 'delete_profile'   ) self::process_delete_profile();
             if ( $action === 'suspend_listing'  ) self::process_suspend_listing();
+            if ( $action === 'set_primary_listing' ) self::process_set_primary_listing();
         }
     }
 
@@ -1038,6 +1039,40 @@ class VA_User_System {
     }
 
     /* ── Hirdetés felfüggesztés / újraindítás (Gold, Platinum) ── */
+    private static function process_set_primary_listing(): void {
+        if ( ! is_user_logged_in() ) return;
+        if ( ! isset( $_POST['va_primary_listing_nonce'] ) ||
+             ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['va_primary_listing_nonce'] ) ), 'va_primary_listing' ) ) {
+            va_set_flash( 'error', 'Érvénytelen kérés.' );
+            return;
+        }
+
+        $user_id = get_current_user_id();
+        $post_id = (int) ( $_POST['listing_id'] ?? 0 );
+        if ( $post_id <= 0 ) {
+            va_set_flash( 'error', 'Érvénytelen hirdetés azonosító.' );
+            wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
+            exit;
+        }
+
+        $post = get_post( $post_id );
+        if ( ! $post || (int) $post->post_author !== $user_id || $post->post_type !== 'va_listing' ) {
+            va_set_flash( 'error', 'Nincs jogosultságod ehhez a hirdetéshez.' );
+            wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
+            exit;
+        }
+
+        update_user_meta( $user_id, 'va_primary_listing_id', $post_id );
+        delete_transient( 'va_enforce_ok_' . $user_id );
+        if ( class_exists( 'VA_User_Roles' ) && method_exists( 'VA_User_Roles', 'enforce_plan_limits' ) ) {
+            VA_User_Roles::enforce_plan_limits( $user_id );
+        }
+
+        va_set_flash( 'success', 'Aktív hirdetésként kiválasztva: ' . get_the_title( $post_id ) );
+        wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
+        exit;
+    }
+
     private static function process_suspend_listing(): void {
         if ( ! is_user_logged_in() ) return;
         if ( ! isset( $_POST['va_suspend_listing_nonce'] ) ||
