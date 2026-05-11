@@ -30,6 +30,7 @@ $user_plan    = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( 
 $plan_configs = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::PLANS : [];
 $plan_cfg     = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_config( $user_plan, $user->ID ) : [];
 $plan_check   = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::can_post_listing( $user->ID ) : [ 'used' => 0, 'limit' => 0 ];
+$preferred_active_listing_id = (int) get_user_meta( $user->ID, 'va_primary_listing_id', true );
 $boost_nonce  = wp_create_nonce( 'va_user_nonce' );
 $ajax_url     = admin_url( 'admin-ajax.php' );
 $seller_label = get_user_meta( $user->ID, 'va_seller_label', true );
@@ -874,6 +875,9 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                         <?php if ( get_post_meta( $l->ID, 'va_featured', true ) === '1' ): ?>
                                         <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(135deg,#3a2800,#1e1400);color:#ffc840;border:1px solid rgba(255,180,0,.5);box-shadow:0 0 8px rgba(255,160,0,.2);padding:2px 7px;border-radius:20px;"><svg width="9" height="9" viewBox="0 0 24 24" fill="#ffc840" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Kiemelt</span>
                                         <?php endif; ?>
+                                        <?php if ( $preferred_active_listing_id === (int) $l->ID ): ?>
+                                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(135deg,#1d3200,#152400);color:#a8ff7a;border:1px solid rgba(130,220,80,.55);padding:2px 7px;border-radius:20px;">Kijelölt aktív</span>
+                                        <?php endif; ?>
                                     </div>
                                     <div style="margin-top:3px;font-size:11px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                                     <?php if ( $suspended_by_plan ): ?>
@@ -1004,6 +1008,12 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             ?>
                             <?php if ( $suspended_by_plan ): ?>
                             <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:nowrap;">
+                                <form method="post" style="margin:0;">
+                                    <?php wp_nonce_field( 'va_primary_listing', 'va_primary_listing_nonce' ); ?>
+                                    <input type="hidden" name="va_action" value="set_primary_listing">
+                                    <input type="hidden" name="listing_id" value="<?php echo esc_attr( (string) $l->ID ); ?>">
+                                    <button type="submit" class="va-btn va-btn--sm" style="background:rgba(90,220,90,.12);border:1px solid rgba(90,220,90,.45);color:#95ff95;white-space:nowrap;">Legyen ez az aktív</button>
+                                </form>
                                 <a href="<?php echo esc_url( $buy_url ); ?>" class="va-btn va-btn--sm" style="background:linear-gradient(135deg,rgba(255,60,60,.25),rgba(200,0,0,.25));border:1px solid rgba(255,60,60,.5);color:#ff6060;white-space:nowrap;font-weight:600;">Kredit vásárlás →</a>
                                 <form method="post" style="margin:0;" onsubmit="return confirm('Biztosan törlöd ezt a hirdetést?');">
                                     <?php wp_nonce_field( 'va_delete_listing', 'va_delete_listing_nonce' ); ?>
@@ -1014,6 +1024,14 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             </div>
                             <?php else: ?>
                             <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:nowrap;">
+                                <?php if ( $plan_suspended_count > 0 ): ?>
+                                <form method="post" style="margin:0;">
+                                    <?php wp_nonce_field( 'va_primary_listing', 'va_primary_listing_nonce' ); ?>
+                                    <input type="hidden" name="va_action" value="set_primary_listing">
+                                    <input type="hidden" name="listing_id" value="<?php echo esc_attr( (string) $l->ID ); ?>">
+                                    <button type="submit" class="va-btn va-btn--sm" style="background:rgba(90,220,90,.12);border:1px solid rgba(90,220,90,.45);color:#95ff95;white-space:nowrap;">Legyen ez az aktív</button>
+                                </form>
+                                <?php endif; ?>
                                 <a href="<?php echo esc_url( $edit_url ); ?>" class="va-btn va-btn--sm" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;">Szerkesztés</a>
                                 <?php if ( $l->post_status === 'publish' ): ?>
                                 <button class="va-refresh-btn va-btn va-btn--sm"
