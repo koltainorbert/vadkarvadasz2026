@@ -194,9 +194,9 @@ class VA_Shortcodes {
                     <?php if ( $plan_remaining < 0 ): ?>
                     <strong class="va-credits-count">Korlátlan (plan)</strong>
                     <?php elseif ( $plan_remaining > 0 && $paid_credits > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> plan + <?php echo esc_html( (string) $paid_credits ); ?> vásárolt = <?php echo esc_html( (string) $total_credits ); ?> db</strong>
+                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> db csomagkeret + <?php echo esc_html( (string) $paid_credits ); ?> vásárolt kredit = <?php echo esc_html( (string) $total_credits ); ?> db</strong>
                     <?php elseif ( $plan_remaining > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> db (plan keretből)</strong>
+                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> db (csomagkeretből)</strong>
                     <?php elseif ( $paid_credits > 0 ): ?>
                     <strong class="va-credits-count"><?php echo esc_html( (string) $paid_credits ); ?> db (vásárolt kredit)</strong>
                     <?php else: ?>
