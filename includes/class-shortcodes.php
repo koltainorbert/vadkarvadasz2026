@@ -285,8 +285,15 @@ class VA_Shortcodes {
                         <li><?php echo esc_html( $feat_item ); ?></li>
                         <?php endforeach; ?>
                     </ul>
-                    <?php if ( $is_active ): ?>
+                    <?php
+                    $custom_btn_url = trim( (string) ( $card['btn_url'] ?? '' ) );
+                    if ( $is_active ):
+                    ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Aktív csomag</button>
+                    <?php elseif ( $custom_btn_url !== '' ): ?>
+                    <a href="<?php echo esc_url( $custom_btn_url ); ?>" class="va-pkg-buy-btn<?php echo $is_free ? ' va-pkg-buy-btn--free' : ''; ?>" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
+                        <?php echo esc_html( $card['btn_text'] ); ?>
+                    </a>
                     <?php elseif ( $is_free ): ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--free" disabled><?php echo esc_html( $card['btn_text'] ); ?></button>
                     <?php elseif ( $is_locked_by_active_plan ): ?>
@@ -319,12 +326,17 @@ class VA_Shortcodes {
 
     /* ── Plan SVG ikon ──────────────────────────────────────── */
     private static function get_plan_icon( string $slug ): string {
+        $slug = strtolower( trim( $slug ) );
         $icons = [
             'basic'    => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M21 8H3"/><path d="M12 8V21"/><path d="M12 8c0-2 1.5-4 3-4s2 2 0 4"/><path d="M12 8c0-2-1.5-4-3-4S7 6 9 8"/></svg>',
             'silver'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/></svg>',
             'gold'     => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
             'platinum' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-2-2.5-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1.5 6-4z"/><path d="M12 12c2 2.5 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.5-6 4z"/></svg>',
+            'company'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l-2 3 2 3H4z"/><path d="M6 10v10"/><path d="M14 10v10"/><path d="M3 20h14"/></svg>',
         ];
+        if ( in_array( $slug, [ 'company', 'business', 'corporate', 'ceges', 'ceg', 'custom', 'egyedi' ], true ) ) {
+            return $icons['company'];
+        }
         return $icons[ $slug ] ?? $icons['basic'];
     }
 }
