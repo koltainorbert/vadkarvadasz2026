@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 11. – Session #315 (Árkártya listaelemek teljes szerkeszthetőség + korlátlan `+` sor)
+
+### Mi volt a cel
+- Az arkaritya lista osszes sora teljesen adminbol szerkesztheto legyen
+- Ne maradjon automatikusan generalt, nem szerkesztheto felirat a frontend kartyan
+- Lehessen tetszoleges szamu uj lista sort hozzaadni `+` gombbal
+
+### Mit keszitettem [x]
+- [x] Uj tarolasi forma: `va_pc_{n}_features` tomb opcio (n=1..8)
+- [x] Dinamikus admin lista editor: `+ Uj sor` hozzaadas, `-` torles, korlatlan elemszam
+- [x] Frontenden a kartya lista mar csak szerkesztheto sorokbol renderelodik (nem fixen kodolt)
+- [x] Visszafele kompatibilis fallback: regi `feat_1..5` es korabbi auto sorok beolvasasa, hogy ne vesszen el tartalom
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck rendben (0 hiba)
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
+---
+
 ## 2026. 05. 11. – Session #314 (Admin felhasznaloi kredit keret allitas)
 
 ### Mi volt a cel
