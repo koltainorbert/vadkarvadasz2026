@@ -1684,9 +1684,9 @@ class VA_Ajax {
             // Egyedi csomagoknál a per-user duration_days a mérvadó, egyébként a globális (default: 365 nap).
             if ( $new_plan === 'custom' ) {
                 $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
-                $duration_days = $custom_dur > 0 ? $custom_dur : max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+                $duration_days = $custom_dur > 0 ? $custom_dur : 365; // custom: admin állítja, többi: 1 év
             } else {
-                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+                $duration_days = 365; // 1 éves lejárat minden csomagra
             }
             update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
             // Lejárati figyelmeztető flagek törlése az új ciklus kezdetekor.

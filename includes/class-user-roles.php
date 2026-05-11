@@ -269,7 +269,7 @@ class VA_User_Roles {
 
             // Legacy user migracio: ha nincs lejárat, kapjon alapértelmezett ciklust.
             if ( $expires_at <= 0 ) {
-                $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+                $duration_days = 365; // 1 éves lejárat minden csomagra
                 $expires_at = time() + ( $duration_days * DAY_IN_SECONDS );
                 update_user_meta( $user_id, 'va_plan_expires_at', $expires_at );
             }
@@ -903,7 +903,7 @@ class VA_User_Roles {
                 // Egyéb csomagoknál globális default ha nincs lejárat
                 $existing_exp = (int) get_user_meta( $target_uid, 'va_plan_expires_at', true );
                 if ( $existing_exp <= 0 ) {
-                    $dur = max( 1, absint( get_option( 'va_plan_duration_days', 365 ) ) );
+                    $dur = 365; // 1 éves lejárat minden csomagra
                     update_user_meta( $target_uid, 'va_plan_expires_at', time() + ( $dur * DAY_IN_SECONDS ) );
                 }
             }
