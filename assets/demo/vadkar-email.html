@@ -157,6 +157,120 @@ document.getElementById('f2').srcdoc = build(
    ${contactBox()}`,
   '🔓 Csomag frissítése most'
 );
+
+/* ── CSOMAG LEJÁRAT EMAILEK ─────────────────────────────────── */
+
+function buildPlanWarning(heading, bodyHtml, btnLabel, btnUrl){
+  return `<!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${heading}</title></head>
+  <body style="margin:0;padding:0;background:#f4f4f5;font-family:system-ui,-apple-system,Segoe UI,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f5;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+        <tr>
+          <td style="background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);border-radius:12px 12px 0 0;padding:24px 32px;text-align:center;">
+            <a href="${SITE_URL}" style="text-decoration:none;">${logoBlock()}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#ffffff;padding:36px 40px 28px;border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;">
+            <h1 style="margin:0 0 20px;font-size:22px;font-weight:800;color:#0a0a0a;line-height:1.3;">${heading}</h1>
+            <div style="font-size:15px;line-height:1.7;color:#374151;">${bodyHtml}</div>
+            <div style="text-align:center;margin:28px 0 8px;">
+              <a href="${btnUrl}" style="display:inline-block;background:#cc0000;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 32px;border-radius:8px;letter-spacing:0.3px;">${btnLabel}</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#0a0a0a;border-radius:0 0 12px 12px;padding:20px 32px;text-align:center;">
+            <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.45);">
+              © ${YEAR} <a href="${SITE_URL}" style="color:rgba(255,255,255,0.6);text-decoration:none;">${SITE}</a> &bull; Ezt az emailt automatikusan küldte a rendszer.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table></body></html>`;
+}
+
+// CSOMAG – 30 napos figyelmeztetés
+document.getElementById('f3').srcdoc = buildPlanWarning(
+  'A csomagod 30 nap múlva lejár',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>!</p>
+   <p style="margin:0 0 14px;">A <strong>🥈 Ezüst</strong> csomagod hamarosan lejár.</p>
+   <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#f9f9f9;border-radius:8px;overflow:hidden;">
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #eee;">Csomag</td><td style="padding:12px 16px;font-weight:700;color:#0a0a0a;border-bottom:1px solid #eee;">🥈 Ezüst</td></tr>
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;">Lejárat időpontja</td><td style="padding:12px 16px;font-weight:700;color:#0a0a0a;">2026. június 10. 15:59</td></tr>
+   </table>
+   <p style="margin:14px 0 0;">Ha szeretnéd megőrizni prémium hozzáférésedet, vásárolj új csomagot még a lejárat előtt!</p>
+   ${contactBox()}`,
+  'Csomag vásárlás',
+  '#'
+);
+
+// CSOMAG – 7 napos figyelmeztetés
+document.getElementById('f4').srcdoc = buildPlanWarning(
+  'A csomagod 7 nap múlva lejár',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>!</p>
+   <p style="margin:0 0 14px;">A <strong>🥈 Ezüst</strong> csomagod <strong style="color:#ff8800;">már csak 7 nap múlva lejár</strong>.</p>
+   <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#fff8f0;border:1px solid #ffd5a0;border-radius:8px;overflow:hidden;">
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #ffd5a0;">Csomag</td><td style="padding:12px 16px;font-weight:700;color:#0a0a0a;border-bottom:1px solid #ffd5a0;">🥈 Ezüst</td></tr>
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;">Lejárat időpontja</td><td style="padding:12px 16px;font-weight:700;color:#ff8800;">2026. május 18. 15:59</td></tr>
+   </table>
+   <p style="margin:14px 0 0;">Lejárat után automatikusan visszakerülsz az ingyenes Alap csomagra, és a kiemelési lehetőségeid korlátozottak lesznek.</p>
+   ${contactBox()}`,
+  '🔄 Előfizetés megújítása',
+  '#'
+);
+
+// CSOMAG – 1 napos figyelmeztetés
+document.getElementById('f5').srcdoc = buildPlanWarning(
+  'A csomagod HOLNAP lejár!',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>!</p>
+   <p style="margin:0 0 14px;">Ez az <strong style="color:#cc0000;">utolsó figyelmeztetés</strong>. A <strong>🥈 Ezüst</strong> csomagod <strong style="color:#cc0000;">holnap lejár</strong>!</p>
+   <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#fff0f0;border:1px solid #ffb0b0;border-radius:8px;overflow:hidden;">
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #ffb0b0;">Csomag</td><td style="padding:12px 16px;font-weight:700;color:#0a0a0a;border-bottom:1px solid #ffb0b0;">🥈 Ezüst</td></tr>
+     <tr><td style="padding:12px 16px;font-size:13px;color:#6b7280;">Lejárat időpontja</td><td style="padding:12px 16px;font-weight:700;color:#cc0000;">2026. május 12. 15:59</td></tr>
+   </table>
+   <p style="margin:14px 0 0;">Ha ma megújítod a csomagodat, nem veszíted el hozzáféréseidet. Lejárat után az összes prémium funkció, kiemelési lehetőség és magasabb hirdetési limit is megszűnik.</p>
+   ${contactBox()}`,
+  '⚡ Csomag megújítása most',
+  '#'
+);
+
+// CSOMAG LEJÁRT – user email
+document.getElementById('f6').srcdoc = buildPlanWarning(
+  'Csomagod lejárt – visszakerültél az Alap csomagra',
+  `<p style="margin:0 0 14px;">Kedves <strong>Nagy János</strong>!</p>
+   <p style="margin:0 0 14px;">A <strong>🥈 Ezüst</strong> csomagod lejárt. Automatikusan visszakerültél az ingyenes <strong>⬜ Alap</strong> csomagra.</p>
+   <div style="margin:20px 0;padding:16px 20px;background:#f0f0f0;border-radius:8px;border-left:4px solid #999;">
+     <p style="margin:0 0 8px;font-weight:700;color:#0a0a0a;">Alap csomag korlátai:</p>
+     <ul style="margin:0;padding-left:20px;color:#555;font-size:14px;">
+       <li>Max 1 aktív hirdetés</li>
+       <li>Kiemelési újratöltés: 7 nap</li>
+       <li>Statisztika nem elérhető</li>
+     </ul>
+   </div>
+   <p style="margin:14px 0 0;">Ha szeretnéd visszakapni a prémium funkciókat, vásárolj új csomagot bármikor!</p>
+   ${contactBox()}`,
+  '📦 Csomag vásárlása',
+  '#'
+);
+
+// ADMIN értesítő
+document.getElementById('f7').srcdoc = buildPlanWarning(
+  'Felhasználói csomag lejárt',
+  `<p style="margin:0 0 14px;">A következő felhasználó csomagja <strong>lejárt</strong> és visszakerült alap (Basic) csomagra:</p>
+   <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#f9f9f9;border-radius:8px;overflow:hidden;border:1px solid #e5e5e5;">
+     <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #eee;width:40%;">Felhasználó</td><td style="padding:10px 16px;font-weight:700;color:#0a0a0a;border-bottom:1px solid #eee;">Nagy János</td></tr>
+     <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;border-bottom:1px solid #eee;">E-mail</td><td style="padding:10px 16px;color:#0a0a0a;border-bottom:1px solid #eee;">nagy.janos@example.hu</td></tr>
+     <tr><td style="padding:10px 16px;font-size:13px;color:#6b7280;">Volt csomag</td><td style="padding:10px 16px;font-weight:700;color:#cc0000;">🥈 Ezüst</td></tr>
+   </table>
+   <p style="margin:14px 0 0;">Az admin felületen megújíthatod a csomagot.</p>`,
+  '👤 Felhasználó szerkesztése',
+  '#'
+);
 </script>
 </body>
 </html>
