@@ -207,6 +207,53 @@ class VA_User_Roles {
         return $order[ sanitize_key( $plan ) ] ?? 0;
     }
 
+    private static function parse_cooldown_from_feature_row( string $row ): int {
+        if ( preg_match( '/kiemel(?:e|é)s[^0-9]{0,24}(\d+)\s*nap(?:onta)?/iu', $row, $m ) ) {
+            return max( 1, (int) ( $m[1] ?? 0 ) );
+        }
+        return 0;
+    }
+
+    public static function get_card_cooldown_for_plan( string $plan ): int {
+        $plan = sanitize_key( $plan );
+        if ( $plan === '' ) {
+            return 0;
+        }
+
+        $count = max( 1, min( 8, (int) get_option( 'va_pc_count', 4 ) ) );
+        for ( $n = 1; $n <= $count; $n++ ) {
+            if ( get_option( "va_pc_{$n}_enabled", '1' ) !== '1' ) {
+                continue;
+            }
+            $card_plan = sanitize_key( (string) get_option( "va_pc_{$n}_plan_slug", '' ) );
+            if ( $card_plan !== $plan ) {
+                continue;
+            }
+
+            $days = absint( get_option( "va_pc_{$n}_boost_cooldown", 0 ) );
+            if ( $days > 0 ) {
+                return $days;
+            }
+
+            // Visszafelé kompatibilitás: régi feature-sorokból kinyerés.
+            $features = get_option( "va_pc_{$n}_features", [] );
+            if ( is_array( $features ) ) {
+                foreach ( $features as $feature ) {
+                    $row = trim( (string) $feature );
+                    if ( $row === '' ) {
+                        continue;
+                    }
+                    $legacy_days = self::parse_cooldown_from_feature_row( $row );
+                    if ( $legacy_days > 0 ) {
+                        return $legacy_days;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
     public static function get_user_plan( int $user_id ): string {
         if ( self::is_admin_user( $user_id ) ) {
             return 'platinum';
@@ -243,6 +290,12 @@ class VA_User_Roles {
     public static function get_plan_config( string $plan, int $user_id = 0 ): array {
         $all = self::get_all_plan_configs();
         $cfg = ( isset( $all[ $plan ] ) && $plan !== '_global' ) ? $all[ $plan ] : $all['basic'];
+
+        // Alap mindig a kártya: ha van kártyához kötött kiemelési idő, ez a default.
+        $card_cd = self::get_card_cooldown_for_plan( $plan );
+        if ( $card_cd > 0 ) {
+            $cfg['boost_cooldown'] = $card_cd;
+        }
 
         if ( self::is_admin_user( $user_id ) ) {
             $cfg['monthly_limit'] = 0;
