@@ -3812,8 +3812,11 @@ class VA_Settings_Page {
             document.querySelectorAll('.va-upm-plan-sel').forEach(function(sel){
                 sel.addEventListener('change', function(){
                     var editor = this.closest('.va-upm-plan-editor');
-                    var extra = editor ? editor.querySelector('.va-upm-plat-extra') : null;
-                    if(extra) extra.style.display = (this.value === 'platinum' || this.value === 'custom') ? 'flex' : 'none';
+                    var extra        = editor ? editor.querySelector('.va-upm-plat-extra')    : null;
+                    var customExpire = editor ? editor.querySelector('.va-upm-custom-expire') : null;
+                    var plan = this.value;
+                    if(extra)        extra.style.display        = (plan === 'platinum' || plan === 'custom') ? 'flex' : 'none';
+                    if(customExpire) customExpire.style.display = (plan === 'custom') ? '' : 'none';
 
                     // Plan váltáskor a kiemelési nap alapból a kiválasztott kártya értékére áll.
                     var selected = this.options[this.selectedIndex];
@@ -3851,21 +3854,23 @@ class VA_Settings_Page {
                     var sel    = ed ? ed.querySelector('.va-upm-plan-sel') : null;
                     var plan   = sel ? sel.value : 'basic';
 
-                    var limEl = ed ? ed.querySelector('.va-upm-plat-limit') : null;
-                    var cdEl  = ed ? ed.querySelector('.va-upm-plat-cd')    : null;
-                    var noteEl = ed ? ed.querySelector('.va-upm-plat-note')    : null;
-                    var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label') : null;
-                    var creditsEl = ed ? ed.querySelector('.va-upm-credits') : null;
+                    var limEl         = ed ? ed.querySelector('.va-upm-plat-limit')    : null;
+                    var cdEl          = ed ? ed.querySelector('.va-upm-plat-cd')        : null;
+                    var noteEl        = ed ? ed.querySelector('.va-upm-plat-note')      : null;
+                    var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
+                    var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
+                    var customDurEl   = ed ? ed.querySelector('.va-upm-custom-dur')     : null;
 
                     var data = new URLSearchParams({
                         action : 'va_admin_set_user_plan',
                         nonce  : nonce,
                         user_id: uid,
                         plan   : plan,
-                        custom_limit         : limEl  ? limEl.value  : 0,
-                        custom_boost_cooldown: cdEl   ? cdEl.value   : 0,
-                        custom_credits       : creditsEl ? creditsEl.value : 0,
-                        plan_note            : noteEl ? noteEl.value : '',
+                        custom_limit         : limEl      ? limEl.value      : 0,
+                        custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
+                        custom_credits       : creditsEl  ? creditsEl.value  : 0,
+                        custom_duration_days : customDurEl ? customDurEl.value : 0,
+                        plan_note            : noteEl     ? noteEl.value     : '',
                         plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''
                     });
 
