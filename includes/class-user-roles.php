@@ -237,7 +237,7 @@ class VA_User_Roles {
     }
 
     /**
-     * Plan konfiguráció – DB override-dal, platinum esetén user-specifikus értékekkel.
+     * Plan konfiguráció – DB override-dal, user-specifikus kiemelési érték támogatással.
      * @return array{label:string,color:string,bg:string,icon:string,monthly_limit:int,boost_cooldown:int,basis:string,description:string}
      */
     public static function get_plan_config( string $plan, int $user_id = 0 ): array {
@@ -250,11 +250,20 @@ class VA_User_Roles {
             return $cfg;
         }
 
-        if ( in_array( $plan, [ 'platinum', 'custom' ], true ) && $user_id > 0 ) {
-            $custom_limit = (int) get_user_meta( $user_id, 'va_plan_listing_limit', true );
-            $custom_cd    = (int) get_user_meta( $user_id, 'va_plan_boost_cooldown', true );
-            if ( $custom_limit > 0 ) $cfg['monthly_limit']  = $custom_limit;
-            if ( $custom_cd    > 0 ) $cfg['boost_cooldown'] = $custom_cd;
+        if ( $user_id > 0 ) {
+            // A kártyáról szinkronizált / admin által beállított user-szintű kiemelési újratöltés minden planra érvényes.
+            $custom_cd = (int) get_user_meta( $user_id, 'va_plan_boost_cooldown', true );
+            if ( $custom_cd > 0 ) {
+                $cfg['boost_cooldown'] = $custom_cd;
+            }
+
+            // Havi limit override továbbra is csak platinum/custom csomagnál értelmezett.
+            if ( in_array( $plan, [ 'platinum', 'custom' ], true ) ) {
+                $custom_limit = (int) get_user_meta( $user_id, 'va_plan_listing_limit', true );
+                if ( $custom_limit > 0 ) {
+                    $cfg['monthly_limit'] = $custom_limit;
+                }
+            }
         }
         return $cfg;
     }
@@ -830,12 +839,14 @@ class VA_User_Roles {
         update_user_meta( $target_uid, 'va_plan', $plan );
         update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
 
+        // Kiemelési újratöltés felülírás minden csomagnál menthető.
+        if ( $custom_cd > 0 ) {
+            update_user_meta( $target_uid, 'va_plan_boost_cooldown', $custom_cd );
+        }
+
         if ( in_array( $plan, [ 'platinum', 'custom' ], true ) ) {
             if ( $custom_lim > 0 ) {
                 update_user_meta( $target_uid, 'va_plan_listing_limit', $custom_lim );
-            }
-            if ( $custom_cd > 0 ) {
-                update_user_meta( $target_uid, 'va_plan_boost_cooldown', $custom_cd );
             }
             if ( $plan_note !== '' ) {
                 update_user_meta( $target_uid, 'va_plan_note', $plan_note );
