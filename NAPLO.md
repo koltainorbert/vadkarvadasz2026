@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 11. – Session #313 (30/7/1 admin szoveg igazitas a HTML previewhoz)
+
+### Mi volt a cel
+- A 30/7/1 napos admin sablonok szovege pontosan a demo HTML-ben hasznalt megfogalmazast kovesse
+
+### Mit keszitettem [x]
+- [x] 30 napos targy default: `{count} hirdetésed 30 nap múlva törlődhet`
+- [x] 7 napos targy default: `7 nap múlva törlünk {count} hirdetést`
+- [x] 1 napos targy default: `⚠️ Holnap törlünk {count} hirdetést`
+- [x] 30/7/1 napos szovegtorzsek a HTML preview szovegezesehez igazitva
+- [x] Kompatibilitasi auto-frissites: ha a regi `Figyelmeztetés: ...` minta volt a mezoben, automatikusan cserelodik az uj szovegre
+- [x] Runtime fallback szovegek is az uj megfogalmazasra allitva (ha opcio hianyzik)
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck + deploy lefutott
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #312 (Kulon szerkesztheto 30/7/1 figyelmezteto sablonok)
 
 ### Mi volt a cel
