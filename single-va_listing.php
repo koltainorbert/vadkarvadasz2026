@@ -1605,10 +1605,10 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                             $all_plan_cfg = VA_User_Roles::get_all_plan_configs();
 
 
-                            $plan_labels  = [ 'basic'=>'Alap','silver'=>'Ez&#252;st','gold'=>'Arany','platinum'=>'Platina' ];
+                            $plan_labels  = [ 'basic'=>'Alap','silver'=>'Ez&#252;st','gold'=>'Arany','platinum'=>'Platina','custom'=>'Egyedi' ];
 
 
-                            if ( $author_plan === 'platinum' ) {
+                            if ( in_array( $author_plan, [ 'platinum', 'custom' ], true ) ) {
 
 
                                 $user_seller_label = get_user_meta( $author->ID, 'va_seller_label', true );
@@ -1620,13 +1620,13 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                                     ? sanitize_text_field($user_seller_label)
 
 
-                                    : ( ! empty($all_plan_cfg['platinum']['seller_label'])
+                                    : ( ! empty($all_plan_cfg[$author_plan]['seller_label'])
 
 
-                                        ? sanitize_text_field($all_plan_cfg['platinum']['seller_label'])
+                                        ? sanitize_text_field($all_plan_cfg[$author_plan]['seller_label'])
 
 
-                                        : $plan_labels['platinum'] );
+                                        : ( $plan_labels[$author_plan] ?? ucfirst($author_plan) ) );
 
 
                             } else {
@@ -1638,7 +1638,7 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                             }
 
 
-                            $plan_icons = ['basic'=>'','silver'=>'&#10086;','gold'=>'&#9733;','platinum'=>'&#9670;'];
+                            $plan_icons = ['basic'=>'','silver'=>'&#10086;','gold'=>'&#9733;','platinum'=>'&#9670;','custom'=>'&#9873;'];
 
 
                             $plan_icon  = $plan_icons[$author_plan] ?? '';

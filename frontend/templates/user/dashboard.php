@@ -479,7 +479,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 </div>
                 <?php endif; ?>
                 <small><svg class="va-ico va-ico--up" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg> <?php echo esc_html( $plan_cfg['boost_cooldown'] ); ?> naponként emelhető</small>
-                <?php if ( $user_plan === 'platinum' ): ?>
+                <?php if ( in_array( $user_plan, [ 'platinum', 'custom' ], true ) ): ?>
                 <form method="post" class="va-dash-plan-label-form">
                     <?php wp_nonce_field( 'va_profile_label', 'va_profile_label_nonce' ); ?>
                     <input type="hidden" name="va_action" value="profile_label">
@@ -1219,10 +1219,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         <textarea name="profile_bio" class="va-textarea"><?php echo esc_textarea( $user->description ); ?></textarea>
                     </div>
 
-                    <?php if ( $user_plan === 'platinum' ): ?>
+                    <?php if ( in_array( $user_plan, [ 'platinum', 'custom' ], true ) ): ?>
                     <div class="va-form-group">
                         <label>Rang / címke a hirdetésoldalakon
-                            <span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.45);margin-left:6px;">Platinum jogosultság</span>
+                            <span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.45);margin-left:6px;">Platinum / Egyedi jogosultság</span>
                         </label>
                         <input type="text" name="profile_seller_label" class="va-input" value="<?php echo esc_attr( $seller_label ); ?>" placeholder="pl. Kereskedő, Viszonteladó – hagyd üresen ha nem kell" maxlength="40">
                         <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;">Ez jelenik meg a feladó blokkban a hirdetéseidnél. Üresen hagyva az alapértelmezett csomagcímke látszik.</p>

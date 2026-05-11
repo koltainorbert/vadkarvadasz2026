@@ -3405,9 +3405,10 @@ class VA_Settings_Page {
                     $auctions    = $auctions_enabled ? count_user_posts( $user->ID, 'va_auction' ) : 0;
                     $plan        = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user->ID ) : 'basic';
                     $pcfg        = $plans[ $plan ] ?? $plans['basic'];
-                    $plat_limit  = (int) get_user_meta( $user->ID, 'va_plan_listing_limit', true );
-                    $plat_cd     = (int) get_user_meta( $user->ID, 'va_plan_boost_cooldown', true );
-                    $plan_note   = (string) get_user_meta( $user->ID, 'va_plan_note', true );
+                    $plat_limit   = (int) get_user_meta( $user->ID, 'va_plan_listing_limit', true );
+                    $plat_cd      = (int) get_user_meta( $user->ID, 'va_plan_boost_cooldown', true );
+                    $plan_note    = (string) get_user_meta( $user->ID, 'va_plan_note', true );
+                    $seller_label = (string) get_user_meta( $user->ID, 'va_seller_label', true );
                     $paid_credits = absint( get_user_meta( $user->ID, 'va_listing_credits', true ) );
                     $purchase_history = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'get_credit_purchase_history' )
                         ? VA_Ajax::get_credit_purchase_history( $user->ID )
@@ -3453,8 +3454,8 @@ class VA_Settings_Page {
                                     <?php endforeach; ?>
                                 </select>
 
-                                <!-- Platinum extra mezők -->
-                                <div class="va-upm-plat-extra" style="<?php echo $plan === 'platinum' ? '' : 'display:none;'; ?>">
+                                <!-- Egyedi (Platinum + Custom) extra mezők -->
+                                <div class="va-upm-plat-extra" style="<?php echo in_array( $plan, [ 'platinum', 'custom' ], true ) ? '' : 'display:none;'; ?>">
                                     <label>Havi limit:
                                         <input type="number" class="va-upm-plat-limit" min="1" max="9999"
                                                value="<?php echo esc_attr( (string) ( $plat_limit ?: $eff_cfg['monthly_limit'] ) ); ?>" style="width:70px;">
@@ -3462,6 +3463,10 @@ class VA_Settings_Page {
                                     <label>Cooldown (nap):
                                         <input type="number" class="va-upm-plat-cd" min="1" max="365"
                                                value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:60px;">
+                                    </label>
+                                    <label>Rang címke:
+                                        <input type="text" class="va-upm-seller-label" maxlength="40"
+                                               value="<?php echo esc_attr( $seller_label ); ?>" style="width:180px;" placeholder="pl. Céges Partner">
                                     </label>
                                     <label>Megjegyzés:
                                         <input type="text" class="va-upm-plat-note" maxlength="200"
@@ -3754,11 +3759,11 @@ class VA_Settings_Page {
                 });
             });
 
-            // Plan dropdown változáskor platinum extra mezők mutatása
+            // Plan dropdown változáskor egyedi extra mezők mutatása
             document.querySelectorAll('.va-upm-plan-sel').forEach(function(sel){
                 sel.addEventListener('change', function(){
                     var extra = this.closest('.va-upm-plan-editor').querySelector('.va-upm-plat-extra');
-                    if(extra) extra.style.display = this.value === 'platinum' ? 'flex' : 'none';
+                    if(extra) extra.style.display = (this.value === 'platinum' || this.value === 'custom') ? 'flex' : 'none';
                 });
             });
 
@@ -3774,7 +3779,8 @@ class VA_Settings_Page {
 
                     var limEl = ed ? ed.querySelector('.va-upm-plat-limit') : null;
                     var cdEl  = ed ? ed.querySelector('.va-upm-plat-cd')    : null;
-                    var noteEl= ed ? ed.querySelector('.va-upm-plat-note')  : null;
+                    var noteEl = ed ? ed.querySelector('.va-upm-plat-note')    : null;
+                    var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label') : null;
                     var creditsEl = ed ? ed.querySelector('.va-upm-credits') : null;
 
                     var data = new URLSearchParams({
@@ -3785,7 +3791,8 @@ class VA_Settings_Page {
                         custom_limit         : limEl  ? limEl.value  : 0,
                         custom_boost_cooldown: cdEl   ? cdEl.value   : 0,
                         custom_credits       : creditsEl ? creditsEl.value : 0,
-                        plan_note            : noteEl ? noteEl.value : ''
+                        plan_note            : noteEl ? noteEl.value : '',
+                        plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''
                     });
 
                     if(status) status.textContent = 'Mentés…';
@@ -7921,11 +7928,11 @@ class VA_Settings_Page {
                                         <span class="va-pc-field__label">Leírás</span>
                                         <input type="text" class="va-pc-input" data-key="description" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $plan['description'] ); ?>" placeholder="<?php echo esc_attr( $default['description'] ); ?>">
                                     </label>
-                                    <?php if ( $slug === 'platinum' ): ?>
+                                    <?php if ( in_array( $slug, [ 'platinum', 'custom' ], true ) ): ?>
                                     <label class="va-pc-field va-pc-field--full">
                                         <span class="va-pc-field__label">Egyedi rang címke (feladó panel)</span>
-                                        <span class="va-pc-field__hint">Ha üres, az alap „Platina tag” feliratok jelennek meg. Írd be pl. Kereskedő, Viszonteladó – ez jelenik meg a hirdetés oldalon.</span>
-                                        <input type="text" class="va-pc-input" data-key="seller_label" data-slug="platinum" value="<?php echo esc_attr( $plan['seller_label'] ?? '' ); ?>" placeholder="pl. Kereskedő, Viszonteladó">
+                                        <span class="va-pc-field__hint">Ha üres, az alap rangfelirat jelenik meg. Írd be pl. Kereskedő, Viszonteladó – ez jelenik meg a hirdetés oldalon.</span>
+                                        <input type="text" class="va-pc-input" data-key="seller_label" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $plan['seller_label'] ?? '' ); ?>" placeholder="pl. Kereskedő, Viszonteladó">
                                     </label>
                                     <?php endif; ?>
                                 </div>

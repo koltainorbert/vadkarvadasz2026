@@ -819,8 +819,8 @@ class VA_User_System {
 
         $user_id   = get_current_user_id();
         $user_plan = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
-        if ( $user_plan !== 'platinum' ) {
-            va_set_flash( 'error', 'Ez a funkció csak Platinum csomagban érhető el.' );
+        if ( ! in_array( $user_plan, [ 'platinum', 'custom' ], true ) ) {
+            va_set_flash( 'error', 'Ez a funkció csak Platinum vagy Egyedi csomagban érhető el.' );
             wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
             exit;
         }
