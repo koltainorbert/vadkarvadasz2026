@@ -111,6 +111,13 @@ add_action( 'init', function () {
     }
 }, 2 );
 
+// Egyszeri migráció: va_plan_duration_days 30 → 365 (egyéves lejárat mindenhol)
+add_action( 'init', function () {
+    if ( (int) get_option( 'va_plan_duration_days', 0 ) !== 365 ) {
+        update_option( 'va_plan_duration_days', 365 );
+    }
+}, 3 );
+
 /* ── Napi csomag lejárat-ellenőrző cron ───────────────────────────
  * Naponta egyszer lefut: 30/7/1 nappal előre email a usernek,
  * lejáratkor email az adminnak.
