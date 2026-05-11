@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 11. – Session #317 (Buy Credits hero meret visszafogasa)
+
+### Mi volt a cel
+- A hirdetesi csomagok oldalan a hero blokk ne legyen tul magas, ne vigye el a teljes elso viewportot
+
+### Mit keszitettem [x]
+- [x] A `.va-credits-hero--ranks` minimum magassaga visszafogva: `clamp(220px, 36vh, 340px)`
+- [x] A hero belso paddingje csokkentve desktopon es mobilon
+- [x] A tartalom igazitas kozep helyett felso indulassal (`justify-content: flex-start`)
+- [x] Mobilon a korabbi viewport-alapu min-height eltavolitva (`min-height: 0`)
+- [x] `frontend.css` es `frontend.min.css` root + plugin mirror szinkronban frissitve
+- [x] Hibacheck rendben (csak korabbi, ismert CSS kompat figyelmeztetesek maradtak)
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `frontend/css/frontend.css`
+- `frontend/css/frontend.min.css`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.css`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.min.css`
+
+---
+
 ## 2026. 05. 11. – Session #316 (Árkártya ár-szám méret fix admin preview)
 
 ### Mi volt a cel

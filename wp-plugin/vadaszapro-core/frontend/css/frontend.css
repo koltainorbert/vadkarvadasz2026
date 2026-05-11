@@ -1615,7 +1615,7 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
   .va-pkg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .va-credits-hero--ranks { border-radius: 14px; padding: 16px 14px 12px; min-height: auto; }
+  .va-credits-hero--ranks { border-radius: 14px; padding: 16px 14px 12px; min-height: 0; }
   .va-pkg-grid { grid-template-columns: 1fr; gap: 14px; }
   .va-pkg-price { font-size: 28px; }
   .va-pkg-header { padding: 20px 16px 14px; }
