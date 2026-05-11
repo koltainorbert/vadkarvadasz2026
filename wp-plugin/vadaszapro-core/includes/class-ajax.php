@@ -1330,6 +1330,160 @@ class VA_Ajax {
         ];
     }
 
+    public static function backfill_credit_purchase_history_from_stripe( int $max_pages = 20, int $per_page = 100 ): array {
+        $secret_key = trim( (string) get_option( 'va_payment_secret_key', '' ) );
+        if ( $secret_key === '' ) {
+            return [
+                'ok'      => false,
+                'message' => 'Stripe titkos kulcs hiányzik.',
+                'pages'   => 0,
+                'events'  => 0,
+                'imported'=> 0,
+            ];
+        }
+
+        $per_page = max( 1, min( 100, $per_page ) );
+        $max_pages = max( 1, min( 50, $max_pages ) );
+        $starting_after = '';
+        $pages = 0;
+        $events_seen = 0;
+        $imported = 0;
+
+        while ( $pages < $max_pages ) {
+            $query = [
+                'type'  => 'checkout.session.completed',
+                'limit' => $per_page,
+            ];
+            if ( $starting_after !== '' ) {
+                $query['starting_after'] = $starting_after;
+            }
+
+            $response = wp_remote_get( add_query_arg( $query, 'https://api.stripe.com/v1/events' ), [
+                'timeout' => 45,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $secret_key,
+                ],
+            ] );
+
+            if ( is_wp_error( $response ) ) {
+                return [
+                    'ok'      => false,
+                    'message' => 'Stripe eseménylista lekérése sikertelen: ' . $response->get_error_message(),
+                    'pages'   => $pages,
+                    'events'  => $events_seen,
+                    'imported'=> $imported,
+                ];
+            }
+
+            $code = (int) wp_remote_retrieve_response_code( $response );
+            $json = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+            if ( $code < 200 || $code >= 300 || ! is_array( $json ) ) {
+                return [
+                    'ok'      => false,
+                    'message' => 'Stripe eseménylista érvénytelen választ adott.',
+                    'pages'   => $pages,
+                    'events'  => $events_seen,
+                    'imported'=> $imported,
+                ];
+            }
+
+            $pages++;
+            $events = is_array( $json['data'] ?? null ) ? $json['data'] : [];
+            if ( empty( $events ) ) {
+                break;
+            }
+
+            foreach ( $events as $event ) {
+                if ( ! is_array( $event ) ) {
+                    continue;
+                }
+
+                $events_seen++;
+                $starting_after = sanitize_text_field( (string) ( $event['id'] ?? $starting_after ) );
+                $object = $event['data']['object'] ?? null;
+                if ( ! is_array( $object ) ) {
+                    continue;
+                }
+
+                $status = (string) ( $object['status'] ?? '' );
+                $payment_status = (string) ( $object['payment_status'] ?? '' );
+                if ( $status !== 'complete' || $payment_status !== 'paid' ) {
+                    continue;
+                }
+
+                $metadata = is_array( $object['metadata'] ?? null ) ? $object['metadata'] : [];
+                $user_id  = absint( $metadata['user_id'] ?? 0 );
+                $qty      = absint( $metadata['qty'] ?? 0 );
+                if ( $user_id <= 0 || $qty <= 0 ) {
+                    continue;
+                }
+
+                $currency = sanitize_key( (string) ( $object['currency'] ?? 'huf' ) );
+                $amount_total = absint( $object['amount_total'] ?? 0 );
+                $amount_ft = $currency === 'huf' ? (int) round( $amount_total / 100 ) : $amount_total;
+                $payment_intent = sanitize_text_field( (string) ( $object['payment_intent'] ?? '' ) );
+                $receipt_url = '';
+                if ( $payment_intent !== '' ) {
+                    $pi_response = wp_remote_get( 'https://api.stripe.com/v1/payment_intents/' . rawurlencode( $payment_intent ), [
+                        'timeout' => 45,
+                        'headers' => [
+                            'Authorization' => 'Bearer ' . $secret_key,
+                        ],
+                    ] );
+                    if ( ! is_wp_error( $pi_response ) ) {
+                        $pi_code = (int) wp_remote_retrieve_response_code( $pi_response );
+                        $pi_json = json_decode( (string) wp_remote_retrieve_body( $pi_response ), true );
+                        if ( $pi_code >= 200 && $pi_code < 300 && is_array( $pi_json ) ) {
+                            $charges = $pi_json['charges']['data'] ?? [];
+                            if ( is_array( $charges ) && ! empty( $charges[0]['receipt_url'] ) ) {
+                                $receipt_url = esc_url_raw( (string) $charges[0]['receipt_url'] );
+                            }
+                        }
+                    }
+                }
+
+                $before = count( self::get_credit_purchase_history( $user_id ) );
+                self::record_credit_purchase_history( $user_id, [
+                    'token'                 => sanitize_text_field( (string) ( $object['client_reference_id'] ?? ( $metadata['token'] ?? '' ) ) ),
+                    'user_id'               => $user_id,
+                    'qty'                   => $qty,
+                    'amount'                => $amount_ft,
+                    'provider'              => 'stripe',
+                    'return_to'             => 'buy',
+                    'plan_slug'             => self::get_target_plan_slug_for_qty( $qty ),
+                    'stripe_session_id'     => sanitize_text_field( (string) ( $object['id'] ?? '' ) ),
+                    'stripe_payment_intent' => $payment_intent,
+                    'stripe_receipt_url'    => $receipt_url,
+                    'initiated_at'          => absint( $object['created'] ?? $event['created'] ?? 0 ),
+                    'completed_at'          => absint( $event['created'] ?? $object['created'] ?? 0 ),
+                ] );
+                $after = count( self::get_credit_purchase_history( $user_id ) );
+                if ( $after > $before ) {
+                    $imported++;
+                }
+            }
+
+            if ( empty( $json['has_more'] ) ) {
+                break;
+            }
+        }
+
+        update_option( 'va_stripe_purchase_history_last_sync', [
+            'ran_at'   => current_time( 'mysql' ),
+            'pages'    => $pages,
+            'events'   => $events_seen,
+            'imported' => $imported,
+        ], false );
+
+        return [
+            'ok'       => true,
+            'message'  => 'Stripe vásárlási előzmények szinkronizálva.',
+            'pages'    => $pages,
+            'events'   => $events_seen,
+            'imported' => $imported,
+        ];
+    }
+
     private static function parse_stripe_webhook_event( string $payload, string $signature ) {
         $secret = trim( (string) get_option( 'va_payment_webhook_secret', '' ) );
         if ( $secret === '' ) {
