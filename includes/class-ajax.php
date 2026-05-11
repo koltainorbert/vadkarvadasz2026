@@ -474,6 +474,75 @@ class VA_Ajax {
         return 'basic';
     }
 
+    private static function get_card_index_for_purchase( int $qty, string $plan_slug ): int {
+        $plan_slug = sanitize_key( $plan_slug );
+        $count = max( 1, min( 8, (int) get_option( 'va_pc_count', 4 ) ) );
+
+        // 1) Pontos találat: qty + plan slug.
+        for ( $n = 1; $n <= $count; $n++ ) {
+            if ( get_option( "va_pc_{$n}_enabled", '1' ) !== '1' ) {
+                continue;
+            }
+            $cfg_qty = max( 1, (int) get_option( "va_pc_{$n}_qty", 0 ) );
+            $cfg_slug = sanitize_key( (string) get_option( "va_pc_{$n}_plan_slug", '' ) );
+            if ( $cfg_qty === $qty && $cfg_slug !== '' && $cfg_slug === $plan_slug ) {
+                return $n;
+            }
+        }
+
+        // 2) Fallback: qty egyezés (ha slug nincs vagy egyedi).
+        for ( $n = 1; $n <= $count; $n++ ) {
+            if ( get_option( "va_pc_{$n}_enabled", '1' ) !== '1' ) {
+                continue;
+            }
+            $cfg_qty = max( 1, (int) get_option( "va_pc_{$n}_qty", 0 ) );
+            if ( $cfg_qty === $qty ) {
+                return $n;
+            }
+        }
+
+        return 0;
+    }
+
+    private static function extract_card_cooldown_days( array $features ): int {
+        foreach ( $features as $feature ) {
+            $row = trim( (string) $feature );
+            if ( $row === '' ) {
+                continue;
+            }
+
+            // Pl.: "Hirdetés kiemelés: 7 naponta" vagy "Kiemelési újratöltés: 5 nap".
+            if ( preg_match( '/kiemel(?:e|é)s[^0-9]{0,24}(\d+)\s*nap(?:onta)?/iu', $row, $m ) ) {
+                return max( 1, (int) ( $m[1] ?? 0 ) );
+            }
+        }
+        return 0;
+    }
+
+    private static function sync_user_card_cooldown( int $user_id, int $qty, string $plan_slug ): void {
+        if ( $user_id <= 0 || $qty <= 0 ) {
+            return;
+        }
+
+        $card_index = self::get_card_index_for_purchase( $qty, $plan_slug );
+        if ( $card_index <= 0 ) {
+            return;
+        }
+
+        $features = get_option( "va_pc_{$card_index}_features", [] );
+        if ( ! is_array( $features ) ) {
+            return;
+        }
+
+        $days = self::extract_card_cooldown_days( $features );
+        if ( $days <= 0 ) {
+            return;
+        }
+
+        // Kártya a mérvadó: vásárláskor a user szintű kiemelési újratöltést ehhez igazítjuk.
+        update_user_meta( $user_id, 'va_plan_boost_cooldown', $days );
+    }
+
     private static function enforce_credit_package_purchase_rule( int $user_id, int $qty ) {
         $target_plan = self::get_target_plan_slug_for_qty( $qty );
 
@@ -1610,6 +1679,9 @@ class VA_Ajax {
             $duration_days = max( 1, absint( get_option( 'va_plan_duration_days', 30 ) ) );
             update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
         }
+
+        // Vásárláskor a kártyán megadott kiemelési gyakoriság legyen a mérvadó.
+        self::sync_user_card_cooldown( $user_id, $qty, $new_plan );
 
         $completed_at = current_time( 'timestamp' );
         self::record_credit_purchase_history( $user_id, [
