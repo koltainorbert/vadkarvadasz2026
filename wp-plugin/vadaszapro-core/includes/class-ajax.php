@@ -1694,6 +1694,7 @@ class VA_Ajax {
                 delete_user_meta( $user_id, 'va_plan_expiry_warned_' . $_t );
             }
             delete_user_meta( $user_id, 'va_plan_expired_admin_notified' );
+            delete_user_meta( $user_id, 'va_plan_expired_user_notified' );
         }
 
         // Vásárláskor a kártyán megadott kiemelési gyakoriság legyen a mérvadó.

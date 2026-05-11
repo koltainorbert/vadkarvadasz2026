@@ -126,6 +126,34 @@ class VA_Mailer {
 </html>';
     }
 
+  private static function get_tpl( string $key, string $default ): string {
+    $val = trim( (string) get_option( $key, '' ) );
+    return $val !== '' ? $val : $default;
+  }
+
+  private static function tpl_replace( string $template, array $tokens ): string {
+    $map = [];
+    foreach ( $tokens as $k => $v ) {
+      $map[ '{' . $k . '}' ] = (string) $v;
+    }
+    return strtr( $template, $map );
+  }
+
+  private static function text_to_html( string $text ): string {
+    $parts = preg_split( '/\R{2,}/', trim( $text ) );
+    if ( ! is_array( $parts ) || empty( $parts ) ) {
+      return '';
+    }
+    $out = '';
+    foreach ( $parts as $p ) {
+      $safe = nl2br( esc_html( trim( (string) $p ) ) );
+      if ( $safe !== '' ) {
+        $out .= '<p>' . $safe . '</p>';
+      }
+    }
+    return $out;
+  }
+
     /* ─── Csomag lejárati figyelmeztetés a felhasználónak ───────── */
     public static function send_plan_expiry_warning( int $user_id, int $days_left ): bool {
         $user = get_userdata( $user_id );
@@ -137,57 +165,109 @@ class VA_Mailer {
         $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
         $date_str   = $expires_at > 0 ? wp_date( 'Y.m.d H:i', $expires_at ) : '–';
 
-        $subject = $days_left <= 1
-            ? 'Csomagod HOLNAP lejár – ' . self::BRAND_NAME
-            : sprintf( 'Csomagod %d nap múlva lejár – %s', $days_left, self::BRAND_NAME );
+        $variant = $days_left <= 1 ? '1' : ( $days_left <= 7 ? '7' : '30' );
+        $subject_tpl = self::get_tpl( 'va_email_plan_expiry_subject_' . $variant, 'A csomagod {days_left} nap múlva lejár – {site_name}' );
+        $heading_tpl = self::get_tpl( 'va_email_plan_expiry_heading_' . $variant, 'A csomagod {days_left} nap múlva lejár' );
+        $body_tpl    = self::get_tpl( 'va_email_plan_expiry_body_' . $variant, "Kedves {name}!\n\nA {plan_label} csomagod hamarosan lejár.\nLejárat időpontja: {expires_at}" );
+        $btn_lbl_tpl = self::get_tpl( 'va_email_plan_expiry_btn_label_' . $variant, 'Csomag vásárlás' );
+        $btn_url_tpl = self::get_tpl( 'va_email_plan_expiry_btn_url_' . $variant, home_url( '/csomagok/' ) );
 
-        $heading = $days_left <= 1
-            ? 'A csomagod holnap lejár!'
-            : sprintf( 'A csomagod %d nap múlva lejár', $days_left );
+        $tokens = [
+          'name'          => (string) $user->display_name,
+          'user_email'    => (string) $user->user_email,
+          'plan_label'    => (string) $plan_label,
+          'plan_slug'     => (string) $plan,
+          'days_left'     => (string) $days_left,
+          'expires_at'    => (string) $date_str,
+          'site_name'     => (string) get_option( 'va_email_brand_name', self::BRAND_NAME ),
+          'support_email' => (string) get_option( 'va_email_contact_email', self::SUPPORT_EMAIL ),
+          'edit_url'      => (string) get_edit_user_link( $user_id ),
+        ];
 
-        $body = sprintf(
-            '<p>Kedves <strong>%s</strong>!</p>
-            <p>A <strong>%s</strong> csomagod hamarosan lejár.</p>
-            <p><strong>Lejárat időpontja:</strong> %s</p>
-            <p>Ha szeretnéd megőrizni prémium hozzáférésedet, vásárolj új csomagot még a lejárat előtt!</p>',
-            esc_html( $user->display_name ),
-            esc_html( $plan_label ),
-            esc_html( $date_str )
-        );
+        $subject = self::tpl_replace( $subject_tpl, $tokens );
+        $heading = self::tpl_replace( $heading_tpl, $tokens );
+        $body    = self::text_to_html( self::tpl_replace( $body_tpl, $tokens ) );
+        $btn_lbl = self::tpl_replace( $btn_lbl_tpl, $tokens );
+        $btn_url = self::tpl_replace( $btn_url_tpl, $tokens );
 
         return self::send( $user->user_email, $subject, $heading, $body, [
-            'label' => 'Csomag vásárlás',
-            'url'   => home_url( '/csomagok/' ),
+          'label' => $btn_lbl,
+          'url'   => $btn_url,
         ] );
     }
+
+      /* ─── Felhasználó értesítése: csomag lejárt ────────────────── */
+      public static function send_plan_expired_user( int $user_id ): bool {
+        $user = get_userdata( $user_id );
+        if ( ! $user ) return false;
+
+        $plan       = (string) get_user_meta( $user_id, 'va_plan', true );
+        $plan_cfg   = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_config( $plan, $user_id ) : [];
+        $plan_label = $plan_cfg['label'] ?? $plan;
+        $expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+        $date_str   = $expires_at > 0 ? wp_date( 'Y.m.d H:i', $expires_at ) : '–';
+
+        $tokens = [
+          'name'          => (string) $user->display_name,
+          'user_email'    => (string) $user->user_email,
+          'plan_label'    => (string) $plan_label,
+          'plan_slug'     => (string) $plan,
+          'days_left'     => '0',
+          'expires_at'    => (string) $date_str,
+          'site_name'     => (string) get_option( 'va_email_brand_name', self::BRAND_NAME ),
+          'support_email' => (string) get_option( 'va_email_contact_email', self::SUPPORT_EMAIL ),
+          'edit_url'      => (string) get_edit_user_link( $user_id ),
+        ];
+
+        $subject = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_user_subject', 'Csomagod lejárt – visszakerültél Alap csomagra ({site_name})' ), $tokens );
+        $heading = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_user_heading', 'A csomagod lejárt' ), $tokens );
+        $body    = self::text_to_html( self::tpl_replace( self::get_tpl( 'va_email_plan_expired_user_body', "Kedves {name}!\n\nA csomagod lejárt, visszakerültél Alap csomagra." ), $tokens ) );
+        $btn_lbl = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_user_btn_label', 'Csomag vásárlása' ), $tokens );
+        $btn_url = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_user_btn_url', home_url( '/csomagok/' ) ), $tokens );
+
+        return self::send( $user->user_email, $subject, $heading, $body, [
+          'label' => $btn_lbl,
+          'url'   => $btn_url,
+        ] );
+      }
 
     /* ─── Admin értesítés lejárt csomagról ──────────────────────── */
     public static function send_plan_expired_admin( int $user_id ): bool {
         $admin_email = (string) get_option( 'admin_email', '' );
         if ( ! is_email( $admin_email ) ) return false;
 
-        $user     = get_userdata( $user_id );
-        $name     = $user ? esc_html( $user->display_name ) : "#{$user_id}";
-        $email    = $user ? esc_html( $user->user_email )   : '–';
-        $plan     = esc_html( (string) get_user_meta( $user_id, 'va_plan', true ) );
-        $edit_url = esc_url( get_edit_user_link( $user_id ) );
+        $user       = get_userdata( $user_id );
+        $name       = $user ? (string) $user->display_name : "#{$user_id}";
+        $user_email = $user ? (string) $user->user_email   : '–';
+        $plan       = (string) get_user_meta( $user_id, 'va_plan', true );
+        $plan_cfg   = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_config( $plan, $user_id ) : [];
+        $plan_label = (string) ( $plan_cfg['label'] ?? $plan );
+        $edit_url   = (string) get_edit_user_link( $user_id );
 
-        $subject = 'Lejárt csomag – ' . $name;
-        $heading = 'Felhasználói csomag lejárt';
-        $body    = sprintf(
-            '<p>A következő felhasználó csomagja <strong>lejárt</strong> és visszakerült alap (Basic) csomagra:</p>
-            <ul style="margin:12px 0;padding-left:20px;">
-                <li><strong>Felhasználó:</strong> %s</li>
-                <li><strong>E-mail:</strong> %s</li>
-                <li><strong>Volt csomag:</strong> %s</li>
-            </ul>
-            <p>Az admin felületen megújíthatod a csomagot.</p>',
-            $name, $email, $plan
-        );
+        $tokens = [
+          'name'          => $name,
+          'user_email'    => $user_email,
+          'plan_label'    => $plan_label,
+          'plan_slug'     => $plan,
+          'days_left'     => '0',
+          'expires_at'    => '',
+          'site_name'     => (string) get_option( 'va_email_brand_name', self::BRAND_NAME ),
+          'support_email' => (string) get_option( 'va_email_contact_email', self::SUPPORT_EMAIL ),
+          'edit_url'      => $edit_url,
+        ];
+
+        $subject = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_admin_subject', 'Lejárt csomag – {name}' ), $tokens );
+        $heading = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_admin_heading', 'Felhasználói csomag lejárt' ), $tokens );
+        $body    = self::text_to_html( self::tpl_replace( self::get_tpl( 'va_email_plan_expired_admin_body', "A következő felhasználó csomagja lejárt.\n\nFelhasználó: {name}\nE-mail: {user_email}\nVolt csomag: {plan_label}" ), $tokens ) );
+        $btn_lbl = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_admin_btn_label', 'Felhasználó szerkesztése' ), $tokens );
+        $btn_url = self::tpl_replace( self::get_tpl( 'va_email_plan_expired_admin_btn_url', '' ), $tokens );
+        if ( trim( $btn_url ) === '' ) {
+          $btn_url = $edit_url;
+        }
 
         return self::send( $admin_email, $subject, $heading, $body, [
-            'label' => 'Felhasználó szerkesztése',
-            'url'   => $edit_url,
+          'label' => $btn_lbl,
+          'url'   => $btn_url,
         ] );
     }
 }

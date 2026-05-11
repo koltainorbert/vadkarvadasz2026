@@ -912,6 +912,7 @@ class VA_User_Roles {
                 delete_user_meta( $target_uid, 'va_plan_expiry_warned_' . $_t );
             }
             delete_user_meta( $target_uid, 'va_plan_expired_admin_notified' );
+            delete_user_meta( $target_uid, 'va_plan_expired_user_notified' );
         }
 
         // Kiemelési újratöltés felülírás minden csomagnál menthető.
