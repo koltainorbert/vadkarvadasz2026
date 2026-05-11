@@ -2,6 +2,33 @@
 
 ---
 
+## 2026. 05. 11. – Session #307 (Stripe vasarlasi naplo: visszatoltes + szuro + CSV export)
+
+### Mi volt a cel
+- A korabbi Stripe fizetesek utolagos visszatoltese az admin vasarlasi naploba
+- Kulon szuro es export a `Felhasznalok & Csomagok` oldalon, hogy visszakeresheto legyen ki, mikor, mit fizetett
+
+### Mit keszitettem [x]
+- [x] Uj Stripe backfill a `VA_Ajax::backfill_credit_purchase_history_from_stripe()` metodusban
+- [x] A Stripe `checkout.session.completed` esemenyek oldalozva beolvasasra kerulnek
+- [x] A visszatoltes a korabbi vasarlasokat is beirja a per-user `va_credit_purchase_history` naploba
+- [x] Payment Intent alapjan receipt URL is mentodik, ha elerheto
+- [x] Az admin users oldalon uj `Vasarlasi naplo` CSV export gomb kerult be
+- [x] Az admin users oldalon uj `Stripe elozmenyek szinkron` gomb kerult be
+- [x] Uj vasarlasi szuro kerult be: minden / csak vasarlok / vasarlas nelkuliek
+- [x] Az utolso Stripe szinkron metaadatai megjelennek az admin feluleten
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+### Ellenorzes
+- A modositott PHP fajlokon a statikus hibavizsgalat rendben lefutott
+- A deploy script ezen a gepen LocalWP target hianyaban production-trigger modot jelzett
+
 ## 2026. 05. 10. – Session #306 (Holnapi munkahelyi folytatas / elesitesi checklist)
 
 ### Kontextus atadas holnapra [x]
