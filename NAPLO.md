@@ -20,7 +20,8 @@
 - [x] A felhasznalonkenti Stripe tranzakcio blokk alapbol osszecsukott, kulon lenyithato lett
 - [x] Dashboard figyelmeztetes bekerult: `Amennyiben nem szeretne elofizeteset meghosszabbitani...` + visszaszamlalo + hosszabbitas gomb
 - [x] A plan-limit miatt leallitott hirdeteseknel mentodik a leallitas idopontja (`va_suspended_by_plan_at`)
-- [x] Napi automata takaritas bekerult: 90 napnal regebbi, plan miatt leallitott hirdetesek vegleges torlese
+- [x] Kivalasztasos logika bekerult: user kijelolheti melyik hirdetes legyen az aktiv (`va_primary_listing_id`)
+- [x] Napi automata lepcsos takaritas bekerult: figyelmezteto e-mail (30/7/1 nap) -> kuka -> vegleges torles
 - [x] Root + plugin mirror fajlok szinkronban frissitve
 
 ### Erintett fajlok
@@ -30,6 +31,8 @@
 - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
 - `includes/class-user-roles.php`
 - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `includes/class-user-system.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-system.php`
 - `frontend/templates/user/dashboard.php`
 - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
 
