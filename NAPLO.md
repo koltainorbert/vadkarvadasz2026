@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 11. – Session #314 (Admin felhasznaloi kredit keret allitas)
+
+### Mi volt a cel
+- A `Felhasznalok & Csomagok` oldalon az admin felhasznalonkent szabadon tudja allitani a vasarolt kredit mennyiseget
+
+### Mit keszitettem [x]
+- [x] Uj mező a user sor szerkesztojeben: `Vásárolt kredit (db)`
+- [x] Menteskor a kredit ertek is kuldesre kerul az AJAX keressel (`custom_credits`)
+- [x] Backendben a `va_admin_set_user_plan` endpoint menti a `va_listing_credits` user metat
+- [x] Plan + kredit update egy mentesben tortenik
+- [x] Sikeres valasz frissitve (`Terv és kredit sikeresen frissítve!`)
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck + deploy lefutott
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #313 (30/7/1 admin szoveg igazitas a HTML previewhoz)
 
 ### Mi volt a cel
