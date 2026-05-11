@@ -1361,6 +1361,20 @@ class VA_Ajax {
         $paid_key = 'va_credit_paid_' . $token;
         $paid     = get_transient( $paid_key );
         if ( is_array( $paid ) && ! empty( $paid['user_id'] ) && ! empty( $paid['qty'] ) ) {
+            self::record_credit_purchase_history( (int) $paid['user_id'], [
+                'token'                => $token,
+                'user_id'              => (int) $paid['user_id'],
+                'qty'                  => (int) $paid['qty'],
+                'amount'               => absint( $paid['amount'] ?? 0 ),
+                'provider'             => sanitize_key( (string) ( $paid['provider'] ?? 'stripe' ) ),
+                'return_to'            => (string) ( $paid['return_to'] ?? 'buy' ),
+                'plan_slug'            => sanitize_key( (string) ( $paid['plan_slug'] ?? '' ) ),
+                'stripe_session_id'    => sanitize_text_field( (string) ( $paid['stripe_session_id'] ?? '' ) ),
+                'stripe_payment_intent'=> sanitize_text_field( (string) ( $paid['stripe_payment_intent'] ?? '' ) ),
+                'stripe_receipt_url'   => esc_url_raw( (string) ( $paid['stripe_receipt_url'] ?? '' ) ),
+                'initiated_at'         => absint( $paid['initiated_at'] ?? 0 ),
+                'completed_at'         => absint( $paid['completed_at'] ?? current_time( 'timestamp' ) ),
+            ] );
             return [
                 'already'   => true,
                 'user_id'   => (int) $paid['user_id'],
@@ -1368,6 +1382,7 @@ class VA_Ajax {
                 'return_to' => (string) ( $paid['return_to'] ?? 'buy' ),
                 'stripe_session_id'     => sanitize_text_field( (string) ( $paid['stripe_session_id'] ?? '' ) ),
                 'stripe_payment_intent' => sanitize_text_field( (string) ( $paid['stripe_payment_intent'] ?? '' ) ),
+                'stripe_receipt_url'    => esc_url_raw( (string) ( $paid['stripe_receipt_url'] ?? '' ) ),
             ];
         }
 
@@ -1378,10 +1393,13 @@ class VA_Ajax {
 
         $user_id   = absint( $data['user_id'] ?? 0 );
         $qty       = absint( $data['qty'] ?? 0 );
+        $amount    = absint( $data['amount'] ?? 0 );
         $return_to = isset( $data['return_to'] ) && $data['return_to'] === 'submit' ? 'submit' : 'buy';
         $provider  = sanitize_key( (string) ( $data['provider'] ?? get_option( 'va_payment_provider', 'none' ) ) );
         $stripe_session_id     = sanitize_text_field( (string) ( $data['stripe_session_id'] ?? '' ) );
         $stripe_payment_intent = sanitize_text_field( (string) ( $data['stripe_payment_intent'] ?? '' ) );
+        $stripe_receipt_url    = esc_url_raw( (string) ( $data['stripe_receipt_url'] ?? '' ) );
+        $initiated_at          = absint( $data['created_at'] ?? time() );
 
         if ( $user_id <= 0 || $qty <= 0 ) {
             return new WP_Error( 'va_credit_missing_payload', 'A fizetés adatai hiányosak, kredit nem írható jóvá.' );
@@ -1405,17 +1423,40 @@ class VA_Ajax {
             update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
         }
 
+        $completed_at = current_time( 'timestamp' );
+        self::record_credit_purchase_history( $user_id, [
+            'token'                 => $token,
+            'user_id'               => $user_id,
+            'qty'                   => $qty,
+            'amount'                => $amount,
+            'provider'              => $provider,
+            'return_to'             => $return_to,
+            'plan_slug'             => $new_plan,
+            'stripe_session_id'     => $stripe_session_id,
+            'stripe_payment_intent'  => $stripe_payment_intent,
+            'stripe_receipt_url'    => $stripe_receipt_url,
+            'initiated_at'          => $initiated_at,
+            'completed_at'          => $completed_at,
+        ] );
+
         $paid_data = [
-            'user_id'   => $user_id,
-            'qty'       => $qty,
-            'provider'  => $provider,
-            'return_to' => $return_to,
+            'user_id'               => $user_id,
+            'qty'                   => $qty,
+            'amount'                => $amount,
+            'provider'              => $provider,
+            'return_to'             => $return_to,
+            'plan_slug'             => $new_plan,
+            'initiated_at'          => $initiated_at,
+            'completed_at'          => $completed_at,
         ];
         if ( $stripe_session_id !== '' ) {
             $paid_data['stripe_session_id'] = $stripe_session_id;
         }
         if ( $stripe_payment_intent !== '' ) {
             $paid_data['stripe_payment_intent'] = $stripe_payment_intent;
+        }
+        if ( $stripe_receipt_url !== '' ) {
+            $paid_data['stripe_receipt_url'] = $stripe_receipt_url;
         }
 
         set_transient( $paid_key, $paid_data, WEEK_IN_SECONDS );
@@ -1433,7 +1474,77 @@ class VA_Ajax {
             'return_to' => $return_to,
             'stripe_session_id'     => $stripe_session_id,
             'stripe_payment_intent' => $stripe_payment_intent,
+            'stripe_receipt_url'    => $stripe_receipt_url,
         ];
+    }
+
+    public static function get_credit_purchase_history( int $user_id ): array {
+        $history = get_user_meta( $user_id, 'va_credit_purchase_history', true );
+        if ( ! is_array( $history ) ) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ( $history as $entry ) {
+            if ( ! is_array( $entry ) ) {
+                continue;
+            }
+
+            $normalized[] = [
+                'token'                => sanitize_text_field( (string) ( $entry['token'] ?? '' ) ),
+                'user_id'              => absint( $entry['user_id'] ?? $user_id ),
+                'qty'                  => absint( $entry['qty'] ?? 0 ),
+                'amount'               => absint( $entry['amount'] ?? 0 ),
+                'provider'             => sanitize_key( (string) ( $entry['provider'] ?? 'stripe' ) ),
+                'return_to'            => sanitize_key( (string) ( $entry['return_to'] ?? 'buy' ) ),
+                'plan_slug'            => sanitize_key( (string) ( $entry['plan_slug'] ?? '' ) ),
+                'stripe_session_id'    => sanitize_text_field( (string) ( $entry['stripe_session_id'] ?? '' ) ),
+                'stripe_payment_intent'=> sanitize_text_field( (string) ( $entry['stripe_payment_intent'] ?? '' ) ),
+                'stripe_receipt_url'   => esc_url_raw( (string) ( $entry['stripe_receipt_url'] ?? '' ) ),
+                'initiated_at'         => absint( $entry['initiated_at'] ?? 0 ),
+                'completed_at'         => absint( $entry['completed_at'] ?? 0 ),
+            ];
+        }
+
+        usort( $normalized, static function( array $a, array $b ): int {
+            return ( $b['completed_at'] ?? 0 ) <=> ( $a['completed_at'] ?? 0 );
+        } );
+
+        return $normalized;
+    }
+
+    private static function record_credit_purchase_history( int $user_id, array $entry ): void {
+        if ( $user_id <= 0 ) {
+            return;
+        }
+
+        $history = self::get_credit_purchase_history( $user_id );
+        $token   = sanitize_text_field( (string) ( $entry['token'] ?? '' ) );
+        $session = sanitize_text_field( (string) ( $entry['stripe_session_id'] ?? '' ) );
+        $intent  = sanitize_text_field( (string) ( $entry['stripe_payment_intent'] ?? '' ) );
+
+        foreach ( $history as $existing ) {
+            if ( $token !== '' && ( $existing['token'] ?? '' ) === $token ) {
+                return;
+            }
+            if ( $session !== '' && ( $existing['stripe_session_id'] ?? '' ) === $session ) {
+                return;
+            }
+            if ( $intent !== '' && ( $existing['stripe_payment_intent'] ?? '' ) === $intent ) {
+                return;
+            }
+        }
+
+        $entry['logged_at']   = current_time( 'mysql' );
+        $entry['logged_ts']   = current_time( 'timestamp' );
+        $history[] = $entry;
+
+        usort( $history, static function( array $a, array $b ): int {
+            return ( $b['completed_at'] ?? $b['logged_ts'] ?? 0 ) <=> ( $a['completed_at'] ?? $a['logged_ts'] ?? 0 );
+        } );
+
+        $history = array_slice( $history, 0, 100 );
+        update_user_meta( $user_id, 'va_credit_purchase_history', $history );
     }
 
     private static function redirect_submit_page(): void {
