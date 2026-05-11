@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 11. – Session #310 (Fix brand + fix e-mail kenyszerites)
+
+### Mi volt a cel
+- A nev mindenhol: Vadkár Vadász
+- Az e-mail mindenhol: vadkarvadasz@gmail.com
+
+### Mit keszitettem [x]
+- [x] `VA_Mailer` fix konstansokat kapott: `BRAND_NAME`, `SUPPORT_EMAIL`
+- [x] Felado nev fix: `Vadkár Vadász`
+- [x] Felado e-mail fix: `vadkarvadasz@gmail.com`
+- [x] Email sablonban site nev fixen a brand konstansbol jon
+- [x] Plan figyelmezteto emailben a targy/szoveg brand neve fix `Vadkár Vadász`
+- [x] Plan figyelmezteto emailben kontakt fixen `vadkarvadasz@gmail.com`
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck + deploy lefutott
+
+### Erintett fajlok
+- `includes/class-mailer.php`
+- `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #309 (Nyitolap logok elrejtese)
 
 ### Mi volt a cel
