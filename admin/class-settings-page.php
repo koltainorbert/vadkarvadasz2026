@@ -3329,7 +3329,7 @@ class VA_Settings_Page {
                                             <strong>Stripe vásárlási előzmények</strong>
                                             <span><?php echo esc_html( (string) $purchase_count ); ?> tranzakció · <?php echo esc_html( (string) $purchase_total_qty ); ?> kredit · <?php echo esc_html( number_format( $purchase_total_amount, 0, ',', ' ' ) ); ?> Ft</span>
                                         </div>
-                                        <span class="va-upm-history-toggle">Lenyitás</span>
+                                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
                                     </summary>
                                 <div class="va-upm-history-list">
                                     <?php foreach ( $purchase_history as $purchase ):
