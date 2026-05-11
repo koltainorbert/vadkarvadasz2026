@@ -736,17 +736,35 @@ class VA_User_Roles {
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
 
-        $subject_tpl = trim( (string) get_option( 'va_email_warning_subject', 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})' ) );
+        $subject_default = 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})';
+        $body_default    = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+
+        $subject_by_days = [
+            30 => trim( (string) get_option( 'va_email_warning_subject_30', '' ) ),
+            7  => trim( (string) get_option( 'va_email_warning_subject_7', '' ) ),
+            1  => trim( (string) get_option( 'va_email_warning_subject_1', '' ) ),
+        ];
+        $body_by_days = [
+            30 => (string) get_option( 'va_email_warning_body_30', '' ),
+            7  => (string) get_option( 'va_email_warning_body_7', '' ),
+            1  => (string) get_option( 'va_email_warning_body_1', '' ),
+        ];
+
+        $subject_tpl = $subject_by_days[ $days_left ] ?? '';
+        $body_tpl    = $body_by_days[ $days_left ] ?? '';
+
         if ( $subject_tpl === '' ) {
-            $subject_tpl = 'Figyelmeztetés: {days} nap múlva inaktív hirdetés törlés ({site_name})';
+            $subject_tpl = trim( (string) get_option( 'va_email_warning_subject', $subject_default ) );
+        }
+        if ( $subject_tpl === '' ) {
+            $subject_tpl = $subject_default;
         }
 
-        $body_tpl = (string) get_option(
-            'va_email_warning_body',
-            "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}"
-        );
         if ( trim( $body_tpl ) === '' ) {
-            $body_tpl = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed {days} nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+            $body_tpl = (string) get_option( 'va_email_warning_body', $body_default );
+        }
+        if ( trim( $body_tpl ) === '' ) {
+            $body_tpl = $body_default;
         }
 
         $replace_map = [

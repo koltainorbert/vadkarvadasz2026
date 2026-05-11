@@ -799,6 +799,43 @@ class VA_Settings_Page {
             update_option( 'va_email_warning_body', self::$defaults['va_email_warning_body'] );
         }
 
+        // 30/7/1 napos külön figyelmeztető sablonok
+        register_setting( 'va_general_settings', 'va_email_warning_subject_30', [ 'sanitize_callback' => 'sanitize_text_field' ] );
+        self::$defaults['va_email_warning_subject_30'] = 'Figyelmeztetés: 30 nap múlva inaktív hirdetés törlés ({site_name})';
+        if ( get_option( 'va_email_warning_subject_30' ) === false ) {
+            update_option( 'va_email_warning_subject_30', self::$defaults['va_email_warning_subject_30'] );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_body_30', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+        self::$defaults['va_email_warning_body_30'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 30 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        if ( get_option( 'va_email_warning_body_30' ) === false ) {
+            update_option( 'va_email_warning_body_30', self::$defaults['va_email_warning_body_30'] );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_subject_7', [ 'sanitize_callback' => 'sanitize_text_field' ] );
+        self::$defaults['va_email_warning_subject_7'] = 'Figyelmeztetés: 7 nap múlva inaktív hirdetés törlés ({site_name})';
+        if ( get_option( 'va_email_warning_subject_7' ) === false ) {
+            update_option( 'va_email_warning_subject_7', self::$defaults['va_email_warning_subject_7'] );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_body_7', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+        self::$defaults['va_email_warning_body_7'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 7 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        if ( get_option( 'va_email_warning_body_7' ) === false ) {
+            update_option( 'va_email_warning_body_7', self::$defaults['va_email_warning_body_7'] );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_subject_1', [ 'sanitize_callback' => 'sanitize_text_field' ] );
+        self::$defaults['va_email_warning_subject_1'] = 'Figyelmeztetés: 1 nap múlva inaktív hirdetés törlés ({site_name})';
+        if ( get_option( 'va_email_warning_subject_1' ) === false ) {
+            update_option( 'va_email_warning_subject_1', self::$defaults['va_email_warning_subject_1'] );
+        }
+
+        register_setting( 'va_general_settings', 'va_email_warning_body_1', [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+        self::$defaults['va_email_warning_body_1'] = "Kedves {name}!\n\nÉrtesítünk, hogy {count} db, csomaglimit miatt inaktív hirdetésed 1 nap múlva törlésre kerülhet.\nLegkorábbi törlés időpontja: {delete_at}\n\nMeghosszabbításhoz: {buy_url}\n\nKapcsolat: {support_email}\n\nÜdvözlettel,\n{site_name}";
+        if ( get_option( 'va_email_warning_body_1' ) === false ) {
+            update_option( 'va_email_warning_body_1', self::$defaults['va_email_warning_body_1'] );
+        }
+
         /* Reklámzónák */
         register_setting( 'va_ad_settings', 'va_ad_show_placeholder', [ 'sanitize_callback' => 'absint' ] );
         foreach ( array_keys( VA_Ad_Zones::ZONES ) as $zone ) {
@@ -1336,8 +1373,14 @@ class VA_Settings_Page {
                     <?php self::field_text( 'va_email_brand_name', 'E-mail márkanév' ); ?>
                     <?php self::field_email( 'va_email_contact_email', 'E-mail kapcsolati cím' ); ?>
                     <?php self::field_media( 'va_email_logo_url', 'E-mail logó (ha üres, fejléc logó használata)' ); ?>
-                    <?php self::field_text( 'va_email_warning_subject', 'Figyelmeztető e-mail tárgy sablon' ); ?>
-                    <?php self::field_textarea( 'va_email_warning_body', 'Figyelmeztető e-mail szöveg sablon', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 8 ); ?>
+                    <?php self::field_text( 'va_email_warning_subject_30', '30 napos figyelmeztetés tárgy' ); ?>
+                    <?php self::field_textarea( 'va_email_warning_body_30', '30 napos figyelmeztetés szöveg', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 6 ); ?>
+                    <?php self::field_text( 'va_email_warning_subject_7', '7 napos figyelmeztetés tárgy' ); ?>
+                    <?php self::field_textarea( 'va_email_warning_body_7', '7 napos figyelmeztetés szöveg', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 6 ); ?>
+                    <?php self::field_text( 'va_email_warning_subject_1', '1 napos figyelmeztetés tárgy' ); ?>
+                    <?php self::field_textarea( 'va_email_warning_body_1', '1 napos figyelmeztetés szöveg', 'Változók: {name}, {count}, {days}, {delete_at}, {buy_url}, {support_email}, {site_name}', 6 ); ?>
+                    <?php self::field_text( 'va_email_warning_subject', 'Közös fallback tárgy sablon (opcionális)' ); ?>
+                    <?php self::field_textarea( 'va_email_warning_body', 'Közös fallback szöveg sablon (opcionális)', 'Akkor használjuk, ha a 30/7/1 mező üres.', 5 ); ?>
                     <?php self::field_select('va_home_hero_align',      'Főoldal hero elemek igazítása', [ 'left' => 'Balra zárt', 'center' => 'Középre', 'right' => 'Jobbra zárt' ] ); ?>
                     <?php self::field_select('va_home_hero_bg_type', 'Főoldal hero háttér típusa', [
                         'video'    => '🎬 Videó',

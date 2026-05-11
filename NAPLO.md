@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 11. – Session #312 (Kulon szerkesztheto 30/7/1 figyelmezteto sablonok)
+
+### Mi volt a cel
+- Ne egy kozos figyelmezteto sablon legyen, hanem kulon szerkesztheto 30 napos, 7 napos es 1 napos e-mail
+
+### Mit keszitettem [x]
+- [x] Uj admin opciok: `va_email_warning_subject_30`, `va_email_warning_body_30`
+- [x] Uj admin opciok: `va_email_warning_subject_7`, `va_email_warning_body_7`
+- [x] Uj admin opciok: `va_email_warning_subject_1`, `va_email_warning_body_1`
+- [x] Az `Általános` oldalon kulon mezok kerultek be mind a 3 figyelmezteteshez
+- [x] E-mail kuldesnel a rendszer a megfelelo naphoz tartozo sablont valasztja (`30/7/1`)
+- [x] Visszafele kompatibilitas: ha valamelyik kulon sablon ures, a kozos `va_email_warning_subject/body` fallback hasznalodik
+- [x] Root + plugin mirror fajlok szinkronban frissitve
+- [x] Hibacheck rendben, deploy lefutott
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #311 (Admin szerkesztheto e-mail sablon + mirror sync)
 
 ### Mi volt a cel
