@@ -8603,7 +8603,7 @@ class VA_Settings_Page {
                 updateSidebarSummary(slug, panel);
             }
 
-            document.querySelectorAll('.va-pc-input[data-key="color"]').forEach(function(input){
+            wrap.querySelectorAll('.va-pc-input[data-key="color"]').forEach(function(input){
                 input.addEventListener('input', function(){
                     updatePlanPreview(input.dataset.slug);
                 });
@@ -8612,7 +8612,7 @@ class VA_Settings_Page {
                 });
             });
 
-            document.querySelectorAll('.va-pc-panel[data-slug] [data-key]').forEach(function(input){
+            wrap.querySelectorAll('.va-pc-panel[data-slug] [data-key]').forEach(function(input){
                 if(input.dataset.key === 'color'){
                     return;
                 }
@@ -8622,7 +8622,7 @@ class VA_Settings_Page {
                 });
             });
 
-            document.querySelectorAll('.va-pc-reset-btn').forEach(function(button){
+            wrap.querySelectorAll('.va-pc-reset-btn').forEach(function(button){
                 button.addEventListener('click', function(){
                     var defaults = JSON.parse(button.dataset.defaults || '{}');
                     var panel = document.getElementById('va-pc-panel-' + button.dataset.slug);
