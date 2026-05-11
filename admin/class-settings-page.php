@@ -7251,6 +7251,19 @@ class VA_Settings_Page {
         $g = static fn( string $k, string $d = '' ) => (string) ( get_option( $k, $d ) ?: $d );
         $gi = static fn( string $k, int $d = 0 ) => (int) ( get_option( $k, $d ) ?: $d );
 
+        // Csomagkonfig lekérése szinkronhoz
+        $plan_configs_for_sync = [];
+        if ( class_exists( 'VA_User_Roles' ) ) {
+            foreach ( VA_User_Roles::PLANS as $slug => $def ) {
+                $cfg = VA_User_Roles::get_plan_config( $slug );
+                $plan_configs_for_sync[ $slug ] = [
+                    'label'       => $cfg['label'] ?? $def['label'],
+                    'description' => $cfg['description'] ?? $def['description'],
+                    'icon'        => $cfg['icon'] ?? $def['icon'],
+                ];
+            }
+        }
+
         $card_defaults = [
             'labels'     => [ 1 => 'Basic', 2 => 'Silver', 3 => 'Gold', 4 => 'Platinum' ],
             'slugs'      => [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ],
@@ -7328,6 +7341,16 @@ class VA_Settings_Page {
                     <h1>💳 Árkártyák szerkesztő</h1>
                     <p>Szerkeszd az árkártyák megjelenését, szövegeit és árait. A változtatások azonnal megjelennek az oldalon mentés után.</p>
                 </div>
+                <?php if ( ! empty( $plan_configs_for_sync ) ): ?>
+                <div>
+                    <button type="button" id="va-pk-sync-from-plans" class="button"
+                            data-plans="<?php echo esc_attr( wp_json_encode( $plan_configs_for_sync ) ); ?>"
+                            style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;">
+                        🔄 Szinkronizálás a Csomag beállításokból
+                    </button>
+                    <p style="font-size:11px;color:rgba(255,255,255,.4);margin:6px 0 0;">Kártyánként átírja a nevet és leírást a Csomagok oldalon beállított adatokból.</p>
+                </div>
+                <?php endif; ?>
             </div>
 
             <?php settings_errors( 'va_price_cards_settings' ); ?>
