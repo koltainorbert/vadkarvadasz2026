@@ -3386,6 +3386,7 @@ class VA_Settings_Page {
                     $plat_limit  = (int) get_user_meta( $user->ID, 'va_plan_listing_limit', true );
                     $plat_cd     = (int) get_user_meta( $user->ID, 'va_plan_boost_cooldown', true );
                     $plan_note   = (string) get_user_meta( $user->ID, 'va_plan_note', true );
+                    $paid_credits = absint( get_user_meta( $user->ID, 'va_listing_credits', true ) );
                     $purchase_history = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'get_credit_purchase_history' )
                         ? VA_Ajax::get_credit_purchase_history( $user->ID )
                         : [];
@@ -3443,6 +3444,13 @@ class VA_Settings_Page {
                                     <label>Megjegyzés:
                                         <input type="text" class="va-upm-plat-note" maxlength="200"
                                                value="<?php echo esc_attr( $plan_note ); ?>" style="width:200px;">
+                                    </label>
+                                </div>
+
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
+                                    <label>Vásárolt kredit (db):
+                                        <input type="number" class="va-upm-credits" min="0" max="999999"
+                                               value="<?php echo esc_attr( (string) $paid_credits ); ?>" style="width:110px;">
                                     </label>
                                 </div>
 
