@@ -148,11 +148,28 @@ class VA_Shortcodes {
                 'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[$n] ),
                 'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ) ),
             ];
-            // Extra felirat sorok
-            $feats = [];
-            for ( $f = 1; $f <= 5; $f++ ) {
-                $v = trim( (string) get_option( "va_pc_{$n}_feat_{$f}", '' ) );
-                if ( $v !== '' ) $feats[] = $v;
+            // Lista sorok: uj tarolas (va_pc_{n}_features), visszafele kompatibilis fallbackkel.
+            $feats = get_option( "va_pc_{$n}_features", null );
+            if ( ! is_array( $feats ) ) {
+                $feats = [];
+                if ( class_exists( 'VA_User_Roles' ) ) {
+                    $cfg = VA_User_Roles::get_plan_config( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ) );
+                    $plan_limit = (int) ( $cfg['monthly_limit'] ?? 0 );
+                    $plan_basis = (string) ( $cfg['basis'] ?? 'monthly' );
+                    if ( $plan_limit > 0 ) {
+                        $feats[] = $plan_basis === 'active' ? 'Max ' . $plan_limit . ' aktív hirdetés' : $plan_limit . ' hirdetés / hó';
+                    } else {
+                        $feats[] = 'Korlátlan hirdetés';
+                    }
+                    $plan_boost_cd = (int) ( $cfg['boost_cooldown'] ?? 0 );
+                    if ( $plan_boost_cd > 0 ) {
+                        $feats[] = 'Boost újratöltés: ' . $plan_boost_cd . ' nap';
+                    }
+                }
+                for ( $f = 1; $f <= 5; $f++ ) {
+                    $v = trim( (string) get_option( "va_pc_{$n}_feat_{$f}", '' ) );
+                    if ( $v !== '' && ! in_array( $v, $feats, true ) ) $feats[] = $v;
+                }
             }
             $rank_cards[ array_key_last( $rank_cards ) ]['feats'] = $feats;
         }
@@ -227,9 +244,6 @@ class VA_Shortcodes {
                     $card_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $slug ) : 0;
                     $is_locked_by_active_plan = ( $has_active_product && $card_rank <= $current_plan_rank );
                     $cfg       = ( isset( $all_plan_cfg[ $slug ] ) && is_array( $all_plan_cfg[ $slug ] ) ) ? $all_plan_cfg[ $slug ] : [];
-                    $plan_limit    = (int)    ( $cfg['monthly_limit'] ?? 0 );
-                    $plan_basis    = (string) ( $cfg['basis'] ?? 'monthly' );
-                    $plan_boost_cd = (int)    ( $cfg['boost_cooldown'] ?? 0 );
                     $pkg = $packages_by_qty[ $qty ] ?? [
                         'qty'        => $qty,
                         'label'      => $qty . ' kredit',
@@ -264,14 +278,6 @@ class VA_Shortcodes {
                     </div>
                     <ul class="va-pkg-meta">
                         <li><?php echo esc_html( $card['desc'] ); ?></li>
-                        <?php if ( $plan_limit > 0 ): ?>
-                        <li><?php echo $plan_basis === 'active' ? 'Max ' . esc_html( (string) $plan_limit ) . ' aktív hirdetés' : esc_html( (string) $plan_limit ) . ' hirdetés / hó'; ?></li>
-                        <?php else: ?>
-                        <li>Korlátlan hirdetés</li>
-                        <?php endif; ?>
-                        <?php if ( $plan_boost_cd > 0 ): ?>
-                        <li>Boost újratöltés: <?php echo esc_html( (string) $plan_boost_cd ); ?> nap</li>
-                        <?php endif; ?>
                         <?php foreach ( $card['feats'] as $feat_item ): ?>
                         <li><?php echo esc_html( $feat_item ); ?></li>
                         <?php endforeach; ?>
