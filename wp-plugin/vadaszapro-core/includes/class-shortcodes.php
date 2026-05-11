@@ -129,31 +129,32 @@ class VA_Shortcodes {
         $default_tags   = [ 1 => 'Belépő', 2 => 'Népszerű', 3 => 'Profi', 4 => 'Prémium' ];
         $default_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
         $default_btns   = [ 1 => 'Mindenki számára elérhető', 2 => 'Vásárlás →', 3 => 'Vásárlás →', 4 => 'Vásárlás →' ];
+        $pc_count       = max( 4, min( 8, (int) get_option( 'va_pc_count', 4 ) ) );
 
         $rank_cards = [];
-        for ( $n = 1; $n <= 4; $n++ ) {
+        for ( $n = 1; $n <= $pc_count; $n++ ) {
             $enabled = get_option( "va_pc_{$n}_enabled", '1' ) === '1';
             if ( ! $enabled ) continue;
             $rank_cards[] = [
                 'n'        => $n,
-                'slug'     => (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ),
-                'qty'      => max( 1, (int) get_option( "va_pc_{$n}_qty",  $default_qtys[$n] ) ),
-                'theme'    => (string) get_option( "va_pc_{$n}_theme",     $default_themes[$n] ),
-                'tag'      => (string) get_option( "va_pc_{$n}_tag",       $default_tags[$n] ),
-                'label'    => (string) get_option( "va_pc_{$n}_label",     $default_labels[$n] ),
+                'slug'     => (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ),
+                'qty'      => max( 1, (int) get_option( "va_pc_{$n}_qty",  $default_qtys[ $n ] ?? 1 ) ),
+                'theme'    => (string) get_option( "va_pc_{$n}_theme",     $default_themes[ $n ] ?? 'basic' ),
+                'tag'      => (string) get_option( "va_pc_{$n}_tag",       $default_tags[ $n ] ?? '' ),
+                'label'    => (string) get_option( "va_pc_{$n}_label",     $default_labels[ $n ] ?? ( 'Kártya ' . $n ) ),
                 'desc'     => (string) get_option( "va_pc_{$n}_desc",      'Hirdetési csomag' ),
                 'badge'    => (string) get_option( "va_pc_{$n}_badge",     '' ),
                 'featured' => get_option( "va_pc_{$n}_featured", '0' ) === '1',
                 'free'     => get_option( "va_pc_{$n}_free", $n === 1 ? '1' : '0' ) === '1',
-                'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[$n] ),
-                'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ) ),
+                'btn_text' => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
+                'icon'     => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
             ];
             // Lista sorok: uj tarolas (va_pc_{n}_features), visszafele kompatibilis fallbackkel.
             $feats = get_option( "va_pc_{$n}_features", null );
             if ( ! is_array( $feats ) ) {
                 $feats = [];
                 if ( class_exists( 'VA_User_Roles' ) ) {
-                    $cfg = VA_User_Roles::get_plan_config( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[$n] ) );
+                    $cfg = VA_User_Roles::get_plan_config( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) );
                     $plan_limit = (int) ( $cfg['monthly_limit'] ?? 0 );
                     $plan_basis = (string) ( $cfg['basis'] ?? 'monthly' );
                     if ( $plan_limit > 0 ) {
