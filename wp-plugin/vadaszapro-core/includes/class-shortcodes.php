@@ -7,6 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Shortcodes {
 
+    private static function normalize_plan_slug( string $plan ): string {
+        $plan = sanitize_key( $plan );
+        if ( in_array( $plan, [ 'egyedi', 'ceges', 'ceg', 'business', 'corporate' ], true ) ) {
+            return 'custom';
+        }
+        return $plan;
+    }
+
     public static function init() {
         $codes = [
             'va_login_form'      => 'render_login',
@@ -208,7 +216,7 @@ class VA_Shortcodes {
             'nonce'    => $nonce,
         ]);
         $all_plan_cfg = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_all_plan_configs() : [];
-        $user_plan    = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
+        $user_plan    = class_exists( 'VA_User_Roles' ) ? self::normalize_plan_slug( VA_User_Roles::get_user_plan( $user_id ) ) : 'basic';
         $plan_expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
         $has_active_product = ( $user_plan !== 'basic' && ( $plan_expires_at <= 0 || $plan_expires_at > time() ) );
         $current_plan_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $user_plan ) : 0;
@@ -245,7 +253,7 @@ class VA_Shortcodes {
 
             <div class="va-pkg-grid">
                 <?php foreach ( $rank_cards as $card ):
-                    $slug      = $card['slug'];
+                    $slug      = self::normalize_plan_slug( (string) $card['slug'] );
                     $qty       = (int) $card['qty'];
                     $is_free   = $card['free'];
                     $is_active = ( $slug === $user_plan );
