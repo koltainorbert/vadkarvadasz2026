@@ -1557,7 +1557,7 @@ class VA_Ajax {
         $session = sanitize_text_field( (string) ( $entry['stripe_session_id'] ?? '' ) );
         $intent  = sanitize_text_field( (string) ( $entry['stripe_payment_intent'] ?? '' ) );
 
-        foreach ( $history as $existing ) {
+        foreach ( $history as $index => $existing ) {
             if ( $token !== '' && ( $existing['token'] ?? '' ) === $token ) {
                 $merged = $existing;
                 foreach ( $entry as $key => $value ) {
@@ -1565,8 +1565,7 @@ class VA_Ajax {
                         $merged[ $key ] = $value;
                     }
                 }
-                $history[] = $merged;
-                array_shift( $history );
+                $history[ $index ] = $merged;
                 update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
@@ -1577,8 +1576,7 @@ class VA_Ajax {
                         $merged[ $key ] = $value;
                     }
                 }
-                $history[] = $merged;
-                array_shift( $history );
+                $history[ $index ] = $merged;
                 update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
@@ -1589,8 +1587,7 @@ class VA_Ajax {
                         $merged[ $key ] = $value;
                     }
                 }
-                $history[] = $merged;
-                array_shift( $history );
+                $history[ $index ] = $merged;
                 update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
