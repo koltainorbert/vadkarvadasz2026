@@ -873,6 +873,7 @@ class VA_User_Roles {
         $custom_cd         = absint( $_POST['custom_boost_cooldown'] ?? 0 );
         $custom_credits    = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
         $custom_dur_days   = absint( $_POST['custom_duration_days'] ?? 0 );
+        $custom_expires_at = sanitize_text_field( wp_unslash( (string) ( $_POST['custom_expires_at'] ?? '' ) ) );
         $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
         $seller_label      = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
 
@@ -913,6 +914,14 @@ class VA_User_Roles {
             }
             delete_user_meta( $target_uid, 'va_plan_expired_admin_notified' );
             delete_user_meta( $target_uid, 'va_plan_expired_user_notified' );
+
+            // Ha admin konkrét lejárat dátumot adott meg, az felülírja a fenti számítást.
+            if ( $custom_expires_at !== '' ) {
+                $exp_ts = strtotime( $custom_expires_at );
+                if ( $exp_ts && $exp_ts > 0 ) {
+                    update_user_meta( $target_uid, 'va_plan_expires_at', (int) $exp_ts );
+                }
+            }
         }
 
         // Kiemelési újratöltés felülírás minden csomagnál menthető.

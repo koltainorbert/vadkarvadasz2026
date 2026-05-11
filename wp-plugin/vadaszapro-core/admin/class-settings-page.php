@@ -3491,7 +3491,9 @@ class VA_Settings_Page {
                     $phone       = get_user_meta( $user->ID, 'va_phone', true );
                     $listings    = count_user_posts( $user->ID, 'va_listing' );
                     $auctions    = $auctions_enabled ? count_user_posts( $user->ID, 'va_auction' ) : 0;
+                    $stored_plan = sanitize_key( (string) get_user_meta( $user->ID, 'va_plan', true ) );
                     $plan        = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user->ID ) : 'basic';
+                    $plan_editor = ( isset( $plans[ $stored_plan ] ) && $stored_plan !== '_global' ) ? $stored_plan : $plan;
                     $pcfg        = $plans[ $plan ] ?? $plans['basic'];
                     $plat_limit   = (int) get_user_meta( $user->ID, 'va_plan_listing_limit', true );
                     $plat_cd      = (int) get_user_meta( $user->ID, 'va_plan_boost_cooldown', true );
@@ -3500,6 +3502,7 @@ class VA_Settings_Page {
                     $paid_credits = absint( get_user_meta( $user->ID, 'va_listing_credits', true ) );
                     $expires_ts   = (int) get_user_meta( $user->ID, 'va_plan_expires_at', true );
                     $custom_dur   = (int) get_user_meta( $user->ID, 'va_plan_custom_duration_days', true );
+                    $expires_iso  = $expires_ts > 0 ? wp_date( 'Y-m-d\\TH:i', $expires_ts ) : '';
                     $purchase_history = class_exists( 'VA_Ajax' ) && method_exists( 'VA_Ajax', 'get_credit_purchase_history' )
                         ? VA_Ajax::get_credit_purchase_history( $user->ID )
                         : [];
@@ -3513,8 +3516,10 @@ class VA_Settings_Page {
 
                     if ( class_exists( 'VA_User_Roles' ) ) {
                         $eff_cfg = VA_User_Roles::get_plan_config( $plan, $user->ID );
+                        $eff_cfg_editor = VA_User_Roles::get_plan_config( $plan_editor, $user->ID );
                     } else {
                         $eff_cfg = $pcfg;
+                        $eff_cfg_editor = $pcfg;
                     }
                 ?>
                     <tr class="va-upm-row" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">
@@ -3543,7 +3548,7 @@ class VA_Settings_Page {
                                                 ? (int) VA_User_Roles::get_card_cooldown_for_plan( (string) $pk )
                                                 : (int) ( $pcfg2['boost_cooldown'] ?? 0 );
                                         ?>
-                                        <option value="<?php echo esc_attr( $pk ); ?>" data-card-cd="<?php echo esc_attr( (string) $card_cd_for_plan ); ?>" <?php selected( $plan, $pk ); ?>>
+                                        <option value="<?php echo esc_attr( $pk ); ?>" data-card-cd="<?php echo esc_attr( (string) $card_cd_for_plan ); ?>" <?php selected( $plan_editor, $pk ); ?>>
                                             <?php echo esc_html( $pcfg2['icon'] . ' ' . $pcfg2['label'] ); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -3552,24 +3557,32 @@ class VA_Settings_Page {
                                 <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
                                     <label>Kiemelési újratöltés (nap):
                                         <input type="number" class="va-upm-plat-cd" min="1" max="365"
-                                               value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:70px;">
+                                               value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg_editor['boost_cooldown'] ) ); ?>" style="width:70px;">
                                     </label>
                                     <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
                                 </div>
 
                                 <!-- Egyedi (Custom) lejárati idő -->
-                                <div class="va-upm-custom-expire" style="<?php echo $plan === 'custom' ? '' : 'display:none;'; ?>">
-                                    <label>Egyedi lejárat (nap a mai napótól):
+                                <div class="va-upm-custom-expire" style="<?php echo $plan_editor === 'custom' ? '' : 'display:none;'; ?>">
+                                    <label>Egyedi lejárat (nap a mai naptól):
                                         <input type="number" class="va-upm-custom-dur" min="1" max="3650"
                                                value="<?php echo esc_attr( (string) ( $custom_dur ?: 365 ) ); ?>" style="width:90px;">
                                         <span style="color:rgba(255,255,255,.4);font-size:11px;margin-left:6px;">
                                             <?php
-                                            if ( $plan === 'custom' && $expires_ts > 0 ) {
-                                                echo 'Jelenlegi lejárat: ' . esc_html( date_i18n( 'Y.m.d', $expires_ts ) );
+                                            if ( $expires_ts > 0 ) {
+                                                echo 'Jelenlegi lejárat: ' . esc_html( date_i18n( 'Y.m.d H:i', $expires_ts ) );
                                             }
                                             ?>
                                         </span>
                                     </label>
+                                </div>
+
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
+                                    <label>Lejárat dátuma:
+                                        <input type="datetime-local" class="va-upm-expires-at"
+                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:190px;">
+                                    </label>
+                                    <span style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</span>
                                 </div>
 
                                 <!-- Egyedi (Platinum + Custom) extra mezők -->
@@ -3614,14 +3627,18 @@ class VA_Settings_Page {
                             } else {
                                 $now_ts    = time();
                                 $days_diff = (int) ceil( ( $expires_ts - $now_ts ) / DAY_IN_SECONDS );
-                                $date_str  = date_i18n( 'Y.m.d', $expires_ts );
+                                $date_str  = date_i18n( 'Y.m.d H:i', $expires_ts );
                                 if ( $expires_ts < $now_ts ) {
-                                    echo '<span style="color:#ff4444;font-weight:700" title="Lejárt: ' . esc_attr( $date_str ) . '">&#x26A0; Lejárt</span>';
+                                    $expired_days = (int) floor( ( $now_ts - $expires_ts ) / DAY_IN_SECONDS );
+                                    echo '<div><span style="display:inline-block;color:#ff4444;font-weight:800;background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.45);padding:2px 8px;border-radius:999px;">&#x26A0; LEJÁRT ' . esc_html( (string) $expired_days ) . ' napja</span></div>';
+                                    echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejárt: ' . esc_html( $date_str ) . '</div>';
                                 } elseif ( $days_diff <= 30 ) {
                                     $col = $days_diff <= 7 ? '#ff8800' : '#ffcc00';
-                                    echo '<span style="color:' . esc_attr( $col ) . ';font-weight:700" title="' . esc_attr( $date_str ) . '">' . esc_html( (string) $days_diff ) . ' nap</span>';
+                                    echo '<div><span style="display:inline-block;color:' . esc_attr( $col ) . ';font-weight:800;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.45);padding:2px 8px;border-radius:999px;">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
+                                    echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejár: ' . esc_html( $date_str ) . '</div>';
                                 } else {
-                                    echo '<span style="color:#00c850" title="' . esc_attr( $date_str ) . '">' . esc_html( (string) $days_diff ) . ' nap</span>';
+                                    echo '<div><span style="display:inline-block;color:#00c850;font-weight:800;background:rgba(0,200,80,.12);border:1px solid rgba(0,200,80,.45);padding:2px 8px;border-radius:999px;">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
+                                    echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejár: ' . esc_html( $date_str ) . '</div>';
                                 }
                             }
                         ?>
@@ -3944,6 +3961,7 @@ class VA_Settings_Page {
                     var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
                     var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
                     var customDurEl   = ed ? ed.querySelector('.va-upm-custom-dur')     : null;
+                    var expiresAtEl   = ed ? ed.querySelector('.va-upm-expires-at')     : null;
 
                     var data = new URLSearchParams({
                         action : 'va_admin_set_user_plan',
@@ -3954,6 +3972,7 @@ class VA_Settings_Page {
                         custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
                         custom_credits       : creditsEl  ? creditsEl.value  : 0,
                         custom_duration_days : customDurEl ? customDurEl.value : 0,
+                        custom_expires_at    : expiresAtEl ? expiresAtEl.value : '',
                         plan_note            : noteEl     ? noteEl.value     : '',
                         plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''
                     });
