@@ -7984,6 +7984,7 @@ class VA_Settings_Page {
         .va-pc-sidebar {
             position: sticky;
             top: 72px;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             gap: 16px;
