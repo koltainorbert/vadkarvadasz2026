@@ -2,6 +2,83 @@
 
 ---
 
+## 2026. 05. 11. – Session #321 (Terminologia lokalizacio: boost_cooldown → kiemelés)
+
+### Mi volt a cel
+- Az angol "boost_cooldown" terminologia helyett magyarnak legyen megfelelő "kiemelés" / "kiemelési újratöltés"
+- Verifikáció: a kártya adatok mindig mérvadóak (nem lehet automatikusan generálni)
+- Verifikáció: az admin minden felhasználónál tudja a paramétereket módosítani (per-user override)
+- Dokumentáció: a rendszer hogyan határozza meg a rangokat (user plan → limit, cooldown, etc.)
+
+### Mit keszitettem [x]
+- [x] **Terminológia csere (user-facing text):**
+  - Admin users table header: "Kiemelési cooldown" → "Kiemelési újratöltés"
+  - Admin plan editor label: "Cooldown (nap)" → "Kiemelési újratöltés (nap)"
+  - Admin plan editor tooltip: "nap cooldown" → "nap kiemelési újratöltés"
+  - Plan feature list: "Boost újratöltés: X nap" → "Kiemelési újratöltés: X nap"
+  - Plan config card title: "Boost / Kiemelés" → "Kiemelés / Boost"
+  - Plan config card label: "Cooldown" → "Kiemelési újratöltés"
+  - Plan settings overview card: "Cooldown" → "Kiemelési újratöltés"
+  - Plan token/summary: "nap cooldown" → "nap kiemelési újratöltés"
+  - Admin mini-card: "Boost rendszer" → "Kiemelés rendszer"
+  - Dashboard: "naponként emelhető" → "naponként emelhető (kiemelési újratöltés)"
+  - Dashboard button title: (tooltip) kiemelési újratöltés szöveg
+
+- [x] **Adatforrás autoritásának verifikációja:**
+  - ✓ Kártyák (`va_pc_{n}_*` options) mindig a primerAdatforrás – nem auto-generálódnak
+  - ✓ Feature lista: `va_pc_count` + `va_pc_{n}_feature_{m}` – admin szerkeszt, rendszer soha nem módosít
+  - ✓ Gomb URL: `va_pc_{n}_btn_url` – admin szerkeszt, frontend megjelenít
+  - ✓ Ingyenes felirat: `va_pc_{n}_free_label` – admin szerkeszt, frontend megjelenít
+
+- [x] **Admin per-user override verifikációja:**
+  - ✓ `get_plan_config($plan, $user_id)` metódus: kiolvassa a per-user user_meta értékeket
+  - ✓ Ha `platinum` vagy `custom`: user_meta `va_plan_listing_limit` + `va_plan_boost_cooldown` felülír
+  - ✓ Admin AJAX (`va_admin_set_user_plan`) mentés: aktualizálja a user_meta-t
+  - ✓ Admin form: platinum/custom planokra extra mezők (havi limit, kiemelési újratöltés, rang címke, megjegyzés)
+  - ✓ Enforcement: új plan = azonnal enforce-ol a `on_plan_meta_updated` hook
+
+- [x] **Rendszer rangmeghatározás dokumentációja:**
+  A rendszer a **user plan → plan config** logikán alapul:
+  
+  **Rank szint (int)**: `get_plan_rank($plan)` 
+  - basic → 0, silver → 1, gold → 2, platinum → 3, custom → 4 (magasabb = több privileégium)
+  
+  **Effektív konfiguráció** (`get_plan_config`):
+  1. Plan base config lekérése (PLANS const-ból)
+  2. Ha admin user → limitsz nélkül (0 = korlátlan)
+  3. Ha platinum/custom + user_id > 0 → user_meta override-ok felülírnak
+  
+  **Megjelenítés (frontend):**
+  - Hirdetes oldalon: plan-szintű badge + ha custom user label → az használódik
+  - Dashboard: a felhasználó aktuális plan-ja → korlátok/cooldown megjelenítése
+  
+  **Limites enforce:**
+  - Havi limit: `va_user_system.php` `can_post_listing()` — hogyha elérte a limitet → felfüggesztés
+  - Kiemelési újratöltés: `can_boost()` — cooldown periódusban nem emelhető
+  
+  **Automatikus trigger:**
+  - Per-user naponta egyszer: `maybe_enforce_current_user_limits()` (transient)
+  - Plan meta változás: `on_plan_meta_updated()` azonnal enforce-ol
+
+- [x] Mirror és deploy:
+  - Root → wp-plugin + wp-theme szinkronizálás
+  - Deploy All (production FTP workflow triggered)
+
+### Erintett fajlok (UI frissítések)
+- `admin/class-settings-page.php` (9 string csere)
+- `frontend/templates/user/dashboard.php` (2 string csere)
+- Mirror: `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- Mirror: `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+### Verifikáció ✓
+- PHP syntax: OK (no errors)
+- Deploy: OK (production trigger)
+- Adatforrás: ✓ Kártyák mindig mérvadóak
+- Admin override: ✓ Per-user meta felülírás működik
+- Rank system: ✓ Plan → config → enforcement logika dokumentálva
+
+---
+
 ## 2026. 05. 11. – Session #320 (Egyedi user kategoria + rangnev szerkesztes)
 
 ### Mi volt a cel
