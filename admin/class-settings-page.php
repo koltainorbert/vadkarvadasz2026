@@ -7345,7 +7345,7 @@ class VA_Settings_Page {
         .va-pk-card__field-row--3 { grid-template-columns:1fr 1fr 1fr; }
         .va-pk-card__price-preview { text-align:center; padding:14px 0; }
         .va-pk-card__price-preview .total { font-size:64px; font-weight:900; color:#fff; line-height:1; display:flex; align-items:baseline; justify-content:center; gap:4px; }
-        .va-pk-card__price-preview .total .num { letter-spacing:-2px; }
+        .va-pk-card__price-preview .total .num { font-size:1em !important; font-weight:inherit !important; line-height:1 !important; letter-spacing:-2px; text-decoration:none !important; display:inline-block; }
         .va-pk-card__price-preview .total .currency { font-size:28px; font-weight:700; opacity:.7; margin-left:3px; }
         .va-pk-card__price-preview .unit  { font-size:13px; color:rgba(255,255,255,.4); margin-top:4px; }
         .va-pk-card__price-preview .free-tag { font-size:22px; font-weight:700; color:#4ade80; }
