@@ -401,7 +401,7 @@ html, body {
   display: flex; align-items: center;
   background: transparent;
   border: 1px solid rgba(255,255,255,.18);
-  color: rgba(255,255,255,.7) !important;
+  color: #fff !important;
   padding: 0 20px;
   height: 36px; box-sizing: border-box;
   font-size: .76rem; font-weight: 600;
@@ -409,6 +409,9 @@ html, body {
   border-radius: 999px;
   transition: all .18s;
 }
+.va-header__user-login,
+.va-header__user-login font,
+.va-header__user-login * { color: #fff !important; }
 .va-header__user-login:hover {
   background: rgba(255,255,255,.07);
   color: #fff !important;

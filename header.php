@@ -29,6 +29,15 @@
         }
         .va-lang-sw__item:hover { background: rgba(255,255,255,.09) !important; }
         .va-lang-sw__item.active { background: rgba(255,200,0,.13) !important; color: #fff !important; }
+        .va-auth-box__title,
+        .va-header__user-login,
+        .va-header__user-login * ,
+        .va-header__user-login font,
+        .va-header__submit-btn,
+        .va-header__submit-btn * ,
+        .va-header__submit-btn font {
+            color: #fff !important;
+        }
     </style>
 </head>
 <body <?php body_class(); ?>>
