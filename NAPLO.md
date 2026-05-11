@@ -2,6 +2,40 @@
 
 ---
 
+## 2026. 05. 11. – Session #325 (Kartya az alap + userenkenti visszaallitas gomb)
+
+### Igeny
+- Uj usernel (es altalaban alap esetben) a kiemelesi idot mindig a kartyan beallitott ertek adja.
+- Ha userenkent kezzel modositunk, legyen egy gomb, amivel visszaall a kartya szerinti eredeti kiemelesi napra.
+
+### Megvalositas [x]
+- [x] `includes/class-user-roles.php`:
+  - Uj helper: `get_card_cooldown_for_plan($plan)`
+    - a kartya `plan_slug` alapjan megkeresi a megfelelo kartya kiemelesi napjat (`va_pc_{n}_boost_cooldown`),
+    - fallback: regi feature-szoveg parse kompatibilitas.
+  - `get_plan_config()` elejen az alap `boost_cooldown` most mar a kartya erteke, ha van.
+  - User meta override (`va_plan_boost_cooldown`) tovabbra is felulirja, ha admin/manualisan megadott.
+
+- [x] `admin/class-settings-page.php` (Felhasznalok & Csomagok):
+  - Plan dropdown optionok kaptak `data-card-cd` attributumot.
+  - Uj gomb a kiemeles mezonel: `↺ Kártya alap`.
+  - Plan valtasnal a kiemelesi nap input automatikusan a valasztott csomag kartya alapjara all.
+  - Uj gomb kattintasra visszaallitja a mezot a valasztott csomag kartya ertekere.
+
+### Eredmeny
+- Alap logika: "ami a kartyan van, az az alap".
+- Uj user/basic es plan szerinti megjelenites mar a kartya erteket koveti.
+- Ha userenkent at lett irva, egy kattintas a `Kártya alap` gomb, es visszaall az eredeti kartya napra.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `admin/class-settings-page.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 11. – Session #324 (Dedikalt kartya mezo: kiemelesi ido)
 
 ### Felhasznaloi igeny

@@ -3451,7 +3451,12 @@ class VA_Settings_Page {
                             <div class="va-upm-plan-editor" id="va-upm-editor-<?php echo esc_attr( (string) $user->ID ); ?>" style="display:none;">
                                 <select class="va-upm-plan-sel" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">
                                     <?php foreach ( $plans as $pk => $pcfg2 ): ?>
-                                        <option value="<?php echo esc_attr( $pk ); ?>" <?php selected( $plan, $pk ); ?>>
+                                        <?php
+                                            $card_cd_for_plan = class_exists( 'VA_User_Roles' )
+                                                ? (int) VA_User_Roles::get_card_cooldown_for_plan( (string) $pk )
+                                                : (int) ( $pcfg2['boost_cooldown'] ?? 0 );
+                                        ?>
+                                        <option value="<?php echo esc_attr( $pk ); ?>" data-card-cd="<?php echo esc_attr( (string) $card_cd_for_plan ); ?>" <?php selected( $plan, $pk ); ?>>
                                             <?php echo esc_html( $pcfg2['icon'] . ' ' . $pcfg2['label'] ); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -3462,6 +3467,7 @@ class VA_Settings_Page {
                                         <input type="number" class="va-upm-plat-cd" min="1" max="365"
                                                value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg['boost_cooldown'] ) ); ?>" style="width:70px;">
                                     </label>
+                                    <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
                                 </div>
 
                                 <!-- Egyedi (Platinum + Custom) extra mezők -->
@@ -3768,8 +3774,33 @@ class VA_Settings_Page {
             // Plan dropdown változáskor egyedi extra mezők mutatása
             document.querySelectorAll('.va-upm-plan-sel').forEach(function(sel){
                 sel.addEventListener('change', function(){
-                    var extra = this.closest('.va-upm-plan-editor').querySelector('.va-upm-plat-extra');
+                    var editor = this.closest('.va-upm-plan-editor');
+                    var extra = editor ? editor.querySelector('.va-upm-plat-extra') : null;
                     if(extra) extra.style.display = (this.value === 'platinum' || this.value === 'custom') ? 'flex' : 'none';
+
+                    // Plan váltáskor a kiemelési nap alapból a kiválasztott kártya értékére áll.
+                    var selected = this.options[this.selectedIndex];
+                    var cdInput = editor ? editor.querySelector('.va-upm-plat-cd') : null;
+                    var cardCd = selected ? parseInt(selected.getAttribute('data-card-cd') || '0', 10) : 0;
+                    if (cdInput && cardCd > 0) {
+                        cdInput.value = String(cardCd);
+                    }
+                });
+            });
+
+            // Kiemelési nap visszaállítás a kiválasztott csomag kártya alapértékére.
+            document.querySelectorAll('.va-upm-reset-cd-btn').forEach(function(btn){
+                btn.addEventListener('click', function(){
+                    var editor = this.closest('.va-upm-plan-editor');
+                    var sel = editor ? editor.querySelector('.va-upm-plan-sel') : null;
+                    var cdInput = editor ? editor.querySelector('.va-upm-plat-cd') : null;
+                    if (!sel || !cdInput) return;
+
+                    var selected = sel.options[sel.selectedIndex];
+                    var cardCd = selected ? parseInt(selected.getAttribute('data-card-cd') || '0', 10) : 0;
+                    if (cardCd > 0) {
+                        cdInput.value = String(cardCd);
+                    }
                 });
             });
 
