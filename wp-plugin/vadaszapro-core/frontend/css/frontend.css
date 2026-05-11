@@ -1390,8 +1390,8 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
 
 .va-pkg-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
   margin: 28px 0;
   align-items: stretch;
 }
@@ -1611,13 +1611,16 @@ html.va-js .va-animate.visible { opacity: 1; transform: none; }
 }
 
 /* ── Reszponzív ── */
-@media (max-width: 1100px) {
-  .va-pkg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1200px) {
+  .va-pkg-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px; }
 }
-@media (max-width: 640px) {
+@media (max-width: 860px) {
+  .va-pkg-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+@media (max-width: 560px) {
   .va-credits-hero--ranks { border-radius: 14px; padding: 16px 14px 12px; min-height: 0; }
-  .va-pkg-grid { grid-template-columns: 1fr; gap: 14px; }
+  .va-pkg-grid { grid-template-columns: 1fr; gap: 12px; }
   .va-pkg-price { font-size: 28px; }
-  .va-pkg-header { padding: 20px 16px 14px; }
-  .va-pkg-meta, .va-pkg-price-block, .va-pkg-card .va-pkg-buy-btn { padding-left: 16px; padding-right: 16px; width: auto; margin-left: 16px; margin-right: 16px; }
+  .va-pkg-header { padding: 18px 14px 12px; }
+  .va-pkg-meta, .va-pkg-price-block, .va-pkg-card .va-pkg-buy-btn { padding-left: 14px; padding-right: 14px; width: auto; margin-left: 14px; margin-right: 14px; }
 }
