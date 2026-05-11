@@ -135,11 +135,16 @@ class VA_Shortcodes {
         for ( $n = 1; $n <= $pc_count; $n++ ) {
             $enabled = get_option( "va_pc_{$n}_enabled", '1' ) === '1';
             if ( ! $enabled ) continue;
+            $card_slug  = (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' );
+            $card_theme = (string) get_option( "va_pc_{$n}_theme", $default_themes[ $n ] ?? 'basic' );
+            if ( in_array( strtolower( trim( $card_slug ) ), [ 'company', 'business', 'corporate', 'ceges', 'ceg', 'custom', 'egyedi' ], true ) ) {
+                $card_theme = 'company';
+            }
             $rank_cards[] = [
                 'n'        => $n,
-                'slug'     => (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ),
+                'slug'     => $card_slug,
                 'qty'      => max( 1, (int) get_option( "va_pc_{$n}_qty",  $default_qtys[ $n ] ?? 1 ) ),
-                'theme'    => (string) get_option( "va_pc_{$n}_theme",     $default_themes[ $n ] ?? 'basic' ),
+                'theme'    => $card_theme,
                 'tag'      => (string) get_option( "va_pc_{$n}_tag",       $default_tags[ $n ] ?? '' ),
                 'label'    => (string) get_option( "va_pc_{$n}_label",     $default_labels[ $n ] ?? ( 'Kártya ' . $n ) ),
                 'desc'     => (string) get_option( "va_pc_{$n}_desc",      'Hirdetési csomag' ),
@@ -149,7 +154,7 @@ class VA_Shortcodes {
                 'btn_text'   => (string) get_option( "va_pc_{$n}_btn_text",  $default_btns[ $n ] ?? 'Vásárlás →' ),
                 'btn_url'    => (string) get_option( "va_pc_{$n}_btn_url",   '' ),
                 'free_label' => (string) get_option( "va_pc_{$n}_free_label", 'Ingyenes' ),
-                'icon'       => self::get_plan_icon( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ),
+                'icon'       => self::get_plan_icon( $card_slug ),
             ];
             // Lista sorok: uj tarolas (va_pc_{n}_features), visszafele kompatibilis fallbackkel.
             $feats = get_option( "va_pc_{$n}_features", null );
@@ -291,7 +296,7 @@ class VA_Shortcodes {
                     ?>
                     <button type="button" class="va-pkg-buy-btn va-pkg-buy-btn--current" disabled>Aktív csomag</button>
                     <?php elseif ( $custom_btn_url !== '' ): ?>
-                    <a href="<?php echo esc_url( $custom_btn_url ); ?>" class="va-pkg-buy-btn<?php echo $is_free ? ' va-pkg-buy-btn--free' : ''; ?>" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
+                    <a href="<?php echo esc_url( $custom_btn_url ); ?>" class="va-pkg-buy-btn" data-qty="<?php echo esc_attr( (string) $qty ); ?>" data-total="<?php echo esc_attr( (string) $pkg['total'] ); ?>">
                         <?php echo esc_html( $card['btn_text'] ); ?>
                     </a>
                     <?php elseif ( $is_free ): ?>
