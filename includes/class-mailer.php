@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class VA_Mailer {
 
   const BRAND_NAME = 'Vadkár Vadász';
+  const SUPPORT_EMAIL = 'vadkarvadasz@gmail.com';
 
     /**
      * HTML email küldése branded template-tel.
@@ -36,8 +37,7 @@ class VA_Mailer {
 
     public static function set_html_content_type(): string { return 'text/html'; }
     public static function set_from_email( string $email ): string {
-        $opt = get_option( 'va_contact_email', '' );
-        return $opt ?: $email;
+      return self::SUPPORT_EMAIL;
     }
     public static function set_from_name( string $name ): string {
       return self::BRAND_NAME;

@@ -778,10 +778,11 @@ class VA_User_Roles {
             $btn_label = '📦 Előfizetési csomagok';
         }
 
+        $support_email = 'vadkarvadasz@gmail.com';
         $body = $intro
             . '<p style="margin:20px 0 0;padding:12px 16px;background:#f9f9f9;border-left:3px solid #cc0000;border-radius:4px;font-size:13px;color:#6b7280;">'
             . 'Ha bármilyen kérdésed van, keress minket: '
-            . '<a href="mailto:' . esc_attr( get_option( 'va_contact_email', get_option( 'admin_email' ) ) ) . '" style="color:#cc0000;">' . esc_html( get_option( 'va_contact_email', get_option( 'admin_email' ) ) ) . '</a>'
+            . '<a href="mailto:' . esc_attr( $support_email ) . '" style="color:#cc0000;">' . esc_html( $support_email ) . '</a>'
             . '</p>';
 
         return VA_Mailer::send(
