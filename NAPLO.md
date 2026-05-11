@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 11. – Session #322 (Kartya a mervado: kiemelesi ujratoltes vasarlas utan)
+
+### Mi volt a cel
+- Ha admin a kartya feature sorban azt allitja: "Hirdetes kiemeles: X naponta", akkor vasarlas utan a user tenyleges kiemelesi ujratoltese is pontosan ez legyen.
+- A kartya maradjon a mervado adatforras.
+
+### Mit keszitettem [x]
+- [x] Uj logika a `includes/class-ajax.php` fajlban a vasarlas veglegesitesenel (`finalize_credit_purchase`).
+- [x] Bevezetve: `get_card_index_for_purchase($qty, $plan_slug)`
+  - Eloszor `qty + plan_slug` alapjan keres kartya indexet.
+  - Fallbackkent csak `qty` alapjan keres.
+- [x] Bevezetve: `extract_card_cooldown_days($features)`
+  - Regex-szel kiolvassa a feature sorbol a nap erteket.
+  - Tamogatott mintak pl.: "Hirdetes kiemeles: 7 naponta", "Kiemelesi ujratoltes: 5 nap".
+- [x] Bevezetve: `sync_user_card_cooldown($user_id, $qty, $plan_slug)`
+  - A talalt kartya `va_pc_{n}_features` adataibol kiolvassa az X napot.
+  - Vasarlas utan frissiti a user metat: `va_plan_boost_cooldown = X`.
+- [x] `finalize_credit_purchase()` most minden sikeres vasarlasnal meghivja a kartya alapu szinkront.
+
+### Eredmeny
+- A kiemelesi ujratoltes gyakorisaga mar nem elcsuszhat a kartya szovegetol.
+- A user pontosan azt az X napos erteket kapja, amit admin a vasarolt csomag kartyajara irt.
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php` (mirror)
+
+---
+
 ## 2026. 05. 11. – Session #321 (Terminologia lokalizacio: boost_cooldown → kiemelés)
 
 ### Mi volt a cel
