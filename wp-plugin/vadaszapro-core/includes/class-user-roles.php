@@ -91,6 +91,12 @@ class VA_User_Roles {
         // Automatikus limit-érvényesítés bejelentkezett usereknél (naponta egyszer/user)
         add_action( 'wp', [ __CLASS__, 'maybe_enforce_current_user_limits' ] );
 
+        // Leállított (plan limit miatt private) hirdetések takarítása.
+        add_action( 'va_cleanup_plan_suspended_listings', [ __CLASS__, 'cleanup_plan_suspended_listings' ] );
+        if ( ! wp_next_scheduled( 'va_cleanup_plan_suspended_listings' ) ) {
+            wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'va_cleanup_plan_suspended_listings' );
+        }
+
         // Ha bármi (admin, webhook, WC) frissíti a va_plan metát → azonnal enforce
         add_action( 'update_user_meta', [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
         add_action( 'added_user_meta',  [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
@@ -543,23 +549,85 @@ class VA_User_Roles {
 
         $suspended = 0;
         foreach ( $posts as $i => $post ) {
+            $is_plan_suspended = get_post_meta( $post->ID, 'va_suspended_by_plan', true ) === '1';
             if ( $i < $limit ) {
                 // Belül a limitben – ha korábban felfüggesztettük, visszaállítjuk
-                if ( get_post_meta( $post->ID, 'va_suspended_by_plan', true ) === '1' ) {
+                if ( $is_plan_suspended ) {
                     wp_update_post( [ 'ID' => $post->ID, 'post_status' => 'publish' ] );
                     delete_post_meta( $post->ID, 'va_suspended_by_plan' );
+                    delete_post_meta( $post->ID, 'va_suspended_by_plan_at' );
                 }
             } else {
                 // Limit felett → felfüggesztés
                 if ( $post->post_status !== 'private' ) {
                     wp_update_post( [ 'ID' => $post->ID, 'post_status' => 'private' ] );
                     update_post_meta( $post->ID, 'va_suspended_by_plan', '1' );
+                    update_post_meta( $post->ID, 'va_suspended_by_plan_at', current_time( 'timestamp' ) );
                     $suspended++;
+                } elseif ( $is_plan_suspended && (int) get_post_meta( $post->ID, 'va_suspended_by_plan_at', true ) <= 0 ) {
+                    // Régi rekordoknál a visszaszámlálóhoz pótoljuk a hiányzó időbélyeget.
+                    update_post_meta( $post->ID, 'va_suspended_by_plan_at', current_time( 'timestamp' ) );
                 }
             }
         }
 
         return $suspended;
+    }
+
+    /**
+     * Plan limit miatt leállított hirdetések automatikus törlése.
+     * A megőrzési idő alapértelmezetten 90 nap (va_plan_suspended_retention_days option).
+     */
+    public static function cleanup_plan_suspended_listings(): void {
+        $retention_days = max( 1, absint( get_option( 'va_plan_suspended_retention_days', 90 ) ) );
+        $cutoff_ts      = current_time( 'timestamp' ) - ( $retention_days * DAY_IN_SECONDS );
+        $loops          = 0;
+
+        do {
+            $q = new WP_Query([
+                'post_type'           => 'va_listing',
+                'post_status'         => 'private',
+                'fields'              => 'ids',
+                'posts_per_page'      => 100,
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'orderby'             => 'meta_value_num',
+                'order'               => 'ASC',
+                'meta_key'            => 'va_suspended_by_plan_at',
+                'meta_query'          => [
+                    [
+                        'key'     => 'va_suspended_by_plan',
+                        'value'   => '1',
+                        'compare' => '=',
+                    ],
+                    [
+                        'key'     => 'va_suspended_by_plan_at',
+                        'value'   => $cutoff_ts,
+                        'type'    => 'NUMERIC',
+                        'compare' => '<=',
+                    ],
+                ],
+            ]);
+
+            if ( empty( $q->posts ) ) {
+                break;
+            }
+
+            foreach ( $q->posts as $post_id ) {
+                $post_id = (int) $post_id;
+                if ( $post_id <= 0 ) {
+                    continue;
+                }
+
+                if ( class_exists( 'VA_User_System' ) && method_exists( 'VA_User_System', 'delete_listing_with_images' ) ) {
+                    VA_User_System::delete_listing_with_images( $post_id );
+                } else {
+                    wp_delete_post( $post_id, true );
+                }
+            }
+
+            $loops++;
+        } while ( $loops < 50 );
     }
 
     public static function ajax_admin_set_plan(): void {
