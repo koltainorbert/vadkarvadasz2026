@@ -725,7 +725,8 @@ class VA_User_Roles {
             return false;
         }
 
-        $site_name = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+        $site_name = 'Vadkár Vadász';
+        $support_email = 'vadkarvadasz@gmail.com';
         $buy_page  = get_page_by_path( 'va-kredit-vasarlas' );
         $buy_url   = $buy_page ? get_permalink( $buy_page ) : home_url( '/va-kredit-vasarlas/' );
 
@@ -734,6 +735,7 @@ class VA_User_Roles {
             . "Értesítünk, hogy " . $count . " db, csomaglimit miatt inaktív hirdetésed " . $days_left . " nap múlva törlésre kerülhet.\n"
             . "Legkorábbi törlés időpontja: " . date_i18n( 'Y.m.d H:i', $earliest_delete_ts ) . "\n\n"
             . "Meghosszabbításhoz: " . $buy_url . "\n\n"
+            . "Kapcsolat: " . $support_email . "\n\n"
             . "Üdvözlettel,\n" . $site_name;
 
         return wp_mail( $user->user_email, $subject, $message );
