@@ -31,6 +31,8 @@ class VA_Settings_Page {
         add_action( 'admin_post_va_create_snapshot',  [ __CLASS__, 'handle_create_snapshot'  ] );
         add_action( 'admin_post_va_restore_snapshot', [ __CLASS__, 'handle_restore_snapshot' ] );
         add_action( 'admin_post_va_delete_snapshot',  [ __CLASS__, 'handle_delete_snapshot'  ] );
+        add_action( 'admin_post_va_sync_stripe_purchase_history', [ __CLASS__, 'handle_sync_stripe_purchase_history' ] );
+        add_action( 'admin_post_va_export_purchase_history', [ __CLASS__, 'handle_export_purchase_history' ] );
     }
 
     /* ══ Settings regisztráció ════════════════════════════ */
@@ -3059,6 +3061,10 @@ class VA_Settings_Page {
         // Keresés + szűrés
         $search   = sanitize_text_field( wp_unslash( $_GET['s'] ?? '' ) );
         $filter_plan = sanitize_key( $_GET['filter_plan'] ?? '' );
+        $purchase_filter = sanitize_key( $_GET['purchase_filter'] ?? '' );
+        if ( ! in_array( $purchase_filter, [ '', 'with', 'without' ], true ) ) {
+            $purchase_filter = '';
+        }
         $paged    = max( 1, absint( $_GET['paged'] ?? 1 ) );
         $per_page = 40;
         $offset   = ( $paged - 1 ) * $per_page;
@@ -3073,12 +3079,30 @@ class VA_Settings_Page {
             $user_args['search']         = '*' . $search . '*';
             $user_args['search_columns'] = [ 'user_login', 'user_email', 'display_name' ];
         }
+        $meta_query = [];
         if ( $filter_plan !== '' && isset( $plans[ $filter_plan ] ) ) {
-            $user_args['meta_query'] = [[
+            $meta_query[] = [
                 'key'     => 'va_plan',
                 'value'   => $filter_plan,
                 'compare' => '=',
-            ]];
+            ];
+        }
+        if ( $purchase_filter === 'with' ) {
+            $meta_query[] = [
+                'key'     => 'va_credit_purchase_history',
+                'compare' => 'EXISTS',
+            ];
+        } elseif ( $purchase_filter === 'without' ) {
+            $meta_query[] = [
+                'key'     => 'va_credit_purchase_history',
+                'compare' => 'NOT EXISTS',
+            ];
+        }
+        if ( ! empty( $meta_query ) ) {
+            if ( count( $meta_query ) > 1 ) {
+                $meta_query['relation'] = 'AND';
+            }
+            $user_args['meta_query'] = $meta_query;
         }
 
         $users       = get_users( $user_args );
@@ -3086,9 +3110,21 @@ class VA_Settings_Page {
         $total_pages = max( 1, (int) ceil( $total_users / $per_page ) );
 
         $admin_nonce = wp_create_nonce( 'va_admin_user_plan' );
+        $last_sync = get_option( 'va_stripe_purchase_history_last_sync', [] );
         ?>
         <div class="wrap va-admin-wrap">
             <h1>👥 weingartnerauto.hu - Felhasznalok &amp; Csomagok</h1>
+
+            <?php if ( isset( $_GET['va_sync_done'] ) ): ?>
+                <div class="notice notice-<?php echo ! empty( $_GET['va_sync_ok'] ) ? 'success' : 'error'; ?> is-dismissible"><p>
+                    <?php
+                    echo esc_html( (string) ( $_GET['va_sync_msg'] ?? 'Stripe szinkron lefutott.' ) );
+                    if ( isset( $_GET['va_sync_imported'], $_GET['va_sync_events'] ) ) {
+                        echo ' ' . esc_html( (string) $_GET['va_sync_imported'] ) . ' új bejegyzés, ' . esc_html( (string) $_GET['va_sync_events'] ) . ' átnézett esemény.';
+                    }
+                    ?>
+                </p></div>
+            <?php endif; ?>
 
             <!-- ── Plan összefoglaló kártyák ── -->
             <?php if ( $plans ): ?>
@@ -3129,13 +3165,35 @@ class VA_Settings_Page {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                    <select name="purchase_filter" class="va-upm-filter-sel">
+                        <option value="" <?php selected( $purchase_filter, '' ); ?>>– Minden vásárlás –</option>
+                        <option value="with" <?php selected( $purchase_filter, 'with' ); ?>>Csak vásárló ügyfelek</option>
+                        <option value="without" <?php selected( $purchase_filter, 'without' ); ?>>Csak vásárlás nélküliek</option>
+                    </select>
                     <button type="submit" class="button">Szűrés</button>
-                    <?php if ( $search || $filter_plan ): ?>
+                    <?php if ( $search || $filter_plan || $purchase_filter ): ?>
                         <a href="<?php echo esc_url( admin_url( 'admin.php?page=vadaszapro-users' ) ); ?>" class="button">✕ Törlés</a>
                     <?php endif; ?>
                 </form>
+                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="va-upm-inline-form">
+                    <input type="hidden" name="action" value="va_sync_stripe_purchase_history">
+                    <input type="hidden" name="page" value="vadaszapro-users">
+                    <?php wp_nonce_field( 'va_sync_stripe_purchase_history' ); ?>
+                    <button type="submit" class="button button-primary">Stripe előzmények szinkron</button>
+                </form>
+                <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="va-upm-inline-form">
+                    <input type="hidden" name="action" value="va_export_purchase_history">
+                    <input type="hidden" name="s" value="<?php echo esc_attr( $search ); ?>">
+                    <input type="hidden" name="filter_plan" value="<?php echo esc_attr( $filter_plan ); ?>">
+                    <input type="hidden" name="purchase_filter" value="<?php echo esc_attr( $purchase_filter ); ?>">
+                    <?php wp_nonce_field( 'va_export_purchase_history' ); ?>
+                    <button type="submit" class="button">Vásárlási napló CSV</button>
+                </form>
                 <span class="va-upm-count"><?php echo esc_html( $total_users ); ?> felhasználó</span>
             </div>
+            <?php if ( is_array( $last_sync ) && ! empty( $last_sync['ran_at'] ) ): ?>
+                <div class="va-upm-sync-meta">Utolsó Stripe szinkron: <?php echo esc_html( (string) $last_sync['ran_at'] ); ?> · <?php echo esc_html( (string) ( $last_sync['imported'] ?? 0 ) ); ?> új rekord · <?php echo esc_html( (string) ( $last_sync['events'] ?? 0 ) ); ?> esemény</div>
+            <?php endif; ?>
 
             <!-- ── Felhasználók táblázat ── -->
             <table class="va-upm-table">
@@ -3314,8 +3372,8 @@ class VA_Settings_Page {
             <?php if ( $total_pages > 1 ): ?>
             <div class="va-upm-pagination">
                 <?php for ( $p = 1; $p <= $total_pages; $p++ ): ?>
-                    <a href="<?php echo esc_url( add_query_arg( [ 'page' => 'vadaszapro-users', 'paged' => $p, 's' => $search, 'filter_plan' => $filter_plan ], admin_url( 'admin.php' ) ) ); ?>"
-                       class="va-upm-page<?php echo $p === $paged ? ' active' : ''; ?>"><?php echo esc_html( (string) $p ); ?></a>
+                          <a href="<?php echo esc_url( add_query_arg( [ 'page' => 'vadaszapro-users', 'paged' => $p, 's' => $search, 'filter_plan' => $filter_plan, 'purchase_filter' => $purchase_filter ], admin_url( 'admin.php' ) ) ); ?>"
+                              class="va-upm-page<?php echo $p === $paged ? ' active' : ''; ?>"><?php echo esc_html( (string) $p ); ?></a>
                 <?php endfor; ?>
             </div>
             <?php endif; ?>
@@ -3335,9 +3393,11 @@ class VA_Settings_Page {
 
         .va-upm-toolbar { display:flex;align-items:center;gap:10px;margin-bottom:14px; }
         .va-upm-search-form { display:flex;align-items:center;gap:8px;flex:1; }
+        .va-upm-inline-form { margin:0; }
         .va-upm-search { background:var(--va-bg3) !important;border:1px solid var(--va-border2) !important;color:var(--va-text) !important;border-radius:var(--va-radius-sm);padding:6px 12px;min-width:260px; }
         .va-upm-filter-sel { background:var(--va-bg3);border:1px solid var(--va-border2);color:var(--va-text);border-radius:var(--va-radius-sm);padding:6px 10px; }
         .va-upm-count { margin-left:auto;font-size:12px;color:var(--va-muted); }
+        .va-upm-sync-meta { margin:-4px 0 12px;font-size:12px;color:var(--va-muted); }
 
         .va-upm-table { width:100%;border-collapse:collapse;background:var(--va-bg2);border-radius:var(--va-radius);overflow:hidden;border:1px solid var(--va-border); }
         .va-upm-table th { background:var(--va-bg3);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--va-muted);border-bottom:1px solid var(--va-border); }
