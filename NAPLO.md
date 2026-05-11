@@ -2,6 +2,38 @@
 
 ---
 
+## 2026. 05. 11. – Session #324 (Dedikalt kartya mezo: kiemelesi ido)
+
+### Felhasznaloi igeny
+- Ne a lista sorbol kelljen kitalalni a kiemelesi idot,
+- legyen a kartyan kulon mezo, ahova admin konkretan beirja a napok szamat,
+- vasarlas utan a vevo ezt a beirt erteket kapja meg.
+
+### Megvalositas [x]
+- [x] Uj kartya option kulcs: `va_pc_{n}_boost_cooldown` (1..8).
+- [x] Admin arkartya editorban uj dedikalt input mezo:
+  - "Kiemelesi ujratoltes (nap)"
+  - a Kredit mennyiseg + Ar / kredit sorban kapott helyet (3 oszlopos sor).
+- [x] Beallitasi regisztracio/sanitize:
+  - `card_int_keys` bovitve `va_pc_{n}_boost_cooldown` kulccsal,
+  - alapertelmek: Basic 7, Silver 5, Gold 3, Platinum 3.
+- [x] Vasarlasi szinkron (`includes/class-ajax.php`):
+  - elso forras mar a dedikalt mezo (`va_pc_{n}_boost_cooldown`),
+  - csak fallbackkent parse-olja a feature listat a regi kompatibilitas miatt.
+
+### Eredmeny
+- Most mar pontosan az a kiemelesi ido kerul a userre, amit az admin a kartya dedikalt mezejebe ir.
+- A listaelemek szovege dekoracios/informacios, nem az az egyetlen adatforras.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 11. – Session #323 (Silver 70 nap fix: kartya alap + admin manual override minden planra)
 
 ### Hiba

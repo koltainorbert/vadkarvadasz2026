@@ -529,12 +529,17 @@ class VA_Ajax {
             return;
         }
 
-        $features = get_option( "va_pc_{$card_index}_features", [] );
-        if ( ! is_array( $features ) ) {
-            return;
+        // Elsődleges forrás: dedikált admin mező a kártyán.
+        $days = absint( get_option( "va_pc_{$card_index}_boost_cooldown", 0 ) );
+        if ( $days <= 0 ) {
+            // Visszafelé kompatibilitás: régi feature-szöveg parse-olása.
+            $features = get_option( "va_pc_{$card_index}_features", [] );
+            if ( ! is_array( $features ) ) {
+                return;
+            }
+            $days = self::extract_card_cooldown_days( $features );
         }
 
-        $days = self::extract_card_cooldown_days( $features );
         if ( $days <= 0 ) {
             return;
         }

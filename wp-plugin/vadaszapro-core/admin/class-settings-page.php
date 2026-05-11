@@ -1004,6 +1004,7 @@ class VA_Settings_Page {
         for ( $n = 1; $n <= 8; $n++ ) {
             $card_int_keys[] = "va_pc_{$n}_qty";
             $card_int_keys[] = "va_pc_{$n}_price";
+            $card_int_keys[] = "va_pc_{$n}_boost_cooldown";
         }
         $default_card_qtys  = [ 1 => 1, 2 => 3, 3 => 5, 4 => 10 ];
         $default_card_labels= [ 1 => 'Basic', 2 => 'Silver', 3 => 'Gold', 4 => 'Platinum' ];
@@ -1016,6 +1017,7 @@ class VA_Settings_Page {
             4 => '10 kredit – maximális értékcsomag vadász profiknak.',
         ];
         $default_card_prices = [ 1 => 0, 2 => 1791, 3 => 1592, 4 => 1393 ];
+        $default_card_boost_cooldowns = [ 1 => 7, 2 => 5, 3 => 3, 4 => 3 ];
         $default_card_badges = [ 1 => '', 2 => '–10%', 3 => '–20%', 4 => '–30%' ];
         $default_card_themes = [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ];
 
@@ -1040,6 +1042,7 @@ class VA_Settings_Page {
             $price_card_opts[ "va_pc_{$n}_desc"      ] = $default_card_descs[ $n ]   ?? '';
             $price_card_opts[ "va_pc_{$n}_qty"       ] = (string) ( $default_card_qtys[ $n ]   ?? 1 );
             $price_card_opts[ "va_pc_{$n}_price"     ] = (string) ( $default_card_prices[ $n ] ?? 0 );
+            $price_card_opts[ "va_pc_{$n}_boost_cooldown" ] = (string) ( $default_card_boost_cooldowns[ $n ] ?? 3 );
             $price_card_opts[ "va_pc_{$n}_badge"     ] = $default_card_badges[ $n ]  ?? '';
             $price_card_opts[ "va_pc_{$n}_featured"  ] = ( $n === 3 ) ? '1' : '0';
             $price_card_opts[ "va_pc_{$n}_free"      ] = ( $n === 1 ) ? '1' : '0';
@@ -7303,6 +7306,7 @@ class VA_Settings_Page {
             'descs'      => [ 1 => 'Ingyenes alap csomag minden regisztrált felhasználónak.', 2 => '3 hirdetési kredit kedvezményes áron.', 3 => '5 kredit – legjobb érték a profik számára.', 4 => '10 kredit – maximális értékcsomag vadász profiknak.' ],
             'qtys'       => [ 1 => 1, 2 => 3, 3 => 5, 4 => 10 ],
             'prices'     => [ 1 => 0, 2 => 1791, 3 => 1592, 4 => 1393 ],
+            'boost_cooldowns' => [ 1 => 7, 2 => 5, 3 => 3, 4 => 3 ],
             'badges'     => [ 1 => '', 2 => '–10%', 3 => '–20%', 4 => '–30%' ],
             'themes'     => [ 1 => 'basic', 2 => 'silver', 3 => 'gold', 4 => 'platinum' ],
             'btns'       => [ 1 => 'Mindenki számára elérhető', 2 => 'Vásárlás →', 3 => 'Vásárlás →', 4 => 'Vásárlás →' ],
@@ -7432,6 +7436,7 @@ class VA_Settings_Page {
                     $desc     = $g( "va_pc_{$n}_desc",     $card_defaults['descs'][$n]   ?? '' );
                     $qty      = $gi( "va_pc_{$n}_qty",     $card_defaults['qtys'][$n]    ?? 1  );
                     $price    = $gi( "va_pc_{$n}_price",   $card_defaults['prices'][$n]  ?? 0  );
+                    $boost_cd = $gi( "va_pc_{$n}_boost_cooldown", $card_defaults['boost_cooldowns'][$n] ?? 3 );
                     $badge    = $g( "va_pc_{$n}_badge",    $card_defaults['badges'][$n]  ?? '' );
                     $featured = $g( "va_pc_{$n}_featured", ( $n === 3 ) ? '1' : '0' ) === '1';
                     $free     = $g( "va_pc_{$n}_free",     ( $n === 1 ) ? '1' : '0' ) === '1';
@@ -7456,7 +7461,7 @@ class VA_Settings_Page {
                             } else {
                                 $feats[] = 'Korlátlan hirdetés';
                             }
-                            $plan_boost_cd = (int) ( $cfg['boost_cooldown'] ?? 0 );
+                            $plan_boost_cd = $boost_cd > 0 ? $boost_cd : (int) ( $cfg['boost_cooldown'] ?? 0 );
                             if ( $plan_boost_cd > 0 ) {
                                 $feats[] = 'Kiemelési újratöltés: ' . $plan_boost_cd . ' nap';
                             }
@@ -7553,7 +7558,7 @@ class VA_Settings_Page {
                             <button type="button" class="va-pk-feat-add" data-card="<?php echo $n; ?>">+ Új sor</button>
                         </div>
 
-                        <div class="va-pk-card__field-row">
+                        <div class="va-pk-card__field-row va-pk-card__field-row--3">
                             <div class="va-pk-field">
                                 <label>Kredit mennyiség</label>
                                 <input type="number" name="va_pc_<?php echo $n; ?>_qty" value="<?php echo esc_attr( (string) $qty ); ?>" min="1" max="9999"
@@ -7563,6 +7568,10 @@ class VA_Settings_Page {
                                 <label>Ár / kredit (Ft)</label>
                                 <input type="number" name="va_pc_<?php echo $n; ?>_price" value="<?php echo esc_attr( (string) $price ); ?>" min="0" max="99999"
                                        data-card="<?php echo $n; ?>" class="va-pk-price-input">
+                            </div>
+                            <div class="va-pk-field">
+                                <label>Kiemelési újratöltés (nap)</label>
+                                <input type="number" name="va_pc_<?php echo $n; ?>_boost_cooldown" value="<?php echo esc_attr( (string) $boost_cd ); ?>" min="1" max="365">
                             </div>
                         </div>
 
