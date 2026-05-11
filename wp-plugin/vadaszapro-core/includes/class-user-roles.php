@@ -794,9 +794,6 @@ class VA_User_Roles {
         );
     }
 
-        return wp_mail( $user->user_email, $subject, $message );
-    }
-
     public static function ajax_admin_set_plan(): void {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( [ 'message' => 'Nincs jogosultság.' ] );
