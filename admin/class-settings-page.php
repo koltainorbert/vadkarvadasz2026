@@ -3961,6 +3961,7 @@ class VA_Settings_Page {
                     var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
                     var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
                     var customDurEl   = ed ? ed.querySelector('.va-upm-custom-dur')     : null;
+                    var expiresAtEl   = ed ? ed.querySelector('.va-upm-expires-at')     : null;
 
                     var data = new URLSearchParams({
                         action : 'va_admin_set_user_plan',
@@ -3971,6 +3972,7 @@ class VA_Settings_Page {
                         custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
                         custom_credits       : creditsEl  ? creditsEl.value  : 0,
                         custom_duration_days : customDurEl ? customDurEl.value : 0,
+                        custom_expires_at    : expiresAtEl ? expiresAtEl.value : '',
                         plan_note            : noteEl     ? noteEl.value     : '',
                         plan_seller_label    : sellerLabelEl ? sellerLabelEl.value : ''
                     });

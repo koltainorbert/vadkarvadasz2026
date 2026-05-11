@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 11. – Session #327 (Admin lejárat szerkesztés + egyértelmű visszaszámláló)
+
+### Igeny
+- Az admin user listában eltűnt / nem volt egyértelmű a lejárat kezelése.
+- Az Egyedi csomag lejárat módosítása stabilan látszódjon.
+- A hátralévő idő vizuálisan legyen sokkal egyértelműbb.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`:
+  - a szerkesztő immár a tárolt (`va_plan`) csomag alapján nyílik (nem az effektív, visszaesett basic alapján),
+  - visszakerült / stabilan látszik az Egyedi lejárat (nap) mező,
+  - új mező: konkrét `Lejárat dátuma` (`datetime-local`) kézi admin felülíráshoz,
+  - `Lejárat` oszlop új badge-es megjelenítés:
+    - zöld/sárga/piros „X nap hátra”,
+    - lejártnál „LEJÁRT X napja”,
+    - alatta pontos dátum-idő.
+
+- [x] `includes/class-user-roles.php`:
+  - `ajax_admin_set_plan()` már fogadja a `custom_expires_at` mezőt,
+  - ha admin konkrét lejárat dátumot ad meg, az felülírja a számolt lejáratot.
+
+### Eredmeny
+- Az admin oldalon ismét egyértelműen szerkeszthető a lejárat (Egyedi csomagnál is),
+- a visszaszámláló vizuálisan erős és azonnal olvasható.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 11. – Session #326 (Csomag lejárati emailek: teljes paraméterezhetőség)
 
 ### Igeny
