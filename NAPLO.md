@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 11. – Session #316 (Árkártya ár-szám méret fix admin preview)
+
+### Mi volt a cel
+- Az arkaritya szerkeszto preview-ben az ar szamjegyek ne legyenek aprok, hanem egyezzenek a foszoveg meretevel
+
+### Mit keszitettem [x]
+- [x] A `.va-pk-card__price-preview .total .num` stilus felulerese erositett szaballyal
+- [x] `font-size:1em !important` + `font-weight:inherit !important` + `line-height:1 !important`
+- [x] `text-decoration:none !important` beallitva, hogy ne tudja mas szabaly athuzni
+- [x] Root + plugin mirror szinkronban frissitve
+- [x] Hibacheck rendben
+- [x] Deploy lefutott production-trigger modban
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 11. – Session #315 (Árkártya listaelemek teljes szerkeszthetőség + korlátlan `+` sor)
 
 ### Mi volt a cel
