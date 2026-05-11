@@ -3562,12 +3562,18 @@ class VA_Settings_Page {
                                     <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
                                 </div>
 
-                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
-                                    <label>Lejárat dátuma:
+                                <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
+                                    <label style="display:flex;flex-direction:column;gap:6px;">
+                                        <span>Lejárat dátuma:</span>
                                         <input type="datetime-local" class="va-upm-expires-at"
-                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:190px;background:#060606;color:#fff;border:1px solid #ff0000;border-radius:8px;padding:6px 10px;accent-color:#ff0000;">
+                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:230px;background:#060606;color:#fff;border:1px solid #ff0000;border-radius:8px;padding:6px 10px;accent-color:#ff0000;box-shadow:0 0 0 1px rgba(255,0,0,.15) inset;">
                                     </label>
-                                    <span style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</span>
+                                    <div style="font-size:11px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:4px 10px;">
+                                        Jelenlegi: <strong style="color:#fff;">
+                                            <?php echo esc_html( $expires_ts > 0 ? date_i18n( 'Y.m.d H:i', $expires_ts ) : 'nincs beállítva' ); ?>
+                                        </strong>
+                                    </div>
+                                    <div style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</div>
                                 </div>
 
                                 <!-- Egyedi (Platinum + Custom) extra mezők -->
