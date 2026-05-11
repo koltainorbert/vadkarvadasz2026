@@ -811,7 +811,7 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 /* ── Felhasználói form-ok ────────────────────────── */
 .va-auth-wrap { max-width: 440px; margin: 0 auto; }
 .va-auth-box { background: #141414; border: 1px solid rgba(255,255,255,.08); border-radius: var(--va-radius); padding: 32px; }
-.va-auth-box__title { font-size: 22px; font-weight: 800; margin-bottom: 22px; }
+.va-auth-box__title { font-size: 22px; font-weight: 800; margin-bottom: 22px; color: #fff; }
 .va-auth-links { margin-top: 18px; font-size: 13px; color: var(--va-muted); text-align: center; }
 .va-auth-links a { color: var(--va-accent); }
 
