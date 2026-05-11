@@ -1762,19 +1762,29 @@ class VA_Ajax {
         }
 
         $normalized = [];
+        $did_update = false;
         foreach ( $history as $entry ) {
             if ( ! is_array( $entry ) ) {
                 continue;
             }
 
+            $plan_slug = sanitize_key( (string) ( $entry['plan_slug'] ?? '' ) );
+            $qty       = absint( $entry['qty'] ?? 0 );
+            if ( $plan_slug === '' && $qty > 0 ) {
+                $plan_slug = self::get_target_plan_slug_for_qty( $qty );
+                if ( $plan_slug !== '' ) {
+                    $did_update = true;
+                }
+            }
+
             $normalized[] = [
                 'token'                => sanitize_text_field( (string) ( $entry['token'] ?? '' ) ),
                 'user_id'              => absint( $entry['user_id'] ?? $user_id ),
-                'qty'                  => absint( $entry['qty'] ?? 0 ),
+                'qty'                  => $qty,
                 'amount'               => absint( $entry['amount'] ?? 0 ),
                 'provider'             => sanitize_key( (string) ( $entry['provider'] ?? 'stripe' ) ),
                 'return_to'            => sanitize_key( (string) ( $entry['return_to'] ?? 'buy' ) ),
-                'plan_slug'            => sanitize_key( (string) ( $entry['plan_slug'] ?? '' ) ),
+                'plan_slug'            => $plan_slug,
                 'stripe_session_id'    => sanitize_text_field( (string) ( $entry['stripe_session_id'] ?? '' ) ),
                 'stripe_payment_intent'=> sanitize_text_field( (string) ( $entry['stripe_payment_intent'] ?? '' ) ),
                 'stripe_receipt_url'   => esc_url_raw( (string) ( $entry['stripe_receipt_url'] ?? '' ) ),
@@ -1786,6 +1796,10 @@ class VA_Ajax {
         usort( $normalized, static function( array $a, array $b ): int {
             return ( $b['completed_at'] ?? 0 ) <=> ( $a['completed_at'] ?? 0 );
         } );
+
+        if ( $did_update ) {
+            update_user_meta( $user_id, 'va_credit_purchase_history', $normalized );
+        }
 
         return $normalized;
     }
