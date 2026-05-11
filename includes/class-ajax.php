@@ -874,11 +874,15 @@ class VA_Ajax {
                 if ( is_array( $verify ) ) {
                     $sid = sanitize_text_field( (string) ( $verify['session_id'] ?? '' ) );
                     $pid = sanitize_text_field( (string) ( $verify['payment_intent'] ?? '' ) );
+                    $rurl = esc_url_raw( (string) ( $verify['receipt_url'] ?? '' ) );
                     if ( $sid !== '' ) {
                         $data['stripe_session_id'] = $sid;
                     }
                     if ( $pid !== '' ) {
                         $data['stripe_payment_intent'] = $pid;
+                    }
+                    if ( $rurl !== '' ) {
+                        $data['stripe_receipt_url'] = $rurl;
                     }
                     $parts = [];
                     if ( $sid !== '' ) $parts[] = 'session: ' . $sid;
@@ -967,6 +971,7 @@ class VA_Ajax {
                     'provider'  => 'stripe',
                     'stripe_session_id' => sanitize_text_field( (string) ( $object['id'] ?? '' ) ),
                     'stripe_payment_intent' => sanitize_text_field( (string) ( $object['payment_intent'] ?? '' ) ),
+                    'stripe_receipt_url' => '',
                     'return_to' => 'buy',
                 ];
                 self::finalize_credit_purchase( $token, $fallback );
@@ -1288,11 +1293,33 @@ class VA_Ajax {
             return new WP_Error( 'va_stripe_not_paid', 'A Stripe fizetés még nincs sikeresen lezárva.' );
         }
 
+        $receipt_url = '';
+        $payment_intent = sanitize_text_field( (string) ( $json['payment_intent'] ?? '' ) );
+        if ( $payment_intent !== '' ) {
+            $pi_response = wp_remote_get( 'https://api.stripe.com/v1/payment_intents/' . rawurlencode( $payment_intent ), [
+                'timeout' => 45,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $secret_key,
+                ],
+            ] );
+            if ( ! is_wp_error( $pi_response ) ) {
+                $pi_code = (int) wp_remote_retrieve_response_code( $pi_response );
+                $pi_json = json_decode( (string) wp_remote_retrieve_body( $pi_response ), true );
+                if ( $pi_code >= 200 && $pi_code < 300 && is_array( $pi_json ) ) {
+                    $charges = $pi_json['charges']['data'] ?? [];
+                    if ( is_array( $charges ) && ! empty( $charges[0]['receipt_url'] ) ) {
+                        $receipt_url = esc_url_raw( (string) $charges[0]['receipt_url'] );
+                    }
+                }
+            }
+        }
+
         return [
             'session_id'     => sanitize_text_field( (string) ( $json['id'] ?? $session_id ) ),
-            'payment_intent' => sanitize_text_field( (string) ( $json['payment_intent'] ?? '' ) ),
+            'payment_intent' => $payment_intent,
             'amount_total'   => absint( $json['amount_total'] ?? 0 ),
             'currency'       => sanitize_key( (string) ( $json['currency'] ?? '' ) ),
+            'receipt_url'    => $receipt_url,
         ];
     }
 
@@ -1525,12 +1552,39 @@ class VA_Ajax {
 
         foreach ( $history as $existing ) {
             if ( $token !== '' && ( $existing['token'] ?? '' ) === $token ) {
+                $merged = $existing;
+                foreach ( $entry as $key => $value ) {
+                    if ( $value !== '' && $value !== null ) {
+                        $merged[ $key ] = $value;
+                    }
+                }
+                $history[] = $merged;
+                array_shift( $history );
+                update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
             if ( $session !== '' && ( $existing['stripe_session_id'] ?? '' ) === $session ) {
+                $merged = $existing;
+                foreach ( $entry as $key => $value ) {
+                    if ( $value !== '' && $value !== null ) {
+                        $merged[ $key ] = $value;
+                    }
+                }
+                $history[] = $merged;
+                array_shift( $history );
+                update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
             if ( $intent !== '' && ( $existing['stripe_payment_intent'] ?? '' ) === $intent ) {
+                $merged = $existing;
+                foreach ( $entry as $key => $value ) {
+                    if ( $value !== '' && $value !== null ) {
+                        $merged[ $key ] = $value;
+                    }
+                }
+                $history[] = $merged;
+                array_shift( $history );
+                update_user_meta( $user_id, 'va_credit_purchase_history', $history );
                 return;
             }
         }
