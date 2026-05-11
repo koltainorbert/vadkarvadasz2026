@@ -7574,6 +7574,31 @@ class VA_Settings_Page {
                     }
                 });
             }
+
+            // Szinkronizálás a Csomag beállításokból
+            var syncBtn = document.getElementById('va-pk-sync-from-plans');
+            if(syncBtn){
+                syncBtn.addEventListener('click', function(){
+                    var plans = {};
+                    try { plans = JSON.parse(syncBtn.dataset.plans || '{}'); } catch(e) { return; }
+                    var synced = 0;
+                    document.querySelectorAll('.va-pk-card[data-card-n]').forEach(function(card){
+                        var n = card.dataset.cardN;
+                        var slugInput = card.querySelector('[name="va_pc_'+n+'_plan_slug"]');
+                        if(!slugInput) return;
+                        var slug = slugInput.value.trim();
+                        if(!slug || !plans[slug]) return;
+                        var plan = plans[slug];
+                        var labelInput = card.querySelector('[name="va_pc_'+n+'_label"]');
+                        var descInput  = card.querySelector('[name="va_pc_'+n+'_desc"]');
+                        if(labelInput && plan.label) { labelInput.value = plan.label; }
+                        if(descInput  && plan.description) { descInput.value  = plan.description; }
+                        synced++;
+                    });
+                    syncBtn.textContent = '✅ ' + synced + ' kártya szinkronizálva – Ments el!';
+                    setTimeout(function(){ syncBtn.textContent = '🔄 Szinkronizálás a Csomag beállításokból'; }, 3000);
+                });
+            }
         })();
         </script>
         <?php
