@@ -905,9 +905,9 @@ class VA_Ajax {
 
             $qty = absint( $finalize['qty'] ?? 0 );
             if ( ! empty( $finalize['already'] ) ) {
-                va_set_flash( 'info', 'A fizetés már feldolgozásra került.' . $stripe_diag );
+                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' );
             } else {
-                va_set_flash( 'success', $qty . ' hirdetési kredit jóváírva! Most már feladhatod a hirdetésedet.' . $stripe_diag );
+                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' );
             }
             if ( $return_to === 'submit' ) {
                 self::redirect_submit_page();
