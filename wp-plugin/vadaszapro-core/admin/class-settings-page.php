@@ -3711,7 +3711,7 @@ class VA_Settings_Page {
                             if ( class_exists( 'VA_User_Roles' ) ) {
                                 $plan_check = VA_User_Roles::can_post_listing( $user->ID );
                                 $used  = $plan_check['used'];
-                                $limit = $plan_check['limit'];
+                                $limit = $plan_check['effective_limit'];
                                 if ( $limit > 0 ) {
                                     $pct = min( 100, (int) round( $used / $limit * 100 ) );
                                     $col = $pct >= 100 ? '#ff4444' : ( $pct >= 80 ? '#ffaa00' : '#00c850' );

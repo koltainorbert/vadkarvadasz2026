@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 12. – Session #352 (UI fix: effective_limit helyett limit megjelenítése)
+
+### Bug
+- Az oldal "Jelenlegi kereted elérve" üzenetet mutatott, pedig 2 hirdetés futott (Basic 1 + ajándékkredit 1).
+- Hiba: az UI rétegek (`submit-form.php`, `dashboard.php`, `admin/class-settings-page.php`) még a régi `$plan_check['limit']` mezőt használták (alap csomag 1), nem az `effective_limit`-et (1+1=2).
+- Backend jól működött, csak a felhasználói üzenet volt félrevezető.
+
+### Javítás
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - Line 326: `$plan_check['plan_limit']` → `$plan_check['effective_limit']`
+  - Line 328-329: `$plan_check['limit']` → `$plan_check['effective_limit']`
+- `frontend/templates/user/dashboard.php` + mirror:
+  - Line 160: `$plan_check['limit']` → `$plan_check['effective_limit']`
+- `admin/class-settings-page.php` + mirror:
+  - Line 3715: `$plan_check['limit']` → `$plan_check['effective_limit']`
+
+### Eredmény
+- "Jelenlegi kereted elérve" már nem jelenik meg, ha van szabad slot
+- Dashboard: "2/2 Kereted" helyesen
+- Admin: kerethasználat százalékos megjelenítésé helyes (2/2 = 100%)
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `frontend/templates/user/dashboard.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 12. – Session #351 (Ajándékkredit + effektív keret helyes megjelenítése)
 
 ### Javítás
