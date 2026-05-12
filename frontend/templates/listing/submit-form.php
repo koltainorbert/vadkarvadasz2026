@@ -15,12 +15,12 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '<input type="text" id="va-title" name="title" class="va-input" maxlength="150"' . $req_attr . ' placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
                 break;
             case 'category':
-                echo '<select name="category" class="va-select"' . $req_attr . '>';
+                echo '<select name="category" id="va-category" class="va-select"' . $req_attr . '>';
                 echo '<option value="">– Válasszon –</option>';
                 foreach ( $categories as $cat ) {
                     $indent   = $cat->parent ? '&nbsp;&nbsp;' : '';
                     $selected = selected( (int) $val, $cat->term_id, false );
-                    echo '<option value="' . esc_attr( $cat->term_id ) . '"' . $selected . '>' . $indent . esc_html( $cat->name ) . '</option>';
+                    echo '<option value="' . esc_attr( $cat->term_id ) . '" data-slug="' . esc_attr( (string) $cat->slug ) . '"' . $selected . '>' . $indent . esc_html( $cat->name ) . '</option>';
                 }
                 echo '</select>';
                 break;
@@ -56,7 +56,8 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'brand':
                 if ( $site_type !== 'jarmu' ) {
-                    echo '<input type="text" name="brand" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
+                    echo '<input type="text" name="brand" id="va-brand" class="va-input" list="va-brand-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
+                    echo '<datalist id="va-brand-list"></datalist>';
                     break;
                 }
                 echo '<select name="brand" id="va-brand" class="va-select">';
@@ -71,7 +72,8 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'model':
                 if ( $site_type !== 'jarmu' ) {
-                    echo '<input type="text" name="model" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
+                    echo '<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
+                    echo '<datalist id="va-model-list"></datalist>';
                     break;
                 }
                 $brand_value = (string) ( $ev['brand'] ?? '' );
@@ -201,6 +203,7 @@ $counties   = get_terms( [ 'taxonomy' => 'va_county',   'hide_empty' => false ] 
 $conditions = get_terms( [ 'taxonomy' => 'va_condition','hide_empty' => false ] );
 $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brands() : [];
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
+$hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $body_types = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
 
 /* ── Edit mód felismerés ───────────────────────────── */
@@ -377,6 +380,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
     'nonce_address'  => wp_create_nonce( 'va_address_suggest' ),
     'site_type'      => $site_type,
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
+    'hunting_brand_models' => $site_type !== 'jarmu' ? $hunting_brand_models : [],
 ]);
 ?>
 <?php va_display_flash(); ?>
@@ -1071,6 +1075,64 @@ document.addEventListener('DOMContentLoaded', function() {
         rebuildVehicleModelOptions();
     });
     rebuildVehicleModelOptions();
+
+    function getSelectedCategorySlug() {
+        var $cat = $('#va-category');
+        if (!$cat.length) return '';
+        var opt = $cat.find('option:selected');
+        return (opt.data('slug') || '').toString();
+    }
+
+    function rebuildHuntingBrandModelDatalists(clearModel) {
+        if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
+
+        var $brand = $('#va-brand');
+        var $model = $('#va-model');
+        var $brandList = $('#va-brand-list');
+        var $modelList = $('#va-model-list');
+        if (!$brand.length || !$model.length || !$brandList.length || !$modelList.length) return;
+
+        var categorySlug = getSelectedCategorySlug();
+        var catData = (VA_Data.hunting_brand_models && VA_Data.hunting_brand_models[categorySlug]) ? VA_Data.hunting_brand_models[categorySlug] : {};
+        var currentBrand = (($brand.val() || '') + '').trim();
+        var currentModel = (($model.val() || '') + '').trim();
+        var matchedBrandKey = '';
+
+        $brandList.empty();
+        Object.keys(catData).forEach(function(brand) {
+            if (currentBrand.toLowerCase() === brand.toLowerCase()) {
+                matchedBrandKey = brand;
+            }
+            $('<option>').attr('value', brand).appendTo($brandList);
+        });
+
+        var modelSource = matchedBrandKey ? (catData[matchedBrandKey] || []) : [];
+        $modelList.empty();
+        modelSource.forEach(function(model) {
+            $('<option>').attr('value', model).appendTo($modelList);
+        });
+
+        if (clearModel) {
+            $model.val('');
+        } else if (currentModel && modelSource.length && modelSource.indexOf(currentModel) === -1) {
+            $model.val('');
+        }
+    }
+
+    $('#va-category').on('change', function(){
+        if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
+            $('#va-brand').val('');
+            rebuildHuntingBrandModelDatalists(true);
+        }
+    });
+
+    $(document).on('input change blur', '#va-brand', function(){
+        if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
+            rebuildHuntingBrandModelDatalists(true);
+        }
+    });
+
+    rebuildHuntingBrandModelDatalists(false);
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;

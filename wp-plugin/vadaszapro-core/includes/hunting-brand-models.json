@@ -1,0 +1,86 @@
+{
+  "golyos-puska": {
+    "Blaser": ["R8", "R93", "K95"],
+    "Sako": ["85", "90", "S20"],
+    "Tikka": ["T3x", "T1x", "T3"],
+    "Bergara": ["B14", "Premier", "Ridge"],
+    "Browning": ["X-Bolt", "A-Bolt", "Maral"]
+  },
+  "soretes-puska": {
+    "Beretta": ["686", "A400", "1301"],
+    "Benelli": ["M2", "Super Black Eagle 3", "Montefeltro"],
+    "Browning": ["B525", "Maxus", "Cynergy"],
+    "Fabarm": ["XLR5", "Elos", "L4S"],
+    "Franchi": ["Affinity", "Instinct", "Feeling"]
+  },
+  "vegyescsovu-puska": {
+    "Blaser": ["BD14", "BBF95"],
+    "Merkel": ["B3", "B4", "Helix"],
+    "Sabatti": ["Forest", "Rover", "Classic"],
+    "Krieghoff": ["Classic", "Ultra"],
+    "Antonio Zoli": ["Corona", "Express", "MG92"]
+  },
+  "tavcsovek": {
+    "Zeiss": ["Conquest V4", "Victory V8", "Terra"],
+    "Swarovski": ["Z8i", "Z6i", "Habicht"],
+    "Leica": ["Amplus", "Magnus", "Fortis"],
+    "Meopta": ["MeoStar R2", "MeoPro", "Optika6"],
+    "Vortex": ["Viper", "Razor", "Diamondback"]
+  },
+  "ejjellato-tavcso": {
+    "Pard": ["NV007", "NV008", "NV008S"],
+    "ATN": ["X-Sight 4K", "X-Sight LTV", "Thor LT"],
+    "Sightmark": ["Wraith", "Photon"],
+    "Yukon": ["Photon", "Sightline"],
+    "Armasight": ["CO-Mini", "Nyx"]
+  },
+  "hokamerak": {
+    "Pulsar": ["Thermion 2", "Axion", "Telos"],
+    "Hikmicro": ["Thunder", "Lynx", "Falcon"],
+    "Infiray": ["Tube", "Finder", "Mate"],
+    "Guide": ["TR", "TU", "TN"],
+    "Nocpix": ["Vista", "Ace", "Quest"]
+  },
+  "vadkamera": {
+    "Boly": ["SG2060", "MG984", "BG590"],
+    "Browning": ["Strike Force", "Spec Ops", "Dark Ops"],
+    "Spypoint": ["Flex", "Link-Micro", "Force"],
+    "UOVision": ["UV785", "Glory", "UM785"],
+    "Keepguard": ["KG895", "KG895SF", "KG795"]
+  },
+  "vadaszlampa": {
+    "Olight": ["Javelot", "Warrior", "Marauder"],
+    "Fenix": ["HT18R", "TK30", "TK22"],
+    "Nitecore": ["P30", "MH25", "SRT7"],
+    "Armytek": ["Predator", "Viking", "Wizard"],
+    "Ledlenser": ["P7R", "MT14", "H7R"]
+  },
+  "vadaszkutya": {
+    "Magyar Vizsla": ["rovidszoru", "drotzoru"],
+    "Pointer": ["angol", "gordon", "ir setter"],
+    "Retriever": ["labrador", "golden", "chesapeake"],
+    "Spanielek": ["cocker", "springer", "field"],
+    "Tacskok": ["standard", "torpe", "kaninchen"]
+  },
+  "vadasz-ruhazat": {
+    "Harkila": ["Pro Hunter", "Forest", "Metso"],
+    "Seeland": ["Hawker", "Woodcock", "Avail"],
+    "Deerhunter": ["Muflon", "Rusky", "Chamois"],
+    "Blaser Outfits": ["Argali", "Vintage", "Ram"],
+    "Percussion": ["Sologne", "Imperlight", "Tradition"]
+  },
+  "cipo-bakancs": {
+    "Meindl": ["Dovre", "Island", "Vakuum"],
+    "Lowa": ["Renegade", "Zephyr", "Camino"],
+    "Hanwag": ["Tatra", "Alaska", "Banks"],
+    "Crispi": ["Nevada", "Hunter", "Wild Rock"],
+    "Aigle": ["Parcours", "Laforse", "Chambord"]
+  },
+  "vadasz-felszereles": {
+    "Primos": ["trigger stick", "power crow", "double bull"],
+    "Allen": ["gun sling", "rifle case", "cleaning kit"],
+    "3M Peltor": ["sporttac", "ws alert", "bulls eye"],
+    "Garmin": ["alpha", "astro", "inreach"],
+    "Leatherman": ["wave", "surge", "signal"]
+  }
+}
