@@ -374,6 +374,8 @@ class VA_Ajax {
         $credits = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
         if ( $credits > 0 ) {
             update_user_meta( $user_id, 'va_listing_credits', max( 0, $credits - 1 ) );
+            $used_total = absint( get_user_meta( $user_id, 'va_listing_credits_used_total', true ) );
+            update_user_meta( $user_id, 'va_listing_credits_used_total', $used_total + 1 );
         }
 
         $msg = $status === 'publish'
