@@ -2,6 +2,27 @@
 
 ---
 
+## 2026. 05. 12. – Session #352f (Vásárlás oldal keret-kijelzés összhangba hozása)
+
+### Bug
+- A vásárlás oldalon hibásan jelent meg: `1 db (vásárolt kredit)`.
+- Valójában ez Basic + ajándékkredit kombináció volt, és már fel is volt használva.
+- A feladás oldal és a vásárlás oldal eltérő logikát használt, ezért nem volt összhang.
+
+### Javítás
+- `includes/class-shortcodes.php` + mirror:
+  - A régi `plan_remaining/paid_credits/total_credits` hero logika helyett a `VA_User_Roles::can_post_listing()` adatait használja.
+  - Új kijelzés: `Alapcsomag: X db (ingyenes), Ajándékkredit: Y db, Felhasználva: U/L`.
+  - Kikerült a félrevezető `vásárolt kredit` címke ennél a flow-nál.
+
+### Eredmény
+- A vásárlási oldal most ugyanazt a valós állapotot mutatja, mint a feladási oldal.
+- Látszik, hogy a Basic ingyenes keret és az ajándékkredit külön tétel, valamint hogy mennyi van már használatban.
+
+### Érintett fájlok
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
 ## 2026. 05. 12. – Session #352e (Design-illesztett figyelmeztetés színek)
 
 ### Kérés

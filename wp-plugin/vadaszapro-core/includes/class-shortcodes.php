@@ -92,21 +92,15 @@ class VA_Shortcodes {
 
         $user_id      = get_current_user_id();
         $packages     = VA_Ajax::get_credit_packages();
-        $paid_credits = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
         $nonce        = wp_create_nonce( 'va_buy_credits' );
 
-        // Plan-ból kapott maradék keret
-        $plan_remaining = 0;
-        if ( class_exists( 'VA_User_Roles' ) ) {
-            $check = VA_User_Roles::can_post_listing( $user_id );
-            if ( isset( $check['remaining'] ) && $check['remaining'] >= 0 ) {
-                $plan_remaining = (int) $check['remaining'];
-            } elseif ( $check['limit'] === 0 ) {
-                // korlátlan plan – ne mutassunk számot a hőssávban
-                $plan_remaining = -1;
-            }
-        }
-        $total_credits = ( $plan_remaining >= 0 ) ? $plan_remaining : $paid_credits;
+        // Egységes keretszámítás a feladási oldallal: alapcsomag + ajándékkredit.
+        $plan_check      = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::can_post_listing( $user_id ) : [];
+        $plan_is_unlim   = isset( $plan_check['remaining'] ) && (int) $plan_check['remaining'] < 0;
+        $plan_limit_base = isset( $plan_check['plan_limit'] ) ? (int) $plan_check['plan_limit'] : 0;
+        $gift_credits    = isset( $plan_check['credits_total'] ) ? (int) $plan_check['credits_total'] : absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
+        $effective_limit = isset( $plan_check['effective_limit'] ) ? (int) $plan_check['effective_limit'] : ( $plan_limit_base + $gift_credits );
+        $used_slots      = isset( $plan_check['used'] ) ? (int) $plan_check['used'] : 0;
 
         $return_to = isset( $_GET['va_return'] ) ? sanitize_key( (string) wp_unslash( $_GET['va_return'] ) ) : 'buy';
         if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
@@ -249,15 +243,11 @@ class VA_Shortcodes {
                 <div class="va-credits-eyebrow"><span class="va-credits-eyebrow-dot"></span><?php echo esc_html( $hero_eyebrow ); ?></div>
                 <h2 class="va-credits-title"><?php echo esc_html( $hero_title ); ?></h2>
                 <p class="va-credits-sub"><?php echo esc_html( $hero_sub ); ?></p>
-                <p class="va-credits-sub">Jelenlegi elérhető hirdetési kereteid:
-                    <?php if ( $plan_remaining < 0 ): ?>
-                    <strong class="va-credits-count">Korlátlan (plan)</strong>
-                    <?php elseif ( $plan_remaining > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $total_credits ); ?> db összesen</strong>
-                    <?php elseif ( $paid_credits > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $paid_credits ); ?> db (vásárolt kredit)</strong>
+                <p class="va-credits-sub">Jelenlegi hirdetési keret állapota:
+                    <?php if ( $plan_is_unlim ): ?>
+                    <strong class="va-credits-count">Korlátlan csomag</strong>
                     <?php else: ?>
-                    <strong class="va-credits-count">0 db</strong>
+                    <strong class="va-credits-count">Alapcsomag: <?php echo esc_html( (string) $plan_limit_base ); ?> db (ingyenes), Ajándékkredit: <?php echo esc_html( (string) $gift_credits ); ?> db, Felhasználva: <?php echo esc_html( (string) $used_slots ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong>
                     <?php endif; ?>
                 </p>
                 <?php if ( $return_to === 'submit' ): ?>
