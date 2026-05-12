@@ -3509,6 +3509,7 @@ class VA_Settings_Page {
                     $plat_limit   = (int) get_user_meta( $user->ID, 'va_plan_listing_limit', true );
                     $plat_cd      = (int) get_user_meta( $user->ID, 'va_plan_boost_cooldown', true );
                     $plan_note    = (string) get_user_meta( $user->ID, 'va_plan_note', true );
+                    $admin_note   = (string) get_user_meta( $user->ID, 'va_admin_note', true );
                     $seller_label = (string) get_user_meta( $user->ID, 'va_seller_label', true );
                     $paid_credits = absint( get_user_meta( $user->ID, 'va_listing_credits', true ) );
                     $expires_ts   = (int) get_user_meta( $user->ID, 'va_plan_expires_at', true );
@@ -3524,6 +3525,11 @@ class VA_Settings_Page {
                         $purchase_total_qty += absint( $purchase['qty'] ?? 0 );
                         $purchase_total_amount += absint( $purchase['amount'] ?? 0 );
                     }
+
+                    $gift_credit_history = get_user_meta( $user->ID, 'va_gift_credit_history', true );
+                    $gift_credit_history = is_array( $gift_credit_history ) ? array_reverse( $gift_credit_history ) : [];
+                    $gift_credit_count = count( $gift_credit_history );
+                    $last_gift_credit = $gift_credit_count > 0 ? $gift_credit_history[0] : null;
                     $last_upgrade_item = null;
                     foreach ( $purchase_history as $purchase ) {
                         $comp_days = absint( $purchase['carryover_days'] ?? 0 );
@@ -3560,94 +3566,106 @@ class VA_Settings_Page {
                                 <?php echo esc_html( $pcfg['icon'] . ' ' . $pcfg['label'] ); ?>
                             </span>
 
-                            <!-- Plan szerkesztő (összezárva, toggle) -->
-                            <div class="va-upm-plan-editor" id="va-upm-editor-<?php echo esc_attr( (string) $user->ID ); ?>" style="display:none;">
-                                <select class="va-upm-plan-sel" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">
-                                    <?php foreach ( $plans as $pk => $pcfg2 ): ?>
-                                        <?php
-                                            $card_cd_for_plan = class_exists( 'VA_User_Roles' )
-                                                ? (int) VA_User_Roles::get_card_cooldown_for_plan( (string) $pk )
-                                                : (int) ( $pcfg2['boost_cooldown'] ?? 0 );
-                                        ?>
-                                        <option value="<?php echo esc_attr( $pk ); ?>" data-card-cd="<?php echo esc_attr( (string) $card_cd_for_plan ); ?>" <?php selected( $plan_editor, $pk ); ?>>
-                                            <?php echo esc_html( $pcfg2['icon'] . ' ' . $pcfg2['label'] ); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-
-                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
-                                    <label>Kiemelési újratöltés (nap):
-                                        <input type="number" class="va-upm-plat-cd" min="1" max="365"
-                                               value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg_editor['boost_cooldown'] ) ); ?>" style="width:70px;">
-                                    </label>
-                                    <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
-                                </div>
-
-                                <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
-                                    <label style="display:flex;flex-direction:column;gap:6px;">
-                                        <span>Lejárat dátuma:</span>
-                                        <input type="datetime-local" class="va-upm-expires-at"
-                                               value="<?php echo esc_attr( $expires_iso ); ?>" style="width:230px;background:#060606;color:#fff;border:1px solid #ff0000;border-radius:8px;padding:6px 10px;accent-color:#ff0000;box-shadow:0 0 0 1px rgba(255,0,0,.15) inset;">
-                                    </label>
-                                    <div style="font-size:11px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:4px 10px;">
-                                        Jelenlegi: <strong style="color:#fff;">
-                                            <?php echo esc_html( $expires_ts > 0 ? date_i18n( 'Y.m.d H:i', $expires_ts ) : 'nincs beállítva' ); ?>
-                                        </strong>
+                            <!-- Plan szerkesztő (modal popup) -->
+                            <div class="va-upm-modal" id="va-upm-modal-<?php echo esc_attr( (string) $user->ID ); ?>">
+                                <div class="va-upm-modal__backdrop"></div>
+                                <div class="va-upm-modal__content">
+                                    <div class="va-upm-modal__header">
+                                        <div class="va-upm-modal__title">📦 Csomag szerkesztése – <?php echo esc_html( $user->display_name ); ?></div>
+                                        <button type="button" class="va-upm-modal__close-btn" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">&times;</button>
                                     </div>
-                                    <div style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</div>
-                                </div>
+                                    <div class="va-upm-modal__body">
+                                        <div class="va-upm-plan-editor" id="va-upm-editor-<?php echo esc_attr( (string) $user->ID ); ?>">
+                                            <select class="va-upm-plan-sel" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">
+                                                <?php foreach ( $plans as $pk => $pcfg2 ): ?>
+                                                    <?php
+                                                        $card_cd_for_plan = class_exists( 'VA_User_Roles' )
+                                                            ? (int) VA_User_Roles::get_card_cooldown_for_plan( (string) $pk )
+                                                            : (int) ( $pcfg2['boost_cooldown'] ?? 0 );
+                                                    ?>
+                                                    <option value="<?php echo esc_attr( $pk ); ?>" data-card-cd="<?php echo esc_attr( (string) $card_cd_for_plan ); ?>" <?php selected( $plan_editor, $pk ); ?>>
+                                                        <?php echo esc_html( $pcfg2['icon'] . ' ' . $pcfg2['label'] ); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
 
-                                <!-- Egyedi (Platinum + Custom) extra mezők -->
-                                <div class="va-upm-plat-extra" style="<?php echo in_array( $plan, [ 'platinum', 'custom' ], true ) ? '' : 'display:none;'; ?>">
-                                    <label>Havi limit:
-                                        <input type="number" class="va-upm-plat-limit" min="1" max="9999"
-                                               value="<?php echo esc_attr( (string) ( $plat_limit ?: $eff_cfg['monthly_limit'] ) ); ?>" style="width:70px;">
-                                    </label>
-                                    <label>Rang címke:
-                                        <input type="text" class="va-upm-seller-label" maxlength="40"
-                                               value="<?php echo esc_attr( $seller_label ); ?>" style="width:180px;" placeholder="pl. Céges Partner">
-                                    </label>
-                                    <label>Megjegyzés:
-                                        <input type="text" class="va-upm-plat-note" maxlength="200"
-                                               value="<?php echo esc_attr( $plan_note ); ?>" style="width:200px;">
-                                    </label>
-                                </div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
+                                                <label>Kiemelési újratöltés (nap):
+                                                    <input type="number" class="va-upm-plat-cd" min="1" max="365"
+                                                           value="<?php echo esc_attr( (string) ( $plat_cd ?: $eff_cfg_editor['boost_cooldown'] ) ); ?>" style="width:70px;">
+                                                </label>
+                                                <button type="button" class="button button-small va-upm-reset-cd-btn" title="Visszaállítás a választott csomag kártya alapértékére">↺ Kártya alap</button>
+                                            </div>
 
-                                <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
-                                    <label>Ajándék hirdetés hozzáadása (db):
-                                        <input type="number" class="va-upm-credits" min="0" max="999999"
-                                                   value="0" style="width:110px;">
-                                    </label>
-                                </div>
+                                            <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
+                                                <label style="display:flex;flex-direction:column;gap:6px;">
+                                                    <span>Lejárat dátuma:</span>
+                                                    <input type="datetime-local" class="va-upm-expires-at"
+                                                           value="<?php echo esc_attr( $expires_iso ); ?>" style="width:230px;background:#060606;color:#fff;border:1px solid #ff0000;border-radius:8px;padding:6px 10px;accent-color:#ff0000;box-shadow:0 0 0 1px rgba(255,0,0,.15) inset;">
+                                                </label>
+                                                <div style="font-size:11px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:4px 10px;">
+                                                    Jelenlegi: <strong style="color:#fff;">
+                                                        <?php echo esc_html( $expires_ts > 0 ? date_i18n( 'Y.m.d H:i', $expires_ts ) : 'nincs beállítva' ); ?>
+                                                    </strong>
+                                                </div>
+                                                <div style="font-size:11px;color:rgba(255,255,255,.45);">(Ha kitöltöd, ezt menti el konkrét lejáratként.)</div>
+                                            </div>
 
-                                <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
-                                    <label style="display:flex;flex-direction:column;gap:6px;width:100%;">
-                                        <span>Admin megjegyzés / notifikáció:</span>
-                                        <textarea class="va-upm-admin-note" rows="3" maxlength="500" style="width:100%;max-width:320px;background:#060606;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;resize:vertical;" placeholder="pl. telefonon egyeztetve, külön kedvezmény, határidő, visszahívás oka"><?php echo esc_textarea( $admin_note ); ?></textarea>
-                                    </label>
-                                    <div style="font-size:11px;color:rgba(255,255,255,.45);">Belső megjegyzés, csak adminnak látszik. Nem kerül ki a felhasználónak.</div>
-                                    <?php if ( $gift_credit_count > 0 && is_array( $last_gift_credit ) ): ?>
-                                    <?php
-                                        $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
-                                        $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
-                                        $gift_delta = (int) ( $last_gift_credit['delta_credits'] ?? 0 );
-                                        $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
-                                        $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
-                                        $gift_admin = trim( (string) ( $last_gift_credit['admin_name'] ?? '' ) );
-                                    ?>
-                                    <div style="margin-top:8px;padding:8px;background:rgba(106,184,173,.08);border-left:3px solid #6ab8ad;border-radius:4px;font-size:11px;color:rgba(255,255,255,.7);">
-                                        <strong style="color:#6ab8ad;">🎁 Utolsó ajándék kredit:</strong><br>
-                                        <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen' ); ?> · <strong><?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?></strong> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · admin: <em><?php echo esc_html( $gift_admin !== '' ? $gift_admin : '(név nélkül)' ); ?></em>
-                                        <?php if ( $gift_note !== '' ): ?><br><span style="color:rgba(255,255,255,.5);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span><?php endif; ?>
+                                            <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
+                                                <label style="display:flex;flex-direction:column;gap:6px;width:100%;">
+                                                    <span>Admin megjegyzés / notifikáció:</span>
+                                                    <textarea class="va-upm-admin-note" rows="3" maxlength="500" style="width:100%;max-width:320px;background:#060606;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;resize:vertical;" placeholder="pl. telefonon egyeztetve, külön kedvezmény, határidő, visszahívás oka"><?php echo esc_textarea( $admin_note ); ?></textarea>
+                                                </label>
+                                                <div style="font-size:11px;color:rgba(255,255,255,.45);">Belső megjegyzés, csak adminnak látszik. Nem kerül ki a felhasználónak.</div>
+                                                <?php if ( $gift_credit_count > 0 && is_array( $last_gift_credit ) ): ?>
+                                                <?php
+                                                    $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
+                                                    $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
+                                                    $gift_delta = (int) ( $last_gift_credit['delta_credits'] ?? 0 );
+                                                    $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
+                                                    $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
+                                                    $gift_admin = trim( (string) ( $last_gift_credit['admin_name'] ?? '' ) );
+                                                ?>
+                                                <div style="margin-top:8px;padding:8px;background:rgba(106,184,173,.08);border-left:3px solid #6ab8ad;border-radius:4px;font-size:11px;color:rgba(255,255,255,.7);">
+                                                    <strong style="color:#6ab8ad;">🎁 Utolsó ajándék kredit:</strong><br>
+                                                    <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen' ); ?> · <strong><?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?></strong> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · admin: <em><?php echo esc_html( $gift_admin !== '' ? $gift_admin : '(név nélkül)' ); ?></em>
+                                                    <?php if ( $gift_note !== '' ): ?><br><span style="color:rgba(255,255,255,.5);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span><?php endif; ?>
+                                                </div>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <!-- Egyedi (Platinum + Custom) extra mezők -->
+                                            <div class="va-upm-plat-extra" style="<?php echo in_array( $plan, [ 'platinum', 'custom' ], true ) ? '' : 'display:none;'; ?>">
+                                                <label>Havi limit:
+                                                    <input type="number" class="va-upm-plat-limit" min="1" max="9999"
+                                                           value="<?php echo esc_attr( (string) ( $plat_limit ?: $eff_cfg['monthly_limit'] ) ); ?>" style="width:70px;">
+                                                </label>
+                                                <label>Rang címke:
+                                                    <input type="text" class="va-upm-seller-label" maxlength="40"
+                                                           value="<?php echo esc_attr( $seller_label ); ?>" style="width:180px;" placeholder="pl. Céges Partner">
+                                                </label>
+                                                <label>Megjegyzés:
+                                                    <input type="text" class="va-upm-plat-note" maxlength="200"
+                                                           value="<?php echo esc_attr( $plan_note ); ?>" style="width:200px;">
+                                                </label>
+                                            </div>
+
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
+                                                <label>Ajándék hirdetés hozzáadása (db):
+                                                    <input type="number" class="va-upm-credits" min="0" max="999999"
+                                                               value="0" style="width:110px;">
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <?php endif; ?>
+                                    <div class="va-upm-modal__footer">
+                                        <button class="button" type="button" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>" class="va-upm-cancel-btn">Mégse</button>
+                                        <button class="button button-primary va-upm-save-btn"
+                                                data-uid="<?php echo esc_attr( (string) $user->ID ); ?>"
+                                                data-nonce="<?php echo esc_attr( $admin_nonce ); ?>">Mentés</button>
+                                        <span class="va-upm-save-status"></span>
+                                    </div>
                                 </div>
-
-                                <button class="button button-primary va-upm-save-btn"
-                                        data-uid="<?php echo esc_attr( (string) $user->ID ); ?>"
-                                        data-nonce="<?php echo esc_attr( $admin_nonce ); ?>">Mentés</button>
-                                <button class="button va-upm-cancel-btn" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">Mégse</button>
-                                <span class="va-upm-save-status"></span>
                             </div>
                         </td>
                         <td class="va-upm-td-cd">
@@ -3773,63 +3791,120 @@ class VA_Settings_Page {
                             </div>
                         </td>
                     </tr>
-
-                        <?php if ( $gift_credit_count > 0 ): ?>
-                        <tr class="va-upm-history-row">
-                            <td colspan="8">
-                                <div class="va-upm-history-box">
-                                    <details class="va-upm-history-disclosure">
-                                        <summary class="va-upm-history-head">
-                                            <div>
-                                                <strong>🎁 Ajándék kredit napló</strong>
-                                                <span><?php echo esc_html( (string) $gift_credit_count ); ?> bejegyzés</span>
-                                                <?php if ( is_array( $last_gift_credit ) ): ?>
-                                                <?php
-                                                    $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
-                                                    $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
-                                                    $gift_delta = absint( $last_gift_credit['delta_credits'] ?? 0 );
-                                                    $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
-                                                    $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
-                                                ?>
-                                                <span style="color:#8bb3ff;">Utolsó ajándék: <?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen időpont' ); ?></span>
-                                                <?php if ( $gift_note !== '' ): ?>
-                                                <span style="display:block;color:rgba(255,255,255,.55);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span>
-                                                <?php endif; ?>
-                                                <?php endif; ?>
-                                            </div>
-                                            <span class="va-upm-history-toggle" aria-hidden="true"></span>
-                                        </summary>
-                                        <div class="va-upm-history-list">
-                                            <?php foreach ( $gift_credit_history as $gift_entry ): ?>
-                                            <?php
-                                                $gift_saved_at = absint( $gift_entry['saved_at'] ?? 0 );
-                                                $gift_prev     = absint( $gift_entry['prev_credits'] ?? 0 );
-                                                $gift_new      = absint( $gift_entry['new_credits'] ?? 0 );
-                                                $gift_delta    = (int) ( $gift_entry['delta_credits'] ?? 0 );
-                                                $gift_admin_id = absint( $gift_entry['admin_id'] ?? 0 );
-                                                $gift_admin    = sanitize_text_field( (string) ( $gift_entry['admin_name'] ?? '' ) );
-                                                $gift_note     = trim( (string) ( $gift_entry['note'] ?? '' ) );
-                                                $gift_label    = $gift_delta >= 0 ? '+' . absint( $gift_delta ) : (string) $gift_delta;
-                                            ?>
-                                            <div class="va-upm-history-item">
-                                                <div class="va-upm-history-item__top">
-                                                    <span><?php echo esc_html( $gift_saved_at > 0 ? date_i18n( 'Y.m.d H:i', $gift_saved_at ) : '—' ); ?></span>
-                                                    <span style="color:#8bb3ff;font-weight:800;">Ajándék kredit <?php echo esc_html( $gift_label ); ?></span>
-                                                    <span><?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?></span>
-                                                    <span><?php echo esc_html( $gift_admin !== '' ? $gift_admin : ( $gift_admin_id > 0 ? 'admin #' . $gift_admin_id : 'ismeretlen admin' ) ); ?></span>
-                                                </div>
-                                                <?php if ( $gift_note !== '' ): ?>
-                                                <div class="va-upm-history-item__meta">Megjegyzés: <?php echo esc_html( $gift_note ); ?></div>
-                                                <?php endif; ?>
-                                            </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </details>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endif; ?>
                     <?php endif; ?>
+
+                    <?php if ( $gift_credit_count > 0 ): ?>
+                    <tr class="va-upm-history-row">
+                        <td colspan="8">
+                            <div class="va-upm-history-box">
+                                <details class="va-upm-history-disclosure">
+                                    <summary class="va-upm-history-head">
+                                        <div>
+                                            <strong>🎁 Ajándék kredit napló</strong>
+                                            <span><?php echo esc_html( (string) $gift_credit_count ); ?> bejegyzés</span>
+                                            <?php if ( is_array( $last_gift_credit ) ): ?>
+                                            <?php
+                                                $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
+                                                $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
+                                                $gift_delta = absint( $last_gift_credit['delta_credits'] ?? 0 );
+                                                $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
+                                                $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
+                                            ?>
+                                            <span style="color:#8bb3ff;">Utolsó ajándék: <?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen időpont' ); ?></span>
+                                            <?php if ( $gift_note !== '' ): ?>
+                                            <span style="display:block;color:rgba(255,255,255,.55);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span>
+                                            <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
+                                    </summary>
+                                    <div class="va-upm-history-list">
+                                        <?php foreach ( $gift_credit_history as $gift_entry ): ?>
+                                        <?php
+                                            $gift_saved_at = absint( $gift_entry['saved_at'] ?? 0 );
+                                            $gift_prev     = absint( $gift_entry['prev_credits'] ?? 0 );
+                                            $gift_new      = absint( $gift_entry['new_credits'] ?? 0 );
+                                            $gift_delta    = (int) ( $gift_entry['delta_credits'] ?? 0 );
+                                            $gift_admin_id = absint( $gift_entry['admin_id'] ?? 0 );
+                                            $gift_admin    = sanitize_text_field( (string) ( $gift_entry['admin_name'] ?? '' ) );
+                                            $gift_note     = trim( (string) ( $gift_entry['note'] ?? '' ) );
+                                            $gift_label    = $gift_delta >= 0 ? '+' . absint( $gift_delta ) : (string) $gift_delta;
+                                        ?>
+                                        <div class="va-upm-history-item">
+                                            <div class="va-upm-history-item__top">
+                                                <span><?php echo esc_html( $gift_saved_at > 0 ? date_i18n( 'Y.m.d H:i', $gift_saved_at ) : '—' ); ?></span>
+                                                <span style="color:#8bb3ff;font-weight:800;">Ajándék kredit <?php echo esc_html( $gift_label ); ?></span>
+                                                <span><?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?></span>
+                                                <span><?php echo esc_html( $gift_admin !== '' ? $gift_admin : ( $gift_admin_id > 0 ? 'admin #' . $gift_admin_id : 'ismeretlen admin' ) ); ?></span>
+                                            </div>
+                                            <?php if ( $gift_note !== '' ): ?>
+                                            <div class="va-upm-history-item__meta">Megjegyzés: <?php echo esc_html( $gift_note ); ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </details>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+
+                    <?php if ( $gift_credit_count > 0 ): ?>
+                    <tr class="va-upm-history-row">
+                        <td colspan="8">
+                            <div class="va-upm-history-box">
+                                <details class="va-upm-history-disclosure">
+                                    <summary class="va-upm-history-head">
+                                        <div>
+                                            <strong>🎁 Ajándék kredit napló</strong>
+                                            <span><?php echo esc_html( (string) $gift_credit_count ); ?> bejegyzés</span>
+                                            <?php if ( is_array( $last_gift_credit ) ): ?>
+                                            <?php
+                                                $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
+                                                $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
+                                                $gift_delta = absint( $last_gift_credit['delta_credits'] ?? 0 );
+                                                $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
+                                                $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
+                                            ?>
+                                            <span style="color:#8bb3ff;">Utolsó ajándék: <?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen időpont' ); ?></span>
+                                            <?php if ( $gift_note !== '' ): ?>
+                                            <span style="display:block;color:rgba(255,255,255,.55);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span>
+                                            <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
+                                    </summary>
+                                    <div class="va-upm-history-list">
+                                        <?php foreach ( $gift_credit_history as $gift_entry ): ?>
+                                        <?php
+                                            $gift_saved_at = absint( $gift_entry['saved_at'] ?? 0 );
+                                            $gift_prev     = absint( $gift_entry['prev_credits'] ?? 0 );
+                                            $gift_new      = absint( $gift_entry['new_credits'] ?? 0 );
+                                            $gift_delta    = (int) ( $gift_entry['delta_credits'] ?? 0 );
+                                            $gift_admin_id = absint( $gift_entry['admin_id'] ?? 0 );
+                                            $gift_admin    = sanitize_text_field( (string) ( $gift_entry['admin_name'] ?? '' ) );
+                                            $gift_note     = trim( (string) ( $gift_entry['note'] ?? '' ) );
+                                            $gift_label    = $gift_delta >= 0 ? '+' . absint( $gift_delta ) : (string) $gift_delta;
+                                        ?>
+                                        <div class="va-upm-history-item">
+                                            <div class="va-upm-history-item__top">
+                                                <span><?php echo esc_html( $gift_saved_at > 0 ? date_i18n( 'Y.m.d H:i', $gift_saved_at ) : '—' ); ?></span>
+                                                <span style="color:#8bb3ff;font-weight:800;">Ajándék kredit <?php echo esc_html( $gift_label ); ?></span>
+                                                <span><?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?></span>
+                                                <span><?php echo esc_html( $gift_admin !== '' ? $gift_admin : ( $gift_admin_id > 0 ? 'admin #' . $gift_admin_id : 'ismeretlen admin' ) ); ?></span>
+                                            </div>
+                                            <?php if ( $gift_note !== '' ): ?>
+                                            <div class="va-upm-history-item__meta">Megjegyzés: <?php echo esc_html( $gift_note ); ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </details>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+
                     <?php
                     $email_log = get_user_meta( $user->ID, 'va_email_send_log', true );
                     $email_log = is_array( $email_log ) ? $email_log : [];
@@ -3945,7 +4020,6 @@ class VA_Settings_Page {
             border:1px solid var(--pc,#888);border-radius:999px;
             padding:3px 10px;font-size:12px;font-weight:700;
         }
-        .va-upm-note { margin-top:4px;font-size:11px;color:#ffd166;max-width:260px;white-space:pre-wrap; }
         .va-upm-expire-pill {
             display:inline-flex;
             align-items:center;
@@ -3964,6 +4038,7 @@ class VA_Settings_Page {
             background:var(--va-bg2);border:1px solid var(--va-border2);color:var(--va-text);
             border-radius:var(--va-radius-sm);padding:5px 8px;font-size:12px;
         }
+        .va-upm-note { margin-top:4px;font-size:11px;color:#ffd166;max-width:260px;white-space:pre-wrap; }
         .va-upm-plat-extra { display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;padding:8px;background:rgba(226,198,255,.06);border-radius:var(--va-radius-sm); }
         .va-upm-plat-extra label { display:flex;align-items:center;gap:5px;font-size:12px; }
         .va-upm-save-status { font-size:12px;margin-left:8px; }
