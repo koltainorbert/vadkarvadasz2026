@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 12. – Session #352g (Header logó + oldalneve visszaállítás)
+
+### Bug
+- Frontenden eltűnt a headerből a logó és az oldalnév.
+- Oka: a fejléc logó főoldalon feltételesen el volt rejtve, illetve a logo-text több breakpointon `display:none` volt.
+
+### Javítás
+- `header.php` + `wp-theme/vadaszapro-theme/header.php`:
+  - A header logó link mindig megjelenik (nem front-page függő).
+  - Visszakerült a márkanév a logó mellé: `<span class="va-logo__text">...</span>`.
+  - A `$hide_home_logo` változó megmaradt a hero-rész kompatibilitásához.
+- `style.css` + `wp-theme/vadaszapro-theme/style.css`:
+  - A `.va-logo__text` mobil/resp szabályban többé nem rejtődik el (`display:block`).
+
+### Eredmény
+- Headerben újra látható a logó és az oldal neve.
+- Frontoldalon és belső oldalakon is konzisztens branding jelenik meg.
+
+### Érintett fájlok
+- `header.php`
+- `style.css`
+- `wp-theme/vadaszapro-theme/header.php`
+- `wp-theme/vadaszapro-theme/style.css`
+
 ## 2026. 05. 12. – Session #352f (Vásárlás oldal keret-kijelzés összhangba hozása)
 
 ### Bug

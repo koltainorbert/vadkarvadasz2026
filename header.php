@@ -81,6 +81,7 @@
     if ( $hero_logo === '' ) {
         $hero_logo = $header_logo;
     }
+    $hide_home_logo = is_front_page();
     ?>
 
     <!-- ═══ Header ══════════════════════════════════════ -->
