@@ -97,20 +97,17 @@ add_action( 'init', function () {
     }
 }, 999 );
 
-// Ideiglenes probe endpoint deploy verifikációhoz: ?va_probe=20260513
+// Egyszeri migráció: form-konfigok kényszer visszaállítása vadász defaultokra
 add_action( 'init', function () {
-    $probe = isset( $_GET['va_probe'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['va_probe'] ) ) : '';
-    if ( $probe === '20260513' ) {
-        wp_die( 'VA_PROBE_OK_20260513' );
-    }
-}, 0 );
+    if ( get_option( 'va_form_config_forced_reset_v5' ) ) return;
 
-// Egyszeri migráció: régi autós form-konfig törlése az adatbázisból
-add_action( 'init', function () {
-    if ( get_transient( 'va_form_config_reset_v4' ) ) return;
-    delete_option( 'va_form_config_va_listing_submit' );
-    delete_option( 'va_form_config_va_admin_listing_edit' );
-    set_transient( 'va_form_config_reset_v4', 1, YEAR_IN_SECONDS );
+    $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
+    if ( $site_type !== 'jarmu' && class_exists( 'VA_Form_Builder' ) ) {
+        update_option( 'va_form_config_va_listing_submit', VA_Form_Builder::get_default_fields( 'va_listing_submit' ) );
+        update_option( 'va_form_config_va_admin_listing_edit', VA_Form_Builder::get_default_fields( 'va_admin_listing_edit' ) );
+    }
+
+    update_option( 'va_form_config_forced_reset_v5', '1', false );
 }, 1 );
 
 // Hiányzó alapoldalak létrehozása futás közben (reaktiválás nélkül)
