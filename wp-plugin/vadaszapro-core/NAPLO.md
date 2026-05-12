@@ -5,9 +5,9 @@
 ## 2026. 05. 12. – Session #351 (Ajándékkredit + effektív keret helyes megjelenítése)
 
 ### Javítás
-- `includes/class-user-roles.php`: az effektív limit most a plan limit + összes gift kredit alapján számolódik.
-- `includes/class-ajax.php`: kredit felhasználáskor a balance csökken, a felhasznált összesítő nő.
-- `frontend/templates/listing/submit-form.php`: a feliratok külön mutatják a csomagot és a gift kreditet.
+- `includes/class-user-roles.php`: az effektív limit most a plan limit + jelenlegi gift kredit alapján számolódik.
+- `includes/class-ajax.php`: a gift kredit nem csökken feladáskor.
+- `frontend/templates/listing/submit-form.php`: a feliratok külön mutatják a csomagot és a gift kredit keretet.
 - `admin/class-settings-page.php`: használati label "Kereted".
 
 ---
