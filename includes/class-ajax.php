@@ -370,8 +370,12 @@ class VA_Ajax {
             $img_errors = self::handle_images( $post_id, $_FILES['listing_images'], $featured_idx );
         }
 
-        // Ha nem ingyenes: kredit levonás
-        if ( ! $is_free_allowed ) {
+        // Minden feladásnál először a manuális ajándék kredit fogy (1 feladás = 1 kredit).
+        $gift_credits = absint( get_user_meta( $user_id, 'va_gift_listing_credits', true ) );
+        if ( $gift_credits > 0 ) {
+            update_user_meta( $user_id, 'va_gift_listing_credits', max( 0, $gift_credits - 1 ) );
+        } elseif ( ! $is_free_allowed ) {
+            // Ha nincs ajándék kredit, csak akkor fogy fizetett kreditből.
             $credits = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
             update_user_meta( $user_id, 'va_listing_credits', max( 0, $credits - 1 ) );
         }

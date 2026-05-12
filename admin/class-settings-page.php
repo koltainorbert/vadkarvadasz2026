@@ -3651,8 +3651,8 @@ class VA_Settings_Page {
                                             </div>
 
                                             <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
-                                                <label>Ajándék hirdetés hozzáadása (db):
-                                                    <input type="number" class="va-upm-credits" min="0" max="999999"
+                                                <label>Ajándék hirdetés módosítása (db, +/-):
+                                                    <input type="number" class="va-upm-credits" min="-999999" max="999999"
                                                                value="0" style="width:110px;">
                                                 </label>
                                             </div>
