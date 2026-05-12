@@ -418,6 +418,9 @@ class VA_Settings_Page {
 
             // Lábléc szövegek
             'va_hf_footer_brand_title'             => 'weingartnerauto.hu',
+            'va_contact_addr'                      => '',
+            'va_billing_phone'                     => '',
+            'va_contact_email'                     => '',
             'va_hf_footer_col_categories_title'    => 'Kategóriák',
             'va_hf_footer_col_account_title'       => 'Fiók',
             'va_hf_footer_col_legal_title'         => 'Jogi információk',
