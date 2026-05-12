@@ -385,14 +385,15 @@ class VA_User_Roles {
         }
 
         $label = $cfg['label'];
-        if ( $cfg['basis'] === 'active' ) {
-            $reason = "{$label} csomaggal egyszerre legfeljebb {$plan_limit} aktív hirdetésed lehet.";
-        } else {
-            $reason = "{$label} csomaggal ebben a hónapban legfeljebb {$plan_limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
-        }
-
+        $credits_note = '';
         if ( $gift_credits_balance > 0 ) {
-            $reason .= ' Ajándékkreditből jelenleg ' . $gift_credits_balance . ' db áll rendelkezésre.';
+            $credits_note = " (+ ajándékkredit {$gift_credits_balance} db, már foglalt az aktív hirdetésedhez)";
+        }
+        
+        if ( $cfg['basis'] === 'active' ) {
+            $reason = "Kereted: {$used}/{$effective_limit}{$credits_note}. Nincs szabad hely az új hirdetéshez.";
+        } else {
+            $reason = "Havi keret: {$used}/{$effective_limit}{$credits_note}. A hónap végén újra indul.";
         }
 
         return [

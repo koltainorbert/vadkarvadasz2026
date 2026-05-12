@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 12. – Session #352b (Error message javítás: effective_limit mutatása + clarity)
+
+### Bug
+- Az error üzenet azt mondta: "Basic csomag egyszerre legfeljebb 1 aktív hirdetésed lehet"
+- Ez **FÉLREVEZETŐ**, mert az ajándékkredit már foglalt az egyik hirdetéshez (2 futó, 2 slot)
+- Az üzenet az alap csomag limitjét mutatta (`$plan_limit = 1`), nem az effektív limitet (`$effective_limit = 2`)
+- Az ajándékkredit "rendelkezésre áll" üzenet azt sugallta, hogy még SZABAD, pedig már FOL VAN FOGLALVA
+
+### Javítás
+- `includes/class-user-roles.php` + mirror:
+  - Az error üzenet most ezt mutatja: **"Kereted: 2/2 (+ ajándékkredit 1 db, már foglalt az aktív hirdetésedhez). Nincs szabad hely az új hirdetéshez."**
+  - Helyett a régi: "Basic csomag ... legfeljebb 1 ... Ajándékkredit még 1 rendelkezésre"
+  - Monthly basis üzenet: "Havi keret: X/Y (+ ajándékkredit... már foglalt)."
+
+### Eredmény
+- Az üzenet most egyértelműen jelzi, hogy összesen 2 slot van, 2 aktív futó van, és az ajándékkredit MÁR FELHASZNÁLT
+- Felhasználó nem fog azt gondolni, hogy az ajándékkredit még "szabad" slotként rendelkezésre áll
+
+### Érintett fájlok
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 12. – Session #352 (UI fix: effective_limit helyett limit megjelenítése)
 
 ### Bug
