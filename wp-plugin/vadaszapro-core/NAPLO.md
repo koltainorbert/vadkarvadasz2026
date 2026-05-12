@@ -2,6 +2,50 @@
 
 ---
 
+## 2026. 05. 12. – Session #345 (Komoly ajandek kredit kezeles + napi süti teljes torles)
+
+### Igeny
+- Az admin kredit kezeles ne +/- mezos legyen, hanem kulon, egyertelmu jovairas es visszavonas.
+- A napi "szerencsesuti" funkcio 100%-ban keruljon eltavolitasra.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`: a `+/-` kredit input helyett ket kulon mezore allitva:
+  - `va-upm-credits-add` (jovairas)
+  - `va-upm-credits-revoke` (visszavonas)
+- [x] `admin/class-settings-page.php`: AJAX payload mar kulon kuldi:
+  - `custom_credits_add`
+  - `custom_credits_revoke`
+- [x] `includes/class-user-roles.php`: admin mentes backend atallitva kulon add/revoke szamitasra (`delta = add - revoke`).
+- [x] `includes/class-user-roles.php`: visszafele kompatibilitas megtartva a regi `custom_credits` mezovel.
+- [x] `frontend/templates/user/dashboard.php`: napi süti/welcome funkcio teljes torlese:
+  - user meta iras torolve (`va_daily_welcome_seen`),
+  - transient/IP-hash logika torolve,
+  - overlay markup torolve,
+  - kapcsolodo CSS torolve,
+  - kapcsolodo JS init torolve.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+### Eredmeny
+- Az admin ajandek kredit kezeles egyertelmu: kulon mezoben adas es kulon mezoben visszavonas.
+- A napi süti funkcio minden retegbol eltunt (allapot, UI, stilus, JS).
+- A valtozasok hibamentesek (`get_errors`: nincs hiba).
+
+### Deploy
+- `Deploy All` lefutott (production trigger mode): `push main` + GitHub FTP workflow trigger.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+---
+
 ## 2026. 05. 12. – Session #344 (Ajandek hirdetes kredit: egyszer hasznalatos + visszavonhato)
 
 ### Igeny
