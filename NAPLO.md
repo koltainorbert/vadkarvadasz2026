@@ -2,6 +2,39 @@
 
 ---
 
+## 2026. 05. 12. – Session #352n (Vadasz kategoriak + varos/iranyitoszam validacio)
+
+### Keres
+- Sorban induljon a teljes vadaszati atallas.
+
+### Javitas (1-2. lepes)
+- Kategoria dataset vadasz listara allitva:
+  - `includes/class-vehicle-catalog.php`
+  - `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- Taxonomia sync mar nem kenyszeriti `jarmu` modra a rendszert, hanem `vadaszat`-ra all:
+  - `includes/class-taxonomy.php`
+  - `wp-plugin/vadaszapro-core/includes/class-taxonomy.php`
+- Feladas/szerkesztes backend validacio:
+  - kotelezo legalabb az egyik: varos VAGY iranyitoszam
+  - uj metak mentese: `va_postal_code`, `va_street`
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Feladas UI bovites:
+  - `location` mezo alatt uj `postal_code` + `street` input
+  - kliens oldali ellenorzes submit elott (varos/iranyitoszam)
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Weingartner fallback szovegek cserelve VadászApróra:
+  - `footer.php`
+  - `wp-theme/vadaszapro-theme/footer.php`
+
+### Eredmeny
+- A rendszer vadász kategoriakkal seedel.
+- A feladasnal mar ervenyes a varos vagy iranyitoszam kovetelmeny.
+- A postal code + utca adatok menthetok.
+
 ## 2026. 05. 12. – Session #352m (Teszt lo blokk visszavonasa)
 
 ### Keres
