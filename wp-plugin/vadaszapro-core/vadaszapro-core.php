@@ -99,10 +99,10 @@ add_action( 'init', function () {
 
 // Egyszeri migráció: régi autós form-konfig törlése az adatbázisból
 add_action( 'init', function () {
-    if ( get_transient( 'va_form_config_reset_v3' ) ) return;
+    if ( get_transient( 'va_form_config_reset_v4' ) ) return;
     delete_option( 'va_form_config_va_listing_submit' );
     delete_option( 'va_form_config_va_admin_listing_edit' );
-    set_transient( 'va_form_config_reset_v3', 1, YEAR_IN_SECONDS );
+    set_transient( 'va_form_config_reset_v4', 1, YEAR_IN_SECONDS );
 }, 1 );
 
 // Hiányzó alapoldalak létrehozása futás közben (reaktiválás nélkül)

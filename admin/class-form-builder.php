@@ -31,26 +31,17 @@ class VA_Form_Builder {
     private static function should_reset_legacy_config( string $form_id, array $saved ): bool {
         if ( $form_id === 'va_listing_submit' ) {
             $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
-
-            // Legacy vehicle-form markers from older installs.
-            $vehicle_markers = [ 'body_type' ];
-            $hunting_markers = [ 'caliber', 'license_req' ];
-
-            if ( $site_type !== 'jarmu' && self::config_has_any_keys( $saved, $vehicle_markers ) ) {
-                return true;
+            if ( $site_type !== 'jarmu' ) {
+                // Vadász site: ha nincs 'caliber' a mentett konfigban → régi/rossz config, reset
+                return ! self::config_has_any_keys( $saved, [ 'caliber', 'license_req', 'va_caliber' ] );
             }
-
-            if ( $site_type === 'jarmu' && self::config_has_any_keys( $saved, $hunting_markers ) && ! self::config_has_any_keys( $saved, $vehicle_markers ) ) {
-                return true;
-            }
-
-            return false;
+            // Jármu site: ha nincs 'body_type' → rossz config
+            return ! self::config_has_any_keys( $saved, [ 'body_type' ] );
         }
 
         if ( $form_id === 'va_admin_listing_edit' ) {
-            // Admin form should not carry legacy vehicle-only keys from old auto schema.
-            $legacy_vehicle_markers = [ 'va_body_type', 'va_fuel_type', 'va_engine_size', 'va_transmission', 'va_drive' ];
-            return self::config_has_any_keys( $saved, $legacy_vehicle_markers );
+            // Ha nincs 'va_caliber' a mentett admin konfigban → régi/rossz config, reset
+            return ! self::config_has_any_keys( $saved, [ 'va_caliber', 'va_license_req' ] );
         }
 
         return false;
