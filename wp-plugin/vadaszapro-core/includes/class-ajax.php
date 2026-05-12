@@ -7,6 +7,80 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Ajax {
 
+    private static function get_category_required_rules(): array {
+        return [
+            'golyos-puska'      => [ 'label' => 'Golyós puska', 'required' => [ 'brand', 'caliber' ] ],
+            'soretes-puska'     => [ 'label' => 'Sörétes puska', 'required' => [ 'brand', 'caliber' ] ],
+            'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű puska', 'required' => [ 'brand', 'caliber' ] ],
+            'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+            'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
+            'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
+            'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
+            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model' ] ],
+            'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model' ] ],
+            'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model' ] ],
+            'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
+            'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
+            'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model' ] ],
+            'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+            'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+            'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
+        ];
+    }
+
+    private static function validate_category_required_fields( int $category_id, string $brand, string $model, string $caliber ): string {
+        if ( $category_id <= 0 ) {
+            return '';
+        }
+
+        $term = get_term( $category_id, 'va_category' );
+        if ( ! $term || is_wp_error( $term ) ) {
+            return '';
+        }
+
+        $slug = sanitize_title( (string) $term->slug );
+        $rules = self::get_category_required_rules();
+        if ( ! isset( $rules[ $slug ] ) ) {
+            return '';
+        }
+
+        $rule = $rules[ $slug ];
+        $required = is_array( $rule['required'] ?? null ) ? $rule['required'] : [];
+        if ( empty( $required ) ) {
+            return '';
+        }
+
+        $values = [
+            'brand'   => trim( $brand ),
+            'model'   => trim( $model ),
+            'caliber' => trim( $caliber ),
+        ];
+
+        $labels = [
+            'brand'   => 'Márka / gyártó',
+            'model'   => 'Modell / típus',
+            'caliber' => 'Kaliber',
+        ];
+
+        $missing = [];
+        foreach ( $required as $field ) {
+            if ( empty( $values[ $field ] ?? '' ) ) {
+                $missing[] = $labels[ $field ] ?? $field;
+            }
+        }
+
+        if ( empty( $missing ) ) {
+            return '';
+        }
+
+        $cat_label = (string) ( $rule['label'] ?? $term->name );
+        return sprintf(
+            '%s kategóriában kötelező: %s.',
+            $cat_label,
+            implode( ', ', $missing )
+        );
+    }
+
     public static function init() {
         // Hirdetés feladás
         add_action( 'wp_ajax_va_submit_listing',  [ __CLASS__, 'submit_listing' ] );
@@ -125,6 +199,11 @@ class VA_Ajax {
 
         if ( $location === '' && $postal_code === '' ) {
             wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
+        }
+
+        $rule_error = self::validate_category_required_fields( $category, $brand, $model, $caliber );
+        if ( $rule_error !== '' ) {
+            wp_send_json_error( [ 'message' => $rule_error ] );
         }
 
         wp_update_post( [
@@ -289,6 +368,11 @@ class VA_Ajax {
 
         if ( $location === '' && $postal_code === '' ) {
             wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
+        }
+
+        $rule_error = self::validate_category_required_fields( $category, $brand, $model, $caliber );
+        if ( $rule_error !== '' ) {
+            wp_send_json_error( [ 'message' => $rule_error ] );
         }
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
