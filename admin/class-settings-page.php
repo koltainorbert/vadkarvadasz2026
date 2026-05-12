@@ -864,6 +864,10 @@ class VA_Settings_Page {
             'va_email_plan_expired_admin_heading'  => 'Felhasználói csomag lejárt',
             'va_email_plan_expired_admin_body'     => "A következő felhasználó csomagja lejárt és visszakerült alap (Basic) csomagra:\n\nFelhasználó: {name}\nE-mail: {user_email}\nVolt csomag: {plan_label}",
             'va_email_plan_expired_admin_btn_label'=> 'Felhasználó szerkesztése',
+            'va_email_plan_upgrade_subject'        => 'Sikeres csomagváltás – maradék érték jóváírva ({site_name})',
+            'va_email_plan_upgrade_heading'        => 'Sikeres csomagváltás',
+            'va_email_plan_upgrade_body'           => "Kedves {name}!\n\nA csomagváltásod sikeres volt.\nKorábbi csomag: {prev_plan_label}\nÚj csomag: {new_plan_label}\nMaradék kompenzáció: +{carryover_days} nap ({carryover_value_ft} Ft érték)\nÚj lejárat: {expires_at}\n\nFontos: a maradék érték nem veszett el, automatikusan hozzáíródott az új csomagodhoz.",
+            'va_email_plan_upgrade_btn_label'      => 'Csomagjaim megtekintése',
         ];
         foreach ( $plan_email_text_defaults as $key => $default ) {
             $is_body_key = ( strpos( $key, '_body_' ) !== false ) || ( substr( $key, -5 ) === '_body' );
@@ -883,6 +887,7 @@ class VA_Settings_Page {
             'va_email_plan_expiry_btn_url_1'       => home_url( '/csomagok/' ),
             'va_email_plan_expired_user_btn_url'   => home_url( '/csomagok/' ),
             'va_email_plan_expired_admin_btn_url'  => '',
+            'va_email_plan_upgrade_btn_url'        => home_url( '/va-kredit-vasarlas/' ),
         ];
         foreach ( $plan_email_url_defaults as $key => $default ) {
             register_setting( 'va_general_settings', $key, [ 'sanitize_callback' => 'esc_url_raw' ] );
@@ -1495,6 +1500,12 @@ class VA_Settings_Page {
                     <?php self::field_textarea( 'va_email_plan_expired_admin_body', 'Lejárt csomag (admin) – szöveg', 'Szövegként írd, a rendszer automatikusan HTML bekezdésre alakítja.', 6 ); ?>
                     <?php self::field_text( 'va_email_plan_expired_admin_btn_label', 'Lejárt csomag (admin) – gomb felirat' ); ?>
                     <?php self::field_text( 'va_email_plan_expired_admin_btn_url', 'Lejárt csomag (admin) – gomb link URL (üresen hagyva automatikusan user szerkesztő oldal)' ); ?>
+
+                    <?php self::field_text( 'va_email_plan_upgrade_subject', 'Csomag upgrade (felhasználó) – tárgy' ); ?>
+                    <?php self::field_text( 'va_email_plan_upgrade_heading', 'Csomag upgrade (felhasználó) – cím (emailben)' ); ?>
+                    <?php self::field_textarea( 'va_email_plan_upgrade_body', 'Csomag upgrade (felhasználó) – szöveg', 'Változók: {name}, {user_email}, {prev_plan_label}, {prev_plan_slug}, {new_plan_label}, {new_plan_slug}, {carryover_days}, {carryover_value_ft}, {expires_at}, {site_name}, {support_email}', 6 ); ?>
+                    <?php self::field_text( 'va_email_plan_upgrade_btn_label', 'Csomag upgrade (felhasználó) – gomb felirat' ); ?>
+                    <?php self::field_text( 'va_email_plan_upgrade_btn_url', 'Csomag upgrade (felhasználó) – gomb link URL' ); ?>
 
                     <?php self::field_select('va_home_hero_align',      'Főoldal hero elemek igazítása', [ 'left' => 'Balra zárt', 'center' => 'Középre', 'right' => 'Jobbra zárt' ] ); ?>
                     <?php self::field_select('va_home_hero_bg_type', 'Főoldal hero háttér típusa', [
@@ -3513,6 +3524,15 @@ class VA_Settings_Page {
                         $purchase_total_qty += absint( $purchase['qty'] ?? 0 );
                         $purchase_total_amount += absint( $purchase['amount'] ?? 0 );
                     }
+                    $last_upgrade_item = null;
+                    foreach ( $purchase_history as $purchase ) {
+                        $comp_days = absint( $purchase['carryover_days'] ?? 0 );
+                        $upgrade_applied = ! empty( $purchase['upgrade_applied'] );
+                        if ( $upgrade_applied || $comp_days > 0 ) {
+                            $last_upgrade_item = $purchase;
+                            break;
+                        }
+                    }
 
                     if ( class_exists( 'VA_User_Roles' ) ) {
                         $eff_cfg = VA_User_Roles::get_plan_config( $plan, $user->ID );
@@ -3672,6 +3692,19 @@ class VA_Settings_Page {
                                         <div>
                                             <strong>Stripe vásárlási előzmények</strong>
                                             <span><?php echo esc_html( (string) $purchase_count ); ?> tranzakció · <?php echo esc_html( (string) $purchase_total_qty ); ?> kredit · <?php echo esc_html( number_format( $purchase_total_amount, 0, ',', ' ' ) ); ?> Ft</span>
+                                            <?php if ( is_array( $last_upgrade_item ) ): ?>
+                                            <?php
+                                                $lu_days = absint( $last_upgrade_item['carryover_days'] ?? 0 );
+                                                $lu_value = absint( $last_upgrade_item['carryover_value_ft'] ?? 0 );
+                                                $lu_prev_slug = sanitize_key( (string) ( $last_upgrade_item['prev_plan_slug'] ?? '' ) );
+                                                $lu_new_slug = sanitize_key( (string) ( $last_upgrade_item['plan_slug'] ?? '' ) );
+                                                $lu_prev_label = $plans[ $lu_prev_slug ]['label'] ?? ( $lu_prev_slug !== '' ? ucfirst( $lu_prev_slug ) : 'ismeretlen' );
+                                                $lu_new_label = $plans[ $lu_new_slug ]['label'] ?? ( $lu_new_slug !== '' ? ucfirst( $lu_new_slug ) : 'ismeretlen' );
+                                                if ( $lu_prev_slug === 'custom' ) { $lu_prev_label = 'Céges előfizetés'; }
+                                                if ( $lu_new_slug === 'custom' ) { $lu_new_label = 'Céges előfizetés'; }
+                                            ?>
+                                            <span style="color:#8bb3ff;">Utolsó upgrade kompenzáció: <?php echo esc_html( $lu_prev_label ); ?> → <?php echo esc_html( $lu_new_label ); ?> · +<?php echo esc_html( (string) $lu_days ); ?> nap · <?php echo esc_html( number_format( $lu_value, 0, ',', ' ' ) ); ?> Ft</span>
+                                            <?php endif; ?>
                                         </div>
                                         <span class="va-upm-history-toggle" aria-hidden="true"></span>
                                     </summary>
