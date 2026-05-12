@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 12. – Session #352v (Hotfix: admin + feladas kategoriavaltas valos mukodes)
+
+### Hiba
+- Visszajelzes alapjan az admin szerkeszto es a hirdetes feladas kategoriankenti dinamikus logikaja nem mutatott valtozast.
+
+### Ok
+- Admin oldalon a kategoriavalaszto `select` elemrol hianyzott:
+  - az elvart `id="va-admin-category"`
+  - a `data-slug` az option elemeken
+- Emiatt a JS nem talalta a kategoriamezot, illetve nem tudott slug alapjan szabalyt alkalmazni.
+
+### Javitas
+- Admin szerkeszto (root + mirror):
+  - kategoriavalaszto kapott `id="va-admin-category"` attributumot
+  - optionokra bekerult a `data-slug` (`$cat->slug`)
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+- Feladas oldal robusztusitas (root + mirror):
+  - lokalizalt `category_slugs` map (`term_id -> slug`)
+  - JS `getSelectedCategorySlug()` fallbackot kapott:
+    - eloszor option `data-slug`
+    - ha nincs, akkor `VA_Data.category_slugs[id]`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- Az admin kategoriankenti mezo-lathatosag es required allitas tenylegesen aktiv lett.
+- A feladas oldali kategoriankenti logika fallbackkal stabilabb lett template/DOM valtozasok mellett is.
+
 ## 2026. 05. 12. – Session #352u (Kereso kategoriatudatossag 2: jarmu-specifikus mezok dinamikus lathatosaga)
 
 ### Keres
