@@ -2712,7 +2712,7 @@ class VA_Ajax {
         }
     }
 
-    /* ── Hirdetés frissítése (lista tetejére tol) ───────────── */
+    /* ── Hirdetés frissítése (sorrendváltoztatás nélkül) ────── */
     public static function refresh_listing(): void {
         check_ajax_referer( 'va_user_nonce', 'nonce' );
         $user_id = get_current_user_id();
@@ -2727,13 +2727,11 @@ class VA_Ajax {
         $now = current_time( 'mysql' );
         wp_update_post( [
             'ID'                => $post_id,
-            'post_date'         => $now,
-            'post_date_gmt'     => get_gmt_from_date( $now ),
             'post_modified'     => $now,
             'post_modified_gmt' => get_gmt_from_date( $now ),
         ] );
         update_post_meta( $post_id, 'va_active_since', current_time( 'timestamp' ) );
-        wp_send_json_success( [ 'message' => 'Hirdetés frissítve.' ] );
+        wp_send_json_success( [ 'message' => 'Hirdetés frissítve. A listasorrend nem változik.' ] );
     }
 
     /* ── Tömeges hirdetés-kezelés ───────────────────────────── */

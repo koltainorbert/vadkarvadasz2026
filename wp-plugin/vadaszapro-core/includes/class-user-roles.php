@@ -1042,6 +1042,7 @@ class VA_User_Roles {
             wp_send_json_error( [
                 'message'           => $msg,
                 'seconds_remaining' => $check['seconds_remaining'],
+                'cooldown_days'     => $check['cooldown_days'],
             ] );
         }
 

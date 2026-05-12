@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 05. 12. – Session #341 (Kiemeles visszaszamlalo + Frissites hardening)
+
+### Igeny
+- Kiemelesnel ne csak "X nap" jelenjen meg, hanem pontos visszaszamlalo.
+- Tisztazni/javitani a "Frissites" gombot, hogy ne lehessen vele korlatlanul listatetore tolni.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: a varakozo kiemeles gomb adat-attribumokat kapott (`data-seconds-remaining`, `data-cooldown-days`).
+- [x] `frontend/templates/user/dashboard.php`: elovisszaszamlalo JS logika bekerult (`HH:MM:SS`, illetve `N nap HH:MM:SS`).
+- [x] `includes/class-user-roles.php`: `ajax_boost_listing` error valasz kiegeszitve `cooldown_days` adattal.
+- [x] `includes/class-ajax.php`: `refresh_listing()` mar nem irja at a `post_date` / `post_date_gmt` mezoket, csak `post_modified`-ot frissit.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- A felhasznalo pontosan latja, mennyi ido van hatra a kovetkezo kiemelesig.
+- A Frissites gomb tovabbra is frissit, de nem tudja listatetore tenni a hirdetest (nincs sorrend-manipulacio `post_date` alapon).
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 12. – Session #340 (Kiemelesi cooldown forrasa: mindig arkartya)
 
 ### Igeny
