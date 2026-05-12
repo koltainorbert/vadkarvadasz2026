@@ -6,19 +6,26 @@
 
 ### Bug
 - A főoldali hero logó hiába volt beállítva az adminban, nem jelent meg.
-- Oka: a hero logó kimenete még a főoldal elrejtési logikához volt kötve.
+- Oka: a hero logó kimenete még a főoldal elrejtési logikához volt kötve, és a CSS felfelé tolta a képet.
 
 ### Javítás
 - `header.php` + `wp-theme/vadaszapro-theme/header.php`:
   - A hero logó már nem függ a `hide_home_logo` feltételtől.
   - Ha van `va_hero_logo_url`, akkor a főoldalon is megjelenik.
+- `style.css` + `style.min.css` + theme mirror:
+  - A `.vh__logo` transformja `translateY(0)` lett, hogy ne csússzon a viewport fölé.
 
 ### Eredmény
 - Az adminban megadott hero logó most már a frontend hero szekcióban is látszik.
+- A logó nem kerül a hero fölé, ezért nem vágja le az overflow.
 
 ### Érintett fájlok
 - `header.php`
+- `style.css`
+- `style.min.css`
 - `wp-theme/vadaszapro-theme/header.php`
+- `wp-theme/vadaszapro-theme/style.css`
+- `wp-theme/vadaszapro-theme/style.min.css`
 
 ## 2026. 05. 12. – Session #352i (Hero admin sync + hirdetés gomb cél javítás)
 
