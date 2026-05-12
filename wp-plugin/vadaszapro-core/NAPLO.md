@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 13. – Session #353c (Vadasz adatbazis bovites: marka/tipus + kaliber autocomplete)
+
+### Keres
+- A vadász schema már működött, de túl szűk volt a márka/típus lista és hiányzott a széles kaliber választék.
+
+### Javitas
+- `includes/hunting-brand-models.json` + mirror:
+  - Jelentősen kibővített, kategória-specifikus márka/típus adatbázis (fegyver, optika, hőkamera, vadkamera, ruházat, bakancs, íj, felszerelés, kutya).
+- Új fájl: `includes/hunting-calibers.json` + mirror:
+  - Nagy, normalizált kaliberlista (imperiális, metrikus, sörétes gauge, klasszikus vadász kaliberek).
+- `includes/class-vehicle-catalog.php` + mirror:
+  - Új betöltő metódus: `get_hunting_calibers()` a JSON alapú kaliberlistához.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - A `caliber` mező `datalist` alapú autocomplete támogatást kapott (`va-caliber-list`).
+  - A kaliberlista lokálisan és JS adaton keresztül is átadásra kerül vadász mód esetén.
+
+### Eredmeny
+- Lényegesen több márka/típus opció jelenik meg kategóriától függően.
+- A kaliber mező gyors, szabványos autocomplete listából választható, de szabad szöveg továbbra is beírható.
+
 ## 2026. 05. 12. – Session #352j (Hero logó megjelenés javítás)
 
 ### Bug
