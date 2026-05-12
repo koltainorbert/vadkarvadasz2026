@@ -2881,6 +2881,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 (function(){
     document.querySelectorAll('.va-boost-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
+            if (this.classList.contains('va-plan-locked')) {
+                alert(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
+                return;
+            }
             var postId   = this.dataset.postId;
             var nonce    = this.dataset.nonce;
             var ajaxUrl  = this.dataset.ajaxUrl;
@@ -2935,6 +2939,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
     document.querySelectorAll('.va-newpill-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
+            if (this.classList.contains('va-plan-locked')) {
+                alert(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
+                return;
+            }
             var postId   = this.dataset.postId;
             var nonce    = this.dataset.nonce;
             var ajaxUrl  = this.dataset.ajaxUrl;
@@ -3316,6 +3324,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     }
 
     function saveSalePrice(postId, normalPrice, salePriceValue, endDate) {
+        if (_isBasicPlan) {
+            alert(_upgradeMsg);
+            return;
+        }
         if (!postId) return;
         var normalPriceNum = parseFloat(normalPrice || 0);
         if (isNaN(normalPriceNum) || normalPriceNum < 0) {

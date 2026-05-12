@@ -1018,6 +1018,10 @@ class VA_User_Roles {
         $plan           = self::get_user_plan( $user_id );
         $is_admin       = self::is_admin_user( $user_id );
 
+        if ( ! $is_admin && $plan === 'basic' ) {
+            wp_send_json_error( [ 'message' => 'Basic csomaggal a kiemelés nem elérhető. Vásároljon nagyobb előfizetést.' ] );
+        }
+
         // Pill levétele: platinum és admin bármikor leveheti
         if ( $mode === 'remove' || ( $mode === 'toggle' && $is_boosted_now ) ) {
             if ( ! $is_admin && $plan !== 'platinum' ) {
@@ -1080,6 +1084,12 @@ class VA_User_Roles {
 
         $mode   = sanitize_key( (string) ( $_POST['mode'] ?? 'toggle' ) );
         $active = self::is_new_pill( $post_id );
+        $plan   = self::get_user_plan( $user_id );
+        $is_admin = self::is_admin_user( $user_id );
+
+        if ( ! $is_admin && $plan === 'basic' ) {
+            wp_send_json_error( [ 'message' => 'Basic csomaggal az Új pill nem elérhető. Vásároljon nagyobb előfizetést.' ] );
+        }
 
         if ( $mode === 'off' || ( $mode === 'toggle' && $active ) ) {
             delete_post_meta( $post_id, 'va_new_pill_time' );
