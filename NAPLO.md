@@ -2,6 +2,31 @@
 
 ---
 
+## 2026. 05. 13. – Session #353a (Production hotfix: site_type visszakenyszerites + form config hard reset)
+
+### Hiba
+- Eles oldalon (`vadkarvadasz.hu`) tovabbra is teljes autos mezokeszlet jelent meg az admin `Uj hirdetes` es frontend feladas formon.
+- Tunet: `Jarmukategoria`, `Kivitel`, valamint autos extra blokkok jelentek meg, nem a vadasz schema.
+
+### Ok
+- A form viselkedese `va_site_type` opciotol fugg; productionon ez varhatoan `jarmu` allapotban maradt vagy visszaallt.
+- A korabbi reset logika csak bizonyos felteteleknel futott (dataset valtas / egyszeri transient), ezert nem volt eleg eros.
+
+### Javitas
+- `vadaszapro-core.php` + `wp-plugin/vadaszapro-core/vadaszapro-core.php`:
+  - Uj init migracio (`va_form_config_forced_reset_v6`):
+    - host ellenorzes (`home_url` host normalizalva)
+    - ha host `vadkarvadasz.hu`, akkor `va_site_type` kenyszeritve `vadaszat`-ra
+    - ezutan `va_form_config_va_listing_submit` es `va_form_config_va_admin_listing_edit` defaultokra irasa `VA_Form_Builder::get_default_fields(...)` alapjan
+  - Korabbi v5 reset logika lecserelve a fenti v6 hard resetre.
+- Admin emergency endpoint bent maradt:
+  - `/wp-admin/?va_force_form_reset=1`
+  - admin joggal azonnali form config reset vadász defaultokra.
+
+### Eredmeny
+- A site_type alapja production hoston vedetten `vadaszat`.
+- A submit/admin form konfigok kenyszeritett ujrageneralasa miatt a legacy autos mezok nem maradhatnak bent tartosan.
+
 ## 2026. 05. 12. – Session #352w (Form Builder ontisztitas: legacy autos submit/admin konfig automatikus reset)
 
 ### Hiba
