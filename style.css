@@ -2356,6 +2356,9 @@ body.sl-viewer-open { overflow: hidden; }
     border-radius: 18px;
   }
 }
+.page-template-page-kapcsolat-php .va-footer {
+  margin-top: 0;
+}
 
 /* ── Grid (vcp) — oszlopszámot a dinamikus layout CSS adja ─────── */
 .vcp-grid {
