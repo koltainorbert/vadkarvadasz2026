@@ -415,17 +415,17 @@ wp_localize_script( 'va-submit', 'VA_Data', [
 <?php va_display_flash(); ?>
 <div id="va-submit-notice"></div>
 
-    <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
+    <form id="va-submit-form" class="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
         <input type="hidden" name="action" value="<?php echo $edit_mode ? 'va_update_listing' : 'va_submit_listing'; ?>">
         <input type="hidden" name="nonce"  value="<?php echo esc_attr( wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ) ); ?>">
         <?php if ( $edit_mode ): ?>
         <input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>">
         <?php endif; ?>
 
-        <h2 style="font-size:20px;font-weight:800;margin-bottom:22px;"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
+        <h2 class="va-submit-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
 
         <?php if ( ! $edit_mode ): ?>
-        <div class="va-notice va-notice--info" style="margin-bottom:16px;">
+        <div class="va-notice va-notice--info va-submit-plan-notice">
             <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
                 <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
                     Jelenlegi keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
@@ -518,7 +518,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
             // Szekció fejléc
             if ( isset( $section_groups[ $fkey ] ) && ! isset( $opened_sections[ $fkey ] ) ) {
                 $opened_sections[ $fkey ] = true;
-                echo '<h3 style="font-size:12px;font-weight:700;margin:20px 0 14px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;">'
+                echo '<h3 class="va-submit-section-title">'
                     . esc_html( $section_groups[ $fkey ] ) . '</h3>';
             }
 
@@ -813,7 +813,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
             $phone_val  = esc_attr( (string)( $edit_meta['phone'] ?? '' ) );
             $phone_ph   = esc_attr( (string)( $phone_field['placeholder'] ?? '+36 30 000 0000' ) );
         ?>
-        <h3 style="font-size:12px;font-weight:700;margin:20px 0 14px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:1px;">Kapcsolat</h3>
+        <h3 class="va-submit-section-title">Kapcsolat</h3>
         <div class="va-form-group">
             <label>Telefonszám<?php echo $phone_req_html; ?></label>
             <input type="tel" name="phone" class="va-input" placeholder="<?php echo $phone_ph; ?>"<?php echo $phone_req_attr; ?> value="<?php echo $phone_val; ?>">

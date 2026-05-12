@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 05. 13. – Session #353b (Submit form UI facelift)
+
+### Keres
+- A vadasz mezostruktura mar jo volt, de a `Hirdetes feladas` felulet tul alap, nehezen attekintheto benyomast adott.
+
+### Javitas
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - inline stilusok helyett celzott osztalyok (`va-submit-form`, `va-submit-title`, `va-submit-plan-notice`, `va-submit-section-title`)
+- `frontend/css/frontend.css` + mirror:
+  - submit formra scoped vizualis frissites: karcmentes kartya-hatter, finom dot-grid, erosebb cimtipografia, rendezettebb section-headerek,
+    egysegesebb inputok/fokusz allapotok, jobb checkbox blokkok, mobil paddings.
+
+### Eredmeny
+- A feladas oldal vizualisan modernebb, attekinthetobb es markansabban "Vadkar" karakteru maradt (#fff szoveg, #ff0000 accent, sotet hatter).
+
 ## 2026. 05. 13. – Session #353a (Production hotfix: site_type visszakenyszerites + form config hard reset)
 
 ### Hiba

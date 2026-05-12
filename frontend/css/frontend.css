@@ -463,6 +463,88 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 .va-check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
 .va-check-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--va-accent); }
 
+/* ── Submit form visual refresh ───────────────────── */
+.va-submit-form {
+  position: relative;
+  background:
+    radial-gradient(circle at 18% -6%, rgba(255, 0, 0, .16), transparent 34%),
+    radial-gradient(circle at 88% 0%, rgba(255, 0, 0, .08), transparent 26%),
+    radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: auto, auto, 14px 14px;
+  background-position: 0 0, 0 0, 0 0;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 16px 42px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.04);
+}
+.va-submit-form::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 0, 0, .18);
+  pointer-events: none;
+}
+.va-submit-title {
+  margin: 0 0 16px;
+  font-size: clamp(20px, 2.6vw, 29px);
+  line-height: 1.15;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 22px rgba(255,0,0,.25);
+}
+.va-submit-plan-notice {
+  margin-bottom: 18px !important;
+  border: 1px solid rgba(255,255,255,.14);
+  border-left: 4px solid #ff0000;
+  background: rgba(10,10,10,.88);
+  border-radius: 12px;
+}
+.va-submit-section-title {
+  margin: 24px 0 12px;
+  padding-bottom: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.78);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.va-submit-form .va-form-group { margin-bottom: 13px; }
+.va-submit-form .va-form-group > label {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.va-submit-form .va-input,
+.va-submit-form .va-select,
+.va-submit-form .va-textarea {
+  background: rgba(12,12,12,.96) !important;
+  border: 1px solid rgba(255,255,255,.15) !important;
+  border-radius: 12px;
+  min-height: 44px;
+}
+.va-submit-form .va-input:focus,
+.va-submit-form .va-select:focus,
+.va-submit-form .va-textarea:focus {
+  border-color: rgba(255,0,0,.92) !important;
+  box-shadow: 0 0 0 3px rgba(255,0,0,.18);
+}
+.va-submit-form .va-check-label {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+@media (max-width: 700px) {
+  .va-submit-form { padding: 16px; border-radius: 14px; }
+  .va-submit-title { margin-bottom: 12px; }
+}
+
 /* ── Kártya (hirdetés lista elem) ────────────────── */
 .va-card {
   background: #141414; border: 1px solid rgba(255,255,255,.08);
