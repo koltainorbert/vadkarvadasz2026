@@ -865,10 +865,20 @@ class VA_User_Roles {
 
         $target_uid        = absint( $_POST['user_id'] ?? 0 );
         $plan              = sanitize_key( $_POST['plan'] ?? 'basic' );
-        $custom_lim        = absint( $_POST['custom_limit'] ?? 0 );
-        $custom_cd         = absint( $_POST['custom_boost_cooldown'] ?? 0 );
-        $custom_credits_raw = isset( $_POST['custom_credits'] ) ? wp_unslash( (string) $_POST['custom_credits'] ) : '0';
-        $custom_credits     = (int) $custom_credits_raw;
+        $custom_lim           = absint( $_POST['custom_limit'] ?? 0 );
+        $custom_cd            = absint( $_POST['custom_boost_cooldown'] ?? 0 );
+        $custom_credits_add   = absint( $_POST['custom_credits_add'] ?? 0 );
+        $custom_credits_revoke= absint( $_POST['custom_credits_revoke'] ?? 0 );
+        // Visszafele kompatibilitas a regi +/- mezovel.
+        if ( $custom_credits_add === 0 && $custom_credits_revoke === 0 && isset( $_POST['custom_credits'] ) ) {
+            $legacy_delta = (int) wp_unslash( (string) $_POST['custom_credits'] );
+            if ( $legacy_delta >= 0 ) {
+                $custom_credits_add = $legacy_delta;
+            } else {
+                $custom_credits_revoke = abs( $legacy_delta );
+            }
+        }
+        $custom_credits_delta = $custom_credits_add - $custom_credits_revoke;
         $custom_expires_at = sanitize_text_field( wp_unslash( (string) ( $_POST['custom_expires_at'] ?? '' ) ) );
         $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
         $admin_note        = sanitize_textarea_field( wp_unslash( (string) ( $_POST['admin_note'] ?? '' ) ) );
@@ -889,7 +899,7 @@ class VA_User_Roles {
         }
 
         $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
-        $new_credits = max( 0, $old_credits + $custom_credits );
+        $new_credits = max( 0, $old_credits + $custom_credits_delta );
 
         update_user_meta( $target_uid, 'va_plan', $plan );
         update_user_meta( $target_uid, 'va_listing_credits', $new_credits );

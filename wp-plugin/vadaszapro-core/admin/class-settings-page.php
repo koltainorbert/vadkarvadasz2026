@@ -3651,8 +3651,12 @@ class VA_Settings_Page {
                                             </div>
 
                                             <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center;">
-                                                <label>Ajándék hirdetés módosítása (db, +/-):
-                                                    <input type="number" class="va-upm-credits" min="-999999" max="999999"
+                                                <label>Ajándék kredit jóváírás (db):
+                                                    <input type="number" class="va-upm-credits-add" min="0" max="999999"
+                                                               value="0" style="width:110px;">
+                                                </label>
+                                                <label>Ajándék kredit visszavonás (db):
+                                                    <input type="number" class="va-upm-credits-revoke" min="0" max="999999"
                                                                value="0" style="width:110px;">
                                                 </label>
                                             </div>
@@ -4107,7 +4111,8 @@ class VA_Settings_Page {
                     var noteEl        = ed ? ed.querySelector('.va-upm-plat-note')      : null;
                     var adminNoteEl   = ed ? ed.querySelector('.va-upm-admin-note')     : null;
                     var sellerLabelEl = ed ? ed.querySelector('.va-upm-seller-label')   : null;
-                    var creditsEl     = ed ? ed.querySelector('.va-upm-credits')        : null;
+                    var creditsAddEl  = ed ? ed.querySelector('.va-upm-credits-add')    : null;
+                    var creditsRevEl  = ed ? ed.querySelector('.va-upm-credits-revoke') : null;
                     var expiresAtEl   = ed ? ed.querySelector('.va-upm-expires-at')     : null;
 
                     var data = new URLSearchParams({
@@ -4116,8 +4121,9 @@ class VA_Settings_Page {
                         user_id: uid,
                         plan   : plan,
                         custom_limit         : limEl      ? limEl.value      : 0,
-                        custom_boost_cooldown: cdEl       ? cdEl.value       : 0,
-                        custom_credits       : creditsEl  ? creditsEl.value  : 0,
+                        custom_boost_cooldown: cdEl        ? cdEl.value        : 0,
+                        custom_credits_add   : creditsAddEl ? creditsAddEl.value : 0,
+                        custom_credits_revoke: creditsRevEl ? creditsRevEl.value : 0,
                         custom_expires_at    : expiresAtEl ? expiresAtEl.value : '',
                         admin_note           : adminNoteEl ? adminNoteEl.value : '',
                         plan_note            : noteEl     ? noteEl.value     : '',
