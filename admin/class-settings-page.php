@@ -3849,62 +3849,6 @@ class VA_Settings_Page {
                     </tr>
                     <?php endif; ?>
 
-                    <?php if ( $gift_credit_count > 0 ): ?>
-                    <tr class="va-upm-history-row">
-                        <td colspan="8">
-                            <div class="va-upm-history-box">
-                                <details class="va-upm-history-disclosure">
-                                    <summary class="va-upm-history-head">
-                                        <div>
-                                            <strong>🎁 Ajándék kredit napló</strong>
-                                            <span><?php echo esc_html( (string) $gift_credit_count ); ?> bejegyzés</span>
-                                            <?php if ( is_array( $last_gift_credit ) ): ?>
-                                            <?php
-                                                $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
-                                                $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
-                                                $gift_delta = absint( $last_gift_credit['delta_credits'] ?? 0 );
-                                                $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
-                                                $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
-                                            ?>
-                                            <span style="color:#8bb3ff;">Utolsó ajándék: <?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen időpont' ); ?></span>
-                                            <?php if ( $gift_note !== '' ): ?>
-                                            <span style="display:block;color:rgba(255,255,255,.55);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span>
-                                            <?php endif; ?>
-                                            <?php endif; ?>
-                                        </div>
-                                        <span class="va-upm-history-toggle" aria-hidden="true"></span>
-                                    </summary>
-                                    <div class="va-upm-history-list">
-                                        <?php foreach ( $gift_credit_history as $gift_entry ): ?>
-                                        <?php
-                                            $gift_saved_at = absint( $gift_entry['saved_at'] ?? 0 );
-                                            $gift_prev     = absint( $gift_entry['prev_credits'] ?? 0 );
-                                            $gift_new      = absint( $gift_entry['new_credits'] ?? 0 );
-                                            $gift_delta    = (int) ( $gift_entry['delta_credits'] ?? 0 );
-                                            $gift_admin_id = absint( $gift_entry['admin_id'] ?? 0 );
-                                            $gift_admin    = sanitize_text_field( (string) ( $gift_entry['admin_name'] ?? '' ) );
-                                            $gift_note     = trim( (string) ( $gift_entry['note'] ?? '' ) );
-                                            $gift_label    = $gift_delta >= 0 ? '+' . absint( $gift_delta ) : (string) $gift_delta;
-                                        ?>
-                                        <div class="va-upm-history-item">
-                                            <div class="va-upm-history-item__top">
-                                                <span><?php echo esc_html( $gift_saved_at > 0 ? date_i18n( 'Y.m.d H:i', $gift_saved_at ) : '—' ); ?></span>
-                                                <span style="color:#8bb3ff;font-weight:800;">Ajándék kredit <?php echo esc_html( $gift_label ); ?></span>
-                                                <span><?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?></span>
-                                                <span><?php echo esc_html( $gift_admin !== '' ? $gift_admin : ( $gift_admin_id > 0 ? 'admin #' . $gift_admin_id : 'ismeretlen admin' ) ); ?></span>
-                                            </div>
-                                            <?php if ( $gift_note !== '' ): ?>
-                                            <div class="va-upm-history-item__meta">Megjegyzés: <?php echo esc_html( $gift_note ); ?></div>
-                                            <?php endif; ?>
-                                        </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </details>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
-
                     <?php
                     $email_log = get_user_meta( $user->ID, 'va_email_send_log', true );
                     $email_log = is_array( $email_log ) ? $email_log : [];
