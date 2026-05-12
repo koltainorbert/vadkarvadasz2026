@@ -7,6 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Shortcodes {
 
+    private static function normalize_plan_slug( string $slug ): string {
+        $slug = strtolower( trim( $slug ) );
+        if ( in_array( $slug, [ 'company', 'business', 'corporate', 'ceges', 'ceg', 'custom', 'egyedi' ], true ) ) {
+            return 'custom';
+        }
+        return $slug;
+    }
+
     public static function init() {
         $codes = [
             'va_login_form'      => 'render_login',
@@ -135,10 +143,18 @@ class VA_Shortcodes {
         for ( $n = 1; $n <= $pc_count; $n++ ) {
             $enabled = get_option( "va_pc_{$n}_enabled", '1' ) === '1';
             if ( ! $enabled ) continue;
-            $card_slug  = (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' );
+            $card_slug_raw  = (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' );
+            $card_slug      = self::normalize_plan_slug( $card_slug_raw );
             $card_theme = (string) get_option( "va_pc_{$n}_theme", $default_themes[ $n ] ?? 'basic' );
-            if ( in_array( strtolower( trim( $card_slug ) ), [ 'company', 'business', 'corporate', 'ceges', 'ceg', 'custom', 'egyedi' ], true ) ) {
+            if ( self::normalize_plan_slug( $card_slug_raw ) === 'custom' ) {
                 $card_theme = 'company';
+            }
+            $card_label = (string) get_option( "va_pc_{$n}_label", $default_labels[ $n ] ?? ( 'Kártya ' . $n ) );
+            if ( $card_slug === 'custom' ) {
+                $label_norm = strtolower( trim( $card_label ) );
+                if ( in_array( $label_norm, [ 'custom', 'egyedi', 'ceges', 'céges', 'company', 'business', 'corporate' ], true ) ) {
+                    $card_label = 'Céges előfizetés';
+                }
             }
             $rank_cards[] = [
                 'n'        => $n,
@@ -146,7 +162,7 @@ class VA_Shortcodes {
                 'qty'      => max( 1, (int) get_option( "va_pc_{$n}_qty",  $default_qtys[ $n ] ?? 1 ) ),
                 'theme'    => $card_theme,
                 'tag'      => (string) get_option( "va_pc_{$n}_tag",       $default_tags[ $n ] ?? '' ),
-                'label'    => (string) get_option( "va_pc_{$n}_label",     $default_labels[ $n ] ?? ( 'Kártya ' . $n ) ),
+                'label'    => $card_label,
                 'desc'     => (string) get_option( "va_pc_{$n}_desc",      'Hirdetési csomag' ),
                 'badge'    => (string) get_option( "va_pc_{$n}_badge",     '' ),
                 'featured' => get_option( "va_pc_{$n}_featured", '0' ) === '1',
@@ -161,7 +177,7 @@ class VA_Shortcodes {
             if ( ! is_array( $feats ) ) {
                 $feats = [];
                 if ( class_exists( 'VA_User_Roles' ) ) {
-                    $cfg = VA_User_Roles::get_plan_config( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) );
+                    $cfg = VA_User_Roles::get_plan_config( self::normalize_plan_slug( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ?? '' ) ) );
                     $plan_limit = (int) ( $cfg['monthly_limit'] ?? 0 );
                     $plan_basis = (string) ( $cfg['basis'] ?? 'monthly' );
                     if ( $plan_limit > 0 ) {
@@ -208,11 +224,22 @@ class VA_Shortcodes {
             'nonce'    => $nonce,
         ]);
         $all_plan_cfg = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_all_plan_configs() : [];
-        $user_plan    = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
+        $user_plan    = class_exists( 'VA_User_Roles' ) ? self::normalize_plan_slug( VA_User_Roles::get_user_plan( $user_id ) ) : 'basic';
         $plan_expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
         $has_active_product = ( $user_plan !== 'basic' && ( $plan_expires_at <= 0 || $plan_expires_at > time() ) );
         $current_plan_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $user_plan ) : 0;
         $plan_exp_txt = ( $plan_expires_at > 0 ) ? wp_date( 'Y.m.d H:i', $plan_expires_at ) : 'nincs beállítva';
+        $plan_label = ucfirst( $user_plan );
+        if ( class_exists( 'VA_User_Roles' ) ) {
+            $user_plan_cfg = VA_User_Roles::get_plan_config( $user_plan, $user_id );
+            $plan_label_candidate = trim( (string) ( $user_plan_cfg['label'] ?? '' ) );
+            if ( $plan_label_candidate !== '' ) {
+                $plan_label = $plan_label_candidate;
+            }
+        }
+        if ( $user_plan === 'custom' ) {
+            $plan_label = 'Céges előfizetés';
+        }
         ?>
         <div class="va-wrap" data-va-buy-nonce="<?php echo esc_attr( $nonce ); ?>" data-va-buy-return-to="<?php echo esc_attr( $return_to ); ?>" data-va-buy-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>">
             <?php va_display_flash(); ?>
@@ -239,7 +266,7 @@ class VA_Shortcodes {
                 <div class="va-notice va-notice--warning" style="margin:14px auto 0;max-width:860px;">A hirdetés feladás folytatásához válassz csomagot, fizetés után automatikusan visszairányítunk a feladáshoz.</div>
                 <?php endif; ?>
                 <?php if ( $has_active_product ): ?>
-                <div class="va-notice va-notice--info" style="margin:14px auto 0;max-width:860px;">Aktív csomagod van (<?php echo esc_html( ucfirst( $user_plan ) ); ?>), lejárat: <?php echo esc_html( $plan_exp_txt ); ?>. Jelenleg csak magasabb rang vásárolható.</div>
+                <div class="va-notice va-notice--info" style="margin:14px auto 0;max-width:860px;">Aktív csomagod van (<?php echo esc_html( $plan_label ); ?>), lejárat: <?php echo esc_html( $plan_exp_txt ); ?>. Jelenleg csak magasabb rang vásárolható.</div>
                 <?php endif; ?>
             </div>
 
