@@ -109,11 +109,13 @@ class VA_User_Roles {
         }
 
         // Ha bármi (admin, webhook, WC) frissíti a va_plan metát → azonnal enforce
-        add_action( 'update_user_meta', [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
-        add_action( 'added_user_meta',  [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
+        // updated_user_meta (nem update_user_meta!) hogy a DB-mentés UTÁN fusson, friss értékkel.
+        add_action( 'updated_user_meta', [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
+        add_action( 'added_user_meta',   [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
 
         // Ha kredit jóváírás történik → felfüggesztett hirdetések visszaállítása
-        add_action( 'update_user_meta', [ __CLASS__, 'on_credits_meta_updated' ], 10, 4 );
+        // updated_user_meta: a hook DB-mentés UTÁN tüzel, get_user_meta() már az új értéket adja.
+        add_action( 'updated_user_meta', [ __CLASS__, 'on_credits_meta_updated' ], 10, 4 );
     }
 
     /**

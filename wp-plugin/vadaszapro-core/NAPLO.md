@@ -2,7 +2,22 @@
 
 ---
 
-## 2026. 05. 12. – Session #348 (Kredit modell javitasa – listing feltoltes utan nem fogyaszt kreditett)
+## 2026. 05. 12. – Session #349 (Kredit enforce hook timing javítás)
+
+### Gyökérhiba
+- Az `on_credits_meta_updated` és `on_plan_meta_updated` hookot `update_user_meta` actionre kötöttük, ami az adatbázis-mentés ELŐTT tüzel.
+- Ezért `enforce_plan_limits()` belsejében `get_user_meta()` még a régi kreditet olvasta → felfüggesztette a 2. hirdetést.
+
+### Javítás
+- `update_user_meta` → `updated_user_meta` (DB-mentés UTÁN): mindkét hooknál.
+
+### Érintett fájlok
+- `includes/class-user-roles.php`
+- mirror
+
+---
+
+ (Kredit modell javitasa – listing feltoltes utan nem fogyaszt kreditett)
 
 ### Hiba
 - Basic csomagos user adminnal kapott 1 ajandek kreditett. Feltolte a 2. hirdetes. A kredit le lett vonva (`va_listing_credits` 1→0). Ezutan `enforce_plan_limits()` ujraszamolt: limit=1+0=1, user-nek 2 aktiv hirdetese volt → a 2. hirdetés felfüggesztve ("Limit felett – kredit szukseges").
