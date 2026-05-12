@@ -380,12 +380,12 @@ wp_localize_script( 'va-submit', 'VA_Data', [
         <div class="va-notice va-notice--info" style="margin-bottom:16px;">
             <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
                 <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Csomaglimitből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-                    <?php if ( $user_credit_balance > 0 ): ?>
-                        Emellett van <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong> egyszer használatos ajándékkredited.
+                    Jelenlegi keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
+                    <?php if ( $gift_total > 0 ): ?>
+                        Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
                     <?php endif; ?>
-                <?php elseif ( $user_credit_balance > 0 ): ?>
-                    Csomaglimit elérve. Van még <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong> egyszer használatos ajándékkredited.
+                <?php elseif ( $gift_total > 0 ): ?>
+                    Jelenlegi kereted elérve. Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
                 <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
                     Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
                 <?php else: ?>
