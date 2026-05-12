@@ -7,6 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $categories = get_terms( [ 'taxonomy' => 'va_category', 'hide_empty' => false, 'parent' => 0 ] );
 $counties   = get_terms( [ 'taxonomy' => 'va_county',   'hide_empty' => false ] );
 $conditions = get_terms( [ 'taxonomy' => 'va_condition','hide_empty' => false ] );
+$category_slug_map = [];
+if ( ! is_wp_error( $categories ) && is_array( $categories ) ) {
+    foreach ( $categories as $cat_term ) {
+        $category_slug_map[ (int) $cat_term->term_id ] = sanitize_title( (string) $cat_term->slug );
+    }
+}
 
 // URL paraméterek
 $url_s           = sanitize_text_field( wp_unslash( $_GET['s']           ?? '' ) );
@@ -133,6 +139,7 @@ wp_localize_script( 'va-frontend', 'VA_Data', [
     'slider_step'      => $lp_slider_step,
     'empty_text'       => $lp_empty_text,
     'vehicle_brand_models' => $vehicle_brand_models,
+    'category_slugs'   => $category_slug_map,
 ]);
 wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [], VA_VERSION );
 ?>
@@ -179,6 +186,13 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
         <div class="va-filter-bar__title"><?php echo esc_html( $lp_filter_title ); ?></div>
         <form id="va-filter-form" data-post-type="<?php echo esc_attr( $url_post_type ); ?>">
             <div class="va-filter-bar__grid">
+                <select id="va-cat" class="va-select">
+                    <option value=""><?php echo esc_html( $lp_cat_placeholder ); ?></option>
+                    <?php foreach ( $categories as $cat ): ?>
+                        <option value="<?php echo esc_attr( (string) $cat->term_id ); ?>"<?php selected( $url_cat, (int) $cat->term_id ); ?>><?php echo esc_html( (string) $cat->name ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+
                 <select id="va-brand-search" class="va-select">
                     <option value="">Márka: Mindegy</option>
                     <?php foreach ( $vehicle_brands as $brand ): ?>
@@ -207,12 +221,12 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
                 <input type="number" id="va-year-min" class="va-input" min="1900" max="2099" placeholder="Évjárat -tól">
                 <input type="number" id="va-year-max" class="va-input" min="1900" max="2099" placeholder="Évjárat -ig">
 
-                <input type="text" id="va-optic-zoom-search" class="va-input" placeholder="Nagyítás (pl. 3-12x50)">
-                <input type="number" id="va-optic-objective-min" class="va-input" min="1" max="120" placeholder="Objektív -tól (mm)">
-                <input type="number" id="va-optic-objective-max" class="va-input" min="1" max="120" placeholder="Objektív -ig (mm)">
+                <input type="text" id="va-optic-zoom-search" class="va-input" placeholder="Nagyítás (pl. 3-12x50)" data-special-filter="optic">
+                <input type="number" id="va-optic-objective-min" class="va-input" min="1" max="120" placeholder="Objektív -tól (mm)" data-special-filter="optic">
+                <input type="number" id="va-optic-objective-max" class="va-input" min="1" max="120" placeholder="Objektív -ig (mm)" data-special-filter="optic">
 
-                <input type="number" id="va-dog-age-min" class="va-input" min="1" max="300" placeholder="Kutya kor -tól (hó)">
-                <input type="number" id="va-dog-age-max" class="va-input" min="1" max="300" placeholder="Kutya kor -ig (hó)">
+                <input type="number" id="va-dog-age-min" class="va-input" min="1" max="300" placeholder="Kutya kor -tól (hó)" data-special-filter="dog">
+                <input type="number" id="va-dog-age-max" class="va-input" min="1" max="300" placeholder="Kutya kor -ig (hó)" data-special-filter="dog">
 
                 <input type="number" id="va-mileage-min" class="va-input" min="0" placeholder="Kilométer -tól">
                 <input type="number" id="va-mileage-max" class="va-input" min="0" placeholder="Kilométer -ig">
