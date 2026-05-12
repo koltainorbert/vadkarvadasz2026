@@ -2433,6 +2433,9 @@ class VA_Settings_Page {
                                 <?php self::field_media( 'va_hf_footer_logo_url',         'Logó (opcionális)' ); ?>
                                 <?php self::field_num(   'va_hf_footer_logo_height',       'Logó magasság (px)', 20, 180 ); ?>
                                 <?php self::field_text( 'va_hf_footer_brand_title',          'Brand oszlop cím' ); ?>
+                                <?php self::field_text( 'va_contact_addr',                    'Lábléc cím (utca, város)' ); ?>
+                                <?php self::field_text( 'va_billing_phone',                   'Lábléc telefon' ); ?>
+                                <?php self::field_email( 'va_contact_email',                  'Lábléc e-mail' ); ?>
                                 <?php self::field_text( 'va_hf_footer_col_categories_title', 'Kategóriák oszlop cím' ); ?>
                                 <?php self::field_text( 'va_hf_footer_col_account_title',    'Fiók oszlop cím' ); ?>
                                 <?php self::field_text( 'va_hf_footer_col_legal_title',      'Jogi oszlop cím' ); ?>
