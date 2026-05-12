@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class VA_Vehicle_Catalog {
 
     private static $brand_models = null;
+    private static $hunting_brand_models = null;
 
     public static function get_dataset_version(): string {
         return 'vadaszapro-categories-2026-05-12';
@@ -482,6 +483,64 @@ class VA_Vehicle_Catalog {
 
         self::$brand_models = $normalized;
         return self::$brand_models;
+    }
+
+    public static function get_hunting_brand_models_by_category(): array {
+        if ( self::$hunting_brand_models !== null ) {
+            return self::$hunting_brand_models;
+        }
+
+        $file = __DIR__ . '/hunting-brand-models.json';
+        if ( ! file_exists( $file ) ) {
+            self::$hunting_brand_models = [];
+            return self::$hunting_brand_models;
+        }
+
+        $raw = file_get_contents( $file );
+        if ( is_string( $raw ) && substr( $raw, 0, 3 ) === "\xEF\xBB\xBF" ) {
+            $raw = substr( $raw, 3 );
+        }
+        if ( ! is_string( $raw ) || trim( $raw ) === '' ) {
+            self::$hunting_brand_models = [];
+            return self::$hunting_brand_models;
+        }
+
+        $decoded = json_decode( $raw, true );
+        if ( ! is_array( $decoded ) ) {
+            self::$hunting_brand_models = [];
+            return self::$hunting_brand_models;
+        }
+
+        $normalized = [];
+        foreach ( $decoded as $category_slug => $brands ) {
+            $slug = sanitize_title( (string) $category_slug );
+            if ( $slug === '' || ! is_array( $brands ) ) {
+                continue;
+            }
+
+            $clean_brands = [];
+            foreach ( $brands as $brand => $models ) {
+                $brand_name = self::normalize_label( (string) $brand );
+                if ( $brand_name === '' || ! is_array( $models ) ) {
+                    continue;
+                }
+
+                $clean_models = [];
+                foreach ( $models as $model ) {
+                    $model_name = self::normalize_label( (string) $model );
+                    if ( $model_name !== '' ) {
+                        $clean_models[] = $model_name;
+                    }
+                }
+
+                $clean_brands[ $brand_name ] = array_values( array_unique( $clean_models ) );
+            }
+
+            $normalized[ $slug ] = $clean_brands;
+        }
+
+        self::$hunting_brand_models = $normalized;
+        return self::$hunting_brand_models;
     }
 
     private static function normalize_label( string $value ): string {
