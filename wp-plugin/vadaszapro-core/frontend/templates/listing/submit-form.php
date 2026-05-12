@@ -322,7 +322,8 @@ if ( is_user_logged_in() ) {
     if ( class_exists( 'VA_User_Roles' ) ) {
         $plan_check = VA_User_Roles::can_post_listing( $user_id );
         $plan_has_allowance = ! empty( $plan_check['can'] );
-        $plan_limit = isset( $plan_check['effective_limit'] ) ? (int) $plan_check['effective_limit'] : (int) ( $plan_check['limit'] ?? 0 );
+        $plan_limit = isset( $plan_check['plan_limit'] ) ? (int) $plan_check['plan_limit'] : (int) ( $plan_check['limit'] ?? 0 );
+        $effective_limit = isset( $plan_check['effective_limit'] ) ? (int) $plan_check['effective_limit'] : $plan_limit;
         $gift_total = isset( $plan_check['credits_total'] ) ? (int) $plan_check['credits_total'] : $user_credit_balance;
 
         if ( isset( $plan_check['effective_limit'], $plan_check['used'] ) && (int) $plan_check['effective_limit'] > 0 ) {
@@ -385,7 +386,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
                         Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
                     <?php endif; ?>
                 <?php elseif ( $gift_total > 0 ): ?>
-                    Jelenlegi kereted elérve. Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
+                    Jelenlegi kereted elérve. Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándékkredit: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>, Összesen: <strong><?php echo esc_html( (string) $plan_check['used'] ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong>.
                 <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
                     Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
                 <?php else: ?>

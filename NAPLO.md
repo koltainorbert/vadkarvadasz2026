@@ -2,6 +2,34 @@
 
 ---
 
+## 2026. 05. 12. – Session #352c (FINAL: Alap vs. Effektív limit szétválasztása az üzenetben)
+
+### Bug
+- Az üzenet azt írta: "Jelenlegi kereted elérve. Alapcsomag: **2 db**, ajándékkredit összesen: 1 db"
+- De az alapcsomag Basic-ben **1 db**! A 2-es az az effektív limit (1 alap + 1 ajándék)
+- Az üzenet ezt sugallta: "Alapcsomag: 2" — amit az user azonnal észrevett, hogy nem igaz.
+
+### Root Cause
+- Az előző deploy-ban átírta a `$plan_limit` = `effective_limit` (2) helyett az alap plan_limit (1)
+- Az üzenet akkor azt mutatta: "Alapcsomag: 2" (amely az effektív limit volt, nem az alap)
+
+### Javítás
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - Szétválasztottam `$plan_limit` (alap = 1) és `$effective_limit` (alap + gift = 2)
+  - Az üzenet most ezt mutatja: **"Alapcsomag: 1 db, Ajándékkredit: 1 db, Összesen: 2/2"**
+  - Ez egyértelműen mutatja az alap csomag limitjét (1) és az ajándékkredit plusz értékét (1)
+
+### Eredmény
+- "Jelenlegi kereted elérve" üzenet most helyesen: "Alapcsomag: 1 db, Ajándékkredit: 1 db, Összesen: 2/2"
+- Az user nem lesz zavaros, hogy az alap csomag 2 lenne
+- Világosan látható: 1 (alap) + 1 (ajándék) = 2 teljes keret
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+---
+
 ## 2026. 05. 12. – Session #352b (Error message javítás: effective_limit mutatása + clarity)
 
 ### Bug
