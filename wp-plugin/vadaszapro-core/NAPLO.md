@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 12. – Session #335 (Ajandek kredit dupla szamolas fix)
+
+### Igeny
+- A Gold csomag + ajándék hirdetés számláló ne duplázza a frontend egyenleget.
+- Az admin oldali hozzáadás delta alapon működjön, és a napló az új egyenleget helyesen mentse.
+
+### Megvalositas [x]
+- [x] `includes/class-user-roles.php`: a `can_post_listing()` kapott egy `remaining` mezőt, hogy minden felület ugyanazt a maradék értéket használja.
+- [x] `frontend/templates/listing/submit-form.php`: az összesen sor már nem adja hozzá még egyszer a kredit metát.
+- [x] `includes/class-shortcodes.php`: a kredit vásárlási nézetben is megszűnt a dupla összegzés.
+- [x] `includes/class-user-roles.php`: admin ajándék kredit mentésnél a `new_credits` és `delta_credits` számítás helyre lett téve.
+
+### Eredmeny
+- A frontend már a ténylegesen maradék feladható hirdetésszámot mutatja.
+- A csomagkeret és az ajándék kredit nem számolódik kétszer.
+- Az adminos kredit napló most a valós régi/új egyenleget írja.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `frontend/templates/listing/submit-form.php`
+- `includes/class-shortcodes.php`
+
+---
+
 ## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
 
 ## 2026. 05. 12. – Session #334 (Admin megjegyzes + ajandek kredit naplo)
