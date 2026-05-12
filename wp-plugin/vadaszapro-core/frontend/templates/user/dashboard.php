@@ -944,17 +944,12 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 $boost_info = VA_User_Roles::can_boost( $user->ID, $l->ID );
                                 $is_boosted_now = VA_User_Roles::is_boosted( $l->ID );
                                 $is_new_pill_now = VA_User_Roles::is_new_pill( $l->ID );
-                                if ( ! in_array( $user_plan, [ 'gold', 'platinum', 'custom' ], true ) ):
+                                if ( $user_plan === 'basic' ):
                             ?>
                             <button class="va-boost-btn va-boost-btn--off va-plan-locked"
-                                    data-locked-msg="A kiemelés csak Gold csomagtól érhető el. Vásároljon nagyobb előfizetést."
+                                    data-locked-msg="A kiemelés Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést."
                                     aria-pressed="false">
                                 <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: zárolva
-                            </button>
-                            <button class="va-newpill-btn va-newpill-btn--off va-plan-locked"
-                                    data-locked-msg="A pillek csak Gold csomagtól érhetők el. Vásároljon nagyobb előfizetést."
-                                    aria-pressed="false">
-                                <span class="va-newpill-btn__dot" aria-hidden="true"></span>Új pill: zárolva
                             </button>
                             <?php elseif ( $is_boosted_now ):
                             ?>
@@ -995,7 +990,14 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             <?php
                                 endif;
 
-                                if ( $is_new_pill_now ):
+                                if ( ! in_array( $user_plan, [ 'gold', 'platinum', 'custom' ], true ) ):
+                            ?>
+                            <button class="va-newpill-btn va-newpill-btn--off va-plan-locked"
+                                    data-locked-msg="A pillek csak Gold csomagtól érhetők el. Vásároljon nagyobb előfizetést."
+                                    aria-pressed="false">
+                                <span class="va-newpill-btn__dot" aria-hidden="true"></span>Új pill: zárolva
+                            </button>
+                            <?php elseif ( $is_new_pill_now ):
                             ?>
                             <button class="va-newpill-btn va-newpill-btn--on"
                                     data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>"
