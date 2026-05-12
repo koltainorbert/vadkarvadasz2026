@@ -2,6 +2,40 @@
 
 ---
 
+## 2026. 05. 12. – Session #351 (Ajándékkredit + effektív keret helyes megjelenítése)
+
+### Hiba
+- Basic felhasználónál +1 ajándékkredit mellett a dashboard és a feladás oldal még `2/1` vagy "limit elérve" állapotot mutatott.
+- Az ok: a csomaglimit és a gift credit balance külön kezelt volt, de nem volt tartósan megőrizve a felhasznált gift kredit összesítése.
+
+### Javítás
+- `includes/class-user-roles.php` + mirror:
+  - bevezetve a `va_listing_credits_used_total` összesítő,
+  - az effektív keret most `plan_limit + gift_balance + gift_used_total`,
+  - a visszaadott `limit` mező már az effektív keretet jelenti.
+- `includes/class-ajax.php` + mirror:
+  - kredit felhasználáskor a balance csökken, a `used_total` nő.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - a feliratok külön mutatják az alapcsomagot és az ajándékkrediteket.
+- `admin/class-settings-page.php` + mirror:
+  - a használati sor címkéje "Kereted" lett.
+
+### Eredmény
+- A basic fiók képernyőn most már az effektív keret jelenik meg, nem a nyers 1-es plan limit.
+- Az ajándékkredit nem veszik el a használat után, hanem az engedélyezett keretben megmarad.
+
+### Érintett fájlok
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `frontend/templates/listing/submit-form.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 12. – Session #350 (Ajándékkredit vissza egyszer használatos modellre)
 
 ### Igeny
