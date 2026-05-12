@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 12. – Session #352u (Kereso kategoriatudatossag 2: jarmu-specifikus mezok dinamikus lathatosaga)
+
+### Keres
+- A specialis (optika/kutya) szurok utan a jarmu-specifikus mezoket is kategoriavalasztashoz kellett kotni.
+
+### Javitas
+- Search template markereles (root + mirror):
+  - `data-special-filter="vehicle"` jeloles kerult a jarmu mezokre:
+    - marka, modell, kivitel, uzemanyag
+    - evjarat, km, hengerurtartalom
+    - jarmu allapot, ajtok, ulesek
+    - extra checkbox blokk (`.va-car-extra-filters`)
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Frontend JS kategoriatudatossag bovites (root + mirror):
+  - `showVehicle = (slug === 'jarmu')`
+  - vehicle mezok mutatasa/rejtese kategoriatol fuggoen
+  - nem-jarmu kategoriaban automatikus reset:
+    - vehicle input/select ertekek torlese
+    - vehicle checkboxok kikapcsolasa
+    - advanced panel visszazarasa, ha nyitva volt
+    - model lista reset (`va_update_model_options('')`)
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+
+### Eredmeny
+- A keresofelulet letisztultabb lett: jarmu mezok csak jarmu kategoriaban latszanak.
+- Irrelevans vehicle szurok nem maradnak aktivan mas kategoriakra atvaltaskor.
+
 ## 2026. 05. 12. – Session #352t (Kereso kategoriatudatossag: specialis mezok dinamikus lathatosaga)
 
 ### Keres

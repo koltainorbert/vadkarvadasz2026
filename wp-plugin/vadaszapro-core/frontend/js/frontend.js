@@ -343,14 +343,31 @@
       'ejjellato-tavcso': 1,
       'hokamerak': 1
     };
+    var showVehicle = slug === 'jarmu';
     var showOptic = !!opticSlugs[slug];
     var showDog = slug === 'vadaszkutya';
 
+    var $vehicleFields = $('[data-special-filter="vehicle"]');
     var $opticFields = $('[data-special-filter="optic"]');
     var $dogFields = $('[data-special-filter="dog"]');
 
+    $vehicleFields.toggle(showVehicle);
     $opticFields.toggle(showOptic);
     $dogFields.toggle(showDog);
+
+    if (!showVehicle) {
+      $('#va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-vehicle-condition, #va-doors, #va-passengers').val('');
+      $('.va-car-filter').prop('checked', false);
+
+      var $panel = $('#va-advanced-panel');
+      var $btn = $('#va-advanced-toggle');
+      if ($panel.length && !$panel.hasClass('is-collapsed')) {
+        $panel.stop(true, true).slideUp(180).addClass('is-collapsed');
+        $btn.attr('aria-expanded', 'false');
+      }
+
+      va_update_model_options('');
+    }
 
     if (!showOptic) {
       $('#va-optic-zoom-search').val('');
