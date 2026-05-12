@@ -150,7 +150,9 @@ if ( ! $card_image_html ) {
         <span class="va-card__badge">🔨 Aukció</span>
     <?php endif; ?>
     <?php if ( $is_boosted && $show_boost_badge ): ?>
-        <span class="va-card__badge va-card__badge--boost"><?php echo esc_html( $boost_badge_text ); ?></span>
+        <span class="va-card__badge va-card__badge--boost" style="background:#ff0000;color:#fff;border:1px solid rgba(255,255,255,.22);box-shadow:0 0 10px rgba(255,0,0,.24);">
+            <?php echo esc_html( $boost_badge_text ); ?>
+        </span>
     <?php endif; ?>
     <?php if ( $is_new_pill ): ?>
         <span class="va-card__badge va-card__badge--new">Új</span>
