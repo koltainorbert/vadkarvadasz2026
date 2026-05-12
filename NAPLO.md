@@ -2,6 +2,34 @@
 
 ---
 
+## 2026. 05. 12. – Session #343 (Frissites gomb kiveve + kozepso fekete notifikacio modal + duplikalt popup fix)
+
+### Igeny
+- A `Frissites` gomb keruljon ki a fiok oldali hirdetes sorbol.
+- A bongeszo `alert` dobozok helyett kozepre zart, blur hatteres, fekete oldalba illo popup legyen.
+- Az `Uj pill` lock figyelmeztetes ne jelenjen meg duplan.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: `Frissites` gomb markup torolve.
+- [x] `frontend/templates/user/dashboard.php`: teljes `va-refresh-btn` JS blokk torolve.
+- [x] `frontend/templates/user/dashboard.php`: uj egyseges notifikacio modal bevezetve (`va-notice-overlay`, `showDashboardNotice()`).
+- [x] `frontend/templates/user/dashboard.php`: lock es hibauzenetek `alert(...)` helyett modalra allitva.
+- [x] `frontend/templates/user/dashboard.php`: duplikalt lock-listener torolve (`.va-plan-locked` global click handler), ezzel megszunt a dupla felugras.
+- [x] `frontend/templates/user/dashboard.php`: fioktorles inline alert kivaltva modal alapu kliens oldali ellenorzessel.
+- [x] Mirror frissites fajlmasolassal:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+### Eredmeny
+- A `Frissites` gomb nem jelenik meg, nem hivhato.
+- Ertesitesek kozepre pozicionalt, blur-es, fekete temaju popupban jelennek meg.
+- `Uj pill` lock kattintasnal mar csak egyszer jelenik meg a figyelmeztetes.
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+---
+
 ## 2026. 05. 12. – Session #342 (Uj pill: fix 1 nap + csak Uzleti/Admin kapcsolhatja)
 
 ### Igeny

@@ -1063,12 +1063,6 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 <?php endif; ?>
                                 <a href="<?php echo esc_url( $edit_url ); ?>" class="va-btn va-btn--sm" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;">Szerkesztés</a>
                                 <?php if ( $l->post_status === 'publish' ): ?>
-                                <button class="va-refresh-btn va-btn va-btn--sm"
-                                        data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>"
-                                        data-nonce="<?php echo esc_attr( $boost_nonce ); ?>"
-                                        data-ajax-url="<?php echo esc_url( $ajax_url ); ?>"
-                                    title="Hirdetés adatok frissítése (nem tolja a lista tetejére)"
-                                        style="background:rgba(0,180,255,.1);border:1px solid rgba(0,180,255,.35);color:#60d0ff;white-space:nowrap;"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.5 14a8.5 8.5 0 1 1 2-5.5"/></svg> Frissítés</button>
                                 <?php endif; ?>
                                 <?php if ( $can_suspend && in_array( $l->post_status, [ 'publish', 'private' ], true ) ): ?>
                                 <form method="post" style="margin:0;">
@@ -1288,7 +1282,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         <input type="hidden" name="va_action" value="delete_profile">
                         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;">
                             <input id="va-confirm-del-input" type="text" name="confirm_delete" class="va-input va-danger-zone__input" placeholder="TORLESEM" autocomplete="off">
-                            <button type="submit" class="va-btn va-danger-zone__submit" onclick="return this.form['confirm_delete'].value==='TORLESEM'||(alert('Írd be pontosan: TORLESEM'),false);">Fiók végleges törlése</button>
+                            <button type="submit" class="va-btn va-danger-zone__submit va-account-delete-submit">Fiók végleges törlése</button>
                         </div>
                     </form>
                 </div>
@@ -2779,6 +2773,56 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     filter:brightness(1.15);
 }
 
+/* ── Notifikáció középső popup (blur + fekete) ── */
+.va-notice-overlay {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:10050;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(8px);
+}
+.va-notice-overlay.open { display:flex; }
+.va-notice-modal {
+    width:min(92vw, 460px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:14px;
+    padding:16px;
+    background:linear-gradient(180deg, rgba(16,16,16,.98), rgba(6,6,6,.98));
+    box-shadow:0 24px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(255,0,0,.12) inset;
+}
+.va-notice-modal__title {
+    margin:0 0 8px;
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+}
+.va-notice-modal__text {
+    margin:0;
+    color:rgba(255,255,255,.82);
+    font-size:13px;
+    line-height:1.5;
+}
+.va-notice-modal__actions {
+    display:flex;
+    justify-content:flex-end;
+    margin-top:14px;
+}
+.va-notice-modal__ok {
+    height:34px;
+    min-width:86px;
+    padding:0 14px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.22);
+    background:linear-gradient(180deg, rgba(255,40,40,.28), rgba(130,0,0,.28));
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+.va-notice-modal__ok:hover { filter:brightness(1.1); }
+
 /* ── Lejárat badge ── */
 .va-expiry-badge {
     display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:999px;
@@ -2886,8 +2930,50 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 }
 </style>
 
+<div id="va-notice-overlay" class="va-notice-overlay" aria-hidden="true">
+    <div class="va-notice-modal" role="dialog" aria-modal="true" aria-labelledby="va-notice-title">
+        <h3 id="va-notice-title" class="va-notice-modal__title">Értesítés</h3>
+        <p id="va-notice-text" class="va-notice-modal__text"></p>
+        <div class="va-notice-modal__actions">
+            <button type="button" id="va-notice-ok" class="va-notice-modal__ok">OK</button>
+        </div>
+    </div>
+</div>
+
 <script>
 (function(){
+    var noticeOverlay = document.getElementById('va-notice-overlay');
+    var noticeText = document.getElementById('va-notice-text');
+    var noticeOk = document.getElementById('va-notice-ok');
+
+    function hideDashboardNotice(){
+        if (!noticeOverlay) return;
+        noticeOverlay.classList.remove('open');
+        noticeOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function showDashboardNotice(message){
+        if (!noticeOverlay || !noticeText) return;
+        noticeText.textContent = message || 'Művelet végrehajtva.';
+        noticeOverlay.classList.add('open');
+        noticeOverlay.setAttribute('aria-hidden', 'false');
+        if (noticeOk) noticeOk.focus();
+    }
+
+    if (noticeOk) {
+        noticeOk.addEventListener('click', hideDashboardNotice);
+    }
+    if (noticeOverlay) {
+        noticeOverlay.addEventListener('click', function(e){
+            if (e.target === noticeOverlay) hideDashboardNotice();
+        });
+    }
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && noticeOverlay && noticeOverlay.classList.contains('open')) {
+            hideDashboardNotice();
+        }
+    });
+
     function formatBoostCountdown(totalSeconds){
         var sec = Math.max(0, parseInt(totalSeconds || 0, 10));
         var days = Math.floor(sec / 86400);
@@ -2959,9 +3045,11 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     });
 
     document.querySelectorAll('.va-boost-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
+        btn.addEventListener('click', function(e){
             if (this.classList.contains('va-plan-locked')) {
-                alert(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
+                e.preventDefault();
+                e.stopPropagation();
+                showDashboardNotice(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
                 return;
             }
             if (this.disabled || this.getAttribute('aria-disabled') === 'true') {
@@ -3017,7 +3105,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         self.disabled = false;
                         self.innerHTML = originalHtml;
                     }
-                    alert(res.data && res.data.message ? res.data.message : 'Hiba történt.');
+                    showDashboardNotice(res.data && res.data.message ? res.data.message : 'Hiba történt.');
                 }
             })
             .catch(function(){
@@ -3028,9 +3116,11 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     });
 
     document.querySelectorAll('.va-newpill-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
+        btn.addEventListener('click', function(e){
             if (this.classList.contains('va-plan-locked')) {
-                alert(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
+                e.preventDefault();
+                e.stopPropagation();
+                showDashboardNotice(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
                 return;
             }
             var postId   = this.dataset.postId;
@@ -3075,7 +3165,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 } else {
                     self.disabled = false;
                     self.textContent = originalText;
-                    alert(res.data && res.data.message ? res.data.message : 'Hiba történt.');
+                    showDashboardNotice(res.data && res.data.message ? res.data.message : 'Hiba történt.');
                 }
             })
             .catch(function(){
@@ -3212,9 +3302,9 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     if (bulkExecBtn) {
         bulkExecBtn.addEventListener('click', function(){
             var action = bulkActionInput ? bulkActionInput.value : '';
-            if (!action) { alert('Válassz műveletet!'); return; }
+            if (!action) { showDashboardNotice('Válassz műveletet!'); return; }
             var ids = Array.from(document.querySelectorAll('.va-row-check:checked')).map(function(cb){ return cb.value; });
-            if (!ids.length) { alert('Jelölj ki legalább egy hirdetést!'); return; }
+            if (!ids.length) { showDashboardNotice('Jelölj ki legalább egy hirdetést!'); return; }
             if (action === 'delete' && !confirm('Biztosan törlöd a kijelölt ' + ids.length + ' hirdetést?')) return;
 
             var params = new URLSearchParams({
@@ -3234,10 +3324,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
             .then(function(r){ return r.json(); })
             .then(function(res){
                 if (res.success) {
-                    alert(res.data.updated + ' hirdetés módosítva.');
+                    showDashboardNotice(res.data.updated + ' hirdetés módosítva.');
                     location.reload();
                 } else {
-                    alert((res.data && res.data.message) || 'Hiba történt.');
+                    showDashboardNotice((res.data && res.data.message) || 'Hiba történt.');
                     bulkExecBtn.disabled = false;
                     bulkExecBtn.textContent = 'Végrehajtás';
                 }
@@ -3248,29 +3338,6 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
             });
         });
     }
-
-    /* ── Refresh listing ── */
-    document.querySelectorAll('.va-refresh-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-            var postId = this.dataset.postId;
-            var self = this;
-            self.disabled = true;
-            self.textContent = '…';
-            var params = new URLSearchParams({ action:'va_refresh_listing', nonce:_nonce, post_id:postId });
-            fetch(_ajaxUrl, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:params.toString() })
-            .then(function(r){ return r.json(); })
-            .then(function(res){
-                if (res.success) {
-                    self.textContent = 'Frissítve';
-                    setTimeout(function(){ self.innerHTML = '<svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.5 14a8.5 8.5 0 1 1 2-5.5"/></svg> Frissítés'; self.disabled = false; }, 2000);
-                } else {
-                    alert((res.data && res.data.message) || 'Hiba.');
-                    self.disabled = false; self.innerHTML = '<svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.5 14a8.5 8.5 0 1 1 2-5.5"/></svg> Frissítés';
-                }
-            })
-            .catch(function(){ self.disabled = false; self.innerHTML = '<svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.5 14a8.5 8.5 0 1 1 2-5.5"/></svg> Frissítés'; });
-        });
-    });
 
     /* ── Sale price modal edit ── */
     var saleOverlay = document.getElementById('va-sale-modal-overlay');
@@ -3415,17 +3482,17 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
     function saveSalePrice(postId, normalPrice, salePriceValue, endDate) {
         if (!_canUsePremiumTools) {
-            alert(_upgradeMsg);
+            showDashboardNotice(_upgradeMsg);
             return;
         }
         if (!postId) return;
         var normalPriceNum = parseFloat(normalPrice || 0);
         if (isNaN(normalPriceNum) || normalPriceNum < 0) {
-            alert('Normál ár nem lehet negatív.');
+            showDashboardNotice('Normál ár nem lehet negatív.');
             return;
         }
         var saleEndNorm = normalizeIsoDateText(endDate);
-        if (saleEndNorm === null) { alert('Akció vége dátum formátum: YYYY-MM-DD'); return; }
+        if (saleEndNorm === null) { showDashboardNotice('Akció vége dátum formátum: YYYY-MM-DD'); return; }
         var params = new URLSearchParams({
             action: 'va_set_sale_price', nonce: _nonce,
             post_id: postId,
@@ -3441,7 +3508,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 closeSaleModal();
                 location.reload();
             } else {
-                alert((res.data && res.data.message) || 'Hiba.');
+                showDashboardNotice((res.data && res.data.message) || 'Hiba.');
                 if (saleSaveBtn) { saleSaveBtn.disabled = false; saleSaveBtn.textContent = 'Mentés'; }
             }
         })
@@ -3453,17 +3520,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     document.querySelectorAll('.va-sale-edit-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
             if (this.classList.contains('va-plan-locked') || _isBasicPlan) {
-                alert(this.dataset.lockedMsg || _upgradeMsg);
+                showDashboardNotice(this.dataset.lockedMsg || _upgradeMsg);
                 return;
             }
             openSaleModal(this.dataset.postId, this.dataset.normalPrice, this.dataset.salePrice, this.dataset.saleEnd);
-        });
-    });
-
-    document.querySelectorAll('.va-plan-locked').forEach(function(btn){
-        btn.addEventListener('click', function(e){
-            e.preventDefault();
-            alert(this.dataset.lockedMsg || _upgradeMsg);
         });
     });
 
@@ -3539,6 +3599,19 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
     if (saleNormal) saleNormal.addEventListener('input', refreshSalePreview);
     if (salePrice) salePrice.addEventListener('input', refreshSalePreview);
     if (saleEnd) saleEnd.addEventListener('change', refreshSalePreview);
+
+    document.querySelectorAll('.va-account-delete-submit').forEach(function(btn){
+        btn.addEventListener('click', function(e){
+            var form = this.form;
+            if (!form) return;
+            var confirmInput = form.querySelector('input[name="confirm_delete"]');
+            var typed = confirmInput ? String(confirmInput.value || '').trim() : '';
+            if (typed !== 'TORLESEM') {
+                e.preventDefault();
+                showDashboardNotice('Írd be pontosan: TORLESEM');
+            }
+        });
+    });
 
     function vaForceDashboardNavScrollbar() {
         var nav = document.querySelector('.va-dashboard__nav');
