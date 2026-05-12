@@ -48,6 +48,10 @@ class VA_Ajax {
         add_action( 'wp_ajax_va_live_search',        [ __CLASS__, 'live_search' ] );
         add_action( 'wp_ajax_nopriv_va_live_search', [ __CLASS__, 'live_search' ] );
 
+        // Cím autocomplete
+        add_action( 'wp_ajax_va_address_suggest',        [ __CLASS__, 'address_suggest' ] );
+        add_action( 'wp_ajax_nopriv_va_address_suggest', [ __CLASS__, 'address_suggest' ] );
+
         // Felhasználói hirdetés-kezelés (dashboard)
         add_action( 'wp_ajax_va_refresh_listing', [ __CLASS__, 'refresh_listing' ] );
         add_action( 'wp_ajax_va_bulk_listings',   [ __CLASS__, 'bulk_listings' ] );
@@ -2600,6 +2604,89 @@ class VA_Ajax {
         }
 
         wp_send_json_success( $results );
+    }
+
+    /* ── Cím autocomplete (város/irányítószám/utca) ───── */
+    public static function address_suggest() {
+        check_ajax_referer( 'va_address_suggest', 'nonce' );
+
+        if ( self::is_rate_limited( 'address_suggest', 120, 60 ) ) {
+            wp_send_json_error( [ 'message' => 'Túl sok kérés. Kérjük várjon egy percet.' ], 429 );
+        }
+
+        $q = strtolower( sanitize_text_field( wp_unslash( $_POST['q'] ?? '' ) ) );
+        $limit = max( 5, min( 20, absint( $_POST['limit'] ?? 10 ) ) );
+
+        $len = function_exists( 'mb_strlen' ) ? mb_strlen( $q, 'UTF-8' ) : strlen( $q );
+        if ( $len < 3 ) {
+            wp_send_json_success( [] );
+        }
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'va_hu_address';
+        $rows  = [];
+
+        $like = '%' . $wpdb->esc_like( $q ) . '%';
+        $prefix = $wpdb->esc_like( $q ) . '%';
+
+        $exists = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+        if ( $exists ) {
+            $rows = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT postal_code, city, street
+                     FROM {$table}
+                     WHERE search_key LIKE %s
+                     ORDER BY CASE WHEN search_key LIKE %s THEN 0 ELSE 1 END, city ASC, street ASC
+                     LIMIT %d",
+                    $like,
+                    $prefix,
+                    $limit
+                ),
+                ARRAY_A
+            );
+        }
+
+        if ( empty( $rows ) ) {
+            $json_file = VA_PLUGIN_DIR . 'includes/hu-address-seed.json';
+            if ( file_exists( $json_file ) ) {
+                $data = json_decode( (string) file_get_contents( $json_file ), true );
+                $records = is_array( $data['records'] ?? null ) ? $data['records'] : [];
+                foreach ( $records as $r ) {
+                    $postal = (string) ( $r['postal_code'] ?? '' );
+                    $city   = (string) ( $r['city'] ?? '' );
+                    $street = (string) ( $r['street'] ?? '' );
+                    $key    = strtolower( trim( $postal . ' ' . $city . ' ' . $street ) );
+                    if ( $key !== '' && strpos( $key, $q ) !== false ) {
+                        $rows[] = [
+                            'postal_code' => $postal,
+                            'city'        => $city,
+                            'street'      => $street,
+                        ];
+                    }
+                    if ( count( $rows ) >= $limit ) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        $out = [];
+        foreach ( $rows as $r ) {
+            $postal = trim( (string) ( $r['postal_code'] ?? '' ) );
+            $city   = trim( (string) ( $r['city'] ?? '' ) );
+            $street = trim( (string) ( $r['street'] ?? '' ) );
+            if ( $city === '' || $street === '' ) {
+                continue;
+            }
+            $out[] = [
+                'postal_code' => $postal,
+                'city'        => $city,
+                'street'      => $street,
+                'label'       => trim( $street . ', ' . $city . ( $postal !== '' ? ' ' . $postal : '' ) ),
+            ];
+        }
+
+        wp_send_json_success( $out );
     }
 
     /* ── Base64 kép feltöltése médiatárba ───────────────────── */

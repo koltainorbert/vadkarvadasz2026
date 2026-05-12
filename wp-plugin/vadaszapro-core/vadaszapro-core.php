@@ -235,6 +235,8 @@ add_filter( 'template_include', function ( $template ) {
 register_activation_hook( __FILE__,   'va_activate'   );
 register_deactivation_hook( __FILE__, 'va_deactivate' );
 
+const VA_ADDRESS_SEED_VER = '2026-05-12-1';
+
 function va_get_view_geo_table_sql( string $charset ): string {
     global $wpdb;
     return "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}va_view_geo (
@@ -275,6 +277,76 @@ function va_get_view_geo_daily_table_sql( string $charset ): string {
         KEY views (views)
     ) $charset;";
 }
+
+function va_get_address_lookup_table_sql( string $charset ): string {
+    global $wpdb;
+    return "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}va_hu_address (
+        id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        postal_code VARCHAR(10)     NOT NULL,
+        city        VARCHAR(120)    NOT NULL,
+        street      VARCHAR(190)    NOT NULL,
+        search_key  VARCHAR(255)    NOT NULL,
+        PRIMARY KEY (id),
+        KEY search_key (search_key),
+        KEY postal_code (postal_code),
+        KEY city (city)
+    ) $charset;";
+}
+
+function va_seed_address_lookup_table(): void {
+    global $wpdb;
+
+    $json_file = plugin_dir_path( __FILE__ ) . 'includes/hu-address-seed.json';
+    if ( ! file_exists( $json_file ) ) {
+        return;
+    }
+
+    $content = file_get_contents( $json_file );
+    if ( ! $content ) {
+        return;
+    }
+
+    $data = json_decode( ltrim( $content, "\xEF\xBB\xBF" ), true );
+    if ( ! is_array( $data ) || ! is_array( $data['records'] ?? null ) ) {
+        return;
+    }
+
+    $table = $wpdb->prefix . 'va_hu_address';
+    $wpdb->query( "TRUNCATE TABLE {$table}" );
+
+    foreach ( $data['records'] as $row ) {
+        $postal = preg_replace( '/\\D+/', '', (string) ( $row['postal_code'] ?? '' ) );
+        $city   = trim( (string) ( $row['city'] ?? '' ) );
+        $street = trim( (string) ( $row['street'] ?? '' ) );
+        if ( $city === '' || $street === '' ) {
+            continue;
+        }
+
+        $search_key = strtolower( trim( $postal . ' ' . $city . ' ' . $street ) );
+        $wpdb->insert( $table, [
+            'postal_code' => $postal,
+            'city'        => $city,
+            'street'      => $street,
+            'search_key'  => $search_key,
+        ], [ '%s', '%s', '%s', '%s' ] );
+    }
+
+    update_option( 'va_address_seed_ver', (string) ( $data['version'] ?? VA_ADDRESS_SEED_VER ), false );
+}
+
+function va_maybe_upgrade_address_lookup(): void {
+    $loaded_ver = (string) get_option( 'va_address_seed_ver', '' );
+    if ( $loaded_ver === VA_ADDRESS_SEED_VER ) {
+        return;
+    }
+
+    global $wpdb;
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( va_get_address_lookup_table_sql( $wpdb->get_charset_collate() ) );
+    va_seed_address_lookup_table();
+}
+
+add_action( 'init', 'va_maybe_upgrade_address_lookup', 25 );
 
 function va_activate() {
     VA_Post_Types::init();
@@ -339,6 +411,7 @@ function va_activate() {
     // Megtekintési lokáció aggregátum (ország/régió/város)
     $sql4 = va_get_view_geo_table_sql( $charset );
     $sql5 = va_get_view_geo_daily_table_sql( $charset );
+    $sql6 = va_get_address_lookup_table_sql( $charset );
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta( $sql );
@@ -346,7 +419,9 @@ function va_activate() {
     dbDelta( $sql3 );
     dbDelta( $sql4 );
     dbDelta( $sql5 );
+    dbDelta( $sql6 );
     update_option( 'va_view_geo_table_ver', '1.1.0', false );
+    va_seed_address_lookup_table();
 
     // Alapértelmezett oldalak létrehozása ha nem léteznek
     va_create_default_pages();
