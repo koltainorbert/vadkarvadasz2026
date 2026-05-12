@@ -2075,6 +2075,7 @@ body.sl-viewer-open { overflow: hidden; }
    KAPCSOLAT OLDAL  (page-kapcsolat.php)
 ══════════════════════════════════════════════════════════════════════ */
 .va-contact-page {
+  flex: 1 0 auto;
   padding-top: var(--nav);
   padding-bottom: 30px;
 }
