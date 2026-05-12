@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 12. – Session #338 (Silver kiemeles visszaengedve, pillek maradnak Goldtol)
+
+### Igeny
+- Silver csomaggal lehessen kiemelni hirdetest.
+- A kiemeles cooldown tovabbra is az arkartya beallitasabol jojjon.
+- Pillek maradjanak Gold csomagtol.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: a kiemeles lock csak Basicre vonatkozik.
+- [x] `frontend/templates/user/dashboard.php`: az Uj pill lock valtozatlanul Gold/Platinum/Uzleti szinttol ervenyes.
+- [x] `includes/class-user-roles.php`: `ajax_boost_listing` Basicnel tilt, Silvernel mar engedett.
+- [x] `includes/class-user-roles.php`: boost remove is javitva (nem csak Platinum), Basicnel tiltva marad.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+### Eredmeny
+- Silver csomaggal ujra hasznalhato a kiemeles.
+- A kiemelesi varakozas (nap) tovabbra is a kartya szerinti cooldownbol szamolodik.
+- Uj pill csak Goldtol maradt elerheto.
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 12. – Session #337 (Silver szigoritas: akcios ar tiltva, pillek Goldtol)
 
 ### Igeny
