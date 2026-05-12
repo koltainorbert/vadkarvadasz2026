@@ -242,6 +242,136 @@ body.va-admin-page .va-le-geo-wrap a.va-le-geo-pill:active {
         box-shadow: none !important;
     }
 }
+
+/* ── Plan editor modal (modern popup) ─────────────────────────── */
+.va-upm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.va-upm-modal.va-upm-modal--open {
+    display: flex;
+    animation: vaUpmModalFadeIn 0.2s ease-out;
+}
+
+@keyframes vaUpmModalFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.va-upm-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    cursor: pointer;
+}
+
+.va-upm-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(580px, calc(100vw - 28px));
+    max-height: calc(100vh - 44px);
+    background: #0b0b0b;
+    color: #fff;
+    border: 1px solid rgba(255, 0, 0, 0.35);
+    border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 0, 0, 0.1) inset;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: vaUpmModalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes vaUpmModalSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.va-upm-modal__header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.va-upm-modal__title {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.va-upm-modal__close-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.15s ease;
+}
+
+.va-upm-modal__close-btn:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.va-upm-modal__body {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.va-upm-modal__footer {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.va-upm-modal__footer .button {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .va-upm-modal__content {
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 20px);
+    }
+
+    .va-upm-modal__body {
+        padding: 12px;
+    }
+
+    .va-upm-modal__header,
+    .va-upm-modal__footer {
+        padding: 12px;
+    }
+}
+
 /* ================================================================
    VadászApró – Admin Dark SaaS Theme
    Teljesen lefedi a WordPress admin UI-t
