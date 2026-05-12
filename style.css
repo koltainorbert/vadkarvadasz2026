@@ -997,7 +997,7 @@ textarea { min-height: 110px; resize: vertical; }
     overflow: hidden;
     padding-right: 0 !important;
   }
-  .va-logo__text { display: none !important; }
+  .va-logo__text { display: block !important; }
   .va-logo__img {
     max-height: 46px !important;
     width: auto !important;

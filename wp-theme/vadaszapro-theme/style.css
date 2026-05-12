@@ -509,7 +509,7 @@ body { top:0 !important; }
     justify-content: space-between;
   }
   .va-logo { margin-left: 0 !important; padding-left: 0 !important; flex: 0 0 auto; }
-  .va-logo__text { display: none; }
+  .va-logo__text { display: block; }
   /* KeresĹ‘mezĹ‘ Ă©s nav elrejtve */
   .va-header__search { display: none !important; }
   /* Right div: kĂ¶zĂ©pre, csak a lang switcher lĂˇthatĂł */
@@ -1093,7 +1093,7 @@ textarea { min-height: 110px; resize: vertical; }
     overflow: hidden;
     padding-right: 0 !important;
   }
-  .va-logo__text { display: none !important; }
+  .va-logo__text { display: block !important; }
   .va-logo__img {
     max-height: 46px !important;
     width: auto !important;
