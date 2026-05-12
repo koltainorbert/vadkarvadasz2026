@@ -82,14 +82,12 @@
     if ( $hero_logo === '' ) {
         $hero_logo = $header_logo;
     }
-    $hide_home_logo = is_front_page();
     ?>
 
     <!-- ═══ Header ══════════════════════════════════════ -->
     <header class="va-header">
         <div class="va-header__inner">
             <!-- Logo -->
-            <?php if ( ! $hide_home_logo ): ?>
             <a href="<?php echo esc_url( home_url('/') ); ?>" class="va-logo">
                 <?php if ( ! empty( $header_logo ) ): ?>
                     <img src="<?php echo esc_url( $header_logo ); ?>" class="va-logo__img va-logo__img--header" style="height:<?php echo esc_attr( $header_logo_h ); ?>px;" alt="<?php echo esc_attr( $brand_name ); ?>" loading="eager" decoding="async">
@@ -98,8 +96,8 @@
                 <?php else: ?>
                     <span class="va-logo__icon">🦌</span>
                 <?php endif; ?>
+                <span class="va-logo__text"><?php echo esc_html( $brand_name ); ?></span>
             </a>
-            <?php endif; ?>
 
             <!-- Navigáció -->
             <nav class="va-nav" id="va-main-nav">
