@@ -2693,7 +2693,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
         btn.dataset.secondsRemaining = '0';
         btn.classList.remove('va-boost-btn--on', 'va-boost-btn--cooldown');
         btn.classList.add('va-boost-btn--off');
-        btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI';
+        btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: KI';
     }
 
     function applyBoostCooldownState(btn, secondsRemaining, cooldownDays){
@@ -2716,11 +2716,11 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
         btn.classList.remove('va-boost-btn--on');
         btn.classList.add('va-boost-btn--off', 'va-boost-btn--cooldown');
         if (cooldownDays) {
-            btn.title = cooldownDays + ' naponként emelhető (kiemelési újratöltés)';
+            btn.title = cooldownDays + ' naponként előre tehető (előre tétel újratöltés)';
         }
 
         function render(){
-            btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: várakozás (<span class="va-boost-countdown">' + formatBoostCountdown(rem) + '</span>)';
+            btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: várakozás (<span class="va-boost-countdown">' + formatBoostCountdown(rem) + '</span>)';
         }
 
         render();
@@ -2783,7 +2783,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         self.classList.remove('va-boost-btn--on');
                         self.classList.remove('va-boost-btn--cooldown');
                         self.classList.add('va-boost-btn--off');
-                        self.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI';
+                        self.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: KI';
                     } else {
                         self.dataset.mode = 'remove';
                         self.setAttribute('aria-pressed', 'true');
