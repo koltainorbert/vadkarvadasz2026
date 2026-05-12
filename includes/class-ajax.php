@@ -371,12 +371,7 @@ class VA_Ajax {
         }
 
         // 1 feladás = 1 kredit levonás (egyszer használatos ajándék/feladási kredit).
-        $credits = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
-        if ( $credits > 0 ) {
-            update_user_meta( $user_id, 'va_listing_credits', max( 0, $credits - 1 ) );
-            $used_total = absint( get_user_meta( $user_id, 'va_listing_credits_used_total', true ) );
-            update_user_meta( $user_id, 'va_listing_credits_used_total', $used_total + 1 );
-        }
+        // Ajándékkredit = plusz tartós slot, nem csökken feladáskor.
 
         $msg = $status === 'publish'
             ? 'Hirdetés sikeresen feladva!'
