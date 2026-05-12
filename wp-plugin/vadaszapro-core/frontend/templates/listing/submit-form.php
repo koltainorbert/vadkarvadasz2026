@@ -100,7 +100,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '</select>';
                 break;
             case 'caliber':
-                echo '<input type="text" name="caliber" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
+                echo '<input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
                 break;
             case 'year':
                 echo '<input type="number" name="year" class="va-input" min="1800" max="' . date('Y') . '" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
@@ -204,6 +204,7 @@ $conditions = get_terms( [ 'taxonomy' => 'va_condition','hide_empty' => false ] 
 $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brands() : [];
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
+$hunting_calibers = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_calibers() : [];
 $body_types = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
 $category_slug_map = [];
 if ( is_array( $categories ) ) {
@@ -408,6 +409,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
     'site_type'      => $site_type,
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
     'hunting_brand_models' => $site_type !== 'jarmu' ? $hunting_brand_models : [],
+    'hunting_calibers' => $site_type !== 'jarmu' ? $hunting_calibers : [],
     'category_slugs' => $category_slug_map,
     'category_required_rules' => $category_required_rules,
 ]);
@@ -567,6 +569,11 @@ wp_localize_script( 'va-submit', 'VA_Data', [
         ?>
 
         <?php if ( $site_type !== 'jarmu' ): ?>
+        <datalist id="va-caliber-list">
+            <?php foreach ( $hunting_calibers as $cal ): ?>
+            <option value="<?php echo esc_attr( (string) $cal ); ?>"></option>
+            <?php endforeach; ?>
+        </datalist>
         <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
             <label>Nagyítás (pl. 3-12x50)</label>
             <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_zoom'] ?? '' ) ); ?>">

@@ -9,6 +9,7 @@ class VA_Vehicle_Catalog {
 
     private static $brand_models = null;
     private static $hunting_brand_models = null;
+    private static $hunting_calibers = null;
 
     public static function get_dataset_version(): string {
         return 'vadaszapro-categories-2026-05-12';
@@ -541,6 +542,40 @@ class VA_Vehicle_Catalog {
 
         self::$hunting_brand_models = $normalized;
         return self::$hunting_brand_models;
+    }
+
+    public static function get_hunting_calibers(): array {
+        if ( self::$hunting_calibers !== null ) {
+            return self::$hunting_calibers;
+        }
+
+        $file = __DIR__ . '/hunting-calibers.json';
+        if ( ! file_exists( $file ) ) {
+            self::$hunting_calibers = [];
+            return self::$hunting_calibers;
+        }
+
+        $raw = file_get_contents( $file );
+        if ( is_string( $raw ) && substr( $raw, 0, 3 ) === "\xEF\xBB\xBF" ) {
+            $raw = substr( $raw, 3 );
+        }
+
+        $decoded = json_decode( (string) $raw, true );
+        if ( ! is_array( $decoded ) ) {
+            self::$hunting_calibers = [];
+            return self::$hunting_calibers;
+        }
+
+        $normalized = [];
+        foreach ( $decoded as $item ) {
+            $label = self::normalize_label( (string) $item );
+            if ( $label !== '' ) {
+                $normalized[] = $label;
+            }
+        }
+
+        self::$hunting_calibers = array_values( array_unique( $normalized ) );
+        return self::$hunting_calibers;
     }
 
     private static function normalize_label( string $value ): string {
