@@ -107,9 +107,12 @@ class VA_Taxonomy {
 
             update_option( 'va_category_dataset_ver', $dataset_version, false );
 
-            if ( get_option( 'va_site_type', 'vadaszat' ) !== 'jarmu' ) {
-                update_option( 'va_site_type', 'jarmu' );
+            if ( get_option( 'va_site_type', 'vadaszat' ) !== 'vadaszat' ) {
+                update_option( 'va_site_type', 'vadaszat' );
             }
+
+            // Új kategória-datasetnél a feladási form térjen vissza az új alapmezőkre.
+            delete_option( 'va_form_config_va_listing_submit' );
         }
 
         foreach ( $categories as $category ) {

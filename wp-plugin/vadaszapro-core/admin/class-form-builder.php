@@ -239,7 +239,7 @@ class VA_Form_Builder {
         ];
         ?>
         <div class="wrap va-admin-wrap va-fb-wrap">
-            <h1>🧩 weingartnerauto.hu – Form szerkesztő</h1>
+            <h1>🧩 VadászApró – Form szerkesztő</h1>
             <?php if ( $updated ): ?>
                 <div class="notice notice-success is-dismissible"><p>✅ A form konfigurációja mentve!</p></div>
             <?php endif; ?>

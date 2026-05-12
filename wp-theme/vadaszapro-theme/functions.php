@@ -5,31 +5,29 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-function va_force_weingartner_brand_text( $text ) {
+function va_normalize_legacy_brand_text( $text ) {
     if ( ! is_string( $text ) || $text === '' ) {
         return $text;
     }
 
     $search = [
-        'VadászApró',
-        'Vadaszapro',
-        'vadaszapro',
         'Weingartner Auto',
         'WEINGARTNER AUTÓ',
         'WEINGARTNER AUTO',
         'weingartner auto',
-        'vadaszapro.net',
+        'weingartnerauto.hu',
+        'weingartnertrans@gmail.com',
     ];
 
-    return str_replace( $search, 'weingartnerauto.hu', $text );
+    return str_replace( $search, 'VadászApró', $text );
 }
 
 add_filter( 'gettext', function ( $translated, $text, $domain ) {
-    return va_force_weingartner_brand_text( $translated );
+    return va_normalize_legacy_brand_text( $translated );
 }, 999, 3 );
 
 add_filter( 'ngettext', function ( $translated, $single, $plural, $number, $domain ) {
-    return va_force_weingartner_brand_text( $translated );
+    return va_normalize_legacy_brand_text( $translated );
 }, 999, 5 );
 
 // Garantalt publikus Sugo URL: /sugo
