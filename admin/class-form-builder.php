@@ -7,6 +7,59 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Form_Builder {
 
+    private static function has_custom_fields( array $fields ): bool {
+        foreach ( $fields as $field ) {
+            $key = sanitize_key( (string) ( $field['key'] ?? '' ) );
+            if ( strpos( $key, 'custom_' ) === 0 ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function config_has_any_keys( array $fields, array $keys ): bool {
+        $needles = array_fill_keys( array_map( 'sanitize_key', $keys ), true );
+        foreach ( $fields as $field ) {
+            $key = sanitize_key( (string) ( $field['key'] ?? '' ) );
+            if ( isset( $needles[ $key ] ) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function should_reset_legacy_config( string $form_id, array $saved ): bool {
+        if ( self::has_custom_fields( $saved ) ) {
+            return false;
+        }
+
+        if ( $form_id === 'va_listing_submit' ) {
+            $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
+
+            // Legacy vehicle-form markers from older installs.
+            $vehicle_markers = [ 'body_type' ];
+            $hunting_markers = [ 'caliber', 'license_req' ];
+
+            if ( $site_type !== 'jarmu' && self::config_has_any_keys( $saved, $vehicle_markers ) ) {
+                return true;
+            }
+
+            if ( $site_type === 'jarmu' && self::config_has_any_keys( $saved, $hunting_markers ) && ! self::config_has_any_keys( $saved, $vehicle_markers ) ) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if ( $form_id === 'va_admin_listing_edit' ) {
+            // Admin form should not carry legacy vehicle-only keys from old auto schema.
+            $legacy_vehicle_markers = [ 'va_body_type', 'va_fuel_type', 'va_engine_size', 'va_transmission', 'va_drive' ];
+            return self::config_has_any_keys( $saved, $legacy_vehicle_markers );
+        }
+
+        return false;
+    }
+
     /* ── Alapértelmezett mezők minden formhoz ──────────── */
 
     public static function get_default_fields( string $form_id ): array {
@@ -92,6 +145,11 @@ class VA_Form_Builder {
     public static function get_fields( string $form_id ): array {
         $saved = get_option( 'va_form_config_' . $form_id );
         if ( $saved && is_array( $saved ) && count( $saved ) > 0 ) {
+            if ( self::should_reset_legacy_config( $form_id, $saved ) ) {
+                $defaults = self::get_default_fields( $form_id );
+                update_option( 'va_form_config_' . $form_id, $defaults );
+                return $defaults;
+            }
             return $saved;
         }
         return self::get_default_fields( $form_id );
