@@ -2,6 +2,32 @@
 
 ---
 
+## 2026. 05. 12. – Session #352e (Design-illesztett figyelmeztetés színek)
+
+### Kérés
+- A keret elérés figyelmeztetés színei ne legyenek "borzalmasak", illeszkedjenek a site designhoz.
+
+### Javítás
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - A sárga inline warning doboz helyett `va-plan-warning` komponens osztályok.
+  - Gomb szöveg: `Csomag vasarlas`.
+- `frontend/css/frontend.css` + `frontend.min.css` + mirror:
+  - Új stílusok: `va-plan-warning`, `va-plan-warning__title`, `va-plan-warning__meta`, `va-plan-warning__btn`.
+  - Sötét alap + piros accent + fehér szöveg, mobilon tördelődő layout.
+  - `va-toast--error` piros accent finomhangolás a designt követve.
+
+### Eredmény
+- A figyelmeztetés és toast egységesen sötét/piros vizuált kapott.
+- Nem maradt sárga, a komponens most a vadkarvadasz design nyelvébe illeszkedik.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `frontend/css/frontend.css`
+- `frontend/css/frontend.min.css`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.css`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.min.css`
+
 ## 2026. 05. 12. – Session #352d (Figyelmeztetés alert + upgrade gomb hozzáadása)
 
 ### Kérés
