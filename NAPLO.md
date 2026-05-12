@@ -2,6 +2,40 @@
 
 ---
 
+## 2026. 05. 12. – Session #352p (Kategoriankenti marka/tipus adatmodell: frontend + admin)
+
+### Keres
+- Kovetkezo fazis: kategoriankenti marka/tipus kezeles bekotese a fiokos feladasi urlapra es az admin szerkesztobe.
+
+### Javitas
+- Uj hunting dataset fajlok:
+  - `includes/hunting-brand-models.json`
+  - `wp-plugin/vadaszapro-core/includes/hunting-brand-models.json`
+- Katalogus osztaly bovitese uj adatbetoltovel:
+  - `VA_Vehicle_Catalog::get_hunting_brand_models_by_category()`
+  - fajlok:
+    - `includes/class-vehicle-catalog.php`
+    - `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- Frontend submit form (fiok) bovitese:
+  - kategoriavalaszto opciokhoz `data-slug`
+  - non-jarmu modban marka/model mezok datalist alapra allitva
+  - JS-ben kategoriavaltas es markairas alapjan dinamikus model lista
+  - uj lokalizalt adat: `hunting_brand_models`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Admin listing editor bovitese:
+  - kategoriamezo `id="va-admin-category"` + `data-slug`
+  - non-jarmu modban marka/model input datalisttal
+  - kozos JS: jarmu select workflow + vadasz datalist workflow
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+
+### Eredmeny
+- Kategoriankent eltoro marka/tipus javaslatok mukodnek fiokban es admin szerkesztesben is.
+- Jarmu oldali korabbi select logika valtozatlan maradt.
+
 ## 2026. 05. 12. – Session #352o (Cim autocomplete: sajat DB + API + UI)
 
 ### Keres

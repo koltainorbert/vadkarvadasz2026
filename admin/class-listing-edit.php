@@ -77,25 +77,84 @@ class VA_Listing_Edit {
         if ( class_exists('VA_Vehicle_Catalog') ) {
             $bm = VA_Vehicle_Catalog::get_brand_models();
             echo '<script>var VA_BrandModels=' . wp_json_encode($bm) . ';</script>';
+            $hbm = VA_Vehicle_Catalog::get_hunting_brand_models_by_category();
+            echo '<script>var VA_HuntingBrandModels=' . wp_json_encode($hbm) . ';</script>';
         }
         ?>
         <script>
         document.addEventListener('DOMContentLoaded',function(){
-            var brandSel=document.getElementById('va-admin-brand');
-            var modelSel=document.getElementById('va-admin-model');
-            if(!brandSel||!modelSel) return;
-            brandSel.addEventListener('change',function(){
-                var brand=this.value;
-                var models=(typeof VA_BrandModels!=='undefined'&&VA_BrandModels[brand])||[];
-                var cur=modelSel.value;
-                modelSel.innerHTML='<option value="">– Válasszon –</option>';
-                models.forEach(function(m){
-                    var o=document.createElement('option');
-                    o.value=m; o.textContent=m;
-                    if(m===cur) o.selected=true;
-                    modelSel.appendChild(o);
+            var brandField=document.getElementById('va-admin-brand');
+            var modelField=document.getElementById('va-admin-model');
+            var categorySel=document.getElementById('va-admin-category');
+            if(!brandField||!modelField) return;
+
+            if (brandField.tagName === 'SELECT' && modelField.tagName === 'SELECT') {
+                brandField.addEventListener('change',function(){
+                    var brand=this.value;
+                    var models=(typeof VA_BrandModels!=='undefined'&&VA_BrandModels[brand])||[];
+                    var cur=modelField.value;
+                    modelField.innerHTML='<option value="">– Válasszon –</option>';
+                    models.forEach(function(m){
+                        var o=document.createElement('option');
+                        o.value=m; o.textContent=m;
+                        if(m===cur) o.selected=true;
+                        modelField.appendChild(o);
+                    });
                 });
+                return;
+            }
+
+            if (brandField.tagName !== 'INPUT' || modelField.tagName !== 'INPUT') {
+                return;
+            }
+
+            var brandList=document.getElementById('va-admin-brand-list');
+            var modelList=document.getElementById('va-admin-model-list');
+            if (!brandList || !modelList || !categorySel) return;
+
+            function getCategorySlug(){
+                var opt = categorySel.options[categorySel.selectedIndex];
+                if (!opt) return '';
+                return (opt.getAttribute('data-slug') || '').toString();
+            }
+
+            function refillHuntingDatalists(clearModel){
+                var slug = getCategorySlug();
+                var catData = (typeof VA_HuntingBrandModels !== 'undefined' && VA_HuntingBrandModels[slug]) ? VA_HuntingBrandModels[slug] : {};
+                var curBrand = (brandField.value || '').trim();
+                var curModel = (modelField.value || '').trim();
+                var matchedBrand = '';
+
+                brandList.innerHTML = '';
+                Object.keys(catData).forEach(function(brand){
+                    if (curBrand.toLowerCase() === brand.toLowerCase()) {
+                        matchedBrand = brand;
+                    }
+                    var ob = document.createElement('option');
+                    ob.value = brand;
+                    brandList.appendChild(ob);
+                });
+
+                modelList.innerHTML = '';
+                var models = matchedBrand ? (catData[matchedBrand] || []) : [];
+                models.forEach(function(model){
+                    var om = document.createElement('option');
+                    om.value = model;
+                    modelList.appendChild(om);
+                });
+
+                if (clearModel || (curModel && models.length && models.indexOf(curModel) === -1)) {
+                    modelField.value = '';
+                }
+            }
+
+            categorySel.addEventListener('change', function(){
+                brandField.value = '';
+                refillHuntingDatalists(true);
             });
+            brandField.addEventListener('input', function(){ refillHuntingDatalists(true); });
+            brandField.addEventListener('change', function(){ refillHuntingDatalists(true); });
+            refillHuntingDatalists(false);
         });
         </script>
         <?php
@@ -613,10 +672,10 @@ class VA_Listing_Edit {
                             <div class="va-le-field-grid">
                                 <div class="va-le-field">
                                     <label class="va-le-lbl">Járműkategória</label>
-                                    <select name="va_category" class="va-le-select">
+                                    <select name="va_category" id="va-admin-category" class="va-le-select">
                                         <option value="">— Válasszon —</option>
                                         <?php foreach ($categories as $cat): ?>
-                                        <option value="<?php echo (int)$cat->term_id; ?>" <?php selected($cur_cat, $cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
+                                        <option value="<?php echo (int)$cat->term_id; ?>" data-slug="<?php echo esc_attr( (string) $cat->slug ); ?>" <?php selected($cur_cat, $cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -723,7 +782,8 @@ class VA_Listing_Edit {
                                         <?php endforeach; ?>
                                     </select>
                                     <?php else: ?>
-                                    <input type="text" name="va_brand" value="<?php echo esc_attr($cur_brand_val); ?>" class="va-le-input" placeholder="<?php echo $fb_ph('va_brand','pl. Browning'); ?>">
+                                    <input type="text" name="va_brand" id="va-admin-brand" value="<?php echo esc_attr($cur_brand_val); ?>" class="va-le-input" list="va-admin-brand-list" autocomplete="off" placeholder="<?php echo $fb_ph('va_brand','pl. Browning'); ?>">
+                                    <datalist id="va-admin-brand-list"></datalist>
                                     <?php endif; ?>
                                 </div>
                                 <?php endif; ?>
@@ -741,7 +801,8 @@ class VA_Listing_Edit {
                                         <?php endforeach; ?>
                                     </select>
                                     <?php else: ?>
-                                    <input type="text" name="va_model" value="<?php echo esc_attr($cur_model_val); ?>" class="va-le-input" placeholder="<?php echo $fb_ph('va_model','pl. X-Bolt'); ?>">
+                                    <input type="text" name="va_model" id="va-admin-model" value="<?php echo esc_attr($cur_model_val); ?>" class="va-le-input" list="va-admin-model-list" autocomplete="off" placeholder="<?php echo $fb_ph('va_model','pl. X-Bolt'); ?>">
+                                    <datalist id="va-admin-model-list"></datalist>
                                     <?php endif; ?>
                                 </div>
                                 <?php endif; ?>
