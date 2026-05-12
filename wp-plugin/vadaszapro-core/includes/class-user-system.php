@@ -540,11 +540,18 @@ class VA_User_System {
             $assigned_role = 'subscriber';
         }
 
+        // Display name összeállítása
+        $display_name = trim( $firstname . ' ' . $lastname );
+        if ( $display_name === '' ) {
+            $display_name = $username;
+        }
+
         wp_update_user([
-            'ID'         => $user_id,
-            'first_name' => $firstname,
-            'last_name'  => $lastname,
-            'role'       => $assigned_role,
+            'ID'           => $user_id,
+            'first_name'   => $firstname,
+            'last_name'    => $lastname,
+            'display_name' => $display_name,
+            'role'         => $assigned_role,
         ]);
         update_user_meta( $user_id, 'va_phone', $phone );
         update_user_meta( $user_id, 'va_account_type', $account_type );
