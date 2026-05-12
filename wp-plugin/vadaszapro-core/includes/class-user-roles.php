@@ -304,12 +304,7 @@ class VA_User_Roles {
         }
 
         if ( $user_id > 0 ) {
-            // A kártyáról szinkronizált / admin által beállított user-szintű kiemelési újratöltés minden planra érvényes.
-            $custom_cd = (int) get_user_meta( $user_id, 'va_plan_boost_cooldown', true );
-            if ( $custom_cd > 0 ) {
-                $cfg['boost_cooldown'] = $custom_cd;
-            }
-
+            // A kiemelési újratöltés mindig a csomag (árkártya) cooldownja szerint működik.
             // Havi limit override továbbra is csak platinum/custom csomagnál értelmezett.
             if ( in_array( $plan, [ 'platinum', 'custom' ], true ) ) {
                 $custom_limit = (int) get_user_meta( $user_id, 'va_plan_listing_limit', true );
