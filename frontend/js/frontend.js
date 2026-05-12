@@ -473,6 +473,11 @@
       model:      $('#va-model-search').val() || '',
       body_type:  $('#va-body-type').val() || '',
       fuel_type:  $('#va-fuel-type').val() || '',
+      optic_zoom: ($('#va-optic-zoom-search').val() || '').trim(),
+      optic_objective_min: parseInt($('#va-optic-objective-min').val() || 0),
+      optic_objective_max: parseInt($('#va-optic-objective-max').val() || 0),
+      dog_age_min: parseInt($('#va-dog-age-min').val() || 0),
+      dog_age_max: parseInt($('#va-dog-age-max').val() || 0),
       year_min:   parseInt($('#va-year-min').val() || 0),
       year_max:   parseInt($('#va-year-max').val() || 0),
       mileage_min: parseInt($('#va-mileage-min').val() || 0),
@@ -503,14 +508,14 @@
   }
 
   // filter esemény
-  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, input[name="va-per-page"]', function() {
+  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, input[name="va-per-page"]', function() {
     if (this.id === 'va-brand-search') {
       va_update_model_options('');
     }
     va_load_listings(1);
   });
 
-  $(document).on('input', '#va-kw, #va-min-price, #va-max-price, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max', function() {
+  $(document).on('input', '#va-kw, #va-min-price, #va-max-price, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-optic-zoom-search', function() {
     clearTimeout(filterTimeout);
     filterTimeout = setTimeout(function() { va_load_listings(1); }, 450);
   });

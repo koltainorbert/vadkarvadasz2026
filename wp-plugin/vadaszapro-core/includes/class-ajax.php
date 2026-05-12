@@ -2382,6 +2382,11 @@ class VA_Ajax {
         $model             = sanitize_text_field( wp_unslash( $_POST['model'] ?? '' ) );
         $body_type         = sanitize_key( $_POST['body_type'] ?? '' );
         $fuel_type         = sanitize_key( $_POST['fuel_type'] ?? '' );
+        $optic_zoom        = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
+        $optic_objective_min = max( 0, intval( $_POST['optic_objective_min'] ?? 0 ) );
+        $optic_objective_max = max( 0, intval( $_POST['optic_objective_max'] ?? 0 ) );
+        $dog_age_min       = max( 0, intval( $_POST['dog_age_min'] ?? 0 ) );
+        $dog_age_max       = max( 0, intval( $_POST['dog_age_max'] ?? 0 ) );
         $year_min          = max( 0, intval( $_POST['year_min'] ?? 0 ) );
         $year_max          = max( 0, intval( $_POST['year_max'] ?? 0 ) );
         $mileage_min       = max( 0, intval( $_POST['mileage_min'] ?? 0 ) );
@@ -2414,7 +2419,7 @@ class VA_Ajax {
         // ── Transient cache kulcs ─────────────────────────
         $cache_key = 'va_fl_' . md5( serialize( compact(
             'paged','category','county','condition','min_price','max_price','keyword','sort','post_type','per_page',
-            'brand','model','body_type','fuel_type','year_min','year_max','mileage_min','mileage_max',
+            'brand','model','body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
             'engine_min','engine_max','vehicle_condition','doors','passengers','opt_automatic','opt_awd','opt_service_book','extras'
         ) ) );
         $cached = get_transient( $cache_key );
@@ -2465,6 +2470,24 @@ class VA_Ajax {
             $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_fuel ON (pm_fuel.post_id = p.ID AND pm_fuel.meta_key = 'va_fuel_type')";
             $where[] = 'pm_fuel.meta_value = %s';
             $params[] = $fuel_type;
+        }
+
+        if ( $optic_zoom !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_oz ON (pm_oz.post_id = p.ID AND pm_oz.meta_key = 'va_optic_zoom')";
+            $where[] = 'pm_oz.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $optic_zoom ) . '%';
+        }
+
+        if ( $optic_objective_min > 0 || $optic_objective_max > 0 ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_oo ON (pm_oo.post_id = p.ID AND pm_oo.meta_key = 'va_optic_objective')";
+            if ( $optic_objective_min > 0 ) { $where[] = 'CAST(pm_oo.meta_value AS UNSIGNED) >= %d'; $params[] = $optic_objective_min; }
+            if ( $optic_objective_max > 0 ) { $where[] = 'CAST(pm_oo.meta_value AS UNSIGNED) <= %d'; $params[] = $optic_objective_max; }
+        }
+
+        if ( $dog_age_min > 0 || $dog_age_max > 0 ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_dog ON (pm_dog.post_id = p.ID AND pm_dog.meta_key = 'va_dog_age_months')";
+            if ( $dog_age_min > 0 ) { $where[] = 'CAST(pm_dog.meta_value AS UNSIGNED) >= %d'; $params[] = $dog_age_min; }
+            if ( $dog_age_max > 0 ) { $where[] = 'CAST(pm_dog.meta_value AS UNSIGNED) <= %d'; $params[] = $dog_age_max; }
         }
 
         if ( $year_min > 0 || $year_max > 0 ) {

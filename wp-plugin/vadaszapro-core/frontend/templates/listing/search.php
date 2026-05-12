@@ -207,6 +207,13 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
                 <input type="number" id="va-year-min" class="va-input" min="1900" max="2099" placeholder="Évjárat -tól">
                 <input type="number" id="va-year-max" class="va-input" min="1900" max="2099" placeholder="Évjárat -ig">
 
+                <input type="text" id="va-optic-zoom-search" class="va-input" placeholder="Nagyítás (pl. 3-12x50)">
+                <input type="number" id="va-optic-objective-min" class="va-input" min="1" max="120" placeholder="Objektív -tól (mm)">
+                <input type="number" id="va-optic-objective-max" class="va-input" min="1" max="120" placeholder="Objektív -ig (mm)">
+
+                <input type="number" id="va-dog-age-min" class="va-input" min="1" max="300" placeholder="Kutya kor -tól (hó)">
+                <input type="number" id="va-dog-age-max" class="va-input" min="1" max="300" placeholder="Kutya kor -ig (hó)">
+
                 <input type="number" id="va-mileage-min" class="va-input" min="0" placeholder="Kilométer -tól">
                 <input type="number" id="va-mileage-max" class="va-input" min="0" placeholder="Kilométer -ig">
 
