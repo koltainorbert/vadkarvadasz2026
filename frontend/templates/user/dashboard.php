@@ -319,7 +319,9 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                     <div class="va-dash-plan-bar"><div style="width:<?php echo esc_attr( $pp ); ?>%;background:<?php echo esc_attr( $pc ); ?>"></div></div>
                 </div>
                 <?php endif; ?>
+                <?php if ( $user_plan !== 'basic' && ! empty( $plan_cfg['boost_cooldown'] ) ) : ?>
                 <small><svg class="va-ico va-ico--up" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg> <?php echo esc_html( $plan_cfg['boost_cooldown'] ); ?> naponként emelhető (kiemelési újratöltés)</small>
+                <?php endif; ?>
                 <?php if ( in_array( $user_plan, [ 'platinum', 'custom' ], true ) ): ?>
                 <form method="post" class="va-dash-plan-label-form">
                     <?php wp_nonce_field( 'va_profile_label', 'va_profile_label_nonce' ); ?>
