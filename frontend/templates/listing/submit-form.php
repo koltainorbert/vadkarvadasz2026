@@ -213,12 +213,12 @@ $category_required_rules = [
     'hatastalanitott'    => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
-    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model' ] ],
-    'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model' ] ],
-    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model' ] ],
+    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
+    'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
+    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
-    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model' ] ],
+    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
@@ -249,6 +249,9 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'model'       => get_post_meta( $maybe_id, 'va_model',       true ),
             'body_type'   => get_post_meta( $maybe_id, 'va_body_type',   true ),
             'caliber'     => get_post_meta( $maybe_id, 'va_caliber',     true ),
+            'optic_zoom'  => get_post_meta( $maybe_id, 'va_optic_zoom',  true ),
+            'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
+            'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             // Jármű extra mezők
@@ -555,6 +558,21 @@ wp_localize_script( 'va-submit', 'VA_Data', [
             endif;
         endforeach;
         ?>
+
+        <?php if ( $site_type !== 'jarmu' ): ?>
+        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+            <label>Nagyítás (pl. 3-12x50)</label>
+            <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_zoom'] ?? '' ) ); ?>">
+        </div>
+        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
+            <label>Objektív átmérő (mm)</label>
+            <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_objective'] ?? '' ) ); ?>">
+        </div>
+        <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+            <label>Kutya életkor (hónap)</label>
+            <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr( (string) ( $edit_meta['dog_age_months'] ?? '' ) ); ?>">
+        </div>
+        <?php endif; ?>
 
         <?php if ( $site_type === 'jarmu' ):
             $ev = $edit_meta;
