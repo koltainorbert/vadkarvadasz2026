@@ -2,6 +2,44 @@
 
 ---
 
+## 2026. 05. 12. – Session #352o (Cim autocomplete: sajat DB + API + UI)
+
+### Keres
+- Jojjon a kovetkezo lepes: utca autocomplete 3-4 karaktertol, sajat adatforrasbol.
+
+### Javitas
+- Uj seed adatforras fajlok:
+  - `includes/hu-address-seed.json`
+  - `wp-plugin/vadaszapro-core/includes/hu-address-seed.json`
+- Uj adatbazis tabla + seedeles + verziozott upgrade:
+  - tabla: `wp_va_hu_address`
+  - mezok: `postal_code`, `city`, `street`, `search_key`
+  - aktivacios letrehozas + seed import
+  - init alatti verzioellenorzeses ujratoltes (`va_address_seed_ver`)
+  - fajlok:
+    - `vadaszapro-core.php`
+    - `wp-plugin/vadaszapro-core/vadaszapro-core.php`
+- Uj AJAX endpoint:
+  - action: `va_address_suggest`
+  - DB-bol keres `search_key` alapjan
+  - fallback: seed JSON, ha tabla ures vagy nem elerheto
+  - rate limit beepitve
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend submit form bekotes:
+  - utca input datalist autocomplete
+  - 3 karaktertol debounced AJAX kereses
+  - kivalsztasnal varos/iranyitoszam automatikus kitoltese
+  - uj nonce atadas: `nonce_address`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- Mukodo cim autocomplete infrastruktra sajat adatforrassal es sajat tablaval.
+- Az utca beirasa kozben mar jonnek javaslatok, es segiti a varos + iranyitoszam kitoltest.
+
 ## 2026. 05. 12. – Session #352n (Vadasz kategoriak + varos/iranyitoszam validacio)
 
 ### Keres
