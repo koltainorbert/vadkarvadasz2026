@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 12. – Session #352k (Lábléc kapcsolati adatok admin + footer fix)
+
+### Feladat
+- Lábléc cím, telefon, e-mail szerkeszthetővé tétele az admin felületen.
+
+### Bug #1 – Footer option kulcs eltérés
+- `footer.php` `va_billing_company_address` kulcsot olvasott, de az admin `va_contact_addr`-ba mentett.
+- Javítás: `footer.php` + mirror átírva `va_contact_addr` kulcsra.
+
+### Bug #2 – register_setting hiánya
+- Az új opciók (`va_contact_addr`, `va_billing_phone`, `va_contact_email`) szerepeltek az allowlist tömbben, de a `$design` tömbből hiányoztak.
+- Ezért `register_setting()` sosem hívódott meg rájuk → WordPress nem fogadta el a mentést.
+- Javítás: mindhárom kulcs felvéve a `$design` tömbbe (Lábléc szövegek blokk, `va_hf_footer_brand_title` után).
+
+### Érintett fájlok
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `footer.php`
+- `wp-theme/vadaszapro-theme/footer.php`
+
+---
+
 ## 2026. 05. 12. – Session #352j (Hero logó megjelenés javítás)
 
 ### Bug
