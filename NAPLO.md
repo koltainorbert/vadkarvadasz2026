@@ -1,8 +1,30 @@
 ﻿# Fejlesztesi Naplo
 
----
 
-## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
+## 2026. 05. 12. – Session #334 (Admin megjegyzes + ajandek kredit naplo)
+
+### Igeny
+- Külön admin megjegyzés/notifikáció mező a felhasználóhoz.
+- Ajándék kredit mentési napló: mikor, mennyit, melyik admin.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`: admin_note mező megjelent a user editorban, és külön ajándék kredit napló blokk is látszik a vásárlási előzmények alatt.
+- [x] `includes/class-user-roles.php`: `va_admin_note` és `va_gift_credit_history` mentése bekerült, a napló max. 50 bejegyzést tart meg.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+### Eredmeny
+- Az admin belső megjegyzést tud rögzíteni a felhasználóhoz.
+- Az ajándék kredit adások visszakereshetők időponttal, előző/új értékkel és admin névvel.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
 
 ### Igeny
 - Komplett vasarlasi rendszer atvizsgalasa (Stripe, callback, webhook, upgrade, limitek, admin felugyelet).

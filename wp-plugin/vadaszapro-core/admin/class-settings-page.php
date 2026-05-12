@@ -3922,6 +3922,7 @@ class VA_Settings_Page {
             border:1px solid var(--pc,#888);border-radius:999px;
             padding:3px 10px;font-size:12px;font-weight:700;
         }
+        .va-upm-note { margin-top:4px;font-size:11px;color:#ffd166;max-width:260px;white-space:pre-wrap; }
         .va-upm-expire-pill {
             display:inline-flex;
             align-items:center;
