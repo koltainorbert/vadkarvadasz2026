@@ -97,17 +97,27 @@ add_action( 'init', function () {
     }
 }, 999 );
 
-// Egyszeri migráció: form-konfigok kényszer visszaállítása vadász defaultokra
+// Egyszeri migráció: vadkarvadasz.hu-n site_type és form-konfig kényszer visszaállítás
 add_action( 'init', function () {
-    if ( get_option( 'va_form_config_forced_reset_v5' ) ) return;
+    if ( get_option( 'va_form_config_forced_reset_v6' ) ) return;
+
+    $host = (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+    $host = strtolower( trim( $host ) );
+    if ( str_starts_with( $host, 'www.' ) ) {
+        $host = substr( $host, 4 );
+    }
+
+    if ( $host === 'vadkarvadasz.hu' && get_option( 'va_site_type', 'vadaszat' ) !== 'vadaszat' ) {
+        update_option( 'va_site_type', 'vadaszat' );
+    }
 
     $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
-    if ( $site_type !== 'jarmu' && class_exists( 'VA_Form_Builder' ) ) {
+    if ( $site_type === 'vadaszat' && class_exists( 'VA_Form_Builder' ) ) {
         update_option( 'va_form_config_va_listing_submit', VA_Form_Builder::get_default_fields( 'va_listing_submit' ) );
         update_option( 'va_form_config_va_admin_listing_edit', VA_Form_Builder::get_default_fields( 'va_admin_listing_edit' ) );
     }
 
-    update_option( 'va_form_config_forced_reset_v5', '1', false );
+    update_option( 'va_form_config_forced_reset_v6', '1', false );
 }, 1 );
 
 // Hiányzó alapoldalak létrehozása futás közben (reaktiválás nélkül)
