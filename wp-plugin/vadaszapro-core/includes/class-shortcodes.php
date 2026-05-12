@@ -267,6 +267,7 @@ class VA_Shortcodes {
                 <?php endif; ?>
                 <?php if ( $has_active_product ): ?>
                 <div class="va-notice va-notice--info" style="margin:14px auto 0;max-width:860px;">Aktív csomagod van (<?php echo esc_html( $plan_label ); ?>), lejárat: <?php echo esc_html( $plan_exp_txt ); ?>. Jelenleg csak magasabb rang vásárolható.</div>
+                <div class="va-notice va-notice--info" style="margin:10px auto 0;max-width:860px;">Upgrade esetén a maradék csomagérték automatikusan hozzáadódik az új csomaghoz, nem vész el.</div>
                 <?php endif; ?>
             </div>
 

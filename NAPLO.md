@@ -2,6 +2,54 @@
 
 ---
 
+## 2026. 05. 12. – Session #331 (Hibrid upgrade modell + maradékérték kompenzáció)
+
+### Igeny
+- Aktív csomag mellett csak magasabb csomag legyen vásárolható.
+- Upgrade esetén a maradék érték ne vesszen el, automatikusan íródjon hozzá az új csomaghoz.
+- A felhasználó erről egyértelmű visszajelzést kapjon (oldalon + email).
+
+### Megvalositas [x]
+- [x] `includes/class-ajax.php`:
+  - plan slug normalizálás (`custom/ceges/company` -> `custom`),
+  - only-upgrade szabály üzenete már plan címkével megy,
+  - új kompenzációs számítás upgrade-nél:
+    - maradék érték számítás régi csomagból,
+    - új csomag napi értékére átszámolt plusz nap,
+    - min +1 nap ha van maradék érték,
+    - plafon: max +365 nap,
+  - lejárat beállítás: új csomag alap nap + kompenzációs nap,
+  - vásárlási history bővítve carryover mezőkkel,
+  - sikeres flash üzenet bővítve: `+X nap jóváírva`, Ft érték feltüntetéssel.
+
+- [x] `includes/class-mailer.php`:
+  - új értesítő: `send_plan_upgrade_notice()`
+  - emailben szerepel: régi csomag, új csomag, +nap kompenzáció, új lejárat,
+  - explicit üzenet: a maradék érték nem veszett el.
+
+- [x] `includes/class-shortcodes.php`:
+  - aktív csomag esetén előzetes tájékoztató: upgrade-nél a maradék érték hozzáadódik.
+
+- [x] Mirror frissítés:
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+  - `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+  - `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
+### Eredmeny
+- Halmozás helyett kontrollált, átlátható hibrid upgrade működés.
+- A user pénzügyi igazságosságot lát: maradék érték automatikusan kompenzálva.
+- Kommunikáció frontend flash-ben és emailben is egységes.
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `includes/class-mailer.php`
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
+---
+
 ## 2026. 05. 12. – Session #330 (Lejarat zold pill magassag fix lenyitasnal)
 
 ### Igeny

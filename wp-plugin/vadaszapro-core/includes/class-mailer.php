@@ -154,6 +154,66 @@ class VA_Mailer {
     return $out;
   }
 
+    public static function send_plan_upgrade_notice( int $user_id, array $data = [] ): bool {
+      $user = get_userdata( $user_id );
+      if ( ! $user ) {
+        return false;
+      }
+
+      $prev_plan = sanitize_key( (string) ( $data['prev_plan_slug'] ?? '' ) );
+      $new_plan  = sanitize_key( (string) ( $data['new_plan_slug'] ?? '' ) );
+      $carryover_days = absint( $data['carryover_days'] ?? 0 );
+      $carryover_value = absint( $data['carryover_value_ft'] ?? 0 );
+      $expires_at = absint( $data['new_expires_at'] ?? get_user_meta( $user_id, 'va_plan_expires_at', true ) );
+
+      $prev_label = $prev_plan !== '' ? ucfirst( $prev_plan ) : 'Korábbi csomag';
+      $new_label  = $new_plan !== '' ? ucfirst( $new_plan ) : 'Új csomag';
+      if ( class_exists( 'VA_User_Roles' ) ) {
+        if ( $prev_plan !== '' ) {
+          $prev_cfg = VA_User_Roles::get_plan_config( $prev_plan, $user_id );
+          $prev_candidate = trim( (string) ( $prev_cfg['label'] ?? '' ) );
+          if ( $prev_candidate !== '' ) {
+            $prev_label = $prev_candidate;
+          }
+        }
+        if ( $new_plan !== '' ) {
+          $new_cfg = VA_User_Roles::get_plan_config( $new_plan, $user_id );
+          $new_candidate = trim( (string) ( $new_cfg['label'] ?? '' ) );
+          if ( $new_candidate !== '' ) {
+            $new_label = $new_candidate;
+          }
+        }
+      }
+      if ( $prev_plan === 'custom' ) {
+        $prev_label = 'Céges előfizetés';
+      }
+      if ( $new_plan === 'custom' ) {
+        $new_label = 'Céges előfizetés';
+      }
+
+      $expires_text = $expires_at > 0 ? wp_date( 'Y.m.d H:i', $expires_at ) : 'nincs beállítva';
+      $carryover_line = $carryover_days > 0
+        ? 'Maradék kompenzáció: +' . $carryover_days . ' nap' . ( $carryover_value > 0 ? ' (' . number_format( $carryover_value, 0, ',', ' ' ) . ' Ft érték)' : '' )
+        : 'Maradék kompenzáció: nem volt jóváírható maradék érték';
+
+      $subject = 'Sikeres csomagváltás - maradék érték jóváírva';
+      $heading = 'Sikeres csomagváltás';
+      $body = self::text_to_html(
+        "Kedves {$user->display_name}!\n\n"
+        . "A csomagváltásod sikeres volt.\n"
+        . "Korábbi csomag: {$prev_label}\n"
+        . "Új csomag: {$new_label}\n"
+        . $carryover_line . "\n"
+        . "Új lejárat: {$expires_text}\n\n"
+        . "Fontos: a maradék érték nem veszett el, automatikusan hozzáíródott az új csomagodhoz."
+      );
+
+      return self::send( (string) $user->user_email, $subject, $heading, $body, [
+        'label' => 'Csomagjaim megtekintése',
+        'url'   => home_url( '/va-kredit-vasarlas/' ),
+      ] );
+    }
+
     /* ─── Csomag lejárati figyelmeztetés a felhasználónak ───────── */
     public static function send_plan_expiry_warning( int $user_id, int $days_left ): bool {
         $user = get_userdata( $user_id );
