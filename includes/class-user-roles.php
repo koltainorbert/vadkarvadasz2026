@@ -361,27 +361,47 @@ class VA_User_Roles {
             return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0, 'remaining' => -1 ];
         }
 
-        // Plusz kreditek (egyszer használatos feladási kreditek)
+        $plan_limit        = (int) $cfg['monthly_limit'];
         $purchased_credits = (int) get_user_meta( $user_id, 'va_listing_credits', true );
-        $limit = $cfg['monthly_limit'] + $purchased_credits;
+        $effective_limit   = $plan_limit + $purchased_credits;
 
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
             : self::get_monthly_listing_count( $user_id );
-        $remaining = max( 0, $limit - $used );
+        $remaining = max( 0, $effective_limit - $used );
 
-        if ( $used < $limit ) {
-            return [ 'can' => true, 'reason' => '', 'used' => $used, 'limit' => $limit, 'remaining' => $remaining ];
+        if ( $used < $effective_limit ) {
+            return [
+                'can'             => true,
+                'reason'          => '',
+                'used'            => $used,
+                'limit'           => $plan_limit,
+                'remaining'       => $remaining,
+                'effective_limit' => $effective_limit,
+                'credits'         => $purchased_credits,
+            ];
         }
 
         $label = $cfg['label'];
         if ( $cfg['basis'] === 'active' ) {
-            $reason = "{$label} csomaggal egyszerre legfeljebb {$limit} aktív hirdetésed lehet. Töröl egy meglévőt, vagy frissítsd csomagodat!";
+            $reason = "{$label} csomaggal egyszerre legfeljebb {$plan_limit} aktív hirdetésed lehet.";
         } else {
-            $reason = "{$label} csomaggal ebben a hónapban legfeljebb {$limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
+            $reason = "{$label} csomaggal ebben a hónapban legfeljebb {$plan_limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
         }
 
-        return [ 'can' => false, 'reason' => $reason, 'used' => $used, 'limit' => $limit, 'remaining' => 0 ];
+        if ( $purchased_credits > 0 ) {
+            $reason .= ' Ajándékkreditből jelenleg ' . $purchased_credits . ' db áll rendelkezésre.';
+        }
+
+        return [
+            'can'             => false,
+            'reason'          => $reason,
+            'used'            => $used,
+            'limit'           => $plan_limit,
+            'remaining'       => 0,
+            'effective_limit' => $effective_limit,
+            'credits'         => $purchased_credits,
+        ];
     }
 
     /* ══ Boost logika ═══════════════════════════════════════════ */
