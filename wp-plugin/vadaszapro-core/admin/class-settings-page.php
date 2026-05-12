@@ -3620,6 +3620,29 @@ class VA_Settings_Page {
                                     </label>
                                 </div>
 
+                                <div style="display:flex;flex-direction:column;gap:6px;margin:8px 0;align-items:flex-start;">
+                                    <label style="display:flex;flex-direction:column;gap:6px;width:100%;">
+                                        <span>Admin megjegyzés / notifikáció:</span>
+                                        <textarea class="va-upm-admin-note" rows="3" maxlength="500" style="width:100%;max-width:320px;background:#060606;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;resize:vertical;" placeholder="pl. telefonon egyeztetve, külön kedvezmény, határidő, visszahívás oka"><?php echo esc_textarea( $admin_note ); ?></textarea>
+                                    </label>
+                                    <div style="font-size:11px;color:rgba(255,255,255,.45);">Belső megjegyzés, csak adminnak látszik. Nem kerül ki a felhasználónak.</div>
+                                    <?php if ( $gift_credit_count > 0 && is_array( $last_gift_credit ) ): ?>
+                                    <?php
+                                        $gift_prev = absint( $last_gift_credit['prev_credits'] ?? 0 );
+                                        $gift_new  = absint( $last_gift_credit['new_credits'] ?? 0 );
+                                        $gift_delta = (int) ( $last_gift_credit['delta_credits'] ?? 0 );
+                                        $gift_note = trim( (string) ( $last_gift_credit['note'] ?? '' ) );
+                                        $gift_ts = absint( $last_gift_credit['saved_at'] ?? 0 );
+                                        $gift_admin = trim( (string) ( $last_gift_credit['admin_name'] ?? '' ) );
+                                    ?>
+                                    <div style="margin-top:8px;padding:8px;background:rgba(106,184,173,.08);border-left:3px solid #6ab8ad;border-radius:4px;font-size:11px;color:rgba(255,255,255,.7);">
+                                        <strong style="color:#6ab8ad;">🎁 Utolsó ajándék kredit:</strong><br>
+                                        <?php echo esc_html( $gift_ts > 0 ? date_i18n( 'Y.m.d H:i', $gift_ts ) : 'ismeretlen' ); ?> · <strong><?php echo esc_html( $gift_delta >= 0 ? '+' : '−' ); ?><?php echo esc_html( (string) abs( $gift_delta ) ); ?></strong> kredit (<?php echo esc_html( (string) $gift_prev ); ?> → <?php echo esc_html( (string) $gift_new ); ?>) · admin: <em><?php echo esc_html( $gift_admin !== '' ? $gift_admin : '(név nélkül)' ); ?></em>
+                                        <?php if ( $gift_note !== '' ): ?><br><span style="color:rgba(255,255,255,.5);">Megjegyzés: <?php echo esc_html( $gift_note ); ?></span><?php endif; ?>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+
                                 <button class="button button-primary va-upm-save-btn"
                                         data-uid="<?php echo esc_attr( (string) $user->ID ); ?>"
                                         data-nonce="<?php echo esc_attr( $admin_nonce ); ?>">Mentés</button>
