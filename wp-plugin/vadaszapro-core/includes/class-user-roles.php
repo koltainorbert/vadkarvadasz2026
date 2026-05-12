@@ -359,10 +359,9 @@ class VA_User_Roles {
             return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0, 'remaining' => -1 ];
         }
 
-        // Plusz kreditek: fizetett + manuálisan adott ajándék
+        // Plusz kreditek (egyszer használatos feladási kreditek)
         $purchased_credits = (int) get_user_meta( $user_id, 'va_listing_credits', true );
-        $gift_credits      = (int) get_user_meta( $user_id, 'va_gift_listing_credits', true );
-        $limit = $cfg['monthly_limit'] + $purchased_credits + $gift_credits;
+        $limit = $cfg['monthly_limit'] + $purchased_credits;
 
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
@@ -889,11 +888,11 @@ class VA_User_Roles {
             wp_send_json_error( [ 'message' => 'Adminisztrátor jogköre nem módosítható.' ] );
         }
 
-        $old_credits = absint( get_user_meta( $target_uid, 'va_gift_listing_credits', true ) );
+        $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
         $new_credits = max( 0, $old_credits + $custom_credits );
 
         update_user_meta( $target_uid, 'va_plan', $plan );
-        update_user_meta( $target_uid, 'va_gift_listing_credits', $new_credits );
+        update_user_meta( $target_uid, 'va_listing_credits', $new_credits );
         if ( $admin_note !== '' ) {
             update_user_meta( $target_uid, 'va_admin_note', $admin_note );
         } else {

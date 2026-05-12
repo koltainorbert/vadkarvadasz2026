@@ -315,9 +315,7 @@ if ( is_user_logged_in() ) {
         $user_id
     ) );
 
-    $paid_credit_balance = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
-    $gift_credit_balance = absint( get_user_meta( $user_id, 'va_gift_listing_credits', true ) );
-    $user_credit_balance = $paid_credit_balance + $gift_credit_balance;
+    $user_credit_balance = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
 
     if ( class_exists( 'VA_User_Roles' ) ) {
         $plan_check = VA_User_Roles::can_post_listing( $user_id );

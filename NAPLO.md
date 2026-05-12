@@ -11,11 +11,10 @@
 - Csomagvaltaskor ne adjon automatikusan uj ajandek kreditet.
 
 ### Megvalositas [x]
-- [x] Kulon user meta bevezetve a manualis ajandek kreditekhez: `va_gift_listing_credits`.
-- [x] `includes/class-user-roles.php`: `can_post_listing()` mar a fizetett + ajandek krediteket egyutt szamolja bele a feladasi keretbe.
-- [x] `includes/class-user-roles.php`: admin csomagmentesnel a `custom_credits` mar elojeles (pozitiv/negativ), es a manualis ajandek poolt modositja.
-- [x] `includes/class-ajax.php`: feladaskor eloszor az ajandek kredit fogy (ha van), kulonben csak szukseg eseten fizetett kredit.
-- [x] `frontend/templates/listing/submit-form.php`: engedelyezeshez es kijelzeshez osszesitett (fizetett+ajandek) kredit egyenleg.
+- [x] `includes/class-user-roles.php`: `custom_credits` mar elojeles (+/-), igy a manualisan adott kredit visszavonhato.
+- [x] `includes/class-user-roles.php`: a kredit modositasa a meglevo `va_listing_credits` mezot hasznalja (kompatibilis a korabbi adatokkal).
+- [x] `includes/class-ajax.php`: minden uj hirdetes feladasakor 1 kredit automatikusan levonasra kerul, ha van egyenleg.
+- [x] `frontend/templates/listing/submit-form.php`: a feladasi ellenorzes a kreditmezot valtozatlanul hasznalja.
 - [x] `admin/class-settings-page.php`: admin input mar +/- modositast enged (`min=-999999`).
 - [x] Mirror frissites:
   - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
@@ -24,9 +23,9 @@
   - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
 
 ### Eredmeny
-- A manualis ajandek kredit tenylegesen egyszer hasznalatos tokenkent viselkedik.
-- Admin barmikor vissza tud vonni fel nem hasznalt ajandek kreditet (negativ db megadasaval).
-- A csomagvaltas onmagaban nem ad uj ajandek kreditet; csak explicit admin modositas ad/vesz el.
+- A manualis ajandek kredit tenylegesen egyszer hasznalatos tokenkent viselkedik (1 feladas = 1 kredit).
+- Admin barmikor vissza tud vonni fel nem hasznalt kreditet (negativ db megadasaval).
+- A csomagvaltas onmagaban nem ad uj kreditet; csak explicit admin modositas ad/vesz el.
 
 ### Erintett fajlok
 - `includes/class-user-roles.php`
