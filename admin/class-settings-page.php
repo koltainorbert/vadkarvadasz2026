@@ -3659,7 +3659,7 @@ class VA_Settings_Page {
                                         </div>
                                     </div>
                                     <div class="va-upm-modal__footer">
-                                        <button class="button" type="button" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>" class="va-upm-cancel-btn">Mégse</button>
+                                        <button class="button va-upm-cancel-btn" type="button" data-uid="<?php echo esc_attr( (string) $user->ID ); ?>">Mégse</button>
                                         <button class="button button-primary va-upm-save-btn"
                                                 data-uid="<?php echo esc_attr( (string) $user->ID ); ?>"
                                                 data-nonce="<?php echo esc_attr( $admin_nonce ); ?>">Mentés</button>
@@ -4089,20 +4089,26 @@ class VA_Settings_Page {
 
         <script>
         (function(){
-            // Toggle szerkesztő
+            // Csomag szerkesztő modal nyitás/zárás
             document.querySelectorAll('.va-upm-edit-btn').forEach(function(btn){
                 btn.addEventListener('click', function(){
                     var uid = this.dataset.uid;
-                    var ed  = document.getElementById('va-upm-editor-' + uid);
-                    if(ed) ed.style.display = ed.style.display === 'none' ? 'block' : 'none';
+                    var modal = document.getElementById('va-upm-modal-' + uid);
+                    if (modal) {
+                        modal.classList.add('va-upm-modal--open');
+                        document.body.style.overflow = 'hidden';
+                    }
                 });
             });
 
             document.querySelectorAll('.va-upm-cancel-btn').forEach(function(btn){
                 btn.addEventListener('click', function(){
                     var uid = this.dataset.uid;
-                    var ed  = document.getElementById('va-upm-editor-' + uid);
-                    if(ed) ed.style.display = 'none';
+                    var modal = document.getElementById('va-upm-modal-' + uid);
+                    if (modal) {
+                        modal.classList.remove('va-upm-modal--open');
+                        document.body.style.overflow = '';
+                    }
                 });
             });
 
