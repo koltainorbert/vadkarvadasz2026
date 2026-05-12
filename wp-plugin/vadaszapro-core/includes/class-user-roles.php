@@ -524,8 +524,8 @@ class VA_User_Roles {
         $window_days  = (int) ( $global_cfg['boost_badge_window'] ?? 7 );
         $boost_cutoff = time() - $window_days * DAY_IN_SECONDS;
 
-        // Boosted (az ablakon belül) hirdetések először, aztán feladás dátuma
-        $clauses['orderby'] = "CASE WHEN CAST( {$alias}.meta_value AS UNSIGNED ) > {$boost_cutoff} THEN 1 ELSE 0 END DESC, {$wpdb->posts}.post_date DESC";
+        // Boostnál előre ugrik, de a később feladott hirdetések idővel megelőzhetik.
+        $clauses['orderby'] = "CASE WHEN CAST( {$alias}.meta_value AS UNSIGNED ) > {$boost_cutoff} THEN GREATEST(CAST( {$alias}.meta_value AS UNSIGNED ), UNIX_TIMESTAMP({$wpdb->posts}.post_date)) ELSE UNIX_TIMESTAMP({$wpdb->posts}.post_date) END DESC";
 
         return $clauses;
     }

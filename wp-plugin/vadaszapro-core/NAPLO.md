@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 12. – Session #339 (Kiemeles sorrend finomhangolas: elore ugrik, majd fokozatosan hatrabb kerul)
+
+### Igeny
+- Kiemeleskor a hirdetes az adott kategoriaban keruljon elore.
+- Ahogy uj hirdeteseket tesznek fel, idovel keruljon egyre hatrebb.
+
+### Megvalositas [x]
+- [x] `includes/class-user-roles.php`: a `posts_clauses` ORDER BY logika atallitva idobelyeg-alapu rendezesre.
+- [x] A kiemeles ideje (va_boost_time) es a feladas datuma kozul a frissebbik rendez, boost ablakon belul.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+### Eredmeny
+- Kiemeleskor a hirdetes azonnal feljebb kerul.
+- Kesobb a nala ujabb hirdetesek megelozik, igy termeszetesen sorolodik hatrebb.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 12. – Session #338 (Silver kiemeles visszaengedve, pillek maradnak Goldtol)
 
 ### Igeny
