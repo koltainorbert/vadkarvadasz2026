@@ -363,9 +363,7 @@ class VA_User_Roles {
 
         $plan_limit          = (int) $cfg['monthly_limit'];
         $gift_credits_balance = max( 0, (int) get_user_meta( $user_id, 'va_listing_credits', true ) );
-        $gift_credits_used    = max( 0, (int) get_user_meta( $user_id, 'va_listing_credits_used_total', true ) );
-        $gift_credits_total   = $gift_credits_balance + $gift_credits_used;
-        $effective_limit      = $plan_limit + $gift_credits_total;
+        $effective_limit      = $plan_limit + $gift_credits_balance;
 
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
@@ -382,8 +380,7 @@ class VA_User_Roles {
                 'remaining'       => $remaining,
                 'effective_limit' => $effective_limit,
                 'credits'         => $gift_credits_balance,
-                'credits_total'   => $gift_credits_total,
-                'credits_used'    => $gift_credits_used,
+                'credits_total'   => $gift_credits_balance,
             ];
         }
 
@@ -407,8 +404,7 @@ class VA_User_Roles {
             'remaining'       => 0,
             'effective_limit' => $effective_limit,
             'credits'         => $gift_credits_balance,
-            'credits_total'   => $gift_credits_total,
-            'credits_used'    => $gift_credits_used,
+            'credits_total'   => $gift_credits_balance,
         ];
     }
 
@@ -630,8 +626,7 @@ class VA_User_Roles {
 
         // Plan limit + megvásárolt kredit = összes engedélyezett aktív hirdetés
         $gift_credits_balance = max( 0, (int) get_user_meta( $user_id, 'va_listing_credits', true ) );
-        $gift_credits_used    = max( 0, (int) get_user_meta( $user_id, 'va_listing_credits_used_total', true ) );
-        $limit = (int) $cfg['monthly_limit'] + $gift_credits_balance + $gift_credits_used;
+        $limit = (int) $cfg['monthly_limit'] + $gift_credits_balance;
 
         // MINDEN hirdetés (aktiv és felfüggesztett) – legrégebbtől legújabbig
         // Az ASC sorrend biztosítja hogy a legrégebbi ("igazi") hirdetések maradnak aktiv.
