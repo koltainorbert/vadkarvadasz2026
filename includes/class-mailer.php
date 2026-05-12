@@ -196,21 +196,36 @@ class VA_Mailer {
         ? 'Maradék kompenzáció: +' . $carryover_days . ' nap' . ( $carryover_value > 0 ? ' (' . number_format( $carryover_value, 0, ',', ' ' ) . ' Ft érték)' : '' )
         : 'Maradék kompenzáció: nem volt jóváírható maradék érték';
 
-      $subject = 'Sikeres csomagváltás - maradék érték jóváírva';
-      $heading = 'Sikeres csomagváltás';
-      $body = self::text_to_html(
-        "Kedves {$user->display_name}!\n\n"
-        . "A csomagváltásod sikeres volt.\n"
-        . "Korábbi csomag: {$prev_label}\n"
-        . "Új csomag: {$new_label}\n"
-        . $carryover_line . "\n"
-        . "Új lejárat: {$expires_text}\n\n"
-        . "Fontos: a maradék érték nem veszett el, automatikusan hozzáíródott az új csomagodhoz."
-      );
+      $tokens = [
+        'name'              => (string) $user->display_name,
+        'user_email'        => (string) $user->user_email,
+        'prev_plan_label'   => (string) $prev_label,
+        'prev_plan_slug'    => (string) $prev_plan,
+        'new_plan_label'    => (string) $new_label,
+        'new_plan_slug'     => (string) $new_plan,
+        'carryover_days'    => (string) $carryover_days,
+        'carryover_value_ft'=> (string) $carryover_value,
+        'expires_at'        => (string) $expires_text,
+        'site_name'         => (string) get_option( 'va_email_brand_name', self::BRAND_NAME ),
+        'support_email'     => (string) get_option( 'va_email_contact_email', self::SUPPORT_EMAIL ),
+        'carryover_line'    => (string) $carryover_line,
+      ];
+
+      $subject_tpl = self::get_tpl( 'va_email_plan_upgrade_subject', 'Sikeres csomagváltás - maradék érték jóváírva ({site_name})' );
+      $heading_tpl = self::get_tpl( 'va_email_plan_upgrade_heading', 'Sikeres csomagváltás' );
+      $body_tpl    = self::get_tpl( 'va_email_plan_upgrade_body', "Kedves {name}!\n\nA csomagváltásod sikeres volt.\nKorábbi csomag: {prev_plan_label}\nÚj csomag: {new_plan_label}\nMaradék kompenzáció: +{carryover_days} nap ({carryover_value_ft} Ft érték)\nÚj lejárat: {expires_at}\n\nFontos: a maradék érték nem veszett el, automatikusan hozzáíródott az új csomagodhoz." );
+      $btn_lbl_tpl = self::get_tpl( 'va_email_plan_upgrade_btn_label', 'Csomagjaim megtekintése' );
+      $btn_url_tpl = self::get_tpl( 'va_email_plan_upgrade_btn_url', home_url( '/va-kredit-vasarlas/' ) );
+
+      $subject = self::tpl_replace( $subject_tpl, $tokens );
+      $heading = self::tpl_replace( $heading_tpl, $tokens );
+      $body    = self::text_to_html( self::tpl_replace( $body_tpl, $tokens ) );
+      $btn_lbl = self::tpl_replace( $btn_lbl_tpl, $tokens );
+      $btn_url = self::tpl_replace( $btn_url_tpl, $tokens );
 
       return self::send( (string) $user->user_email, $subject, $heading, $body, [
-        'label' => 'Csomagjaim megtekintése',
-        'url'   => home_url( '/va-kredit-vasarlas/' ),
+        'label' => $btn_lbl,
+        'url'   => $btn_url,
       ] );
     }
 

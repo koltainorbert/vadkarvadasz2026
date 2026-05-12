@@ -2,6 +2,45 @@
 
 ---
 
+## 2026. 05. 12. – Session #332 (Admin felügyelet: upgrade email sablonok + kompenzáció sor)
+
+### Igeny
+- Az upgrade email teljesen adminból szerkeszthető legyen minden paraméterrel.
+- Az admin `Felhasználók & Csomagok` oldalon látható legyen az utolsó upgrade kompenzáció röviden.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`:
+  - új email opciók regisztrálva:
+    - `va_email_plan_upgrade_subject`
+    - `va_email_plan_upgrade_heading`
+    - `va_email_plan_upgrade_body`
+    - `va_email_plan_upgrade_btn_label`
+    - `va_email_plan_upgrade_btn_url`
+  - új mezők megjelentetve az `Altalanos beallitasok > Csomag lejárati e-mailek` szekcióban,
+  - Stripe vásárlási összegzés alatt új sor:
+    - `Utolsó upgrade kompenzáció: [régi] -> [új] · +X nap · Y Ft`.
+
+- [x] `includes/class-mailer.php`:
+  - az `send_plan_upgrade_notice()` már nem hardcoded,
+  - admin option kulcsokból építi a tárgy/cím/törzs/gomb/url tartalmat,
+  - változók tokenes cserével mennek (`{prev_plan_label}`, `{new_plan_label}`, `{carryover_days}`, `{carryover_value_ft}`, `{expires_at}` stb.).
+
+- [x] Mirror frissítés:
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+  - `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+
+### Eredmeny
+- Az upgrade email teljes körűen szerkeszthető adminból, felügyeleti célra alkalmas.
+- A support/admin oldalon az utolsó kompenzáció röviden, azonnal olvasható.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `includes/class-mailer.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-mailer.php`
+
+---
+
 ## 2026. 05. 12. – Session #331 (Hibrid upgrade modell + maradékérték kompenzáció)
 
 ### Igeny
