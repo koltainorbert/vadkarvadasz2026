@@ -728,11 +728,6 @@ if ( $va_home_h1 === '' ) {
 <!-- FŐ TARTALOM -->
 <main class="va-home-main">
 
-<section style="margin-bottom:16px;padding:10px 12px;border:1px solid rgba(255,0,0,.35);border-radius:8px;background:rgba(255,255,255,.02);">
-  <strong style="color:#ff0000;letter-spacing:.04em;">TESZT LO:</strong>
-  <span style="color:#fff;">L O</span>
-</section>
-
 <!-- VADÁSZ NAPTÁR GANTT -->
 <?php if ( $va_show_home_hunting_calendar ): ?>
 <div class="va-hnaptar" id="va-hnaptar-wrap">

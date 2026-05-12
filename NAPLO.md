@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 12. – Session #352m (Teszt lo blokk visszavonasa)
+
+### Keres
+- Az elozo teszt "lo" blokk teljes eltavolitasa a fooldalrol.
+
+### Javitas
+- `index.php`:
+  - A `<main class="va-home-main">` elejerol torolve a `TESZT LO: L O` teszt blokk.
+- `wp-theme/vadaszapro-theme/index.php`:
+  - Ugyanez a torles mirrorban is megtortent.
+
+### Eredmeny
+- A fooldal visszaallt az elozo allapotara, nincs teszt "lo" blokk.
+
+### Erintett fajlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
 ## 2026. 05. 12. – Session #352l (Teszt lo a fooldalon)
 
 ### Keres
