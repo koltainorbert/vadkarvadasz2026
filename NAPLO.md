@@ -1,5 +1,6 @@
 ﻿# Fejlesztesi Naplo
 
+---
 
 ## 2026. 05. 12. – Session #334 (Admin megjegyzes + ajandek kredit naplo)
 
@@ -25,6 +26,8 @@
 - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
 
 ---
+
+## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
 
 ### Igeny
 - Komplett vasarlasi rendszer atvizsgalasa (Stripe, callback, webhook, upgrade, limitek, admin felugyelet).
