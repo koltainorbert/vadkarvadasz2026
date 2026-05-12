@@ -2,6 +2,74 @@
 
 ---
 
+## 2026. 05. 13. – Session #353 TELJES NAP ÖSSZEFOGLALÓ (holnap más gépről indul!)
+
+### Hol tartunk most — amit HOLNAP TUDNI KELL
+
+**Projekt státusz:** ~75% termékérettség. Vadász hirdetési oldal, nem autós!
+
+**Éles oldal:** `vadkarvadasz.hu`
+**Repo:** GitHub (main ág, auto-deploy FTP workflow)
+**Deploy:** git push → GitHub Actions → FTP → éles szerver, automatikus
+
+---
+
+### Ma elvégzett munkák (2026.05.13)
+
+#### A) Submit form UI facelift (353b)
+- `frontend/templates/listing/submit-form.php` + mirror: inline stílusok → CSS osztályok
+- `frontend/css/frontend.css` + mirror: kártyás design, dot-grid, erős tipográfia, mobil paddings
+
+#### B) Production hotfix – site_type kényszer + form config reset (353a)
+- `vadaszapro-core.php` + mirror: migration v6, ha host=vadkarvadasz.hu → va_site_type=vadaszat + form reset
+- Admin emergency URL: `/wp-admin/?va_force_form_reset=1`
+
+#### C) Vadász adatbázis bővítés – nagy márka/típus + kaliber autocomplete (353c)
+- `includes/hunting-brand-models.json` + mirror: 10+ kategória, 10-15 márka/kategória, 5+ modell/márka
+  - Kategóriák: golyós, sörétes, vegyes csövű, távcső, éjjellátó, hőkamera, vadkamera, lámpa, kutya, ruházat, cipő, íj, felszerelés
+- **ÚJ:** `includes/hunting-calibers.json` + mirror: ~170 kaliber (imperiális, metrikus, sörétes, klasszikus)
+- `includes/class-vehicle-catalog.php` + mirror: új `get_hunting_calibers()` metódus
+- `frontend/templates/listing/submit-form.php` + mirror: caliber mező datalist autocomplete (`va-caliber-list`)
+
+---
+
+### Architektúra emlékeztető
+
+| Fájl | Szerep |
+|---|---|
+| `includes/class-vehicle-catalog.php` | Adat betöltő (márka/modell/kaliber) |
+| `includes/hunting-brand-models.json` | Vadász márka-modell DB kategóriánként |
+| `includes/hunting-calibers.json` | Kaliber autocomplete lista (~170 db) |
+| `admin/class-form-builder.php` | Submit + admin mezők konfigurálása |
+| `frontend/templates/listing/submit-form.php` | Hirdetés feladás sablon |
+| `vadaszapro-core.php` | Plugin bootstrap, migrációk |
+
+**Mirror szabály:** `includes/`, `admin/`, `frontend/` minden fájlnak van tükre `wp-plugin/vadaszapro-core/` alatt!
+
+---
+
+### Ami még NINCS kész (következő session-re)
+
+1. Admin szerkesztő kaliber mező autocomplete
+2. Kaliber szűrő a frontend keresőben
+3. Smoke teszt éles oldalon (hirdetés feladás végig)
+4. Clean install teszt (üres WP-n nulláról)
+5. QA mátrix – böngészők, eszközök
+6. Security audit (nonce, capability, escaping)
+7. Performance (CSS/JS minify, LCP mérés)
+
+---
+
+### HOLNAP REGGEL TEENDŐ
+
+1. **`git pull`** – MÁS GÉPEN KÖTELEZŐ INDULÁS ELŐTT!
+2. Deploy All (LocalWP szinkron)
+3. Nyisd meg: `MI_A_MEG_A_TEENDO.md`
+4. Éles tesztelés: vadász hirdetés feladás → kaliber autocomplete működik-e
+5. Következő fejlesztés: admin edit kaliber autocomplete
+
+---
+
 ## 2026. 05. 13. – Session #353c (Vadasz adatbazis bovites: marka/tipus + kaliber autocomplete)
 
 ### Keres

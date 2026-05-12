@@ -2,6 +2,89 @@
 
 ---
 
+## 2026. 05. 13. – Session #353 TELJES NAP ÖSSZEFOGLALÓ (holnap más gépről indul!)
+
+### Hol tartunk most — amit HOLNAP TUDNI KELL
+
+**Projekt státusz:** ~75% termékérettség. Vadász hirdetési oldal, nem autós!
+
+**Éles oldal:** `vadkarvadasz.hu`
+**Repo:** GitHub (main ág, auto-deploy FTP workflow)
+**Deploy:** git push → GitHub Actions → FTP → éles szerver, automatikus
+
+---
+
+### Ma elvégzett munkák (2026.05.13)
+
+#### A) Submit form UI facelift (353b)
+- `frontend/templates/listing/submit-form.php` + `wp-plugin/...` mirror
+  - Inline stílusok helyett CSS osztályok (`va-submit-form`, `va-submit-title`, stb.)
+- `frontend/css/frontend.css` + mirror
+  - Kártyás design, dot-grid háttér, erős tipográfia, egységes inputok, mobil paddings
+
+#### B) Production hotfix – site_type kényszer + form config reset (353a)
+- Probléma: `vadkarvadasz.hu`-n autos mezők jelentek meg a vadász schema helyett
+- `vadaszapro-core.php` + mirror:
+  - Migration `va_form_config_forced_reset_v6`: ha host = `vadkarvadasz.hu` → `va_site_type` = `vadaszat`, form config hard reset
+  - Admin emergency URL: `/wp-admin/?va_force_form_reset=1`
+
+#### C) Vadász adatbázis bővítés – nagy márka/típus + kaliber autocomplete (353c)
+- `includes/hunting-brand-models.json` + mirror:
+  - Régen: ~5 márka/kategória
+  - Most: 10+ kategória, kategóriánként 10-15 márka, márkánként 5+ modell
+  - Kategóriák: golyós, sörétes, vegyes csövű, távcső, éjjellátó, hőkamera, vadkamera, vadászlámpa, vadászkutya, ruházat, cipő/bakancs, íjak, felszerelés
+- **ÚJ fájl:** `includes/hunting-calibers.json` + mirror
+  - ~170 kaliber (imperiális, metrikus, sörétes, klasszikus vadász kaliberek)
+- `includes/class-vehicle-catalog.php` + mirror:
+  - Új metódus: `get_hunting_calibers()` a JSON-ból
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - `caliber` mező: `list="va-caliber-list"` + `<datalist>` HTML autocomplete bekötve
+  - Vadász módban a PHP átadja a teljes kaliberlistát a datalist-be
+
+---
+
+### Architektúra emlékeztető
+
+| Fájl | Szerep |
+|---|---|
+| `includes/class-vehicle-catalog.php` | Összes adat betöltő (márka/modell/kaliber) |
+| `includes/hunting-brand-models.json` | Vadász márka-modell adatbázis kategóriánként |
+| `includes/hunting-calibers.json` | Kaliber autocomplete lista (~170 db) |
+| `admin/class-form-builder.php` | Submit + admin mezők konfigurálása |
+| `frontend/templates/listing/submit-form.php` | Hirdetés feladás sablon |
+| `frontend/templates/listing/list.php` | Hirdetés lista sablon |
+| `includes/class-ajax.php` | AJAX endpointok (cím, kaliber, stb.) |
+| `vadaszapro-core.php` | Plugin bootstrap, migrációk |
+
+**Mirror szabály:** Minden `includes/`, `admin/`, `frontend/` fájlnak van tükre:
+`wp-plugin/vadaszapro-core/[ugyanaz a path]`
+
+**Deploy parancs (VSCode task):** `Deploy All` vagy `git push` (ha GitHub Actions fut)
+
+---
+
+### Ami még NINCS kész (köv. session-re)
+
+1. **Admin szerkesztő kaliber mező** – az admin edit oldalon a kaliber mező még sima szöveg, autocomplete ott is kellene (`admin/class-form-builder.php` + `class-listing-edit.php`)
+2. **Kategória szűrő a keresőben** – a frontend kereső oldal szűrői között nincs kaliber szűrő (lehetne checkbox csoport)
+3. **Smoke teszt éles oldalon** – vadász hirdetés feladása végig tesztelve, minden mező rendesen ment-e?
+4. **Clean install teszt** – üres WP-n nulláról aktiválás, minden felugrott-e?
+5. **QA mátrix** – Chrome/Firefox/Safari, desktop/mobil/tablet
+6. **Security audit** – nonce/capability check átnézés, escaping teljes körben
+7. **Performance** – CSS/JS minify, LCP mérés
+
+---
+
+### HOLNAP REGGEL TEENDŐ
+
+1. `git pull` (más gépen indulás előtt!)
+2. Deploy All (LocalWP szinkron)
+3. Nyisd meg: `MI_A_MEG_A_TEENDO.md`
+4. Ellenőrizd éles oldalon: hirdetés feladás → kaliber mező autocomplete működik-e
+5. Admin edit oldalon kaliber mező autocomplete (következő fejlesztés)
+
+---
+
 ## 2026. 05. 13. – Session #353c (Vadasz adatbazis bovites: marka/tipus + kaliber autocomplete)
 
 ### Keres
