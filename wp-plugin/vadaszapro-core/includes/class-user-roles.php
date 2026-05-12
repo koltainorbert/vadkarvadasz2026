@@ -894,7 +894,7 @@ class VA_User_Roles {
         $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
 
         update_user_meta( $target_uid, 'va_plan', $plan );
-        update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
+            update_user_meta( $target_uid, 'va_listing_credits', $old_credits + $custom_credits );
         if ( $admin_note !== '' ) {
             update_user_meta( $target_uid, 'va_admin_note', $admin_note );
         } else {
