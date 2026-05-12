@@ -103,9 +103,9 @@ class VA_Ajax {
         $price_type  = sanitize_key( $_POST['price_type'] ?? 'fixed' );
         $phone       = sanitize_text_field( wp_unslash( $_POST['phone']    ?? '' ) );
         $location    = sanitize_text_field( wp_unslash( $_POST['location'] ?? '' ) );
-        if ( $location === '' ) {
-            $location = 'Veszprém Gyulafirátót';
-        }
+        $postal_code = sanitize_text_field( wp_unslash( $_POST['postal_code'] ?? '' ) );
+        $street      = sanitize_text_field( wp_unslash( $_POST['street'] ?? '' ) );
+        $postal_code = preg_replace( '/\D+/', '', $postal_code );
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']    ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']    ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
@@ -119,6 +119,10 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
         }
 
+        if ( $location === '' && $postal_code === '' ) {
+            wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
+        }
+
         wp_update_post( [
             'ID'           => $post_id,
             'post_title'   => $title,
@@ -130,6 +134,8 @@ class VA_Ajax {
             'va_price_type'  => $price_type,
             'va_phone'       => $phone,
             'va_location'    => $location,
+            'va_postal_code' => $postal_code,
+            'va_street'      => $street,
             'va_email_show'  => '1',
             'va_brand'       => $brand,
             'va_model'       => $model,
@@ -261,9 +267,9 @@ class VA_Ajax {
         $price_type  = sanitize_key( $_POST['price_type'] ?? 'fixed' );
         $phone       = sanitize_text_field( wp_unslash( $_POST['phone']  ?? '' ) );
         $location    = sanitize_text_field( wp_unslash( $_POST['location'] ?? '' ) );
-        if ( $location === '' ) {
-            $location = 'Veszprém Gyulafirátót';
-        }
+        $postal_code = sanitize_text_field( wp_unslash( $_POST['postal_code'] ?? '' ) );
+        $street      = sanitize_text_field( wp_unslash( $_POST['street'] ?? '' ) );
+        $postal_code = preg_replace( '/\D+/', '', $postal_code );
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']  ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']  ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
@@ -275,6 +281,10 @@ class VA_Ajax {
 
         if ( empty( $title ) ) {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
+        }
+
+        if ( $location === '' && $postal_code === '' ) {
+            wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
         }
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
@@ -310,6 +320,8 @@ class VA_Ajax {
             'va_price_type'  => $price_type,
             'va_phone'       => $phone,
             'va_location'    => $location,
+            'va_postal_code' => $postal_code,
+            'va_street'      => $street,
             'va_email_show'  => '1',
             'va_brand'       => $brand,
             'va_model'       => $model,

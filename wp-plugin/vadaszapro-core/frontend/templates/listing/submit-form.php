@@ -43,8 +43,15 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '</select>';
                 break;
             case 'location':
-                $location_val = (string) $val !== '' ? (string) $val : 'Veszprém Gyulafirátót';
+                $location_val = (string) ( $ev['location'] ?? '' );
+                $postal_val   = (string) ( $ev['postal_code'] ?? '' );
+                $street_val   = (string) ( $ev['street'] ?? '' );
+                echo '<div class="va-loc-grid">';
                 echo '<input type="text" name="location" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( $location_val ) . '">';
+                echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="' . esc_attr( $postal_val ) . '" inputmode="numeric" pattern="[0-9]*">';
+                echo '<input type="text" name="street" class="va-input" placeholder="Utca (opcionális)" value="' . esc_attr( $street_val ) . '">';
+                echo '<small class="va-help">Város vagy irányítószám megadása kötelező.</small>';
+                echo '</div>';
                 break;
             case 'brand':
                 if ( $site_type !== 'jarmu' ) {
@@ -214,6 +221,8 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'price_type'  => get_post_meta( $maybe_id, 'va_price_type',  true ),
             'phone'       => get_post_meta( $maybe_id, 'va_phone',       true ),
             'location'    => get_post_meta( $maybe_id, 'va_location',    true ),
+            'postal_code' => get_post_meta( $maybe_id, 'va_postal_code', true ),
+            'street'      => get_post_meta( $maybe_id, 'va_street',      true ),
             'brand'       => get_post_meta( $maybe_id, 'va_brand',       true ),
             'model'       => get_post_meta( $maybe_id, 'va_model',       true ),
             'body_type'   => get_post_meta( $maybe_id, 'va_body_type',   true ),
@@ -1066,6 +1075,15 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         var $btn    = $('#va-submit-btn');
         var editMode = !! VA_Data.edit_mode;
+
+        var city = (($('input[name="location"]').val() || '') + '').trim();
+        var zip  = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
+        if (!city && !zip) {
+            $('#va-submit-notice').html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
+            return;
+        }
+
+        $('input[name="postal_code"]').val(zip);
         $btn.prop('disabled', true).text('Feltöltés...');
 
         // Base64 képek feltöltése médiatárba, majd submit
