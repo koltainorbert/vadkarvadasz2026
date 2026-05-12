@@ -99,14 +99,14 @@ class VA_Shortcodes {
         $plan_remaining = 0;
         if ( class_exists( 'VA_User_Roles' ) ) {
             $check = VA_User_Roles::can_post_listing( $user_id );
-            if ( $check['limit'] > 0 ) {
-                $plan_remaining = max( 0, $check['limit'] - $check['used'] );
+            if ( isset( $check['remaining'] ) && $check['remaining'] >= 0 ) {
+                $plan_remaining = (int) $check['remaining'];
             } elseif ( $check['limit'] === 0 ) {
                 // korlátlan plan – ne mutassunk számot a hőssávban
                 $plan_remaining = -1;
             }
         }
-        $total_credits = ( $plan_remaining >= 0 ) ? ( $plan_remaining + $paid_credits ) : $paid_credits;
+        $total_credits = ( $plan_remaining >= 0 ) ? $plan_remaining : $paid_credits;
 
         $return_to = isset( $_GET['va_return'] ) ? sanitize_key( (string) wp_unslash( $_GET['va_return'] ) ) : 'buy';
         if ( ! in_array( $return_to, [ 'buy', 'submit' ], true ) ) {
@@ -252,10 +252,8 @@ class VA_Shortcodes {
                 <p class="va-credits-sub">Jelenlegi elérhető hirdetési kereteid:
                     <?php if ( $plan_remaining < 0 ): ?>
                     <strong class="va-credits-count">Korlátlan (plan)</strong>
-                    <?php elseif ( $plan_remaining > 0 && $paid_credits > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> db csomagkeret + <?php echo esc_html( (string) $paid_credits ); ?> vásárolt kredit = <?php echo esc_html( (string) $total_credits ); ?> db</strong>
                     <?php elseif ( $plan_remaining > 0 ): ?>
-                    <strong class="va-credits-count"><?php echo esc_html( (string) $plan_remaining ); ?> db (csomagkeretből)</strong>
+                    <strong class="va-credits-count"><?php echo esc_html( (string) $total_credits ); ?> db összesen</strong>
                     <?php elseif ( $paid_credits > 0 ): ?>
                     <strong class="va-credits-count"><?php echo esc_html( (string) $paid_credits ); ?> db (vásárolt kredit)</strong>
                     <?php else: ?>

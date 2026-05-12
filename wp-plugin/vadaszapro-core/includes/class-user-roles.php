@@ -361,7 +361,7 @@ class VA_User_Roles {
 
         // Korlátlan (0 vagy -1)
         if ( $cfg['monthly_limit'] <= 0 ) {
-            return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0 ];
+            return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0, 'remaining' => -1 ];
         }
 
         // Vásárolt kreditek hozzáadása a csomaglimithez
@@ -371,9 +371,10 @@ class VA_User_Roles {
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
             : self::get_monthly_listing_count( $user_id );
+        $remaining = max( 0, $limit - $used );
 
         if ( $used < $limit ) {
-            return [ 'can' => true, 'reason' => '', 'used' => $used, 'limit' => $limit ];
+            return [ 'can' => true, 'reason' => '', 'used' => $used, 'limit' => $limit, 'remaining' => $remaining ];
         }
 
         $label = $cfg['label'];
@@ -383,7 +384,7 @@ class VA_User_Roles {
             $reason = "{$label} csomaggal ebben a hónapban legfeljebb {$limit} hirdetést adhatsz fel. A hónap végén újra indul a keret.";
         }
 
-        return [ 'can' => false, 'reason' => $reason, 'used' => $used, 'limit' => $limit ];
+        return [ 'can' => false, 'reason' => $reason, 'used' => $used, 'limit' => $limit, 'remaining' => 0 ];
     }
 
     /* ══ Boost logika ═══════════════════════════════════════════ */
@@ -892,16 +893,17 @@ class VA_User_Roles {
         }
 
         $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
+        $new_credits = $old_credits + $custom_credits;
 
         update_user_meta( $target_uid, 'va_plan', $plan );
-            update_user_meta( $target_uid, 'va_listing_credits', $old_credits + $custom_credits );
+        update_user_meta( $target_uid, 'va_listing_credits', $new_credits );
         if ( $admin_note !== '' ) {
             update_user_meta( $target_uid, 'va_admin_note', $admin_note );
         } else {
             delete_user_meta( $target_uid, 'va_admin_note' );
         }
 
-        if ( $custom_credits !== $old_credits ) {
+        if ( $new_credits !== $old_credits ) {
             $gift_history = get_user_meta( $target_uid, 'va_gift_credit_history', true );
             $gift_history = is_array( $gift_history ) ? $gift_history : [];
             $current_admin = wp_get_current_user();
@@ -910,8 +912,8 @@ class VA_User_Roles {
                 'admin_id'      => get_current_user_id(),
                 'admin_name'    => $current_admin && ! empty( $current_admin->display_name ) ? $current_admin->display_name : ( $current_admin && ! empty( $current_admin->user_login ) ? $current_admin->user_login : '' ),
                 'prev_credits'  => $old_credits,
-                'new_credits'   => $custom_credits,
-                'delta_credits' => $custom_credits - $old_credits,
+                'new_credits'   => $new_credits,
+                'delta_credits' => $new_credits - $old_credits,
                 'note'          => $admin_note,
             ];
             update_user_meta( $target_uid, 'va_gift_credit_history', array_slice( $gift_history, -50 ) );

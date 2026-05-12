@@ -375,8 +375,8 @@ wp_localize_script( 'va-submit', 'VA_Data', [
         <?php if ( ! $edit_mode ): ?>
         <div class="va-notice va-notice--info" style="margin-bottom:16px;">
             <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
-                <?php if ( $user_credit_balance > 0 && is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Egyenleged összesen: <strong><?php echo esc_html( (string) ( $plan_remaining + $user_credit_balance ) ); ?> db</strong>.
+                <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
+                    Egyenleged összesen: <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong>.
                 <?php elseif ( $user_credit_balance > 0 ): ?>
                     Rendelkezésre álló kreditjeid: <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong>.
                 <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
