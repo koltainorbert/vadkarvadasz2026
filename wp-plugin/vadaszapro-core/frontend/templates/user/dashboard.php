@@ -39,6 +39,9 @@ $avatar_url   = $avatar_id ? wp_get_attachment_image_url( $avatar_id, 'thumbnail
 
 $buy_credits_page = get_page_by_path( 'va-kredit-vasarlas' );
 $renew_buy_url    = $buy_credits_page ? get_permalink( $buy_credits_page ) : home_url( '/va-kredit-vasarlas/' );
+$renew_buy_url_submit = add_query_arg( 'va_return', 'submit', $renew_buy_url );
+$can_create_listing_now = ! ( class_exists( 'VA_User_Roles' ) && isset( $plan_check['can'] ) && empty( $plan_check['can'] ) );
+$new_listing_url = $can_create_listing_now && $submit_page ? get_permalink( $submit_page ) : $renew_buy_url_submit;
 
 $plan_suspend_retention_days   = max( 1, absint( get_option( 'va_plan_suspended_retention_days', 90 ) ) );
 $plan_suspended_count          = 0;
@@ -348,8 +351,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
                     <h2 class="va-dashboard__title">Hirdetéseim</h2>
                     <div class="va-dashboard__title-actions">
-                        <?php if ( $submit_page ): ?>
-                            <a href="<?php echo esc_url( get_permalink( $submit_page ) ); ?>" class="va-btn va-btn--primary va-btn--sm">+ Új hirdetés</a>
+                        <?php if ( $submit_page || ! $can_create_listing_now ): ?>
+                            <a href="<?php echo esc_url( $new_listing_url ); ?>" class="va-btn va-btn--primary va-btn--sm"><?php echo $can_create_listing_now ? '+ Új hirdetés' : '🔒 Limit elérve - Csomag vásárlás'; ?></a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -935,8 +938,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 </div><!-- .va-table-scroll -->
                 <?php else: ?>
                     <p style="color:rgba(255,255,255,0.5);">Még nincs feladott hirdetésed.</p>
-                    <?php if ( $submit_page ): ?>
-                        <a href="<?php echo esc_url( get_permalink( $submit_page ) ); ?>" class="va-btn va-btn--primary">+ Hirdetés feladása</a>
+                    <?php if ( $submit_page || ! $can_create_listing_now ): ?>
+                        <a href="<?php echo esc_url( $new_listing_url ); ?>" class="va-btn va-btn--primary"><?php echo $can_create_listing_now ? '+ Hirdetés feladása' : '🔒 Limit elérve - Csomag vásárlás'; ?></a>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

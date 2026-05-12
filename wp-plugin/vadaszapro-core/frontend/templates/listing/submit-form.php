@@ -305,6 +305,8 @@ $plan_has_allowance = false;
 $plan_remaining = null;
 $plan_limit = 0;
 $gift_total = 0;
+$plan_check = [];
+$effective_limit = 0;
 if ( is_user_logged_in() ) {
     global $wpdb;
     $user_id = get_current_user_id();
@@ -341,8 +343,9 @@ if ( $plan_remaining !== null && ! $plan_has_allowance ) {
 
 // ── Azonnali átirányítás ha nincs szabad keret és nem szerkesztés ──
 if ( ! $edit_mode && is_user_logged_in() ) {
+    $blocked_by_plan_limit = class_exists( 'VA_User_Roles' ) && isset( $plan_check['can'] ) && ! $plan_has_allowance;
     $has_any_allowance = $plan_has_allowance || $user_credit_balance > 0 || $remaining_free > 0;
-    if ( ! $has_any_allowance ) {
+    if ( $blocked_by_plan_limit || ! $has_any_allowance ) {
         wp_redirect( $buy_url_submit );
         exit;
     }
