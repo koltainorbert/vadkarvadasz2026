@@ -997,10 +997,10 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             <?php
                                 endif;
 
-                                if ( ! in_array( $user_plan, [ 'gold', 'platinum', 'custom' ], true ) ):
+                                if ( ! ( current_user_can( 'manage_options' ) || $user_plan === 'custom' ) ):
                             ?>
                             <button class="va-newpill-btn va-newpill-btn--off va-plan-locked"
-                                    data-locked-msg="A pillek csak Gold csomagtól érhetők el. Vásároljon nagyobb előfizetést."
+                                    data-locked-msg="Az Új pill kapcsolása csak Üzleti csomagban érhető el. Vásároljon nagyobb előfizetést."
                                     aria-pressed="false">
                                 <span class="va-newpill-btn__dot" aria-hidden="true"></span>Új pill: zárolva
                             </button>

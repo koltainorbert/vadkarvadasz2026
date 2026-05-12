@@ -456,9 +456,9 @@ class VA_User_Roles {
     }
 
     /**
-     * "Új" pill aktív-e (fixen 7 napos ablak).
+     * "Új" pill aktív-e (fixen 1 napos ablak).
      */
-    public static function is_new_pill( int $post_id, int $window_days = 7 ): bool {
+    public static function is_new_pill( int $post_id, int $window_days = 1 ): bool {
         $ts = (int) get_post_meta( $post_id, 'va_new_pill_time', true );
         if ( $ts <= 0 ) return false;
         return ( time() - $ts ) < ( max( 1, $window_days ) * DAY_IN_SECONDS );
@@ -1083,8 +1083,8 @@ class VA_User_Roles {
         $plan   = self::get_user_plan( $user_id );
         $is_admin = self::is_admin_user( $user_id );
 
-        if ( ! $is_admin && self::get_plan_rank( $plan ) < self::get_plan_rank( 'gold' ) ) {
-            wp_send_json_error( [ 'message' => 'A pillek csak Gold csomagtól érhetők el. Vásároljon nagyobb előfizetést.' ] );
+        if ( ! $is_admin && $plan !== 'custom' ) {
+            wp_send_json_error( [ 'message' => 'Az "Új" pill kapcsolasa csak Uzleti csomagban erheto el. Vasaroljon nagyobb elofizetest.' ] );
         }
 
         if ( $mode === 'off' || ( $mode === 'toggle' && $active ) ) {
@@ -1097,7 +1097,7 @@ class VA_User_Roles {
 
         update_post_meta( $post_id, 'va_new_pill_time', time() );
         wp_send_json_success( [
-            'message' => '"Új" pill bekapcsolva (7 nap).',
+            'message' => '"Új" pill bekapcsolva (1 nap).',
             'active'  => true,
         ] );
     }
