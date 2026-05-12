@@ -2,6 +2,31 @@
 
 ---
 
+## 2026. 05. 12. – Session #330 (Lejarat zold pill magassag fix lenyitasnal)
+
+### Igeny
+- A `Felhasználók & Csomagok` oldalon csomag lenyitaskor a `X nap hátra` zold pill ne nyuljon meg/torjon tobb sorba.
+- Ugyanolyan kompakt maradjon, mint a tobbi badge/pill.
+
+### Megvalositas [x]
+- [x] `admin/class-settings-page.php`:
+  - a lejárati badge-ek inline style helyett kozponti osztalyt kaptak: `va-upm-expire-pill`,
+  - uj stilus: `inline-flex`, `line-height:1`, `white-space:nowrap`, fix border/padding,
+  - ettol a `nap hátra` felirat nem torik tobb sorba akkor sem, ha a sor magassaga megno szerkeszteskor.
+
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php` ugyanigy frissitve.
+
+### Eredmeny
+- Csomag lenyitaskor sem no meg a zold lejárat pill magassaga.
+- A lejárat badge vizualisan konzisztens marad minden sorban.
+
+### Erintett fajlok
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 12. – Session #329 (Custom -> Ceges elofizetes + egységes aktiv jeloles)
 
 ### Igeny
