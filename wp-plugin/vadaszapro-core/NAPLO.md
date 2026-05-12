@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 12. – Session #337 (Silver szigoritas: akcios ar tiltva, pillek Goldtol)
+
+### Igeny
+- Silver csomaggal se lehessen akcios arat allitani.
+- Pillek (Kiemeles + Uj pill) csak Gold csomagtol legyenek hasznalhatok.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: lock feltetelek atallitva Gold/Platinum/Uzleti (custom) szintre.
+- [x] `includes/class-user-roles.php`: boost/new pill AJAX ellenorzes plan rank alapon (Gold alatt tiltott).
+- [x] `includes/class-ajax.php`: akcios ar mentes plan rank alapon (Gold alatt tiltott).
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- Silver es Basic csomaggal nem allithato akcios ar.
+- Kiemeles es Uj pill csak Gold/Platinum/Uzleti csomagban hasznalhato.
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 12. – Session #336 (Basic csomag: kiemeles + uj pill + akcios ar tiltasa)
 
 ### Igeny
