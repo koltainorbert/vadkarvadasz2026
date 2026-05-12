@@ -386,7 +386,13 @@ wp_localize_script( 'va-submit', 'VA_Data', [
                         Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
                     <?php endif; ?>
                 <?php elseif ( $gift_total > 0 ): ?>
-                    Jelenlegi kereted elérve. Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándékkredit: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>, Összesen: <strong><?php echo esc_html( (string) $plan_check['used'] ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong>.
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:#fff3cd;border-radius:6px;gap:16px;">
+                        <div>
+                            <strong style="color:#856404;">⚠️ Jelenlegi kereted elérve!</strong><br>
+                            <span style="color:#866000;font-size:13px;">Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándékkredit: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>, Összesen: <strong><?php echo esc_html( (string) $plan_check['used'] ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong></span>
+                        </div>
+                        <a href="<?php echo esc_url( $buy_url ); ?>" class="va-btn va-btn--primary" style="white-space:nowrap;flex-shrink:0;padding:10px 16px;font-size:13px;">🛒 Frissítés</a>
+                    </div>
                 <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
                     Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
                 <?php else: ?>
