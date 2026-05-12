@@ -2460,6 +2460,9 @@ body.sl-viewer-open { overflow: hidden; }
 .va-contact-page ~ footer.va-footer {
   margin-top: 0 !important;
 }
+.va-body-kapcsolat main.va-container {
+  flex: 0 0 auto;
+}
 
 /* â”€â”€ Grid (vcp) â€” oszlopszĂˇmot a dinamikus layout CSS adja â”€â”€â”€â”€â”€â”€â”€ */
 .vcp-grid {

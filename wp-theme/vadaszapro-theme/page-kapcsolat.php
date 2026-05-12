@@ -2,6 +2,10 @@
 /**
  * page-kapcsolat.php – Kapcsolat oldal
  */
+add_filter( 'body_class', function( $classes ) {
+    $classes[] = 'va-body-kapcsolat';
+    return $classes;
+} );
 get_header();
 
 $status = sanitize_text_field( wp_unslash( $_GET['contact_status'] ?? '' ) );
