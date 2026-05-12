@@ -359,9 +359,10 @@ class VA_User_Roles {
             return [ 'can' => true, 'reason' => '', 'used' => 0, 'limit' => 0, 'remaining' => -1 ];
         }
 
-        // Vásárolt kreditek hozzáadása a csomaglimithez
+        // Plusz kreditek: fizetett + manuálisan adott ajándék
         $purchased_credits = (int) get_user_meta( $user_id, 'va_listing_credits', true );
-        $limit = $cfg['monthly_limit'] + $purchased_credits;
+        $gift_credits      = (int) get_user_meta( $user_id, 'va_gift_listing_credits', true );
+        $limit = $cfg['monthly_limit'] + $purchased_credits + $gift_credits;
 
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
@@ -867,7 +868,8 @@ class VA_User_Roles {
         $plan              = sanitize_key( $_POST['plan'] ?? 'basic' );
         $custom_lim        = absint( $_POST['custom_limit'] ?? 0 );
         $custom_cd         = absint( $_POST['custom_boost_cooldown'] ?? 0 );
-        $custom_credits    = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
+        $custom_credits_raw = isset( $_POST['custom_credits'] ) ? wp_unslash( (string) $_POST['custom_credits'] ) : '0';
+        $custom_credits     = (int) $custom_credits_raw;
         $custom_expires_at = sanitize_text_field( wp_unslash( (string) ( $_POST['custom_expires_at'] ?? '' ) ) );
         $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
         $admin_note        = sanitize_textarea_field( wp_unslash( (string) ( $_POST['admin_note'] ?? '' ) ) );
@@ -887,11 +889,11 @@ class VA_User_Roles {
             wp_send_json_error( [ 'message' => 'Adminisztrátor jogköre nem módosítható.' ] );
         }
 
-        $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
-        $new_credits = $old_credits + $custom_credits;
+        $old_credits = absint( get_user_meta( $target_uid, 'va_gift_listing_credits', true ) );
+        $new_credits = max( 0, $old_credits + $custom_credits );
 
         update_user_meta( $target_uid, 'va_plan', $plan );
-        update_user_meta( $target_uid, 'va_listing_credits', $new_credits );
+        update_user_meta( $target_uid, 'va_gift_listing_credits', $new_credits );
         if ( $admin_note !== '' ) {
             update_user_meta( $target_uid, 'va_admin_note', $admin_note );
         } else {
@@ -973,7 +975,7 @@ class VA_User_Roles {
             'label'     => $cfg['label'],
             'icon'      => $cfg['icon'],
             'color'     => $cfg['color'],
-            'credits'   => $custom_credits,
+            'credits'   => $new_credits,
             'suspended' => $suspended,
         ] );
     }
