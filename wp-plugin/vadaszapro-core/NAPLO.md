@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 12. – Session #346 (Kiemeles pill piros-feher szinre allitva)
+
+### Igeny
+- A kiemeles pill legyen piros hatteru es feher szovegu.
+
+### Megvalositas [x]
+- [x] `frontend/css/frontend.css`: `.va-card__badge--boost` piros hatter + feher szoveg + finom glow.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/css/frontend.css`
+
+### Eredmeny
+- A kiemeles pill vizualisan jobban elut a tobbi jelzestol.
+
+### Erintett fajlok
+- `frontend/css/frontend.css`
+- `wp-plugin/vadaszapro-core/frontend/css/frontend.css`
+
+---
+
 ## 2026. 05. 12. – Session #345 (Komoly ajandek kredit kezeles + napi süti teljes torles)
 
 ### Igeny
