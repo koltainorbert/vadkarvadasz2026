@@ -2171,9 +2171,8 @@ body.sl-viewer-open { overflow: hidden; }
    KAPCSOLAT OLDAL  (page-kapcsolat.php)
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .va-contact-page {
-  min-height: 100vh;
   padding-top: var(--nav);
-  padding-bottom: 72px;
+  padding-bottom: 30px;
 }
 .va-contact-page__hero {
   position: relative;
