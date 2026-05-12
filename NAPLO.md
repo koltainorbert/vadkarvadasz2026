@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 12. – Session #352t (Kereso kategoriatudatossag: specialis mezok dinamikus lathatosaga)
+
+### Keres
+- A specialis (optika/kutya) szurok mar mukodtek backendben, de UI oldalon kategoriavalasztastol fuggo lathatosag kellett.
+
+### Javitas
+- Kategoria select visszarakasa a keresesi racsba:
+  - `#va-cat` bekerult a filter form elejere
+  - a kategoriak top-level taxonomia termekbol jonnek, URL `cat` param prefill tamogatassal
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- JS adat atadas bovites:
+  - `category_slugs` map lokalizalva (`term_id -> slug`) a frontend scriptnek
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Dinamikus specialis szuro lathatosag frontendben:
+  - uj helper: kivalasztott kategoria slug meghatarozasa
+  - optika mezok csak ezeknel latszanak: `tavcsovek`, `ejjellato-tavcso`, `hokamerak`
+  - kutya mezok csak ennél latszanak: `vadaszkutya`
+  - rejtett allapotban az ertekek torlesre kerulnek, hogy ne maradjon stale szuro
+  - init, kategoriavaltas es reset alatt is lefut
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+
+### Eredmeny
+- A keresoben mar kategoriankent kontextusos a specialis mezok megjelenitese.
+- Az irrelevans optika/kutya szurok nem zajositanak mas kategoriaknal.
+
 ## 2026. 05. 12. – Session #352s (Kereso/szuro bovites: optika + kutya mezo szures)
 
 ### Keres

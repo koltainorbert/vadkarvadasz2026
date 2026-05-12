@@ -323,6 +323,44 @@
     $model.html(html);
   }
 
+  function va_get_selected_category_slug() {
+    var catId = parseInt($('#va-cat').val() || 0, 10);
+    if (!catId && typeof VA_Data !== 'undefined' && parseInt(VA_Data.initial_cat || 0, 10) > 0) {
+      catId = parseInt(VA_Data.initial_cat, 10);
+    }
+
+    var map = (typeof VA_Data !== 'undefined' && VA_Data.category_slugs) ? VA_Data.category_slugs : {};
+    if (!catId || !map) return '';
+
+    var slug = map[String(catId)] || map[catId] || '';
+    return String(slug || '').trim();
+  }
+
+  function va_apply_category_specific_search_filters() {
+    var slug = va_get_selected_category_slug();
+    var opticSlugs = {
+      'tavcsovek': 1,
+      'ejjellato-tavcso': 1,
+      'hokamerak': 1
+    };
+    var showOptic = !!opticSlugs[slug];
+    var showDog = slug === 'vadaszkutya';
+
+    var $opticFields = $('[data-special-filter="optic"]');
+    var $dogFields = $('[data-special-filter="dog"]');
+
+    $opticFields.toggle(showOptic);
+    $dogFields.toggle(showDog);
+
+    if (!showOptic) {
+      $('#va-optic-zoom-search').val('');
+      $('#va-optic-objective-min, #va-optic-objective-max').val('');
+    }
+    if (!showDog) {
+      $('#va-dog-age-min, #va-dog-age-max').val('');
+    }
+  }
+
   $(document).on('input', '#va-min-price, #va-max-price', function() {
     va_update_range();
     clearTimeout(filterTimeout);
@@ -509,6 +547,9 @@
 
   // filter esemény
   $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, input[name="va-per-page"]', function() {
+    if (this.id === 'va-cat') {
+      va_apply_category_specific_search_filters();
+    }
     if (this.id === 'va-brand-search') {
       va_update_model_options('');
     }
@@ -528,6 +569,7 @@
   $(document).on('click', '#va-filter-reset', function() {
     $('#va-filter-form')[0].reset();
     va_update_model_options('');
+    va_apply_category_specific_search_filters();
     va_update_range();
     va_load_listings(1);
   });
@@ -743,6 +785,7 @@
     } else {
       va_update_model_options('');
     }
+    va_apply_category_specific_search_filters();
     va_load_listings(1);
   }
 
