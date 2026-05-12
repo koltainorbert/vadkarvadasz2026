@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 12. – Session #352j (Hero logó megjelenés javítás)
+
+### Bug
+- A főoldali hero logó hiába volt beállítva az adminban, nem jelent meg.
+- Oka: a hero logó kimenete még a főoldal elrejtési logikához volt kötve.
+
+### Javítás
+- `header.php` + `wp-theme/vadaszapro-theme/header.php`:
+  - A hero logó már nem függ a `hide_home_logo` feltételtől.
+  - Ha van `va_hero_logo_url`, akkor a főoldalon is megjelenik.
+
+### Eredmény
+- Az adminban megadott hero logó most már a frontend hero szekcióban is látszik.
+
+### Érintett fájlok
+- `header.php`
+- `wp-theme/vadaszapro-theme/header.php`
+
 ## 2026. 05. 12. – Session #352i (Hero admin sync + hirdetés gomb cél javítás)
 
 ### Bug

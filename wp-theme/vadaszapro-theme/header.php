@@ -522,7 +522,7 @@
         <div class="vh__overlay"></div>
 
         <div class="vh__content vh__content--<?php echo esc_attr( $home_hero_align ); ?>">
-            <?php if ( ! $hide_home_logo && ! empty( $hero_logo ) ): ?>
+            <?php if ( ! empty( $hero_logo ) ): ?>
                 <img src="<?php echo esc_url( $hero_logo ); ?>" class="vh__logo vh__logo--<?php echo esc_attr( $hero_logo_pos ); ?>" style="height:<?php echo esc_attr( $hero_logo_h ); ?>px;" alt="<?php echo esc_attr( $brand_name ); ?>" loading="eager" decoding="async">
             <?php endif; ?>
             <div class="vh__badge"><span class="vcp-hero__badge-dot"></span><?php echo esc_html( $home_badge ); ?></div>
