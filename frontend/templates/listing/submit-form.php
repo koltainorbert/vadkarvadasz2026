@@ -47,7 +47,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 $postal_val   = (string) ( $ev['postal_code'] ?? '' );
                 $street_val   = (string) ( $ev['street'] ?? '' );
                 echo '<div class="va-loc-grid">';
-                echo '<input type="text" name="location" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( $location_val ) . '">';
+                echo '<input type="text" name="location" class="va-input" list="va-street-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( $location_val ) . '">';
                 echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="' . esc_attr( $postal_val ) . '" inputmode="numeric" pattern="[0-9]*">';
                 echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Utca (opcionális)" value="' . esc_attr( $street_val ) . '">';
                 echo '<datalist id="va-street-list"></datalist>';
@@ -1141,7 +1141,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!$brand.length || !$model.length || !$brandList.length || !$modelList.length) return;
 
         var categorySlug = getSelectedCategorySlug();
-        var catData = (VA_Data.hunting_brand_models && VA_Data.hunting_brand_models[categorySlug]) ? VA_Data.hunting_brand_models[categorySlug] : {};
+        var categoryData = (VA_Data.hunting_brand_models && VA_Data.hunting_brand_models[categorySlug]) ? VA_Data.hunting_brand_models[categorySlug] : {};
+        var catData = categoryData;
+        if (!catData || !Object.keys(catData).length) {
+            var merged = {};
+            var all = VA_Data.hunting_brand_models || {};
+            Object.keys(all).forEach(function(slug){
+                var byBrand = all[slug] || {};
+                Object.keys(byBrand).forEach(function(brand){
+                    if (!merged[brand]) merged[brand] = [];
+                    (byBrand[brand] || []).forEach(function(model){
+                        if (merged[brand].indexOf(model) === -1) merged[brand].push(model);
+                    });
+                });
+            });
+            catData = merged;
+        }
         var currentBrand = (($brand.val() || '') + '').trim();
         var currentModel = (($model.val() || '') + '').trim();
         var matchedBrandKey = '';
@@ -1215,7 +1230,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    $(document).on('input', 'input[name="street"]', function(){
+    $(document).on('input', 'input[name="street"], input[name="location"]', function(){
         var q = (($(this).val() || '') + '').trim();
         if (q.length < 3) {
             renderStreetSuggestions([]);
@@ -1225,13 +1240,13 @@ document.addEventListener('DOMContentLoaded', function() {
         addressTimer = setTimeout(function(){ fetchStreetSuggestions(q); }, 180);
     });
 
-    $(document).on('change blur', 'input[name="street"]', function(){
+    $(document).on('change blur', 'input[name="street"], input[name="location"]', function(){
         var v = (($(this).val() || '') + '').trim();
         var selected = streetMetaByLabel[v] || null;
         if (!selected) return;
-        if (!$('input[name="location"]').val()) $('input[name="location"]').val(selected.city || '');
+        $('input[name="location"]').val(selected.city || '');
         if (!$('input[name="postal_code"]').val()) $('input[name="postal_code"]').val(selected.postal_code || '');
-        if (selected.street) $(this).val(selected.street);
+        if (selected.street) $('input[name="street"]').val(selected.street);
     });
 
     function validateCategoryRequiredFields() {
