@@ -2,6 +2,33 @@
 
 ---
 
+## 2026. 05. 12. – Session #352w (Form Builder ontisztitas: legacy autos submit/admin konfig automatikus reset)
+
+### Hiba
+- Visszajelzes szerint a hirdetesfeladasokban szinte teljesen megmaradt a korabbi weingartnerauto/autos mezostruktura.
+- A gyakorlatban csak a kategoriak latszottak frissnek, a submit/admin mezok sok telepitesen legacy mentett konfigbol jottek.
+
+### Ok
+- A Form Builder `va_form_config_*` opcioi mentett allapotbol toltenek.
+- Ha ez a mentett allapot korabbi autos schema volt, akkor a vadasz defaultok nem ervenyesultek.
+
+### Javitas
+- Form Builder ongyogyitas bekerult (root + mirror):
+  - `get_fields()` most ellenorzi a mentett konfigot
+  - ha custom mezok nincsenek es legacy autos marker detektalhato, akkor automatikusan defaultra resetel
+- `va_listing_submit` reset feltetelek:
+  - nem `jarmu` site_type mellett `body_type` marker jelen van
+  - vagy `jarmu` site_type mellett hunting marker van (`caliber`, `license_req`) de vehicle marker nincs
+- `va_admin_listing_edit` reset feltetel:
+  - legacy vehicle-only kulcsok detektalasa (`va_body_type`, `va_fuel_type`, `va_engine_size`, `va_transmission`, `va_drive`)
+- Fajlok:
+  - `admin/class-form-builder.php`
+  - `wp-plugin/vadaszapro-core/admin/class-form-builder.php`
+
+### Eredmeny
+- A feladas/admin formok nem ragadnak bent regi autos mentett konfiguracion.
+- Vadasz profil mellett a submit/admin mezostruktura automatikusan visszaall a megfelelo defaultokra (kategoria mellett a mezo- es labelkeszlet is).
+
 ## 2026. 05. 12. – Session #352v (Hotfix: admin + feladas kategoriavaltas valos mukodes)
 
 ### Hiba
