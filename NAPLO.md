@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 05. 12. – Session #350 (Ajándékkredit vissza egyszer használatos modellre)
+
+### Igeny
+- Basic csomagnál ne jelenjen meg félrevezetően a "max 2" limit.
+- Az ajándékkredit legyen egyszer használatos feladási kupon, ne permanens slot-bővítés.
+
+### Javitas
+- `includes/class-ajax.php` + mirror: visszaállítva a kreditlevonás feladáskor (`1 feladás = 1 kredit`).
+- `includes/class-user-roles.php` + mirror:
+  - belső ellenőrzéshez külön `effective_limit = plan_limit + credits` használat,
+  - a felhasználói üzenetben a csomaglimit külön marad (`limit = plan_limit`),
+  - így Basic mindig 1-es csomaglimitet kommunikál.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - a tájékoztató szöveg szétválasztva: csomaglimit külön, ajándékkredit külön,
+  - "egyszer használatos ajándékkredit" megfogalmazásra állítva.
+
+### Eredmeny
+- Nem írja többé, hogy Basic csomaggal max 2 hirdetés adható fel.
+- Az ajándékkredit kuponként jelenik meg és feladáskor fogy.
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `includes/class-user-roles.php`
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+---
+
 ## 2026. 05. 12. – Session #349 (Kredit enforce hook timing javítás)
 
 ### Gyökérhiba

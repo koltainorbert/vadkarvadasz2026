@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 12. – Session #350 (Ajándékkredit vissza egyszer használatos modellre)
+
+### Igeny
+- Basic csomagnál ne jelenjen meg félrevezetően a "max 2" limit.
+- Az ajándékkredit legyen egyszer használatos feladási kupon.
+
+### Javitas
+- `includes/class-ajax.php`: visszaállítva a kreditlevonás feladáskor.
+- `includes/class-user-roles.php`: csomaglimit és ajándékkredit külön kezelése (belső effektív limit, UI-ban plan limit).
+- `frontend/templates/listing/submit-form.php`: üzenetek pontosítva (egyszer használatos ajándékkredit).
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `includes/class-user-roles.php`
+- `frontend/templates/listing/submit-form.php`
+
+---
+
 ## 2026. 05. 12. – Session #349 (Kredit enforce hook timing javítás)
 
 ### Gyökérhiba
