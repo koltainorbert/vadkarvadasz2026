@@ -16,19 +16,19 @@ class VA_Ajax {
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
-            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model' ] ],
-            'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model' ] ],
-            'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model' ] ],
+            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
+            'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
+            'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
-            'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model' ] ],
+            'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
         ];
     }
 
-    private static function validate_category_required_fields( int $category_id, string $brand, string $model, string $caliber ): string {
+    private static function validate_category_required_fields( int $category_id, array $values ): string {
         if ( $category_id <= 0 ) {
             return '';
         }
@@ -50,16 +50,18 @@ class VA_Ajax {
             return '';
         }
 
-        $values = [
-            'brand'   => trim( $brand ),
-            'model'   => trim( $model ),
-            'caliber' => trim( $caliber ),
-        ];
+        $values = array_map(
+            static fn( $v ) => is_scalar( $v ) ? trim( (string) $v ) : '',
+            $values
+        );
 
         $labels = [
             'brand'   => 'Márka / gyártó',
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
+            'optic_zoom' => 'Nagyítás',
+            'optic_objective' => 'Objektív átmérő (mm)',
+            'dog_age_months' => 'Kutya életkor (hónap)',
         ];
 
         $missing = [];
@@ -189,6 +191,9 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
+        $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
+        $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -201,7 +206,14 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
         }
 
-        $rule_error = self::validate_category_required_fields( $category, $brand, $model, $caliber );
+        $rule_error = self::validate_category_required_fields( $category, [
+            'brand' => $brand,
+            'model' => $model,
+            'caliber' => $caliber,
+            'optic_zoom' => $optic_zoom,
+            'optic_objective' => $optic_objective,
+            'dog_age_months' => $dog_age_months,
+        ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
         }
@@ -225,6 +237,9 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_zoom'  => $optic_zoom,
+            'va_optic_objective' => $optic_objective,
+            'va_dog_age_months' => $dog_age_months,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -358,6 +373,9 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
+        $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
+        $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -370,7 +388,14 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => 'Adja meg a várost vagy az irányítószámot.' ] );
         }
 
-        $rule_error = self::validate_category_required_fields( $category, $brand, $model, $caliber );
+        $rule_error = self::validate_category_required_fields( $category, [
+            'brand' => $brand,
+            'model' => $model,
+            'caliber' => $caliber,
+            'optic_zoom' => $optic_zoom,
+            'optic_objective' => $optic_objective,
+            'dog_age_months' => $dog_age_months,
+        ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
         }
@@ -416,6 +441,9 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_zoom'  => $optic_zoom,
+            'va_optic_objective' => $optic_objective,
+            'va_dog_age_months' => $dog_age_months,
             'va_views'       => 0,
         ];
 
