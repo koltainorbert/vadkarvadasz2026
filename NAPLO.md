@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 12. – Session #347 (Kiemeles szovegek atnevezve elore tetelre)
+
+### Igeny
+- A felhasznaloi feluleten a "kiemeles" helyett egyertelmuen az "elore tetel" kifejezes jelenjen meg.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: a kiemeleshez tartozo gombok, table header es infotextek atnevezve elore tételre.
+- [x] `admin/class-settings-page.php`: a csomagkezeloi jelzesek, badge-k es cooldown feliratok elore tétel szovegre cserelve.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+  - `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+### Eredmeny
+- A felhasznaloi feluleten a funkcio neve erthetobben jelenik meg.
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+
+---
+
 ## 2026. 05. 12. – Session #346 (Kiemeles pill piros-feher szinre allitva)
 
 ### Igeny

@@ -320,7 +320,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                 </div>
                 <?php endif; ?>
                 <?php if ( $user_plan !== 'basic' && ! empty( $plan_cfg['boost_cooldown'] ) ) : ?>
-                <small><svg class="va-ico va-ico--up" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg> <?php echo esc_html( $plan_cfg['boost_cooldown'] ); ?> naponként emelhető (kiemelési újratöltés)</small>
+                <small><svg class="va-ico va-ico--up" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg> <?php echo esc_html( $plan_cfg['boost_cooldown'] ); ?> naponként előre tehető (előre tétel újratöltés)</small>
                 <?php endif; ?>
                 <?php if ( in_array( $user_plan, [ 'platinum', 'custom' ], true ) ): ?>
                 <form method="post" class="va-dash-plan-label-form">
@@ -376,7 +376,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                     <div class="va-crm__head">
                         <div>
                             <h3>Részletes bontás</h3>
-                            <p>Státuszok, toplista, kiemelések</p>
+                            <p>Státuszok, toplista, előre tétel</p>
                         </div>
                     </div>
 
@@ -427,7 +427,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         </article>
 
                         <article class="va-crm__panel">
-                            <h4>Jelzők és kiemelések</h4>
+                            <h4>Jelzők és előre tétel</h4>
                             <div class="va-crm__metric-list">
                                 <div class="va-crm__metric-row"><span>Kiemelt hirdetések</span><strong><?php echo esc_html( number_format( $crm_highlight_count, 0, ',', ' ' ) ); ?></strong></div>
                                 <div class="va-crm__metric-row"><span>Új címke aktív</span><strong><?php echo esc_html( number_format( $crm_newpill_count, 0, ',', ' ' ) ); ?></strong></div>
@@ -658,7 +658,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             <th style="text-align:left;padding:8px;color:rgba(255,255,255,0.5);">Státusz</th>
                             <th style="text-align:left;padding:8px;color:rgba(255,255,255,0.5);">Dátum</th>
                             <th style="text-align:left;padding:8px;color:rgba(255,255,255,0.5);">Megtekintés</th>
-                            <th style="text-align:left;padding:8px;color:rgba(255,255,255,0.5);">Kiemelés</th>
+                            <th style="text-align:left;padding:8px;color:rgba(255,255,255,0.5);">Előre tétel</th>
                             <th style="padding:8px;"></th>
                         </tr>
                     </thead>

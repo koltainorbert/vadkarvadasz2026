@@ -4070,7 +4070,7 @@ class VA_Settings_Page {
                     if(extra)        extra.style.display        = (plan === 'platinum' || plan === 'custom') ? 'flex' : 'none';
                     if(customExpire) customExpire.style.display = (plan === 'custom') ? '' : 'none';
 
-                    // Plan váltáskor a kiemelési nap alapból a kiválasztott kártya értékére áll.
+                    // Plan váltáskor az előre tétel nap alapból a kiválasztott kártya értékére áll.
                     var selected = this.options[this.selectedIndex];
                     var cdInput = editor ? editor.querySelector('.va-upm-plat-cd') : null;
                     var cardCd = selected ? parseInt(selected.getAttribute('data-card-cd') || '0', 10) : 0;
@@ -4080,7 +4080,7 @@ class VA_Settings_Page {
                 });
             });
 
-            // Kiemelési nap visszaállítás a kiválasztott csomag kártya alapértékére.
+            // Előre tétel nap visszaállítás a kiválasztott csomag kártya alapértékére.
             document.querySelectorAll('.va-upm-reset-cd-btn').forEach(function(btn){
                 btn.addEventListener('click', function(){
                     var editor = this.closest('.va-upm-plan-editor');
@@ -8337,7 +8337,7 @@ class VA_Settings_Page {
                                     </label>
                                     <label class="va-pc-field va-pc-field--full">
                                         <span class="va-pc-field__label">Promo badge szöveg</span>
-                                        <input type="text" class="va-pc-input" data-key="badge_text" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $plan['badge_text'] ?? '' ); ?>" placeholder="opcionális kiemelés, pl. Legjobb ár">
+                                        <input type="text" class="va-pc-input" data-key="badge_text" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( $plan['badge_text'] ?? '' ); ?>" placeholder="opcionális jelölés, pl. Legjobb ár">
                                     </label>
                                 </div>
                             </section>
