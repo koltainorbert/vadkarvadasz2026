@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 12. – Session #348 (Kredit modell javitasa – listing feltoltes utan nem fogyaszt kreditett)
+
+### Hiba
+- Basic csomagos user adminnal kapott 1 ajandek kreditett. Feltolte a 2. hirdetes. A kredit le lett vonva (`va_listing_credits` 1→0). Ezutan `enforce_plan_limits()` ujraszamolt: limit=1+0=1, user-nek 2 aktiv hirdetese volt → a 2. hirdetés felfüggesztve ("Limit felett – kredit szukseges").
+
+### Gyokeroktok
+- A kredit "egyszer hasznalatos submission token"-kent volt implementalva (1 feladas = -1 kredit a `class-ajax.php` listing submit kodjaban).
+- Valojaban a kredit permanens slot-bovitesnek kellene lennie: `va_listing_credits` = engedett extra hirdetesslot-ok szama.
+- Lehet_post_listing() es enforce_plan_limits() mindketto helyesen szamol: `limit = plan_limit + purchased_credits`. Ha a kredit megmarad, a logika jo.
+
+### Megvalositas [x]
+- [x] `includes/class-ajax.php`: eltavolitva a kredit-levontas a listing submit kodjából (4 sor torölve).
+- [x] `wp-plugin/vadaszapro-core/includes/class-ajax.php`: ugyanaz.
+
+### Admin teendo
+- Koltainorbert@gmail.com felhasznalo: ellenorizze hogy `va_listing_credits = 1`, ha nem, adja ujra az 1 kreditett. Az `on_credits_meta_updated` hook automatikusan meghivja az enforce-t ami visszaallitja a felfuggesztett hirdetest.
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 12. – Session #347 (Kiemeles szovegek atnevezve elore tetelre)
 
 ### Igeny
