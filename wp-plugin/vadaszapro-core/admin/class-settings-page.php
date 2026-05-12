@@ -3715,7 +3715,7 @@ class VA_Settings_Page {
                                 if ( $limit > 0 ) {
                                     $pct = min( 100, (int) round( $used / $limit * 100 ) );
                                     $col = $pct >= 100 ? '#ff4444' : ( $pct >= 80 ? '#ffaa00' : '#00c850' );
-                                    echo '<div style="margin-top:4px;font-size:11px;color:rgba(255,255,255,.5);">Havi: ' . esc_html( $used ) . '/' . esc_html( $limit ) . '</div>';
+                                    echo '<div style="margin-top:4px;font-size:11px;color:rgba(255,255,255,.5);">Kereted: ' . esc_html( $used ) . '/' . esc_html( $limit ) . '</div>';
                                     echo '<div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:2px;"><div style="height:3px;width:' . esc_attr( $pct ) . '%;background:' . esc_attr( $col ) . ';border-radius:2px;"></div></div>';
                                 }
                             }
