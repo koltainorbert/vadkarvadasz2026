@@ -2,6 +2,34 @@
 
 ---
 
+## 2026. 05. 12. – Session #342 (Uj pill: fix 1 nap + csak Uzleti/Admin kapcsolhatja)
+
+### Igeny
+- Az "Uj" pill minden hirdetesen fixen 1 napig legyen aktiv.
+- Az "Uj" pillt csak az Uzleti (custom) csomag tudja kapcsolni fel/le, illetve az admin.
+
+### Megvalositas [x]
+- [x] `includes/class-user-roles.php`: `is_new_pill()` alapablak 7 naprol 1 napra allitva.
+- [x] `includes/class-user-roles.php`: `ajax_toggle_new_pill()` jogosultsag Gold+ helyett csak `custom` vagy admin.
+- [x] `includes/class-user-roles.php`: siker uzenet frissitve `1 nap` idotartamra.
+- [x] `frontend/templates/user/dashboard.php`: UI lock feltetel Gold/Platinum/Custom helyett csak Admin/Custom.
+- [x] `frontend/templates/user/dashboard.php`: lock uzenet frissitve Uzleti-only szovegre.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+### Eredmeny
+- Az "Uj" pill idotartama mindenhol 24 ora.
+- Silver/Gold/Platinum felhasznalo mar nem tudja kapcsolni; csak Uzleti es admin.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+
+---
+
 ## 2026. 05. 12. – Session #341 (Kiemeles visszaszamlalo + Frissites hardening)
 
 ### Igeny
