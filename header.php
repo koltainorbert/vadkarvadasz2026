@@ -420,13 +420,10 @@
         $submit_page = get_page_by_path('va-hirdetes-feladas');
         $search_page = get_page_by_path('va-hirdetes-kereses');
         $home_badge  = get_option( 'va_home_hero_badge_text', 'Magyarország első vadászati hirdetőoldala' );
-        $home_title1 = 'Weingartner';
-        $home_title2 = "Autó-Motor\nÉrtékesítés";
-        $home_sub    = 'Veszprém';
-        $home_cta_1  = get_option( 'va_home_hero_primary_cta_text', 'Kapcsolatfelvetel' );
-        if ( preg_match( '/hirdet[eé]s\s*felad/i', (string) $home_cta_1 ) ) {
-            $home_cta_1 = 'Kapcsolatfelvetel';
-        }
+        $home_title1 = get_option( 'va_home_hero_title_top', 'VadászBazár' );
+        $home_title2 = get_option( 'va_home_hero_title_bottom', 'és Apróhirdetés' );
+        $home_sub    = get_option( 'va_home_hero_sub_text', 'Magyarország első vadászati hirdetőoldala' );
+        $home_cta_1  = get_option( 'va_home_hero_primary_cta_text', '+ Hirdetés feladása' );
         $home_cta_2  = get_option( 'va_home_hero_secondary_cta_text', 'Hirdetések böngészése →' );
     ?>
     <div class="vh<?php echo $hero_bg_type === 'carousel' ? ' vh--carousel' : ''; ?>"
@@ -479,11 +476,7 @@
                 <?php echo esc_html( $home_sub ); ?>
             </p>
             <div class="vh__actions">
-                <?php
-                $contact_page = get_page_by_path( 'kapcsolat' );
-                $contact_url  = $contact_page ? get_permalink( $contact_page ) : home_url( '/kapcsolat' );
-                ?>
-                <a href="<?php echo esc_url( $contact_url ); ?>" class="vh__btn vh__btn--primary">
+                <a href="<?php echo esc_url( $submit_page ? get_permalink($submit_page) : home_url('/va-hirdetes-feladas/') ); ?>" class="vh__btn vh__btn--primary">
                     <?php echo esc_html( $home_cta_1 ); ?>
                 </a>
                 <a href="<?php echo esc_url( $search_page ? get_permalink($search_page) : home_url('/hirdetes') ); ?>" class="vh__btn vh__btn--ghost">

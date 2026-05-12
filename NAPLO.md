@@ -2,6 +2,33 @@
 
 ---
 
+## 2026. 05. 12. – Session #352i (Hero admin sync + hirdetés gomb cél javítás)
+
+### Bug
+- Adminban átírt hero szövegek nem jelentek meg a főoldalon.
+- A hero első gomb (`+ Hirdetés feladása`) nem a hirdetés-feladás oldalra vitt.
+
+### Root cause
+- A hero title/sub tartalom hardcode-olva volt (`Weingartner / Autó-Motor Értékesítés / Veszprém`).
+- Az első CTA gomb kódja a kapcsolat oldalra mutatott.
+
+### Javítás
+- `header.php` + `wp-theme/vadaszapro-theme/header.php`:
+  - Hero szövegek visszakötve admin optionökre:
+    - `va_home_hero_title_top`
+    - `va_home_hero_title_bottom`
+    - `va_home_hero_sub_text`
+    - `va_home_hero_primary_cta_text`
+  - Első CTA célja javítva: `va-hirdetes-feladas` oldal.
+
+### Eredmény
+- Az adminban átírt hero tartalom azonnal megjelenik.
+- A `+ Hirdetés feladása` gomb a hirdetés feladás oldalra mutat.
+
+### Érintett fájlok
+- `header.php`
+- `wp-theme/vadaszapro-theme/header.php`
+
 ## 2026. 05. 12. – Session #352h (Azonnali limit-tiltás: dashboard gomb + submit redirect)
 
 ### Kérés
