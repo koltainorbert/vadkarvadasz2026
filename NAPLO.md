@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 12. – Session #352l (Teszt lo a fooldalon)
+
+### Keres
+- Kerult egy gyorsan ellenorizheto teszt "lo" blokk a fooldal elejere.
+
+### Javitas
+- `index.php`:
+  - A `<main class="va-home-main">` elejere bekerult egy jol lathato, piros keretes teszt blokk: `TESZT LO: L O`.
+- `wp-theme/vadaszapro-theme/index.php`:
+  - Ugyanez a beszuras mirrorban is megtortent.
+
+### Eredmeny
+- A fooldal tartalom elejen azonnal lathato egy teszt "lo" blokk.
+
+### Erintett fajlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
 ## 2026. 05. 12. – Session #352k (Lábléc kapcsolati adatok admin + footer fix)
 
 ### Feladat
