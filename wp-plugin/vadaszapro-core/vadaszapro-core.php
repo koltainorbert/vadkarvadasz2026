@@ -124,6 +124,20 @@ add_action( 'init', function () {
     }
 }, 2 );
 
+// Kézi kényszer-reset adminból: /wp-admin/?va_force_form_reset=1
+add_action( 'admin_init', function () {
+    if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) return;
+    if ( ! isset( $_GET['va_force_form_reset'] ) ) return;
+    if ( ! class_exists( 'VA_Form_Builder' ) ) return;
+
+    update_option( 'va_form_config_va_listing_submit', VA_Form_Builder::get_default_fields( 'va_listing_submit' ) );
+    update_option( 'va_form_config_va_admin_listing_edit', VA_Form_Builder::get_default_fields( 'va_admin_listing_edit' ) );
+    update_option( 'va_form_config_forced_reset_v5', '1', false );
+
+    wp_safe_redirect( admin_url( 'admin.php?page=vadaszapro-settings&va_form_reset=1' ) );
+    exit;
+}, 1 );
+
 // Egyszeri migráció: va_plan_duration_days 30 → 365 (egyéves lejárat mindenhol)
 add_action( 'init', function () {
     if ( (int) get_option( 'va_plan_duration_days', 0 ) !== 365 ) {
