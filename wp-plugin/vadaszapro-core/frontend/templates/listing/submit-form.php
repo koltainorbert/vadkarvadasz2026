@@ -49,7 +49,8 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '<div class="va-loc-grid">';
                 echo '<input type="text" name="location" class="va-input" placeholder="' . $ph . '" value="' . esc_attr( $location_val ) . '">';
                 echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="' . esc_attr( $postal_val ) . '" inputmode="numeric" pattern="[0-9]*">';
-                echo '<input type="text" name="street" class="va-input" placeholder="Utca (opcionális)" value="' . esc_attr( $street_val ) . '">';
+                echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Utca (opcionális)" value="' . esc_attr( $street_val ) . '">';
+                echo '<datalist id="va-street-list"></datalist>';
                 echo '<small class="va-help">Város vagy irányítószám megadása kötelező.</small>';
                 echo '</div>';
                 break;
@@ -373,6 +374,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
         return [ 'id' => $id, 'url' => $src ?: '' ];
     }, $edit_gallery ?? [] ) : [],
     'edit_thumb'     => $edit_mode ? $edit_thumb : 0,
+    'nonce_address'  => wp_create_nonce( 'va_address_suggest' ),
     'site_type'      => $site_type,
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
 ]);
@@ -1069,6 +1071,56 @@ document.addEventListener('DOMContentLoaded', function() {
         rebuildVehicleModelOptions();
     });
     rebuildVehicleModelOptions();
+
+    /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
+    var addressTimer = null;
+    var streetMetaByLabel = {};
+
+    function renderStreetSuggestions(items) {
+        var $dl = $('#va-street-list');
+        if (!$dl.length) return;
+        $dl.empty();
+        streetMetaByLabel = {};
+
+        (items || []).forEach(function(it){
+            if (!it || !it.label) return;
+            streetMetaByLabel[it.label] = it;
+            $('<option>').attr('value', it.label).appendTo($dl);
+        });
+    }
+
+    function fetchStreetSuggestions(q) {
+        if (!VA_Data || !VA_Data.nonce_address) return;
+        $.post(VA_Data.ajax_url, {
+            action: 'va_address_suggest',
+            nonce: VA_Data.nonce_address,
+            q: q,
+            limit: 12
+        }).done(function(res){
+            if (res && res.success && Array.isArray(res.data)) {
+                renderStreetSuggestions(res.data);
+            }
+        });
+    }
+
+    $(document).on('input', 'input[name="street"]', function(){
+        var q = (($(this).val() || '') + '').trim();
+        if (q.length < 3) {
+            renderStreetSuggestions([]);
+            return;
+        }
+        clearTimeout(addressTimer);
+        addressTimer = setTimeout(function(){ fetchStreetSuggestions(q); }, 180);
+    });
+
+    $(document).on('change blur', 'input[name="street"]', function(){
+        var v = (($(this).val() || '') + '').trim();
+        var selected = streetMetaByLabel[v] || null;
+        if (!selected) return;
+        if (!$('input[name="location"]').val()) $('input[name="location"]').val(selected.city || '');
+        if (!$('input[name="postal_code"]').val()) $('input[name="postal_code"]').val(selected.postal_code || '');
+        if (selected.street) $(this).val(selected.street);
+    });
 
     /* ══ Form submit ═════════════════════════════════════ */
     $('#va-submit-form').on('submit', function(e){
