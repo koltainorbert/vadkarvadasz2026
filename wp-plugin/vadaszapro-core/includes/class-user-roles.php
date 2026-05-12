@@ -874,6 +874,7 @@ class VA_User_Roles {
         $custom_credits    = max( 0, absint( $_POST['custom_credits'] ?? 0 ) );
         $custom_expires_at = sanitize_text_field( wp_unslash( (string) ( $_POST['custom_expires_at'] ?? '' ) ) );
         $plan_note         = sanitize_textarea_field( wp_unslash( (string) ( $_POST['plan_note'] ?? '' ) ) );
+        $admin_note        = sanitize_textarea_field( wp_unslash( (string) ( $_POST['admin_note'] ?? '' ) ) );
         $seller_label      = sanitize_text_field( wp_unslash( (string) ( $_POST['plan_seller_label'] ?? '' ) ) );
 
         $all_plans = self::get_all_plan_configs();
@@ -890,8 +891,31 @@ class VA_User_Roles {
             wp_send_json_error( [ 'message' => 'Adminisztrátor jogköre nem módosítható.' ] );
         }
 
+        $old_credits = absint( get_user_meta( $target_uid, 'va_listing_credits', true ) );
+
         update_user_meta( $target_uid, 'va_plan', $plan );
         update_user_meta( $target_uid, 'va_listing_credits', $custom_credits );
+        if ( $admin_note !== '' ) {
+            update_user_meta( $target_uid, 'va_admin_note', $admin_note );
+        } else {
+            delete_user_meta( $target_uid, 'va_admin_note' );
+        }
+
+        if ( $custom_credits !== $old_credits ) {
+            $gift_history = get_user_meta( $target_uid, 'va_gift_credit_history', true );
+            $gift_history = is_array( $gift_history ) ? $gift_history : [];
+            $current_admin = wp_get_current_user();
+            $gift_history[] = [
+                'saved_at'      => time(),
+                'admin_id'      => get_current_user_id(),
+                'admin_name'    => $current_admin && ! empty( $current_admin->display_name ) ? $current_admin->display_name : ( $current_admin && ! empty( $current_admin->user_login ) ? $current_admin->user_login : '' ),
+                'prev_credits'  => $old_credits,
+                'new_credits'   => $custom_credits,
+                'delta_credits' => $custom_credits - $old_credits,
+                'note'          => $admin_note,
+            ];
+            update_user_meta( $target_uid, 'va_gift_credit_history', array_slice( $gift_history, -50 ) );
+        }
 
         // Admin által beállított lejárat (csak ha van érték és nem basic)
         if ( $plan !== 'basic' ) {
