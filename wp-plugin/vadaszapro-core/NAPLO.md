@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 12. – Session #352h (Azonnali limit-tiltás: dashboard gomb + submit redirect)
+
+### Kérés
+- Ha elérte a user a hirdetési limitet, ne engedje új hirdetés készítését.
+- A fiókban az "Új hirdetés" gomb már azonnal tiltson/irányítson csomagvásárlásra.
+
+### Javítás
+- `frontend/templates/user/dashboard.php` + mirror:
+  - `can_create_listing_now` számítás a `VA_User_Roles::can_post_listing()['can']` alapján.
+  - Az "Új hirdetés" és "Hirdetés feladása" gomb limit esetén nem a submit oldalra, hanem a vásárlási oldalra visz (`va_return=submit`).
+  - Gombszöveg limitnél: `🔒 Limit elérve - Csomag vásárlás`.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - Közvetlen URL-es belépés ellen védés: ha plan-limit betelt (`can=false`), az oldal azonnal átirányít a csomagvásárlásra.
+
+### Eredmény
+- Limit elérése után a user nem tud végigmenni a hirdetéskészítésen.
+- Dashboardból azonnal helyes irányba (vásárlás) megy, nem a feladási formra.
+
+### Érintett fájlok
+- `frontend/templates/user/dashboard.php`
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
 ## 2026. 05. 12. – Session #352g (Header logó + oldalneve visszaállítás)
 
 ### Bug
