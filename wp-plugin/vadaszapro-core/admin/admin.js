@@ -523,5 +523,58 @@
         va_init_admin_overlay_scrollbars();
     }
 
+    /* ── Plan editor modal (modern popup) ────────────────────── */
+    $(document).on('click', '.va-upm-badge-click', function(e) {
+        e.preventDefault();
+        var uid = $(this).data('uid');
+        var $modal = $('#va-upm-modal-' + uid);
+        if ($modal.length) {
+            $modal.addClass('va-upm-modal--open');
+            $('body').css('overflow', 'hidden');
+        }
+    });
+
+    $(document).on('click', '.va-upm-modal__backdrop', function(e) {
+        if (e.target === this) {
+            var $modal = $(this).closest('.va-upm-modal');
+            var uid = $modal.attr('id').replace('va-upm-modal-', '');
+            closeModal(uid);
+        }
+    });
+
+    $(document).on('click', '.va-upm-modal__close-btn', function(e) {
+        e.preventDefault();
+        var uid = $(this).data('uid');
+        closeModal(uid);
+    });
+
+    $(document).on('click', '.va-upm-cancel-btn', function(e) {
+        e.preventDefault();
+        var uid = $(this).data('uid');
+        closeModal(uid);
+    });
+
+    function closeModal(uid) {
+        var $modal = $('#va-upm-modal-' + uid);
+        if ($modal.length) {
+            $modal.removeClass('va-upm-modal--open');
+            $('body').css('overflow', '');
+        }
+    }
+
+    // Kattintás az admin szerkesztésre a PLAN BADGE-n
+    $(document).on('click', '.va-upm-plan-badge', function(e) {
+        if (!$(e.target).closest('button').length) {
+            e.preventDefault();
+            var $tr = $(this).closest('.va-upm-row');
+            var uid = $tr.data('uid');
+            var $modal = $('#va-upm-modal-' + uid);
+            if ($modal.length) {
+                $modal.addClass('va-upm-modal--open');
+                $('body').css('overflow', 'hidden');
+            }
+        }
+    });
+
 }(jQuery));
 
