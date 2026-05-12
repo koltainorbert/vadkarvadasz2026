@@ -1666,7 +1666,7 @@ class VA_Settings_Page {
                     <?php self::field_select('va_card_meta_row_author', 'Feladó sora', [ '1' => '1. sor', '2' => '2. sor', '3' => '3. sor' ] ); ?>
                     <?php self::field_toggle('va_card_meta_show_date', 'Mutassa: dátum' ); ?>
                     <?php self::field_select('va_card_meta_row_date', 'Dátum sora', [ '1' => '1. sor', '2' => '2. sor', '3' => '3. sor' ] ); ?>
-                    <?php self::field_toggle('va_card_show_boost_badge', 'Kiemelés (előre téve) badge megjelenjen a kártyákon' ); ?>
+                    <?php self::field_toggle('va_card_show_boost_badge', 'Előre tétel badge megjelenjen a kártyákon' ); ?>
 
                     <?php self::field_text(  'va_home_hero_badge_text',         'Főoldal hero badge szöveg' ); ?>
                     <?php self::field_text(  'va_home_hero_title_top',          'Főoldal hero cím 1. sor' ); ?>
@@ -8306,13 +8306,13 @@ class VA_Settings_Page {
                             <section class="va-pc-card">
                                 <div class="va-pc-card__head">
                                     <div>
-                                        <h2 class="va-pc-card__title">Kiemelés / Boost</h2>
-                                        <p class="va-pc-card__text">A kiemelési újratöltés csomag-specifikus. A globális badge és kapcsoló a külön panelen állítható.</p>
+                                        <h2 class="va-pc-card__title">Előre tétel / Boost</h2>
+                                        <p class="va-pc-card__text">Az előre tétel újratöltése csomag-specifikus. A globális badge és kapcsoló a külön panelen állítható.</p>
                                     </div>
                                 </div>
                                 <div class="va-pc-form-grid va-pc-form-grid--compact">
                                     <label class="va-pc-field">
-                                        <span class="va-pc-field__label">Kiemelési újratöltés</span>
+                                        <span class="va-pc-field__label">Előre tétel újratöltés</span>
                                         <span class="va-pc-field__hint">napokban mérve</span>
                                         <input type="number" class="va-pc-input va-pc-input--number" data-key="boost_cooldown" data-slug="<?php echo esc_attr( $slug ); ?>" value="<?php echo esc_attr( (string) (int) $plan['boost_cooldown'] ); ?>" min="1" max="365">
                                     </label>

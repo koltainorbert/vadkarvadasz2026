@@ -790,9 +790,9 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 if ( $user_plan === 'basic' ):
                             ?>
                             <button class="va-boost-btn va-boost-btn--off va-plan-locked"
-                                    data-locked-msg="A kiemelés Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést."
+                                    data-locked-msg="A hirdetés előre tétel a Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést."
                                     aria-pressed="false">
-                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: zárolva
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: zárolva
                             </button>
                             <?php elseif ( $is_boosted_now ):
                             ?>
@@ -802,7 +802,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                     data-ajax-url="<?php echo esc_url( $ajax_url ); ?>"
                                     data-mode="remove"
                                     aria-pressed="true">
-                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelt: BE
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Előre téve: BE
                             </button>
                             <?php elseif ( $boost_info['can'] ):
                             ?>
@@ -812,7 +812,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                     data-ajax-url="<?php echo esc_url( $ajax_url ); ?>"
                                     data-mode="boost"
                                     aria-pressed="false">
-                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: KI
                             </button>
                             <?php else:
                                 $remaining_secs = max( 0, (int) $boost_info['seconds_remaining'] );
@@ -834,8 +834,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                     aria-pressed="false"
                                     aria-disabled="true"
                                     disabled
-                                    title="<?php echo esc_attr( $boost_info['cooldown_days'] . ' naponként emelhető (kiemelési újratöltés)' ); ?>">
-                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: várakozás (<span class="va-boost-countdown"><?php echo esc_html( $wait_label ); ?></span>)
+                                    title="<?php echo esc_attr( $boost_info['cooldown_days'] . ' naponként előre tehető (előre tétel újratöltés)' ); ?>">
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Előre tétel: várakozás (<span class="va-boost-countdown"><?php echo esc_html( $wait_label ); ?></span>)
                             </button>
                             <?php
                                 endif;
