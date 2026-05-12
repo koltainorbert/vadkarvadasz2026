@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 12. – Session #352d (Figyelmeztetés alert + upgrade gomb hozzáadása)
+
+### Kérés
+- Az "Jelenlegi kereted elérve" üzenethez figyelmeztetés alert + "Csomag frissítés" gomb kellene.
+
+### Javítás
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - Az üzenet helyett egy sárga warning alert (`#fff3cd` háttér + sötét szöveg)
+  - ⚠️ ikon a figyelemfelhíváshoz
+  - Jobb oldali "🛒 Frissítés" gomb az upgrade oldalra linkelve
+  - Flex layout: szöveg balra, gomb jobbra
+
+### Eredmény
+- Az üzenet most világos figyelmeztetésként jelenik meg (nem csak szöveg)
+- Gomb azonnal elérhető a csomag frissítésre (nem kell másik oldalra menni)
+- UX javulás: felhasználó azonnal látja az opciót
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+---
+
 ## 2026. 05. 12. – Session #352c (FINAL: Alap vs. Effektív limit szétválasztása az üzenetben)
 
 ### Bug
