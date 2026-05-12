@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vadkarvadasz - Belso vasarlasi audit es admin doksi</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#060606; color:#fff; line-height:1.5; margin:0; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    h1,h2,h3 { color:#fff; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    h2 { font-size: 22px; margin-top: 28px; border-bottom:1px solid #222; padding-bottom:8px; }
+    h3 { font-size: 18px; margin-top: 20px; }
+    .muted { color:#bbb; }
+    .ok { color:#7dff9f; }
+    .warn { color:#ffd166; }
+    .err { color:#ff7b7b; }
+    .box { background:#0f0f0f; border:1px solid #222; border-radius:10px; padding:14px; margin:10px 0; }
+    table { width:100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { border:1px solid #2a2a2a; padding:8px; text-align:left; vertical-align:top; }
+    th { background:#141414; }
+    code { color:#ff8080; background:#141414; padding:2px 6px; border-radius:6px; }
+    ul { margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Belso Vasarlasi Audit es Admin Uzemeltetesi Dokszi</h1>
+    <p class="muted">Projekt: Vadkarvadasz2026 | Datum: 2026-05-12 | Scope: kredit + csomagvasarlas + upgrade kompenzacio + Stripe + admin felugyelet</p>
+
+    <h2>1. Vezetoi Osszefoglalo</h2>
+    <div class="box">
+      <p><strong>Statusz:</strong> <span class="ok">A rendszer mukodokepes, a hibrid upgrade modell aktiv, a maradek ertek kompenzacio mukodik, admin felugyelet bovitve.</span></p>
+      <p><strong>Audit konkluzio:</strong> 1 kritikus hibat talaltunk es azonnal javitottuk. Nyitott blokkolo hiba jelenleg nincs.</p>
+      <p><strong>Fontos:</strong> A kompenzacio pontossaga uzletileg jelenleg az aktualis kartyaarakra tamaszkodik (nem a historikus vasarlasi arakra). Ez uzleti dontes szerint finomithato kesobb.</p>
+    </div>
+
+    <h2>2. Audit Megallapitasok (Hibak es Kockazatok)</h2>
+    <h3>2.1 Javított kritikus hiba</h3>
+    <table>
+      <thead>
+        <tr><th>Sulyossag</th><th>Terulet</th><th>Tuntet</th><th>Ok</th><th>Javitas</th><th>Erintett hely</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="err"><strong>KRITIKUS</strong></td>
+          <td>Upgrade kompenzacio szamitas</td>
+          <td>Webhook fallback esetben rossz (tul nagy) kompenzacio nap szamolhato</td>
+          <td><code>$new_total_price = max(1, $amount)</code> miatt <code>$amount=0</code> eseten 1 Ft-tal szamolt napi ar</td>
+          <td><code>$new_total_price = ($amount &gt; 0) ? $amount : get_plan_price_total_for_slug(...)</code>; ha ez is 0, akkor 1</td>
+          <td><code>includes/class-ajax.php</code>, <code>wp-plugin/vadaszapro-core/includes/class-ajax.php</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.2 Nyitott, de nem blokkolo kockazatok</h3>
+    <table>
+      <thead>
+        <tr><th>Sulyossag</th><th>Kockazat</th><th>Leiras</th><th>Javaslat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="warn">Kozepes</td>
+          <td>Historikus ar pontossag</td>
+          <td>A maradek ertek az aktualis csomagarbol becsult, nem feltetlenul a user eredeti vasarlasi arabol.</td>
+          <td>Ha 100%-os penzugyi transzparencia kell, tarold kulon a plan aktivalasori plan arat is usermeta/history mezoben.</td>
+        </tr>
+        <tr>
+          <td class="warn">Alacsony</td>
+          <td>Tobb kartya azonos plan sluggal</td>
+          <td>Ha ugyanarra a planra tobb kartya van, a fallback szamitas az elso talalatot hasznalja.</td>
+          <td>Opcionalisan vezess be egy explicit plan->price mapot, vagy vasarlasnal mentsd a forras kartya indexet.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. End-to-End Mukodes (Pontrol pontra)</h2>
+    <h3>3.1 Vasarlas inditas (frontend)</h3>
+    <ol>
+      <li>User a <code>/va-kredit-vasarlas/</code> oldalon csomagot valaszt.</li>
+      <li>Rendszer ellenorzi: be van-e jelentkezve.</li>
+      <li>Ellenorzi: a valasztott mennyiseg valos, aktiv kartya-e.</li>
+      <li>Fut a szabaly: aktiv csomag mellett csak magasabb rang vasarolhato.</li>
+      <li>General token, tranziensekbe menti: user, qty, amount, provider, return_to, created_at.</li>
+      <li>Stripe provider eseten Checkout Session letrehozas, redirect Stripe-ra.</li>
+    </ol>
+
+    <h3>3.2 Fizetes visszaerkezes (callback)</h3>
+    <ol>
+      <li>Success URL visszahivja a callback-et tokennel (+ Stripe session_id).</li>
+      <li>Rendszer validalja sessiont Stripe API-val (status=complete, payment_status=paid, token egyezes).</li>
+      <li>Meghivja a veglegesitest: <code>finalize_credit_purchase()</code>.</li>
+      <li>Siker eseten flash uzenet: vasarlas rendben + kompenzacio info (+X nap, Y Ft).</li>
+    </ol>
+
+    <h3>3.3 Stripe webhook (aszinkron biztonsagi ut)</h3>
+    <ol>
+      <li>Webhook alairas ellenorzes (<code>Stripe-Signature</code>, tolerance ablak).</li>
+      <li>Idempotencia event szinten transienttel.</li>
+      <li><code>checkout.session.completed</code> eseten fallback adatokkal finalizalas.</li>
+    </ol>
+
+    <h3>3.4 Veglegesites (kredit + csomag + kompenzacio)</h3>
+    <ol>
+      <li>Kredit jovairas: <code>va_listing_credits += qty</code>.</li>
+      <li>Cel plan kiszamitas qty alapjan.</li>
+      <li>Ha upgrade (uj rang magasabb):
+        <ul>
+          <li>Maradek ido kiszamitas regi lejartbol.</li>
+          <li>Maradek ertek (Ft) becsles regi plan napi ertekebol.</li>
+          <li>Uj plan napi ertekevel atszamolt kompenzacios nap.</li>
+          <li>Guardrail: min +1 nap ha van maradek ertek, max +365 nap.</li>
+          <li>Uj lejarat = uj plan alap nap + kompenzacios nap.</li>
+          <li>Lejarati warning flag-ek reset.</li>
+          <li>Upgrade email kuldes.</li>
+        </ul>
+      </li>
+      <li>Kiemeles cooldown szinkron a valasztott kartyarol.</li>
+      <li>Vasarlasi history mentes + paid transient idempotenciahoz.</li>
+      <li>Plan limit enforce futtatasa.</li>
+    </ol>
+
+    <h2>4. Uzleti Szabalyok (Aktiv)</h2>
+    <table>
+      <thead><tr><th>Szabaly</th><th>Jelenlegi allapot</th></tr></thead>
+      <tbody>
+        <tr><td>Aktiv csomag mellett csak magasabb vasarolhato</td><td class="ok">Igen</td></tr>
+        <tr><td>Kisebb/azonos csomag vasarlas tiltasa aktiv csomagnal</td><td class="ok">Igen</td></tr>
+        <tr><td>Maradek ertek kompenzacio upgrade-kor</td><td class="ok">Igen</td></tr>
+        <tr><td>Kompenzacio plafon</td><td class="ok">+365 nap</td></tr>
+        <tr><td>Sikeres vasarlas user tajekoztatas kompenzaciorol</td><td class="ok">Igen (flash + email)</td></tr>
+        <tr><td>Admin felugyelet utolso kompenzacio sorral</td><td class="ok">Igen</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. Adatmodell es Tarolas</h2>
+    <h3>5.1 Uservmeta kulcsok (fobb)</h3>
+    <ul>
+      <li><code>va_plan</code> - aktualis plan slug</li>
+      <li><code>va_plan_expires_at</code> - Unix timestamp</li>
+      <li><code>va_listing_credits</code> - vasarolt kredit egyenleg</li>
+      <li><code>va_plan_boost_cooldown</code> - user szintu boost nap</li>
+      <li><code>va_credit_purchase_history</code> - vasarlasi lista (upgrade + carryover mezokkel)</li>
+    </ul>
+
+    <h3>5.2 Tranziensek</h3>
+    <ul>
+      <li><code>va_credit_token_{token}</code> - pending vasarlas payload</li>
+      <li><code>va_credit_paid_{token}</code> - mar feldolgozott tranzakcio idempotencia</li>
+      <li><code>va_stripe_evt_{event_id}</code> - webhook event idempotencia</li>
+    </ul>
+
+    <h3>5.3 History bejegyzes mezei</h3>
+    <ul>
+      <li>Alap: token, qty, amount, provider, return_to, plan_slug, stripe IDs, initiated_at, completed_at</li>
+      <li>Upgrade extra: <code>upgrade_applied</code>, <code>carryover_days</code>, <code>carryover_value_ft</code>, <code>prev_plan_slug</code></li>
+    </ul>
+
+    <h2>6. Metodus-Szintu Referencia (Minden vasarlasi metodus)</h2>
+
+    <h3>6.1 includes/class-ajax.php</h3>
+    <table>
+      <thead><tr><th>Metodus</th><th>Feladat</th><th>Bemenet</th><th>Kimenet/Mellekhatas</th></tr></thead>
+      <tbody>
+        <tr><td><code>get_credit_packages()</code></td><td>Kartyakbol ar/mennyiseg lista epitese</td><td>wp_options</td><td>Rendezett package tomb</td></tr>
+        <tr><td><code>get_target_plan_slug_for_qty()</code></td><td>qty -> plan slug</td><td>qty</td><td>basic/silver/gold/platinum/custom</td></tr>
+        <tr><td><code>normalize_purchase_plan_slug()</code></td><td>Aliasok egysites</td><td>slug</td><td>normalizalt slug</td></tr>
+        <tr><td><code>get_plan_base_duration_days()</code></td><td>Plan alap ciklushossz</td><td>user_id, plan</td><td>napok (alt. 365)</td></tr>
+        <tr><td><code>get_plan_price_total_for_slug()</code></td><td>Plan becsult teljes ar</td><td>plan</td><td>Ft</td></tr>
+        <tr><td><code>get_plan_label_for_user()</code></td><td>Felhasznalo altal ertheto plan cimke</td><td>user_id, plan</td><td>label string</td></tr>
+        <tr><td><code>enforce_credit_package_purchase_rule()</code></td><td>Only-upgrade szabaly</td><td>user_id, qty</td><td>true vagy WP_Error</td></tr>
+        <tr><td><code>buy_credits()</code></td><td>AJAX vasarlas inditas</td><td>POST qty, nonce</td><td>checkout_url JSON</td></tr>
+        <tr><td><code>handle_buy_credits_start()</code></td><td>GET fallback vasarlas inditas</td><td>GET params</td><td>redirect Stripe/legacy</td></tr>
+        <tr><td><code>create_stripe_checkout_session()</code></td><td>Stripe session letrehozas</td><td>token, qty, amount</td><td>Stripe URL vagy WP_Error</td></tr>
+        <tr><td><code>verify_stripe_checkout_payment()</code></td><td>Stripe success validalas</td><td>session_id, token</td><td>verified tomb vagy WP_Error</td></tr>
+        <tr><td><code>handle_credit_payment_callback()</code></td><td>Success/cancel return flow</td><td>GET token, state</td><td>flash + redirect</td></tr>
+        <tr><td><code>handle_stripe_webhook()</code></td><td>Aszinkron veglegesites</td><td>Stripe event payload</td><td>finalize meghivas + 200 OK</td></tr>
+        <tr><td><code>parse_stripe_webhook_event()</code></td><td>Alairas + JSON validalas</td><td>payload, signature</td><td>event tomb vagy WP_Error</td></tr>
+        <tr><td><code>finalize_credit_purchase()</code></td><td>Kredit, plan, lejarat, kompenzacio, history, enforce</td><td>token, fallback</td><td>eredmeny tomb vagy WP_Error</td></tr>
+        <tr><td><code>sync_user_card_cooldown()</code></td><td>Kiemeles nap szinkron kartyarol</td><td>user_id, qty, plan</td><td>user meta update</td></tr>
+        <tr><td><code>get_credit_purchase_history()</code></td><td>History normalizalas</td><td>user_id</td><td>rendezett history tomb</td></tr>
+        <tr><td><code>record_credit_purchase_history()</code></td><td>History upsert (token/session/intent idempotencia)</td><td>user_id, entry</td><td>usermeta update</td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.2 includes/class-user-roles.php (vasarlast erinto)</h3>
+    <table>
+      <thead><tr><th>Metodus</th><th>Feladat</th><th>Megjegyzes</th></tr></thead>
+      <tbody>
+        <tr><td><code>get_user_plan()</code></td><td>Effektiv plan (lejarat utan basic fallback)</td><td>Lejaratot auto inicializalja legacy usernel</td></tr>
+        <tr><td><code>get_plan_config()</code></td><td>Plan config + user override</td><td>boost_cooldown usermeta override, limit override custom/platinum</td></tr>
+        <tr><td><code>can_post_listing()</code></td><td>Feladhato-e uj hirdetes</td><td>plan limit + vasarolt kredit keret</td></tr>
+        <tr><td><code>enforce_plan_limits()</code></td><td>Tullepes kezelese (suspension)</td><td>Finalizalas utan lefut</td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.3 includes/class-mailer.php (vasarlast erinto)</h3>
+    <table>
+      <thead><tr><th>Metodus</th><th>Feladat</th><th>Admin szerkesztheto?</th></tr></thead>
+      <tbody>
+        <tr><td><code>send_plan_upgrade_notice()</code></td><td>Upgrade + kompenzacio email</td><td class="ok">Igen, teljesen</td></tr>
+        <tr><td><code>send_plan_expiry_warning()</code></td><td>30/7/1 napos lejarati figyelmeztetes</td><td class="ok">Igen, teljesen</td></tr>
+        <tr><td><code>send_plan_expired_user()</code></td><td>Lejart user ertesites</td><td class="ok">Igen, teljesen</td></tr>
+        <tr><td><code>send_plan_expired_admin()</code></td><td>Lejart admin ertesites</td><td class="ok">Igen, teljesen</td></tr>
+      </tbody>
+    </table>
+
+    <h2>7. Admin Felugyelet (Hol mit allitasz)</h2>
+    <h3>7.1 Altalanos beallitasok - Csomag lejarati e-mailek</h3>
+    <div class="box">
+      <p>Jelenleg minden kulcs kulon szerkesztheto (subject, heading, body, button label, button URL).</p>
+      <p>Uj upgrade kulcsok:</p>
+      <ul>
+        <li><code>va_email_plan_upgrade_subject</code></li>
+        <li><code>va_email_plan_upgrade_heading</code></li>
+        <li><code>va_email_plan_upgrade_body</code></li>
+        <li><code>va_email_plan_upgrade_btn_label</code></li>
+        <li><code>va_email_plan_upgrade_btn_url</code></li>
+      </ul>
+    </div>
+
+    <h3>7.2 Felhasznalok es Csomagok oldal</h3>
+    <div class="box">
+      <p>A Stripe vasarlasi elozmenyek fejlécben megjelenik az utolso kompenzacio:</p>
+      <p><code>Utolso upgrade kompenzacio: [regi] -> [uj] · +X nap · Y Ft</code></p>
+    </div>
+
+    <h2>8. Tokenek az Upgrade Emailhez</h2>
+    <table>
+      <thead><tr><th>Token</th><th>Jelentes</th></tr></thead>
+      <tbody>
+        <tr><td><code>{name}</code></td><td>Felhasznalo neve</td></tr>
+        <tr><td><code>{user_email}</code></td><td>Felhasznalo email</td></tr>
+        <tr><td><code>{prev_plan_label}</code></td><td>Korabbi csomag emberi neve</td></tr>
+        <tr><td><code>{prev_plan_slug}</code></td><td>Korabbi csomag slug</td></tr>
+        <tr><td><code>{new_plan_label}</code></td><td>Uj csomag emberi neve</td></tr>
+        <tr><td><code>{new_plan_slug}</code></td><td>Uj csomag slug</td></tr>
+        <tr><td><code>{carryover_days}</code></td><td>Jovairt kompenzacios napok</td></tr>
+        <tr><td><code>{carryover_value_ft}</code></td><td>Maradek ertek Ft-ban</td></tr>
+        <tr><td><code>{expires_at}</code></td><td>Uj lejarat idopecset</td></tr>
+        <tr><td><code>{site_name}</code></td><td>Markanev</td></tr>
+        <tr><td><code>{support_email}</code></td><td>Tamogatasi cim</td></tr>
+      </tbody>
+    </table>
+
+    <h2>9. Uzemeltetesi Checklist (Adminnak)</h2>
+    <ol>
+      <li>Stripe provider aktiv + secret key megadva.</li>
+      <li>Webhook endpoint aktiv + signing secret beallitva.</li>
+      <li>Kreditkartyak qty/price/plan_slug konzisztens.</li>
+      <li>Upgrade email sablonok kitoltve, tokenek tesztelve.</li>
+      <li>Teszt userrel vegigfuttatni: basic -> silver -> gold upgrade.</li>
+      <li>Ellenorizni: flash uzenet + email + admin kompenzacio sor.</li>
+    </ol>
+
+    <h2>10. Support Forgatokonyv (Gyakori kerdesek)</h2>
+    <h3>"Elveszett a maradekom?"</h3>
+    <p>Nem. Upgrade eseten a maradek ertek automatikusan hozzairva napok formajaban. Ellenorizheto emailben es admin history fejlécben.</p>
+
+    <h3>"Miert nem vehetek kisebb csomagot?"</h3>
+    <p>Aktiv csomag mellett csak magasabb rang vasarolhato, hogy ne legyen felhalmozasi anomalia.</p>
+
+    <h3>"Mi tortenik duplaklikk/dupla callback eseten?"</h3>
+    <p>Idempotencia token/session/intent/event szinten vedi a rendszert duplikalt jovairastol.</p>
+
+    <h2>11. Valtozaskezelesi Javaslatok (kovetkezo kor)</h2>
+    <ul>
+      <li>Historikus plan ar tarolasa aktivalaskor a pontosabb kompenzaciohoz.</li>
+      <li>Kompenzacio szamitas log audit trail kulon usermeta mezoben.</li>
+      <li>Admin oldalon kulon "Kompenzacio tortenet" details blokk.</li>
+    </ul>
+
+    <hr />
+    <p class="muted">Keszitette: Copilot audit. Ez a dokumentum belso admin hasznalatra keszult.</p>
+  </div>
+</body>
+</html>

@@ -2,6 +2,42 @@
 
 ---
 
+## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
+
+### Igeny
+- Komplett vasarlasi rendszer atvizsgalasa (Stripe, callback, webhook, upgrade, limitek, admin felugyelet).
+- Iszonyu reszletes, belso admin magyarazo anyag HTML formatumban.
+
+### Megvalositas [x]
+- [x] Teljes audit elvegezve a kovetkezo modulokon:
+  - `includes/class-ajax.php`
+  - `includes/class-user-roles.php`
+  - `includes/class-mailer.php`
+  - `includes/class-shortcodes.php`
+  - `admin/class-settings-page.php`
+
+- [x] Kritikus hiba javitva (kompenzacio szamitas):
+  - webhook fallback esetben, ha `amount` hianyzott, a rendszer 1 Ft-tal szamolhatott,
+  - javitas: ha `amount <= 0`, akkor plan ar fallbacket hasznalunk; csak vegso esetben 1 Ft.
+
+- [x] Uj belso HTML dokumentacio keszitve:
+  - `BELSO_VASARLASI_AUDIT.html`
+  - tartalom: audit findingok, e2e flow, adatmodell, metoduslista, admin kulcsok, tokenek, support FAQ.
+
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- A vasarlasi rendszer stabilitasa javult a kritikus kompenzacios fallback fixszel.
+- Kesz egy atfogo, belso hasznalatu admin doksi a teljes mukodesrol.
+
+### Erintett fajlok
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `BELSO_VASARLASI_AUDIT.html`
+
+---
+
 ## 2026. 05. 12. – Session #332 (Admin felügyelet: upgrade email sablonok + kompenzáció sor)
 
 ### Igeny
