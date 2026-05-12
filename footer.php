@@ -28,7 +28,7 @@
     $f_logo_height    = max( 20, min( 180, absint( get_option( 'va_hf_footer_logo_height', 48 ) ) ) );
     $f_contact_email  = trim( (string) get_option( 'va_contact_email', 'weingartnertrans@gmail.com' ) );
     $f_contact_phone  = trim( (string) get_option( 'va_billing_phone', '+36 20 943 8636' ) );
-    $f_contact_addr   = trim( (string) get_option( 'va_billing_company_address', '8412 Veszprém, Alsó-Újsor utca 31.' ) );
+    $f_contact_addr   = trim( (string) get_option( 'va_contact_addr', '8412 Veszprém, Alsó-Újsor utca 31.' ) );
     if ( in_array( $f_brand_title, [ 'VadászApró', 'Vadaszapro', 'Weingartner Auto' ], true ) ) {
         $f_brand_title = 'weingartnerauto.hu';
     }
