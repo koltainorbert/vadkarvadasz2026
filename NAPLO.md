@@ -2,6 +2,44 @@
 
 ---
 
+## 2026. 05. 12. – Session #352s (Kereso/szuro bovites: optika + kutya mezo szures)
+
+### Keres
+- A kovetkezo lepesben az uj specialis mezoikre kellett szuresi tamogatast adni a keresesi feluleten is.
+
+### Javitas
+- Szuro UI bovites:
+  - uj mezok a kereso oldalon:
+    - Nagyitas
+    - Objektiv atmero -tol / -ig
+    - Kutya eletkor -tol / -ig
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Frontend AJAX payload bovites:
+  - uj kuldesi parameterek:
+    - `optic_zoom`
+    - `optic_objective_min`, `optic_objective_max`
+    - `dog_age_min`, `dog_age_max`
+  - uj triggerelok (input/change) az uj mezokre
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+- Backend SQL szures bovites (`filter_listings`):
+  - uj parameterek beolvasasa es sanitize
+  - cache kulcs bovitve az uj parameterekkel
+  - uj meta feltetelek:
+    - `va_optic_zoom` (LIKE)
+    - `va_optic_objective` (numeric range)
+    - `va_dog_age_months` (numeric range)
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- Az uj optikai es kutya-specifikus adatok mar nem csak menthetok, hanem kereshetok/szurhetok is.
+- A fiokos feladasban rögzitett specialis mezok bekerultek a listazo oldali szuresi workflow-ba.
+
 ## 2026. 05. 12. – Session #352r (Kategoriankenti specialis mezok: optika + kutya, fiok + admin)
 
 ### Keres
