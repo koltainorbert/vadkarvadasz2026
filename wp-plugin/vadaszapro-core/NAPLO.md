@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 12. – Session #329 (Custom -> Ceges elofizetes + egységes aktiv jeloles)
+
+### Igeny
+- Az arkaratya oldalon ne jelenjen meg a `Custom` felirat.
+- A custom/ceges rang magyar megnevezessel jelenjen meg: `Céges előfizetés`.
+- Ha a user ilyen rangon van, az aktiv kartya jeloles ugyanugy mukodjon, mint a tobbi rangnal.
+
+### Megvalositas [x]
+- [x] `includes/class-shortcodes.php`:
+  - uj plan slug normalizalo helper kerult be (`normalize_plan_slug`),
+  - a `custom` es `ceges` aliasok egységesen `custom`-ra allnak,
+  - az aktiv kartya detektalas es rangsor logika mar normalizalt sluggal fut,
+  - a csomagertesito szovegben a custom plan felirata most `Céges előfizetés`,
+  - a kartya label fallbacknel a `Custom/Egyedi` felirat automatikusan `Céges előfizetés`-re valt.
+
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-shortcodes.php` ugyanigy frissitve.
+
+### Eredmeny
+- Az uzenet mar nem ezt mutatja: `Aktív csomagod van (Custom)`.
+- Helyette: `Aktív csomagod van (Céges előfizetés)`.
+- A custom/ceges plan aktiv jelolese es lock logikaja az arkaratyakon mar konzisztens.
+
+### Erintett fajlok
+- `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
+
+---
+
 ## 2026. 05. 11. – Session #328 (Naptár a mérvadó, fekete date picker)
 
 ### Igeny
