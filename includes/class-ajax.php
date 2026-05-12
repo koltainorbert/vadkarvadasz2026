@@ -2795,8 +2795,8 @@ class VA_Ajax {
 
         if ( class_exists( 'VA_User_Roles' ) ) {
             $plan = VA_User_Roles::get_user_plan( $user_id );
-            if ( $plan === 'basic' ) {
-                wp_send_json_error( [ 'message' => 'Basic csomaggal akciós ár nem állítható. Vásároljon nagyobb előfizetést.' ] );
+            if ( VA_User_Roles::get_plan_rank( $plan ) < VA_User_Roles::get_plan_rank( 'gold' ) ) {
+                wp_send_json_error( [ 'message' => 'Az akciós ár csak Gold, Platinum vagy Üzleti csomagban állítható. Vásároljon nagyobb előfizetést.' ] );
             }
         }
 
