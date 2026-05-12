@@ -3555,7 +3555,7 @@ class VA_Settings_Page {
                                 <strong><?php echo esc_html( $user->display_name ); ?></strong>
                                 <span class="va-upm-login">@<?php echo esc_html( $user->user_login ); ?></span>
                                 <?php if ( $phone ): ?><span class="va-upm-phone">📞 <?php echo esc_html( $phone ); ?></span><?php endif; ?>
-                                <?php if ( $admin_note !== '' ): ?><div class="va-upm-note">📝 <?php echo esc_html( $admin_note ); ?></div><?php endif; ?>
+                                <?php if ( $admin_note !== '' ): ?><div class="va-upm-note"><?php echo esc_html( $admin_note ); ?></div><?php endif; ?>
                             </div>
                         </td>
                         <td><?php echo esc_html( $user->user_email ); ?></td>
