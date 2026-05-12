@@ -205,6 +205,24 @@ $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_bra
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $body_types = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
+$category_required_rules = [
+    'golyos-puska'       => [ 'label' => 'Golyós puska', 'required' => [ 'brand', 'caliber' ] ],
+    'soretes-puska'      => [ 'label' => 'Sörétes puska', 'required' => [ 'brand', 'caliber' ] ],
+    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű puska', 'required' => [ 'brand', 'caliber' ] ],
+    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'hatastalanitott'    => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
+    'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
+    'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
+    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model' ] ],
+    'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model' ] ],
+    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model' ] ],
+    'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
+    'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
+    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model' ] ],
+    'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+    'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
+];
 
 /* ── Edit mód felismerés ───────────────────────────── */
 $edit_post_id = 0;
@@ -381,6 +399,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
     'site_type'      => $site_type,
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
     'hunting_brand_models' => $site_type !== 'jarmu' ? $hunting_brand_models : [],
+    'category_required_rules' => $category_required_rules,
 ]);
 ?>
 <?php va_display_flash(); ?>
@@ -1184,11 +1203,47 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selected.street) $(this).val(selected.street);
     });
 
+    function validateCategoryRequiredFields() {
+        var $cat = $('#va-category');
+        if (!$cat.length || typeof VA_Data === 'undefined') return '';
+
+        var selected = $cat.find('option:selected');
+        var slug = (selected.data('slug') || '').toString();
+        if (!slug) return '';
+
+        var rules = VA_Data.category_required_rules || {};
+        var rule = rules[slug] || null;
+        if (!rule || !Array.isArray(rule.required) || !rule.required.length) return '';
+
+        var labels = {
+            brand: 'Márka / gyártó',
+            model: 'Modell / típus',
+            caliber: 'Kaliber'
+        };
+        var missing = [];
+
+        rule.required.forEach(function(field){
+            var v = (($( '[name="' + field + '"]' ).val() || '') + '').trim();
+            if (!v) {
+                missing.push(labels[field] || field);
+            }
+        });
+
+        if (!missing.length) return '';
+        return (rule.label || 'A választott kategória') + ' kategóriában kötelező: ' + missing.join(', ') + '.';
+    }
+
     /* ══ Form submit ═════════════════════════════════════ */
     $('#va-submit-form').on('submit', function(e){
         e.preventDefault();
         var $btn    = $('#va-submit-btn');
         var editMode = !! VA_Data.edit_mode;
+
+        var categoryRuleError = validateCategoryRequiredFields();
+        if (categoryRuleError) {
+            $('#va-submit-notice').html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            return;
+        }
 
         var city = (($('input[name="location"]').val() || '') + '').trim();
         var zip  = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');

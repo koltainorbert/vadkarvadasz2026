@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 12. – Session #352q (Kategoriatol fuggo kotelezo mezok: frontend + backend)
+
+### Keres
+- Kovetkezo fazisban kategoriankenti kotelezo mezo logikat kellett adni, kliensoldali es szerveroldali ellenorzessel is.
+
+### Javitas
+- Szerver oldali validacio (AJAX submit + update):
+  - uj szabalyhalmaz: kategoriankenti kotelezo mezok (brand/model/caliber)
+  - uj helper: `validate_category_required_fields()`
+  - validacio mind `submit_listing()` es `update_listing()` agban
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend validacio (feladasi urlap):
+  - lokalizalt szabalyobjektum: `category_required_rules`
+  - submit elotti kliensoldali ellenorzes, felhasznalobarat hibauzenettel
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- A kijelolt vadasz kategoriakban kotelezo mezok mar nem hagyhatoak uresen.
+- A kliensoldali ellenorzes gyors visszajelzest ad, a szerveroldali ellenorzes pedig biztosan vedi az adatminoseget.
+
 ## 2026. 05. 12. – Session #352p (Kategoriankenti marka/tipus adatmodell: frontend + admin)
 
 ### Keres
