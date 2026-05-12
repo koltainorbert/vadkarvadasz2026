@@ -1,6 +1,6 @@
 <?php
 /**
- * Használtautó.hu alapú jármű-katalógus adatok.
+ * VadászApró alapú kategória adatok.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -10,23 +10,45 @@ class VA_Vehicle_Catalog {
     private static $brand_models = null;
 
     public static function get_dataset_version(): string {
-        return 'hasznaltauto-2026-05-02';
+        return 'vadaszapro-categories-2026-05-12';
     }
 
     public static function get_categories(): array {
         return [
-            [ 'name' => 'Személyautó',    'slug' => 'szemelyauto' ],
-            [ 'name' => 'Kisautó',        'slug' => 'kisauto' ],
-            [ 'name' => 'Városi autó',    'slug' => 'varosi-auto' ],
-            [ 'name' => 'Családi autó',   'slug' => 'csaladi-auto' ],
-            [ 'name' => 'Terepjáró',      'slug' => 'terepjaro' ],
-            [ 'name' => 'Kishaszonjármű', 'slug' => 'kishaszonjarmu' ],
-            [ 'name' => 'Kisteherautó',   'slug' => 'kisteherauto' ],
-            [ 'name' => 'Teherautó',      'slug' => 'teherauto' ],
-            [ 'name' => 'Lakóautó / Camper', 'slug' => 'lakoauto' ],
-            [ 'name' => 'Busz / Kisbusz', 'slug' => 'busz-kisbusz' ],
-            [ 'name' => 'Motor',          'slug' => 'motor' ],
+            [ 'name' => 'Jármű',                 'slug' => 'jarmu' ],
+            [ 'name' => 'Vadászkutya',           'slug' => 'vadaszkutya' ],
+            [ 'name' => 'Csere',                 'slug' => 'csere' ],
+            [ 'name' => 'Vadászlámpa',           'slug' => 'vadaszlampa' ],
+            [ 'name' => 'Golyós puska',          'slug' => 'golyos-puska' ],
+            [ 'name' => 'Sörétes puska',         'slug' => 'soretes-puska' ],
+            [ 'name' => 'Vegyescsövű puska',     'slug' => 'vegyescsovu-puska' ],
+            [ 'name' => 'Maroklőfegyver',        'slug' => 'maroklofegyver' ],
+            [ 'name' => 'Hatástalanított',       'slug' => 'hatalastalanitott' ],
+            [ 'name' => 'Egyéb fegyverek',       'slug' => 'egyeb-fegyverek' ],
+            [ 'name' => 'Lőszer-Töltény',        'slug' => 'loszer-tolteny' ],
+            [ 'name' => 'Kések',                 'slug' => 'kesek' ],
+            [ 'name' => 'Távcsövek',             'slug' => 'tavcsovek' ],
+            [ 'name' => 'Éjjellátó távcső',      'slug' => 'ejjellato-tavcso' ],
+            [ 'name' => 'Hőkamerák',             'slug' => 'hokamerak' ],
+            [ 'name' => 'Vadkamera',             'slug' => 'vadkamera' ],
+            [ 'name' => 'Vadászati lehetőség',   'slug' => 'vadaszati-lehetoseg' ],
+            [ 'name' => 'Vadkárelhárítás',       'slug' => 'vadkarelhartias' ],
+            [ 'name' => 'Egyeb ruházat',         'slug' => 'egyeb-ruhazat' ],
+            [ 'name' => 'Cipő, Bakancs',         'slug' => 'cipo-bakancs' ],
+            [ 'name' => 'Vadász ruházat',        'slug' => 'vadasz-ruhazat' ],
+            [ 'name' => 'Sportlövő felsz.',      'slug' => 'sportlovo-felsz' ],
+            [ 'name' => 'Vadász Felszerelés',    'slug' => 'vadasz-felszereles' ],
+            [ 'name' => 'Trófea alétét',         'slug' => 'trofea-aletet' ],
+            [ 'name' => 'Szállás',               'slug' => 'szallas' ],
+            [ 'name' => 'Kürtök sípok',          'slug' => 'kurtok-sipok' ],
+            [ 'name' => 'Dísztárgyak',           'slug' => 'disztargyak' ],
+            [ 'name' => 'Szolgáltatás',          'slug' => 'szolgaltatas' ],
+            [ 'name' => 'Ingatlan',              'slug' => 'ingatlan' ],
+            [ 'name' => 'Takarmány',             'slug' => 'takarmany' ],
+            [ 'name' => 'Könyv-folyóirat',       'slug' => 'konyv-folyoirat' ],
+            [ 'name' => 'Vadászati hagyaték',    'slug' => 'vadaszati-hagyatek' ],
             [ 'name' => 'Egyéb',          'slug' => 'egyeb' ],
+            [ 'name' => 'Állás',                 'slug' => 'allas' ],
         ];
     }
 
