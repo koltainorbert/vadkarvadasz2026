@@ -464,7 +464,7 @@ class VA_Ajax {
             }
             $cfg_qty = max( 1, (int) get_option( "va_pc_{$n}_qty", $default_qtys[ $n ] ) );
             if ( $cfg_qty === $qty ) {
-                return sanitize_key( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ) );
+                return self::normalize_purchase_plan_slug( (string) get_option( "va_pc_{$n}_plan_slug", $default_slugs[ $n ] ) );
             }
         }
 
@@ -474,8 +474,65 @@ class VA_Ajax {
         return 'basic';
     }
 
+    private static function normalize_purchase_plan_slug( string $slug ): string {
+        $slug = sanitize_key( $slug );
+        if ( in_array( $slug, [ 'company', 'business', 'corporate', 'ceges', 'ceg', 'custom', 'egyedi' ], true ) ) {
+            return 'custom';
+        }
+        return $slug;
+    }
+
+    private static function get_plan_base_duration_days( int $user_id, string $plan_slug ): int {
+        $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
+        if ( $plan_slug === 'custom' ) {
+            $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
+            return $custom_dur > 0 ? $custom_dur : 365;
+        }
+        return 365;
+    }
+
+    private static function get_plan_price_total_for_slug( string $plan_slug ): int {
+        $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
+        $packages  = self::get_credit_packages();
+
+        $found_total = 0;
+        foreach ( $packages as $pkg ) {
+            $qty = absint( $pkg['qty'] ?? 0 );
+            if ( $qty <= 0 ) {
+                continue;
+            }
+            $pkg_plan = self::get_target_plan_slug_for_qty( $qty );
+            if ( $pkg_plan !== $plan_slug ) {
+                continue;
+            }
+            $total = absint( $pkg['total'] ?? 0 );
+            if ( $total > 0 ) {
+                $found_total = $total;
+                break;
+            }
+        }
+
+        return $found_total;
+    }
+
+    private static function get_plan_label_for_user( int $user_id, string $plan_slug ): string {
+        $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
+        $label = ucfirst( $plan_slug );
+        if ( class_exists( 'VA_User_Roles' ) ) {
+            $cfg = VA_User_Roles::get_plan_config( $plan_slug, $user_id );
+            $candidate = trim( (string) ( $cfg['label'] ?? '' ) );
+            if ( $candidate !== '' ) {
+                $label = $candidate;
+            }
+        }
+        if ( $plan_slug === 'custom' ) {
+            $label = 'Céges előfizetés';
+        }
+        return $label;
+    }
+
     private static function get_card_index_for_purchase( int $qty, string $plan_slug ): int {
-        $plan_slug = sanitize_key( $plan_slug );
+        $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
         $count = max( 1, min( 8, (int) get_option( 'va_pc_count', 4 ) ) );
 
         // 1) Pontos találat: qty + plan slug.
@@ -484,7 +541,7 @@ class VA_Ajax {
                 continue;
             }
             $cfg_qty = max( 1, (int) get_option( "va_pc_{$n}_qty", 0 ) );
-            $cfg_slug = sanitize_key( (string) get_option( "va_pc_{$n}_plan_slug", '' ) );
+            $cfg_slug = self::normalize_purchase_plan_slug( (string) get_option( "va_pc_{$n}_plan_slug", '' ) );
             if ( $cfg_qty === $qty && $cfg_slug !== '' && $cfg_slug === $plan_slug ) {
                 return $n;
             }
@@ -562,6 +619,7 @@ class VA_Ajax {
         $current_plan = class_exists( 'VA_User_Roles' )
             ? VA_User_Roles::get_user_plan( $user_id )
             : sanitize_key( (string) get_user_meta( $user_id, 'va_plan', true ) );
+        $current_plan = self::normalize_purchase_plan_slug( $current_plan );
 
         $current_rank = class_exists( 'VA_User_Roles' )
             ? VA_User_Roles::get_plan_rank( $current_plan )
@@ -575,7 +633,7 @@ class VA_Ajax {
             $until_txt = ( $active_until > 0 ) ? wp_date( 'Y.m.d H:i', $active_until ) : 'nincs beállítva';
             return new WP_Error(
                 'va_plan_upgrade_only',
-                'Aktív csomagod van (' . ucfirst( $current_plan ) . ') ' . $until_txt . ' időpontig. Csak magasabb rang vásárolható.'
+                'Aktív csomagod van (' . self::get_plan_label_for_user( $user_id, $current_plan ) . ') ' . $until_txt . ' időpontig. Csak magasabb rang vásárolható.'
             );
         }
 
@@ -982,10 +1040,20 @@ class VA_Ajax {
             }
 
             $qty = absint( $finalize['qty'] ?? 0 );
+            $carryover_days = absint( $finalize['carryover_days'] ?? 0 );
+            $carryover_value = absint( $finalize['carryover_value_ft'] ?? 0 );
+            $carryover_msg = '';
+            if ( $carryover_days > 0 ) {
+                $carryover_msg = ' A korábbi csomag maradék értéke nem veszett el: +' . $carryover_days . ' nap jóváírva';
+                if ( $carryover_value > 0 ) {
+                    $carryover_msg .= ' (' . number_format( $carryover_value, 0, ',', ' ' ) . ' Ft érték)';
+                }
+                $carryover_msg .= '.';
+            }
             if ( ! empty( $finalize['already'] ) ) {
-                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' );
+                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' . $carryover_msg );
             } else {
-                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' );
+                va_set_flash( 'success', 'Köszönjük vásárlást, a fizetés sikeresen megtörtént! A továbbiakban ellenőrizze az új előfizetési rangját. Amennyiben hibát észlel, haladéktalanul jelezze felénk.' . $carryover_msg );
             }
             if ( $return_to === 'submit' ) {
                 self::redirect_submit_page();
@@ -1636,6 +1704,10 @@ class VA_Ajax {
                 'stripe_receipt_url'   => esc_url_raw( (string) ( $paid['stripe_receipt_url'] ?? '' ) ),
                 'initiated_at'         => absint( $paid['initiated_at'] ?? 0 ),
                 'completed_at'         => absint( $paid['completed_at'] ?? current_time( 'timestamp' ) ),
+                'upgrade_applied'      => ! empty( $paid['upgrade_applied'] ) ? 1 : 0,
+                'carryover_days'       => absint( $paid['carryover_days'] ?? 0 ),
+                'carryover_value_ft'   => absint( $paid['carryover_value_ft'] ?? 0 ),
+                'prev_plan_slug'       => sanitize_key( (string) ( $paid['prev_plan_slug'] ?? '' ) ),
             ] );
             return [
                 'already'   => true,
@@ -1645,6 +1717,11 @@ class VA_Ajax {
                 'stripe_session_id'     => sanitize_text_field( (string) ( $paid['stripe_session_id'] ?? '' ) ),
                 'stripe_payment_intent' => sanitize_text_field( (string) ( $paid['stripe_payment_intent'] ?? '' ) ),
                 'stripe_receipt_url'    => esc_url_raw( (string) ( $paid['stripe_receipt_url'] ?? '' ) ),
+                'upgrade_applied'       => ! empty( $paid['upgrade_applied'] ),
+                'carryover_days'        => absint( $paid['carryover_days'] ?? 0 ),
+                'carryover_value_ft'    => absint( $paid['carryover_value_ft'] ?? 0 ),
+                'prev_plan_slug'        => sanitize_key( (string) ( $paid['prev_plan_slug'] ?? '' ) ),
+                'plan_slug'             => sanitize_key( (string) ( $paid['plan_slug'] ?? '' ) ),
             ];
         }
 
@@ -1671,30 +1748,69 @@ class VA_Ajax {
         update_user_meta( $user_id, 'va_listing_credits', $current + $qty );
 
         // Csomag frissítése a vásárolt csomag rangja alapján, lejárattal.
-        $new_plan = self::get_target_plan_slug_for_qty( $qty );
+        $new_plan = self::normalize_purchase_plan_slug( self::get_target_plan_slug_for_qty( $qty ) );
         $cur_plan = class_exists( 'VA_User_Roles' )
             ? VA_User_Roles::get_user_plan( $user_id )
             : sanitize_key( (string) get_user_meta( $user_id, 'va_plan', true ) );
+        $cur_plan = self::normalize_purchase_plan_slug( $cur_plan );
         $cur_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $cur_plan ) : 0;
         $new_rank = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_plan_rank( $new_plan ) : 0;
 
+        $upgrade_applied    = false;
+        $carryover_days     = 0;
+        $carryover_value_ft = 0;
+        $prev_plan_slug     = $cur_plan;
+
         // Egyszerre csak egy aktív termék: csak magasabb csomag írhatja felül a jelenlegit.
         if ( $new_rank > $cur_rank ) {
-            update_user_meta( $user_id, 'va_plan', $new_plan );
-            // Egyedi csomagoknál a per-user duration_days a mérvadó, egyébként a globális (default: 365 nap).
-            if ( $new_plan === 'custom' ) {
-                $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
-                $duration_days = $custom_dur > 0 ? $custom_dur : 365; // custom: admin állítja, többi: 1 év
-            } else {
-                $duration_days = 365; // 1 éves lejárat minden csomagra
+            $old_expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
+            $old_duration_days = self::get_plan_base_duration_days( $user_id, $cur_plan );
+            $new_duration_days = self::get_plan_base_duration_days( $user_id, $new_plan );
+
+            $old_total_price = self::get_plan_price_total_for_slug( $cur_plan );
+            $new_total_price = max( 1, $amount );
+            if ( $new_total_price <= 0 ) {
+                $new_total_price = max( 1, self::get_plan_price_total_for_slug( $new_plan ) );
             }
-            update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $duration_days * DAY_IN_SECONDS ) );
+
+            $remaining_seconds = ( $old_expires_at > time() ) ? ( $old_expires_at - time() ) : 0;
+            if ( $cur_rank > 0 && $remaining_seconds > 0 && $old_total_price > 0 ) {
+                $old_daily_value = $old_total_price / max( 1, $old_duration_days );
+                $remaining_days_float = $remaining_seconds / DAY_IN_SECONDS;
+                $carryover_value_ft = (int) round( $old_daily_value * $remaining_days_float );
+
+                if ( $carryover_value_ft > 0 ) {
+                    $new_daily_value = $new_total_price / max( 1, $new_duration_days );
+                    if ( $new_daily_value > 0 ) {
+                        $carryover_days = (int) ceil( $carryover_value_ft / $new_daily_value );
+                        if ( $carryover_days > 0 ) {
+                            $carryover_days = max( 1, $carryover_days );
+                            $carryover_days = min( 365, $carryover_days );
+                        }
+                    }
+                }
+            }
+
+            update_user_meta( $user_id, 'va_plan', $new_plan );
+            $final_duration_days = max( 1, $new_duration_days + $carryover_days );
+            update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $final_duration_days * DAY_IN_SECONDS ) );
             // Lejárati figyelmeztető flagek törlése az új ciklus kezdetekor.
             foreach ( [ 1, 7, 30 ] as $_t ) {
                 delete_user_meta( $user_id, 'va_plan_expiry_warned_' . $_t );
             }
             delete_user_meta( $user_id, 'va_plan_expired_admin_notified' );
             delete_user_meta( $user_id, 'va_plan_expired_user_notified' );
+            $upgrade_applied = true;
+
+            if ( class_exists( 'VA_Mailer' ) && method_exists( 'VA_Mailer', 'send_plan_upgrade_notice' ) ) {
+                VA_Mailer::send_plan_upgrade_notice( $user_id, [
+                    'prev_plan_slug'     => $prev_plan_slug,
+                    'new_plan_slug'      => $new_plan,
+                    'carryover_days'     => $carryover_days,
+                    'carryover_value_ft' => $carryover_value_ft,
+                    'new_expires_at'     => (int) get_user_meta( $user_id, 'va_plan_expires_at', true ),
+                ] );
+            }
         }
 
         // Vásárláskor a kártyán megadott kiemelési gyakoriság legyen a mérvadó.
@@ -1714,6 +1830,10 @@ class VA_Ajax {
             'stripe_receipt_url'    => $stripe_receipt_url,
             'initiated_at'          => $initiated_at,
             'completed_at'          => $completed_at,
+            'upgrade_applied'       => $upgrade_applied ? 1 : 0,
+            'carryover_days'        => $carryover_days,
+            'carryover_value_ft'    => $carryover_value_ft,
+            'prev_plan_slug'        => $prev_plan_slug,
         ] );
 
         $paid_data = [
@@ -1725,6 +1845,10 @@ class VA_Ajax {
             'plan_slug'             => $new_plan,
             'initiated_at'          => $initiated_at,
             'completed_at'          => $completed_at,
+            'upgrade_applied'       => $upgrade_applied ? 1 : 0,
+            'carryover_days'        => $carryover_days,
+            'carryover_value_ft'    => $carryover_value_ft,
+            'prev_plan_slug'        => $prev_plan_slug,
         ];
         if ( $stripe_session_id !== '' ) {
             $paid_data['stripe_session_id'] = $stripe_session_id;
@@ -1752,6 +1876,11 @@ class VA_Ajax {
             'stripe_session_id'     => $stripe_session_id,
             'stripe_payment_intent' => $stripe_payment_intent,
             'stripe_receipt_url'    => $stripe_receipt_url,
+            'upgrade_applied'       => $upgrade_applied,
+            'carryover_days'        => $carryover_days,
+            'carryover_value_ft'    => $carryover_value_ft,
+            'prev_plan_slug'        => $prev_plan_slug,
+            'plan_slug'             => $new_plan,
         ];
     }
 
@@ -1790,6 +1919,10 @@ class VA_Ajax {
                 'stripe_receipt_url'   => esc_url_raw( (string) ( $entry['stripe_receipt_url'] ?? '' ) ),
                 'initiated_at'         => absint( $entry['initiated_at'] ?? 0 ),
                 'completed_at'         => absint( $entry['completed_at'] ?? 0 ),
+                'upgrade_applied'      => ! empty( $entry['upgrade_applied'] ) ? 1 : 0,
+                'carryover_days'       => absint( $entry['carryover_days'] ?? 0 ),
+                'carryover_value_ft'   => absint( $entry['carryover_value_ft'] ?? 0 ),
+                'prev_plan_slug'       => sanitize_key( (string) ( $entry['prev_plan_slug'] ?? '' ) ),
             ];
         }
 
