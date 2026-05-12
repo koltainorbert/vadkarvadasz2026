@@ -1768,9 +1768,9 @@ class VA_Ajax {
             $new_duration_days = self::get_plan_base_duration_days( $user_id, $new_plan );
 
             $old_total_price = self::get_plan_price_total_for_slug( $cur_plan );
-            $new_total_price = max( 1, $amount );
+            $new_total_price = $amount > 0 ? $amount : self::get_plan_price_total_for_slug( $new_plan );
             if ( $new_total_price <= 0 ) {
-                $new_total_price = max( 1, self::get_plan_price_total_for_slug( $new_plan ) );
+                $new_total_price = 1;
             }
 
             $remaining_seconds = ( $old_expires_at > time() ) ? ( $old_expires_at - time() ) : 0;
