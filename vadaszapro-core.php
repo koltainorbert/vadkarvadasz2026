@@ -97,6 +97,14 @@ add_action( 'init', function () {
     }
 }, 999 );
 
+// Ideiglenes probe endpoint deploy verifikációhoz: ?va_probe=20260513
+add_action( 'init', function () {
+    $probe = isset( $_GET['va_probe'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['va_probe'] ) ) : '';
+    if ( $probe === '20260513' ) {
+        wp_die( 'VA_PROBE_OK_20260513' );
+    }
+}, 0 );
+
 // Egyszeri migráció: régi autós form-konfig törlése az adatbázisból
 add_action( 'init', function () {
     if ( get_transient( 'va_form_config_reset_v4' ) ) return;
