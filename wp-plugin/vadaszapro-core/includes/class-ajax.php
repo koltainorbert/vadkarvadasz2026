@@ -370,8 +370,11 @@ class VA_Ajax {
             $img_errors = self::handle_images( $post_id, $_FILES['listing_images'], $featured_idx );
         }
 
-        // A kredit permanens slot-bővítés – nem fogyasztható el feltöltéskor.
-        // A can_post_listing() és enforce_plan_limits() mindkettő figyelembe veszi a krediteket.
+        // 1 feladás = 1 kredit levonás (egyszer használatos ajándék/feladási kredit).
+        $credits = absint( get_user_meta( $user_id, 'va_listing_credits', true ) );
+        if ( $credits > 0 ) {
+            update_user_meta( $user_id, 'va_listing_credits', max( 0, $credits - 1 ) );
+        }
 
         $msg = $status === 'publish'
             ? 'Hirdetés sikeresen feladva!'

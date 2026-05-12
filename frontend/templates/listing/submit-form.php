@@ -376,9 +376,12 @@ wp_localize_script( 'va-submit', 'VA_Data', [
         <div class="va-notice va-notice--info" style="margin-bottom:16px;">
             <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
                 <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Egyenleged összesen: <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong>.
+                    Csomaglimitből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
+                    <?php if ( $user_credit_balance > 0 ): ?>
+                        Emellett van <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong> egyszer használatos ajándékkredited.
+                    <?php endif; ?>
                 <?php elseif ( $user_credit_balance > 0 ): ?>
-                    Rendelkezésre álló kreditjeid: <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong>.
+                    Csomaglimit elérve. Van még <strong><?php echo esc_html( (string) $user_credit_balance ); ?> db</strong> egyszer használatos ajándékkredited.
                 <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
                     Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
                 <?php else: ?>
