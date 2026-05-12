@@ -3621,14 +3621,14 @@ class VA_Settings_Page {
                                 $date_str  = date_i18n( 'Y.m.d H:i', $expires_ts );
                                 if ( $expires_ts < $now_ts ) {
                                     $expired_days = (int) floor( ( $now_ts - $expires_ts ) / DAY_IN_SECONDS );
-                                    echo '<div><span style="display:inline-block;color:#ff4444;font-weight:800;background:rgba(255,68,68,.12);border:1px solid rgba(255,68,68,.45);padding:2px 8px;border-radius:999px;">&#x26A0; LEJÁRT ' . esc_html( (string) $expired_days ) . ' napja</span></div>';
+                                    echo '<div><span class="va-upm-expire-pill" style="color:#ff4444;background:rgba(255,68,68,.12);border-color:rgba(255,68,68,.45);">&#x26A0; LEJÁRT ' . esc_html( (string) $expired_days ) . ' napja</span></div>';
                                     echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejárt: ' . esc_html( $date_str ) . '</div>';
                                 } elseif ( $days_diff <= 30 ) {
                                     $col = $days_diff <= 7 ? '#ff8800' : '#ffcc00';
-                                    echo '<div><span style="display:inline-block;color:' . esc_attr( $col ) . ';font-weight:800;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.45);padding:2px 8px;border-radius:999px;">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
+                                    echo '<div><span class="va-upm-expire-pill" style="color:' . esc_attr( $col ) . ';background:rgba(255,180,0,.12);border-color:rgba(255,180,0,.45);">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
                                     echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejár: ' . esc_html( $date_str ) . '</div>';
                                 } else {
-                                    echo '<div><span style="display:inline-block;color:#00c850;font-weight:800;background:rgba(0,200,80,.12);border:1px solid rgba(0,200,80,.45);padding:2px 8px;border-radius:999px;">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
+                                    echo '<div><span class="va-upm-expire-pill" style="color:#00c850;background:rgba(0,200,80,.12);border-color:rgba(0,200,80,.45);">' . esc_html( (string) $days_diff ) . ' nap hátra</span></div>';
                                     echo '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;">Lejár: ' . esc_html( $date_str ) . '</div>';
                                 }
                             }
@@ -3831,6 +3831,17 @@ class VA_Settings_Page {
             background:var(--pb,rgba(136,136,136,.15));color:var(--pc,#888);
             border:1px solid var(--pc,#888);border-radius:999px;
             padding:3px 10px;font-size:12px;font-weight:700;
+        }
+        .va-upm-expire-pill {
+            display:inline-flex;
+            align-items:center;
+            border:1px solid transparent;
+            border-radius:999px;
+            padding:2px 8px;
+            font-size:12px;
+            font-weight:800;
+            line-height:1;
+            white-space:nowrap;
         }
         .va-upm-plan-editor { margin-top:8px;padding:10px;background:var(--va-bg3);border-radius:var(--va-radius-sm);border:1px solid var(--va-border2); }
         .va-upm-plan-editor select,
