@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 12. – Session #340 (Kiemelesi cooldown forrasa: mindig arkartya)
+
+### Igeny
+- Silver kartyan atallitott cooldown (pl. 10 nap) jelenjen meg azonnal a Fiok oldalon is.
+- A kiemeles cooldown mindig a kartya szerinti ertek legyen.
+
+### Megvalositas [x]
+- [x] `includes/class-user-roles.php`: eltavolitva a user-meta (`va_plan_boost_cooldown`) feluliras a `get_plan_config()`-bol.
+- [x] A boost cooldown ezentul minden csomagnal a kartya/plan konfiguraciobol jon.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+### Eredmeny
+- Kartya cooldown modositas utan a Fiok oldali kijelzes es a valos jogosultsag is az uj erteket koveti.
+- Megszunt az a helyzet, hogy regi user-specifikus ertek bent tart egy korabbi nap-szamot.
+
+### Erintett fajlok
+- `includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+
+---
+
 ## 2026. 05. 12. – Session #339 (Kiemeles sorrend finomhangolas: elore ugrik, majd fokozatosan hatrabb kerul)
 
 ### Igeny
