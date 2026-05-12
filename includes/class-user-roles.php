@@ -947,7 +947,7 @@ class VA_User_Roles {
 
         $cfg = self::get_plan_config( $plan, $target_uid );
         wp_send_json_success( [
-            'message'   => 'Terv és kredit sikeresen frissítve!',
+            'message'   => 'Ajándék hirdetés jóváírva / beállítva!',
             'plan'      => $plan,
             'label'     => $cfg['label'],
             'icon'      => $cfg['icon'],
