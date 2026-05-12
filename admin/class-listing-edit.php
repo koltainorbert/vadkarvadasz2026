@@ -1115,10 +1115,10 @@ class VA_Listing_Edit {
                         <!-- Kategória -->
                         <div class="va-le-card">
                             <div class="va-le-card-hdr">🗂️ Kategória</div>
-                            <select name="va_category" class="va-le-select">
+                            <select name="va_category" id="va-admin-category" class="va-le-select">
                                 <option value="">— Nincs megadva —</option>
                                 <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo (int)$cat->term_id; ?>" <?php selected($cur_cat, $cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
+                                <option value="<?php echo (int)$cat->term_id; ?>" data-slug="<?php echo esc_attr( (string) $cat->slug ); ?>" <?php selected($cur_cat, $cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

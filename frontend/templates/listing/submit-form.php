@@ -205,6 +205,12 @@ $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_bra
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $body_types = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
+$category_slug_map = [];
+if ( is_array( $categories ) ) {
+    foreach ( $categories as $cat_term ) {
+        $category_slug_map[ (int) $cat_term->term_id ] = sanitize_title( (string) ( $cat_term->slug ?? '' ) );
+    }
+}
 $category_required_rules = [
     'golyos-puska'       => [ 'label' => 'Golyós puska', 'required' => [ 'brand', 'caliber' ] ],
     'soretes-puska'      => [ 'label' => 'Sörétes puska', 'required' => [ 'brand', 'caliber' ] ],
@@ -402,6 +408,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
     'site_type'      => $site_type,
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
     'hunting_brand_models' => $site_type !== 'jarmu' ? $hunting_brand_models : [],
+    'category_slugs' => $category_slug_map,
     'category_required_rules' => $category_required_rules,
 ]);
 ?>
@@ -1117,7 +1124,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var $cat = $('#va-category');
         if (!$cat.length) return '';
         var opt = $cat.find('option:selected');
-        return (opt.data('slug') || '').toString();
+        var slug = (opt.data('slug') || '').toString();
+        if (slug) return slug;
+        var id = parseInt($cat.val() || 0, 10);
+        if (!id || typeof VA_Data === 'undefined' || !VA_Data.category_slugs) return '';
+        return (VA_Data.category_slugs[String(id)] || VA_Data.category_slugs[id] || '').toString();
     }
 
     function rebuildHuntingBrandModelDatalists(clearModel) {
