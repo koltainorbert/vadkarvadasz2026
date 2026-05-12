@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 12. – Session #336 (Basic csomag: kiemeles + uj pill + akcios ar tiltasa)
+
+### Igeny
+- Basic csomaggal ne lehessen kiemelni hirdetest.
+- Basic csomaggal ne lehessen akcios arat allitani a fiok oldali ar szerkesztoben.
+- Basic csomaggal a pillek (Kiemeles / Uj pill) ne legyenek hasznalhatok, kattintasra jelenjen meg felhivas nagyobb elofizetesre.
+
+### Megvalositas [x]
+- [x] `frontend/templates/user/dashboard.php`: Basic csomagnal az ar szerkeszto gomb lockolt allapotba kerul, kattintasra figyelmezteto uzenet jelenik meg.
+- [x] `frontend/templates/user/dashboard.php`: Basic csomagnal a `Kiemeles` es `Uj pill` gombok lockolt allapotban jelennek meg, kattintasra upsell uzenettel.
+- [x] `includes/class-user-roles.php`: `ajax_boost_listing` es `ajax_toggle_new_pill` backend tiltast kapott Basic csomagra.
+- [x] `includes/class-ajax.php`: `set_sale_price` backend tiltast kapott Basic csomagra.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- Basic csomaggal mar sem frontend, sem AJAX utvonalon nem lehet kiemelest, uj pillt vagy akcios arat hasznalni.
+- A felhasznalo egyertelmu uzenetet kap: vasaroljon nagyobb elofizetest.
+
+### Erintett fajlok
+- `frontend/templates/user/dashboard.php`
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/user/dashboard.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 12. – Session #335 (Ajandek kredit dupla szamolas fix)
 
 ### Igeny
