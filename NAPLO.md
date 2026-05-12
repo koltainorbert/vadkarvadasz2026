@@ -2,6 +2,49 @@
 
 ---
 
+## 2026. 05. 12. – Session #352r (Kategoriankenti specialis mezok: optika + kutya, fiok + admin)
+
+### Keres
+- A kovetkezo fazisban a kategoriankenti kotelezo logikat specialis mezokre kellett kiterjeszteni,
+  es ezt admin szerkesztesben is lathatova tenni.
+
+### Javitas
+- Backend validacio bovites (AJAX submit + update):
+  - uj mezok: `optic_zoom`, `optic_objective`, `dog_age_months`
+  - szabalyok:
+    - tavcsovek: brand + model + nagyitas + objektiv
+    - ejjellato/hokamera: brand + model + nagyitas
+    - vadaszkutya: brand + model + kutya eletkor
+  - uj metak mentese:
+    - `va_optic_zoom`
+    - `va_optic_objective`
+    - `va_dog_age_months`
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend feladasi urlap bovites:
+  - uj kategoriatol fuggo mezoblokkok:
+    - Nagyitas
+    - Objektiv atmero
+    - Kutya eletkor (honap)
+  - dinamikus megjelenites/elrejtese kategoriavaltaskor
+  - kategoriankenti `required` attributum allitas kliensoldalon
+  - edit modban elozo ertekek visszatoltese
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Admin listing szerkeszto bovites:
+  - uj mezok a Termek reszletei blokkban (non-jarmu mod)
+  - kategoriatol fuggo lathatosag + required kapcsolas JS-ben
+  - admin mentesnel uj metak tartos mentese
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+
+### Eredmeny
+- A specialis kategoriaknal mar nem csak brand/model/caliber, hanem a valos use-case mezok is kovetelhetok.
+- Fiokos feladas es admin szerkesztes ugyanarra a kategoriankenti logikara allt at.
+
 ## 2026. 05. 12. – Session #352q (Kategoriatol fuggo kotelezo mezok: frontend + backend)
 
 ### Keres

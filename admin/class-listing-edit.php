@@ -276,6 +276,9 @@ class VA_Listing_Edit {
             $forced_location = 'Veszprém Gyulafirátót';
         }
         update_post_meta( $post_id, 'va_location', $forced_location );
+        update_post_meta( $post_id, 'va_optic_zoom', sanitize_text_field( wp_unslash( $_POST['va_optic_zoom'] ?? '' ) ) );
+        update_post_meta( $post_id, 'va_optic_objective', sanitize_text_field( wp_unslash( $_POST['va_optic_objective'] ?? '' ) ) );
+        update_post_meta( $post_id, 'va_dog_age_months', sanitize_text_field( wp_unslash( $_POST['va_dog_age_months'] ?? '' ) ) );
 
         // Galéria képek
         $raw_gids = sanitize_text_field( wp_unslash( $_POST['va_gallery_ids'] ?? '' ) );
@@ -866,6 +869,21 @@ class VA_Listing_Edit {
                                 <div class="va-le-field">
                                     <label class="va-le-lbl"><?php echo $fb_lbl('va_year', 'Gyártási év'); ?></label>
                                     <input type="number" name="va_year" min="1800" max="2099" value="<?php echo esc_attr($get_meta('va_year')); ?>" class="va-le-input" placeholder="<?php echo $fb_ph('va_year','pl. 2020'); ?>">
+                                </div>
+                                <?php endif; ?>
+
+                                <?php if ( $site_type !== 'jarmu' ): ?>
+                                <div class="va-le-field va-admin-cat-rule" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+                                    <label class="va-le-lbl">Nagyítás</label>
+                                    <input type="text" name="va_optic_zoom" value="<?php echo esc_attr( $get_meta('va_optic_zoom') ); ?>" class="va-le-input" placeholder="pl. 3-12x50">
+                                </div>
+                                <div class="va-le-field va-admin-cat-rule" data-categories="tavcsovek">
+                                    <label class="va-le-lbl">Objektív átmérő (mm)</label>
+                                    <input type="number" name="va_optic_objective" min="1" max="120" value="<?php echo esc_attr( $get_meta('va_optic_objective') ); ?>" class="va-le-input" placeholder="pl. 50">
+                                </div>
+                                <div class="va-le-field va-admin-cat-rule" data-categories="vadaszkutya">
+                                    <label class="va-le-lbl">Kutya életkor (hónap)</label>
+                                    <input type="number" name="va_dog_age_months" min="1" max="300" value="<?php echo esc_attr( $get_meta('va_dog_age_months') ); ?>" class="va-le-input" placeholder="pl. 18">
                                 </div>
                                 <?php endif; ?>
                             </div>
