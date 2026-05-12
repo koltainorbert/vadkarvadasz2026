@@ -303,6 +303,8 @@ $user_listings_count = 0;
 $user_credit_balance = 0;
 $plan_has_allowance = false;
 $plan_remaining = null;
+$plan_limit = 0;
+$gift_total = 0;
 if ( is_user_logged_in() ) {
     global $wpdb;
     $user_id = get_current_user_id();
@@ -320,6 +322,8 @@ if ( is_user_logged_in() ) {
     if ( class_exists( 'VA_User_Roles' ) ) {
         $plan_check = VA_User_Roles::can_post_listing( $user_id );
         $plan_has_allowance = ! empty( $plan_check['can'] );
+        $plan_limit = isset( $plan_check['plan_limit'] ) ? (int) $plan_check['plan_limit'] : (int) ( $plan_check['limit'] ?? 0 );
+        $gift_total = isset( $plan_check['credits_total'] ) ? (int) $plan_check['credits_total'] : $user_credit_balance;
 
         if ( isset( $plan_check['limit'], $plan_check['used'] ) && (int) $plan_check['limit'] > 0 ) {
             $plan_remaining = max( 0, (int) $plan_check['limit'] - (int) $plan_check['used'] );
