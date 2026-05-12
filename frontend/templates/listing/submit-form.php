@@ -1160,6 +1160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
             rebuildHuntingBrandModelDatalists(true);
+            applyCategorySpecificFieldVisibility();
         }
     });
 
@@ -1170,6 +1171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     rebuildHuntingBrandModelDatalists(false);
+    applyCategorySpecificFieldVisibility();
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;
@@ -1236,7 +1238,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var labels = {
             brand: 'Márka / gyártó',
             model: 'Modell / típus',
-            caliber: 'Kaliber'
+            caliber: 'Kaliber',
+            optic_zoom: 'Nagyítás',
+            optic_objective: 'Objektív átmérő (mm)',
+            dog_age_months: 'Kutya életkor (hónap)'
         };
         var missing = [];
 
@@ -1249,6 +1254,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!missing.length) return '';
         return (rule.label || 'A választott kategória') + ' kategóriában kötelező: ' + missing.join(', ') + '.';
+    }
+
+    function applyCategorySpecificFieldVisibility() {
+        if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
+        var slug = getSelectedCategorySlug();
+        var rules = VA_Data.category_required_rules || {};
+        var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
+
+        $('.va-cat-rule-field').each(function(){
+            var $wrap = $(this);
+            var list = (($wrap.data('categories') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var visible = list.indexOf(slug) !== -1;
+            $wrap.toggle(visible);
+
+            $wrap.find('input,select,textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = visible && required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        });
     }
 
     /* ══ Form submit ═════════════════════════════════════ */

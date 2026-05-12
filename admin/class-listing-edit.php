@@ -80,6 +80,25 @@ class VA_Listing_Edit {
             $hbm = VA_Vehicle_Catalog::get_hunting_brand_models_by_category();
             echo '<script>var VA_HuntingBrandModels=' . wp_json_encode($hbm) . ';</script>';
         }
+        $category_rules = [
+            'golyos-puska'       => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
+            'soretes-puska'      => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
+            'vegyescsovu-puska'  => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
+            'maroklofegyver'     => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
+            'hatastalanitott'    => [ 'required' => [ 'va_brand', 'va_model' ] ],
+            'egyeb-fegyverek'    => [ 'required' => [ 'va_brand' ] ],
+            'loszer-tolteny'     => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
+            'tavcsovek'          => [ 'required' => [ 'va_brand', 'va_model', 'va_optic_zoom', 'va_optic_objective' ] ],
+            'ejjellato-tavcso'   => [ 'required' => [ 'va_brand', 'va_model', 'va_optic_zoom' ] ],
+            'hokamerak'          => [ 'required' => [ 'va_brand', 'va_model', 'va_optic_zoom' ] ],
+            'vadkamera'          => [ 'required' => [ 'va_brand', 'va_model' ] ],
+            'vadaszlampa'        => [ 'required' => [ 'va_brand', 'va_model' ] ],
+            'vadaszkutya'        => [ 'required' => [ 'va_brand', 'va_model', 'va_dog_age_months' ] ],
+            'vadasz-ruhazat'     => [ 'required' => [ 'va_brand' ] ],
+            'cipo-bakancs'       => [ 'required' => [ 'va_brand' ] ],
+            'vadasz-felszereles' => [ 'required' => [ 'va_brand' ] ],
+        ];
+        echo '<script>var VA_CategoryRequiredRules=' . wp_json_encode( $category_rules ) . ';</script>';
         ?>
         <script>
         document.addEventListener('DOMContentLoaded',function(){
@@ -151,10 +170,31 @@ class VA_Listing_Edit {
             categorySel.addEventListener('change', function(){
                 brandField.value = '';
                 refillHuntingDatalists(true);
+                applyCategoryRuleFieldVisibility();
             });
             brandField.addEventListener('input', function(){ refillHuntingDatalists(true); });
             brandField.addEventListener('change', function(){ refillHuntingDatalists(true); });
             refillHuntingDatalists(false);
+
+            function applyCategoryRuleFieldVisibility(){
+                var opt = categorySel.options[categorySel.selectedIndex];
+                var slug = opt ? (opt.getAttribute('data-slug') || '') : '';
+                var rules = (typeof VA_CategoryRequiredRules !== 'undefined' && VA_CategoryRequiredRules[slug]) ? VA_CategoryRequiredRules[slug] : null;
+                var requiredFields = (rules && Array.isArray(rules.required)) ? rules.required : [];
+
+                document.querySelectorAll('.va-admin-cat-rule').forEach(function(wrap){
+                    var categories = (wrap.getAttribute('data-categories') || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+                    var visible = categories.indexOf(slug) !== -1;
+                    wrap.style.display = visible ? '' : 'none';
+
+                    wrap.querySelectorAll('input,select,textarea').forEach(function(input){
+                        var name = (input.getAttribute('name') || '').trim();
+                        input.required = visible && requiredFields.indexOf(name) !== -1;
+                    });
+                });
+            }
+
+            applyCategoryRuleFieldVisibility();
         });
         </script>
         <?php
