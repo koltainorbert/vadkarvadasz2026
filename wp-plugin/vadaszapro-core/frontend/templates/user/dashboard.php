@@ -972,20 +972,27 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI
                             </button>
                             <?php else:
-                                $hrs = (int) ceil( $boost_info['seconds_remaining'] / 3600 );
-                                $days_left = (int) ceil( $boost_info['seconds_remaining'] / 86400 );
-                                $wait_label = $boost_info['seconds_remaining'] >= 86400 ? ( $days_left . ' nap' ) : ( $hrs . ' óra' );
+                                $remaining_secs = max( 0, (int) $boost_info['seconds_remaining'] );
+                                $days_left      = (int) floor( $remaining_secs / DAY_IN_SECONDS );
+                                $hours_left     = (int) floor( ( $remaining_secs % DAY_IN_SECONDS ) / HOUR_IN_SECONDS );
+                                $mins_left      = (int) floor( ( $remaining_secs % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
+                                $secs_left      = (int) ( $remaining_secs % MINUTE_IN_SECONDS );
+                                $wait_label     = $days_left > 0
+                                    ? sprintf( '%d nap %02d:%02d:%02d', $days_left, $hours_left, $mins_left, $secs_left )
+                                    : sprintf( '%02d:%02d:%02d', $hours_left, $mins_left, $secs_left );
                             ?>
-                            <button class="va-boost-btn va-boost-btn--off"
+                            <button class="va-boost-btn va-boost-btn--off va-boost-btn--cooldown"
                                     data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>"
                                     data-nonce="<?php echo esc_attr( $boost_nonce ); ?>"
                                     data-ajax-url="<?php echo esc_url( $ajax_url ); ?>"
                                     data-mode="boost"
+                                    data-seconds-remaining="<?php echo esc_attr( (string) $remaining_secs ); ?>"
+                                    data-cooldown-days="<?php echo esc_attr( (string) $boost_info['cooldown_days'] ); ?>"
                                     aria-pressed="false"
                                     aria-disabled="true"
                                     disabled
                                     title="<?php echo esc_attr( $boost_info['cooldown_days'] . ' naponként emelhető (kiemelési újratöltés)' ); ?>">
-                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: várakozás (<?php echo esc_html( $wait_label ); ?>)
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: várakozás (<span class="va-boost-countdown"><?php echo esc_html( $wait_label ); ?></span>)
                             </button>
                             <?php
                                 endif;
@@ -1060,7 +1067,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                         data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>"
                                         data-nonce="<?php echo esc_attr( $boost_nonce ); ?>"
                                         data-ajax-url="<?php echo esc_url( $ajax_url ); ?>"
-                                        title="Hirdetés frissítése (lista tetejére tol)"
+                                    title="Hirdetés adatok frissítése (nem tolja a lista tetejére)"
                                         style="background:rgba(0,180,255,.1);border:1px solid rgba(0,180,255,.35);color:#60d0ff;white-space:nowrap;"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.5 14a8.5 8.5 0 1 1 2-5.5"/></svg> Frissítés</button>
                                 <?php endif; ?>
                                 <?php if ( $can_suspend && in_array( $l->post_status, [ 'publish', 'private' ], true ) ): ?>
@@ -2881,10 +2888,83 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
 <script>
 (function(){
+    function formatBoostCountdown(totalSeconds){
+        var sec = Math.max(0, parseInt(totalSeconds || 0, 10));
+        var days = Math.floor(sec / 86400);
+        var hours = Math.floor((sec % 86400) / 3600);
+        var mins = Math.floor((sec % 3600) / 60);
+        var secs = sec % 60;
+        var hh = String(hours).padStart(2, '0');
+        var mm = String(mins).padStart(2, '0');
+        var ss = String(secs).padStart(2, '0');
+        return days > 0 ? (days + ' nap ' + hh + ':' + mm + ':' + ss) : (hh + ':' + mm + ':' + ss);
+    }
+
+    function switchBoostButtonReady(btn){
+        if (btn._vaBoostCooldownTimer) {
+            clearInterval(btn._vaBoostCooldownTimer);
+            btn._vaBoostCooldownTimer = null;
+        }
+        btn.disabled = false;
+        btn.removeAttribute('aria-disabled');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.dataset.mode = 'boost';
+        btn.dataset.secondsRemaining = '0';
+        btn.classList.remove('va-boost-btn--on', 'va-boost-btn--cooldown');
+        btn.classList.add('va-boost-btn--off');
+        btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI';
+    }
+
+    function applyBoostCooldownState(btn, secondsRemaining, cooldownDays){
+        var rem = Math.max(0, parseInt(secondsRemaining || 0, 10));
+        if (rem <= 0) {
+            switchBoostButtonReady(btn);
+            return;
+        }
+
+        if (btn._vaBoostCooldownTimer) {
+            clearInterval(btn._vaBoostCooldownTimer);
+            btn._vaBoostCooldownTimer = null;
+        }
+
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.dataset.mode = 'boost';
+        btn.dataset.secondsRemaining = String(rem);
+        btn.classList.remove('va-boost-btn--on');
+        btn.classList.add('va-boost-btn--off', 'va-boost-btn--cooldown');
+        if (cooldownDays) {
+            btn.title = cooldownDays + ' naponként emelhető (kiemelési újratöltés)';
+        }
+
+        function render(){
+            btn.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: várakozás (<span class="va-boost-countdown">' + formatBoostCountdown(rem) + '</span>)';
+        }
+
+        render();
+        btn._vaBoostCooldownTimer = setInterval(function(){
+            rem -= 1;
+            if (rem <= 0) {
+                switchBoostButtonReady(btn);
+                return;
+            }
+            btn.dataset.secondsRemaining = String(rem);
+            render();
+        }, 1000);
+    }
+
+    document.querySelectorAll('.va-boost-btn[data-seconds-remaining]').forEach(function(btn){
+        applyBoostCooldownState(btn, btn.dataset.secondsRemaining, btn.dataset.cooldownDays || 0);
+    });
+
     document.querySelectorAll('.va-boost-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
             if (this.classList.contains('va-plan-locked')) {
                 alert(this.dataset.lockedMsg || 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.');
+                return;
+            }
+            if (this.disabled || this.getAttribute('aria-disabled') === 'true') {
                 return;
             }
             var postId   = this.dataset.postId;
@@ -2892,7 +2972,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
             var ajaxUrl  = this.dataset.ajaxUrl;
             var mode     = this.dataset.mode || 'toggle';
             var self     = this;
-            var originalText = self.textContent;
+            var originalHtml = self.innerHTML;
 
             self.disabled = true;
             self.textContent = 'Mentés...';
@@ -2916,25 +2996,33 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                     if (res.data && res.data.removed) {
                         self.dataset.mode = 'boost';
                         self.setAttribute('aria-pressed', 'false');
+                        self.removeAttribute('aria-disabled');
                         self.classList.remove('va-boost-btn--on');
+                        self.classList.remove('va-boost-btn--cooldown');
                         self.classList.add('va-boost-btn--off');
                         self.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: KI';
                     } else {
                         self.dataset.mode = 'remove';
                         self.setAttribute('aria-pressed', 'true');
+                        self.removeAttribute('aria-disabled');
                         self.classList.remove('va-boost-btn--off');
+                        self.classList.remove('va-boost-btn--cooldown');
                         self.classList.add('va-boost-btn--on');
                         self.innerHTML = '<span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelt: BE';
                     }
                 } else {
-                    self.disabled    = false;
-                    self.textContent = originalText;
+                    if (res.data && typeof res.data.seconds_remaining !== 'undefined') {
+                        applyBoostCooldownState(self, res.data.seconds_remaining, res.data.cooldown_days || 0);
+                    } else {
+                        self.disabled = false;
+                        self.innerHTML = originalHtml;
+                    }
                     alert(res.data && res.data.message ? res.data.message : 'Hiba történt.');
                 }
             })
             .catch(function(){
                 self.disabled    = false;
-                self.textContent = originalText;
+                self.innerHTML = originalHtml;
             });
         });
     });
