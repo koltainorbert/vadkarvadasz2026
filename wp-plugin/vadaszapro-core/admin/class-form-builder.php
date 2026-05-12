@@ -29,10 +29,6 @@ class VA_Form_Builder {
     }
 
     private static function should_reset_legacy_config( string $form_id, array $saved ): bool {
-        if ( self::has_custom_fields( $saved ) ) {
-            return false;
-        }
-
         if ( $form_id === 'va_listing_submit' ) {
             $site_type = sanitize_key( (string) get_option( 'va_site_type', 'vadaszat' ) );
 

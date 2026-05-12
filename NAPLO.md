@@ -15,7 +15,7 @@
 ### Javitas
 - Form Builder ongyogyitas bekerult (root + mirror):
   - `get_fields()` most ellenorzi a mentett konfigot
-  - ha custom mezok nincsenek es legacy autos marker detektalhato, akkor automatikusan defaultra resetel
+  - ha legacy autos marker detektalhato, automatikusan defaultra resetel (custom mezoket sem tart bent ilyen esetben)
 - `va_listing_submit` reset feltetelek:
   - nem `jarmu` site_type mellett `body_type` marker jelen van
   - vagy `jarmu` site_type mellett hunting marker van (`caliber`, `license_req`) de vehicle marker nincs
