@@ -899,10 +899,18 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 <del style="color:rgba(255,255,255,.4);font-size:12px;"><?php echo esc_html( va_format_price( $price, $p_type ) ); ?></del><br>
                                 <span style="color:#ff3030;font-weight:700;"><?php echo esc_html( number_format( $l_sale_price, 0, ',', ' ' ) . ' Ft' ); ?> <span style="font-size:10px;background:rgba(255,0,0,.2);border:1px solid rgba(255,0,0,.4);border-radius:4px;padding:1px 5px;">AKCIÓ</span></span>
                                 <?php if ( $l_sale_end ): ?><br><span style="font-size:10px;color:rgba(255,255,255,.35);">–<?php echo esc_html( $l_sale_end ); ?></span><?php endif; ?>
+                                <?php if ( $user_plan === 'basic' ): ?>
+                                <button class="va-sale-edit-btn va-sale-edit-btn--active va-plan-locked" data-locked-msg="A Basic csomag nem használhat akciós árat. Vásároljon nagyobb előfizetést." title="Basic csomagban nem elérhető"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+                                <?php else: ?>
                                 <button class="va-sale-edit-btn va-sale-edit-btn--active" data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>" data-normal-price="<?php echo esc_attr( (string) floatval( $price ) ); ?>" data-sale-price="<?php echo esc_attr( (string) $l_sale_price ); ?>" data-sale-end="<?php echo esc_attr( $l_sale_end ); ?>" title="Ár szerkesztése"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <?php echo esc_html( va_format_price( $price, $p_type ) ); ?>
+                                <?php if ( $user_plan === 'basic' ): ?>
+                                <button class="va-sale-edit-btn va-sale-edit-btn--idle va-plan-locked" data-locked-msg="A Basic csomag nem használhat akciós árat. Vásároljon nagyobb előfizetést." title="Basic csomagban nem elérhető"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+                                <?php else: ?>
                                 <button class="va-sale-edit-btn va-sale-edit-btn--idle" data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>" data-normal-price="<?php echo esc_attr( (string) floatval( $price ) ); ?>" data-sale-price="" data-sale-end="" title="Ár szerkesztése"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                         <td style="padding:10px 8px;"><?php echo $statuses[ $l->post_status ] ?? esc_html( $l->post_status ); ?></td>
@@ -936,7 +944,19 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 $boost_info = VA_User_Roles::can_boost( $user->ID, $l->ID );
                                 $is_boosted_now = VA_User_Roles::is_boosted( $l->ID );
                                 $is_new_pill_now = VA_User_Roles::is_new_pill( $l->ID );
-                                if ( $is_boosted_now ):
+                                if ( $user_plan === 'basic' ):
+                            ?>
+                            <button class="va-boost-btn va-boost-btn--off va-plan-locked"
+                                    data-locked-msg="Basic csomaggal a kiemelés nem elérhető. Vásároljon nagyobb előfizetést."
+                                    aria-pressed="false">
+                                <span class="va-boost-btn__dot" aria-hidden="true"></span>Kiemelés: zárolva
+                            </button>
+                            <button class="va-newpill-btn va-newpill-btn--off va-plan-locked"
+                                    data-locked-msg="Basic csomaggal az Új pill nem elérhető. Vásároljon nagyobb előfizetést."
+                                    aria-pressed="false">
+                                <span class="va-newpill-btn__dot" aria-hidden="true"></span>Új pill: zárolva
+                            </button>
+                            <?php elseif ( $is_boosted_now ):
                             ?>
                             <button class="va-boost-btn va-boost-btn--on"
                                     data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>"
@@ -2990,6 +3010,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
     var _nonce  = '<?php echo esc_js( $boost_nonce ); ?>';
     var _ajaxUrl= '<?php echo esc_js( $ajax_url ); ?>';
+    var _isBasicPlan = <?php echo $user_plan === 'basic' ? 'true' : 'false'; ?>;
+    var _upgradeMsg = 'Ez a funkció Basic csomagban nem elérhető. Vásároljon nagyobb előfizetést.';
 
     <?php if ( $va_show_daily_welcome ) : ?>
     (function(){
@@ -3328,7 +3350,18 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
 
     document.querySelectorAll('.va-sale-edit-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
+            if (this.classList.contains('va-plan-locked') || _isBasicPlan) {
+                alert(this.dataset.lockedMsg || _upgradeMsg);
+                return;
+            }
             openSaleModal(this.dataset.postId, this.dataset.normalPrice, this.dataset.salePrice, this.dataset.saleEnd);
+        });
+    });
+
+    document.querySelectorAll('.va-plan-locked').forEach(function(btn){
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            alert(this.dataset.lockedMsg || _upgradeMsg);
         });
     });
 

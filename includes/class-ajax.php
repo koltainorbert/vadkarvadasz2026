@@ -2792,6 +2792,14 @@ class VA_Ajax {
         if ( ! $post || (int) $post->post_author !== $user_id ) {
             wp_send_json_error( [ 'message' => 'Érvénytelen hirdetés.' ] );
         }
+
+        if ( class_exists( 'VA_User_Roles' ) ) {
+            $plan = VA_User_Roles::get_user_plan( $user_id );
+            if ( $plan === 'basic' ) {
+                wp_send_json_error( [ 'message' => 'Basic csomaggal akciós ár nem állítható. Vásároljon nagyobb előfizetést.' ] );
+            }
+        }
+
         $normal_price = isset( $_POST['normal_price'] ) ? floatval( $_POST['normal_price'] ) : null;
         if ( $normal_price !== null && $normal_price >= 0 ) {
             update_post_meta( $post_id, 'va_price', $normal_price );
