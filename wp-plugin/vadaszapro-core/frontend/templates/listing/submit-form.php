@@ -460,6 +460,11 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:1fr!important}}
+.va-loc-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+.va-loc-grid .va-input{width:100%!important}
+.va-loc-grid small{grid-column:1/-1!important;margin-top:-8px!important;color:rgba(255,255,255,.55)!important;font-size:12px!important}
+@media (max-width:1200px){.va-loc-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:760px){.va-loc-grid{grid-template-columns:1fr!important}}
 </style>
 
 <div class="va-submit-preview-shell">
@@ -992,6 +997,47 @@ document.addEventListener('DOMContentLoaded', function() {
         if (s !== _wStep) wizGoTo(s);
     });
     wizGoTo(1);
+
+    /* ══ Irányítószám/Város/Utca keresés ═══════════════════ */
+    // Irányítószám DB betöltése
+    var VA_ADDRESS_DB = <?php echo json_encode( json_decode( file_get_contents( __DIR__ . '/../../includes/hu-address-seed.json' ), true ) ); ?>;
+    var VA_POSTAL_CITY_MAP = {};
+    var VA_CITY_STREETS_MAP = {};
+    if (VA_ADDRESS_DB && VA_ADDRESS_DB.records) {
+        VA_ADDRESS_DB.records.forEach(function(rec) {
+            var pc = rec.postal_code, city = rec.city, street = rec.street;
+            if (!VA_POSTAL_CITY_MAP[pc]) VA_POSTAL_CITY_MAP[pc] = city;
+            if (!VA_CITY_STREETS_MAP[city]) VA_CITY_STREETS_MAP[city] = [];
+            if (VA_CITY_STREETS_MAP[city].indexOf(street) === -1) {
+                VA_CITY_STREETS_MAP[city].push(street);
+            }
+        });
+    }
+    
+    // Irányítószám change → város autofill
+    $(document).on('change blur', 'input[name="postal_code"]', function(){
+        var pc = ($(this).val() + '').trim();
+        if (pc && VA_POSTAL_CITY_MAP[pc]) {
+            $('input[name="location"]').val(VA_POSTAL_CITY_MAP[pc]).trigger('change');
+        }
+    });
+    
+    // Város change → utcák lista
+    $(document).on('change blur input', 'input[name="location"]', function(){
+        var city = ($(this).val() + '').trim();
+        var $datalist = $('#va-street-list');
+        $datalist.empty();
+        if (city && VA_CITY_STREETS_MAP[city]) {
+            VA_CITY_STREETS_MAP[city].forEach(function(street){
+                $datalist.append('<option value="' + esc_html(street) + '">');
+            });
+        }
+    });
+    
+    // Trigger ha már van érték (szerkesztés módban)
+    if ($('input[name="location"]').val()) {
+        $('input[name="location"]').trigger('change');
+    }
 
     /* ══ Képkezelő ═══════════════════════════════════════ */
     let _files   = [];   // { file: File|null, id: string, existing_id: int|null, url: string|null }[]
