@@ -740,7 +740,7 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   background: rgba(255,0,0,.12);
 }
 .va-advanced-toggle::after {
-  content: 'â–ľ';
+  content: '▾';
   font-size: 12px;
   line-height: 1;
   transition: transform .2s;
