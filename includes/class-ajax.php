@@ -341,6 +341,7 @@ class VA_Ajax {
         $postal_code = sanitize_text_field( wp_unslash( $_POST['postal_code'] ?? '' ) );
         $street      = sanitize_text_field( wp_unslash( $_POST['street'] ?? '' ) );
         $postal_code = preg_replace( '/\D+/', '', $postal_code );
+        $other_category = sanitize_text_field( wp_unslash( $_POST['other_category'] ?? '' ) );
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']    ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']    ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
@@ -386,6 +387,7 @@ class VA_Ajax {
             'va_location'    => $location,
             'va_postal_code' => $postal_code,
             'va_street'      => $street,
+            'va_other_category' => $other_category,
             'va_email_show'  => '1',
             'va_brand'       => $brand,
             'va_model'       => $model,
@@ -531,6 +533,7 @@ class VA_Ajax {
         $postal_code = sanitize_text_field( wp_unslash( $_POST['postal_code'] ?? '' ) );
         $street      = sanitize_text_field( wp_unslash( $_POST['street'] ?? '' ) );
         $postal_code = preg_replace( '/\D+/', '', $postal_code );
+        $other_category = sanitize_text_field( wp_unslash( $_POST['other_category'] ?? '' ) );
         $brand       = sanitize_text_field( wp_unslash( $_POST['brand']  ?? '' ) );
         $model       = sanitize_text_field( wp_unslash( $_POST['model']  ?? '' ) );
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
@@ -598,6 +601,7 @@ class VA_Ajax {
             'va_location'    => $location,
             'va_postal_code' => $postal_code,
             'va_street'      => $street,
+            'va_other_category' => $other_category,
             'va_email_show'  => '1',
             'va_brand'       => $brand,
             'va_model'       => $model,

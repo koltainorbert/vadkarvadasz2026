@@ -270,6 +270,7 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'location'    => get_post_meta( $maybe_id, 'va_location',    true ),
             'postal_code' => get_post_meta( $maybe_id, 'va_postal_code', true ),
             'street'      => get_post_meta( $maybe_id, 'va_street',      true ),
+            'other_category' => get_post_meta( $maybe_id, 'va_other_category', true ),
             'brand'       => get_post_meta( $maybe_id, 'va_brand',       true ),
             'model'       => get_post_meta( $maybe_id, 'va_model',       true ),
             'body_type'   => get_post_meta( $maybe_id, 'va_body_type',   true ),
@@ -534,6 +535,11 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     margin-top: 14px;
     margin-bottom: 0;
 }
+#va-wizard-overlay.va-wizard-shell .va-cond-btn.is-selected {
+    background: #ff8a00 !important;
+    border-color: #ff8a00 !important;
+    color: #111 !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-wstep-title,
 #va-wizard-overlay.va-wizard-shell .va-wstep-title em {
     font-size: 30px !important;
@@ -558,6 +564,45 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     border-color: #ff8a00 !important;
     color: #111 !important;
     filter: brightness(1.03);
+}
+
+/* Egyeb kategoria popup */
+.va-other-cat-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(4px);
+}
+.va-other-cat-modal.is-open {
+    display: flex;
+}
+.va-other-cat-card {
+    width: min(520px, calc(100% - 24px));
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: #0e0e0e;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    padding: 18px;
+}
+.va-other-cat-card h4 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+}
+.va-other-cat-card p {
+    margin: 0 0 12px;
+    color: rgba(255,255,255,.7);
+}
+.va-other-cat-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px;
 }
 </style>
 
@@ -615,6 +660,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                 <?php endforeach; ?>
             </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
+            <input type="hidden" name="other_category" id="va-other-category" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Állapot</label>
                 <div class="va-cond-btns" id="va-cond-btns">
@@ -625,6 +671,18 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                     <?php endforeach; ?>
                 </div>
                 <input type="hidden" name="condition" id="va-condition-hidden" value="<?php echo esc_attr((string)$cond_saved); ?>">
+            </div>
+        </div>
+
+        <div class="va-other-cat-modal" id="va-other-cat-modal" aria-hidden="true">
+            <div class="va-other-cat-card" role="dialog" aria-modal="true" aria-labelledby="va-other-cat-title">
+                <h4 id="va-other-cat-title">Egyéb kategória megadása</h4>
+                <p>Írd be pontosan, milyen kategóriát szeretnél megadni.</p>
+                <input type="text" id="va-other-cat-input" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb">
+                <div class="va-other-cat-actions">
+                    <button type="button" class="va-btn va-btn--ghost" id="va-other-cat-cancel">Mégse</button>
+                    <button type="button" class="va-btn va-btn--primary" id="va-other-cat-save">Mentés</button>
+                </div>
             </div>
         </div>
 
@@ -1059,6 +1117,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.va_toast && va_toast('Válassz kategóriát!', 'error');
                 return false;
             }
+            var slug = getSelectedCategorySlug();
+            if (slug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
+                openOtherCategoryModal();
+                window.va_toast && va_toast('Add meg az egyéb kategóriát.', 'error');
+                return false;
+            }
         } else if (step === 2) {
             if (!(($('[name="title"]').val() || '') + '').trim()) {
                 window.va_toast && va_toast('Add meg a hirdetés címét!', 'error');
@@ -1079,10 +1143,48 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
     $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
     // Kategória listaelement választás
+    function openOtherCategoryModal() {
+        var $modal = $('#va-other-cat-modal');
+        var $input = $('#va-other-cat-input');
+        $input.val((($('#va-other-category').val() || '') + '').trim());
+        $modal.addClass('is-open').attr('aria-hidden', 'false');
+        setTimeout(function(){ $input.trigger('focus'); }, 30);
+    }
+
+    function closeOtherCategoryModal() {
+        $('#va-other-cat-modal').removeClass('is-open').attr('aria-hidden', 'true');
+    }
+
     $(document).on('click', '.va-cat-item', function() {
         $('.va-cat-item').removeAttr('data-selected');
         $(this).attr('data-selected', '1');
         $('#va-category').val($(this).data('term-id')).trigger('change');
+
+        var slug = (($(this).data('slug') || '') + '').toLowerCase();
+        if (slug === 'egyeb') {
+            openOtherCategoryModal();
+        } else {
+            $('#va-other-category').val('');
+        }
+    });
+
+    $('#va-other-cat-cancel').on('click', function(){
+        closeOtherCategoryModal();
+    });
+    $('#va-other-cat-save').on('click', function(){
+        var val = (($('#va-other-cat-input').val() || '') + '').trim();
+        if (!val) {
+            window.va_toast && va_toast('Adj meg egy kategória nevet.', 'error');
+            return;
+        }
+        $('#va-other-category').val(val);
+        closeOtherCategoryModal();
+    });
+    $('#va-other-cat-modal').on('click', function(e){
+        if (e.target === this) closeOtherCategoryModal();
+    });
+    $(document).on('keydown', function(e){
+        if (e.key === 'Escape') closeOtherCategoryModal();
     });
     // Állapot gomb választás
     $(document).on('click', '.va-cond-btn', function() {
@@ -1755,6 +1857,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
             $notice.html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            return;
+        }
+
+        var selectedSlug = getSelectedCategorySlug();
+        if (selectedSlug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
+            openOtherCategoryModal();
+            $notice.html('<div class="va-notice va-notice--error">Egyéb kategóriánál add meg a kategória nevét is.</div>');
             return;
         }
 
