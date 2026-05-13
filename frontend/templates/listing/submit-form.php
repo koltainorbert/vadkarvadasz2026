@@ -453,10 +453,12 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 #va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
-#va-wizard-overlay.va-wizard-shell{height:min(84vh,980px)!important;max-height:min(84vh,980px)!important;overflow:hidden!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-header--inline{display:none!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;min-height:0;height:100%;overflow:hidden;padding-top:14px!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;min-height:0;overflow-y:auto!important;overflow-x:hidden;padding-right:6px;-webkit-overflow-scrolling:touch}
+#va-wizard-overlay.va-wizard-shell{height:auto!important;max-height:none!important;overflow:visible!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-main{display:block;height:auto;overflow:visible;padding-top:0!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important;padding-right:0}
+#va-wizard-overlay.va-wizard-shell .va-cat-cards{display:none!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-modal-title{margin:0 0 10px}
+#va-wizard-overlay.va-wizard-shell .va-cat-compact .va-select{height:48px;font-size:16px}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(4,minmax(120px,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(120px,1fr))!important}}
 </style>
@@ -509,29 +511,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
         <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, <em>válassz kategóriát</em></h3>
-            <select name="category" id="va-category" style="display:none" required>
-                <option value="">– Válasszon –</option>
-                <?php foreach ( $categories as $cat ): ?>
-                <option value="<?php echo esc_attr( $cat->term_id ); ?>" data-slug="<?php echo esc_attr( (string)$cat->slug ); ?>"<?php selected( (int)($edit_meta['category'] ?? 0), $cat->term_id ); ?>><?php echo esc_html( $cat->name ); ?></option>
-                <?php endforeach; ?>
-            </select>
-            <?php if ( $site_type !== 'jarmu' ): ?>
-            <div class="va-cat-cards" id="va-cat-cards">
-                <?php foreach ( $categories as $cat ):
-                    $slug   = (string)$cat->slug;
-                    $icon   = $cat_icons_map[$slug] ?? '📦';
-                    $is_sel = (int)($edit_meta['category'] ?? 0) === $cat->term_id;
-                ?>
-                <button type="button" class="va-cat-card<?php echo $is_sel ? ' is-selected' : ''; ?>"
-                    data-term-id="<?php echo esc_attr( $cat->term_id ); ?>"
-                    data-slug="<?php echo esc_attr( $slug ); ?>">
-                    <span class="va-cat-card__icon"><?php echo $icon; ?></span>
-                    <span class="va-cat-card__label"><?php echo esc_html( $cat->name ); ?></span>
-                </button>
-                <?php endforeach; ?>
-            </div>
-            <?php else: ?>
-            <div class="va-form-group">
+            <div class="va-form-group va-cat-compact">
                 <label>Kategória <span class="required">*</span></label>
                 <select name="category" id="va-category" class="va-select" required>
                     <option value="">– Válasszon –</option>
@@ -540,7 +520,6 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                     <?php endforeach; ?>
                 </select>
             </div>
-            <?php endif; ?>
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Állapot</label>
                 <div class="va-cond-btns" id="va-cond-btns">
