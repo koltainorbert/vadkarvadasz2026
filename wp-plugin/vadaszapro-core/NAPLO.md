@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 13. – Session #356 — Emergency wizard rollback (inline fallback)
+
+### Elvegzett munkak
+- A kategorias popup wizard UX hibas volt elesben, ezert a modal viselkedes azonnal letiltva.
+- A `va-hirdetes-feladas` oldalon a feladasi form most egyoldalas, stabil inline modban fut.
+- A mezok es submit logika maradt, de a popup/nav leptezes ki lett iktatva fallbackban.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `frontend/css/frontend.css` + wp-plugin mirror masolatok.
+
+### Deploy
+- Eles deploy trigger lefutott, commit: `97cb2dc`.
+
+---
+
 ## 2026. 05. 13. – Session #355 — Live-only deploy, helyi WP torolve
 
 ### Elvegzett munkak
