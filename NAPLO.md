@@ -2,51 +2,49 @@
 
 ---
 
-## 2026. 05. 13. – Session #357f — Kategória kártya grid visszaadása responsive elrendezéssel
+## 2026. 05. 13. – Session #357h — Kategória lista 3 oszlopba
 
 ### Elvegzett munkak
-- Az előző `<select>` dropdown helyett visszaadva a kategória-kártya grid rendszert (responsív!):
-  - **Desktop (1200px+)**: 3 oszlop
-  - **Tablet (760px-1200px)**: 2 oszlop
-  - **Mobil (<760px)**: 1 oszlop
-- A kategória gombokra kattintás már működik, és beállítja a rejtett `#va-category` inputot
+- Az előző e-commerce megamenu helyett egyszerű listát implementáltam:
+  - **Kategóriák**: `<ul><li>` struktúra, sima gombokkal
+  - **Grid layout**: 3 oszlop desktopra, 2 tabletre, 1 mobilra
+  - **Stílus**: szürke háttér, piros hover, piros/félkövér ha kiválasztott
+  - **Responszív**: CSS media queries
+- HTML: `.va-cat-list` (ul) + `.va-cat-item` (li button)
+- CSS: grid 3 oszlopba, Media queries tablet/mobil-hez
+- JS: `.va-cat-item` click kezelés, `data-selected` attribútum
 - Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
 
-### CSS módosítás
-```css
-#va-wizard-overlay.va-wizard-shell .va-cat-cards{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:12px!important;
-}
-@media (max-width:1200px) {
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-}
-@media (max-width:760px) {
-  grid-template-columns:1fr!important;
-}
-```
+### Megoldott probléma
+- Az előző e-commerce megamenu (szülő-gyermek hierarchia) PHP errort okozott, ezért töröltem
+- Helyette: sima kategória lista 3 oszlopba
 
 ### Deploy
 - Git push committed + deployed.
 
 ---
 
-## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus (visszavont)
+## 2026. 05. 13. – Session #357g — E-commerce megamenu (visszavont)
 
 ### Elvegzett munkak
-- Az előző iterációban a kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adtam, de nem volt az, amit a felhasználó akart.
-- A felhasználó inkább vissza akarta a kártyákat, de responsive elrendezéssel.
-- **Ez a munkamenet visszavonva, helyette a kártyák jöttek vissza.**
+- E-commerce stílus kategória menü megvalósítása:
+  - Szülő kategóriák oszlopokba
+  - Al-kategóriák lista formátumban
+  - **VISZONT:** PHP errort okozott, az oldal szétment
+  - **Megoldás:** Revert az utolsó jó verzióra (`9185b34`)
+
+### Status
+- **VISSZAVONT** – szétment az oldal
 
 ---
 
-## 2026. 05. 13. – Session #357d — Kompakt lenyíló kategóriaválasztás
+## 2026. 05. 13. – Session #357f — Kategória kártya grid responsív
 
 ### Elvegzett munkak
-- A nagy kategória-kártya rács helyett kompakt lenyíló (`select`) kategóriaválasztó lett az első lépésben.
-- A modalból kivezetve a panelt vágó fix magasság/scroll kényszer, így nem esik szét és nem marad nagy felső gap.
-- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+- Kategória-kártya grid: 3 oszlop desktopra, 2 tabletre, 1 mobilra
+- Deploy: `9185b34`
+
+---
 
 ### Deploy
 - Eles deploy commit: `3777b37`.
