@@ -1,180 +1,1764 @@
 {
   "golyos-puska": {
-    "Anschutz": ["1782", "1771", "1903"],
-    "Bergara": ["B14", "B14 Wilderness", "Premier", "Ridge", "HMR"],
-    "Blaser": ["R8", "R93", "R8 Professional", "K95", "R8 Ultimate"],
-    "Browning": ["X-Bolt", "X-Bolt Pro", "A-Bolt", "Maral", "BAR MK3"],
-    "CZ": ["557", "600", "527", "550", "600 Alpha"],
-    "Heym": ["SR21", "SR30", "Express", "26B"],
-    "Howa": ["1500", "1500 Hogue", "Mini Action", "HS Precision"],
-    "Mauser": ["M12", "M18", "M03", "M98", "M25"],
-    "Merkel": ["Helix", "RX Helix", "KR1", "KR1 Black", "RX Helix Speedster"],
-    "Remington": ["700", "783", "700 SPS", "700 BDL", "Model Seven"],
-    "Ruger": ["American", "Hawkeye", "Scout", "M77", "Precision Rifle"],
-    "Sako": ["85", "90", "S20", "A7", "Finnlight"],
-    "Sabatti": ["Rover", "Rover Hunter", "Tactical", "Saphire", "Olympus"],
-    "Steyr": ["Mannlicher CL II", "Monobloc", "SM12", "Scout", "Carbon"],
-    "Tikka": ["T3x", "T1x", "T3", "T3x Lite", "T3x Superlite"],
-    "Voere": ["LBW", "X3", "K15A", "VEC", "K98"],
-    "Weatherby": ["Vanguard", "Mark V", "307", "Backcountry", "Weathermark"],
-    "Winchester": ["XPR", "Model 70", "SX-AR", "Wildcat", "XPR Stealth"]
+    "Anschutz": [
+      "1771",
+      "1782",
+      "1903"
+    ],
+    "Bergara": [
+      "B14",
+      "B14 Wilderness",
+      "HMR",
+      "Premier",
+      "Ridge"
+    ],
+    "Blaser": [
+      "K95",
+      "R8",
+      "R8 Professional",
+      "R8 Ultimate",
+      "R93"
+    ],
+    "Browning": [
+      "A-Bolt",
+      "BAR MK3",
+      "Maral",
+      "X-Bolt",
+      "X-Bolt Pro"
+    ],
+    "CZ": [
+      "527",
+      "550",
+      "557",
+      "600",
+      "600 Alpha"
+    ],
+    "Heym": [
+      "26B",
+      "Express",
+      "SR21",
+      "SR30"
+    ],
+    "Howa": [
+      "1500",
+      "1500 Hogue",
+      "HS Precision",
+      "Mini Action"
+    ],
+    "Mauser": [
+      "M03",
+      "M12",
+      "M18",
+      "M25",
+      "M98"
+    ],
+    "Merkel": [
+      "Helix",
+      "KR1",
+      "KR1 Black",
+      "RX Helix",
+      "RX Helix Speedster"
+    ],
+    "Remington": [
+      "700",
+      "700 BDL",
+      "700 SPS",
+      "783",
+      "Model Seven"
+    ],
+    "Ruger": [
+      "American",
+      "Hawkeye",
+      "M77",
+      "Precision Rifle",
+      "Scout"
+    ],
+    "Sabatti": [
+      "Olympus",
+      "Rover",
+      "Rover Hunter",
+      "Saphire",
+      "Tactical"
+    ],
+    "Sako": [
+      "85",
+      "90",
+      "A7",
+      "Finnlight",
+      "S20"
+    ],
+    "Steyr": [
+      "Carbon",
+      "Mannlicher CL II",
+      "Monobloc",
+      "Scout",
+      "SM12"
+    ],
+    "Tikka": [
+      "T1x",
+      "T3",
+      "T3x",
+      "T3x Lite",
+      "T3x Superlite"
+    ],
+    "Voere": [
+      "K15A",
+      "K98",
+      "LBW",
+      "VEC",
+      "X3"
+    ],
+    "Weatherby": [
+      "307",
+      "Backcountry",
+      "Mark V",
+      "Vanguard",
+      "Weathermark"
+    ],
+    "Winchester": [
+      "Model 70",
+      "SX-AR",
+      "Wildcat",
+      "XPR",
+      "XPR Stealth"
+    ]
   },
   "soretes-puska": {
-    "ATA Arms": ["SP", "CY", "Neo", "Arms Venza", "Etro"],
-    "Baikal": ["MP-27", "MP-43", "MP-153", "MP-155", "IJ-27"],
-    "Benelli": ["M2", "Super Black Eagle 3", "Montefeltro", "Raffaello", "M4"],
-    "Beretta": ["686", "687", "A400", "1301", "DT11"],
-    "Browning": ["B525", "B725", "Maxus", "Cynergy", "A5"],
-    "Caesar Guerini": ["Summit", "Magnus", "Invictus", "Apex", "Ellipse"],
-    "Fabarm": ["XLR5", "Elos", "L4S", "STF 12", "Axis"],
-    "Fair": ["Carrera", "Premier", "Iside", "DC", "Racing"],
-    "Franchi": ["Affinity", "Instinct", "Feeling", "Horizon", "Esprit"],
-    "Khan Arms": ["Arthemis", "K500", "Impact", "Venator", "Pointer"],
-    "Krieghoff": ["K80", "K20", "Parcours", "Semprio", "Ulm"],
-    "Mossberg": ["500", "590", "930", "940", "835"],
-    "Remington": ["870", "1100", "1187", "Versa Max", "V3"],
-    "Stoeger": ["M3000", "M3500", "Condor", "Coach Gun", "P3000"],
-    "Winchester": ["SX4", "SX3", "SXP", "101", "Super X Model 1"]
+    "ATA Arms": [
+      "Arms Venza",
+      "CY",
+      "Etro",
+      "Neo",
+      "SP"
+    ],
+    "Baikal": [
+      "IJ-27",
+      "MP-153",
+      "MP-155",
+      "MP-27",
+      "MP-43"
+    ],
+    "Benelli": [
+      "M2",
+      "M4",
+      "Montefeltro",
+      "Raffaello",
+      "Super Black Eagle 3"
+    ],
+    "Beretta": [
+      "1301",
+      "686",
+      "687",
+      "A400",
+      "DT11"
+    ],
+    "Browning": [
+      "A5",
+      "B525",
+      "B725",
+      "Cynergy",
+      "Maxus"
+    ],
+    "Caesar Guerini": [
+      "Apex",
+      "Ellipse",
+      "Invictus",
+      "Magnus",
+      "Summit"
+    ],
+    "Fabarm": [
+      "Axis",
+      "Elos",
+      "L4S",
+      "STF 12",
+      "XLR5"
+    ],
+    "Fair": [
+      "Carrera",
+      "DC",
+      "Iside",
+      "Premier",
+      "Racing"
+    ],
+    "Franchi": [
+      "Affinity",
+      "Esprit",
+      "Feeling",
+      "Horizon",
+      "Instinct"
+    ],
+    "Khan Arms": [
+      "Arthemis",
+      "Impact",
+      "K500",
+      "Pointer",
+      "Venator"
+    ],
+    "Krieghoff": [
+      "K20",
+      "K80",
+      "Parcours",
+      "Semprio",
+      "Ulm"
+    ],
+    "Mossberg": [
+      "500",
+      "590",
+      "835",
+      "930",
+      "940"
+    ],
+    "Remington": [
+      "1100",
+      "1187",
+      "870",
+      "V3",
+      "Versa Max"
+    ],
+    "Stoeger": [
+      "Coach Gun",
+      "Condor",
+      "M3000",
+      "M3500",
+      "P3000"
+    ],
+    "Winchester": [
+      "101",
+      "Super X Model 1",
+      "SX3",
+      "SX4",
+      "SXP"
+    ]
   },
   "vegyescsovu-puska": {
-    "Antonio Zoli": ["Corona", "Express", "MG92", "Kronos", "De Luxe"],
-    "Baikal": ["IZH-94", "MP-94", "Taiga", "Sever", "Express"],
-    "Blaser": ["BD14", "BBF95", "B95", "D99", "Combination"],
-    "Brno": ["ZH", "Combo", "Super", "Express", "Drilling"],
-    "Heym": ["26B", "37V", "88B", "Express", "Drilling"],
-    "Krieghoff": ["Classic", "Ultra", "Optima", "Hubertus", "Big Five"],
-    "Merkel": ["B3", "B4", "96K", "140", "Helix Explorer"],
-    "Sabatti": ["Forest", "Rover", "Classic", "Express", "Inox"],
-    "Sauer": ["3000", "202", "404", "Drilling", "Royal"],
-    "Tikka": ["M55", "M65", "M695", "T3 Hunter", "Master"],
-    "Valmet": ["212", "412", "412S", "Petra", "Combo"],
-    "Verney-Carron": ["Sagittaire", "Impact", "Azur", "Super 9", "Attila"]
+    "Antonio Zoli": [
+      "Corona",
+      "De Luxe",
+      "Express",
+      "Kronos",
+      "MG92"
+    ],
+    "Baikal": [
+      "Express",
+      "IZH-94",
+      "MP-94",
+      "Sever",
+      "Taiga"
+    ],
+    "Blaser": [
+      "B95",
+      "BBF95",
+      "BD14",
+      "Combination",
+      "D99"
+    ],
+    "Brno": [
+      "Combo",
+      "Drilling",
+      "Express",
+      "Super",
+      "ZH"
+    ],
+    "Heym": [
+      "26B",
+      "37V",
+      "88B",
+      "Drilling",
+      "Express"
+    ],
+    "Krieghoff": [
+      "Big Five",
+      "Classic",
+      "Hubertus",
+      "Optima",
+      "Ultra"
+    ],
+    "Merkel": [
+      "140",
+      "96K",
+      "B3",
+      "B4",
+      "Helix Explorer"
+    ],
+    "Sabatti": [
+      "Classic",
+      "Express",
+      "Forest",
+      "Inox",
+      "Rover"
+    ],
+    "Sauer": [
+      "202",
+      "3000",
+      "404",
+      "Drilling",
+      "Royal"
+    ],
+    "Tikka": [
+      "M55",
+      "M65",
+      "M695",
+      "Master",
+      "T3 Hunter"
+    ],
+    "Valmet": [
+      "212",
+      "412",
+      "412S",
+      "Combo",
+      "Petra"
+    ],
+    "Verney-Carron": [
+      "Attila",
+      "Azur",
+      "Impact",
+      "Sagittaire",
+      "Super 9"
+    ]
   },
   "tavcsovek": {
-    "Athlon": ["Ares", "Helos", "Midas", "Argos", "Cronus"],
-    "Burris": ["Veracity", "Fullfield", "Eliminator", "Signature HD", "RT"],
-    "Delta Optical": ["Titanium", "Stryker", "Hornet", "Classic", "Chase"],
-    "Kahles": ["Helia", "K318i", "K624i", "K1050", "K16i"],
-    "Leica": ["Amplus", "Magnus", "Fortis", "Visus", "ER"],
-    "Leupold": ["VX-3HD", "VX-5HD", "VX-6HD", "Mark 5HD", "Freedom"],
-    "March": ["FX", "Genesis", "Compact", "High Master", "Tactical"],
-    "Meopta": ["MeoStar R2", "MeoPro", "Optika6", "MeoTac", "ZD"],
-    "Minox": ["ZX5", "ZE5", "Allrounder", "RS-4", "X-range"],
-    "Nightforce": ["NXS", "ATACR", "SHV", "NX8", "Benchrest"],
-    "Nikko Stirling": ["Diamond", "Octa", "Panamax", "Airking", "Mountmaster"],
-    "Schmidt & Bender": ["PM II", "Exos", "Polar", "Klassik", "Meta"],
-    "Swarovski": ["Z8i", "Z6i", "Z5", "dS", "Habicht"],
-    "Vortex": ["Viper", "Razor", "Diamondback", "Strike Eagle", "Crossfire"],
-    "Zeiss": ["Conquest V4", "Conquest V6", "Victory V8", "Terra", "LRP S5"]
+    "Athlon": [
+      "Ares",
+      "Argos",
+      "Cronus",
+      "Helos",
+      "Midas"
+    ],
+    "Burris": [
+      "Eliminator",
+      "Fullfield",
+      "RT",
+      "Signature HD",
+      "Veracity"
+    ],
+    "Delta Optical": [
+      "Chase",
+      "Classic",
+      "Hornet",
+      "Stryker",
+      "Titanium"
+    ],
+    "Kahles": [
+      "Helia",
+      "K1050",
+      "K16i",
+      "K318i",
+      "K624i"
+    ],
+    "Leica": [
+      "Amplus",
+      "ER",
+      "Fortis",
+      "Magnus",
+      "Visus"
+    ],
+    "Leupold": [
+      "Freedom",
+      "Mark 5HD",
+      "VX-3HD",
+      "VX-5HD",
+      "VX-6HD"
+    ],
+    "March": [
+      "Compact",
+      "FX",
+      "Genesis",
+      "High Master",
+      "Tactical"
+    ],
+    "Meopta": [
+      "MeoPro",
+      "MeoStar R2",
+      "MeoTac",
+      "Optika6",
+      "ZD"
+    ],
+    "Minox": [
+      "Allrounder",
+      "RS-4",
+      "X-range",
+      "ZE5",
+      "ZX5"
+    ],
+    "Nightforce": [
+      "ATACR",
+      "Benchrest",
+      "NX8",
+      "NXS",
+      "SHV"
+    ],
+    "Nikko Stirling": [
+      "Airking",
+      "Diamond",
+      "Mountmaster",
+      "Octa",
+      "Panamax"
+    ],
+    "Schmidt & Bender": [
+      "Exos",
+      "Klassik",
+      "Meta",
+      "PM II",
+      "Polar"
+    ],
+    "Swarovski": [
+      "dS",
+      "Habicht",
+      "Z5",
+      "Z6i",
+      "Z8i"
+    ],
+    "Vortex": [
+      "Crossfire",
+      "Diamondback",
+      "Razor",
+      "Strike Eagle",
+      "Viper"
+    ],
+    "Zeiss": [
+      "Conquest V4",
+      "Conquest V6",
+      "LRP S5",
+      "Terra",
+      "Victory V8"
+    ]
   },
   "ejjellato-tavcso": {
-    "AGM": ["Rattler", "Adder", "Varmint", "Taipan", "Neith"],
-    "Armasight": ["CO-Mini", "Nyx", "PVS14", "Sirius", "Vulcan"],
-    "ATN": ["X-Sight 4K", "X-Sight LTV", "Thor LT", "Thor 5", "Mars 4"],
-    "Guide": ["N-Series", "TU", "TR", "Digital NV", "TE"],
-    "Hikmicro": ["Alpex", "Cheetah", "Habrok", "Thunder", "Stellar"],
-    "Infiray": ["Tube", "Bolt", "Finder", "Mate", "Saim"],
-    "Pard": ["NV007", "NV008", "NV008S", "DS35", "FD1"],
-    "Pulsar": ["Digex", "Forward", "Krypton", "Thermion Duo", "Merger"],
-    "Sightmark": ["Wraith", "Wraith Mini", "Photon", "Pinnacle", "Citadel"],
-    "Yukon": ["Photon", "Sightline", "NVMT", "Signal", "Tracker"]
+    "AGM": [
+      "Adder",
+      "Neith",
+      "Rattler",
+      "Taipan",
+      "Varmint"
+    ],
+    "Armasight": [
+      "CO-Mini",
+      "Nyx",
+      "PVS14",
+      "Sirius",
+      "Vulcan"
+    ],
+    "ATN": [
+      "Mars 4",
+      "Thor 5",
+      "Thor LT",
+      "X-Sight 4K",
+      "X-Sight LTV"
+    ],
+    "Guide": [
+      "Digital NV",
+      "N-Series",
+      "TE",
+      "TR",
+      "TU"
+    ],
+    "Hikmicro": [
+      "Alpex",
+      "Cheetah",
+      "Habrok",
+      "Stellar",
+      "Thunder"
+    ],
+    "Infiray": [
+      "Bolt",
+      "Finder",
+      "Mate",
+      "Saim",
+      "Tube"
+    ],
+    "Pard": [
+      "DS35",
+      "FD1",
+      "NV007",
+      "NV008",
+      "NV008S"
+    ],
+    "Pulsar": [
+      "Digex",
+      "Forward",
+      "Krypton",
+      "Merger",
+      "Thermion Duo"
+    ],
+    "Sightmark": [
+      "Citadel",
+      "Photon",
+      "Pinnacle",
+      "Wraith",
+      "Wraith Mini"
+    ],
+    "Yukon": [
+      "NVMT",
+      "Photon",
+      "Sightline",
+      "Signal",
+      "Tracker"
+    ]
   },
   "hokamerak": {
-    "Bering Optics": ["Super Yoter", "Hogster", "Phenom", "Apex", "Snoopy"],
-    "Dipol": ["TFA", "DN", "D127", "TFA1000", "TFA75"],
-    "Guide": ["TR", "TU", "TN", "TrackIR", "IR"],
-    "Hikmicro": ["Thunder", "Lynx", "Falcon", "Panther", "Condor"],
-    "Infiray": ["Tube", "Finder", "Mate", "Rico", "Cabin"],
-    "iRay": ["Rico", "Bolt", "Hybrid", "Mini", "Saim"],
-    "Nocpix": ["Vista", "Ace", "Quest", "Lumi", "Pivot"],
-    "Pulsar": ["Thermion 2", "Axion", "Telos", "Trail", "Helion"],
-    "Trijicon": ["Reap-IR", "IR-Hunter", "SkeetIR", "Oasys", "Patrol"],
-    "Xinfrared": ["T2 Pro", "P2", "XH09", "X2", "X3"]
+    "Bering Optics": [
+      "Apex",
+      "Hogster",
+      "Phenom",
+      "Snoopy",
+      "Super Yoter"
+    ],
+    "Dipol": [
+      "D127",
+      "DN",
+      "TFA",
+      "TFA1000",
+      "TFA75"
+    ],
+    "Guide": [
+      "IR",
+      "TN",
+      "TR",
+      "TrackIR",
+      "TU"
+    ],
+    "Hikmicro": [
+      "Condor",
+      "Falcon",
+      "Lynx",
+      "Panther",
+      "Thunder"
+    ],
+    "Infiray": [
+      "Cabin",
+      "Finder",
+      "Mate",
+      "Rico",
+      "Tube"
+    ],
+    "iRay": [
+      "Bolt",
+      "Hybrid",
+      "Mini",
+      "Rico",
+      "Saim"
+    ],
+    "Nocpix": [
+      "Ace",
+      "Lumi",
+      "Pivot",
+      "Quest",
+      "Vista"
+    ],
+    "Pulsar": [
+      "Axion",
+      "Helion",
+      "Telos",
+      "Thermion 2",
+      "Trail"
+    ],
+    "Trijicon": [
+      "IR-Hunter",
+      "Oasys",
+      "Patrol",
+      "Reap-IR",
+      "SkeetIR"
+    ],
+    "Xinfrared": [
+      "P2",
+      "T2 Pro",
+      "X2",
+      "X3",
+      "XH09"
+    ]
   },
   "vadkamera": {
-    "Boly": ["SG2060", "MG984", "BG590", "BG310", "BG710"],
-    "Browning": ["Strike Force", "Spec Ops", "Dark Ops", "Recon Force", "Defender"],
-    "Bushnell": ["Core", "Prime", "CelluCore", "Aggressor", "Trophy Cam"],
-    "Cuddeback": ["C1", "C2", "Tracks", "Ambush", "IR Plus"],
-    "Keepguard": ["KG895", "KG895SF", "KG795", "KG861", "KG760"],
-    "Ltl Acorn": ["6210", "6310", "6511", "8510", "8010"],
-    "Moultrie": ["A-Series", "Edge", "Mobile", "Delta", "Micro"],
-    "Reolink": ["KEEN", "Go PT", "TrackMix", "Argus", "Ranger"],
-    "Spypoint": ["Flex", "Link-Micro", "Force", "Solar Dark", "Cell-Link"],
-    "UOVision": ["UV785", "Glory", "UM785", "Select", "Hunter"]
+    "Boly": [
+      "BG310",
+      "BG590",
+      "BG710",
+      "MG984",
+      "SG2060"
+    ],
+    "Browning": [
+      "Dark Ops",
+      "Defender",
+      "Recon Force",
+      "Spec Ops",
+      "Strike Force"
+    ],
+    "Bushnell": [
+      "Aggressor",
+      "CelluCore",
+      "Core",
+      "Prime",
+      "Trophy Cam"
+    ],
+    "Cuddeback": [
+      "Ambush",
+      "C1",
+      "C2",
+      "IR Plus",
+      "Tracks"
+    ],
+    "Keepguard": [
+      "KG760",
+      "KG795",
+      "KG861",
+      "KG895",
+      "KG895SF"
+    ],
+    "Ltl Acorn": [
+      "6210",
+      "6310",
+      "6511",
+      "8010",
+      "8510"
+    ],
+    "Moultrie": [
+      "A-Series",
+      "Delta",
+      "Edge",
+      "Micro",
+      "Mobile"
+    ],
+    "Reolink": [
+      "Argus",
+      "Go PT",
+      "KEEN",
+      "Ranger",
+      "TrackMix"
+    ],
+    "Spypoint": [
+      "Cell-Link",
+      "Flex",
+      "Force",
+      "Link-Micro",
+      "Solar Dark"
+    ],
+    "UOVision": [
+      "Glory",
+      "Hunter",
+      "Select",
+      "UM785",
+      "UV785"
+    ]
   },
   "vadaszlampa": {
-    "Acebeam": ["L17", "L19", "K30", "P18", "W35"],
-    "Armytek": ["Predator", "Viking", "Wizard", "Dobermann", "Barracuda"],
-    "Brinyte": ["T28", "T18", "PT18", "WT01", "T16"],
-    "Fenix": ["HT18R", "TK30", "TK22", "PD36R", "LR35R"],
-    "Klarus": ["XT11", "XT21", "RS30", "G35", "A1"],
-    "Ledlenser": ["P7R", "MT14", "H7R", "X21R", "P18R"],
-    "Nitecore": ["P30", "MH25", "SRT7", "P20i", "TM9K"],
-    "Olight": ["Javelot", "Warrior", "Marauder", "Baton", "Seeker"],
-    "Nextorch": ["T7", "TA30", "P81", "MyTorch", "Dr.K3"],
-    "Weltool": ["W3", "W35", "T8", "T12", "M8"]
+    "Acebeam": [
+      "K30",
+      "L17",
+      "L19",
+      "P18",
+      "W35"
+    ],
+    "Armytek": [
+      "Barracuda",
+      "Dobermann",
+      "Predator",
+      "Viking",
+      "Wizard"
+    ],
+    "Brinyte": [
+      "PT18",
+      "T16",
+      "T18",
+      "T28",
+      "WT01"
+    ],
+    "Fenix": [
+      "HT18R",
+      "LR35R",
+      "PD36R",
+      "TK22",
+      "TK30"
+    ],
+    "Klarus": [
+      "A1",
+      "G35",
+      "RS30",
+      "XT11",
+      "XT21"
+    ],
+    "Ledlenser": [
+      "H7R",
+      "MT14",
+      "P18R",
+      "P7R",
+      "X21R"
+    ],
+    "Nextorch": [
+      "Dr.K3",
+      "MyTorch",
+      "P81",
+      "T7",
+      "TA30"
+    ],
+    "Nitecore": [
+      "MH25",
+      "P20i",
+      "P30",
+      "SRT7",
+      "TM9K"
+    ],
+    "Olight": [
+      "Baton",
+      "Javelot",
+      "Marauder",
+      "Seeker",
+      "Warrior"
+    ],
+    "Weltool": [
+      "M8",
+      "T12",
+      "T8",
+      "W3",
+      "W35"
+    ]
   },
   "vadaszkutya": {
-    "Agarak": ["magyar agar", "whippet", "greyhound", "saluki", "deerhound"],
-    "Ebtenyesztes": ["kolyok", "novenek", "tenyeszpar", "kikepzett", "torzskonyves"],
-    "Foxterrierek": ["smooth foxterrier", "wire foxterrier", "working line", "show line", "junior"],
-    "Kopo fajtak": ["erdelyi kopo", "bajor vereb", "hanoveri vereb", "beagle", "dalmata kopo"],
-    "Magyar Vizsla": ["rovidszoru", "drotzoru", "munkavizsgas", "utanjaro", "apasztott"],
-    "Pointer es setter": ["angol pointer", "gordon setter", "ir setter", "angol setter", "vizisetter"],
-    "Retriever": ["labrador", "golden", "chesapeake", "flat coated", "nova scotia"],
-    "Spanielek": ["cocker", "springer", "field", "clumber", "sussex"],
-    "Tacskok": ["standard", "torpe", "kaninchen", "sima szoru", "szalkas szoru"],
-    "Terrierek": ["jagdterrier", "patterdale", "border terrier", "lakeland", "parson russell"]
+    "Agarak": [
+      "deerhound",
+      "greyhound",
+      "magyar agar",
+      "saluki",
+      "whippet"
+    ],
+    "Ebtenyesztes": [
+      "kikepzett",
+      "kolyok",
+      "novenek",
+      "tenyeszpar",
+      "torzskonyves"
+    ],
+    "Foxterrierek": [
+      "junior",
+      "show line",
+      "smooth foxterrier",
+      "wire foxterrier",
+      "working line"
+    ],
+    "Kopo fajtak": [
+      "bajor vereb",
+      "beagle",
+      "dalmata kopo",
+      "erdelyi kopo",
+      "hanoveri vereb"
+    ],
+    "Magyar Vizsla": [
+      "apasztott",
+      "drotzoru",
+      "munkavizsgas",
+      "rovidszoru",
+      "utanjaro"
+    ],
+    "Pointer es setter": [
+      "angol pointer",
+      "angol setter",
+      "gordon setter",
+      "ir setter",
+      "vizisetter"
+    ],
+    "Retriever": [
+      "chesapeake",
+      "flat coated",
+      "golden",
+      "labrador",
+      "nova scotia"
+    ],
+    "Spanielek": [
+      "clumber",
+      "cocker",
+      "field",
+      "springer",
+      "sussex"
+    ],
+    "Tacskok": [
+      "kaninchen",
+      "sima szoru",
+      "standard",
+      "szalkas szoru",
+      "torpe"
+    ],
+    "Terrierek": [
+      "border terrier",
+      "jagdterrier",
+      "lakeland",
+      "parson russell",
+      "patterdale"
+    ]
   },
   "vadasz-ruhazat": {
-    "Aigle": ["Aigle Tech", "Aigle Hunt", "Aigle Parka", "Aigle Fleece", "Aigle Rain"],
-    "Blaser Outfits": ["Argali", "Vintage", "Ram", "HunTec", "Camo"],
-    "Chevalier": ["Mainstone", "Blyth", "Pointer", "Mistral", "Grouse"],
-    "Crispi": ["Outfit", "Hunter Line", "Merino", "Storm", "Mountain"],
-    "Deerhunter": ["Muflon", "Rusky", "Chamois", "Explore", "Gamekeeper"],
-    "Hart": ["Irati", "Artic", "Siberia", "Inliner", "Wild"],
-    "Harkila": ["Pro Hunter", "Forest", "Metso", "Driven Hunt", "Moose Hunter"],
-    "Jagdhund": ["Classic", "Premium", "Mountain", "Rain", "Winter"],
-    "Percussion": ["Sologne", "Imperlight", "Tradition", "Rambouillet", "Bretagne"],
-    "Seeland": ["Hawker", "Woodcock", "Avail", "Climate", "Taxus"],
-    "Swedteam": ["Alpha", "Lynx", "Ridge", "Titan", "Crest"],
-    "Verney-Carron": ["Fox", "Ghostcamo", "Stagunt", "ProHunt", "Furtiv"]
+    "Aigle": [
+      "Aigle Fleece",
+      "Aigle Hunt",
+      "Aigle Parka",
+      "Aigle Rain",
+      "Aigle Tech"
+    ],
+    "Blaser Outfits": [
+      "Argali",
+      "Camo",
+      "HunTec",
+      "Ram",
+      "Vintage"
+    ],
+    "Chevalier": [
+      "Blyth",
+      "Grouse",
+      "Mainstone",
+      "Mistral",
+      "Pointer"
+    ],
+    "Crispi": [
+      "Hunter Line",
+      "Merino",
+      "Mountain",
+      "Outfit",
+      "Storm"
+    ],
+    "Deerhunter": [
+      "Chamois",
+      "Explore",
+      "Gamekeeper",
+      "Muflon",
+      "Rusky"
+    ],
+    "Harkila": [
+      "Driven Hunt",
+      "Forest",
+      "Metso",
+      "Moose Hunter",
+      "Pro Hunter"
+    ],
+    "Hart": [
+      "Artic",
+      "Inliner",
+      "Irati",
+      "Siberia",
+      "Wild"
+    ],
+    "Jagdhund": [
+      "Classic",
+      "Mountain",
+      "Premium",
+      "Rain",
+      "Winter"
+    ],
+    "Percussion": [
+      "Bretagne",
+      "Imperlight",
+      "Rambouillet",
+      "Sologne",
+      "Tradition"
+    ],
+    "Seeland": [
+      "Avail",
+      "Climate",
+      "Hawker",
+      "Taxus",
+      "Woodcock"
+    ],
+    "Swedteam": [
+      "Alpha",
+      "Crest",
+      "Lynx",
+      "Ridge",
+      "Titan"
+    ],
+    "Verney-Carron": [
+      "Fox",
+      "Furtiv",
+      "Ghostcamo",
+      "ProHunt",
+      "Stagunt"
+    ]
   },
   "cipo-bakancs": {
-    "Aigle": ["Parcours", "Laforse", "Chambord", "Sonricker", "Huntshaw"],
-    "Alpina": ["Tundra", "Hunter", "Trapper", "Ranger", "Mountain"],
-    "Chiruca": ["Game", "Monique", "Sierra", "Pointer", "Sumatra"],
-    "Crispi": ["Nevada", "Hunter", "Wild Rock", "A-Way", "Attiva"],
-    "Gateway1": ["Pheasant", "Woodstalker", "Ascot", "Trophy", "Sportsman"],
-    "Hanwag": ["Tatra", "Alaska", "Banks", "Ancash", "Makra"],
-    "Lowa": ["Renegade", "Zephyr", "Camino", "Tibet", "Hunter"],
-    "Meindl": ["Dovre", "Island", "Vakuum", "Perfekt", "Sahara"],
-    "Muck Boot": ["Arctic", "Woody", "Apex", "Wetland", "Edgewater"],
-    "Zamberlan": ["Tofane", "Vioz", "Lynx", "Leopard", "Guide"]
+    "Aigle": [
+      "Chambord",
+      "Huntshaw",
+      "Laforse",
+      "Parcours",
+      "Sonricker"
+    ],
+    "Alpina": [
+      "Hunter",
+      "Mountain",
+      "Ranger",
+      "Trapper",
+      "Tundra"
+    ],
+    "Chiruca": [
+      "Game",
+      "Monique",
+      "Pointer",
+      "Sierra",
+      "Sumatra"
+    ],
+    "Crispi": [
+      "A-Way",
+      "Attiva",
+      "Hunter",
+      "Nevada",
+      "Wild Rock"
+    ],
+    "Gateway1": [
+      "Ascot",
+      "Pheasant",
+      "Sportsman",
+      "Trophy",
+      "Woodstalker"
+    ],
+    "Hanwag": [
+      "Alaska",
+      "Ancash",
+      "Banks",
+      "Makra",
+      "Tatra"
+    ],
+    "Lowa": [
+      "Camino",
+      "Hunter",
+      "Renegade",
+      "Tibet",
+      "Zephyr"
+    ],
+    "Meindl": [
+      "Dovre",
+      "Island",
+      "Perfekt",
+      "Sahara",
+      "Vakuum"
+    ],
+    "Muck Boot": [
+      "Apex",
+      "Arctic",
+      "Edgewater",
+      "Wetland",
+      "Woody"
+    ],
+    "Zamberlan": [
+      "Guide",
+      "Leopard",
+      "Lynx",
+      "Tofane",
+      "Vioz"
+    ]
   },
   "vadasz-felszereles": {
-    "3M Peltor": ["SportTac", "WS Alert", "Bulls Eye", "ComTac", "ProTac"],
-    "Allen": ["Gun Sling", "Rifle Case", "Cleaning Kit", "Shooting Rest", "Bipod"],
-    "Bushnell": ["Prime", "Legend", "Fusion", "Scout", "BackTrack"],
-    "Garmin": ["Alpha", "Astro", "inReach", "Instinct", "Foretrex"],
-    "Gerber": ["StrongArm", "Gator", "Paraframe", "Center-Drive", "Vital"],
-    "Hoppes": ["BoreSnake", "No.9", "Elite", "Gun Medic", "Field Kit"],
-    "Kahles": ["Helia RF", "Rangefinder", "Binocular", "Monocular", "RF-M"],
-    "Leatherman": ["Wave", "Surge", "Signal", "Charge", "Rebar"],
-    "Primos": ["Trigger Stick", "Power Crow", "Double Bull", "Alpha Dogg", "Gen3"],
-    "Sordin": ["Supreme Pro X", "Supreme Pro", "SFA", "Slim", "Mil Aux"]
+    "3M Peltor": [
+      "Bulls Eye",
+      "ComTac",
+      "ProTac",
+      "SportTac",
+      "WS Alert"
+    ],
+    "A-Tec": [
+      "?ltal?nos"
+    ],
+    "AccuSharp": [
+      "?ltal?nos"
+    ],
+    "Acebeam": [
+      "?ltal?nos"
+    ],
+    "Aguila Ammunition": [
+      "?ltal?nos"
+    ],
+    "Aimpoint": [
+      "?ltal?nos"
+    ],
+    "Allen": [
+      "?ltal?nos",
+      "Bipod",
+      "Cleaning Kit",
+      "Gun Sling",
+      "Rifle Case",
+      "Shooting Rest"
+    ],
+    "Ameristep": [
+      "?ltal?nos"
+    ],
+    "ATA Arms": [
+      "?ltal?nos"
+    ],
+    "Atlas Bipod": [
+      "?ltal?nos"
+    ],
+    "Baikal / IZH": [
+      "?ltal?nos"
+    ],
+    "Ballistol": [
+      "?ltal?nos"
+    ],
+    "Banner": [
+      "?ltal?nos"
+    ],
+    "Barnaul": [
+      "?ltal?nos"
+    ],
+    "Barnes": [
+      "?ltal?nos"
+    ],
+    "Barnett": [
+      "?ltal?nos"
+    ],
+    "Barrett": [
+      "?ltal?nos"
+    ],
+    "Benelli": [
+      "?ltal?nos"
+    ],
+    "Beretta": [
+      "?ltal?nos"
+    ],
+    "Bergara": [
+      "?ltal?nos"
+    ],
+    "Big Carp Bait": [
+      "?ltal?nos"
+    ],
+    "Big Fun Line": [
+      "?ltal?nos"
+    ],
+    "Big Tradition": [
+      "?ltal?nos"
+    ],
+    "Bignami": [
+      "?ltal?nos"
+    ],
+    "Black Fox": [
+      "?ltal?nos"
+    ],
+    "Blaser": [
+      "?ltal?nos"
+    ],
+    "Blimey": [
+      "?ltal?nos"
+    ],
+    "Bollé": [
+      "?ltal?nos"
+    ],
+    "Boly": [
+      "?ltal?nos"
+    ],
+    "Boss Buck": [
+      "?ltal?nos"
+    ],
+    "Bros": [
+      "?ltal?nos"
+    ],
+    "Browning": [
+      "?ltal?nos"
+    ],
+    "Brunox": [
+      "?ltal?nos"
+    ],
+    "BSA": [
+      "?ltal?nos"
+    ],
+    "Buck Knives": [
+      "?ltal?nos"
+    ],
+    "Bul Armory": [
+      "?ltal?nos"
+    ],
+    "Bulls": [
+      "?ltal?nos"
+    ],
+    "Burris": [
+      "?ltal?nos"
+    ],
+    "Bushnell": [
+      "?ltal?nos",
+      "BackTrack",
+      "Fusion",
+      "Legend",
+      "Prime",
+      "Scout"
+    ],
+    "Buttolo": [
+      "?ltal?nos"
+    ],
+    "Camillus": [
+      "?ltal?nos"
+    ],
+    "Camojojo": [
+      "?ltal?nos"
+    ],
+    "Carbon Express": [
+      "?ltal?nos"
+    ],
+    "Carl Walther": [
+      "?ltal?nos"
+    ],
+    "CCI": [
+      "?ltal?nos"
+    ],
+    "Champion": [
+      "?ltal?nos"
+    ],
+    "Charles Daly": [
+      "?ltal?nos"
+    ],
+    "Chiappa": [
+      "?ltal?nos"
+    ],
+    "Cold Steel": [
+      "?ltal?nos"
+    ],
+    "Colt": [
+      "?ltal?nos"
+    ],
+    "Crispi": [
+      "?ltal?nos"
+    ],
+    "Crosman": [
+      "?ltal?nos"
+    ],
+    "Cudeman": [
+      "?ltal?nos"
+    ],
+    "CZ": [
+      "?ltal?nos"
+    ],
+    "Dali": [
+      "?ltal?nos"
+    ],
+    "Diana": [
+      "?ltal?nos"
+    ],
+    "DNM": [
+      "?ltal?nos"
+    ],
+    "DPMS Panther Arms": [
+      "?ltal?nos"
+    ],
+    "EAA": [
+      "?ltal?nos"
+    ],
+    "Eastman Outfitters": [
+      "?ltal?nos"
+    ],
+    "EK Archery": [
+      "?ltal?nos"
+    ],
+    "ELF": [
+      "?ltal?nos"
+    ],
+    "Fabarm": [
+      "?ltal?nos"
+    ],
+    "Fiocchi": [
+      "?ltal?nos"
+    ],
+    "Firefox": [
+      "?ltal?nos"
+    ],
+    "Flextone": [
+      "?ltal?nos"
+    ],
+    "Fomei": [
+      "?ltal?nos"
+    ],
+    "Forest Favorit": [
+      "?ltal?nos"
+    ],
+    "Fox Bullets": [
+      "?ltal?nos"
+    ],
+    "Foxpro": [
+      "?ltal?nos"
+    ],
+    "Frankonia": [
+      "?ltal?nos"
+    ],
+    "Garmin": [
+      "Alpha",
+      "Astro",
+      "Foretrex",
+      "inReach",
+      "Instinct"
+    ],
+    "Geco": [
+      "?ltal?nos"
+    ],
+    "Gerber": [
+      "?ltal?nos",
+      "Center-Drive",
+      "Gator",
+      "Paraframe",
+      "StrongArm",
+      "Vital"
+    ],
+    "Gladius": [
+      "?ltal?nos"
+    ],
+    "Glock": [
+      "?ltal?nos"
+    ],
+    "GRAND TOTAL: 225 márka": [
+      "?ltal?nos"
+    ],
+    "Green Trail": [
+      "?ltal?nos"
+    ],
+    "H&K": [
+      "?ltal?nos"
+    ],
+    "H&N": [
+      "?ltal?nos"
+    ],
+    "Haenel": [
+      "?ltal?nos"
+    ],
+    "Hammerli": [
+      "?ltal?nos"
+    ],
+    "Harkila": [
+      "?ltal?nos"
+    ],
+    "Harris": [
+      "?ltal?nos"
+    ],
+    "Hartkopf": [
+      "?ltal?nos"
+    ],
+    "Hatsan": [
+      "?ltal?nos"
+    ],
+    "Hausken": [
+      "?ltal?nos"
+    ],
+    "Hawke": [
+      "?ltal?nos"
+    ],
+    "Herbertz": [
+      "?ltal?nos"
+    ],
+    "HiViz": [
+      "?ltal?nos"
+    ],
+    "Hoppes": [
+      "BoreSnake",
+      "Elite",
+      "Field Kit",
+      "Gun Medic",
+      "No.9"
+    ],
+    "Hornady": [
+      "?ltal?nos"
+    ],
+    "Horton": [
+      "?ltal?nos"
+    ],
+    "Howa": [
+      "?ltal?nos"
+    ],
+    "Howard Leight": [
+      "?ltal?nos"
+    ],
+    "Hubertus & Buttolo": [
+      "?ltal?nos"
+    ],
+    "ICOtec": [
+      "?ltal?nos"
+    ],
+    "ISSC": [
+      "?ltal?nos"
+    ],
+    "Jakob Winter": [
+      "?ltal?nos"
+    ],
+    "Kahles": [
+      "?ltal?nos",
+      "Binocular",
+      "Helia RF",
+      "Monocular",
+      "Rangefinder",
+      "RF-M"
+    ],
+    "Kalashnikov": [
+      "?ltal?nos"
+    ],
+    "Keliler Shoot": [
+      "?ltal?nos"
+    ],
+    "Kershaw": [
+      "?ltal?nos"
+    ],
+    "Kimar": [
+      "?ltal?nos"
+    ],
+    "Klever": [
+      "?ltal?nos"
+    ],
+    "Kopfjäger": [
+      "?ltal?nos"
+    ],
+    "Krico": [
+      "?ltal?nos"
+    ],
+    "Krieghoff": [
+      "?ltal?nos"
+    ],
+    "Kümmel": [
+      "?ltal?nos"
+    ],
+    "Lansky": [
+      "?ltal?nos"
+    ],
+    "Lapua": [
+      "?ltal?nos"
+    ],
+    "Leatherman": [
+      "?ltal?nos",
+      "Charge",
+      "Rebar",
+      "Signal",
+      "Surge",
+      "Wave"
+    ],
+    "Leica": [
+      "?ltal?nos"
+    ],
+    "Lenspen": [
+      "?ltal?nos"
+    ],
+    "Leupold": [
+      "?ltal?nos"
+    ],
+    "Liemke": [
+      "?ltal?nos"
+    ],
+    "Luger": [
+      "?ltal?nos"
+    ],
+    "Magnum Research / Desert Eagle": [
+      "?ltal?nos"
+    ],
+    "Magpul": [
+      "?ltal?nos"
+    ],
+    "MAK": [
+      "?ltal?nos"
+    ],
+    "March": [
+      "?ltal?nos"
+    ],
+    "Marlin": [
+      "?ltal?nos"
+    ],
+    "Marocchi": [
+      "?ltal?nos"
+    ],
+    "Marttiini": [
+      "?ltal?nos"
+    ],
+    "Maruzen": [
+      "?ltal?nos"
+    ],
+    "Matthews Mission": [
+      "?ltal?nos"
+    ],
+    "Mauser": [
+      "?ltal?nos"
+    ],
+    "Meopta": [
+      "?ltal?nos"
+    ],
+    "Mercury": [
+      "?ltal?nos"
+    ],
+    "Merkel": [
+      "?ltal?nos"
+    ],
+    "MFS": [
+      "?ltal?nos"
+    ],
+    "Millett": [
+      "?ltal?nos"
+    ],
+    "Minox": [
+      "?ltal?nos"
+    ],
+    "Morakniv": [
+      "?ltal?nos"
+    ],
+    "MTM": [
+      "?ltal?nos"
+    ],
+    "Muck Boot": [
+      "?ltal?nos"
+    ],
+    "Napier": [
+      "?ltal?nos"
+    ],
+    "Nieto": [
+      "?ltal?nos"
+    ],
+    "Nightforce": [
+      "?ltal?nos"
+    ],
+    "Nikon": [
+      "?ltal?nos"
+    ],
+    "Nitecore": [
+      "?ltal?nos"
+    ],
+    "NiteSite": [
+      "?ltal?nos"
+    ],
+    "Noblex": [
+      "?ltal?nos"
+    ],
+    "Nocpix": [
+      "?ltal?nos"
+    ],
+    "Norica": [
+      "?ltal?nos"
+    ],
+    "Norma": [
+      "?ltal?nos"
+    ],
+    "Nosler": [
+      "?ltal?nos"
+    ],
+    "NXG": [
+      "?ltal?nos"
+    ],
+    "Olight": [
+      "?ltal?nos"
+    ],
+    "Opinel": [
+      "?ltal?nos"
+    ],
+    "Optical Dynamics": [
+      "?ltal?nos"
+    ],
+    "Pajzs": [
+      "?ltal?nos"
+    ],
+    "Pard NV Optics": [
+      "?ltal?nos"
+    ],
+    "Parforce": [
+      "?ltal?nos"
+    ],
+    "Peltor / 3M": [
+      "?ltal?nos"
+    ],
+    "Percussion": [
+      "?ltal?nos"
+    ],
+    "Perfecta": [
+      "?ltal?nos"
+    ],
+    "Plano": [
+      "?ltal?nos"
+    ],
+    "PPU": [
+      "?ltal?nos"
+    ],
+    "Primos": [
+      "?ltal?nos",
+      "Alpha Dogg",
+      "Double Bull",
+      "Gen3",
+      "Power Crow",
+      "Trigger Stick"
+    ],
+    "ProHunt": [
+      "?ltal?nos"
+    ],
+    "Puma": [
+      "?ltal?nos"
+    ],
+    "Raetz": [
+      "?ltal?nos"
+    ],
+    "Rapid Assault": [
+      "?ltal?nos"
+    ],
+    "Raven": [
+      "?ltal?nos"
+    ],
+    "Redfield": [
+      "?ltal?nos"
+    ],
+    "Remington": [
+      "?ltal?nos"
+    ],
+    "Retay": [
+      "?ltal?nos"
+    ],
+    "Rohm": [
+      "?ltal?nos"
+    ],
+    "Rottweil": [
+      "?ltal?nos"
+    ],
+    "Ruger": [
+      "?ltal?nos"
+    ],
+    "Rusan": [
+      "?ltal?nos"
+    ],
+    "RWS": [
+      "?ltal?nos"
+    ],
+    "Sabatti": [
+      "?ltal?nos"
+    ],
+    "Sako": [
+      "?ltal?nos"
+    ],
+    "Sauer": [
+      "?ltal?nos"
+    ],
+    "Savage": [
+      "?ltal?nos"
+    ],
+    "Sax Munition": [
+      "?ltal?nos"
+    ],
+    "Schrade": [
+      "?ltal?nos"
+    ],
+    "Seeland": [
+      "?ltal?nos"
+    ],
+    "Sellier & Bellot": [
+      "?ltal?nos"
+    ],
+    "Sieger": [
+      "?ltal?nos"
+    ],
+    "Sightmark": [
+      "?ltal?nos"
+    ],
+    "Simmons": [
+      "?ltal?nos"
+    ],
+    "Skorpion": [
+      "?ltal?nos"
+    ],
+    "Smith & Wesson": [
+      "?ltal?nos"
+    ],
+    "Sordin": [
+      "Mil Aux",
+      "SFA",
+      "Slim",
+      "Supreme Pro",
+      "Supreme Pro X"
+    ],
+    "Speer": [
+      "?ltal?nos"
+    ],
+    "Stanley": [
+      "?ltal?nos"
+    ],
+    "Steyr": [
+      "?ltal?nos"
+    ],
+    "Stil Crin": [
+      "?ltal?nos"
+    ],
+    "Stoney Point": [
+      "?ltal?nos"
+    ],
+    "Swarovski": [
+      "?ltal?nos"
+    ],
+    "Swedteam": [
+      "?ltal?nos"
+    ],
+    "Swiza": [
+      "?ltal?nos"
+    ],
+    "Sytong": [
+      "?ltal?nos"
+    ],
+    "Tactacam": [
+      "?ltal?nos"
+    ],
+    "Tasco": [
+      "?ltal?nos"
+    ],
+    "Taurus": [
+      "?ltal?nos"
+    ],
+    "The Outdoor Connection": [
+      "?ltal?nos"
+    ],
+    "Thermacell": [
+      "?ltal?nos"
+    ],
+    "Tipp Arms": [
+      "?ltal?nos"
+    ],
+    "Tokyo Soldier": [
+      "?ltal?nos"
+    ],
+    "Traditions": [
+      "?ltal?nos"
+    ],
+    "Tru-Flite": [
+      "?ltal?nos"
+    ],
+    "TrueSpec": [
+      "?ltal?nos"
+    ],
+    "Truglo": [
+      "?ltal?nos"
+    ],
+    "Tula": [
+      "?ltal?nos"
+    ],
+    "Umarex / Huglu": [
+      "?ltal?nos"
+    ],
+    "Uncle Mike's": [
+      "?ltal?nos"
+    ],
+    "UOVision": [
+      "?ltal?nos"
+    ],
+    "UST": [
+      "?ltal?nos"
+    ],
+    "Vector Optics": [
+      "?ltal?nos"
+    ],
+    "Victorinox": [
+      "?ltal?nos"
+    ],
+    "Vortex": [
+      "?ltal?nos"
+    ],
+    "Wadie": [
+      "?ltal?nos"
+    ],
+    "Wald & Frost": [
+      "?ltal?nos"
+    ],
+    "Walther": [
+      "?ltal?nos"
+    ],
+    "Weaver": [
+      "?ltal?nos"
+    ],
+    "Wegu": [
+      "?ltal?nos"
+    ],
+    "Western Rivers": [
+      "?ltal?nos"
+    ],
+    "Wicked Ridge": [
+      "?ltal?nos"
+    ],
+    "Wildgame Innovations": [
+      "?ltal?nos"
+    ],
+    "Winchester": [
+      "?ltal?nos"
+    ],
+    "Winchester WX": [
+      "?ltal?nos"
+    ],
+    "Windham Weaponry": [
+      "?ltal?nos"
+    ],
+    "Yildiz": [
+      "?ltal?nos"
+    ],
+    "Zastava": [
+      "?ltal?nos"
+    ],
+    "Zeiss": [
+      "?ltal?nos"
+    ],
+    "ZKK": [
+      "?ltal?nos"
+    ],
+    "Összesen: 106 márka": [
+      "?ltal?nos"
+    ],
+    "Összesen: 119 márka": [
+      "?ltal?nos"
+    ]
   },
   "vadasz-ijak": {
-    "Bear Archery": ["Cruzer", "Whitetail", "Legend", "Resurgence", "Execute"],
-    "Bowtech": ["Reckoning", "Core", "CP28", "Solution", "Realm"],
-    "Elite": ["Kure", "Ritual", "Omnia", "Terrain", "Era"],
-    "Hoyt": ["VTM", "RX", "Ventum", "Torrex", "Carbon"],
-    "Mathews": ["Phase4", "V3X", "Lift", "Traverse", "Vertix"],
-    "PSE": ["Evoke", "Drive", "Stinger", "Mach", "Brute"],
-    "Sanlida": ["Dragon", "Hero", "Miracle", "X8", "Hawk"],
-    "Win and Win": ["Black Wolf", "Wiawis", "Apex", "Inno", "NS"],
-    "Xpedition": ["Smoke", "XLite", "Perfexion", "Mx", "Denali"],
-    "Mission": ["Switch", "Sub-1", "MXR", "Hammr", "Radik"]
-  }
+    "Bear Archery": [
+      "Cruzer",
+      "Execute",
+      "Legend",
+      "Resurgence",
+      "Whitetail"
+    ],
+    "Bowtech": [
+      "Core",
+      "CP28",
+      "Realm",
+      "Reckoning",
+      "Solution"
+    ],
+    "Elite": [
+      "Era",
+      "Kure",
+      "Omnia",
+      "Ritual",
+      "Terrain"
+    ],
+    "Hoyt": [
+      "Carbon",
+      "RX",
+      "Torrex",
+      "Ventum",
+      "VTM"
+    ],
+    "Mathews": [
+      "Lift",
+      "Phase4",
+      "Traverse",
+      "V3X",
+      "Vertix"
+    ],
+    "Mission": [
+      "Hammr",
+      "MXR",
+      "Radik",
+      "Sub-1",
+      "Switch"
+    ],
+    "PSE": [
+      "Brute",
+      "Drive",
+      "Evoke",
+      "Mach",
+      "Stinger"
+    ],
+    "Sanlida": [
+      "Dragon",
+      "Hawk",
+      "Hero",
+      "Miracle",
+      "X8"
+    ],
+    "Win and Win": [
+      "Apex",
+      "Black Wolf",
+      "Inno",
+      "NS",
+      "Wiawis"
+    ],
+    "Xpedition": [
+      "Denali",
+      "Mx",
+      "Perfexion",
+      "Smoke",
+      "XLite"
+    ]
+  },
+  "maroklofegyver": {},
+  "hatastalanitott": {},
+  "egyeb-fegyverek": {},
+  "loszer-tolteny": {}
 }
