@@ -446,7 +446,6 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 </style>
 <style>
 /* hard override against global button styles */
-.va-submit-preview-card h2{color:#fff!important}
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(6,minmax(120px,1fr))!important;gap:12px!important}
 #va-wizard-overlay.va-wizard-shell .va-cat-card{display:flex!important;flex-direction:column!important;justify-content:space-between!important;align-items:flex-start!important;width:100%!important;min-height:112px!important;padding:14px!important;margin:0!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:14px!important;color:#fff!important;line-height:1.25!important;white-space:normal!important}
 #va-wizard-overlay.va-wizard-shell .va-cat-card:hover{border-color:rgba(255,0,0,.55)!important;background:rgba(255,0,0,.14)!important}
@@ -459,39 +458,6 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 </style>
 
 <div class="va-submit-preview-shell">
-    <?php if ( ! $edit_mode ): ?>
-    <section class="va-submit-preview-hero">
-        <div class="va-submit-preview-card">
-            <span class="va-submit-preview-eyebrow">Hirdetés feladás</span>
-            <h2>Ennek kellett volna megjelennie.</h2>
-            <p>Átlátható, sötét, vezetett feladási élmény. Először kategória, utána termékadatok, aztán ár és helyszín, végül leírás és képek.</p>
-            <div class="va-submit-preview-pills">
-                <span>Vizuális kategória választás</span>
-                <span>4 tiszta lépés</span>
-                <span>Jobb mobil élmény</span>
-                <span>Gyorsabb kitöltés</span>
-            </div>
-        </div>
-        <aside class="va-submit-preview-summary">
-            <div class="va-submit-preview-summary-block">
-                <span class="va-submit-preview-summary-label">Első benyomás</span>
-                <strong>Nagy kategória-kártyák</strong>
-                <span>Nem nyers, szétesett gombsor.</span>
-            </div>
-            <div class="va-submit-preview-summary-block">
-                <span class="va-submit-preview-summary-label">Folyamat</span>
-                <strong>Értelmes lépésvezetés</strong>
-                <span>Mindig csak az aktuális feladat legyen előtérben.</span>
-            </div>
-            <div class="va-submit-preview-summary-block">
-                <span class="va-submit-preview-summary-label">Zárás</span>
-                <strong>Képek + leírás + publikálás</strong>
-                <span>Magabiztos lezárás, nem kapkodós űrlapvég.</span>
-            </div>
-        </aside>
-    </section>
-    <?php endif; ?>
-
     <div class="va-wizard-shell" id="va-wizard-overlay">
         <aside class="va-wizard-sidebar">
             <p class="va-wizard-sidebar-title">Lépések</p>
