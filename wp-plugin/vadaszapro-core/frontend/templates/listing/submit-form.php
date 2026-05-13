@@ -461,7 +461,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 </div>
 <?php endif; ?>
 
-<div class="va-wizard-overlay<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
+<div class="va-wizard-overlay va-wizard-inline<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
 <div class="va-wizard-modal">
 
     <!-- Header: dots + progress -->
@@ -940,8 +940,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var _wStep   = 1;
     var _wTotal  = 4;
     var _wLabels = ['Kategória', 'Termék adatai', 'Ár & Helyszín', 'Leírás & Képek'];
+    var _inlineWizard = $('#va-wizard-overlay').hasClass('va-wizard-inline');
+
+    if (_inlineWizard) {
+        $('#va-wizard-launcher').hide();
+        $('#va-wizard-overlay').addClass('is-open');
+        $('.va-wstep').addClass('is-active');
+        $('#va-submit-btn').show();
+        $('#va-wizard-next, #va-wizard-prev').hide();
+        $('body').removeClass('va-wiz-open');
+    }
 
     function wizGoTo(step) {
+        if (_inlineWizard) {
+            _wStep = step;
+            return;
+        }
         if (step > _wStep && !wizValidate(_wStep)) return;
         $('.va-wstep').removeClass('is-active');
         $('.va-wstep[data-step="' + step + '"]').addClass('is-active');
@@ -960,6 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function wizValidate(step) {
+        if (_inlineWizard) return true;
         if (step === 1) {
             if (!($('#va-category').val() || '')) {
                 window.va_toast && va_toast('Válassz kategóriát!', 'error');
@@ -982,26 +997,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
-    $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
+    if (!_inlineWizard) {
+        $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
+        $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
 
-    $('#va-wizard-open').on('click', function() {
-        $('#va-wizard-overlay').addClass('is-open');
-        $('body').addClass('va-wiz-open');
-    });
-    $('#va-wizard-close').on('click', function() {
-        $('#va-wizard-overlay').removeClass('is-open');
-        $('body').removeClass('va-wiz-open');
-    });
-    $('#va-wizard-overlay').on('click', function(e) {
-        if (e.target === this) { $(this).removeClass('is-open'); $('body').removeClass('va-wiz-open'); }
-    });
-    $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' && !VA_Data.edit_mode) {
+        $('#va-wizard-open').on('click', function() {
+            $('#va-wizard-overlay').addClass('is-open');
+            $('body').addClass('va-wiz-open');
+        });
+        $('#va-wizard-close').on('click', function() {
             $('#va-wizard-overlay').removeClass('is-open');
             $('body').removeClass('va-wiz-open');
-        }
-    });
+        });
+        $('#va-wizard-overlay').on('click', function(e) {
+            if (e.target === this) { $(this).removeClass('is-open'); $('body').removeClass('va-wiz-open'); }
+        });
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && !VA_Data.edit_mode) {
+                $('#va-wizard-overlay').removeClass('is-open');
+                $('body').removeClass('va-wiz-open');
+            }
+        });
+    }
     // Kategória kártya választás
     $(document).on('click', '.va-cat-card', function() {
         $('.va-cat-card').removeClass('is-selected');
@@ -1549,7 +1566,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 $btn.prop('disabled', false).text(editMode ? '💾 Változások mentése' : '📤 Hirdetés feladása');
                 if(res.success){
                     $notice.html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
-                    $('#va-wizard-overlay').removeClass('is-open');
+                    if (!_inlineWizard) {
+                        $('#va-wizard-overlay').removeClass('is-open');
+                    }
                     if (typeof window.va_toast === 'function') {
                         window.va_toast(res.data.message || 'Mentés sikeres.', 'success');
                     }
