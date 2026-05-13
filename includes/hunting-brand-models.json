@@ -1,23 +1,74 @@
 {
   "golyos-puska": {
+    "Accuracy International": [
+      "Puska"
+    ],
+    "Adcor Defense": [
+      "Puska"
+    ],
+    "AEK": [
+      "Puska"
+    ],
+    "Aero Precision": [
+      "Puska"
+    ],
+    "Alexander Arms": [
+      "Puska"
+    ],
+    "Alfa": [
+      "Ismétlő"
+    ],
+    "Anderson Manufacturing": [
+      "Puska"
+    ],
     "Anschutz": [
       "1771",
       "1782",
       "1903"
+    ],
+    "Anschütz": [
+      "Puska"
+    ],
+    "ArmaLite": [
+      "Puska"
+    ],
+    "Arsenal (Bulgaria)": [
+      "Puska"
+    ],
+    "ATA Arms": [
+      "Ismétlő"
+    ],
+    "Barrett": [
+      "Ismétlő",
+      "Puska"
+    ],
+    "BCM (Bravo Company)": [
+      "Puska"
     ],
     "Bergara": [
       "B14",
       "B14 Wilderness",
       "HMR",
       "Premier",
+      "Puska",
       "Ridge"
     ],
     "Blaser": [
+      "Billenő",
+      "Bock",
+      "Egyeneshúzású",
       "K95",
+      "Puska",
       "R8",
       "R8 Professional",
       "R8 Ultimate",
       "R93"
+    ],
+    "Bleiker": [
+      "Puska"
+    ],
+    "Bravo Company Manufacturing": [
+      "Puska"
     ],
     "Browning": [
       "A-Bolt",
@@ -26,6 +77,24 @@
       "X-Bolt",
       "X-Bolt Pro"
     ],
+    "BSA": [
+      "Puska, légfegyver"
+    ],
+    "Bulls": [
+      "Légpuska"
+    ],
+    "Bushmaster": [
+      "Puska"
+    ],
+    "Cadex Defence": [
+      "Puska"
+    ],
+    "Chiappa": [
+      "Billenő"
+    ],
+    "Christensen Arms": [
+      "Puska"
+    ],
     "CZ": [
       "527",
       "550",
@@ -33,9 +102,38 @@
       "600",
       "600 Alpha"
     ],
+    "Daniel Defense": [
+      "Puska"
+    ],
+    "Desert Tech": [
+      "Puska"
+    ],
+    "Diana": [
+      "Légpuska"
+    ],
+    "DPMS Panther Arms": [
+      "Puska"
+    ],
+    "FAMAE": [
+      "Puska"
+    ],
+    "Feinwerkbau": [
+      "Légfegyver, puska"
+    ],
+    "Griffin & Howe": [
+      "Puska"
+    ],
+    "Haenel / Merkel": [
+      "Ismétlő"
+    ],
+    "Henry Repeating Arms": [
+      "Puska"
+    ],
     "Heym": [
       "26B",
+      "Dupla",
       "Express",
+      "Puska",
       "SR21",
       "SR30"
     ],
@@ -43,28 +141,97 @@
       "1500",
       "1500 Hogue",
       "HS Precision",
-      "Mini Action"
+      "Mini Action",
+      "Puska"
+    ],
+    "ISSC": [
+      "Puska"
+    ],
+    "John Rigby & Company": [
+      "Puska"
+    ],
+    "Kalashnikov Concern": [
+      "Puska"
+    ],
+    "Krico": [
+      "Puska"
+    ],
+    "Krieghoff": [
+      "Billenő",
+      "Bock",
+      "Sörétes, puska"
+    ],
+    "Lewis Machine & Tool": [
+      "Puska"
+    ],
+    "Lithgow Arms": [
+      "Puska"
+    ],
+    "Lobaev Arms": [
+      "Puska"
+    ],
+    "LWRC International": [
+      "Puska"
+    ],
+    "Marlin Firearms": [
+      "Puska"
     ],
     "Mauser": [
+      "Ismétlő",
       "M03",
       "M12",
       "M18",
       "M25",
-      "M98"
+      "M98",
+      "Puska"
+    ],
+    "McMillan": [
+      "Puska"
     ],
     "Merkel": [
+      "Billenő",
+      "Bock",
       "Helix",
       "KR1",
       "KR1 Black",
+      "Puska, sörétes",
       "RX Helix",
       "RX Helix Speedster"
+    ],
+    "Montana Rifle Company": [
+      "Puska"
+    ],
+    "Mossberg": [
+      "Sörétes, puska"
+    ],
+    "Norica": [
+      "Légpuska"
+    ],
+    "Noveske Rifleworks": [
+      "Puska"
+    ],
+    "ORSIS": [
+      "Puska"
+    ],
+    "Patriot Ordnance Factory (POF)": [
+      "Puska"
+    ],
+    "PGM Précision": [
+      "Puska"
     ],
     "Remington": [
       "700",
       "700 BDL",
       "700 SPS",
       "783",
+      "Ismétlő",
       "Model Seven"
+    ],
+    "Robinson Armament": [
+      "Puska"
+    ],
+    "Rock River Arms": [
+      "Puska"
     ],
     "Ruger": [
       "American",
@@ -73,8 +240,15 @@
       "Precision Rifle",
       "Scout"
     ],
+    "Rößler": [
+      "Puska"
+    ],
     "Sabatti": [
+      "Billenő",
+      "Bock",
+      "Ismétlő",
       "Olympus",
+      "Puska, sörétes",
       "Rover",
       "Rover Hunter",
       "Saphire",
@@ -87,6 +261,33 @@
       "Finnlight",
       "S20"
     ],
+    "SAKO": [
+      "Puska"
+    ],
+    "Sauer": [
+      "Ismétlő"
+    ],
+    "Sauer (J.P. Sauer & Sohn)": [
+      "Puska"
+    ],
+    "Savage": [
+      "Ismétlő"
+    ],
+    "Savage Arms": [
+      "Puska"
+    ],
+    "Schultz & Larsen": [
+      "Puska"
+    ],
+    "Seekins Precision": [
+      "Puska"
+    ],
+    "Stag Arms": [
+      "Puska"
+    ],
+    "Stevens Arms / Savage": [
+      "Puska, sörétes"
+    ],
     "Steyr": [
       "Carbon",
       "Mannlicher CL II",
@@ -94,17 +295,37 @@
       "Scout",
       "SM12"
     ],
+    "Steyr-Mannlicher": [
+      "Ismétlő"
+    ],
+    "Tanner Sportwaffen": [
+      "Puska"
+    ],
+    "Thompson/Center Arms": [
+      "Puska"
+    ],
     "Tikka": [
+      "Puska",
       "T1x",
       "T3",
       "T3x",
       "T3x Lite",
       "T3x Superlite"
     ],
+    "Traditions Firearms": [
+      "Elöltöltő, puska"
+    ],
+    "Troy Industries": [
+      "Puska, kiegészítők"
+    ],
+    "Truvelo": [
+      "Puska"
+    ],
     "Voere": [
       "K15A",
       "K98",
       "LBW",
+      "Puska",
       "VEC",
       "X3"
     ],
@@ -112,8 +333,12 @@
       "307",
       "Backcountry",
       "Mark V",
+      "Puska",
       "Vanguard",
       "Weathermark"
+    ],
+    "Weihrauch": [
+      "Légpuska"
     ],
     "Winchester": [
       "Model 70",
@@ -121,11 +346,30 @@
       "Wildcat",
       "XPR",
       "XPR Stealth"
+    ],
+    "Windham Weaponry": [
+      "Puska"
+    ],
+    "Zastava": [
+      "Ismétlő"
+    ],
+    "Zbrojovka Brno": [
+      "Puska"
+    ],
+    "Zbroyar": [
+      "Puska"
+    ],
+    "ZKK": [
+      "Ismétlő"
+    ],
+    "ZKK / Zastava": [
+      "Puska"
     ]
   },
   "soretes-puska": {
     "ATA Arms": [
       "Arms Venza",
+      "Bock",
       "CY",
       "Etro",
       "Neo",
@@ -139,6 +383,7 @@
       "MP-43"
     ],
     "Benelli": [
+      "Félautomata",
       "M2",
       "M4",
       "Montefeltro",
@@ -150,6 +395,7 @@
       "686",
       "687",
       "A400",
+      "Bock",
       "DT11"
     ],
     "Browning": [
@@ -166,9 +412,13 @@
       "Magnus",
       "Summit"
     ],
+    "Chiappa": [
+      "Dupla"
+    ],
     "Fabarm": [
       "Axis",
       "Elos",
+      "Félautomata",
       "L4S",
       "STF 12",
       "XLR5"
@@ -195,11 +445,16 @@
       "Venator"
     ],
     "Krieghoff": [
+      "Bock",
       "K20",
       "K80",
       "Parcours",
       "Semprio",
       "Ulm"
+    ],
+    "Merkel": [
+      "Bock",
+      "Dupla"
     ],
     "Mossberg": [
       "500",
@@ -212,8 +467,16 @@
       "1100",
       "1187",
       "870",
+      "Pumpás",
       "V3",
       "Versa Max"
+    ],
+    "Retay": [
+      "Félautomata"
+    ],
+    "Sabatti": [
+      "Bock",
+      "Félautomata"
     ],
     "Stoeger": [
       "Coach Gun",
@@ -222,12 +485,18 @@
       "M3500",
       "P3000"
     ],
+    "Umarex": [
+      "Pumpás"
+    ],
     "Winchester": [
       "101",
       "Super X Model 1",
       "SX3",
       "SX4",
       "SXP"
+    ],
+    "Yildiz": [
+      "Bock"
     ]
   },
   "vegyescsovu-puska": {
@@ -317,6 +586,10 @@
     ]
   },
   "tavcsovek": {
+    "Aimpoint": [
+      "Optika",
+      "Red Dot/Piros pont irányzék"
+    ],
     "Athlon": [
       "Ares",
       "Argos",
@@ -325,11 +598,18 @@
       "Midas"
     ],
     "Burris": [
+      "33-42mm objektív",
       "Eliminator",
       "Fullfield",
+      "Red Dot/Piros pont irányzék",
       "RT",
       "Signature HD",
       "Veracity"
+    ],
+    "Bushnell": [
+      "33-42mm objektív",
+      "Optika",
+      "Távolságmérő"
     ],
     "Delta Optical": [
       "Chase",
@@ -338,53 +618,92 @@
       "Stryker",
       "Titanium"
     ],
+    "Fomei": [
+      "33-42mm objektív",
+      "Optika"
+    ],
+    "Hawke": [
+      "33-42mm objektív",
+      "Keresőtávcső",
+      "Optika",
+      "Red Dot/Piros pont irányzék",
+      "Távolságmérő"
+    ],
     "Kahles": [
+      "51mm objektívtől",
       "Helia",
       "K1050",
       "K16i",
       "K318i",
-      "K624i"
+      "K624i",
+      "Optika"
     ],
     "Leica": [
       "Amplus",
       "ER",
       "Fortis",
+      "Keresőtávcső",
       "Magnus",
+      "Optika",
+      "Távolságmérő",
       "Visus"
     ],
+    "Lenspen": [
+      "Optikai kellék"
+    ],
     "Leupold": [
+      "43-50mm objektív",
       "Freedom",
       "Mark 5HD",
+      "Optika",
       "VX-3HD",
       "VX-5HD",
       "VX-6HD"
     ],
+    "MAK": [
+      "Távcsőszerelék",
+      "Weaver/Picatinny sínre"
+    ],
     "March": [
+      "51mm objektívtől",
       "Compact",
       "FX",
       "Genesis",
       "High Master",
       "Tactical"
     ],
+    "March Scopes": [
+      "Optika"
+    ],
     "Meopta": [
+      "Keresőtávcső",
       "MeoPro",
       "MeoStar R2",
       "MeoTac",
+      "Optika",
       "Optika6",
       "ZD"
     ],
+    "Millett": [
+      "33-42mm objektív",
+      "Optika, irányzék"
+    ],
     "Minox": [
+      "33-42mm objektív",
       "Allrounder",
+      "Optika",
       "RS-4",
       "X-range",
       "ZE5",
       "ZX5"
     ],
     "Nightforce": [
+      "51mm objektívtől",
       "ATACR",
       "Benchrest",
       "NX8",
       "NXS",
+      "Optika",
       "SHV"
     ],
     "Nikko Stirling": [
@@ -394,6 +713,23 @@
       "Octa",
       "Panamax"
     ],
+    "Noblex": [
+      "43-50mm objektív",
+      "Optika"
+    ],
+    "Noblex / Docter": [
+      "Optika"
+    ],
+    "Optical Dynamics": [
+      "Optika"
+    ],
+    "Redfield": [
+      "Optika"
+    ],
+    "Rusan": [
+      "Távcsőszerelék",
+      "Weaver/Picatinny sínre"
+    ],
     "Schmidt & Bender": [
       "Exos",
       "Klassik",
@@ -401,25 +737,60 @@
       "PM II",
       "Polar"
     ],
+    "Sightmark": [
+      "32mm objektívig",
+      "Optika",
+      "Red Dot/Piros pont irányzék"
+    ],
+    "Simmons": [
+      "32mm objektívig",
+      "Optika"
+    ],
     "Swarovski": [
+      "51mm objektívtől",
       "dS",
       "Habicht",
+      "Keresőtávcső",
+      "Távolságmérő",
       "Z5",
       "Z6i",
       "Z8i"
     ],
+    "Swarovski Optik": [
+      "Optika"
+    ],
+    "Tasco": [
+      "32mm objektívig",
+      "Optika"
+    ],
+    "Vector Optics": [
+      "33-42mm objektív",
+      "Optika",
+      "Red Dot/Piros pont irányzék"
+    ],
     "Vortex": [
+      "43-50mm objektív",
       "Crossfire",
       "Diamondback",
       "Razor",
+      "Red Dot/Piros pont irányzék",
       "Strike Eagle",
       "Viper"
     ],
+    "Weaver": [
+      "33-42mm objektív",
+      "Optika, szerelék"
+    ],
     "Zeiss": [
+      "51mm objektívtől",
       "Conquest V4",
       "Conquest V6",
+      "Fegyvertípushoz",
+      "Keresőtávcső",
       "LRP S5",
+      "Optika",
       "Terra",
+      "Távolságmérő",
       "Victory V8"
     ]
   },
@@ -466,12 +837,21 @@
       "Saim",
       "Tube"
     ],
+    "Liemke": [
+      "Céltávcső"
+    ],
+    "NiteSite": [
+      "Előtét/mögétét"
+    ],
     "Pard": [
       "DS35",
       "FD1",
       "NV007",
       "NV008",
       "NV008S"
+    ],
+    "Pard NV": [
+      "Előtét/mögétét"
     ],
     "Pulsar": [
       "Digex",
@@ -482,10 +862,14 @@
     ],
     "Sightmark": [
       "Citadel",
+      "Céltávcső",
       "Photon",
       "Pinnacle",
       "Wraith",
       "Wraith Mini"
+    ],
+    "Sytong": [
+      "Előtét/mögétét"
     ],
     "Yukon": [
       "NVMT",
@@ -538,6 +922,9 @@
       "Rico",
       "Saim"
     ],
+    "Liemke": [
+      "Kézi kereső"
+    ],
     "Nocpix": [
       "Ace",
       "Lumi",
@@ -545,12 +932,18 @@
       "Quest",
       "Vista"
     ],
+    "Pard NV": [
+      "Előtét"
+    ],
     "Pulsar": [
       "Axion",
       "Helion",
       "Telos",
       "Thermion 2",
       "Trail"
+    ],
+    "Sytong": [
+      "Előtét"
     ],
     "Trijicon": [
       "IR-Hunter",
@@ -573,7 +966,8 @@
       "BG590",
       "BG710",
       "MG984",
-      "SG2060"
+      "SG2060",
+      "Vadkamera"
     ],
     "Browning": [
       "Dark Ops",
@@ -587,7 +981,8 @@
       "CelluCore",
       "Core",
       "Prime",
-      "Trophy Cam"
+      "Trophy Cam",
+      "Vadkamera"
     ],
     "Cuddeback": [
       "Ambush",
@@ -631,16 +1026,21 @@
       "Link-Micro",
       "Solar Dark"
     ],
+    "Tactacam": [
+      "Vadkamera"
+    ],
     "UOVision": [
       "Glory",
       "Hunter",
       "Select",
       "UM785",
-      "UV785"
+      "UV785",
+      "Vadkamera"
     ]
   },
   "vadaszlampa": {
     "Acebeam": [
+      "Fegyverlámpa",
       "K30",
       "L17",
       "L19",
@@ -696,8 +1096,12 @@
       "SRT7",
       "TM9K"
     ],
+    "NiteSite": [
+      "Vérkereső lámpa"
+    ],
     "Olight": [
       "Baton",
+      "Fegyverlámpa",
       "Javelot",
       "Marauder",
       "Seeker",
@@ -806,6 +1210,7 @@
       "Pointer"
     ],
     "Crispi": [
+      "Bakancs/félcipő",
       "Hunter Line",
       "Merino",
       "Mountain",
@@ -851,12 +1256,14 @@
       "Avail",
       "Climate",
       "Hawker",
+      "Kabát",
       "Taxus",
       "Woodcock"
     ],
     "Swedteam": [
       "Alpha",
       "Crest",
+      "Kabát",
       "Lynx",
       "Ridge",
       "Titan"
@@ -896,6 +1303,7 @@
       "Attiva",
       "Hunter",
       "Nevada",
+      "Vadászbakancs",
       "Wild Rock"
     ],
     "Gateway1": [
@@ -950,123 +1358,210 @@
       "WS Alert"
     ],
     "A-Tec": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Gyorsoldású (A-Lock)",
+      "Hangtompító",
+      "M14x1",
+      "M15x1",
+      "M18x1"
+    ],
+    "A. Uberti": [
+      "Vegyes"
     ],
     "AccuSharp": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Acebeam": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Aguila Ammunition": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Aimpoint": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Allen": [
       "?ltal?nos",
+      "Altalanos",
       "Bipod",
       "Cleaning Kit",
       "Gun Sling",
+      "Kiegészítők",
+      "Puskatok",
       "Rifle Case",
       "Shooting Rest"
     ],
+    "American Tactical Imports (ATI)": [
+      "Vegyes"
+    ],
     "Ameristep": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lessátor"
+    ],
+    "Armscor": [
+      "Vegyes"
     ],
     "ATA Arms": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Atlas Bipod": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Bipod",
+      "Kétlábú (bipod)"
+    ],
+    "AYA": [
+      "Sörétes"
+    ],
+    "B&T AG": [
+      "Vegyes"
     ],
     "Baikal / IZH": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Ballistol": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyverolaj",
+      "Fegyverolajok/vegyszerek"
     ],
     "Banner": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Akku",
+      "Altalanos"
     ],
     "Barnaul": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Barnes": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lövedék"
     ],
     "Barnett": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Barrett": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Benelli": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Beretta": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Bergara": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Big Carp Bait": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Big Fun Line": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Big Tradition": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elöltöltő"
     ],
     "Bignami": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kiegészítők"
     ],
     "Black Fox": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Blaser": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Blimey": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Boito": [
+      "Sörétes"
+    ],
+    "Bolle": [
+      "Védőszemüveg"
     ],
     "Bollé": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Védőszemüveg"
     ],
     "Boly": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Boss & Co.": [
+      "Sörétes"
     ],
     "Boss Buck": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadetető",
+      "Vadetetők"
     ],
     "Bros": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Browning": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Brunox": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "BSA": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Buck Knives": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Bul Armory": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Bulls": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Burris": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Bushnell": [
       "?ltal?nos",
+      "Altalanos",
       "BackTrack",
       "Fusion",
       "Legend",
@@ -1074,100 +1569,187 @@
       "Scout"
     ],
     "Buttolo": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Csalisíp/Kürt",
+      "Vadhívó"
+    ],
+    "C.G. Haenel / Haenel": [
+      "Vegyes"
     ],
     "Camillus": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés"
     ],
     "Camojojo": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadkamera"
     ],
     "Carbon Express": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Carl Walther": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "CCI": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Century International Arms": [
+      "Vegyes"
     ],
     "Champion": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lőtér felszerelés"
     ],
     "Charles Daly": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Chiappa": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Cold Steel": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés"
     ],
     "Colt": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
+    ],
+    "Cosmi Americo & Figlio": [
+      "Sörétes"
     ],
     "Crispi": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Crosman": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Légfegyver"
     ],
     "Cudeman": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászkés/vadásztőr"
+    ],
+    "CVA (Connecticut Valley Arms)": [
+      "Elöltöltő"
     ],
     "CZ": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "CZ (Česká zbrojovka)": [
+      "Vegyes"
     ],
     "Dali": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Davide Pedersoli": [
+      "Elöltöltő"
+    ],
+    "Denel Land Systems": [
+      "Vegyes"
     ],
     "Diana": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "DNM": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "DPMS Panther Arms": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "EAA": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "EAA (European American Armory)": [
+      "Vegyes"
     ],
     "Eastman Outfitters": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászkellék"
     ],
     "EK Archery": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "ELF": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "ELF (Elftmann Tactical)": [
+      "Ravaszmechanizmus"
     ],
     "Fabarm": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Fiocchi": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Firefox": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Flextone": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elektromos hívó",
+      "Vadhívó"
+    ],
+    "FN Herstal": [
+      "Vegyes"
     ],
     "Fomei": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Forest Favorit": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Fox Bullets": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lövedék"
     ],
     "Foxpro": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elektromos hívó"
+    ],
+    "Franchi": [
+      "Sörétes"
     ],
     "Frankonia": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Felszerelések"
+    ],
+    "Freedom Arms": [
+      "Revolver"
     ],
     "Garmin": [
       "Alpha",
@@ -1177,63 +1759,118 @@
       "Instinct"
     ],
     "Geco": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Gerber": [
       "?ltal?nos",
+      "Altalanos",
       "Center-Drive",
       "Gator",
+      "Kés, multiszerszám",
+      "Multiszerszám",
       "Paraframe",
       "StrongArm",
       "Vital"
     ],
+    "German Sport Guns (GSG)": [
+      "Vegyes"
+    ],
     "Gladius": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Glock": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "GRAND TOTAL: 225 márka": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Green Trail": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászkellék"
     ],
     "H&K": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "H&K (Heckler & Koch)": [
+      "Vegyes"
     ],
     "H&N": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Léglövedék"
+    ],
+    "H&R Arms": [
+      "Vegyes"
     ],
     "Haenel": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Hammerli": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Harkila": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Harris": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Bipod",
+      "Kétlábú (bipod)"
+    ],
+    "Harris Engineering": [
+      "Bipod"
     ],
     "Hartkopf": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászkés/vadásztőr"
     ],
     "Hatsan": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Légfegyver, sörétes"
     ],
     "Hausken": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Hangtompító",
+      "Hangtompítók"
     ],
     "Hawke": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "HEI (Hunting Equipment International)": [
+      "Vadászkellék"
     ],
     "Herbertz": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Taktikai bicska"
+    ],
+    "Hi-Point Firearms": [
+      "Vegyes"
     ],
     "HiViz": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Irányzék",
+      "Sörétes"
+    ],
+    "Holland & Holland": [
+      "Vegyes"
     ],
     "Hoppes": [
       "BoreSnake",
@@ -1243,31 +1880,61 @@
       "No.9"
     ],
     "Hornady": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Horton": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Howa": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Howard Leight": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fülvédő"
     ],
     "Hubertus & Buttolo": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadhívó, kés"
     ],
     "ICOtec": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elektromos hívó",
+      "Vadászkellék"
+    ],
+    "IMBEL": [
+      "Vegyes"
     ],
     "ISSC": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Ithaca": [
+      "Sörétes"
+    ],
+    "IWI (Israel Weapon Industries)": [
+      "Vegyes"
+    ],
+    "IZh": [
+      "Vegyes"
     ],
     "Jakob Winter": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyverkoffer",
+      "Fém/műa. koffer"
+    ],
+    "James Purdey & Sons": [
+      "Vegyes"
     ],
     "Kahles": [
       "?ltal?nos",
+      "Altalanos",
       "Binocular",
       "Helia RF",
       "Monocular",
@@ -1275,272 +1942,466 @@
       "RF-M"
     ],
     "Kalashnikov": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Kel-Tec": [
+      "Vegyes"
     ],
     "Keliler Shoot": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kiegészítők"
     ],
     "Kershaw": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Egykezes bicska",
+      "Kés"
     ],
     "Kimar": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Klever": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Klever Kemi (Ballistol)": [
+      "Fegyverolaj"
     ],
     "Kopfjäger": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lőbot"
     ],
     "Krico": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Krieghoff": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Kümmel": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyverkoffer"
     ],
     "Lansky": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Késélező"
     ],
     "Lapua": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Leatherman": [
       "?ltal?nos",
+      "Altalanos",
       "Charge",
+      "Multiszerszám",
       "Rebar",
       "Signal",
       "Surge",
       "Wave"
     ],
     "Leica": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Lenspen": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Leupold": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Liemke": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Hőkamera, éjjellátó"
     ],
     "Luger": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Magnum Research / Desert Eagle": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Magpul": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kiegészítők"
     ],
     "MAK": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Manurhin": [
+      "Revolver"
     ],
     "March": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Marlin": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Marocchi": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Marttiini": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászkés/vadásztőr"
     ],
     "Maruzen": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Airsoft",
+      "Altalanos"
     ],
     "Matthews Mission": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Mauser": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Meopta": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Mercury": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászkellék"
     ],
     "Merkel": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Merkel"
     ],
     "MFS": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Milkor": [
+      "Gránátvető"
     ],
     "Millett": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Minox": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Miroku": [
+      "Sörétes"
     ],
     "Morakniv": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászkés/vadásztőr"
     ],
     "MTM": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Muck Boot": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Gumicsizma"
     ],
     "Napier": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyverápolás"
     ],
     "Nieto": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés"
     ],
     "Nightforce": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Nikon": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Nitecore": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "NiteSite": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Éjjellátó"
     ],
     "Noblex": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Nocpix": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Éjjellátó"
     ],
     "Norica": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Norinco": [
+      "Vegyes"
     ],
     "Norma": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "North American Arms": [
+      "Revolver"
     ],
     "Nosler": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "NXG": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Légfegyver, kiegészítő"
     ],
     "Olight": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Lámpa"
     ],
     "Opinel": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászbicska"
     ],
     "Optical Dynamics": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Pajzs": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Célpajzs"
+    ],
+    "Pakistan Ordnance Factories": [
+      "Vegyes"
+    ],
+    "Palmetto State Armory (PSA)": [
+      "Vegyes"
+    ],
+    "Pard NV": [
+      "Éjjellátó"
     ],
     "Pard NV Optics": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Éjjellátó"
     ],
     "Parforce": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászkellék"
     ],
     "Peltor / 3M": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fülvédő"
+    ],
+    "Peltor/3M": [
+      "Fülvédő"
+    ],
+    "Perazzi": [
+      "Sörétes"
     ],
     "Percussion": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elöltöltő"
     ],
     "Perfecta": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Pindad": [
+      "Vegyes"
     ],
     "Plano": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyvertároló",
+      "Puskatok"
     ],
     "PPU": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Primos": [
       "?ltal?nos",
       "Alpha Dogg",
+      "Altalanos",
+      "Csalisíp/Kürt",
       "Double Bull",
       "Gen3",
       "Power Crow",
-      "Trigger Stick"
+      "Trigger Stick",
+      "Vadászkellék"
+    ],
+    "Proarms": [
+      "Vegyes"
     ],
     "ProHunt": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "ProHunt (LVC)": [
+      "Vadászfelszerelés"
     ],
     "Puma": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Vadászkés/vadásztőr"
     ],
     "Raetz": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Rapid Assault": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Taktikai felszerelés"
     ],
     "Raven": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyver kiegészítő"
     ],
     "Redfield": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Remington": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Retay": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Rohm": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Rossi": [
+      "Vegyes"
     ],
     "Rottweil": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Ruger": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Ruger (Sturm, Ruger & Co.)": [
+      "Vegyes"
     ],
     "Rusan": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "RWS": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Sabatti": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Sako": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Santa Bárbara Sistemas": [
+      "Vegyes"
+    ],
+    "Sarsılmaz": [
+      "Vegyes"
     ],
     "Sauer": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Savage": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Sax Munition": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Schrade": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kés",
+      "Taktikai kés/tőr"
     ],
     "Seeland": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászruha"
     ],
     "Sellier & Bellot": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Serbu Firearms": [
+      "Sörétes"
     ],
     "Sieger": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "SIG Sauer": [
+      "Vegyes"
     ],
     "Sightmark": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Simmons": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Skorpion": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes kiegészítő"
     ],
     "Smith & Wesson": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Sordin": [
       "Mil Aux",
@@ -1550,142 +2411,278 @@
       "Supreme Pro X"
     ],
     "Speer": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Springfield Armory": [
+      "Vegyes"
     ],
     "Stanley": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Termosz"
     ],
     "Steyr": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Steyr-Mannlicher": [
+      "Steyr"
     ],
     "Stil Crin": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Csőkígyók",
+      "Fegyverápolás"
+    ],
+    "Stilcrin": [
+      "Fegyverápolás"
+    ],
+    "Stoeger Industries": [
+      "Sörétes"
     ],
     "Stoney Point": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Swarovski": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Swedteam": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászruha"
     ],
     "Swiza": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Svájci bicska"
     ],
     "Sytong": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Éjjellátó"
     ],
     "Tactacam": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Akciókamera",
+      "Altalanos"
     ],
     "Tasco": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Taurus": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "The Outdoor Connection": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Thermacell": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Illatanyag",
+      "Szúnyogriasztó"
     ],
     "Tipp Arms": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Légfegyver"
+    ],
+    "Tisaş Arms": [
+      "Vegyes"
     ],
     "Tokyo Soldier": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Airsoft",
+      "Altalanos"
+    ],
+    "TOZ (Tula Arms Plant)": [
+      "Vegyes"
     ],
     "Traditions": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Tru-Flite": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "TrueSpec": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Taktikai ruha"
     ],
     "Truglo": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "TruGlo": [
+      "Irányzék, lámpa"
     ],
     "Tula": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Tula Arms Plant": [
+      "Vegyes"
+    ],
+    "Ugartechea": [
+      "Sörétes"
+    ],
+    "Umarex": [
+      "Légfegyver, replika",
+      "Umarex"
     ],
     "Umarex / Huglu": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Uncle Mike's": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Kiegészítők"
     ],
     "UOVision": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadkamera"
     ],
     "UST": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Túlélőfelszerelés"
+    ],
+    "UST (Ultimate Survival Technologies)": [
+      "Túlélőfelszerelés"
     ],
     "Vector Optics": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Verney-Carron": [
+      "Vegyes"
     ],
     "Victorinox": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Svájci bicska"
     ],
     "Vortex": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "W.W. Greener": [
+      "Sörétes"
     ],
     "Wadie": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Wald & Frost": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadászkellék"
     ],
     "Walther": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Walther (Carl Walther)": [
+      "Vegyes"
     ],
     "Weaver": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Webley & Scott": [
+      "Vegyes"
     ],
     "Wegu": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Fegyver kiegészítő"
     ],
     "Western Rivers": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Elektromos hívó"
+    ],
+    "Westley Richards": [
+      "Vegyes"
     ],
     "Wicked Ridge": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Wildgame Innovations": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vadkamera, vadetető"
     ],
     "Winchester": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Vegyes"
     ],
     "Winchester WX": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Windham Weaponry": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Yildiz": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos",
+      "Sörétes"
     ],
     "Zastava": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Zastava Arms": [
+      "Vegyes"
     ],
     "Zeiss": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Zenith Firearms": [
+      "Vegyes"
+    ],
+    "Ziegenhahn & Sohn": [
+      "Sörétes"
     ],
     "ZKK": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Összesen: 106 márka": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
     ],
     "Összesen: 119 márka": [
-      "?ltal?nos"
+      "?ltal?nos",
+      "Altalanos"
+    ],
+    "Összesen: 204 márka-kategória párosítás": [
+      "Altalanos"
+    ],
+    "Összesen: 333 márka": [
+      "Altalanos"
     ]
   },
   "vadasz-ijak": {
+    "Barnett": [
+      "Számszeríj",
+      "Számszeríj/nyílpuska"
+    ],
     "Bear Archery": [
       "Cruzer",
       "Execute",
@@ -1700,12 +2697,20 @@
       "Reckoning",
       "Solution"
     ],
+    "EK Archery": [
+      "Számszeríj",
+      "Számszeríj/nyílpuska"
+    ],
     "Elite": [
       "Era",
       "Kure",
       "Omnia",
       "Ritual",
       "Terrain"
+    ],
+    "Horton": [
+      "Számszeríj",
+      "Számszeríj/nyílpuska"
     ],
     "Hoyt": [
       "Carbon",
@@ -1720,6 +2725,9 @@
       "Traverse",
       "V3X",
       "Vertix"
+    ],
+    "Matthews Mission": [
+      "Íj"
     ],
     "Mission": [
       "Hammr",
@@ -1742,6 +2750,13 @@
       "Miracle",
       "X8"
     ],
+    "The Outdoor Connection": [
+      "Fegyverszíj"
+    ],
+    "Wicked Ridge": [
+      "Számszeríj",
+      "Számszeríj/nyílpuska"
+    ],
     "Win and Win": [
       "Apex",
       "Black Wolf",
@@ -1757,8 +2772,292 @@
       "XLite"
     ]
   },
-  "maroklofegyver": {},
+  "maroklofegyver": {
+    "American Derringer": [
+      "Pisztoly"
+    ],
+    "Auto-Ordnance": [
+      "Géppisztoly"
+    ],
+    "Beretta": [
+      "Co2 patronos",
+      "Szekrénytáras"
+    ],
+    "Bersa": [
+      "Pisztoly"
+    ],
+    "Bond Arms": [
+      "Pisztoly"
+    ],
+    "BUL Armory": [
+      "Pisztoly"
+    ],
+    "Canik": [
+      "Pisztoly"
+    ],
+    "Charter Arms": [
+      "Pisztoly"
+    ],
+    "Colt": [
+      "Co2 patronos"
+    ],
+    "CZ": [
+      "Szekrénytáras"
+    ],
+    "EAA Corp": [
+      "Pisztoly"
+    ],
+    "Girsan": [
+      "Pisztoly"
+    ],
+    "Glock": [
+      "Co2 patronos",
+      "Pisztoly",
+      "Szekrénytáras"
+    ],
+    "Hammerli / Hämmerli": [
+      "Pisztoly, puska"
+    ],
+    "HS Produkt": [
+      "Pisztoly"
+    ],
+    "Kahr Arms": [
+      "Pisztoly"
+    ],
+    "Kimar": [
+      "Gázpisztoly",
+      "Szekrénytáras"
+    ],
+    "Kimber": [
+      "Pisztoly, puska"
+    ],
+    "Korth": [
+      "Revolver, pisztoly"
+    ],
+    "Magnum Research": [
+      "Pisztoly",
+      "Szekrénytáras"
+    ],
+    "Magnum Research / Desert Eagle": [
+      "Pisztoly"
+    ],
+    "Morini": [
+      "Pisztoly"
+    ],
+    "Nighthawk Custom": [
+      "Pisztoly"
+    ],
+    "Pardini Arms": [
+      "Pisztoly"
+    ],
+    "Phoenix Arms": [
+      "Pisztoly"
+    ],
+    "Retay": [
+      "Sörétes, gázpisztoly"
+    ],
+    "Rohm": [
+      "Gázpisztoly",
+      "Szekrénytáras"
+    ],
+    "Rohm / RG": [
+      "Gázpisztoly"
+    ],
+    "Ruger": [
+      "Csőletörős",
+      "Szekrénytáras"
+    ],
+    "SCCY Firearms": [
+      "Pisztoly"
+    ],
+    "Shadow Systems": [
+      "Pisztoly"
+    ],
+    "SIG Sauer": [
+      "Szekrénytáras"
+    ],
+    "Smith & Wesson": [
+      "Forgótáras"
+    ],
+    "Staccato": [
+      "Pisztoly"
+    ],
+    "Steyr Mannlicher": [
+      "Puska, pisztoly"
+    ],
+    "Tanfoglio": [
+      "Pisztoly"
+    ],
+    "Taurus": [
+      "Szekrénytáras"
+    ],
+    "Umarex": [
+      "Co2 patronos",
+      "Szekrénytáras"
+    ],
+    "Walther": [
+      "Co2 patronos",
+      "Szekrénytáras"
+    ],
+    "Wilson Combat": [
+      "Pisztoly, puska"
+    ]
+  },
   "hatastalanitott": {},
-  "egyeb-fegyverek": {},
-  "loszer-tolteny": {}
+  "egyeb-fegyverek": {
+    "BSA": [
+      "Csőletörős rugós"
+    ],
+    "CZ": [
+      "Ismétlő"
+    ],
+    "Diana": [
+      "Csőletörős rugós"
+    ],
+    "FAB Defense": [
+      "Tus/markolat"
+    ],
+    "Marlin": [
+      "Ismétlő"
+    ],
+    "Norica": [
+      "Csőletörős rugós",
+      "Gázrugós",
+      "Légtartályos (PCP)"
+    ],
+    "NXG": [
+      "Csőletörős rugós"
+    ],
+    "Remington": [
+      "Elsütés"
+    ],
+    "Ruger": [
+      "Ismétlő"
+    ],
+    "Savage": [
+      "Ismétlő"
+    ],
+    "Tipp Arms": [
+      "Légtartályos (PCP)"
+    ],
+    "Tokyo Soldier": [
+      "Elektromos"
+    ],
+    "Umarex": [
+      "Co2 patronos",
+      "Ismétlő"
+    ],
+    "Walther": [
+      "Co2 patronos"
+    ],
+    "Weihrauch": [
+      "Fix csövű rugós"
+    ]
+  },
+  "loszer-tolteny": {
+    "Aguila Ammunition": [
+      "Lőszer"
+    ],
+    "Barnaul": [
+      "Lőszer"
+    ],
+    "Barnes": [
+      "Ólommentes mag"
+    ],
+    "CCI": [
+      "Lekerekített hegyű",
+      "Lőszer"
+    ],
+    "Federal": [
+      "Műanyag hegyű",
+      "Teljes köpenyes"
+    ],
+    "Fiocchi": [
+      "Lőszer",
+      "Sport"
+    ],
+    "Fox Bullets": [
+      "Ólommentes mag"
+    ],
+    "Geco": [
+      "Lőszer",
+      "Sport",
+      "Teljes köpenyes"
+    ],
+    "H&N": [
+      "Léglövedék 4.5mm"
+    ],
+    "Hornady": [
+      "Lőszer, lövedék",
+      "Műanyag hegyű"
+    ],
+    "Lapua": [
+      "Lőszer",
+      "Teljes köpenyes"
+    ],
+    "MFS": [
+      "Lőszer"
+    ],
+    "MTM": [
+      "Kiegészítők",
+      "Lőszertartó"
+    ],
+    "MTM Case-Gard": [
+      "Lőszertartó"
+    ],
+    "Norma": [
+      "Lőszer",
+      "Műanyag hegyű"
+    ],
+    "Nosler": [
+      "Lövedék, lőszer",
+      "Műanyag hegyű"
+    ],
+    "Perfecta": [
+      "Lőszer"
+    ],
+    "PPU": [
+      "Teljes köpenyes"
+    ],
+    "PPU (Prva Partizanska Punionica)": [
+      "Lőszer"
+    ],
+    "Raetz": [
+      "Lőszertartó"
+    ],
+    "Remington": [
+      "Lekerekített hegyű"
+    ],
+    "Rottweil": [
+      "Lőszer",
+      "Sport",
+      "Vadász"
+    ],
+    "RWS": [
+      "Léglövedék 4.5mm",
+      "Lőszer, léglövedék",
+      "Műanyag hegyű"
+    ],
+    "Sako": [
+      "Ólom hegyű mag"
+    ],
+    "Sax Munition": [
+      "Lőszer"
+    ],
+    "Sellier & Bellot": [
+      "Lőszer",
+      "Teljes köpenyes"
+    ],
+    "Speer": [
+      "Lőszer, lövedék"
+    ],
+    "Stoney Point": [
+      "Lőszer kiegészítő"
+    ],
+    "Wadie": [
+      "Gáz és riasztó lőszer",
+      "Gáz/riasztó töltény",
+      "Sport"
+    ]
+  }
 }
