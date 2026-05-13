@@ -1,0 +1,1922 @@
+[
+  {
+    "name": "Fegyverek",
+    "slug": "fegyverek",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Golyós",
+    "slug": "golyos",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Ismétlő",
+    "slug": "ismetlo-golyas",
+    "parent": "Golyós",
+    "description": ""
+  },
+  {
+    "name": "Billenő",
+    "slug": "billeno-golyas",
+    "parent": "Golyós",
+    "description": ""
+  },
+  {
+    "name": "Alsókulcsos",
+    "slug": "alsokulcsos-golyas",
+    "parent": "Golyós",
+    "description": ""
+  },
+  {
+    "name": "Félauto",
+    "slug": "felauto",
+    "parent": "Golyós",
+    "description": ""
+  },
+  {
+    "name": "Egyeneshúzású",
+    "slug": "egyeneshuzasu",
+    "parent": "Golyós",
+    "description": ""
+  },
+  {
+    "name": "Sörétes",
+    "slug": "soretes",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Bock",
+    "slug": "bock-soretes",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Dupla",
+    "slug": "dupla-soretes",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Pumpás (előagyszánas)",
+    "slug": "pumpas-eloagyszanas",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Félautomata",
+    "slug": "felautomata-soretes",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Alsókulcsos",
+    "slug": "alsokulcsos-soretes",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Drilling 3 csövű",
+    "slug": "drilling-3-csovu",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Egylövetű",
+    "slug": "egylovetu",
+    "parent": "Sörétes",
+    "description": ""
+  },
+  {
+    "name": "Kiskaliberű",
+    "slug": "kiskaliberu",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Ismétlő",
+    "slug": "ismetlo-kiskaliberu",
+    "parent": "Kiskaliberű",
+    "description": ""
+  },
+  {
+    "name": "Alsókulcsos",
+    "slug": "alsokulcsos-kiskaliberu",
+    "parent": "Kiskaliberű",
+    "description": ""
+  },
+  {
+    "name": "Öntöltő (sport)",
+    "slug": "ontolto-sport",
+    "parent": "Kiskaliberű",
+    "description": ""
+  },
+  {
+    "name": "Tradicionális",
+    "slug": "tradicionalis",
+    "parent": "Kiskaliberű",
+    "description": ""
+  },
+  {
+    "name": "Billenő",
+    "slug": "billeno-kiskaliberu",
+    "parent": "Kiskaliberű",
+    "description": ""
+  },
+  {
+    "name": "Duplagolyós",
+    "slug": "duplagolyos",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Bock",
+    "slug": "bock-duplagolyos",
+    "parent": "Duplagolyós",
+    "description": ""
+  },
+  {
+    "name": "Dupla",
+    "slug": "dupla-duplagolyos",
+    "parent": "Duplagolyós",
+    "description": ""
+  },
+  {
+    "name": "Vegyescsövű",
+    "slug": "vegyescsovu",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Drilling",
+    "slug": "drilling",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Maroklő",
+    "slug": "maroklo",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Szekrénytáras",
+    "slug": "szekrenytaras-maroklo",
+    "parent": "Maroklő",
+    "description": ""
+  },
+  {
+    "name": "Forgótáras",
+    "slug": "forgotaras-maroklo",
+    "parent": "Maroklő",
+    "description": ""
+  },
+  {
+    "name": "Váltócső",
+    "slug": "valtocso",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Golyós",
+    "slug": "golyas-valtocso",
+    "parent": "Váltócső",
+    "description": ""
+  },
+  {
+    "name": "Duplagolyós",
+    "slug": "duplagolyos-valtocso",
+    "parent": "Váltócső",
+    "description": ""
+  },
+  {
+    "name": "Sörétes",
+    "slug": "soretes-valtocso",
+    "parent": "Váltócső",
+    "description": ""
+  },
+  {
+    "name": "Vegyes",
+    "slug": "vegyes",
+    "parent": "Váltócső",
+    "description": ""
+  },
+  {
+    "name": "Zárfejek",
+    "slug": "zarfejek",
+    "parent": "Váltócső",
+    "description": ""
+  },
+  {
+    "name": "Alkatrészek",
+    "slug": "alkatreszek",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Choke, Szűkítés",
+    "slug": "choke-szukites",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Tár",
+    "slug": "tar-alkatresz",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Elsütés",
+    "slug": "elsutes",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Irányzék",
+    "slug": "iranyzek-alkatresz",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Oldalpanel",
+    "slug": "oldalpanel",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Tus, markolat",
+    "slug": "tus-markolat",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Egyéb",
+    "slug": "egyeb-alkatresz",
+    "parent": "Alkatrészek",
+    "description": ""
+  },
+  {
+    "name": "Elöltöltő",
+    "slug": "eloltolto",
+    "parent": "Fegyverek",
+    "description": ""
+  },
+  {
+    "name": "Engedélymentes fegyver",
+    "slug": "engedelymentes-fegyver",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Önvédelmi eszközök",
+    "slug": "onvedelmi-eszkozok",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Gázspray",
+    "slug": "gazspray",
+    "parent": "Önvédelmi eszközök",
+    "description": ""
+  },
+  {
+    "name": "Kubotan",
+    "slug": "kubotan",
+    "parent": "Önvédelmi eszközök",
+    "description": ""
+  },
+  {
+    "name": "Taktikai toll",
+    "slug": "taktikai-toll",
+    "parent": "Önvédelmi eszközök",
+    "description": ""
+  },
+  {
+    "name": "Egyéb önvédelmi eszköz",
+    "slug": "egyeb-onvedelmi-eszkoz",
+    "parent": "Önvédelmi eszközök",
+    "description": ""
+  },
+  {
+    "name": "Airsoft fegyver",
+    "slug": "airsoft-fegyver",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Rugós airsoft",
+    "slug": "rugos-airsoft",
+    "parent": "Airsoft fegyver",
+    "description": ""
+  },
+  {
+    "name": "Elektromos airsoft",
+    "slug": "elektromos-airsoft",
+    "parent": "Airsoft fegyver",
+    "description": ""
+  },
+  {
+    "name": "Gázos airsoft",
+    "slug": "gazos-airsoft",
+    "parent": "Airsoft fegyver",
+    "description": ""
+  },
+  {
+    "name": "Co2 patronos airsoft",
+    "slug": "co2-patronos-airsoft",
+    "parent": "Airsoft fegyver",
+    "description": ""
+  },
+  {
+    "name": "Dual power airsoft",
+    "slug": "dual-power-airsoft",
+    "parent": "Airsoft fegyver",
+    "description": ""
+  },
+  {
+    "name": "Gáz-riasztó pisztoly",
+    "slug": "gaz-riaszto-pisztoly",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Szekrénytáras gázpisztoly",
+    "slug": "szekrenytaras-gazpisztoly",
+    "parent": "Gáz-riasztó pisztoly",
+    "description": ""
+  },
+  {
+    "name": "Forgótáras gázpisztoly",
+    "slug": "forgotaras-gazpisztoly",
+    "parent": "Gáz-riasztó pisztoly",
+    "description": ""
+  },
+  {
+    "name": "Csőletörős gázpisztoly",
+    "slug": "csoletoros-gazpisztoly",
+    "parent": "Gáz-riasztó pisztoly",
+    "description": ""
+  },
+  {
+    "name": "Légpisztoly",
+    "slug": "legpisztoly",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Co2 patronos légpisztoly",
+    "slug": "co2-patronos-legpisztoly",
+    "parent": "Légpisztoly",
+    "description": ""
+  },
+  {
+    "name": "Csőletörős légpisztoly",
+    "slug": "csoletoros-legpisztoly",
+    "parent": "Légpisztoly",
+    "description": ""
+  },
+  {
+    "name": "Légtartályos légpisztoly",
+    "slug": "legtartalyos-legpisztoly",
+    "parent": "Légpisztoly",
+    "description": ""
+  },
+  {
+    "name": "Rugós légpisztoly",
+    "slug": "rugos-legpisztoly",
+    "parent": "Légpisztoly",
+    "description": ""
+  },
+  {
+    "name": "Légpuska",
+    "slug": "legpuska",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Csőletörős rugós légpuska",
+    "slug": "csoletoros-rugos-legpuska",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Fix csövű rugós légpuska",
+    "slug": "fix-csovu-rugos-legpuska",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Co2 patronos légpuska",
+    "slug": "co2-patronos-legpuska",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Légtartályos (PCP) légpuska",
+    "slug": "legtartalyos-pcp-legpuska",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Gázrugós légpuska",
+    "slug": "gazrugos-legpuska",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Gyakorló fegyver",
+    "slug": "gyakorlo-fegyver",
+    "parent": "Légpuska",
+    "description": ""
+  },
+  {
+    "name": "Gumilövedékes és gyakorló",
+    "slug": "gumilovedekes-es-gyakorlo",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Gumi, bors és festéklövők",
+    "slug": "gumi-bors-es-festeklovok",
+    "parent": "Gumilövedékes és gyakorló",
+    "description": ""
+  },
+  {
+    "name": "Gumilövedékes puska",
+    "slug": "gumilovedekes-puska",
+    "parent": "Gumilövedékes és gyakorló",
+    "description": ""
+  },
+  {
+    "name": "Tárak, alkatrészek",
+    "slug": "tarak-alkatreszek-gumilovedekes",
+    "parent": "Gumilövedékes és gyakorló",
+    "description": ""
+  },
+  {
+    "name": "Töltény, lövedék",
+    "slug": "tolteny-lovedek",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Airsoft lövedék 6mmBB",
+    "slug": "airsoft-lovedek-6mmbb",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "AirSoft gáz, szilikon",
+    "slug": "airsoft-gaz-szilikon",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Co2 patron légpisztolyhoz",
+    "slug": "co2-patron-legpisztolyhoz",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Gáz és riasztó töltény",
+    "slug": "gaz-es-riaszto-tolteny",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Jelzőrakéta-tüzijáték riasztó fegyverhez",
+    "slug": "jelzoraketa-tuzijatek-riaszto-fegyverhez",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Léglövedék 4.5 (.177)",
+    "slug": "leglovedek-4-5-177",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Léglövedék 5.5 (.22)",
+    "slug": "leglovedek-5-5-22",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Léglövedék 4.5 BB",
+    "slug": "leglovedek-4-5-bb",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": ".43 RAM",
+    "slug": "43-ram",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": ".68 RAM",
+    "slug": "68-ram",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": ".50 RAM",
+    "slug": "50-ram",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Gumilövedék",
+    "slug": "gumilovedek",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Léglövedék 6.35 (.25)",
+    "slug": "leglovedek-6-35-25",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Léglövedék 7.62 (.30)",
+    "slug": "leglovedek-7-62-30",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Kiegészítők",
+    "slug": "kiegeszitok-tolteny-lovedek",
+    "parent": "Töltény, lövedék",
+    "description": ""
+  },
+  {
+    "name": "Tár-tartozék-alkatrész",
+    "slug": "tar-tartozek-alkatresz",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Alkatrész",
+    "slug": "alkatresz",
+    "parent": "Tár-tartozék-alkatrész",
+    "description": ""
+  },
+  {
+    "name": "Tartozék",
+    "slug": "tartozek",
+    "parent": "Tár-tartozék-alkatrész",
+    "description": ""
+  },
+  {
+    "name": "Tárak",
+    "slug": "tarak",
+    "parent": "Tár-tartozék-alkatrész",
+    "description": ""
+  },
+  {
+    "name": "Csúzli",
+    "slug": "csuzli",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Íj, számszeríj, fúvócső",
+    "slug": "ij-szamszerij-fuvocso",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Íjvessző",
+    "slug": "ijvesszo",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Fúvócső",
+    "slug": "fuvocso",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Nyílpisztoly",
+    "slug": "nyilpisztoly",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Számszeríj/nyílpuska",
+    "slug": "szamszerij-nyilpuska",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Íj",
+    "slug": "ij",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Kiegészítők",
+    "slug": "kiegeszitok-ij",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Darts",
+    "slug": "darts",
+    "parent": "Íj, számszeríj, fúvócső",
+    "description": ""
+  },
+  {
+    "name": "Céltáblák, célok",
+    "slug": "celtablak-celok",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Kompresszor",
+    "slug": "kompresszor",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Modell, makett",
+    "slug": "modell-makett",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Játék",
+    "slug": "jatek",
+    "parent": "Engedélymentes fegyver",
+    "description": ""
+  },
+  {
+    "name": "Lőszerek",
+    "slug": "loszerek",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Golyós lőszer",
+    "slug": "golyos-loszer",
+    "parent": "Lőszerek",
+    "description": ""
+  },
+  {
+    "name": "Műanyag hegyű",
+    "slug": "muanyag-hegyu-golyas-loszer",
+    "parent": "Golyós lőszer",
+    "description": ""
+  },
+  {
+    "name": "Ólom hegyű mag",
+    "slug": "olom-hegyu-mag",
+    "parent": "Golyós lőszer",
+    "description": ""
+  },
+  {
+    "name": "Ólommentes mag",
+    "slug": "olommentes-mag-golyas",
+    "parent": "Golyós lőszer",
+    "description": ""
+  },
+  {
+    "name": "Fúrt",
+    "slug": "furt-golyas",
+    "parent": "Golyós lőszer",
+    "description": ""
+  },
+  {
+    "name": "Teljes köpenyes",
+    "slug": "teljes-kopenyes-golyas",
+    "parent": "Golyós lőszer",
+    "description": ""
+  },
+  {
+    "name": "Kiskaliberű lőszer",
+    "slug": "kiskaliberu-loszer",
+    "parent": "Lőszerek",
+    "description": ""
+  },
+  {
+    "name": "Műanyag hegyű",
+    "slug": "muanyag-hegyu-kiskaliberu",
+    "parent": "Kiskaliberű lőszer",
+    "description": ""
+  },
+  {
+    "name": "Fúrt",
+    "slug": "furt-kiskaliberu",
+    "parent": "Kiskaliberű lőszer",
+    "description": ""
+  },
+  {
+    "name": "Lekerekített hegyű",
+    "slug": "lekerekitett-hegyu",
+    "parent": "Kiskaliberű lőszer",
+    "description": ""
+  },
+  {
+    "name": "FMJ teljes köpenyes",
+    "slug": "fmj-teljes-kopenyes",
+    "parent": "Kiskaliberű lőszer",
+    "description": ""
+  },
+  {
+    "name": "Ólommentes",
+    "slug": "olommentes",
+    "parent": "Kiskaliberű lőszer",
+    "description": ""
+  },
+  {
+    "name": "Pisztoly lőszer",
+    "slug": "pisztoly-loszer",
+    "parent": "Lőszerek",
+    "description": ""
+  },
+  {
+    "name": "Teljes köpenyes",
+    "slug": "teljes-kopenyes-pisztoly",
+    "parent": "Pisztoly lőszer",
+    "description": ""
+  },
+  {
+    "name": "Sport",
+    "slug": "sport-pisztoly-loszer",
+    "parent": "Pisztoly lőszer",
+    "description": ""
+  },
+  {
+    "name": "Sörétes lőszer",
+    "slug": "soretes-loszer",
+    "parent": "Lőszerek",
+    "description": ""
+  },
+  {
+    "name": "Sport",
+    "slug": "sport-soretes-loszer",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Vadász",
+    "slug": "vadasz",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Nagy szemű sörét",
+    "slug": "nagy-szemu-soret",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Gyöngygolyó",
+    "slug": "gyongygolyo",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Acélsörét",
+    "slug": "acelsoret",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Ólommentes mag",
+    "slug": "olommentes-mag-soretes",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Rendvédelmi",
+    "slug": "rendvedelmi",
+    "parent": "Sörétes lőszer",
+    "description": ""
+  },
+  {
+    "name": "Lőszertöltés",
+    "slug": "loszertoltes",
+    "parent": "Lőszerek",
+    "description": ""
+  },
+  {
+    "name": "Gépek",
+    "slug": "gepek",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Hüvelyek",
+    "slug": "huvelyek",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Kenéstechnika",
+    "slug": "kenestechnika",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Kiegészítők",
+    "slug": "kiegeszitok-loszertoltes",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Lőpormérők",
+    "slug": "lopormerok",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Lövedékek",
+    "slug": "lovedekek",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Matricák",
+    "slug": "matricak",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Tisztítók",
+    "slug": "tisztitok",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Csappantyúk",
+    "slug": "csappantyuk",
+    "parent": "Lőszertöltés",
+    "description": ""
+  },
+  {
+    "name": "Felszerelések",
+    "slug": "felszerelesek",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "HI-Viz irányzékok",
+    "slug": "hi-viz-iranyzekok",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Golyós",
+    "slug": "golyas-hiviz",
+    "parent": "HI-Viz irányzékok",
+    "description": ""
+  },
+  {
+    "name": "Sörétes",
+    "slug": "soretes-hiviz",
+    "parent": "HI-Viz irányzékok",
+    "description": ""
+  },
+  {
+    "name": "Pisztoly",
+    "slug": "pisztoly-hiviz",
+    "parent": "HI-Viz irányzékok",
+    "description": ""
+  },
+  {
+    "name": "Tusgumi",
+    "slug": "tusgumi",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Szíjkengyel",
+    "slug": "szijkengyel",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Fegyverszíj",
+    "slug": "fegyverszij",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Lőszertartó, töltényöv",
+    "slug": "loszertarto-toltenyov",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Lőszertartó",
+    "slug": "loszertarto-kategoria",
+    "parent": "Lőszertartó, töltényöv",
+    "description": ""
+  },
+  {
+    "name": "Töltényöv",
+    "slug": "toltenyov",
+    "parent": "Lőszertartó, töltényöv",
+    "description": ""
+  },
+  {
+    "name": "Fegyvertok",
+    "slug": "fegyvertok",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Puskatok",
+    "slug": "puskatok",
+    "parent": "Fegyvertok",
+    "description": ""
+  },
+  {
+    "name": "Fém és műa. fegyverkoffer",
+    "slug": "fem-es-mua-fegyverkoffer",
+    "parent": "Fegyvertok",
+    "description": ""
+  },
+  {
+    "name": "Pisztolytok",
+    "slug": "pisztolytok",
+    "parent": "Fegyvertok",
+    "description": ""
+  },
+  {
+    "name": "Tártok",
+    "slug": "tartok",
+    "parent": "Fegyvertok",
+    "description": ""
+  },
+  {
+    "name": "Bipod, lőbot",
+    "slug": "bipod-lobot",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Bipod",
+    "slug": "bipod",
+    "parent": "Bipod, lőbot",
+    "description": ""
+  },
+  {
+    "name": "Lőbot",
+    "slug": "lobot",
+    "parent": "Bipod, lőbot",
+    "description": ""
+  },
+  {
+    "name": "Fegyver belövés",
+    "slug": "fegyver-beloves",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Lőzsák / fegyvertámasz",
+    "slug": "lozsak-fegyvertamasz",
+    "parent": "Fegyver belövés",
+    "description": ""
+  },
+  {
+    "name": "Belövő állvány",
+    "slug": "belovo-allvany",
+    "parent": "Fegyver belövés",
+    "description": ""
+  },
+  {
+    "name": "Céltábla, lőlap",
+    "slug": "celtabla-lolap",
+    "parent": "Fegyver belövés",
+    "description": ""
+  },
+  {
+    "name": "Célkamera",
+    "slug": "celkamera",
+    "parent": "Fegyver belövés",
+    "description": ""
+  },
+  {
+    "name": "Fegyver tárolás",
+    "slug": "fegyver-tarolas",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Fegyverszekrény",
+    "slug": "fegyverszekreny",
+    "parent": "Fegyver tárolás",
+    "description": ""
+  },
+  {
+    "name": "Pisztolykazetta",
+    "slug": "pisztolykazetta",
+    "parent": "Fegyver tárolás",
+    "description": ""
+  },
+  {
+    "name": "Elsütő billentyű zár",
+    "slug": "elsuto-billentyu-zar",
+    "parent": "Fegyver tárolás",
+    "description": ""
+  },
+  {
+    "name": "Tartó, konzol",
+    "slug": "tarto-konzol",
+    "parent": "Fegyver tárolás",
+    "description": ""
+  },
+  {
+    "name": "Fegyver ápolás",
+    "slug": "fegyver-apolas",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Fegyverolajok, vegyszerek",
+    "slug": "fegyverolajok-vegyszerek",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Puffer és páraszívó patronok",
+    "slug": "puffer-es-paraszivo-patronok",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Csőkígyók",
+    "slug": "csokigyok",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Kefék és pálcák",
+    "slug": "kefek-es-palcak",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Készletek",
+    "slug": "keszletek-apolas",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Egyéb felszerelések",
+    "slug": "egyeb-felszereles-apolas",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Endoszkópok",
+    "slug": "endoszkopok",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Tisztító állvány",
+    "slug": "tisztito-allvany",
+    "parent": "Fegyver ápolás",
+    "description": ""
+  },
+  {
+    "name": "Termosz, kulacs",
+    "slug": "termosz-kulacs",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Iránytű, tájoló",
+    "slug": "iranytu-tajolo",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Hasznos dolgok",
+    "slug": "hasznos-dolgok",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Védőfelszerelések",
+    "slug": "vedofelszerelesek",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Fülvédő",
+    "slug": "fulvedo",
+    "parent": "Védőfelszerelések",
+    "description": ""
+  },
+  {
+    "name": "Védőszemüveg",
+    "slug": "vedoszemuveg",
+    "parent": "Védőfelszerelések",
+    "description": ""
+  },
+  {
+    "name": "Protektorok",
+    "slug": "protektorok",
+    "parent": "Védőfelszerelések",
+    "description": ""
+  },
+  {
+    "name": "Táska",
+    "slug": "taska",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Hátizsák",
+    "slug": "hatizsak",
+    "parent": "Táska",
+    "description": ""
+  },
+  {
+    "name": "Oldaltáska",
+    "slug": "oldaltaska",
+    "parent": "Táska",
+    "description": ""
+  },
+  {
+    "name": "Range bag",
+    "slug": "range-bag",
+    "parent": "Táska",
+    "description": ""
+  },
+  {
+    "name": "Aggaték, bőrtermékek",
+    "slug": "aggatek-bortermekek",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Aggaték",
+    "slug": "aggatek",
+    "parent": "Aggaték, bőrtermékek",
+    "description": ""
+  },
+  {
+    "name": "Pénztárca, bankkártyatartó",
+    "slug": "penztarca-bankkartyatarto",
+    "parent": "Aggaték, bőrtermékek",
+    "description": ""
+  },
+  {
+    "name": "Igazolványtartó, kulcstartó",
+    "slug": "igazolvanytarto-kulcstarto",
+    "parent": "Aggaték, bőrtermékek",
+    "description": ""
+  },
+  {
+    "name": "Lőszertartó, pofadékemelő",
+    "slug": "loszertarto-pofadekemelo",
+    "parent": "Aggaték, bőrtermékek",
+    "description": ""
+  },
+  {
+    "name": "Bicska, tőr, kard",
+    "slug": "bicska-tor-kard",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Vadászbicska",
+    "slug": "vadaszbicska",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Egykezes bicska",
+    "slug": "egykezes-bicska",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Taktikai bicska",
+    "slug": "taktikai-bicska",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Svájci bicska",
+    "slug": "svajci-bicska",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Vadászkés, vadásztőr",
+    "slug": "vadaszkes-vadasztor",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Taktikai kés, taktikai tőr",
+    "slug": "taktikai-kes-taktikai-tor",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Dobótőr",
+    "slug": "dobotor",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Kard, pajzs",
+    "slug": "kard-pajzs",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Késélező",
+    "slug": "keselezo",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Konyhakés",
+    "slug": "konyhakes",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Machete, bozótvágó",
+    "slug": "machete-bozotvago",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Multiszerszám",
+    "slug": "multiszerszam",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Tok, késlánc",
+    "slug": "tok-keslanc",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Taktikai ásó, taktikai fejsze",
+    "slug": "taktikai-aso-taktikai-fejsze",
+    "parent": "Bicska, tőr, kard",
+    "description": ""
+  },
+  {
+    "name": "Könyv, ajándék, agancs termék",
+    "slug": "konyv-ajandek-agancs-termek",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Könyv",
+    "slug": "konyv",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Agancs termék",
+    "slug": "agancs-termek",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Artina ón termékek",
+    "slug": "artina-on-termekek",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Kitűző",
+    "slug": "kituzo",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Üveg és kerámia termékek",
+    "slug": "uveg-es-keramia-termekek",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Kulcstartó",
+    "slug": "kulcstarto-ajandek",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Egyéb",
+    "slug": "egyeb-ajandek",
+    "parent": "Könyv, ajándék, agancs termék",
+    "description": ""
+  },
+  {
+    "name": "Ruházat, lábbeli",
+    "slug": "ruhazat-labbeli",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Kalap, sapka, maszk",
+    "slug": "kalap-sapka-maszk",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Kesztyű",
+    "slug": "kesztyu",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Zokni",
+    "slug": "zokni",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Öv",
+    "slug": "ov",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Gumicsizma",
+    "slug": "gumicsizma",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Bakancs, félcipő",
+    "slug": "bakancs-felcipo",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Ing, póló",
+    "slug": "ing-polo",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Pulóver",
+    "slug": "pulover",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Kabát",
+    "slug": "kabat",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Mellény",
+    "slug": "melleny",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Nadrág",
+    "slug": "nadrag",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Zubbony",
+    "slug": "zubbony",
+    "parent": "Ruházat, lábbeli",
+    "description": ""
+  },
+  {
+    "name": "Szúnyogriasztó",
+    "slug": "szunyogriaszto",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Koronglövészet",
+    "slug": "korongloveszet",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Vadászati kiegészítők",
+    "slug": "vadaszati-kiegeszitok",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Vadászkutya felszerelés",
+    "slug": "vadaszkutya-felszereles",
+    "parent": "Felszerelések",
+    "description": ""
+  },
+  {
+    "name": "Vadhívás, lesvadászat",
+    "slug": "vadhivas-lesvadaszat",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Lámpák",
+    "slug": "lampak",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Fegyverlámpa",
+    "slug": "fegyverlampa",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Kézi reflektor",
+    "slug": "kezi-reflektor",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Elem- és akkuslámpa",
+    "slug": "elem-es-akkuslampa",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Fejlámpa",
+    "slug": "fejlampa",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Vérkereső lámpa",
+    "slug": "verkereso-lampa",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Akkumulátorok, izzók",
+    "slug": "akkumulatorok-izzok",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Tartozékok, kiegészítők",
+    "slug": "tartozekok-kiegeszitok-lampak",
+    "parent": "Lámpák",
+    "description": ""
+  },
+  {
+    "name": "Csalisíp, Kürt",
+    "slug": "csalisip-kurt",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Illatanyag",
+    "slug": "illatanyag",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Vadetető csali",
+    "slug": "vadeteto-csali",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Vadászszék",
+    "slug": "vadaszszek",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Élvefogó csapda",
+    "slug": "elvefogo-csapda",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Elektromos hívó",
+    "slug": "elektromos-hivo",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Vadetetők",
+    "slug": "vadetetok",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Mobil les, vadkár les",
+    "slug": "mobil-les-vadkar-les",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Lessátor/Vadászsátor",
+    "slug": "lessator-vadaszsator",
+    "parent": "Vadhívás, lesvadászat",
+    "description": ""
+  },
+  {
+    "name": "Hangtompítók",
+    "slug": "hangtompitok",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "A-Tec",
+    "slug": "a-tec",
+    "parent": "Hangtompítók",
+    "description": ""
+  },
+  {
+    "name": "1/2-20",
+    "slug": "1-2-20",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "1/2-28",
+    "slug": "1-2-28",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "5/8-24",
+    "slug": "5-8-24",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "Adapterek, kiegészítők, csőszájfékek",
+    "slug": "adapterek-kiegeszitok-csoszajfekek",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "Gyorsoldású (A-Lock)",
+    "slug": "gyorsoldasu-a-lock",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "M14x1",
+    "slug": "m14x1",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "M15x1",
+    "slug": "m15x1",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "M16x1",
+    "slug": "m16x1",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "M17x1",
+    "slug": "m17x1",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "Pisztoly és karabély hangtompítók",
+    "slug": "pisztoly-es-karabely-hangtompitok",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "Sörétes hangtompító 12ga",
+    "slug": "soretes-hangtompito-12ga",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "M18x1",
+    "slug": "m18x1",
+    "parent": "A-Tec",
+    "description": ""
+  },
+  {
+    "name": "Hausken",
+    "slug": "hausken",
+    "parent": "Hangtompítók",
+    "description": ""
+  },
+  {
+    "name": "Hangtompítók",
+    "slug": "hangtompitok-hausken",
+    "parent": "Hausken",
+    "description": ""
+  },
+  {
+    "name": "Kiegészítők",
+    "slug": "kiegeszitok-hausken",
+    "parent": "Hausken",
+    "description": ""
+  },
+  {
+    "name": "Menetváltó",
+    "slug": "menetvalto",
+    "parent": "Hausken",
+    "description": ""
+  },
+  {
+    "name": "Steyr",
+    "slug": "steyr",
+    "parent": "Hangtompítók",
+    "description": ""
+  },
+  {
+    "name": "Merkel",
+    "slug": "merkel",
+    "parent": "Hangtompítók",
+    "description": ""
+  },
+  {
+    "name": "Umarex",
+    "slug": "umarex",
+    "parent": "Hangtompítók",
+    "description": ""
+  },
+  {
+    "name": "Lőtér",
+    "slug": "loter",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Élménylövész csomagok",
+    "slug": "elmenylovesz-csomagok",
+    "parent": "Lőtér",
+    "description": ""
+  },
+  {
+    "name": "Egyéni csomagok",
+    "slug": "egyeni-csomagok",
+    "parent": "Élménylövész csomagok",
+    "description": ""
+  },
+  {
+    "name": "Csoportos csomagok",
+    "slug": "csoportos-csomagok",
+    "parent": "Élménylövész csomagok",
+    "description": ""
+  },
+  {
+    "name": "Lőtér bérletek",
+    "slug": "loter-berletek",
+    "parent": "Lőtér",
+    "description": ""
+  },
+  {
+    "name": "Lőtér foglalás",
+    "slug": "loter-foglalas",
+    "parent": "Lőtér",
+    "description": ""
+  },
+  {
+    "name": "Egyéni foglalás",
+    "slug": "egyeni-foglalas",
+    "parent": "Lőtér foglalás",
+    "description": ""
+  },
+  {
+    "name": "Lőtér bérlés",
+    "slug": "loter-berles",
+    "parent": "Lőtér foglalás",
+    "description": ""
+  },
+  {
+    "name": "Optika",
+    "slug": "optika",
+    "parent": "",
+    "description": ""
+  },
+  {
+    "name": "Vadkamera",
+    "slug": "vadkamera",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Céltávcső",
+    "slug": "celtavcso-optika",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "32mm objektívig",
+    "slug": "32mm-objektivig",
+    "parent": "Céltávcső",
+    "description": ""
+  },
+  {
+    "name": "33-42mm objektív",
+    "slug": "33-42mm-objektiv",
+    "parent": "Céltávcső",
+    "description": ""
+  },
+  {
+    "name": "43-50mm objektív",
+    "slug": "43-50mm-objektiv",
+    "parent": "Céltávcső",
+    "description": ""
+  },
+  {
+    "name": "51mm objektívtől",
+    "slug": "51mm-objektivtol",
+    "parent": "Céltávcső",
+    "description": ""
+  },
+  {
+    "name": "Távolságmérő",
+    "slug": "tavolsagmero",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Hidegbelövő",
+    "slug": "hidegbelovo",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Éjjellátó",
+    "slug": "ejjellato",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Céltávcső",
+    "slug": "celtavcso-ejjellato",
+    "parent": "Éjjellátó",
+    "description": ""
+  },
+  {
+    "name": "Előtét, mögétét",
+    "slug": "elotet-mogetet",
+    "parent": "Éjjellátó",
+    "description": ""
+  },
+  {
+    "name": "Infravető, kiegészítő",
+    "slug": "infraveto-kiegeszito",
+    "parent": "Éjjellátó",
+    "description": ""
+  },
+  {
+    "name": "Hőkamera",
+    "slug": "hokamera",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Céltávcső",
+    "slug": "celtavcso-hokamera",
+    "parent": "Hőkamera",
+    "description": ""
+  },
+  {
+    "name": "Kézi kereső",
+    "slug": "kezi-kereso",
+    "parent": "Hőkamera",
+    "description": ""
+  },
+  {
+    "name": "Előtét",
+    "slug": "elotet-hokamera",
+    "parent": "Hőkamera",
+    "description": ""
+  },
+  {
+    "name": "Szerelék, kiegészítő",
+    "slug": "szerelak-kiegeszito-hokamera",
+    "parent": "Hőkamera",
+    "description": ""
+  },
+  {
+    "name": "Távcső alkatrészek, kiegészítők",
+    "slug": "tavcso-alkatreszek-kiegeszitok",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Lencsevédő kupak",
+    "slug": "lencsevedo-kupak",
+    "parent": "Távcső alkatrészek, kiegészítők",
+    "description": ""
+  },
+  {
+    "name": "Árnyékoló",
+    "slug": "arnyekolo",
+    "parent": "Távcső alkatrészek, kiegészítők",
+    "description": ""
+  },
+  {
+    "name": "Távcsőszíj, adapter, tok",
+    "slug": "tavcsoszij-adapter-tok",
+    "parent": "Távcső alkatrészek, kiegészítők",
+    "description": ""
+  },
+  {
+    "name": "Lencsetisztító",
+    "slug": "lencsetisztito",
+    "parent": "Távcső alkatrészek, kiegészítők",
+    "description": ""
+  },
+  {
+    "name": "Távcső alkatrész",
+    "slug": "tavcso-alkatresz",
+    "parent": "Távcső alkatrészek, kiegészítők",
+    "description": ""
+  },
+  {
+    "name": "Spektív",
+    "slug": "spektiv",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Keresőtávcső",
+    "slug": "keresotavcso",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Távcsőszerelékek",
+    "slug": "tavcsoszerelekek",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Weaver / Picatinny sínre",
+    "slug": "weaver-picatinny-sinre",
+    "parent": "Távcsőszerelékek",
+    "description": ""
+  },
+  {
+    "name": "Kispuska, légpuska távcsőszerelék 9-11mm",
+    "slug": "kispuska-legpuska-tavcsoszerelek-9-11mm",
+    "parent": "Távcsőszerelékek",
+    "description": ""
+  },
+  {
+    "name": "Sínek",
+    "slug": "sinek",
+    "parent": "Távcsőszerelékek",
+    "description": ""
+  },
+  {
+    "name": "Kiegészítők",
+    "slug": "kiegeszitok-tavcsoszerelak",
+    "parent": "Távcsőszerelékek",
+    "description": ""
+  },
+  {
+    "name": "Fegyvertípushoz",
+    "slug": "fegyvertipushoz",
+    "parent": "Távcsőszerelékek",
+    "description": ""
+  },
+  {
+    "name": "Red Dot / Piros pont irányzék",
+    "slug": "red-dot-piros-pont-iranyzek",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Csillagásztávcső",
+    "slug": "csillagasztavcso",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Akciókamera",
+    "slug": "akciokamera",
+    "parent": "Optika",
+    "description": ""
+  },
+  {
+    "name": "Sportlétesítmény korszerűsítése",
+    "slug": "sportletesitmeny-korszerusitese",
+    "parent": "",
+    "description": ""
+  }
+]
