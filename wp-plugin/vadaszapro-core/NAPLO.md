@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 13. – Session #355 — Live-only deploy, helyi WP torolve
+
+### Elvegzett munkak
+- A deploy folyamat teljesen atallitva eles uzemre (`vadkarvadasz.hu`): nincs helyi fajlmasolos deploy.
+- `.vscode/deploy.ps1` atirva: `git add` + automatikus commit + `git push`, majd workflow trigger.
+- `.vscode/deploy-plugin.ps1` es `.vscode/deploy-theme.ps1` mar csak a live deploy scriptet hivja.
+- `.vscode/tasks.json`: a kulon `Deploy Plugin`/`Deploy Theme` taskok eltavolitva, csak a teljes deploy maradt.
+- `.vscode/local-config.example.ps1` torolve, `.gitignore` local-config sora torolve.
+- Dokumentacio frissitve live-only modra: `.github/copilot-instructions.md`, `TELEPITES.md`.
+- Admin import hiba/uzenetekben a LocalWP emlites csereje altalanos szerver PHP beallitasokra (source + mirror).
+
+### Uj deploy szabaly
+- Minden valtozas elesbe megy: `Deploy All` vagy `Push`.
+- A feltoltest a GitHub workflow intezi (`.github/workflows/deploy.yml`).
+
+---
+
 ## 2026. 05. 14. – Session #354 — Wizard modal refaktor KÉSZ
 
 ### Elvégzett munkák
