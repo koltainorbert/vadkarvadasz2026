@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
@@ -336,6 +336,22 @@
 
   .chip {
     padding: 11px 14px;
+
+  .actions--left {
+    justify-content: flex-start;
+  }
+
+  .mt-22 {
+    margin-top: 22px;
+  }
+
+  .mt-8 {
+    margin-top: 8px;
+  }
+
+  .is-hidden {
+    display: none;
+  }
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,.08);
     background: rgba(255,255,255,.03);
@@ -527,7 +543,7 @@
           <div class="info-band">A koncepcio lenyege: eloszor egy eros kategoriavalasztas, es csak utana jelenjenek meg a reszletes mezok.</div>
 
           <section class="step-panel active" data-step="1">
-            <h3 class="step-title">Mit arulsz?</h3>
+            <h3 class="step-title">Hirdetes feladas, valassz kategoriat</h3>
             <div class="step-sub">A kategoriavalasztasnak nagynak, gyorsnak es egyertelmunek kellett volna lennie.</div>
             <div class="category-grid">
               <button class="cat active"><span class="cat-emoji">🎯</span><span class="cat-name">Golyos puska</span></button>
@@ -539,7 +555,7 @@
               <button class="cat"><span class="cat-emoji">📷</span><span class="cat-name">Vadkamera</span></button>
               <button class="cat"><span class="cat-emoji">📦</span><span class="cat-name">Egyeb</span></button>
             </div>
-            <div style="margin-top:22px">
+            <div class="mt-22">
               <div class="field">
                 <label>Allapot</label>
                 <div class="condition-row">
@@ -556,15 +572,15 @@
             <h3 class="step-title">Termek adatai</h3>
             <div class="step-sub">Itt mar csak azok a mezok jelennek meg, amik a kivalasztott kategoriara tenyleg relevansak.</div>
             <div class="grid-2">
-              <div class="field"><label>Hirdetes cime</label><input value="Blaser R8 Professional 308 Win" /></div>
-              <div class="field"><label>Marka / gyarto</label><input value="Blaser" /></div>
+              <div class="field"><label>Hirdetes cime</label><input value="Blaser R8 Professional 308 Win" placeholder="Hirdetes cime" title="Hirdetes cime" /></div>
+              <div class="field"><label>Marka / gyarto</label><input value="Blaser" placeholder="Marka / gyarto" title="Marka / gyarto" /></div>
             </div>
             <div class="grid-3">
-              <div class="field"><label>Modell / tipus</label><input value="R8 Professional" /></div>
-              <div class="field"><label>Kaliber</label><input value=".308 Win" /></div>
-              <div class="field"><label>Gyartasi ev</label><input value="2022" /></div>
+              <div class="field"><label>Modell / tipus</label><input value="R8 Professional" placeholder="Modell / tipus" title="Modell / tipus" /></div>
+              <div class="field"><label>Kaliber</label><input value=".308 Win" placeholder="Kaliber" title="Kaliber" /></div>
+              <div class="field"><label>Gyartasi ev</label><input value="2022" placeholder="Gyartasi ev" title="Gyartasi ev" /></div>
             </div>
-            <div class="chips" style="margin-top:8px">
+            <div class="chips mt-8">
               <span class="pill">Fegyverengedely szukseges</span>
               <span class="pill">Csak ellenorzott mezok</span>
               <span class="pill">Kategoriara szabott adatlap</span>
@@ -575,15 +591,15 @@
             <h3 class="step-title">Ar es elerhetoseg</h3>
             <div class="step-sub">Ahol a vevo szamara a legfontosabb informaciok gyorsan es atlathatoan jelennek meg.</div>
             <div class="grid-3">
-              <div class="field"><label>Ar</label><input value="1 890 000 Ft" /></div>
-              <div class="field"><label>Ar jellege</label><select><option>Fix ar</option></select></div>
-              <div class="field"><label>Telefonszam</label><input value="+36 30 400 4626" /></div>
+              <div class="field"><label>Ar</label><input value="1 890 000 Ft" placeholder="Ar" title="Ar" /></div>
+              <div class="field"><label>Ar jellege</label><select title="Ar jellege"><option>Fix ar</option></select></div>
+              <div class="field"><label>Telefonszam</label><input value="+36 30 400 4626" placeholder="Telefonszam" title="Telefonszam" /></div>
             </div>
             <div class="grid-2">
-              <div class="field"><label>Varos</label><input value="Budapest" /></div>
-              <div class="field"><label>Irányítószám</label><input value="1048" /></div>
+              <div class="field"><label>Varos</label><input value="Budapest" placeholder="Varos" title="Varos" /></div>
+              <div class="field"><label>Irányítószám</label><input value="1048" placeholder="Irányítószám" title="Irányítószám" /></div>
             </div>
-            <div class="field"><label>Utca</label><input value="Róbert Károly körút" /></div>
+            <div class="field"><label>Utca</label><input value="Róbert Károly körút" placeholder="Utca" title="Utca" /></div>
           </section>
 
           <section class="step-panel" data-step="4">
@@ -591,7 +607,7 @@
             <div class="step-sub">A vegso blokk mar premium erzetu kellett volna legyen: nagy feltoltozona, szep editor, tiszta publish gomb.</div>
             <div class="field">
               <label>Leiras</label>
-              <textarea>Elado megkimelt allapotu Blaser R8 Professional .308 Win kaliberben. Pontos, megbizhato, vadaszatra azonnal viheto. Tartozekokkal, eredeti iratokkal.</textarea>
+              <textarea placeholder="Leiras" title="Leiras">Elado megkimelt allapotu Blaser R8 Professional .308 Win kaliberben. Pontos, megbizhato, vadaszatra azonnal viheto. Tartozekokkal, eredeti iratokkal.</textarea>
             </div>
             <div class="upload-zone">
               <div>
@@ -606,7 +622,7 @@
             <div class="btns">
               <button class="btn btn-ghost" id="prevBtn">Vissza</button>
               <button class="btn btn-secondary" id="nextBtn">Tovabb</button>
-              <button class="btn btn-primary" id="submitBtn" style="display:none">Hirdetes feladasa</button>
+              <button class="btn btn-primary is-hidden" id="submitBtn">Hirdetes feladasa</button>
             </div>
           </div>
         </div>
@@ -655,3 +671,4 @@
 </script>
 </body>
 </html>
+
