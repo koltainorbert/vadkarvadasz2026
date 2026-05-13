@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 13. – Session #357t — Egyéb kategória popup + állapot kijelölés fix
+
+### Kérés
+- `Egyéb` kategóriánál popup/blur felület jelenjen meg, ahol a user be tudja írni az egyedi kategóriát.
+- Az állapot kiválasztás legyen egyértelműen jelölve.
+
+### Javítás
+- `Egyéb` kategóriára kattintáskor modal (blur overlay) nyílik:
+  - kötelező szövegbevitel `other_category` mezőbe,
+  - mentés/mégse, ESC és backdrop bezárás támogatás.
+- Form validáció bővítve:
+  - ha kiválasztott kategória `egyeb`, üres egyéb mezővel nem mehet tovább/submit.
+- Backend mentés bővítve:
+  - új meta kulcs: `va_other_category` (submit + update útvonal).
+- Állapot gombok vizuális fix:
+  - `.va-cond-btn.is-selected` narancs kiemelést kap.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357s — Egységes cím tipográfia a wizardban
 
 ### Kérés
