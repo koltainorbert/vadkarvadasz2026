@@ -593,6 +593,16 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => $post_id->get_error_message() ] );
         }
 
+        if ( class_exists( 'VA_User_Roles' ) && ! empty( $plan_check['can'] ) ) {
+            $plan_limit = isset( $plan_check['plan_limit'] ) ? (int) $plan_check['plan_limit'] : 0;
+            $used_slots  = isset( $plan_check['used'] ) ? (int) $plan_check['used'] : 0;
+            $gift_slots  = isset( $plan_check['credits_total'] ) ? (int) $plan_check['credits_total'] : 0;
+
+            if ( $plan_limit > 0 && $used_slots >= $plan_limit && $gift_slots > 0 ) {
+                VA_User_Roles::consume_gift_credit( $user_id );
+            }
+        }
+
         // Meta mentés
         $metas = [
             'va_price'       => $price,
@@ -672,9 +682,6 @@ class VA_Ajax {
             $featured_idx = isset( $_POST['featured_image_index'] ) ? absint( (string) $_POST['featured_image_index'] ) : 0;
             $img_errors = self::handle_images( $post_id, $_FILES['listing_images'], $featured_idx );
         }
-
-        // 1 feladás = 1 kredit levonás (egyszer használatos ajándék/feladási kredit).
-        // Ajándékkredit = plusz tartós slot, nem csökken feladáskor.
 
         $msg = $status === 'publish'
             ? 'Hirdetés sikeresen feladva!'
