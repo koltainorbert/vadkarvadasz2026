@@ -416,15 +416,79 @@ wp_localize_script( 'va-submit', 'VA_Data', [
 ?>
 <?php va_display_flash(); ?>
 <div id="va-submit-notice"></div>
+<?php
+$cat_icons_map = [
+    'golyos-puska' => '🎯', 'soretes-puska' => '🦆', 'vegyescsovu-puska' => '⚔️',
+    'maroklofegyver' => '🔫', 'hatastalanitott' => '🏛️', 'egyeb-fegyverek' => '⚙️',
+    'loszer-tolteny' => '💥', 'tavcsovek' => '🔭', 'ejjellato-tavcso' => '🌙',
+    'hokamerak' => '🌡️', 'vadkamera' => '📷', 'vadaszlampa' => '🔦',
+    'vadaszkutya' => '🐕', 'vadasz-ruhazat' => '🧥', 'cipo-bakancs' => '👢',
+    'vadasz-felszereles' => '🎒', 'egyeb' => '📦',
+];
+$wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
+$max_img     = absint( get_option( 'va_max_images_per_listing', 10 ) );
+$desc_val    = wp_kses_post( (string)( $edit_meta['description'] ?? '' ) );
+$cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
+?>
 
-    <form id="va-submit-form" class="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
+<?php if ( ! $edit_mode ): ?>
+<div class="va-wizard-launcher" id="va-wizard-launcher">
+    <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
+    <div class="va-notice va-notice--info va-wiz-plan-notice">
+        <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
+            Keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
+        <?php elseif ( $gift_total > 0 ): ?>
+            Alap: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándék: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
+        <?php else: ?>
+            Az előfizetésed alapján tudsz hirdetést feladni.
+        <?php endif; ?>
+    </div>
+    <?php elseif ( $remaining_free > 0 ): ?>
+    <div class="va-notice va-notice--info va-wiz-plan-notice">
+        <?php if ( $remaining_free === 1 ): ?>
+            Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána díja: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> — <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok</a>
+        <?php else: ?>
+            Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <div class="va-wiz-launcher-hero">
+        <div class="va-wiz-launcher-icon">🎯</div>
+        <h2>Adj fel hirdetést!</h2>
+        <p>Gyors, egyszerű — 4 lépésben</p>
+        <button type="button" class="va-btn va-btn--primary va-btn--xl" id="va-wizard-open">📋 Hirdetés feladása</button>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="va-wizard-overlay<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
+<div class="va-wizard-modal">
+
+    <!-- Header: dots + progress -->
+    <div class="va-wizard-header">
+        <?php if ( ! $edit_mode ): ?>
+        <button type="button" class="va-wizard-close-btn" id="va-wizard-close" aria-label="Bezárás">✕</button>
+        <?php endif; ?>
+        <h2 class="va-wizard-modal-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
+        <div class="va-wizard-dots">
+            <?php foreach ( $wiz_steps as $si => $slabel ): $sn = $si + 1; ?>
+            <div class="va-wdot<?php echo $sn === 1 ? ' is-active' : ''; ?>" data-step="<?php echo $sn; ?>">
+                <div class="va-wdot__circle"><span><?php echo $sn; ?></span></div>
+                <div class="va-wdot__label"><?php echo esc_html( $slabel ); ?></div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="va-wizard-prog-wrap">
+            <div class="va-wizard-prog-fill" id="va-wiz-fill" style="width:25%"></div>
+        </div>
+    </div><!-- .va-wizard-header -->
+
+    <!-- Scrollable form body -->
+    <div class="va-wizard-body">
+    <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
         <input type="hidden" name="action" value="<?php echo $edit_mode ? 'va_update_listing' : 'va_submit_listing'; ?>">
         <input type="hidden" name="nonce"  value="<?php echo esc_attr( wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ) ); ?>">
-        <?php if ( $edit_mode ): ?>
-        <input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>">
-        <?php endif; ?>
-
-        <h2 class="va-submit-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
+        <?php if ( $edit_mode ): ?><input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>"><?php endif; ?>
 
         <?php if ( ! $edit_mode ): ?>
         <div class="va-notice va-notice--info va-submit-plan-notice">
