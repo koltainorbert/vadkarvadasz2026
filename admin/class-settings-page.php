@@ -5237,7 +5237,7 @@ class VA_Settings_Page {
             $note = '❌ Nem érkezett import fájl. Válassz ki egy <code>.json</code> fájlt és kattints az "Import indítása" gombra.';
             $cls  = 'notice notice-error';
         } elseif ( $msg === 'import_toolarge' ) {
-            $note = '❌ A feltöltött fájl túl nagy (PHP upload limit). A LocalWP PHP settings-ben növeld: <code>upload_max_filesize</code> és <code>post_max_size</code>.';
+            $note = '❌ A feltöltött fájl túl nagy (PHP upload limit). Növeld a szerver PHP beállításaiban: <code>upload_max_filesize</code> és <code>post_max_size</code>.';
             $cls  = 'notice notice-error';
         } elseif ( $msg === 'import_partial' ) {
             $note = '❌ A fájl feltöltése megszakadt. Próbáld újra.';
@@ -5303,7 +5303,7 @@ class VA_Settings_Page {
                     wp_max_upload_size: <code><?php echo esc_html( size_format($max_upload) ); ?></code> &nbsp;|&nbsp;
                     tmp_dir írható: <code><?php echo $tmp_ok ? '<span style="color:#4ade80">igen</span>' : '<span style="color:#f87171">NEM</span>'; ?></code>
                     <?php if ( ! $limit_ok ): ?>
-                        <br><span style="color:#f87171;font-weight:600;">⚠ Az upload limit kevesebb mint 1MB! Növeld a LocalWP PHP Settings-ben.</span>
+                        <br><span style="color:#f87171;font-weight:600;">⚠ Az upload limit kevesebb mint 1MB! Növeld a szerver PHP beállításaiban.</span>
                     <?php endif; ?>
                 </div>
                 <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">

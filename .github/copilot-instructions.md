@@ -33,25 +33,14 @@ Mentéskor a `va_sync_listing_meta($post_id)` szinkronizálja automatikusan (`sa
 - Az AJAX `va_get_bid_status` is azonnal lezárja ha lejárt (cron nélkül is)
 - Lezárt aukció flag: `va_auction_closed` meta = '1'
 
-### 5. Deploy parancs (LocalWP)
-**Ajanlott mod:** VS Code task → `Deploy All` (vagy `Deploy Plugin` / `Deploy Theme`)
+### 5. Deploy parancs (ELE̋S)
+**Ajanlott mod:** VS Code task → `Deploy All`
 
-A deploy gepenkent kulonbozo utvonalakat hasznal. Minden gepen kell egy `.vscode/local-config.ps1` fajl (gitignoralt, NE commitald):
-```powershell
-# sablon: .vscode/local-config.example.ps1
-$LOCAL_WP_PLUGIN = "D:\LocalWP\...\wp-content\plugins\vadaszapro-core"
-$LOCAL_WP_THEME  = "D:\LocalWP\...\wp-content\themes\vadaszapro-theme"
-```
+Ez a projekt kizárólag éles deploy-ban fut:
+- `Deploy All` = `git add` + automatikus commit + `git push`
+- push után a `.github/workflows/deploy.yml` FTP workflow tölti fel a változásokat a `vadkarvadasz.hu` oldalra
 
-**Kezzel is futtathato:**
-Plugin:
-```powershell
-. .vscode/local-config.ps1 ; Copy-Item 'wp-plugin/vadaszapro-core/*' $LOCAL_WP_PLUGIN -Recurse -Force
-```
-Tema:
-```powershell
-. .vscode/local-config.ps1 ; Copy-Item 'wp-theme/vadaszapro-theme/*' $LOCAL_WP_THEME -Recurse -Force
-```
+Nincs LocalWP, nincs gépfüggő local path, nincs `local-config.ps1`.
 
 ### 6. Adatbázis táblák
 | Tábla | Mire való |

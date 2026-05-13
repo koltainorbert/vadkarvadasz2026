@@ -39,22 +39,6 @@
       "problemMatcher": []
     },
     {
-      "label": "Deploy Plugin",
-      "type": "shell",
-      "command": "powershell -ExecutionPolicy Bypass -File .vscode/deploy-plugin.ps1",
-      "options": { "cwd": "${workspaceFolder}" },
-      "group": "none",
-      "problemMatcher": []
-    },
-    {
-      "label": "Deploy Theme",
-      "type": "shell",
-      "command": "powershell -ExecutionPolicy Bypass -File .vscode/deploy-theme.ps1",
-      "options": { "cwd": "${workspaceFolder}" },
-      "group": "none",
-      "problemMatcher": []
-    },
-    {
       "label": "Deploy All",
       "type": "shell",
       "command": "powershell -ExecutionPolicy Bypass -File .vscode/deploy.ps1",
