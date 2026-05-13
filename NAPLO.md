@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 13. – Session #357b — Wizard cím és footer finomítás
+
+### Elvegzett munkak
+- A feladás wizard első lépésének címe átírva a kért formára: `Hirdetés feladás, válassz kategóriát`.
+- A felső segédmondat eltávolítva a wizard fejlécről.
+- A navigációs footer balra zárva, hogy a `1 / 4` és a `Tovább` gomb együtt bal oldalon induljon.
+- A demo preview HTML-ben az inline style-ok is kivezetve.
+
+### Deploy
+- Eles deploy trigger lefutott, a változások pusholva.
+
+---
+
 ## 2026. 05. 13. – Session #357 — Feladas oldal felső hero blokk eltávolítás
 
 ### Elvegzett munkak
