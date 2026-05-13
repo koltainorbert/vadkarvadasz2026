@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 13. – Session #357s — Egységes cím tipográfia a wizardban
+
+### Kérés
+- Egységes betűméret és stílus a wizard címsorában.
+
+### Javítás
+- A step-1 címben az eltérő kiemelés (`<em>`) eltávolítva, egységes szöveggé alakítva.
+- Célzott CSS egységesítés:
+  - `.va-wstep-title` és `.va-wstep-title em` azonos méret/stílus/súly
+  - nincs dőlt eltérés, azonos fehér szín és sortáv.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357r — Wizard footer: balra zárás + narancs gombok
 
 ### Kérés
