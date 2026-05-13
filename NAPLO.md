@@ -2,41 +2,42 @@
 
 ---
 
-## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus
+## 2026. 05. 13. – Session #357f — Kategória kártya grid visszaadása responsive elrendezéssel
 
 ### Elvegzett munkak
-- A kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adva:
-  - Minimális border (`1px solid rgba(255,255,255,.20)`)
-  - Sötét háttér (`rgba(255,255,255,.06)`)
-  - Rendszerfont (`system-ui, -apple-system, sans-serif`)
-  - Enyhe kör (`border-radius: 6px`)
-  - Hover/focus effekt: piros szín highlight
-- Az `<option>` popup magát a böngésző jeleníti meg nativályan (OS/böngésző kontrollált), CSS-ből nem módosítható.
+- Az előző `<select>` dropdown helyett visszaadva a kategória-kártya grid rendszert (responsív!):
+  - **Desktop (1200px+)**: 3 oszlop
+  - **Tablet (760px-1200px)**: 2 oszlop
+  - **Mobil (<760px)**: 1 oszlop
+- A kategória gombokra kattintás már működik, és beállítja a rejtett `#va-category` inputot
 - Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
 
 ### CSS módosítás
 ```css
-#va-wizard-overlay.va-wizard-shell .va-select{
-  display:block!important; width:100%!important;
-  padding:11px 12px!important;
-  font-size:15px!important;
-  font-family:system-ui,-apple-system,sans-serif!important;
-  background-color:rgba(255,255,255,.06)!important;
-  border:1px solid rgba(255,255,255,.20)!important;
-  border-radius:6px!important;
-  color:#fff!important;
-  cursor:pointer!important;
-  transition:border-color .2s ease!important;
-  -webkit-appearance:none!important; appearance:none!important;
+#va-wizard-overlay.va-wizard-shell .va-cat-cards{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
 }
-#va-wizard-overlay.va-wizard-shell .va-select:hover{border-color:rgba(255,255,255,.40)!important;}
-#va-wizard-overlay.va-wizard-shell .va-select:focus{outline:none!important;border-color:rgba(255,0,0,.55)!important;}
-#va-wizard-overlay.va-wizard-shell .va-select option{background-color:#1a1a1a!important;color:#fff!important;}
+@media (max-width:1200px) {
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+@media (max-width:760px) {
+  grid-template-columns:1fr!important;
+}
 ```
 
 ### Deploy
-- Fajlok már szinkronizálva az előző iterációból, Git diffben semmit nem talált.
-- Az éles vadkarvadasz.hu-n már az új stílus aktív.
+- Git push committed + deployed.
+
+---
+
+## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus (visszavont)
+
+### Elvegzett munkak
+- Az előző iterációban a kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adtam, de nem volt az, amit a felhasználó akart.
+- A felhasználó inkább vissza akarta a kártyákat, de responsive elrendezéssel.
+- **Ez a munkamenet visszavonva, helyette a kártyák jöttek vissza.**
 
 ---
 

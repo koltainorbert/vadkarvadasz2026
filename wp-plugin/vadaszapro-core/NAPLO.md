@@ -2,21 +2,18 @@
 
 ---
 
-## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus
+## 2026. 05. 13. – Session #357f — Kategória kártya grid visszaadása responsive elrendezéssel
 
 ### Elvegzett munkak
-- A kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adva:
-  - Minimális border (`1px solid rgba(255,255,255,.20)`)
-  - Sötét háttér (`rgba(255,255,255,.06)`)
-  - Rendszerfont (`system-ui, -apple-system, sans-serif`)
-  - Enyhe kör (`border-radius: 6px`)
-  - Hover/focus effekt: piros szín highlight
-- Az `<option>` popup magát a böngésző jeleníti meg nativályan (OS/böngésző kontrollált), CSS-ből nem módosítható.
+- Az előző `<select>` dropdown helyett visszaadva a kategória-kártya grid rendszert (responsív!):
+  - **Desktop (1200px+)**: 3 oszlop
+  - **Tablet (760px-1200px)**: 2 oszlop
+  - **Mobil (<760px)**: 1 oszlop
+- A kategória gombokra kattintás már működik, és beállítja a rejtett `#va-category` inputot
 - Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
 
 ### Deploy
-- Fajlok már szinkronizálva az előző iterációból, Git diffben semmit nem talált.
-- Az éles vadkarvadasz.hu-n már az új stílus aktív.
+- Git push committed + deployed.
 
 ---
 
