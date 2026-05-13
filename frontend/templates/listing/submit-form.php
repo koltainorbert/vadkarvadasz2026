@@ -461,7 +461,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 </div>
 <?php endif; ?>
 
-<div class="va-wizard-overlay<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
+<div class="va-wizard-overlay va-wizard-inline<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
 <div class="va-wizard-modal">
 
     <!-- Header: dots + progress -->

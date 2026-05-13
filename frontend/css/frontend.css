@@ -1823,3 +1823,43 @@ body.va-wiz-open { overflow: hidden; }
   .va-wdot__label { display:none; }
   .va-wdot__circle { width:26px; height:26px; font-size:11px; }
 }
+
+/* Emergency fallback: wizard inline (non-modal, all sections visible) */
+.va-wizard-overlay.va-wizard-inline {
+  display: block;
+  position: static;
+  inset: auto;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+}
+.va-wizard-overlay.va-wizard-inline .va-wizard-modal {
+  max-width: none;
+  max-height: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+}
+.va-wizard-overlay.va-wizard-inline .va-wizard-header,
+.va-wizard-overlay.va-wizard-inline .va-wizard-footer,
+.va-wizard-overlay.va-wizard-inline .va-wizard-close-btn {
+  display: none !important;
+}
+.va-wizard-overlay.va-wizard-inline .va-wizard-body {
+  overflow: visible;
+  padding: 0;
+}
+.va-wizard-overlay.va-wizard-inline .va-wstep {
+  display: block !important;
+}
+.va-wizard-overlay.va-wizard-inline .va-wstep + .va-wstep {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.va-wizard-overlay.va-wizard-inline #va-submit-btn {
+  display: inline-flex !important;
+  margin-top: 16px;
+}
