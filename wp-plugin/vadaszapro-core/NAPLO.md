@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 13. – Session #357 — Feladas oldal felső hero blokk eltávolítás
+
+### Elvegzett munkak
+- A feladási wizard tetejéről a teljes preview hero + summary blokk eltávolítva kérésre.
+- A felület most közvetlenül a lépésvezérelt wizard résszel indul.
+- A kapcsolódó extra sor takarítva: `.va-submit-preview-card h2{...}` hard override törölve.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `assets/demo/submit-wizard-preview.html`.
+
+### Deploy
+- Eles deploy trigger lefutott (`.vscode/deploy.ps1`), workflow indulva.
+
+---
+
 ## 2026. 05. 13. – Session #356 — Emergency wizard rollback (inline fallback)
 
 ### Elvegzett munkak
