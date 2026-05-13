@@ -453,6 +453,9 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 #va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
+#va-wizard-overlay.va-wizard-shell{max-height:min(84vh,980px)!important;overflow:hidden!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;min-height:0}
+#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1;min-height:0;overflow-y:auto;padding-right:6px}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(4,minmax(120px,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(120px,1fr))!important}}
 </style>
@@ -478,13 +481,6 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
             <div class="va-wizard-header va-wizard-header--inline">
                 <div>
                     <h2 class="va-wizard-modal-title"><?php echo $edit_mode ? 'Hirdetés szerkesztése' : 'Hirdetés feladása'; ?></h2>
-                    
-                </div>
-                <div class="va-wizard-progress-meta">
-                    <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
-                    <div class="va-wizard-prog-wrap">
-                        <div class="va-wizard-prog-fill" id="va-wiz-fill" style="width:25%"></div>
-                    </div>
                 </div>
             </div>
 
