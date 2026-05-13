@@ -40,7 +40,7 @@ Ez a projekt kizárólag éles deploy-ban fut:
 - `Deploy All` = `git add` + automatikus commit + `git push`
 - push után a `.github/workflows/deploy.yml` FTP workflow tölti fel a változásokat a `vadkarvadasz.hu` oldalra
 
-Nincs LocalWP, nincs gépfüggő local path, nincs `local-config.ps1`.
+Nincs helyi fájlmásolós deploy útvonal: kizárólag push + workflow.
 
 ### 6. Adatbázis táblák
 | Tábla | Mire való |

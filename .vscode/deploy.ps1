@@ -1,5 +1,5 @@
 # Live deploy script (vadkarvadasz.hu only)
-# Nincs LocalWP tamogatas: deploy = git commit + git push, majd GitHub Actions FTP workflow.
+# Kizarolag eles deploy: git commit + git push, majd GitHub Actions FTP workflow.
 
 Set-Location (Resolve-Path "$PSScriptRoot\..")
 
