@@ -19,6 +19,12 @@
 - `VA_VERSION` emelve `1.1.6`-ra (source + mirror).
 - `.github/workflows/deploy.yml` Cloudflare purge domain javitva `vadkarvadasz.hu`-ra, es bekerult a `va-hirdetes-feladas` oldal purge-ja is.
 
+### Masodik kor: preview-alapu ujraepites
+- A demo alapjan a feladasi oldal shellje teljesen at lett huzva preview-szerkezetre.
+- Uj hero + summary blokk, bal oldali lepesnavigacio, jobb oldali progress head, megtartott submit mezokkel.
+- A torott modal/inline fallback logika eltavolitva a submit JS-bol.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `frontend/css/frontend.css`.
+
 ---
 
 ## 2026. 05. 13. – Session #355 — Live-only deploy, helyi WP torolve
