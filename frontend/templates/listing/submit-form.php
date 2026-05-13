@@ -431,65 +431,100 @@ $cat_icons_map = [
     'vadasz-felszereles' => '🎒', 'egyeb' => '📦',
 ];
 $wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
+$wiz_step_descs = [
+    'Mit árulsz pontosan?',
+    'Minden fontos adat egy helyen.',
+    'Ár, település, telefonszám.',
+    'Leírás, képek, végső ellenőrzés.',
+];
 $max_img     = absint( get_option( 'va_max_images_per_listing', 10 ) );
 $desc_val    = wp_kses_post( (string)( $edit_meta['description'] ?? '' ) );
 $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 ?>
 
-<?php if ( ! $edit_mode ): ?>
-<div class="va-wizard-launcher" id="va-wizard-launcher">
-    <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
-    <div class="va-notice va-notice--info va-wiz-plan-notice">
-        <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-            Keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-        <?php elseif ( $gift_total > 0 ): ?>
-            Alap: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándék: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
-        <?php else: ?>
-            Az előfizetésed alapján tudsz hirdetést feladni.
-        <?php endif; ?>
-    </div>
-    <?php elseif ( $remaining_free > 0 ): ?>
-    <div class="va-notice va-notice--info va-wiz-plan-notice">
-        <?php if ( $remaining_free === 1 ): ?>
-            Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána díja: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> — <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok</a>
-        <?php else: ?>
-            Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
-        <?php endif; ?>
-    </div>
-    <?php endif; ?>
-    <div class="va-wiz-launcher-hero">
-        <div class="va-wiz-launcher-icon">🎯</div>
-        <h2>Adj fel hirdetést!</h2>
-        <p>Gyors, egyszerű — 4 lépésben</p>
-        <button type="button" class="va-btn va-btn--primary va-btn--xl" id="va-wizard-open">📋 Hirdetés feladása</button>
-    </div>
-</div>
-<?php endif; ?>
-
-<div class="va-wizard-overlay va-wizard-inline<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
-<div class="va-wizard-modal">
-
-    <!-- Header: dots + progress -->
-    <div class="va-wizard-header">
-        <?php if ( ! $edit_mode ): ?>
-        <button type="button" class="va-wizard-close-btn" id="va-wizard-close" aria-label="Bezárás">✕</button>
-        <?php endif; ?>
-        <h2 class="va-wizard-modal-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
-        <div class="va-wizard-dots">
-            <?php foreach ( $wiz_steps as $si => $slabel ): $sn = $si + 1; ?>
-            <div class="va-wdot<?php echo $sn === 1 ? ' is-active' : ''; ?>" data-step="<?php echo $sn; ?>">
-                <div class="va-wdot__circle"><span><?php echo $sn; ?></span></div>
-                <div class="va-wdot__label"><?php echo esc_html( $slabel ); ?></div>
+<div class="va-submit-preview-shell">
+    <?php if ( ! $edit_mode ): ?>
+    <section class="va-submit-preview-hero">
+        <div class="va-submit-preview-card">
+            <span class="va-submit-preview-eyebrow">Hirdetés feladás</span>
+            <h2>Ennek kellett volna megjelennie.</h2>
+            <p>Átlátható, sötét, vezetett feladási élmény. Először kategória, utána termékadatok, aztán ár és helyszín, végül leírás és képek.</p>
+            <div class="va-submit-preview-pills">
+                <span>Vizuális kategória választás</span>
+                <span>4 tiszta lépés</span>
+                <span>Jobb mobil élmény</span>
+                <span>Gyorsabb kitöltés</span>
             </div>
-            <?php endforeach; ?>
         </div>
-        <div class="va-wizard-prog-wrap">
-            <div class="va-wizard-prog-fill" id="va-wiz-fill" style="width:25%"></div>
-        </div>
-    </div><!-- .va-wizard-header -->
+        <aside class="va-submit-preview-summary">
+            <div class="va-submit-preview-summary-block">
+                <span class="va-submit-preview-summary-label">Első benyomás</span>
+                <strong>Nagy kategória-kártyák</strong>
+                <span>Nem nyers, szétesett gombsor.</span>
+            </div>
+            <div class="va-submit-preview-summary-block">
+                <span class="va-submit-preview-summary-label">Folyamat</span>
+                <strong>Értelmes lépésvezetés</strong>
+                <span>Mindig csak az aktuális feladat legyen előtérben.</span>
+            </div>
+            <div class="va-submit-preview-summary-block">
+                <span class="va-submit-preview-summary-label">Zárás</span>
+                <strong>Képek + leírás + publikálás</strong>
+                <span>Magabiztos lezárás, nem kapkodós űrlapvég.</span>
+            </div>
+        </aside>
+    </section>
+    <?php endif; ?>
 
-    <!-- Scrollable form body -->
-    <div class="va-wizard-body">
+    <div class="va-wizard-shell" id="va-wizard-overlay">
+        <aside class="va-wizard-sidebar">
+            <p class="va-wizard-sidebar-title">Lépések</p>
+            <div class="va-wizard-dots va-wizard-dots--stack">
+                <?php foreach ( $wiz_steps as $si => $slabel ): $sn = $si + 1; ?>
+                <button type="button" class="va-wdot<?php echo $sn === 1 ? ' is-active' : ''; ?>" data-step="<?php echo $sn; ?>">
+                    <span class="va-wdot__circle"><span><?php echo $sn; ?></span></span>
+                    <span class="va-wdot__copy">
+                        <span class="va-wdot__title"><?php echo esc_html( $slabel ); ?></span>
+                        <span class="va-wdot__desc"><?php echo esc_html( $wiz_step_descs[ $si ] ); ?></span>
+                    </span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </aside>
+
+        <div class="va-wizard-main">
+            <div class="va-wizard-header va-wizard-header--inline">
+                <div>
+                    <h2 class="va-wizard-modal-title"><?php echo $edit_mode ? 'Hirdetés szerkesztése' : 'Hirdetés feladása'; ?></h2>
+                    <p class="va-wizard-head-copy">Gyors, sötét, modern kitöltés. Nem szétesett admin-érzet.</p>
+                </div>
+                <div class="va-wizard-progress-meta">
+                    <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
+                    <div class="va-wizard-prog-wrap">
+                        <div class="va-wizard-prog-fill" id="va-wiz-fill" style="width:25%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <?php if ( ! $edit_mode && ( $plan_has_allowance || $user_credit_balance > 0 || $remaining_free > 0 ) ): ?>
+            <div class="va-notice va-notice--info va-wiz-plan-notice">
+                <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
+                    <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
+                        Keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
+                    <?php elseif ( $gift_total > 0 ): ?>
+                        Alap: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándék: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
+                    <?php else: ?>
+                        Az előfizetésed alapján tudsz hirdetést feladni.
+                    <?php endif; ?>
+                <?php elseif ( $remaining_free === 1 ): ?>
+                    Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána díja: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> — <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok</a>
+                <?php else: ?>
+                    Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
+            <div class="va-wizard-body">
     <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
         <input type="hidden" name="action" value="<?php echo $edit_mode ? 'va_update_listing' : 'va_submit_listing'; ?>">
         <input type="hidden" name="nonce"  value="<?php echo esc_attr( wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ) ); ?>">
@@ -931,9 +966,10 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
             <button type="submit" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
         </div>
     </form>
-    </div><!-- .va-wizard-body -->
-</div><!-- .va-wizard-modal -->
-</div><!-- .va-wizard-overlay -->
+            </div><!-- .va-wizard-body -->
+        </div><!-- .va-wizard-main -->
+    </div><!-- .va-wizard-shell -->
+</div><!-- .va-submit-preview-shell -->
 
 <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
