@@ -530,6 +530,10 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 @media (max-width:760px){
     #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: 1fr !important; }
 }
+#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice {
+    margin-top: 14px;
+    margin-bottom: 0;
+}
 </style>
 
 <div class="va-submit-preview-shell">
@@ -547,9 +551,6 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                 </button>
                 <?php endforeach; ?>
             </div>
-        </aside>
-
-        <div class="va-wizard-main">
 
             <?php if ( ! $edit_mode && ( $plan_has_allowance || $user_credit_balance > 0 || $remaining_free > 0 ) ): ?>
             <div class="va-notice va-notice--info va-wiz-plan-notice">
@@ -568,6 +569,9 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                 <?php endif; ?>
             </div>
             <?php endif; ?>
+        </aside>
+
+        <div class="va-wizard-main">
 
             <div class="va-wizard-body">
     <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">

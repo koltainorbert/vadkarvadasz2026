@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 13. – Session #357q — Keret infó áthelyezés a Lépések oszlopba
+
+### Kérés
+- A felső zöld keret infó (`Keretedből még ...`) ne a fő tartalmi blokk tetején legyen, hanem a bal oldali `Lépések` oszlopban.
+
+### Javítás
+- A plan notice blokk átkerült a sidebarba, közvetlenül a lépéskártyák alá.
+- A fő (`va-wizard-main`) tartalomból eltávolításra került ugyanaz a blokk, így nincs duplikáció.
+- Kiegészítő spacing szabály: sidebarban `margin-top` és `margin-bottom` finomhangolva.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357p — Kategória csempék vékonyítása
 
 ### Kérés
