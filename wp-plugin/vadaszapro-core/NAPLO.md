@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 05. 13. – Session #357c — Számláló pozíció + belső scroll
+
+### Elvegzett munkak
+- A wizard fejlécből a felső `1 / 4` számláló/progress blokk eltávolítva, hogy ne tolja le a jobb oldalt.
+- Belső görgetés bekapcsolva a wizard panelen: a teljes panel fix max magasságot kapott, a `va-wizard-body` belül görget.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+### Deploy
+- Live deploy trigger lefutott.
+
+---
+
 ## 2026. 05. 13. – Session #357b — Wizard cím és footer finomítás
 
 ### Elvegzett munkak
