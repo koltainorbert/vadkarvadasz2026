@@ -936,6 +936,91 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 (function($){
+    /* ══ Wizard navigáció ════════════════════════════════ */
+    var _wStep   = 1;
+    var _wTotal  = 4;
+    var _wLabels = ['Kategória', 'Termék adatai', 'Ár & Helyszín', 'Leírás & Képek'];
+
+    function wizGoTo(step) {
+        if (step > _wStep && !wizValidate(_wStep)) return;
+        $('.va-wstep').removeClass('is-active');
+        $('.va-wstep[data-step="' + step + '"]').addClass('is-active');
+        $('.va-wdot').each(function() {
+            var s = parseInt($(this).data('step'), 10);
+            $(this).toggleClass('is-active', s === step).toggleClass('is-done', s < step);
+        });
+        $('#va-wiz-fill').css('width', (step / _wTotal * 100) + '%');
+        $('#va-wiz-label').text(step + ' / ' + _wTotal);
+        $('#va-wizard-prev').css('visibility', step === 1 ? 'hidden' : '');
+        if (step === _wTotal) { $('#va-wizard-next').hide(); $('#va-submit-btn').show(); }
+        else { $('#va-wizard-next').show(); $('#va-submit-btn').hide(); }
+        _wStep = step;
+        var $body = $('.va-wizard-body');
+        if ($body.length) $body.scrollTop(0);
+    }
+
+    function wizValidate(step) {
+        if (step === 1) {
+            if (!($('#va-category').val() || '')) {
+                window.va_toast && va_toast('Válassz kategóriát!', 'error');
+                return false;
+            }
+        } else if (step === 2) {
+            if (!(($('[name="title"]').val() || '') + '').trim()) {
+                window.va_toast && va_toast('Add meg a hirdetés címét!', 'error');
+                return false;
+            }
+            var catErr = (typeof validateCategoryRequiredFields === 'function') ? validateCategoryRequiredFields() : '';
+            if (catErr) { window.va_toast && va_toast(catErr, 'error'); return false; }
+        } else if (step === 3) {
+            var city  = (($('input[name="location"]').val() || '') + '').trim();
+            var zip   = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
+            var phone = (($('input[name="phone"]').val() || '') + '').trim();
+            if (!city && !zip) { window.va_toast && va_toast('Add meg a várost vagy irányítószámot!', 'error'); return false; }
+            if (!phone)        { window.va_toast && va_toast('Add meg a telefonszámot!', 'error'); return false; }
+        }
+        return true;
+    }
+
+    $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
+    $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
+
+    $('#va-wizard-open').on('click', function() {
+        $('#va-wizard-overlay').addClass('is-open');
+        $('body').addClass('va-wiz-open');
+    });
+    $('#va-wizard-close').on('click', function() {
+        $('#va-wizard-overlay').removeClass('is-open');
+        $('body').removeClass('va-wiz-open');
+    });
+    $('#va-wizard-overlay').on('click', function(e) {
+        if (e.target === this) { $(this).removeClass('is-open'); $('body').removeClass('va-wiz-open'); }
+    });
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && !VA_Data.edit_mode) {
+            $('#va-wizard-overlay').removeClass('is-open');
+            $('body').removeClass('va-wiz-open');
+        }
+    });
+    // Kategória kártya választás
+    $(document).on('click', '.va-cat-card', function() {
+        $('.va-cat-card').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        $('#va-category').val($(this).data('term-id')).trigger('change');
+    });
+    // Állapot gomb választás
+    $(document).on('click', '.va-cond-btn', function() {
+        $('.va-cond-btn').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        $('#va-condition-hidden').val($(this).data('term-id'));
+    });
+    // Step dot kattintás (csak visszafelé)
+    $(document).on('click', '.va-wdot', function() {
+        var s = parseInt($(this).data('step'), 10);
+        if (s < _wStep) wizGoTo(s);
+    });
+    <?php if ( $edit_mode ): ?>wizGoTo(1);<?php endif; ?>
+
     /* ══ Képkezelő ═══════════════════════════════════════ */
     let _files   = [];   // { file: File|null, id: string, existing_id: int|null, url: string|null }[]
     let _maxImg  = 10;
