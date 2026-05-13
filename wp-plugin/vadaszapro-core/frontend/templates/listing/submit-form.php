@@ -416,177 +416,177 @@ wp_localize_script( 'va-submit', 'VA_Data', [
 ?>
 <?php va_display_flash(); ?>
 <div id="va-submit-notice"></div>
+<?php
+$cat_icons_map = [
+    'golyos-puska' => '🎯', 'soretes-puska' => '🦆', 'vegyescsovu-puska' => '⚔️',
+    'maroklofegyver' => '🔫', 'hatastalanitott' => '🏛️', 'egyeb-fegyverek' => '⚙️',
+    'loszer-tolteny' => '💥', 'tavcsovek' => '🔭', 'ejjellato-tavcso' => '🌙',
+    'hokamerak' => '🌡️', 'vadkamera' => '📷', 'vadaszlampa' => '🔦',
+    'vadaszkutya' => '🐕', 'vadasz-ruhazat' => '🧥', 'cipo-bakancs' => '👢',
+    'vadasz-felszereles' => '🎒', 'egyeb' => '📦',
+];
+$wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
+$max_img     = absint( get_option( 'va_max_images_per_listing', 10 ) );
+$desc_val    = wp_kses_post( (string)( $edit_meta['description'] ?? '' ) );
+$cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
+?>
 
-    <form id="va-submit-form" class="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
+<?php if ( ! $edit_mode ): ?>
+<div class="va-wizard-launcher" id="va-wizard-launcher">
+    <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
+    <div class="va-notice va-notice--info va-wiz-plan-notice">
+        <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
+            Keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
+        <?php elseif ( $gift_total > 0 ): ?>
+            Alap: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándék: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
+        <?php else: ?>
+            Az előfizetésed alapján tudsz hirdetést feladni.
+        <?php endif; ?>
+    </div>
+    <?php elseif ( $remaining_free > 0 ): ?>
+    <div class="va-notice va-notice--info va-wiz-plan-notice">
+        <?php if ( $remaining_free === 1 ): ?>
+            Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána díja: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> — <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok</a>
+        <?php else: ?>
+            Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <div class="va-wiz-launcher-hero">
+        <div class="va-wiz-launcher-icon">🎯</div>
+        <h2>Adj fel hirdetést!</h2>
+        <p>Gyors, egyszerű — 4 lépésben</p>
+        <button type="button" class="va-btn va-btn--primary va-btn--xl" id="va-wizard-open">📋 Hirdetés feladása</button>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="va-wizard-overlay<?php echo $edit_mode ? ' is-open' : ''; ?>" id="va-wizard-overlay">
+<div class="va-wizard-modal">
+
+    <!-- Header: dots + progress -->
+    <div class="va-wizard-header">
+        <?php if ( ! $edit_mode ): ?>
+        <button type="button" class="va-wizard-close-btn" id="va-wizard-close" aria-label="Bezárás">✕</button>
+        <?php endif; ?>
+        <h2 class="va-wizard-modal-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
+        <div class="va-wizard-dots">
+            <?php foreach ( $wiz_steps as $si => $slabel ): $sn = $si + 1; ?>
+            <div class="va-wdot<?php echo $sn === 1 ? ' is-active' : ''; ?>" data-step="<?php echo $sn; ?>">
+                <div class="va-wdot__circle"><span><?php echo $sn; ?></span></div>
+                <div class="va-wdot__label"><?php echo esc_html( $slabel ); ?></div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="va-wizard-prog-wrap">
+            <div class="va-wizard-prog-fill" id="va-wiz-fill" style="width:25%"></div>
+        </div>
+    </div><!-- .va-wizard-header -->
+
+    <!-- Scrollable form body -->
+    <div class="va-wizard-body">
+    <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
         <input type="hidden" name="action" value="<?php echo $edit_mode ? 'va_update_listing' : 'va_submit_listing'; ?>">
         <input type="hidden" name="nonce"  value="<?php echo esc_attr( wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ) ); ?>">
-        <?php if ( $edit_mode ): ?>
-        <input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>">
-        <?php endif; ?>
+        <?php if ( $edit_mode ): ?><input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>"><?php endif; ?>
 
-        <h2 class="va-submit-title"><?php echo $edit_mode ? '✏️ Hirdetés szerkesztése' : '📋 Hirdetés feladása'; ?></h2>
+        <?php $fb_form = 'va_listing_submit'; ?>
 
-        <?php if ( ! $edit_mode ): ?>
-        <div class="va-notice va-notice--info va-submit-plan-notice">
-            <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
-                <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Jelenlegi keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-                    <?php if ( $gift_total > 0 ): ?>
-                        Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
-                    <?php endif; ?>
-                <?php elseif ( $gift_total > 0 ): ?>
-                    <div class="va-plan-warning">
-                        <div>
-                            <strong class="va-plan-warning__title">Jelenlegi kereted elérve</strong><br>
-                            <span class="va-plan-warning__meta">Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándékkredit: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>, Összesen: <strong><?php echo esc_html( (string) $plan_check['used'] ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong></span>
-                        </div>
-                        <a href="<?php echo esc_url( $buy_url ); ?>" class="va-btn va-btn--primary va-plan-warning__btn">Csomag vasarlas</a>
-                    </div>
-                <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-                <?php else: ?>
-                    Az előfizetésed alapján jelenleg tudsz hirdetést feladni.
-                <?php endif; ?>
-            <?php elseif ( $remaining_free > 0 ): ?>
-                <?php if ( $remaining_free === 1 ): ?>
-                    Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána minden új hirdetés díja <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> –
-                    <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">vásárolj most csomagot!</a>
-                <?php else: ?>
-                    Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
-                    Utána: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft / hirdetés</strong> –
-                    <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok megtekintése</a>
-                <?php endif; ?>
+        <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
+        <div class="va-wstep is-active" data-step="1">
+            <h3 class="va-wstep-title">Mit árulsz? <em>Válaszd ki a kategóriát</em></h3>
+            <select name="category" id="va-category" style="display:none" required>
+                <option value="">– Válasszon –</option>
+                <?php foreach ( $categories as $cat ): ?>
+                <option value="<?php echo esc_attr( $cat->term_id ); ?>" data-slug="<?php echo esc_attr( (string)$cat->slug ); ?>"<?php selected( (int)($edit_meta['category'] ?? 0), $cat->term_id ); ?>><?php echo esc_html( $cat->name ); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?php if ( $site_type !== 'jarmu' ): ?>
+            <div class="va-cat-cards" id="va-cat-cards">
+                <?php foreach ( $categories as $cat ):
+                    $slug   = (string)$cat->slug;
+                    $icon   = $cat_icons_map[$slug] ?? '📦';
+                    $is_sel = (int)($edit_meta['category'] ?? 0) === $cat->term_id;
+                ?>
+                <button type="button" class="va-cat-card<?php echo $is_sel ? ' is-selected' : ''; ?>"
+                    data-term-id="<?php echo esc_attr( $cat->term_id ); ?>"
+                    data-slug="<?php echo esc_attr( $slug ); ?>">
+                    <span class="va-cat-card__icon"><?php echo $icon; ?></span>
+                    <span class="va-cat-card__label"><?php echo esc_html( $cat->name ); ?></span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+            <div class="va-form-group">
+                <label>Kategória <span class="required">*</span></label>
+                <select name="category" id="va-category" class="va-select" required>
+                    <option value="">– Válasszon –</option>
+                    <?php foreach ( $categories as $cat ): ?>
+                    <option value="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php selected((int)($edit_meta['category']??0),$cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             <?php endif; ?>
+            <div class="va-cond-group">
+                <label class="va-wiz-field-label">Állapot</label>
+                <div class="va-cond-btns" id="va-cond-btns">
+                    <?php foreach ( $conditions as $cond ):
+                        $is_cs = $cond_saved && $cond_saved === $cond->term_id;
+                    ?>
+                    <button type="button" class="va-cond-btn<?php echo $is_cs ? ' is-selected' : ''; ?>" data-term-id="<?php echo esc_attr($cond->term_id); ?>"><?php echo esc_html($cond->name); ?></button>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="condition" id="va-condition-hidden" value="<?php echo esc_attr((string)$cond_saved); ?>">
+            </div>
         </div>
-        <?php endif; ?>
 
-        <?php
-        // Dinamikus form mezők VA_Form_Builder config alapján
-        $fb_form    = 'va_listing_submit';
-        $fb_fields  = VA_Form_Builder::get_fields( $fb_form );
-        usort( $fb_fields, fn( $a, $b ) => (int)( $a['order'] ?? 99 ) - (int)( $b['order'] ?? 99 ) );
-
-        // Csoportok: szekciókat nyit ha szükséges
-        $section_groups = [
-            'brand'       => 'Termék részletek',
-            'price'       => 'Ár',
-            'phone'       => 'Kapcsolat',
-        ];
-        $opened_sections = [];
-
-        // Párba rakandó mezők (2-oszlopos sor)
-        $pair_groups = $site_type === 'jarmu'
-            ? [
-                ['condition','location'],
-                ['brand',    'model'],
-                ['body_type','year'],
-                ['price',    'price_type'],
-            ]
-            : [
-                ['condition','location'],
-                ['brand',    'model'],
-                ['caliber',  'year'],
-                ['price',    'price_type'],
-            ];
-        $pair_map = [];
-        foreach ( $pair_groups as $pair ) {
-            $pair_map[ $pair[0] ] = $pair[1];
-            $pair_map[ $pair[1] ] = $pair[0]; // partner
-        }
-        $rendered_keys = [];
-
-        foreach ( $fb_fields as $field ):
-            $fkey = (string)( $field['key'] ?? '' );
-            if ( in_array( $fkey, $rendered_keys, true ) ) continue;
-            if ( $fkey === 'county' ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-            if ( $fkey === 'email_show' || $fkey === 'phone' ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-            if ( empty( $field['enabled'] ) ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-
-            $label = esc_html( (string)( $field['label'] ?? $fkey ) );
-            $ph    = esc_attr( (string)( $field['placeholder'] ?? '' ) );
-            $req   = ! empty( $field['required'] );
-            $req_html = $req ? ' <span class="required">*</span>' : '';
-            $req_attr = $req ? ' required' : '';
-
-            // Szekció fejléc
-            if ( isset( $section_groups[ $fkey ] ) && ! isset( $opened_sections[ $fkey ] ) ) {
-                $opened_sections[ $fkey ] = true;
-                echo '<h3 class="va-submit-section-title">'
-                    . esc_html( $section_groups[ $fkey ] ) . '</h3>';
-            }
-
-            // Pár-sor logika
-            $partner_key = $pair_map[ $fkey ] ?? null;
-            $partner_field = null;
-            if ( $partner_key ) {
-                foreach ( $fb_fields as $pf ) {
-                    if ( ( $pf['key'] ?? '' ) === $partner_key && ! empty( $pf['enabled'] ) ) {
-                        $partner_field = $pf;
-                        break;
-                    }
-                }
-            }
-
-            if ( $partner_field && ! in_array( $partner_key, $rendered_keys, true ) ):
-                // 2 oszlopos sor
-                $rendered_keys[] = $fkey;
-                $rendered_keys[] = $partner_key;
-                $p2_label   = esc_html( (string)( $partner_field['label'] ?? $partner_key ) );
-                $p2_ph      = esc_attr( (string)( $partner_field['placeholder'] ?? '' ) );
-                $p2_req     = ! empty( $partner_field['required'] );
-                $p2_req_html = $p2_req ? ' <span class="required">*</span>' : '';
-                $p2_req_attr = $p2_req ? ' required' : '';
-                echo '<div class="va-form-row">';
-                // Mező 1
-                echo '<div class="va-form-group">';
-                echo "<label>{$label}{$req_html}</label>";
-                self_render_listing_field( $fkey, $ph, $req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-                // Mező 2
-                echo '<div class="va-form-group">';
-                echo "<label>{$p2_label}{$p2_req_html}</label>";
-                self_render_listing_field( $partner_key, $p2_ph, $p2_req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-                echo '</div>';
-            else:
-                $rendered_keys[] = $fkey;
-                // Teljes soros mező
-                echo '<div class="va-form-group">';
-                echo "<label>{$label}{$req_html}</label>";
-                self_render_listing_field( $fkey, $ph, $req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-            endif;
-        endforeach;
-        ?>
-
-        <?php if ( $site_type !== 'jarmu' ): ?>
-        <datalist id="va-caliber-list">
-            <?php foreach ( $hunting_calibers as $cal ): ?>
-            <option value="<?php echo esc_attr( (string) $cal ); ?>"></option>
-            <?php endforeach; ?>
-        </datalist>
-        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
-            <label>Nagyítás (pl. 3-12x50)</label>
-            <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_zoom'] ?? '' ) ); ?>">
-        </div>
-        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
-            <label>Objektív átmérő (mm)</label>
-            <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_objective'] ?? '' ) ); ?>">
-        </div>
-        <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
-            <label>Kutya életkor (hónap)</label>
-            <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr( (string) ( $edit_meta['dog_age_months'] ?? '' ) ); ?>">
-        </div>
-        <?php endif; ?>
+        <!-- ═══ STEP 2: Termék adatai ═══ -->
+        <div class="va-wstep" data-step="2">
+            <h3 class="va-wstep-title">Termék adatai</h3>
+            <div class="va-form-group">
+                <label>Hirdetés címe <span class="required">*</span></label>
+                <input type="text" name="title" id="va-title" class="va-input" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
+            </div>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Márka / gyártó</label>
+                    <?php self_render_listing_field( 'brand', 'pl. Blaser, Swarovski...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
+                </div>
+                <div class="va-form-group">
+                    <label>Modell / típus</label>
+                    <?php self_render_listing_field( 'model', 'pl. R8, Z6...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
+                </div>
+            </div>
+            <?php if ( $site_type !== 'jarmu' ): ?>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Kaliber</label>
+                    <input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="pl. .308 Win" value="<?php echo esc_attr((string)($edit_meta['caliber'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Gyártási év</label>
+                    <input type="number" name="year" class="va-input" min="1800" max="<?php echo (int)date('Y'); ?>" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>">
+                </div>
+            </div>
+            <datalist id="va-caliber-list">
+                <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
+            </datalist>
+            <div class="va-form-group">
+                <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+                <label>Nagyítás (pl. 3-12x50)</label>
+                <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
+                <label>Objektív átmérő (mm)</label>
+                <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Kutya életkor (hónap)</label>
+                <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
+            </div>
+            <?php endif; ?>
 
         <?php if ( $site_type === 'jarmu' ):
             $ev = $edit_meta;
@@ -810,43 +810,125 @@ wp_localize_script( 'va-submit', 'VA_Data', [
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
+        </div><!-- /va-wstep step 2 -->
 
-        <?php
-        if ( VA_Form_Builder::is_enabled( $fb_form, 'phone' ) ):
-            $phone_field = VA_Form_Builder::get_field( $fb_form, 'phone' );
-            $phone_req   = ! empty( $phone_field['required'] );
-            $phone_req_html = $phone_req ? ' <span class="required">*</span>' : '';
-            $phone_req_attr = $phone_req ? ' required' : '';
-            $phone_val  = esc_attr( (string)( $edit_meta['phone'] ?? '' ) );
-            $phone_ph   = esc_attr( (string)( $phone_field['placeholder'] ?? '+36 30 000 0000' ) );
-        ?>
-        <h3 class="va-submit-section-title">Kapcsolat</h3>
-        <div class="va-form-group">
-            <label>Telefonszám<?php echo $phone_req_html; ?></label>
-            <input type="tel" name="phone" class="va-input" placeholder="<?php echo $phone_ph; ?>"<?php echo $phone_req_attr; ?> value="<?php echo $phone_val; ?>">
+        <!-- ═══ STEP 3: Ár & Helyszín & Elérhetőség ═══ -->
+        <div class="va-wstep" data-step="3">
+            <h3 class="va-wstep-title">Ár és elérhetőség</h3>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Ár (Ft) <span class="required">*</span></label>
+                    <input type="number" name="price" class="va-input" min="0" required placeholder="pl. 150000" value="<?php echo esc_attr((string)($edit_meta['price'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Ár jellege</label>
+                    <?php $pt = (string)($edit_meta['price_type'] ?? 'fixed');
+                    echo '<select name="price_type" class="va-select">';
+                    foreach ( ['fixed'=>'Fix ár','negotiable'=>'Alkudható','free'=>'Ingyenes','on_request'=>'Érdeklődjön'] as $k=>$l ) {
+                        echo '<option value="'.esc_attr($k).'"'.selected($pt,$k,false).'>'.esc_html($l).'</option>';
+                    }
+                    echo '</select>'; ?>
+                </div>
+            </div>
+            <div class="va-form-group">
+                <label>Helyszín <span class="required">*</span></label>
+                <?php
+                $location_val = (string)($edit_meta['location'] ?? '');
+                $postal_val   = (string)($edit_meta['postal_code'] ?? '');
+                $street_val   = (string)($edit_meta['street'] ?? '');
+                echo '<div class="va-loc-grid">';
+                echo '<input type="text" name="location" class="va-input" list="va-street-list" autocomplete="off" placeholder="Város / Helyszín neve" value="'.esc_attr($location_val).'">';
+                echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="'.esc_attr($postal_val).'" inputmode="numeric" pattern="[0-9]*">';
+                echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Utca (opcionális)" value="'.esc_attr($street_val).'">';
+                echo '<datalist id="va-street-list"></datalist>';
+                echo '<small class="va-help">Város vagy irányítószám megadása kötelező.</small>';
+                echo '</div>';
+                ?>
+            </div>
+            <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'phone' ) ):
+                $phone_field = VA_Form_Builder::get_field( $fb_form, 'phone' );
+                $phone_req   = ! empty( $phone_field['required'] );
+                $phone_ph    = esc_attr( (string)( $phone_field['placeholder'] ?? '+36 30 000 0000' ) );
+            ?>
+            <div class="va-form-group">
+                <label>Telefonszám<?php echo $phone_req ? ' <span class="required">*</span>' : ''; ?></label>
+                <input type="tel" name="phone" class="va-input" placeholder="<?php echo $phone_ph; ?>"<?php echo $phone_req ? ' required' : ''; ?> style="background:#0e0e0e!important;color:#fff!important;color-scheme:dark;" value="<?php echo esc_attr((string)($edit_meta['phone'] ?? '')); ?>">
+            </div>
+            <?php endif; ?>
+            <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'email_show' ) ): ?>
+            <div class="va-form-group">
+                <label class="va-check-label">
+                    <input type="checkbox" name="email_show" value="1" checked onclick="return false;">
+                    E-mail cím megjelenítése a hirdetésben
+                </label>
+            </div>
+            <?php endif; ?>
+        </div><!-- /va-wstep step 3 -->
+
+        <!-- ═══ STEP 4: Leírás & Képek ═══ -->
+        <div class="va-wstep" data-step="4">
+            <h3 class="va-wstep-title">Leírás és képek</h3>
+            <div class="va-form-group">
+                <label>Leírás</label>
+                <div id="va-quill-editor"></div>
+                <textarea name="description" id="va-desc-hidden" style="display:none"><?php echo esc_textarea( $desc_val ); ?></textarea>
+                <style>
+                .ql-toolbar.ql-snow{background:#1e1e1e;border:1px solid rgba(255,255,255,.15)!important;border-bottom:none!important;border-radius:6px 6px 0 0;}
+                .ql-container.ql-snow{background:#111;border:1px solid rgba(255,255,255,.15)!important;border-radius:0 0 6px 6px;font-size:15px;}
+                .ql-editor{color:#fff!important;min-height:160px;line-height:1.7;font-family:system-ui,sans-serif;}
+                .ql-editor p,.ql-editor span,.ql-editor li,.ql-editor strong,.ql-editor em,.ql-editor u,.ql-editor s{color:#fff!important;}
+                .ql-editor.ql-blank::before{color:#9a9a9a!important;font-style:normal;}
+                .ql-snow .ql-stroke{stroke:#aaa!important;}.ql-snow .ql-fill,.ql-snow .ql-stroke.ql-fill{fill:#aaa!important;}
+                .ql-snow .ql-picker{color:#bbb!important;}.ql-snow .ql-picker-label{border-color:rgba(255,255,255,.15)!important;}
+                .ql-snow .ql-picker-options{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;}
+                .ql-snow .ql-picker-item{color:#bbb!important;}.ql-snow .ql-picker-item:hover,.ql-snow .ql-picker-item.ql-selected{color:#fff!important;}
+                .ql-snow.ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button:hover .ql-stroke{stroke:#ff4444!important;}
+                .ql-snow.ql-toolbar button.ql-active .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:#ff4444!important;}
+                .ql-snow.ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button:hover .ql-fill{fill:#ff4444!important;}
+                .ql-snow.ql-toolbar button.ql-active .ql-fill{fill:#ff4444!important;}
+                .ql-snow .ql-picker.ql-header .ql-picker-label::before,.ql-snow .ql-picker.ql-header .ql-picker-item::before{color:#bbb!important;}
+                .ql-editor a{color:#ff4444;}.ql-editor img{max-width:100%;border-radius:6px;}
+                .ql-editor blockquote{border-left:3px solid #ff4444;padding-left:12px;color:#aaa;margin:8px 0;}
+                .ql-editor h2,.ql-editor h3{color:#e8e8e8;}.ql-editor ol,.ql-editor ul{color:#e8e8e8;}
+                .ql-snow .ql-tooltip{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;color:#e8e8e8!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important;}
+                .ql-snow .ql-tooltip input[type=text]{background:#111!important;border-color:rgba(255,255,255,.2)!important;color:#e8e8e8!important;}
+                .ql-snow .ql-tooltip a.ql-action,.ql-snow .ql-tooltip a.ql-remove{color:#ff4444!important;}
+                </style>
+            </div>
+            <div class="va-form-group">
+                <label>Képek (max <?php echo (int)$max_img; ?> db)</label>
+                <div class="va-img-picker" id="va-img-picker">
+                    <div class="va-img-grid" id="va-img-grid">
+                        <button type="button" class="va-img-add" id="va-img-add">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <span>Képek<br>hozzáadása</span>
+                        </button>
+                    </div>
+                    <input type="file" id="va-img-file-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none" data-max="<?php echo esc_attr((string)$max_img); ?>">
+                    <input type="hidden" name="featured_image_index" id="va-featured-index" value="0">
+                    <input type="hidden" name="keep_images" id="va-keep-images" value="">
+                    <p class="va-img-hint">Húzd a képeket az átrendezéshez &bull; &#9733; = borítókép beállítása</p>
+                </div>
+            </div>
+            <div id="va-submit-notice-modal"></div>
+            <p class="va-wiz-publish-note">
+                <?php echo get_option('va_auto_publish_listings','0') === '1'
+                    ? 'A hirdetés azonnal megjelenik.'
+                    : 'A hirdetés moderátor jóváhagyása után jelenik meg.'; ?>
+            </p>
+        </div><!-- /va-wstep step 4 -->
+
+        <!-- Wizard navigációs lábléc (form-on belül) -->
+        <div class="va-wizard-footer">
+            <button type="button" class="va-btn va-btn--ghost" id="va-wizard-prev" style="visibility:hidden">← Vissza</button>
+            <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
+            <button type="button" class="va-btn va-btn--primary" id="va-wizard-next">Tovább →</button>
+            <button type="submit" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
         </div>
-        <?php endif; ?>
-
-        <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'email_show' ) ): ?>
-        <div class="va-form-group" style="margin-top:18px;">
-            <label style="margin-bottom:8px;">E-mail megjelenítése</label>
-            <label class="va-check-label">
-                <input type="checkbox" name="email_show" value="1" checked onclick="return false;">
-                E-mail cím megjelenítése a hirdetésben
-            </label>
-        </div>
-        <?php endif; ?>
-
-        <button type="submit" class="va-btn va-btn--primary va-btn--block" id="va-submit-btn">
-            <?php echo $edit_mode ? '💾 Változások mentése' : '📤 Hirdetés feladása'; ?>
-        </button>
-
-        <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;text-align:center;">
-            <?php echo get_option('va_auto_publish_listings','0') === '1'
-                ? 'A hirdetés azonnal megjelenik.'
-                : 'A hirdetés moderátor jóváhagyása után jelenik meg.'; ?>
-        </p>
     </form>
+    </div><!-- .va-wizard-body -->
+</div><!-- .va-wizard-modal -->
+</div><!-- .va-wizard-overlay -->
 
 <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
@@ -854,6 +936,91 @@ wp_localize_script( 'va-submit', 'VA_Data', [
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 (function($){
+    /* ══ Wizard navigáció ════════════════════════════════ */
+    var _wStep   = 1;
+    var _wTotal  = 4;
+    var _wLabels = ['Kategória', 'Termék adatai', 'Ár & Helyszín', 'Leírás & Képek'];
+
+    function wizGoTo(step) {
+        if (step > _wStep && !wizValidate(_wStep)) return;
+        $('.va-wstep').removeClass('is-active');
+        $('.va-wstep[data-step="' + step + '"]').addClass('is-active');
+        $('.va-wdot').each(function() {
+            var s = parseInt($(this).data('step'), 10);
+            $(this).toggleClass('is-active', s === step).toggleClass('is-done', s < step);
+        });
+        $('#va-wiz-fill').css('width', (step / _wTotal * 100) + '%');
+        $('#va-wiz-label').text(step + ' / ' + _wTotal);
+        $('#va-wizard-prev').css('visibility', step === 1 ? 'hidden' : '');
+        if (step === _wTotal) { $('#va-wizard-next').hide(); $('#va-submit-btn').show(); }
+        else { $('#va-wizard-next').show(); $('#va-submit-btn').hide(); }
+        _wStep = step;
+        var $body = $('.va-wizard-body');
+        if ($body.length) $body.scrollTop(0);
+    }
+
+    function wizValidate(step) {
+        if (step === 1) {
+            if (!($('#va-category').val() || '')) {
+                window.va_toast && va_toast('Válassz kategóriát!', 'error');
+                return false;
+            }
+        } else if (step === 2) {
+            if (!(($('[name="title"]').val() || '') + '').trim()) {
+                window.va_toast && va_toast('Add meg a hirdetés címét!', 'error');
+                return false;
+            }
+            var catErr = (typeof validateCategoryRequiredFields === 'function') ? validateCategoryRequiredFields() : '';
+            if (catErr) { window.va_toast && va_toast(catErr, 'error'); return false; }
+        } else if (step === 3) {
+            var city  = (($('input[name="location"]').val() || '') + '').trim();
+            var zip   = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
+            var phone = (($('input[name="phone"]').val() || '') + '').trim();
+            if (!city && !zip) { window.va_toast && va_toast('Add meg a várost vagy irányítószámot!', 'error'); return false; }
+            if (!phone)        { window.va_toast && va_toast('Add meg a telefonszámot!', 'error'); return false; }
+        }
+        return true;
+    }
+
+    $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
+    $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
+
+    $('#va-wizard-open').on('click', function() {
+        $('#va-wizard-overlay').addClass('is-open');
+        $('body').addClass('va-wiz-open');
+    });
+    $('#va-wizard-close').on('click', function() {
+        $('#va-wizard-overlay').removeClass('is-open');
+        $('body').removeClass('va-wiz-open');
+    });
+    $('#va-wizard-overlay').on('click', function(e) {
+        if (e.target === this) { $(this).removeClass('is-open'); $('body').removeClass('va-wiz-open'); }
+    });
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && !VA_Data.edit_mode) {
+            $('#va-wizard-overlay').removeClass('is-open');
+            $('body').removeClass('va-wiz-open');
+        }
+    });
+    // Kategória kártya választás
+    $(document).on('click', '.va-cat-card', function() {
+        $('.va-cat-card').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        $('#va-category').val($(this).data('term-id')).trigger('change');
+    });
+    // Állapot gomb választás
+    $(document).on('click', '.va-cond-btn', function() {
+        $('.va-cond-btn').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        $('#va-condition-hidden').val($(this).data('term-id'));
+    });
+    // Step dot kattintás (csak visszafelé)
+    $(document).on('click', '.va-wdot', function() {
+        var s = parseInt($(this).data('step'), 10);
+        if (s < _wStep) wizGoTo(s);
+    });
+    <?php if ( $edit_mode ): ?>wizGoTo(1);<?php endif; ?>
+
     /* ══ Képkezelő ═══════════════════════════════════════ */
     let _files   = [];   // { file: File|null, id: string, existing_id: int|null, url: string|null }[]
     let _maxImg  = 10;
@@ -1314,17 +1481,18 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         var $btn    = $('#va-submit-btn');
         var editMode = !! VA_Data.edit_mode;
+        var $notice  = $('#va-submit-notice-modal');
 
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
-            $('#va-submit-notice').html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            $notice.html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
             return;
         }
 
         var city = (($('input[name="location"]').val() || '') + '').trim();
         var zip  = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
         if (!city && !zip) {
-            $('#va-submit-notice').html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
+            $notice.html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
             return;
         }
 
@@ -1380,7 +1548,8 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(res){
                 $btn.prop('disabled', false).text(editMode ? '💾 Változások mentése' : '📤 Hirdetés feladása');
                 if(res.success){
-                    $('#va-submit-notice').html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
+                    $notice.html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
+                    $('#va-wizard-overlay').removeClass('is-open');
                     if (typeof window.va_toast === 'function') {
                         window.va_toast(res.data.message || 'Mentés sikeres.', 'success');
                     }
@@ -1389,7 +1558,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else {
                     if (res.data && res.data.need_credits) {
-                        // Kredit szükséges → csomagvásárló megjelenítése
                         var price = res.data.paid_price ? Number(res.data.paid_price).toLocaleString('hu-HU') + ' Ft' : '';
                         var buyPage = '<?php echo esc_js( $buy_url_submit ); ?>';
                         var html = '<div class="va-notice va-notice--warning" style="padding:18px;">'
@@ -1397,7 +1565,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (price ? 'Egy hirdetés ára: <strong>' + price + '</strong><br>' : '')
                             + '<a href="' + buyPage + '" class="va-btn va-btn--primary" style="margin-top:12px;display:inline-flex;">🛒 Hirdetési csomag vásárlása</a>'
                             + '</div>';
-                        $('#va-submit-notice').html(html);
+                        $notice.html(html);
                         if (typeof window.va_toast === 'function') {
                             window.va_toast('Elfogyott az ingyenes keret. Csomag vásárlás szükséges.', 'error');
                         }
@@ -1408,12 +1576,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (amount ? '<br><strong>Fizetendő: ' + amount + '</strong>' : '')
                             + '<br><a href="' + res.data.payment_url + '" class="va-btn va-btn--primary" style="margin-top:10px;display:inline-flex;">Bankkártyás fizetés</a>'
                             + '</div>';
-                        $('#va-submit-notice').html(html2);
+                        $notice.html(html2);
                         if (typeof window.va_toast === 'function') {
                             window.va_toast(res.data.message || 'Fizetés szükséges a folytatáshoz.', 'error');
                         }
                     } else {
-                        $('#va-submit-notice').html('<div class="va-notice va-notice--error">' + res.data.message + '</div>');
+                        $notice.html('<div class="va-notice va-notice--error">' + res.data.message + '</div>');
                         if (typeof window.va_toast === 'function') {
                             window.va_toast((res.data && res.data.message) ? res.data.message : 'Mentési hiba történt.', 'error');
                         }
@@ -1422,10 +1590,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             error: function(){
                 $btn.prop('disabled', false).text('📤 Hirdetés feladása');
-                $('#va-submit-notice').html('<div class="va-notice va-notice--error">Hálózati hiba. Próbálja újra.</div>');
-                if (typeof window.va_toast === 'function') {
-                    window.va_toast('Hálózati hiba. Próbálja újra.', 'error');
-                }
+                $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Próbálja újra.</div>');
             }
         }); // $.ajax end
         }); // $.when end
