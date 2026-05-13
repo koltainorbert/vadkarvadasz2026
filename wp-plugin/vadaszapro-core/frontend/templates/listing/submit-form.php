@@ -456,14 +456,9 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 #va-wizard-overlay.va-wizard-shell{height:auto!important;max-height:none!important;overflow:visible!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:block;height:auto;overflow:visible;padding-top:0!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important;padding-right:0}
-#va-wizard-overlay.va-wizard-shell .va-cat-cards{display:none!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-modal-title{margin:0 0 10px}
-#va-wizard-overlay.va-wizard-shell .va-select{display:block!important;width:100%!important;padding:11px 12px!important;font-size:15px!important;font-family:system-ui,-apple-system,sans-serif!important;background-color:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:6px!important;color:#fff!important;cursor:pointer!important;transition:border-color .2s ease!important;-webkit-appearance:none!important;appearance:none!important}
-#va-wizard-overlay.va-wizard-shell .va-select:hover{border-color:rgba(255,255,255,.40)!important}
-#va-wizard-overlay.va-wizard-shell .va-select:focus{outline:none!important;border-color:rgba(255,0,0,.55)!important}
-#va-wizard-overlay.va-wizard-shell .va-select option{background-color:#1a1a1a!important;color:#fff!important}
-@media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(4,minmax(120px,1fr))!important}}
-@media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(120px,1fr))!important}}
+#va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+@media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:1fr!important}}
 </style>
 
 <div class="va-submit-preview-shell">
@@ -514,15 +509,14 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
         <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, <em>válassz kategóriát</em></h3>
-            <div class="va-form-group va-cat-compact">
-                <label>Kategória <span class="required">*</span></label>
-                <select name="category" id="va-category" class="va-select" required>
-                    <option value="">– Válasszon –</option>
-                    <?php foreach ( $categories as $cat ): ?>
-                    <option value="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php selected((int)($edit_meta['category']??0),$cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="va-cat-cards" id="va-cat-cards">
+                <?php foreach ( $categories as $cat ): ?>
+                <button type="button" class="va-cat-card" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>>
+                    <span class="va-cat-card__label"><?php echo esc_html($cat->name); ?></span>
+                </button>
+                <?php endforeach; ?>
             </div>
+            <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Állapot</label>
                 <div class="va-cond-btns" id="va-cond-btns">
