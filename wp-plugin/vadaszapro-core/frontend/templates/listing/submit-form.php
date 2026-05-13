@@ -446,11 +446,12 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 </style>
 <style>
 /* hard override against global button styles */
-#va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(6,minmax(120px,1fr))!important;gap:12px!important}
-#va-wizard-overlay.va-wizard-shell .va-cat-card{display:flex!important;flex-direction:column!important;justify-content:space-between!important;align-items:flex-start!important;width:100%!important;min-height:112px!important;padding:14px!important;margin:0!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:14px!important;color:#fff!important;line-height:1.25!important;white-space:normal!important}
-#va-wizard-overlay.va-wizard-shell .va-cat-card:hover{border-color:rgba(255,0,0,.55)!important;background:rgba(255,0,0,.14)!important}
-#va-wizard-overlay.va-wizard-shell .va-cat-card__icon{font-size:26px!important;line-height:1!important}
-#va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
+#va-wizard-overlay.va-wizard-shell .va-cat-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;list-style:none!important;margin:0!important;padding:0!important}
+#va-wizard-overlay.va-wizard-shell .va-cat-item{display:block!important;padding:12px 14px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:8px!important;color:rgba(255,255,255,.7)!important;font-size:14px!important;cursor:pointer!important;transition:all .2s ease!important;text-align:left!important;width:100%!important}
+#va-wizard-overlay.va-wizard-shell .va-cat-item:hover{border-color:rgba(255,0,0,.55)!important;background:rgba(255,0,0,.14)!important;color:#fff!important}
+#va-wizard-overlay.va-wizard-shell .va-cat-item[data-selected="1"]{background:rgba(255,0,0,.18)!important;border-color:rgba(255,0,0,.55)!important;color:#ff0000!important;font-weight:700!important}
+@media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-list{grid-template-columns:1fr!important}}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
 #va-wizard-overlay.va-wizard-shell{height:auto!important;max-height:none!important;overflow:visible!important}
@@ -509,13 +510,11 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
         <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, <em>válassz kategóriát</em></h3>
-            <div class="va-cat-cards" id="va-cat-cards">
+            <ul class="va-cat-list" id="va-cat-list">
                 <?php foreach ( $categories as $cat ): ?>
-                <button type="button" class="va-cat-card" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>>
-                    <span class="va-cat-card__label"><?php echo esc_html($cat->name); ?></span>
-                </button>
+                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat->name); ?></button></li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Állapot</label>
@@ -975,10 +974,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
     $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
-    // Kategória kártya választás
-    $(document).on('click', '.va-cat-card', function() {
-        $('.va-cat-card').removeClass('is-selected');
-        $(this).addClass('is-selected');
+    // Kategória listaelement választás
+    $(document).on('click', '.va-cat-item', function() {
+        $('.va-cat-item').removeAttr('data-selected');
+        $(this).attr('data-selected', '1');
         $('#va-category').val($(this).data('term-id')).trigger('change');
     });
     // Állapot gomb választás

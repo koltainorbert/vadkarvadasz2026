@@ -509,13 +509,11 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
         <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, <em>válassz kategóriát</em></h3>
-            <div class="va-cat-cards" id="va-cat-cards">
+            <ul class="va-cat-list" id="va-cat-list">
                 <?php foreach ( $categories as $cat ): ?>
-                <button type="button" class="va-cat-card" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>>
-                    <span class="va-cat-card__label"><?php echo esc_html($cat->name); ?></span>
-                </button>
+                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat->name); ?></button></li>
                 <?php endforeach; ?>
-            </div>
+            </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Állapot</label>
@@ -975,10 +973,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
     $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
-    // Kategória kártya választás
-    $(document).on('click', '.va-cat-card', function() {
-        $('.va-cat-card').removeClass('is-selected');
-        $(this).addClass('is-selected');
+    // Kategória listaelement választás
+    $(document).on('click', '.va-cat-item', function() {
+        $('.va-cat-item').removeAttr('data-selected');
+        $(this).attr('data-selected', '1');
         $('#va-category').val($(this).data('term-id')).trigger('change');
     });
     // Állapot gomb választás
