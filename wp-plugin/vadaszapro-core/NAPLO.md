@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus
+
+### Elvegzett munkak
+- A kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adva:
+  - Minimális border (`1px solid rgba(255,255,255,.20)`)
+  - Sötét háttér (`rgba(255,255,255,.06)`)
+  - Rendszerfont (`system-ui, -apple-system, sans-serif`)
+  - Enyhe kör (`border-radius: 6px`)
+  - Hover/focus effekt: piros szín highlight
+- Az `<option>` popup magát a böngésző jeleníti meg nativályan (OS/böngésző kontrollált), CSS-ből nem módosítható.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+### Deploy
+- Fajlok már szinkronizálva az előző iterációból, Git diffben semmit nem talált.
+- Az éles vadkarvadasz.hu-n már az új stílus aktív.
+
+---
+
 ## 2026. 05. 13. – Session #357d — Kompakt lenyíló kategóriaválasztás
 
 ### Elvegzett munkak

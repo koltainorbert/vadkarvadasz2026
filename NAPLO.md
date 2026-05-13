@@ -2,6 +2,44 @@
 
 ---
 
+## 2026. 05. 13. – Session #357e — Böngésző-szerű kategória dropdown stílus
+
+### Elvegzett munkak
+- A kategória `<select>` lenyílóhoz böngésző-szerű CSS stílust adva:
+  - Minimális border (`1px solid rgba(255,255,255,.20)`)
+  - Sötét háttér (`rgba(255,255,255,.06)`)
+  - Rendszerfont (`system-ui, -apple-system, sans-serif`)
+  - Enyhe kör (`border-radius: 6px`)
+  - Hover/focus effekt: piros szín highlight
+- Az `<option>` popup magát a böngésző jeleníti meg nativályan (OS/böngésző kontrollált), CSS-ből nem módosítható.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+### CSS módosítás
+```css
+#va-wizard-overlay.va-wizard-shell .va-select{
+  display:block!important; width:100%!important;
+  padding:11px 12px!important;
+  font-size:15px!important;
+  font-family:system-ui,-apple-system,sans-serif!important;
+  background-color:rgba(255,255,255,.06)!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  border-radius:6px!important;
+  color:#fff!important;
+  cursor:pointer!important;
+  transition:border-color .2s ease!important;
+  -webkit-appearance:none!important; appearance:none!important;
+}
+#va-wizard-overlay.va-wizard-shell .va-select:hover{border-color:rgba(255,255,255,.40)!important;}
+#va-wizard-overlay.va-wizard-shell .va-select:focus{outline:none!important;border-color:rgba(255,0,0,.55)!important;}
+#va-wizard-overlay.va-wizard-shell .va-select option{background-color:#1a1a1a!important;color:#fff!important;}
+```
+
+### Deploy
+- Fajlok már szinkronizálva az előző iterációból, Git diffben semmit nem talált.
+- Az éles vadkarvadasz.hu-n már az új stílus aktív.
+
+---
+
 ## 2026. 05. 13. – Session #357d — Kompakt lenyíló kategóriaválasztás
 
 ### Elvegzett munkak
