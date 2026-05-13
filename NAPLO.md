@@ -2,6 +2,40 @@
 
 ---
 
+## 2026. 05. 13. – Session #357k — Termék- és kaliber seed bővítés CSV-ből
+
+### Elvegzett munkak
+- A `d:\Downloads\kategoriak_v2.csv` teljes tartalmából elkészült egy új, duplikációmentes termékkategória seed: `includes/hunting-product-categories.json`
+- A seed tükre létrejött itt is: `wp-plugin/vadaszapro-core/includes/hunting-product-categories.json`
+- A `VA_Vehicle_Catalog` új betöltőt kapott: `get_hunting_product_categories()`
+- A meglévő kaliber adatbázis kiegészült a CSV-ből egyértelműen kinyerhető új tételekkel:
+  - `.177`, `.22`, `.25`, `.30`
+  - `.43 RAM`, `.50 RAM`, `.68 RAM`
+  - `4.5 BB`, `6mm BB`
+- A kaliber seedek root + mirror oldalon is frissültek, duplikáció nélkül
+
+### Eredmeny
+- Új termékkategória adatbázis: `320` egyedi kategóriaelem
+- Frissített kaliber adatbázis: `203` tétel
+- Root és mirror JSON fájlok tartalma ellenőrizve, egyeznek
+
+### Blokkolo tenyezo
+- A csatolt XLSX fájlok neve látszott, de a session környezetből nem voltak fizikailag elérhetők fájlként, ezért a márka/típus adatbázis bővítése ebben a körben nem volt biztonságosan elvégezhető.
+- Emiatt a meglévő `hunting-brand-models.json` most szándékosan változatlan maradt.
+
+### Erintett fajlok
+- `includes/class-vehicle-catalog.php`
+- `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- `includes/hunting-calibers.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-calibers.json`
+- `includes/hunting-product-categories.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-product-categories.json`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357j — Helyszín autofill javítás
 
 ### Elvegzett munkak
