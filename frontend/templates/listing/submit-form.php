@@ -1481,17 +1481,18 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         var $btn    = $('#va-submit-btn');
         var editMode = !! VA_Data.edit_mode;
+        var $notice  = $('#va-submit-notice-modal');
 
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
-            $('#va-submit-notice').html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            $notice.html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
             return;
         }
 
         var city = (($('input[name="location"]').val() || '') + '').trim();
         var zip  = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
         if (!city && !zip) {
-            $('#va-submit-notice').html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
+            $notice.html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
             return;
         }
 
@@ -1547,7 +1548,8 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(res){
                 $btn.prop('disabled', false).text(editMode ? '💾 Változások mentése' : '📤 Hirdetés feladása');
                 if(res.success){
-                    $('#va-submit-notice').html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
+                    $notice.html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
+                    $('#va-wizard-overlay').removeClass('is-open');
                     if (typeof window.va_toast === 'function') {
                         window.va_toast(res.data.message || 'Mentés sikeres.', 'success');
                     }
@@ -1556,7 +1558,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else {
                     if (res.data && res.data.need_credits) {
-                        // Kredit szükséges → csomagvásárló megjelenítése
                         var price = res.data.paid_price ? Number(res.data.paid_price).toLocaleString('hu-HU') + ' Ft' : '';
                         var buyPage = '<?php echo esc_js( $buy_url_submit ); ?>';
                         var html = '<div class="va-notice va-notice--warning" style="padding:18px;">'
@@ -1564,7 +1565,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (price ? 'Egy hirdetés ára: <strong>' + price + '</strong><br>' : '')
                             + '<a href="' + buyPage + '" class="va-btn va-btn--primary" style="margin-top:12px;display:inline-flex;">🛒 Hirdetési csomag vásárlása</a>'
                             + '</div>';
-                        $('#va-submit-notice').html(html);
+                        $notice.html(html);
                         if (typeof window.va_toast === 'function') {
                             window.va_toast('Elfogyott az ingyenes keret. Csomag vásárlás szükséges.', 'error');
                         }
@@ -1575,12 +1576,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (amount ? '<br><strong>Fizetendő: ' + amount + '</strong>' : '')
                             + '<br><a href="' + res.data.payment_url + '" class="va-btn va-btn--primary" style="margin-top:10px;display:inline-flex;">Bankkártyás fizetés</a>'
                             + '</div>';
-                        $('#va-submit-notice').html(html2);
+                        $notice.html(html2);
                         if (typeof window.va_toast === 'function') {
                             window.va_toast(res.data.message || 'Fizetés szükséges a folytatáshoz.', 'error');
                         }
                     } else {
-                        $('#va-submit-notice').html('<div class="va-notice va-notice--error">' + res.data.message + '</div>');
+                        $notice.html('<div class="va-notice va-notice--error">' + res.data.message + '</div>');
                         if (typeof window.va_toast === 'function') {
                             window.va_toast((res.data && res.data.message) ? res.data.message : 'Mentési hiba történt.', 'error');
                         }
@@ -1589,10 +1590,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             error: function(){
                 $btn.prop('disabled', false).text('📤 Hirdetés feladása');
-                $('#va-submit-notice').html('<div class="va-notice va-notice--error">Hálózati hiba. Próbálja újra.</div>');
-                if (typeof window.va_toast === 'function') {
-                    window.va_toast('Hálózati hiba. Próbálja újra.', 'error');
-                }
+                $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Próbálja újra.</div>');
             }
         }); // $.ajax end
         }); // $.when end
