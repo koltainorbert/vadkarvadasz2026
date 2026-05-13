@@ -831,9 +831,10 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
                 $postal_val   = (string)($edit_meta['postal_code'] ?? '');
                 $street_val   = (string)($edit_meta['street'] ?? '');
                 echo '<div class="va-loc-grid">';
-                echo '<input type="text" name="location" class="va-input" list="va-street-list" autocomplete="off" placeholder="Város / Helyszín neve" value="'.esc_attr($location_val).'">';
                 echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="'.esc_attr($postal_val).'" inputmode="numeric" pattern="[0-9]*">';
-                echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Utca (opcionális)" value="'.esc_attr($street_val).'">';
+                echo '<input type="text" name="location" class="va-input" list="va-city-list" autocomplete="off" placeholder="Város / Helység" value="'.esc_attr($location_val).'">';
+                echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Cím / utca, házszám" value="'.esc_attr($street_val).'">';
+                echo '<datalist id="va-city-list"></datalist>';
                 echo '<datalist id="va-street-list"></datalist>';
                 echo '<small class="va-help">Város vagy irányítószám megadása kötelező.</small>';
                 echo '</div>';
@@ -1000,43 +1001,91 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ══ Irányítószám/Város/Utca keresés ═══════════════════ */
     // Irányítószám DB betöltése
-    var VA_ADDRESS_DB = <?php echo json_encode( json_decode( file_get_contents( __DIR__ . '/../../includes/hu-address-seed.json' ), true ) ); ?>;
+    var VA_ADDRESS_DB = <?php echo wp_json_encode( json_decode( file_get_contents( dirname( __DIR__, 3 ) . '/includes/hu-address-seed.json' ), true ) ); ?>;
     var VA_POSTAL_CITY_MAP = {};
+    var VA_POSTALS_BY_CITY = {};
     var VA_CITY_STREETS_MAP = {};
+    var VA_CITY_LABELS = {};
+
+    function vaNormalizeAddressValue(value) {
+        return (value || '')
+            .toString()
+            .trim()
+            .toLocaleLowerCase('hu-HU')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function vaPopulateCityOptions() {
+        var $datalist = $('#va-city-list');
+        $datalist.empty();
+        Object.keys(VA_CITY_LABELS).sort().forEach(function(cityKey) {
+            $('<option>').attr('value', VA_CITY_LABELS[cityKey]).appendTo($datalist);
+        });
+    }
+
+    function vaPopulateStreetOptions(cityValue) {
+        var cityKey = vaNormalizeAddressValue(cityValue);
+        var streets = VA_CITY_STREETS_MAP[cityKey] || [];
+        var $datalist = $('#va-street-list');
+        $datalist.empty();
+        streets.forEach(function(street) {
+            $('<option>').attr('value', street).appendTo($datalist);
+        });
+    }
+
+    function vaSyncCityFromPostal() {
+        var postal = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
+        if (!postal || !VA_POSTAL_CITY_MAP[postal]) return;
+        var city = VA_POSTAL_CITY_MAP[postal];
+        $('input[name="location"]').val(city);
+        vaPopulateStreetOptions(city);
+    }
+
+    function vaSyncPostalFromCity() {
+        var cityValue = ($('input[name="location"]').val() || '').toString().trim();
+        var cityKey = vaNormalizeAddressValue(cityValue);
+        var postals = VA_POSTALS_BY_CITY[cityKey] || [];
+        vaPopulateStreetOptions(cityValue);
+        if (!postals.length) return;
+        $('input[name="postal_code"]').val(postals[0]);
+        if (VA_CITY_LABELS[cityKey] && cityValue !== VA_CITY_LABELS[cityKey]) {
+            $('input[name="location"]').val(VA_CITY_LABELS[cityKey]);
+        }
+    }
+
     if (VA_ADDRESS_DB && VA_ADDRESS_DB.records) {
         VA_ADDRESS_DB.records.forEach(function(rec) {
             var pc = rec.postal_code, city = rec.city, street = rec.street;
+            var cityKey = vaNormalizeAddressValue(city);
             if (!VA_POSTAL_CITY_MAP[pc]) VA_POSTAL_CITY_MAP[pc] = city;
-            if (!VA_CITY_STREETS_MAP[city]) VA_CITY_STREETS_MAP[city] = [];
-            if (VA_CITY_STREETS_MAP[city].indexOf(street) === -1) {
-                VA_CITY_STREETS_MAP[city].push(street);
+            if (!VA_POSTALS_BY_CITY[cityKey]) VA_POSTALS_BY_CITY[cityKey] = [];
+            if (VA_POSTALS_BY_CITY[cityKey].indexOf(pc) === -1) {
+                VA_POSTALS_BY_CITY[cityKey].push(pc);
             }
+            if (!VA_CITY_STREETS_MAP[cityKey]) VA_CITY_STREETS_MAP[cityKey] = [];
+            if (VA_CITY_STREETS_MAP[cityKey].indexOf(street) === -1) {
+                VA_CITY_STREETS_MAP[cityKey].push(street);
+            }
+            if (!VA_CITY_LABELS[cityKey]) VA_CITY_LABELS[cityKey] = city;
         });
     }
-    
-    // Irányítószám change → város autofill
-    $(document).on('change blur', 'input[name="postal_code"]', function(){
-        var pc = ($(this).val() + '').trim();
-        if (pc && VA_POSTAL_CITY_MAP[pc]) {
-            $('input[name="location"]').val(VA_POSTAL_CITY_MAP[pc]).trigger('change');
-        }
+
+    vaPopulateCityOptions();
+
+    $(document).on('input change blur', 'input[name="postal_code"]', function(){
+        this.value = (this.value || '').replace(/\D+/g, '').slice(0, 4);
+        vaSyncCityFromPostal();
     });
-    
-    // Város change → utcák lista
-    $(document).on('change blur input', 'input[name="location"]', function(){
-        var city = ($(this).val() + '').trim();
-        var $datalist = $('#va-street-list');
-        $datalist.empty();
-        if (city && VA_CITY_STREETS_MAP[city]) {
-            VA_CITY_STREETS_MAP[city].forEach(function(street){
-                $datalist.append('<option value="' + esc_html(street) + '">');
-            });
-        }
+
+    $(document).on('input change blur', 'input[name="location"]', function(){
+        vaSyncPostalFromCity();
     });
-    
-    // Trigger ha már van érték (szerkesztés módban)
-    if ($('input[name="location"]').val()) {
-        $('input[name="location"]').trigger('change');
+
+    if ($('input[name="postal_code"]').val()) {
+        vaSyncCityFromPostal();
+    } else if ($('input[name="location"]').val()) {
+        vaSyncPostalFromCity();
     }
 
     /* ══ Képkezelő ═══════════════════════════════════════ */

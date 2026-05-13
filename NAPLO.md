@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 13. – Session #357j — Helyszín autofill javítás
+
+### Elvegzett munkak
+- A helyszín mezők sorrendje most: irányítószám → város → cím
+- Javítva lett a címadatbázis betöltési útvonala, így a JS már valódi adatot kap
+- Az irányítószám mező most gépelés közben is automatikusan kitölti a várost
+- A város mező datalist javaslatokat kapott, és visszaírja az irányítószámot is
+- Az utca mező továbbra is az adott városhoz tartozó címjavaslatokat kapja
+
+### Erintett fajlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a javítás után.
+
+---
+
 ## 2026. 05. 13. – Session #357i — Helyszín mezők: irányítószám-város-utca keresés
 
 ### Elvegzett munkak
