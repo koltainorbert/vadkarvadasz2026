@@ -458,7 +458,10 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important;padding-right:0}
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:none!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-modal-title{margin:0 0 10px}
-#va-wizard-overlay.va-wizard-shell .va-cat-compact .va-select{height:48px;font-size:16px}
+#va-wizard-overlay.va-wizard-shell .va-select{display:block!important;width:100%!important;padding:11px 12px!important;font-size:15px!important;font-family:system-ui,-apple-system,sans-serif!important;background-color:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:6px!important;color:#fff!important;cursor:pointer!important;transition:border-color .2s ease!important;-webkit-appearance:none!important;appearance:none!important}
+#va-wizard-overlay.va-wizard-shell .va-select:hover{border-color:rgba(255,255,255,.40)!important}
+#va-wizard-overlay.va-wizard-shell .va-select:focus{outline:none!important;border-color:rgba(255,0,0,.55)!important}
+#va-wizard-overlay.va-wizard-shell .va-select option{background-color:#1a1a1a!important;color:#fff!important}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(4,minmax(120px,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(120px,1fr))!important}}
 </style>
