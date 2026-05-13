@@ -392,8 +392,13 @@ if ( ! $edit_mode && is_user_logged_in() ) {
     }
 }
 
-wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [], VA_VERSION );
-wp_enqueue_script( 'va-submit',   VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery' ], VA_VERSION, true );
+$frontend_css_path = VA_PLUGIN_DIR . 'frontend/css/frontend.css';
+$frontend_js_path  = VA_PLUGIN_DIR . 'frontend/js/frontend.js';
+$frontend_css_ver  = file_exists( $frontend_css_path ) ? (string) filemtime( $frontend_css_path ) : VA_VERSION;
+$frontend_js_ver   = file_exists( $frontend_js_path ) ? (string) filemtime( $frontend_js_path ) : VA_VERSION;
+
+wp_enqueue_style(  'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [], $frontend_css_ver );
+wp_enqueue_script( 'va-submit',   VA_PLUGIN_URL . 'frontend/js/frontend.js',  [ 'jquery' ], $frontend_js_ver, true );
 wp_localize_script( 'va-submit', 'VA_Data', [
     'ajax_url'       => admin_url( 'admin-ajax.php' ),
     'nonce'          => wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ),
