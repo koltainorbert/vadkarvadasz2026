@@ -484,6 +484,53 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 @media (max-width:1200px){.va-loc-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){.va-loc-grid{grid-template-columns:1fr!important}}
 </style>
+<style>
+/* Step 1 category list hotfix (current markup: .va-cat-list > li > .va-cat-item) */
+#va-wizard-overlay.va-wizard-shell .va-cat-list {
+    list-style: none !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-cat-list > li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-cat-item {
+    width: 100% !important;
+    min-height: 84px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    background: rgba(255,255,255,.04) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-cat-item:hover {
+    border-color: rgba(255,0,0,.55) !important;
+    background: rgba(255,0,0,.14) !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-cat-item[data-selected="1"] {
+    border-color: rgba(255,0,0,.75) !important;
+    background: rgba(255,0,0,.22) !important;
+    box-shadow: inset 0 0 0 1px rgba(255,0,0,.22) !important;
+}
+@media (max-width:1200px){
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width:760px){
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: 1fr !important; }
+}
+</style>
 
 <div class="va-submit-preview-shell">
     <div class="va-wizard-shell" id="va-wizard-overlay">

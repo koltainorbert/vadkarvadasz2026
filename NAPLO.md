@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 05. 13. – Session #357o — Modal eleje szétesés hotfix (kategória lista)
+
+### Hiba
+- A feladás wizard 1. lépésén a kategória blokk szétesett (bullet pontok, keskeny gombsor), mert a renderelt markup (`.va-cat-list`) és a rá célzott hard CSS (`.va-cat-cards`) elcsúszott egymástól.
+
+### Javítás
+- Új, célzott hotfix CSS került be a submit template-be a jelenlegi markupra:
+  - `.va-cat-list` grid + list-style reset
+  - `.va-cat-item` teljes szélességű kártya stílus
+  - hover + selected (`data-selected="1"`) vizuális állapot
+  - responsive 3/2/1 oszlop töréspontok
+
+### Eredmény
+- A modal elejének kategória választó UI visszaállt stabil, olvasható kártya-grid nézetre.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357n — Irányítószám ↔ város autofill stabilizálás
 
 ### Hiba
