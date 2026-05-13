@@ -348,6 +348,25 @@ class VA_User_Roles {
         ) );
     }
 
+    public static function get_gift_credits_total( int $user_id ): int {
+        return max( 0, (int) get_user_meta( $user_id, 'va_listing_credits', true ) );
+    }
+
+    public static function get_gift_credits_spent( int $user_id ): int {
+        return max( 0, (int) get_user_meta( $user_id, 'va_listing_credits_spent', true ) );
+    }
+
+    public static function get_gift_credits_remaining( int $user_id ): int {
+        return max( 0, self::get_gift_credits_total( $user_id ) - self::get_gift_credits_spent( $user_id ) );
+    }
+
+    public static function consume_gift_credit( int $user_id, int $qty = 1 ): int {
+        $qty = max( 1, $qty );
+        $spent = self::get_gift_credits_spent( $user_id );
+        update_user_meta( $user_id, 'va_listing_credits_spent', $spent + $qty );
+        return $spent + $qty;
+    }
+
     /**
      * Feladhat-e új hirdetést a felhasználó?
      * @return array{can:bool, reason:string, used:int, limit:int}
@@ -362,8 +381,10 @@ class VA_User_Roles {
         }
 
         $plan_limit          = (int) $cfg['monthly_limit'];
-        $gift_credits_balance = max( 0, (int) get_user_meta( $user_id, 'va_listing_credits', true ) );
-        $effective_limit      = $plan_limit + $gift_credits_balance;
+        $gift_credits_total    = self::get_gift_credits_total( $user_id );
+        $gift_credits_spent    = self::get_gift_credits_spent( $user_id );
+        $gift_credits_balance  = max( 0, $gift_credits_total - $gift_credits_spent );
+        $effective_limit       = $plan_limit + $gift_credits_balance;
 
         $used  = ( $cfg['basis'] === 'active' )
             ? self::get_active_listing_count( $user_id )
@@ -381,13 +402,15 @@ class VA_User_Roles {
                 'effective_limit' => $effective_limit,
                 'credits'         => $gift_credits_balance,
                 'credits_total'   => $gift_credits_balance,
+                'credits_purchased' => $gift_credits_total,
+                'credits_spent'   => $gift_credits_spent,
             ];
         }
 
         $label = $cfg['label'];
         $credits_note = '';
         if ( $gift_credits_balance > 0 ) {
-            $credits_note = " (+ ajándékkredit {$gift_credits_balance} db, már foglalt az aktív hirdetésedhez)";
+            $credits_note = " (+ ajándékkredit {$gift_credits_balance} db, még felhasználható)";
         }
         
         if ( $cfg['basis'] === 'active' ) {
@@ -406,6 +429,8 @@ class VA_User_Roles {
             'effective_limit' => $effective_limit,
             'credits'         => $gift_credits_balance,
             'credits_total'   => $gift_credits_balance,
+            'credits_purchased' => $gift_credits_total,
+            'credits_spent'   => $gift_credits_spent,
         ];
     }
 
