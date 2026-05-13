@@ -205,6 +205,13 @@ $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_bra
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $hunting_calibers = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_calibers() : [];
+$learned_terms = class_exists( 'VA_Ajax' ) ? [
+    'brand'    => VA_Ajax::get_learned_terms_map( 'brand', 1200 ),
+    'model'    => VA_Ajax::get_learned_terms_map( 'model', 1500 ),
+    'caliber'  => VA_Ajax::get_learned_terms_map( 'caliber', 1200 ),
+    'location' => VA_Ajax::get_learned_terms_map( 'location', 800 ),
+    'street'   => VA_Ajax::get_learned_terms_map( 'street', 1200 ),
+] : [];
 $body_types = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
 $category_slug_map = [];
 if ( is_array( $categories ) ) {
@@ -415,6 +422,7 @@ wp_localize_script( 'va-submit', 'VA_Data', [
     'vehicle_brand_models' => $site_type === 'jarmu' ? $brand_models : [],
     'hunting_brand_models' => $site_type !== 'jarmu' ? $hunting_brand_models : [],
     'hunting_calibers' => $site_type !== 'jarmu' ? $hunting_calibers : [],
+    'learned_terms'  => $learned_terms,
     'category_slugs' => $category_slug_map,
     'category_required_rules' => $category_required_rules,
 ]);
@@ -1006,6 +1014,30 @@ document.addEventListener('DOMContentLoaded', function() {
     var VA_CITY_STREETS_MAP = {};
     var VA_CITY_LABELS = {};
 
+    function vaUniqueStrings(values) {
+        var out = [];
+        var seen = {};
+        (values || []).forEach(function(item) {
+            var value = ((item || '') + '').trim();
+            if (!value) return;
+            var key = vaNormalizeAddressValue(value);
+            if (seen[key]) return;
+            seen[key] = true;
+            out.push(value);
+        });
+        return out;
+    }
+
+    function vaGetLearnedTerms(type, categorySlug) {
+        var all = (VA_Data && VA_Data.learned_terms && VA_Data.learned_terms[type]) ? VA_Data.learned_terms[type] : {};
+        var globalTerms = Array.isArray(all.__global) ? all.__global : [];
+        var catTerms = [];
+        if (categorySlug && Array.isArray(all[categorySlug])) {
+            catTerms = all[categorySlug];
+        }
+        return vaUniqueStrings(globalTerms.concat(catTerms));
+    }
+
     function vaNormalizeAddressValue(value) {
         return (value || '')
             .toString()
@@ -1016,19 +1048,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function vaPopulateCityOptions() {
+        var learnedCities = vaGetLearnedTerms('location', '');
         var $datalist = $('#va-city-list');
         $datalist.empty();
+        var allCities = [];
         Object.keys(VA_CITY_LABELS).sort().forEach(function(cityKey) {
-            $('<option>').attr('value', VA_CITY_LABELS[cityKey]).appendTo($datalist);
+            allCities.push(VA_CITY_LABELS[cityKey]);
+        });
+        allCities = vaUniqueStrings(allCities.concat(learnedCities)).sort(function(a, b){ return a.localeCompare(b, 'hu'); });
+        allCities.forEach(function(cityValue) {
+            $('<option>').attr('value', cityValue).appendTo($datalist);
         });
     }
 
     function vaPopulateStreetOptions(cityValue) {
         var cityKey = vaNormalizeAddressValue(cityValue);
-        var streets = VA_CITY_STREETS_MAP[cityKey] || [];
+        var streets = (VA_CITY_STREETS_MAP[cityKey] || []).concat(vaGetLearnedTerms('street', ''));
         var $datalist = $('#va-street-list');
         $datalist.empty();
-        streets.forEach(function(street) {
+        vaUniqueStrings(streets).forEach(function(street) {
             $('<option>').attr('value', street).appendTo($datalist);
         });
     }
@@ -1397,6 +1435,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             catData = merged;
         }
+
+        var learnedBrands = vaGetLearnedTerms('brand', categorySlug);
+        learnedBrands.forEach(function(brand){
+            if (!catData[brand]) catData[brand] = [];
+        });
+
         var currentBrand = (($brand.val() || '') + '').trim();
         var currentModel = (($model.val() || '') + '').trim();
         var matchedBrandKey = '';
@@ -1410,6 +1454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         var modelSource = matchedBrandKey ? (catData[matchedBrandKey] || []) : [];
+        modelSource = vaUniqueStrings(modelSource.concat(vaGetLearnedTerms('model', categorySlug)));
         $modelList.empty();
         modelSource.forEach(function(model) {
             $('<option>').attr('value', model).appendTo($modelList);
@@ -1422,10 +1467,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function applyLearnedCaliberDatalist() {
+        if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
+        var $caliber = $('input[name="caliber"]');
+        var $list = $('#va-caliber-list');
+        if (!$caliber.length || !$list.length) return;
+
+        var seedValues = [];
+        $list.find('option').each(function() {
+            seedValues.push($(this).attr('value') || '');
+        });
+        var categorySlug = getSelectedCategorySlug();
+        var merged = vaUniqueStrings(seedValues.concat(vaGetLearnedTerms('caliber', categorySlug)));
+
+        $list.empty();
+        merged.forEach(function(caliber) {
+            $('<option>').attr('value', caliber).appendTo($list);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
             rebuildHuntingBrandModelDatalists(true);
+            applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
         }
     });
@@ -1437,11 +1502,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     rebuildHuntingBrandModelDatalists(false);
+    applyLearnedCaliberDatalist();
     applyCategorySpecificFieldVisibility();
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;
     var streetMetaByLabel = {};
+
+    function getLearnedStreetSuggestionItems(q, limit) {
+        var needle = vaNormalizeAddressValue(q || '');
+        if (!needle) return [];
+        var learned = vaGetLearnedTerms('street', '');
+        var out = [];
+        learned.forEach(function(street) {
+            if (out.length >= limit) return;
+            if (vaNormalizeAddressValue(street).indexOf(needle) === -1) return;
+            out.push({
+                label: street,
+                street: street,
+                city: '',
+                postal_code: ''
+            });
+        });
+        return out;
+    }
+
+    function mergeStreetSuggestionItems(primary, secondary) {
+        var seen = {};
+        var out = [];
+        (primary || []).concat(secondary || []).forEach(function(item) {
+            if (!item || !item.label) return;
+            var key = vaNormalizeAddressValue(item.label);
+            if (!key || seen[key]) return;
+            seen[key] = true;
+            out.push(item);
+        });
+        return out;
+    }
 
     function renderStreetSuggestions(items) {
         var $dl = $('#va-street-list');
@@ -1457,7 +1554,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchStreetSuggestions(q) {
-        if (!VA_Data || !VA_Data.nonce_address) return;
+        var learnedItems = getLearnedStreetSuggestionItems(q, 10);
+        if (!VA_Data || !VA_Data.nonce_address) {
+            renderStreetSuggestions(learnedItems);
+            return;
+        }
         $.post(VA_Data.ajax_url, {
             action: 'va_address_suggest',
             nonce: VA_Data.nonce_address,
@@ -1465,14 +1566,18 @@ document.addEventListener('DOMContentLoaded', function() {
             limit: 12
         }).done(function(res){
             if (res && res.success && Array.isArray(res.data)) {
-                renderStreetSuggestions(res.data);
+                renderStreetSuggestions(mergeStreetSuggestionItems(res.data, learnedItems));
+            } else {
+                renderStreetSuggestions(learnedItems);
             }
+        }).fail(function(){
+            renderStreetSuggestions(learnedItems);
         });
     }
 
     $(document).on('input', 'input[name="street"], input[name="location"]', function(){
         var q = (($(this).val() || '') + '').trim();
-        if (q.length < 3) {
+        if (q.length < 2) {
             renderStreetSuggestions([]);
             return;
         }
