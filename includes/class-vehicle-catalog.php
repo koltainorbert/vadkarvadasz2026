@@ -10,6 +10,7 @@ class VA_Vehicle_Catalog {
     private static $brand_models = null;
     private static $hunting_brand_models = null;
     private static $hunting_calibers = null;
+    private static $hunting_product_categories = null;
 
     public static function get_dataset_version(): string {
         return 'vadaszapro-categories-2026-05-12';
@@ -576,6 +577,55 @@ class VA_Vehicle_Catalog {
 
         self::$hunting_calibers = array_values( array_unique( $normalized ) );
         return self::$hunting_calibers;
+    }
+
+    public static function get_hunting_product_categories(): array {
+        if ( self::$hunting_product_categories !== null ) {
+            return self::$hunting_product_categories;
+        }
+
+        $file = __DIR__ . '/hunting-product-categories.json';
+        if ( ! file_exists( $file ) ) {
+            self::$hunting_product_categories = [];
+            return self::$hunting_product_categories;
+        }
+
+        $raw = file_get_contents( $file );
+        if ( is_string( $raw ) && substr( $raw, 0, 3 ) === "\xEF\xBB\xBF" ) {
+            $raw = substr( $raw, 3 );
+        }
+
+        $decoded = json_decode( (string) $raw, true );
+        if ( ! is_array( $decoded ) ) {
+            self::$hunting_product_categories = [];
+            return self::$hunting_product_categories;
+        }
+
+        $normalized = [];
+        foreach ( $decoded as $item ) {
+            if ( ! is_array( $item ) ) {
+                continue;
+            }
+
+            $name        = self::normalize_label( (string) ( $item['name'] ?? '' ) );
+            $slug        = sanitize_title( (string) ( $item['slug'] ?? '' ) );
+            $parent      = self::normalize_label( (string) ( $item['parent'] ?? '' ) );
+            $description = self::normalize_label( (string) ( $item['description'] ?? '' ) );
+
+            if ( $name === '' || $slug === '' ) {
+                continue;
+            }
+
+            $normalized[] = [
+                'name'        => $name,
+                'slug'        => $slug,
+                'parent'      => $parent,
+                'description' => $description,
+            ];
+        }
+
+        self::$hunting_product_categories = $normalized;
+        return self::$hunting_product_categories;
     }
 
     private static function normalize_label( string $value ): string {
