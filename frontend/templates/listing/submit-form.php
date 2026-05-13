@@ -501,12 +501,12 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item {
     width: 100% !important;
-    min-height: 84px !important;
+    min-height: 56px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
     text-align: left !important;
-    padding: 14px 16px !important;
+    padding: 10px 14px !important;
     border-radius: 14px !important;
     border: 1px solid rgba(255,255,255,.16) !important;
     background: rgba(255,255,255,.04) !important;
