@@ -13,6 +13,12 @@
 ### Deploy
 - Eles deploy trigger lefutott, commit: `97cb2dc`.
 
+### Utolagos javitas
+- A submit oldal asset cache miatt a live CSS/JS nem frissult megbizhatoan.
+- `submit-form.php` atirva filemtime-alapu cache-bustra a plugin frontend CSS/JS enqueuenal.
+- `VA_VERSION` emelve `1.1.6`-ra (source + mirror).
+- `.github/workflows/deploy.yml` Cloudflare purge domain javitva `vadkarvadasz.hu`-ra, es bekerult a `va-hirdetes-feladas` oldal purge-ja is.
+
 ---
 
 ## 2026. 05. 13. – Session #355 — Live-only deploy, helyi WP torolve
