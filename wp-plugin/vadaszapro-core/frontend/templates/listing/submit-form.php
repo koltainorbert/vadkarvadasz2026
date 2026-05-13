@@ -534,6 +534,15 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     margin-top: 14px;
     margin-bottom: 0;
 }
+#va-wizard-overlay.va-wizard-shell .va-wstep-title,
+#va-wizard-overlay.va-wizard-shell .va-wstep-title em {
+    font-size: 30px !important;
+    font-style: normal !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    line-height: 1.1 !important;
+    margin: 0 0 10px !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer {
     justify-content: flex-start !important;
 }
@@ -599,7 +608,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 
         <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
         <div class="va-wstep is-active" data-step="1">
-            <h3 class="va-wstep-title">Hirdetés feladás, <em>válassz kategóriát</em></h3>
+            <h3 class="va-wstep-title">Hirdetés feladás, válassz kategóriát</h3>
             <ul class="va-cat-list" id="va-cat-list">
                 <?php foreach ( $categories as $cat ): ?>
                 <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat->name); ?></button></li>
