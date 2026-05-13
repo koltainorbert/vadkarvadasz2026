@@ -810,43 +810,125 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
+        </div><!-- /va-wstep step 2 -->
 
-        <?php
-        if ( VA_Form_Builder::is_enabled( $fb_form, 'phone' ) ):
-            $phone_field = VA_Form_Builder::get_field( $fb_form, 'phone' );
-            $phone_req   = ! empty( $phone_field['required'] );
-            $phone_req_html = $phone_req ? ' <span class="required">*</span>' : '';
-            $phone_req_attr = $phone_req ? ' required' : '';
-            $phone_val  = esc_attr( (string)( $edit_meta['phone'] ?? '' ) );
-            $phone_ph   = esc_attr( (string)( $phone_field['placeholder'] ?? '+36 30 000 0000' ) );
-        ?>
-        <h3 class="va-submit-section-title">Kapcsolat</h3>
-        <div class="va-form-group">
-            <label>Telefonszám<?php echo $phone_req_html; ?></label>
-            <input type="tel" name="phone" class="va-input" placeholder="<?php echo $phone_ph; ?>"<?php echo $phone_req_attr; ?> value="<?php echo $phone_val; ?>">
+        <!-- ═══ STEP 3: Ár & Helyszín & Elérhetőség ═══ -->
+        <div class="va-wstep" data-step="3">
+            <h3 class="va-wstep-title">Ár és elérhetőség</h3>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Ár (Ft) <span class="required">*</span></label>
+                    <input type="number" name="price" class="va-input" min="0" required placeholder="pl. 150000" value="<?php echo esc_attr((string)($edit_meta['price'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Ár jellege</label>
+                    <?php $pt = (string)($edit_meta['price_type'] ?? 'fixed');
+                    echo '<select name="price_type" class="va-select">';
+                    foreach ( ['fixed'=>'Fix ár','negotiable'=>'Alkudható','free'=>'Ingyenes','on_request'=>'Érdeklődjön'] as $k=>$l ) {
+                        echo '<option value="'.esc_attr($k).'"'.selected($pt,$k,false).'>'.esc_html($l).'</option>';
+                    }
+                    echo '</select>'; ?>
+                </div>
+            </div>
+            <div class="va-form-group">
+                <label>Helyszín <span class="required">*</span></label>
+                <?php
+                $location_val = (string)($edit_meta['location'] ?? '');
+                $postal_val   = (string)($edit_meta['postal_code'] ?? '');
+                $street_val   = (string)($edit_meta['street'] ?? '');
+                echo '<div class="va-loc-grid">';
+                echo '<input type="text" name="location" class="va-input" list="va-street-list" autocomplete="off" placeholder="Város / Helyszín neve" value="'.esc_attr($location_val).'">';
+                echo '<input type="text" name="postal_code" class="va-input" placeholder="Irányítószám (pl. 1051)" value="'.esc_attr($postal_val).'" inputmode="numeric" pattern="[0-9]*">';
+                echo '<input type="text" name="street" class="va-input" list="va-street-list" autocomplete="off" placeholder="Utca (opcionális)" value="'.esc_attr($street_val).'">';
+                echo '<datalist id="va-street-list"></datalist>';
+                echo '<small class="va-help">Város vagy irányítószám megadása kötelező.</small>';
+                echo '</div>';
+                ?>
+            </div>
+            <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'phone' ) ):
+                $phone_field = VA_Form_Builder::get_field( $fb_form, 'phone' );
+                $phone_req   = ! empty( $phone_field['required'] );
+                $phone_ph    = esc_attr( (string)( $phone_field['placeholder'] ?? '+36 30 000 0000' ) );
+            ?>
+            <div class="va-form-group">
+                <label>Telefonszám<?php echo $phone_req ? ' <span class="required">*</span>' : ''; ?></label>
+                <input type="tel" name="phone" class="va-input" placeholder="<?php echo $phone_ph; ?>"<?php echo $phone_req ? ' required' : ''; ?> style="background:#0e0e0e!important;color:#fff!important;color-scheme:dark;" value="<?php echo esc_attr((string)($edit_meta['phone'] ?? '')); ?>">
+            </div>
+            <?php endif; ?>
+            <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'email_show' ) ): ?>
+            <div class="va-form-group">
+                <label class="va-check-label">
+                    <input type="checkbox" name="email_show" value="1" checked onclick="return false;">
+                    E-mail cím megjelenítése a hirdetésben
+                </label>
+            </div>
+            <?php endif; ?>
+        </div><!-- /va-wstep step 3 -->
+
+        <!-- ═══ STEP 4: Leírás & Képek ═══ -->
+        <div class="va-wstep" data-step="4">
+            <h3 class="va-wstep-title">Leírás és képek</h3>
+            <div class="va-form-group">
+                <label>Leírás</label>
+                <div id="va-quill-editor"></div>
+                <textarea name="description" id="va-desc-hidden" style="display:none"><?php echo esc_textarea( $desc_val ); ?></textarea>
+                <style>
+                .ql-toolbar.ql-snow{background:#1e1e1e;border:1px solid rgba(255,255,255,.15)!important;border-bottom:none!important;border-radius:6px 6px 0 0;}
+                .ql-container.ql-snow{background:#111;border:1px solid rgba(255,255,255,.15)!important;border-radius:0 0 6px 6px;font-size:15px;}
+                .ql-editor{color:#fff!important;min-height:160px;line-height:1.7;font-family:system-ui,sans-serif;}
+                .ql-editor p,.ql-editor span,.ql-editor li,.ql-editor strong,.ql-editor em,.ql-editor u,.ql-editor s{color:#fff!important;}
+                .ql-editor.ql-blank::before{color:#9a9a9a!important;font-style:normal;}
+                .ql-snow .ql-stroke{stroke:#aaa!important;}.ql-snow .ql-fill,.ql-snow .ql-stroke.ql-fill{fill:#aaa!important;}
+                .ql-snow .ql-picker{color:#bbb!important;}.ql-snow .ql-picker-label{border-color:rgba(255,255,255,.15)!important;}
+                .ql-snow .ql-picker-options{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;}
+                .ql-snow .ql-picker-item{color:#bbb!important;}.ql-snow .ql-picker-item:hover,.ql-snow .ql-picker-item.ql-selected{color:#fff!important;}
+                .ql-snow.ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button:hover .ql-stroke{stroke:#ff4444!important;}
+                .ql-snow.ql-toolbar button.ql-active .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:#ff4444!important;}
+                .ql-snow.ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button:hover .ql-fill{fill:#ff4444!important;}
+                .ql-snow.ql-toolbar button.ql-active .ql-fill{fill:#ff4444!important;}
+                .ql-snow .ql-picker.ql-header .ql-picker-label::before,.ql-snow .ql-picker.ql-header .ql-picker-item::before{color:#bbb!important;}
+                .ql-editor a{color:#ff4444;}.ql-editor img{max-width:100%;border-radius:6px;}
+                .ql-editor blockquote{border-left:3px solid #ff4444;padding-left:12px;color:#aaa;margin:8px 0;}
+                .ql-editor h2,.ql-editor h3{color:#e8e8e8;}.ql-editor ol,.ql-editor ul{color:#e8e8e8;}
+                .ql-snow .ql-tooltip{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;color:#e8e8e8!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important;}
+                .ql-snow .ql-tooltip input[type=text]{background:#111!important;border-color:rgba(255,255,255,.2)!important;color:#e8e8e8!important;}
+                .ql-snow .ql-tooltip a.ql-action,.ql-snow .ql-tooltip a.ql-remove{color:#ff4444!important;}
+                </style>
+            </div>
+            <div class="va-form-group">
+                <label>Képek (max <?php echo (int)$max_img; ?> db)</label>
+                <div class="va-img-picker" id="va-img-picker">
+                    <div class="va-img-grid" id="va-img-grid">
+                        <button type="button" class="va-img-add" id="va-img-add">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <span>Képek<br>hozzáadása</span>
+                        </button>
+                    </div>
+                    <input type="file" id="va-img-file-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none" data-max="<?php echo esc_attr((string)$max_img); ?>">
+                    <input type="hidden" name="featured_image_index" id="va-featured-index" value="0">
+                    <input type="hidden" name="keep_images" id="va-keep-images" value="">
+                    <p class="va-img-hint">Húzd a képeket az átrendezéshez &bull; &#9733; = borítókép beállítása</p>
+                </div>
+            </div>
+            <div id="va-submit-notice-modal"></div>
+            <p class="va-wiz-publish-note">
+                <?php echo get_option('va_auto_publish_listings','0') === '1'
+                    ? 'A hirdetés azonnal megjelenik.'
+                    : 'A hirdetés moderátor jóváhagyása után jelenik meg.'; ?>
+            </p>
+        </div><!-- /va-wstep step 4 -->
+
+        <!-- Wizard navigációs lábléc (form-on belül) -->
+        <div class="va-wizard-footer">
+            <button type="button" class="va-btn va-btn--ghost" id="va-wizard-prev" style="visibility:hidden">← Vissza</button>
+            <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
+            <button type="button" class="va-btn va-btn--primary" id="va-wizard-next">Tovább →</button>
+            <button type="submit" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
         </div>
-        <?php endif; ?>
-
-        <?php if ( VA_Form_Builder::is_enabled( $fb_form, 'email_show' ) ): ?>
-        <div class="va-form-group" style="margin-top:18px;">
-            <label style="margin-bottom:8px;">E-mail megjelenítése</label>
-            <label class="va-check-label">
-                <input type="checkbox" name="email_show" value="1" checked onclick="return false;">
-                E-mail cím megjelenítése a hirdetésben
-            </label>
-        </div>
-        <?php endif; ?>
-
-        <button type="submit" class="va-btn va-btn--primary va-btn--block" id="va-submit-btn">
-            <?php echo $edit_mode ? '💾 Változások mentése' : '📤 Hirdetés feladása'; ?>
-        </button>
-
-        <p style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px;text-align:center;">
-            <?php echo get_option('va_auto_publish_listings','0') === '1'
-                ? 'A hirdetés azonnal megjelenik.'
-                : 'A hirdetés moderátor jóváhagyása után jelenik meg.'; ?>
-        </p>
     </form>
+    </div><!-- .va-wizard-body -->
+</div><!-- .va-wizard-modal -->
+</div><!-- .va-wizard-overlay -->
 
 <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
