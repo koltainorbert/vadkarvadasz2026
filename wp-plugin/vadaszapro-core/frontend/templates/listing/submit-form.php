@@ -205,6 +205,17 @@ $brands     = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_bra
 $brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $hunting_calibers = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_calibers() : [];
+$address_seed_data = [ 'records' => [] ];
+$address_seed_path = dirname( __DIR__, 3 ) . '/includes/hu-address-seed.json';
+if ( file_exists( $address_seed_path ) ) {
+    $address_seed_raw = (string) file_get_contents( $address_seed_path );
+    if ( $address_seed_raw !== '' ) {
+        $address_seed_json = json_decode( ltrim( $address_seed_raw, "\xEF\xBB\xBF" ), true );
+        if ( is_array( $address_seed_json ) ) {
+            $address_seed_data = $address_seed_json;
+        }
+    }
+}
 $learned_terms = class_exists( 'VA_Ajax' ) ? [
     'brand'    => VA_Ajax::get_learned_terms_map( 'brand', 1200 ),
     'model'    => VA_Ajax::get_learned_terms_map( 'model', 1500 ),
@@ -1008,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ══ Irányítószám/Város/Utca keresés ═══════════════════ */
     // Irányítószám DB betöltése
-    var VA_ADDRESS_DB = <?php echo wp_json_encode( json_decode( file_get_contents( dirname( __DIR__, 3 ) . '/includes/hu-address-seed.json' ), true ) ); ?>;
+    var VA_ADDRESS_DB = <?php echo wp_json_encode( $address_seed_data ); ?>;
     var VA_POSTAL_CITY_MAP = {};
     var VA_POSTALS_BY_CITY = {};
     var VA_CITY_STREETS_MAP = {};
@@ -1039,12 +1050,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function vaNormalizeAddressValue(value) {
-        return (value || '')
-            .toString()
-            .trim()
-            .toLocaleLowerCase('hu-HU')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '');
+        var normalized = (value || '').toString().trim();
+        try {
+            normalized = normalized.toLocaleLowerCase('hu-HU');
+        } catch (e) {
+            normalized = normalized.toLowerCase();
+        }
+        if (typeof normalized.normalize === 'function') {
+            normalized = normalized.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+        return normalized;
     }
 
     function vaPopulateCityOptions() {
@@ -1091,9 +1106,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (VA_ADDRESS_DB && VA_ADDRESS_DB.records) {
+    if (VA_ADDRESS_DB && Array.isArray(VA_ADDRESS_DB.records)) {
         VA_ADDRESS_DB.records.forEach(function(rec) {
-            var pc = rec.postal_code, city = rec.city, street = rec.street;
+            var pc = (((rec && rec.postal_code) || '') + '').replace(/\D+/g, '').slice(0, 4);
+            var city = (((rec && rec.city) || '') + '').trim();
+            var street = (((rec && rec.street) || '') + '').trim();
+            if (!pc || !city) return;
             var cityKey = vaNormalizeAddressValue(city);
             if (!VA_POSTAL_CITY_MAP[pc]) VA_POSTAL_CITY_MAP[pc] = city;
             if (!VA_POSTALS_BY_CITY[cityKey]) VA_POSTALS_BY_CITY[cityKey] = [];
@@ -1101,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 VA_POSTALS_BY_CITY[cityKey].push(pc);
             }
             if (!VA_CITY_STREETS_MAP[cityKey]) VA_CITY_STREETS_MAP[cityKey] = [];
-            if (VA_CITY_STREETS_MAP[cityKey].indexOf(street) === -1) {
+            if (street && VA_CITY_STREETS_MAP[cityKey].indexOf(street) === -1) {
                 VA_CITY_STREETS_MAP[cityKey].push(street);
             }
             if (!VA_CITY_LABELS[cityKey]) VA_CITY_LABELS[cityKey] = city;

@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 05. 13. – Session #357n — Irányítószám ↔ város autofill stabilizálás
+
+### Hiba
+- A feladás űrlapon továbbra sem működött megbízhatóan az irányítószám→város és város→irányítószám automatikus kitöltés.
+
+### Javítás
+- A cím seed betöltés robusztusra lett átírva:
+  - biztonságos fájl-ellenőrzés (`file_exists`),
+  - BOM-tisztítás,
+  - garantált fallback (`records: []`) JSON hiba esetére.
+- A JS normalizálás védett lett:
+  - `toLocaleLowerCase('hu-HU')` fallback `toLowerCase()`-re,
+  - `normalize()` csak támogatott környezetben fut.
+- Rekordfeldolgozás szigorítva:
+  - irányítószám kötelezően 4 számjegyre tisztítva,
+  - üres/hibás rekordok kihagyva,
+  - üres utcaértékek nem kerülnek be a street mapbe.
+
+### Eredmény
+- A ZIP↔város kétirányú map stabilan épül fel akkor is, ha a seed részben hibás vagy a kliens környezet korlátozottabb.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357m — Tanuló autocomplete adatbázis (ismeretlen beírások mentése)
 
 ### Elvegzett munkak
