@@ -7,6 +7,161 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class VA_Ajax {
 
+    private static function normalize_learning_value( string $value ): string {
+        $value = trim( wp_strip_all_tags( $value ) );
+        if ( $value === '' ) {
+            return '';
+        }
+
+        $value = preg_replace( '/\s+/u', ' ', $value );
+        $norm  = function_exists( 'mb_strtolower' ) ? mb_strtolower( $value, 'UTF-8' ) : strtolower( $value );
+
+        if ( function_exists( 'remove_accents' ) ) {
+            $norm = remove_accents( $norm );
+        }
+
+        $norm = preg_replace( '/[^\p{L}\p{N}\s\.\-\/]+/u', '', $norm );
+        $norm = preg_replace( '/\s+/u', ' ', $norm );
+        return trim( (string) $norm );
+    }
+
+    private static function get_learning_category_slug( int $category_id ): string {
+        if ( $category_id <= 0 ) {
+            return '';
+        }
+
+        $term = get_term( $category_id, 'va_category' );
+        if ( ! $term || is_wp_error( $term ) ) {
+            return '';
+        }
+
+        return sanitize_title( (string) $term->slug );
+    }
+
+    private static function learning_table_exists(): bool {
+        static $exists = null;
+        if ( $exists !== null ) {
+            return $exists;
+        }
+
+        global $wpdb;
+        $table  = $wpdb->prefix . 'va_learning_terms';
+        $exists = (bool) $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) );
+        return $exists;
+    }
+
+    private static function save_learning_term( string $term_type, string $term_value, string $category_slug = '' ): void {
+        $term_type    = sanitize_key( $term_type );
+        $term_value   = trim( sanitize_text_field( $term_value ) );
+        $category_slug = sanitize_title( $category_slug );
+
+        if ( $term_value === '' || strlen( $term_value ) < 2 || strlen( $term_value ) > 190 ) {
+            return;
+        }
+
+        if ( ! in_array( $term_type, [ 'brand', 'model', 'caliber', 'location', 'street' ], true ) ) {
+            return;
+        }
+
+        if ( ! self::learning_table_exists() ) {
+            return;
+        }
+
+        $term_norm = self::normalize_learning_value( $term_value );
+        if ( $term_norm === '' ) {
+            return;
+        }
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'va_learning_terms';
+
+        $wpdb->query(
+            $wpdb->prepare(
+                "INSERT INTO {$table} (term_type, term_value, term_value_norm, category_slug, usage_count, created_at, updated_at)
+                 VALUES (%s, %s, %s, %s, 1, NOW(), NOW())
+                 ON DUPLICATE KEY UPDATE
+                    term_value = VALUES(term_value),
+                    usage_count = usage_count + 1,
+                    updated_at = NOW()",
+                $term_type,
+                $term_value,
+                $term_norm,
+                $category_slug
+            )
+        );
+    }
+
+    private static function learn_listing_terms( int $category_id, array $values ): void {
+        $category_slug = self::get_learning_category_slug( $category_id );
+
+        self::save_learning_term( 'brand', (string) ( $values['brand'] ?? '' ), $category_slug );
+        self::save_learning_term( 'model', (string) ( $values['model'] ?? '' ), $category_slug );
+        self::save_learning_term( 'caliber', (string) ( $values['caliber'] ?? '' ), $category_slug );
+        self::save_learning_term( 'location', (string) ( $values['location'] ?? '' ), '' );
+        self::save_learning_term( 'street', (string) ( $values['street'] ?? '' ), '' );
+    }
+
+    public static function get_learned_terms_map( string $term_type, int $limit = 500 ): array {
+        $term_type = sanitize_key( $term_type );
+        if ( ! in_array( $term_type, [ 'brand', 'model', 'caliber', 'location', 'street' ], true ) ) {
+            return [ '__global' => [] ];
+        }
+
+        if ( ! self::learning_table_exists() ) {
+            return [ '__global' => [] ];
+        }
+
+        $limit = max( 50, min( 2000, absint( $limit ) ) );
+
+        global $wpdb;
+        $table = $wpdb->prefix . 'va_learning_terms';
+        $rows  = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT term_value, category_slug
+                 FROM {$table}
+                 WHERE term_type = %s
+                 ORDER BY usage_count DESC, updated_at DESC
+                 LIMIT %d",
+                $term_type,
+                $limit
+            ),
+            ARRAY_A
+        );
+
+        if ( ! is_array( $rows ) || empty( $rows ) ) {
+            return [ '__global' => [] ];
+        }
+
+        $map = [ '__global' => [] ];
+        $seen = [];
+
+        foreach ( $rows as $row ) {
+            $value = trim( (string) ( $row['term_value'] ?? '' ) );
+            if ( $value === '' ) {
+                continue;
+            }
+
+            $slug = sanitize_title( (string) ( $row['category_slug'] ?? '' ) );
+            $bucket = $slug !== '' ? $slug : '__global';
+            if ( ! isset( $map[ $bucket ] ) ) {
+                $map[ $bucket ] = [];
+            }
+            if ( ! isset( $seen[ $bucket ] ) ) {
+                $seen[ $bucket ] = [];
+            }
+
+            $norm = self::normalize_learning_value( $value );
+            if ( $norm === '' || isset( $seen[ $bucket ][ $norm ] ) ) {
+                continue;
+            }
+
+            $seen[ $bucket ][ $norm ] = true;
+            $map[ $bucket ][] = $value;
+        }
+
+        return $map;
+    }
+
     private static function get_category_required_rules(): array {
         return [
             'golyos-puska'      => [ 'label' => 'Golyós puska', 'required' => [ 'brand', 'caliber' ] ],
@@ -291,6 +446,14 @@ class VA_Ajax {
         if ( $county   ) wp_set_post_terms( $post_id, [ $county ],   'va_county'   );
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
+        self::learn_listing_terms( $category, [
+            'brand'    => $brand,
+            'model'    => $model,
+            'caliber'  => $caliber,
+            'location' => $location,
+            'street'   => $street,
+        ] );
+
         // Megtartandó meglévő képek
         $keep_raw = sanitize_text_field( wp_unslash( $_POST['keep_images'] ?? '' ) );
         $keep_ids = array_filter( array_map( 'absint', explode( ',', $keep_raw ) ) );
@@ -490,6 +653,14 @@ class VA_Ajax {
         if ( $category ) wp_set_post_terms( $post_id, [ $category ], 'va_category' );
         if ( $county   ) wp_set_post_terms( $post_id, [ $county ],   'va_county'   );
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
+
+        self::learn_listing_terms( $category, [
+            'brand'    => $brand,
+            'model'    => $model,
+            'caliber'  => $caliber,
+            'location' => $location,
+            'street'   => $street,
+        ] );
 
         // Képfeltöltés kezelése
         $img_errors = [];

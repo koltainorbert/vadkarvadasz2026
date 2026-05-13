@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 define( 'VA_VERSION',        '1.1.6' );
 define( 'VA_REWRITE_VER',   '1.0.10' );   // Növeld meg ha CPT/tax slug változik!
+define( 'VA_LEARNING_TERMS_VER', '1.0.0' );
 define( 'VA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VA_TEXT_DOMAIN', 'vadaszapro' );
@@ -330,6 +331,25 @@ function va_get_address_lookup_table_sql( string $charset ): string {
     ) $charset;";
 }
 
+function va_get_learning_terms_table_sql( string $charset ): string {
+    global $wpdb;
+    return "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}va_learning_terms (
+        id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        term_type       VARCHAR(32)     NOT NULL,
+        term_value      VARCHAR(190)    NOT NULL,
+        term_value_norm VARCHAR(190)    NOT NULL,
+        category_slug   VARCHAR(120)    NOT NULL DEFAULT '',
+        usage_count     BIGINT UNSIGNED NOT NULL DEFAULT 1,
+        created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY uniq_term (term_type, term_value_norm, category_slug),
+        KEY term_type (term_type),
+        KEY category_slug (category_slug),
+        KEY updated_at (updated_at)
+    ) $charset;";
+}
+
 function va_seed_address_lookup_table(): void {
     global $wpdb;
 
@@ -384,6 +404,20 @@ function va_maybe_upgrade_address_lookup(): void {
 }
 
 add_action( 'init', 'va_maybe_upgrade_address_lookup', 25 );
+
+function va_maybe_upgrade_learning_terms(): void {
+    $loaded_ver = (string) get_option( 'va_learning_terms_ver', '' );
+    if ( $loaded_ver === VA_LEARNING_TERMS_VER ) {
+        return;
+    }
+
+    global $wpdb;
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( va_get_learning_terms_table_sql( $wpdb->get_charset_collate() ) );
+    update_option( 'va_learning_terms_ver', VA_LEARNING_TERMS_VER, false );
+}
+
+add_action( 'init', 'va_maybe_upgrade_learning_terms', 26 );
 
 function va_activate() {
     VA_Post_Types::init();
@@ -449,6 +483,7 @@ function va_activate() {
     $sql4 = va_get_view_geo_table_sql( $charset );
     $sql5 = va_get_view_geo_daily_table_sql( $charset );
     $sql6 = va_get_address_lookup_table_sql( $charset );
+    $sql7 = va_get_learning_terms_table_sql( $charset );
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta( $sql );
@@ -457,7 +492,9 @@ function va_activate() {
     dbDelta( $sql4 );
     dbDelta( $sql5 );
     dbDelta( $sql6 );
+    dbDelta( $sql7 );
     update_option( 'va_view_geo_table_ver', '1.1.0', false );
+    update_option( 'va_learning_terms_ver', VA_LEARNING_TERMS_VER, false );
     va_seed_address_lookup_table();
 
     // Alapértelmezett oldalak létrehozása ha nem léteznek

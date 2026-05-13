@@ -2,6 +2,43 @@
 
 ---
 
+## 2026. 05. 13. – Session #357m — Tanuló autocomplete adatbázis (ismeretlen beírások mentése)
+
+### Elvegzett munkak
+- Uj tanulo tabla kerult a pluginbe: `wp_va_learning_terms`
+  - mezok: `term_type`, `term_value`, `term_value_norm`, `category_slug`, `usage_count`, idobelyegek
+  - egyedi kulcs: `(term_type, term_value_norm, category_slug)` duplikacio ellen
+- A tabla letrehozasa automatikus:
+  - aktivacio alatt (`va_activate`)
+  - es futasi idoben verziozott upgrade-kent (`va_maybe_upgrade_learning_terms`)
+- A frontend listing submit + update mentesnel automatikus tanulas kerult be:
+  - tipusok: `brand`, `model`, `caliber`, `location`, `street`
+  - a rendszer minden uj/szabad szoveges erteket eltessz es novel egy `usage_count` szamlalot
+- A submit wizard autocomplete kibovitve tanult adatokkal:
+  - marka/modell datalist kiegeszites kategoriara szurve is
+  - kaliber datalist kiegeszites kategoriavaltaskor is
+  - varos/cim javaslatokba bekerulnek a korabban tanult elemek
+  - utca autocomplete mar 2 karaktertol elindul, tanult + cim DB javaslatok merge-olesevel
+
+### Eredmeny
+- A rendszer most mar folyamatosan tanul a felhasznaloi beirasokbol.
+- Ismeretlen ertekek nem vesznek el: kovetkezo alkalommal mar javaslatkent jelennek meg gepeles kozben.
+- Duplikacio-kepzes ellen vedett tarolas valosul meg (normalizalt kulccsal).
+
+### Erintett fajlok
+- `vadaszapro-core.php`
+- `includes/class-ajax.php`
+- `frontend/templates/listing/submit-form.php`
+- es mindharom fajl mirror parja:
+  - `wp-plugin/vadaszapro-core/vadaszapro-core.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a valtozasok utan.
+
+---
+
 ## 2026. 05. 13. – Session #357l — XLSX beolvasás kész, márka/modell + kaliber tisztítás
 
 ### Elvegzett munkak
