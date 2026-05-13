@@ -2,6 +2,31 @@
 
 ---
 
+## 2026. 05. 13. – Session #357u — Ajándékkredit ledger: fogyás létrehozáskor, nincs visszatöltés törléskor
+
+### Kérés
+- A felhasznált ajándékkredit ne töltődjön vissza hirdetés törlésekor.
+- Ugyanez a szabály minden csomagra érvényes legyen.
+
+### Javítás
+- Külön fogyó ledger került be:
+  - `va_listing_credits` = megvásárolt ajándék összesen,
+  - `va_listing_credits_spent` = felhasznált ajándék.
+- `VA_User_Roles::can_post_listing()` már a felhasználható maradékból számol.
+- Új hirdetés mentésekor, ha a csomaglimit már elfogyott, egy ajándékkredit elkönyvelése történik.
+- Törlés nem ír vissza semmilyen kreditet.
+- A root és a plugin mirror is frissítve lett.
+
+### Érintett fájlok
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
 ## 2026. 05. 13. – Session #357t — Egyéb kategória popup + állapot kijelölés fix
 
 ### Kérés
