@@ -2,25 +2,43 @@
 
 ---
 
-## 2026. 05. 13. – Session #357h — Kategória lista 3 oszlopba
+## 2026. 05. 13. – Session #357i — Helyszín mezők: irányítószám-város-utca keresés
 
 ### Elvegzett munkak
-- Az előző e-commerce megamenu helyett egyszerű listát implementáltam:
-  - **Kategóriák**: `<ul><li>` struktúra, sima gombokkal
-  - **Grid layout**: 3 oszlop desktopra, 2 tabletre, 1 mobilra
-  - **Stílus**: szürke háttér, piros hover, piros/félkövér ha kiválasztott
-  - **Responszív**: CSS media queries
-- HTML: `.va-cat-list` (ul) + `.va-cat-item` (li button)
-- CSS: grid 3 oszlopba, Media queries tablet/mobil-hez
-- JS: `.va-cat-item` click kezelés, `data-selected` attribútum
+- **Layout javítása**: `.va-loc-grid` CSS 3 oszlopba (desktopra), 2 tabletre, 1 mobilra + jó térközök
+- **Irányítószám-város-utca integráció**:
+  - `hu-address-seed.json` betöltése JavaScript-be
+  - Irányítószám change → város automatikus kitöltés
+  - Város change → utcák megjelenítése datalist-ben
+  - Utca autocomplete (user írás közben javaslatok jelennek meg)
+- **Responsive**: media queries tablet/mobil-hez
 - Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
 
-### Megoldott probléma
-- Az előző e-commerce megamenu (szülő-gyermek hierarchia) PHP errort okozott, ezért töröltem
-- Helyette: sima kategória lista 3 oszlopba
+### CSS módosítás
+```css
+.va-loc-grid {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+@media (max-width:1200px) { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@media (max-width:760px) { grid-template-columns:1fr; }
+```
 
 ### Deploy
 - Git push committed + deployed.
+
+---
+
+## 2026. 05. 13. – Session #357h — Kategória lista 3 oszlopba
+
+### Elvegzett munkak
+- Egyszerű kategória lista 3 oszlopba
+- HTML: `.va-cat-list` (ul) + `.va-cat-item` (li button)
+- CSS: grid 3 oszlopba, Media queries tablet/mobil-hez
+- JS: `.va-cat-item` click kezelés
+
+### Deploy
+- Git push committed + deployed (`5807c32`).
 
 ---
 
