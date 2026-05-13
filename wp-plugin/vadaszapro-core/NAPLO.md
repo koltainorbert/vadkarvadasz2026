@@ -2,6 +2,39 @@
 
 ---
 
+## 2026. 05. 14. – Session #354 — Wizard modal refaktor KÉSZ
+
+### Elvégzett munkák
+
+#### A) Hirdetés feladás → popup wizard (submit-form.php)
+- A régi egész-oldalas form helyett 4 lépéses dark modal wizard
+- **1. lépés:** Kategória vizuális kártya-grid + állapot gomb-csoport
+- **2. lépés:** Cím, márka/modell, kaliber/évjárat, kategória-specifikus mezők
+- **3. lépés:** Ár/típus, helyszín, telefonszám, e-mail beállítás
+- **4. lépés:** Quill szöveges leírás + képfeltöltő + hibakijelző
+- Wizard JS: `wizGoTo()`, `wizValidate()`, kategória-kártyák, állapot gombok, ESC zárás, step dotok
+- Submit handler: `#va-submit-notice` → `#va-submit-notice-modal`, siker után overlay bezárás
+- Launcher hero szekció (trigger gomb) az oldal statikus részeként megmarad
+
+#### B) frontend.css — Wizard CSS stílusok
+- Overlay, modal dialog, header, progress bar, step dots, category cards, condition buttons, footer nav
+- Responsive: 600px alatt sheet-panel stílus (alulról felnyíló), 3 hasábos kategóriagrid
+- Hozzáadva mindkét `frontend.css` másolathoz (source + wp-plugin mirror)
+
+#### C) Min.css encoding fix (session elején)
+- `.va-advanced-toggle::after { content: '▾'; }` — UTF-8 dupla kódolás javítva
+
+#### D) Deploy
+- `Deploy All` task lefutott, production trigger mode (git push → FTP workflow)
+
+### Amit HOLNAP TUDNI KELL
+- A wizard bekerült production-ba
+- Tesztelni kell LocalWP-n: 1. wizard megnyílik-e, 2. lépések közlekednek-e, 3. submit működik-e
+- A `frontend.min.css` nem lett újra-minifikálva (nincs build lépés) — nem kritikus, a .css töltődik be
+- Mirror: `wp-plugin/.../submit-form.php` szinkronizálva
+
+---
+
 ## 2026. 05. 13. – Session #353 TELJES NAP ÖSSZEFOGLALÓ (holnap más gépről indul!)
 
 ### Hol tartunk most — amit HOLNAP TUDNI KELL
@@ -17,19 +50,29 @@
 ### Ma elvégzett munkák (2026.05.13)
 
 #### A) Submit form UI facelift (353b)
-- `frontend/templates/listing/submit-form.php` + mirror: inline stílusok → CSS osztályok
-- `frontend/css/frontend.css` + mirror: kártyás design, dot-grid, erős tipográfia, mobil paddings
+- `frontend/templates/listing/submit-form.php` + `wp-plugin/...` mirror
+  - Inline stílusok helyett CSS osztályok (`va-submit-form`, `va-submit-title`, stb.)
+- `frontend/css/frontend.css` + mirror
+  - Kártyás design, dot-grid háttér, erős tipográfia, egységes inputok, mobil paddings
 
 #### B) Production hotfix – site_type kényszer + form config reset (353a)
-- `vadaszapro-core.php` + mirror: migration v6, ha host=vadkarvadasz.hu → va_site_type=vadaszat + form reset
-- Admin emergency URL: `/wp-admin/?va_force_form_reset=1`
+- Probléma: `vadkarvadasz.hu`-n autos mezők jelentek meg a vadász schema helyett
+- `vadaszapro-core.php` + mirror:
+  - Migration `va_form_config_forced_reset_v6`: ha host = `vadkarvadasz.hu` → `va_site_type` = `vadaszat`, form config hard reset
+  - Admin emergency URL: `/wp-admin/?va_force_form_reset=1`
 
 #### C) Vadász adatbázis bővítés – nagy márka/típus + kaliber autocomplete (353c)
-- `includes/hunting-brand-models.json` + mirror: 10+ kategória, 10-15 márka/kategória, 5+ modell/márka
-  - Kategóriák: golyós, sörétes, vegyes csövű, távcső, éjjellátó, hőkamera, vadkamera, lámpa, kutya, ruházat, cipő, íj, felszerelés
-- **ÚJ:** `includes/hunting-calibers.json` + mirror: ~170 kaliber (imperiális, metrikus, sörétes, klasszikus)
-- `includes/class-vehicle-catalog.php` + mirror: új `get_hunting_calibers()` metódus
-- `frontend/templates/listing/submit-form.php` + mirror: caliber mező datalist autocomplete (`va-caliber-list`)
+- `includes/hunting-brand-models.json` + mirror:
+  - Régen: ~5 márka/kategória
+  - Most: 10+ kategória, kategóriánként 10-15 márka, márkánként 5+ modell
+  - Kategóriák: golyós, sörétes, vegyes csövű, távcső, éjjellátó, hőkamera, vadkamera, vadászlámpa, vadászkutya, ruházat, cipő/bakancs, íjak, felszerelés
+- **ÚJ fájl:** `includes/hunting-calibers.json` + mirror
+  - ~170 kaliber (imperiális, metrikus, sörétes, klasszikus vadász kaliberek)
+- `includes/class-vehicle-catalog.php` + mirror:
+  - Új metódus: `get_hunting_calibers()` a JSON-ból
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - `caliber` mező: `list="va-caliber-list"` + `<datalist>` HTML autocomplete bekötve
+  - Vadász módban a PHP átadja a teljes kaliberlistát a datalist-be
 
 ---
 
@@ -37,36 +80,41 @@
 
 | Fájl | Szerep |
 |---|---|
-| `includes/class-vehicle-catalog.php` | Adat betöltő (márka/modell/kaliber) |
-| `includes/hunting-brand-models.json` | Vadász márka-modell DB kategóriánként |
+| `includes/class-vehicle-catalog.php` | Összes adat betöltő (márka/modell/kaliber) |
+| `includes/hunting-brand-models.json` | Vadász márka-modell adatbázis kategóriánként |
 | `includes/hunting-calibers.json` | Kaliber autocomplete lista (~170 db) |
 | `admin/class-form-builder.php` | Submit + admin mezők konfigurálása |
 | `frontend/templates/listing/submit-form.php` | Hirdetés feladás sablon |
+| `frontend/templates/listing/list.php` | Hirdetés lista sablon |
+| `includes/class-ajax.php` | AJAX endpointok (cím, kaliber, stb.) |
 | `vadaszapro-core.php` | Plugin bootstrap, migrációk |
 
-**Mirror szabály:** `includes/`, `admin/`, `frontend/` minden fájlnak van tükre `wp-plugin/vadaszapro-core/` alatt!
+**Mirror szabály:** Minden `includes/`, `admin/`, `frontend/` fájlnak van tükre:
+`wp-plugin/vadaszapro-core/[ugyanaz a path]`
+
+**Deploy parancs (VSCode task):** `Deploy All` vagy `git push` (ha GitHub Actions fut)
 
 ---
 
-### Ami még NINCS kész (következő session-re)
+### Ami még NINCS kész (köv. session-re)
 
-1. Admin szerkesztő kaliber mező autocomplete
-2. Kaliber szűrő a frontend keresőben
-3. Smoke teszt éles oldalon (hirdetés feladás végig)
-4. Clean install teszt (üres WP-n nulláról)
-5. QA mátrix – böngészők, eszközök
-6. Security audit (nonce, capability, escaping)
-7. Performance (CSS/JS minify, LCP mérés)
+1. **Admin szerkesztő kaliber mező** – az admin edit oldalon a kaliber mező még sima szöveg, autocomplete ott is kellene (`admin/class-form-builder.php` + `class-listing-edit.php`)
+2. **Kategória szűrő a keresőben** – a frontend kereső oldal szűrői között nincs kaliber szűrő (lehetne checkbox csoport)
+3. **Smoke teszt éles oldalon** – vadász hirdetés feladása végig tesztelve, minden mező rendesen ment-e?
+4. **Clean install teszt** – üres WP-n nulláról aktiválás, minden felugrott-e?
+5. **QA mátrix** – Chrome/Firefox/Safari, desktop/mobil/tablet
+6. **Security audit** – nonce/capability check átnézés, escaping teljes körben
+7. **Performance** – CSS/JS minify, LCP mérés
 
 ---
 
 ### HOLNAP REGGEL TEENDŐ
 
-1. **`git pull`** – MÁS GÉPEN KÖTELEZŐ INDULÁS ELŐTT!
+1. `git pull` (más gépen indulás előtt!)
 2. Deploy All (LocalWP szinkron)
 3. Nyisd meg: `MI_A_MEG_A_TEENDO.md`
-4. Éles tesztelés: vadász hirdetés feladás → kaliber autocomplete működik-e
-5. Következő fejlesztés: admin edit kaliber autocomplete
+4. Ellenőrizd éles oldalon: hirdetés feladás → kaliber mező autocomplete működik-e
+5. Admin edit oldalon kaliber mező autocomplete (következő fejlesztés)
 
 ---
 
@@ -89,6 +137,434 @@
 ### Eredmeny
 - Lényegesen több márka/típus opció jelenik meg kategóriától függően.
 - A kaliber mező gyors, szabványos autocomplete listából választható, de szabad szöveg továbbra is beírható.
+
+## 2026. 05. 13. – Session #353b (Submit form UI facelift)
+
+### Keres
+- A vadasz mezostruktura mar jo volt, de a `Hirdetes feladas` felulet tul alap, nehezen attekintheto benyomast adott.
+
+### Javitas
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - inline stilusok helyett celzott osztalyok (`va-submit-form`, `va-submit-title`, `va-submit-plan-notice`, `va-submit-section-title`)
+- `frontend/css/frontend.css` + mirror:
+  - submit formra scoped vizualis frissites: karcmentes kartya-hatter, finom dot-grid, erosebb cimtipografia, rendezettebb section-headerek,
+    egysegesebb inputok/fokusz allapotok, jobb checkbox blokkok, mobil paddings.
+
+### Eredmeny
+- A feladas oldal vizualisan modernebb, attekinthetobb es markansabban "Vadkar" karakteru maradt (#fff szoveg, #ff0000 accent, sotet hatter).
+
+## 2026. 05. 13. – Session #353a (Production hotfix: site_type visszakenyszerites + form config hard reset)
+
+### Hiba
+- Eles oldalon (`vadkarvadasz.hu`) tovabbra is teljes autos mezokeszlet jelent meg az admin `Uj hirdetes` es frontend feladas formon.
+- Tunet: `Jarmukategoria`, `Kivitel`, valamint autos extra blokkok jelentek meg, nem a vadasz schema.
+
+### Ok
+- A form viselkedese `va_site_type` opciotol fugg; productionon ez varhatoan `jarmu` allapotban maradt vagy visszaallt.
+- A korabbi reset logika csak bizonyos felteteleknel futott (dataset valtas / egyszeri transient), ezert nem volt eleg eros.
+
+### Javitas
+- `vadaszapro-core.php` + `wp-plugin/vadaszapro-core/vadaszapro-core.php`:
+  - Uj init migracio (`va_form_config_forced_reset_v6`):
+    - host ellenorzes (`home_url` host normalizalva)
+    - ha host `vadkarvadasz.hu`, akkor `va_site_type` kenyszeritve `vadaszat`-ra
+    - ezutan `va_form_config_va_listing_submit` es `va_form_config_va_admin_listing_edit` defaultokra irasa `VA_Form_Builder::get_default_fields(...)` alapjan
+  - Korabbi v5 reset logika lecserelve a fenti v6 hard resetre.
+- Admin emergency endpoint bent maradt:
+  - `/wp-admin/?va_force_form_reset=1`
+  - admin joggal azonnali form config reset vadász defaultokra.
+
+### Eredmeny
+- A site_type alapja production hoston vedetten `vadaszat`.
+- A submit/admin form konfigok kenyszeritett ujrageneralasa miatt a legacy autos mezok nem maradhatnak bent tartosan.
+
+## 2026. 05. 12. – Session #352w (Form Builder ontisztitas: legacy autos submit/admin konfig automatikus reset)
+
+### Hiba
+- Visszajelzes szerint a hirdetesfeladasokban szinte teljesen megmaradt a korabbi weingartnerauto/autos mezostruktura.
+- A gyakorlatban csak a kategoriak latszottak frissnek, a submit/admin mezok sok telepitesen legacy mentett konfigbol jottek.
+
+### Ok
+- A Form Builder `va_form_config_*` opcioi mentett allapotbol toltenek.
+- Ha ez a mentett allapot korabbi autos schema volt, akkor a vadasz defaultok nem ervenyesultek.
+
+### Javitas
+- Form Builder ongyogyitas bekerult (root + mirror):
+  - `get_fields()` most ellenorzi a mentett konfigot
+  - ha legacy autos marker detektalhato, automatikusan defaultra resetel (custom mezoket sem tart bent ilyen esetben)
+- `va_listing_submit` reset feltetelek:
+  - nem `jarmu` site_type mellett `body_type` marker jelen van
+  - vagy `jarmu` site_type mellett hunting marker van (`caliber`, `license_req`) de vehicle marker nincs
+- `va_admin_listing_edit` reset feltetel:
+  - legacy vehicle-only kulcsok detektalasa (`va_body_type`, `va_fuel_type`, `va_engine_size`, `va_transmission`, `va_drive`)
+- Fajlok:
+  - `admin/class-form-builder.php`
+  - `wp-plugin/vadaszapro-core/admin/class-form-builder.php`
+
+### Eredmeny
+- A feladas/admin formok nem ragadnak bent regi autos mentett konfiguracion.
+- Vadasz profil mellett a submit/admin mezostruktura automatikusan visszaall a megfelelo defaultokra (kategoria mellett a mezo- es labelkeszlet is).
+
+## 2026. 05. 12. – Session #352v (Hotfix: admin + feladas kategoriavaltas valos mukodes)
+
+### Hiba
+- Visszajelzes alapjan az admin szerkeszto es a hirdetes feladas kategoriankenti dinamikus logikaja nem mutatott valtozast.
+
+### Ok
+- Admin oldalon a kategoriavalaszto `select` elemrol hianyzott:
+  - az elvart `id="va-admin-category"`
+  - a `data-slug` az option elemeken
+- Emiatt a JS nem talalta a kategoriamezot, illetve nem tudott slug alapjan szabalyt alkalmazni.
+
+### Javitas
+- Admin szerkeszto (root + mirror):
+  - kategoriavalaszto kapott `id="va-admin-category"` attributumot
+  - optionokra bekerult a `data-slug` (`$cat->slug`)
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+- Feladas oldal robusztusitas (root + mirror):
+  - lokalizalt `category_slugs` map (`term_id -> slug`)
+  - JS `getSelectedCategorySlug()` fallbackot kapott:
+    - eloszor option `data-slug`
+    - ha nincs, akkor `VA_Data.category_slugs[id]`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- Az admin kategoriankenti mezo-lathatosag es required allitas tenylegesen aktiv lett.
+- A feladas oldali kategoriankenti logika fallbackkal stabilabb lett template/DOM valtozasok mellett is.
+
+## 2026. 05. 12. – Session #352u (Kereso kategoriatudatossag 2: jarmu-specifikus mezok dinamikus lathatosaga)
+
+### Keres
+- A specialis (optika/kutya) szurok utan a jarmu-specifikus mezoket is kategoriavalasztashoz kellett kotni.
+
+### Javitas
+- Search template markereles (root + mirror):
+  - `data-special-filter="vehicle"` jeloles kerult a jarmu mezokre:
+    - marka, modell, kivitel, uzemanyag
+    - evjarat, km, hengerurtartalom
+    - jarmu allapot, ajtok, ulesek
+    - extra checkbox blokk (`.va-car-extra-filters`)
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Frontend JS kategoriatudatossag bovites (root + mirror):
+  - `showVehicle = (slug === 'jarmu')`
+  - vehicle mezok mutatasa/rejtese kategoriatol fuggoen
+  - nem-jarmu kategoriaban automatikus reset:
+    - vehicle input/select ertekek torlese
+    - vehicle checkboxok kikapcsolasa
+    - advanced panel visszazarasa, ha nyitva volt
+    - model lista reset (`va_update_model_options('')`)
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+
+### Eredmeny
+- A keresofelulet letisztultabb lett: jarmu mezok csak jarmu kategoriaban latszanak.
+- Irrelevans vehicle szurok nem maradnak aktivan mas kategoriakra atvaltaskor.
+
+## 2026. 05. 12. – Session #352t (Kereso kategoriatudatossag: specialis mezok dinamikus lathatosaga)
+
+### Keres
+- A specialis (optika/kutya) szurok mar mukodtek backendben, de UI oldalon kategoriavalasztastol fuggo lathatosag kellett.
+
+### Javitas
+- Kategoria select visszarakasa a keresesi racsba:
+  - `#va-cat` bekerult a filter form elejere
+  - a kategoriak top-level taxonomia termekbol jonnek, URL `cat` param prefill tamogatassal
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- JS adat atadas bovites:
+  - `category_slugs` map lokalizalva (`term_id -> slug`) a frontend scriptnek
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Dinamikus specialis szuro lathatosag frontendben:
+  - uj helper: kivalasztott kategoria slug meghatarozasa
+  - optika mezok csak ezeknel latszanak: `tavcsovek`, `ejjellato-tavcso`, `hokamerak`
+  - kutya mezok csak ennél latszanak: `vadaszkutya`
+  - rejtett allapotban az ertekek torlesre kerulnek, hogy ne maradjon stale szuro
+  - init, kategoriavaltas es reset alatt is lefut
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+
+### Eredmeny
+- A keresoben mar kategoriankent kontextusos a specialis mezok megjelenitese.
+- Az irrelevans optika/kutya szurok nem zajositanak mas kategoriaknal.
+
+## 2026. 05. 12. – Session #352s (Kereso/szuro bovites: optika + kutya mezo szures)
+
+### Keres
+- A kovetkezo lepesben az uj specialis mezoikre kellett szuresi tamogatast adni a keresesi feluleten is.
+
+### Javitas
+- Szuro UI bovites:
+  - uj mezok a kereso oldalon:
+    - Nagyitas
+    - Objektiv atmero -tol / -ig
+    - Kutya eletkor -tol / -ig
+  - fajlok:
+    - `frontend/templates/listing/search.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`
+- Frontend AJAX payload bovites:
+  - uj kuldesi parameterek:
+    - `optic_zoom`
+    - `optic_objective_min`, `optic_objective_max`
+    - `dog_age_min`, `dog_age_max`
+  - uj triggerelok (input/change) az uj mezokre
+  - fajlok:
+    - `frontend/js/frontend.js`
+    - `wp-plugin/vadaszapro-core/frontend/js/frontend.js`
+- Backend SQL szures bovites (`filter_listings`):
+  - uj parameterek beolvasasa es sanitize
+  - cache kulcs bovitve az uj parameterekkel
+  - uj meta feltetelek:
+    - `va_optic_zoom` (LIKE)
+    - `va_optic_objective` (numeric range)
+    - `va_dog_age_months` (numeric range)
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Eredmeny
+- Az uj optikai es kutya-specifikus adatok mar nem csak menthetok, hanem kereshetok/szurhetok is.
+- A fiokos feladasban rögzitett specialis mezok bekerultek a listazo oldali szuresi workflow-ba.
+
+## 2026. 05. 12. – Session #352r (Kategoriankenti specialis mezok: optika + kutya, fiok + admin)
+
+### Keres
+- A kovetkezo fazisban a kategoriankenti kotelezo logikat specialis mezokre kellett kiterjeszteni,
+  es ezt admin szerkesztesben is lathatova tenni.
+
+### Javitas
+- Backend validacio bovites (AJAX submit + update):
+  - uj mezok: `optic_zoom`, `optic_objective`, `dog_age_months`
+  - szabalyok:
+    - tavcsovek: brand + model + nagyitas + objektiv
+    - ejjellato/hokamera: brand + model + nagyitas
+    - vadaszkutya: brand + model + kutya eletkor
+  - uj metak mentese:
+    - `va_optic_zoom`
+    - `va_optic_objective`
+    - `va_dog_age_months`
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend feladasi urlap bovites:
+  - uj kategoriatol fuggo mezoblokkok:
+    - Nagyitas
+    - Objektiv atmero
+    - Kutya eletkor (honap)
+  - dinamikus megjelenites/elrejtese kategoriavaltaskor
+  - kategoriankenti `required` attributum allitas kliensoldalon
+  - edit modban elozo ertekek visszatoltese
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Admin listing szerkeszto bovites:
+  - uj mezok a Termek reszletei blokkban (non-jarmu mod)
+  - kategoriatol fuggo lathatosag + required kapcsolas JS-ben
+  - admin mentesnel uj metak tartos mentese
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+
+### Eredmeny
+- A specialis kategoriaknal mar nem csak brand/model/caliber, hanem a valos use-case mezok is kovetelhetok.
+- Fiokos feladas es admin szerkesztes ugyanarra a kategoriankenti logikara allt at.
+
+## 2026. 05. 12. – Session #352q (Kategoriatol fuggo kotelezo mezok: frontend + backend)
+
+### Keres
+- Kovetkezo fazisban kategoriankenti kotelezo mezo logikat kellett adni, kliensoldali es szerveroldali ellenorzessel is.
+
+### Javitas
+- Szerver oldali validacio (AJAX submit + update):
+  - uj szabalyhalmaz: kategoriankenti kotelezo mezok (brand/model/caliber)
+  - uj helper: `validate_category_required_fields()`
+  - validacio mind `submit_listing()` es `update_listing()` agban
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend validacio (feladasi urlap):
+  - lokalizalt szabalyobjektum: `category_required_rules`
+  - submit elotti kliensoldali ellenorzes, felhasznalobarat hibauzenettel
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- A kijelolt vadasz kategoriakban kotelezo mezok mar nem hagyhatoak uresen.
+- A kliensoldali ellenorzes gyors visszajelzest ad, a szerveroldali ellenorzes pedig biztosan vedi az adatminoseget.
+
+## 2026. 05. 12. – Session #352p (Kategoriankenti marka/tipus adatmodell: frontend + admin)
+
+### Keres
+- Kovetkezo fazis: kategoriankenti marka/tipus kezeles bekotese a fiokos feladasi urlapra es az admin szerkesztobe.
+
+### Javitas
+- Uj hunting dataset fajlok:
+  - `includes/hunting-brand-models.json`
+  - `wp-plugin/vadaszapro-core/includes/hunting-brand-models.json`
+- Katalogus osztaly bovitese uj adatbetoltovel:
+  - `VA_Vehicle_Catalog::get_hunting_brand_models_by_category()`
+  - fajlok:
+    - `includes/class-vehicle-catalog.php`
+    - `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- Frontend submit form (fiok) bovitese:
+  - kategoriavalaszto opciokhoz `data-slug`
+  - non-jarmu modban marka/model mezok datalist alapra allitva
+  - JS-ben kategoriavaltas es markairas alapjan dinamikus model lista
+  - uj lokalizalt adat: `hunting_brand_models`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Admin listing editor bovitese:
+  - kategoriamezo `id="va-admin-category"` + `data-slug`
+  - non-jarmu modban marka/model input datalisttal
+  - kozos JS: jarmu select workflow + vadasz datalist workflow
+  - fajlok:
+    - `admin/class-listing-edit.php`
+    - `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`
+
+### Eredmeny
+- Kategoriankent eltoro marka/tipus javaslatok mukodnek fiokban es admin szerkesztesben is.
+- Jarmu oldali korabbi select logika valtozatlan maradt.
+
+## 2026. 05. 12. – Session #352o (Cim autocomplete: sajat DB + API + UI)
+
+### Keres
+- Jojjon a kovetkezo lepes: utca autocomplete 3-4 karaktertol, sajat adatforrasbol.
+
+### Javitas
+- Uj seed adatforras fajlok:
+  - `includes/hu-address-seed.json`
+  - `wp-plugin/vadaszapro-core/includes/hu-address-seed.json`
+- Uj adatbazis tabla + seedeles + verziozott upgrade:
+  - tabla: `wp_va_hu_address`
+  - mezok: `postal_code`, `city`, `street`, `search_key`
+  - aktivacios letrehozas + seed import
+  - init alatti verzioellenorzeses ujratoltes (`va_address_seed_ver`)
+  - fajlok:
+    - `vadaszapro-core.php`
+    - `wp-plugin/vadaszapro-core/vadaszapro-core.php`
+- Uj AJAX endpoint:
+  - action: `va_address_suggest`
+  - DB-bol keres `search_key` alapjan
+  - fallback: seed JSON, ha tabla ures vagy nem elerheto
+  - rate limit beepitve
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Frontend submit form bekotes:
+  - utca input datalist autocomplete
+  - 3 karaktertol debounced AJAX kereses
+  - kivalsztasnal varos/iranyitoszam automatikus kitoltese
+  - uj nonce atadas: `nonce_address`
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Eredmeny
+- Mukodo cim autocomplete infrastruktra sajat adatforrassal es sajat tablaval.
+- Az utca beirasa kozben mar jonnek javaslatok, es segiti a varos + iranyitoszam kitoltest.
+
+## 2026. 05. 12. – Session #352n (Vadasz kategoriak + varos/iranyitoszam validacio)
+
+### Keres
+- Sorban induljon a teljes vadaszati atallas.
+
+### Javitas (1-2. lepes)
+- Kategoria dataset vadasz listara allitva:
+  - `includes/class-vehicle-catalog.php`
+  - `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- Taxonomia sync mar nem kenyszeriti `jarmu` modra a rendszert, hanem `vadaszat`-ra all:
+  - `includes/class-taxonomy.php`
+  - `wp-plugin/vadaszapro-core/includes/class-taxonomy.php`
+- Feladas/szerkesztes backend validacio:
+  - kotelezo legalabb az egyik: varos VAGY iranyitoszam
+  - uj metak mentese: `va_postal_code`, `va_street`
+  - fajlok:
+    - `includes/class-ajax.php`
+    - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- Feladas UI bovites:
+  - `location` mezo alatt uj `postal_code` + `street` input
+  - kliens oldali ellenorzes submit elott (varos/iranyitoszam)
+  - fajlok:
+    - `frontend/templates/listing/submit-form.php`
+    - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- Weingartner fallback szovegek cserelve VadászApróra:
+  - `footer.php`
+  - `wp-theme/vadaszapro-theme/footer.php`
+
+### Eredmeny
+- A rendszer vadász kategoriakkal seedel.
+- A feladasnal mar ervenyes a varos vagy iranyitoszam kovetelmeny.
+- A postal code + utca adatok menthetok.
+
+## 2026. 05. 12. – Session #352m (Teszt lo blokk visszavonasa)
+
+### Keres
+- Az elozo teszt "lo" blokk teljes eltavolitasa a fooldalrol.
+
+### Javitas
+- `index.php`:
+  - A `<main class="va-home-main">` elejerol torolve a `TESZT LO: L O` teszt blokk.
+- `wp-theme/vadaszapro-theme/index.php`:
+  - Ugyanez a torles mirrorban is megtortent.
+
+### Eredmeny
+- A fooldal visszaallt az elozo allapotara, nincs teszt "lo" blokk.
+
+### Erintett fajlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+## 2026. 05. 12. – Session #352l (Teszt lo a fooldalon)
+
+### Keres
+- Kerult egy gyorsan ellenorizheto teszt "lo" blokk a fooldal elejere.
+
+### Javitas
+- `index.php`:
+  - A `<main class="va-home-main">` elejere bekerult egy jol lathato, piros keretes teszt blokk: `TESZT LO: L O`.
+- `wp-theme/vadaszapro-theme/index.php`:
+  - Ugyanez a beszuras mirrorban is megtortent.
+
+### Eredmeny
+- A fooldal tartalom elejen azonnal lathato egy teszt "lo" blokk.
+
+### Erintett fajlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+## 2026. 05. 12. – Session #352k (Lábléc kapcsolati adatok admin + footer fix)
+
+### Feladat
+- Lábléc cím, telefon, e-mail szerkeszthetővé tétele az admin felületen.
+
+### Bug #1 – Footer option kulcs eltérés
+- `footer.php` `va_billing_company_address` kulcsot olvasott, de az admin `va_contact_addr`-ba mentett.
+- Javítás: `footer.php` + mirror átírva `va_contact_addr` kulcsra.
+
+### Bug #2 – register_setting hiánya
+- Az új opciók (`va_contact_addr`, `va_billing_phone`, `va_contact_email`) szerepeltek az allowlist tömbben, de a `$design` tömbből hiányoztak.
+- Ezért `register_setting()` sosem hívódott meg rájuk → WordPress nem fogadta el a mentést.
+- Javítás: mindhárom kulcs felvéve a `$design` tömbbe (Lábléc szövegek blokk, `va_hf_footer_brand_title` után).
+
+### Érintett fájlok
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `footer.php`
+- `wp-theme/vadaszapro-theme/footer.php`
+
+---
 
 ## 2026. 05. 12. – Session #352j (Hero logó megjelenés javítás)
 
@@ -346,10 +822,28 @@
 ## 2026. 05. 12. – Session #351 (Ajándékkredit + effektív keret helyes megjelenítése)
 
 ### Javítás
-- `includes/class-user-roles.php`: az effektív limit most a plan limit + jelenlegi gift kredit alapján számolódik.
-- `includes/class-ajax.php`: a gift kredit nem csökken feladáskor.
-- `frontend/templates/listing/submit-form.php`: a feliratok külön mutatják a csomagot és a gift kredit keretet.
-- `admin/class-settings-page.php`: használati label "Kereted".
+- `includes/class-user-roles.php` + mirror:
+  - az effektív keret a `plan_limit + jelenlegi ajándékkredit`.
+- `includes/class-ajax.php` + mirror:
+  - az ajándékkredit nem csökken feladáskor, csak admini visszavonásra változik.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - a feliratok külön mutatják az alapcsomagot és a teljes ajándékkredit keretet.
+- `admin/class-settings-page.php` + mirror:
+  - a használati sor címkéje "Kereted" lett.
+
+### Eredmény
+- A basic fiók képernyőn az effektív keret jelenik meg, nem a nyers 1-es plan limit.
+- Az ajándékkredit plusz, admin által visszavonható slotként viselkedik.
+
+### Érintett fájlok
+- `includes/class-user-roles.php`
+- `includes/class-ajax.php`
+- `frontend/templates/listing/submit-form.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
 
 ---
 
@@ -357,32 +851,48 @@
 
 ### Igeny
 - Basic csomagnál ne jelenjen meg félrevezetően a "max 2" limit.
-- Az ajándékkredit legyen egyszer használatos feladási kupon.
+- Az ajándékkredit legyen egyszer használatos feladási kupon, ne permanens slot-bővítés.
 
 ### Javitas
-- `includes/class-ajax.php`: visszaállítva a kreditlevonás feladáskor.
-- `includes/class-user-roles.php`: csomaglimit és ajándékkredit külön kezelése (belső effektív limit, UI-ban plan limit).
-- `frontend/templates/listing/submit-form.php`: üzenetek pontosítva (egyszer használatos ajándékkredit).
+- `includes/class-ajax.php` + mirror: visszaállítva a kreditlevonás feladáskor (`1 feladás = 1 kredit`).
+- `includes/class-user-roles.php` + mirror:
+  - belső ellenőrzéshez külön `effective_limit = plan_limit + credits` használat,
+  - a felhasználói üzenetben a csomaglimit külön marad (`limit = plan_limit`),
+  - így Basic mindig 1-es csomaglimitet kommunikál.
+- `frontend/templates/listing/submit-form.php` + mirror:
+  - a tájékoztató szöveg szétválasztva: csomaglimit külön, ajándékkredit külön,
+  - "egyszer használatos ajándékkredit" megfogalmazásra állítva.
+
+### Eredmeny
+- Nem írja többé, hogy Basic csomaggal max 2 hirdetés adható fel.
+- Az ajándékkredit kuponként jelenik meg és feladáskor fogy.
 
 ### Erintett fajlok
 - `includes/class-ajax.php`
 - `includes/class-user-roles.php`
 - `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ---
 
 ## 2026. 05. 12. – Session #349 (Kredit enforce hook timing javítás)
 
 ### Gyökérhiba
-- Az `on_credits_meta_updated` és `on_plan_meta_updated` hookot `update_user_meta` actionre kötöttük, ami az adatbázis-mentés ELŐTT tüzel.
-- Ezért `enforce_plan_limits()` belsejében `get_user_meta()` még a régi kreditet olvasta → felfüggesztette a 2. hirdetést.
+- Az `on_credits_meta_updated` és `on_plan_meta_updated` hookot `update_user_meta` actionre kötöttük, ami **az adatbázis-mentés ELŐTT** tüzel.
+- Ezért `enforce_plan_limits()` belsejében `get_user_meta()` még a régi (pl. 0) kreditet olvasta → limit=1+0=1 → felfüggesztette a 2. hirdetést, miközben a kredit már 1-re volt állítva.
 
 ### Javítás
-- `update_user_meta` → `updated_user_meta` (DB-mentés UTÁN): mindkét hooknál.
+- `update_user_meta` → `updated_user_meta` (DB-mentés UTÁN tüzel): mindkét hooknál.
+- Érintett: `includes/class-user-roles.php` + mirror.
+
+### Admin teendő
+- koltainorbert@gmail.com-nál: adj újra 1 kreditet (0→1) az admin panelből. Az `on_credits_meta_updated` mostantól DB-mentés után fut, `enforce_plan_limits()` limit=2-vel → a "test" hirdetés automatikusan visszaáll aktívra.
 
 ### Érintett fájlok
 - `includes/class-user-roles.php`
-- mirror
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
 
 ---
 
@@ -399,6 +909,9 @@
 ### Megvalositas [x]
 - [x] `includes/class-ajax.php`: eltavolitva a kredit-levontas a listing submit kodjából (4 sor torölve).
 - [x] `wp-plugin/vadaszapro-core/includes/class-ajax.php`: ugyanaz.
+
+### Admin teendo
+- Koltainorbert@gmail.com felhasznalo: ellenorizze hogy `va_listing_credits = 1`, ha nem, adja ujra az 1 kreditett. Az `on_credits_meta_updated` hook automatikusan meghivja az enforce-t ami visszaallitja a felfuggesztett hirdetest.
 
 ### Erintett fajlok
 - `includes/class-ajax.php`
@@ -759,6 +1272,10 @@
 - [x] `frontend/templates/listing/submit-form.php`: az összesen sor már nem adja hozzá még egyszer a kredit metát.
 - [x] `includes/class-shortcodes.php`: a kredit vásárlási nézetben is megszűnt a dupla összegzés.
 - [x] `includes/class-user-roles.php`: admin ajándék kredit mentésnél a `new_credits` és `delta_credits` számítás helyre lett téve.
+- [x] Mirror frissites:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
 
 ### Eredmeny
 - A frontend már a ténylegesen maradék feladható hirdetésszámot mutatja.
@@ -769,10 +1286,11 @@
 - `includes/class-user-roles.php`
 - `frontend/templates/listing/submit-form.php`
 - `includes/class-shortcodes.php`
+- `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/includes/class-shortcodes.php`
 
 ---
-
-## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
 
 ## 2026. 05. 12. – Session #334 (Admin megjegyzes + ajandek kredit naplo)
 
@@ -798,6 +1316,8 @@
 - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
 
 ---
+
+## 2026. 05. 12. – Session #333 (Komplett vasarlasi audit + kritikus kompenzacio fix + belso HTML doksi)
 
 ### Igeny
 - Komplett vasarlasi rendszer atvizsgalasa (Stripe, callback, webhook, upgrade, limitek, admin felugyelet).
