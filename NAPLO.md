@@ -2,6 +2,39 @@
 
 ---
 
+## 2026. 05. 14. – Session #354 — Wizard modal refaktor KÉSZ
+
+### Elvégzett munkák
+
+#### A) Hirdetés feladás → popup wizard (submit-form.php)
+- A régi egész-oldalas form helyett 4 lépéses dark modal wizard
+- **1. lépés:** Kategória vizuális kártya-grid + állapot gomb-csoport
+- **2. lépés:** Cím, márka/modell, kaliber/évjárat, kategória-specifikus mezők
+- **3. lépés:** Ár/típus, helyszín, telefonszám, e-mail beállítás
+- **4. lépés:** Quill szöveges leírás + képfeltöltő + hibakijelző
+- Wizard JS: `wizGoTo()`, `wizValidate()`, kategória-kártyák, állapot gombok, ESC zárás, step dotok
+- Submit handler: `#va-submit-notice` → `#va-submit-notice-modal`, siker után overlay bezárás
+- Launcher hero szekció (trigger gomb) az oldal statikus részeként megmarad
+
+#### B) frontend.css — Wizard CSS stílusok
+- Overlay, modal dialog, header, progress bar, step dots, category cards, condition buttons, footer nav
+- Responsive: 600px alatt sheet-panel stílus (alulról felnyíló), 3 hasábos kategóriagrid
+- Hozzáadva mindkét `frontend.css` másolathoz (source + wp-plugin mirror)
+
+#### C) Min.css encoding fix (session elején)
+- `.va-advanced-toggle::after { content: '▾'; }` — UTF-8 dupla kódolás javítva
+
+#### D) Deploy
+- `Deploy All` task lefutott, production trigger mode (git push → FTP workflow)
+
+### Amit HOLNAP TUDNI KELL
+- A wizard bekerült production-ba
+- Tesztelni kell LocalWP-n: 1. wizard megnyílik-e, 2. lépések közlekednek-e, 3. submit működik-e
+- A `frontend.min.css` nem lett újra-minifikálva (nincs build lépés) — nem kritikus, a .css töltődik be
+- Mirror: `wp-plugin/.../submit-form.php` szinkronizálva
+
+---
+
 ## 2026. 05. 13. – Session #353 TELJES NAP ÖSSZEFOGLALÓ (holnap más gépről indul!)
 
 ### Hol tartunk most — amit HOLNAP TUDNI KELL
