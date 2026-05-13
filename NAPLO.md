@@ -2,6 +2,51 @@
 
 ---
 
+## 2026. 05. 13. – Session #357l — XLSX beolvasás kész, márka/modell + kaliber tisztítás
+
+### Elvegzett munkak
+- A `Kategoria/` mappaba betett XLSX forrasokbol lefutott a teljes merge a meglevo seed adatbazisokra:
+  - `magnum_marka_tipus_terkep.xlsx`
+  - `vilag_fegyvermarkak.xlsx`
+  - `vilag_fegyvermarkak(1).xlsx`
+  - `magnum_markak.xlsx`
+  - `vilag_fegyver_kaliberek.xlsx`
+- A header-felismeres normalizalt (ekezetfuggetlen) parserre lett javitva, hogy a `Marka/Fokategoria/Alkategoria/Al-alkategoria` mezok biztosan egyezzenek.
+- A marka-modell adatbazis ujratoltve es deduplikalva kategoriankent.
+- A kaliber adatbazis tisztitva: a nem-kaliber zajok eldobva (pl. `AK-47`, `AK-74`, `Osszesen...` jellegu sorok), majd ujra deduplikalas.
+- Root + mirror fajlok teljes szinkronban tartva.
+
+### Eredmeny
+- `hunting-brand-models.json`: `17` kategoriakulcs
+- Fo kategoriak brandszamai:
+  - `golyos-puska`: `91`
+  - `soretes-puska`: `21`
+  - `vegyescsovu-puska`: `12`
+  - `maroklofegyver`: `40`
+  - `loszer-tolteny`: `29`
+  - `tavcsovek`: `34`
+  - `ejjellato-tavcso`: `14`
+  - `hokamerak`: `13`
+  - `vadkamera`: `11`
+  - `vadasz-felszereles`: `306`
+- `hunting-calibers.json`: `636` tisztitott, egyedi tétel
+- Root/mirror paritas ellenorizve: minden erintett JSON fajl byte-szinten egyezik.
+
+### Erintett fajlok
+- `includes/hunting-brand-models.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-brand-models.json`
+- `includes/hunting-calibers.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-calibers.json`
+- `NAPLO.md`
+
+### Takaritas
+- Torolve: `.tmp_magnum_mapping_report.json`
+
+### Deploy
+- Deploy All futtatva a valtozasok utan.
+
+---
+
 ## 2026. 05. 13. – Session #357k — Termék- és kaliber seed bővítés CSV-ből
 
 ### Elvegzett munkak
