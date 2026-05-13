@@ -534,6 +534,22 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     margin-top: 14px;
     margin-bottom: 0;
 }
+#va-wizard-overlay.va-wizard-shell .va-wizard-footer {
+    justify-content: flex-start !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn {
+    background: #ff8a00 !important;
+    border-color: #ff8a00 !important;
+    color: #111 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn:hover,
+#va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn:focus,
+#va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn:active {
+    background: #ff8a00 !important;
+    border-color: #ff8a00 !important;
+    color: #111 !important;
+    filter: brightness(1.03);
+}
 </style>
 
 <div class="va-submit-preview-shell">
@@ -984,7 +1000,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 
         <!-- Wizard navigációs lábléc (form-on belül) -->
         <div class="va-wizard-footer">
-            <button type="button" class="va-btn va-btn--ghost" id="va-wizard-prev" style="visibility:hidden">← Vissza</button>
+            <button type="button" class="va-btn va-btn--ghost" id="va-wizard-prev" style="display:none">← Vissza</button>
             <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
             <button type="button" class="va-btn va-btn--primary" id="va-wizard-next">Tovább →</button>
             <button type="submit" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
@@ -1016,7 +1032,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         $('#va-wiz-fill').css('width', (step / _wTotal * 100) + '%');
         $('#va-wiz-label').text(step + ' / ' + _wTotal);
-        $('#va-wizard-prev').css('visibility', step === 1 ? 'hidden' : '');
+        if (step === 1) {
+            $('#va-wizard-prev').hide();
+        } else {
+            $('#va-wizard-prev').css('display', 'inline-flex');
+        }
         if (step === _wTotal) { $('#va-wizard-next').hide(); $('#va-submit-btn').show(); }
         else { $('#va-wizard-next').show(); $('#va-submit-btn').hide(); }
         _wStep = step;

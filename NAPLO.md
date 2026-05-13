@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 13. – Session #357r — Wizard footer: balra zárás + narancs gombok
+
+### Kérés
+- A wizard footer gombsor teljesen balra zárjon.
+- A gombok mindig az oldal narancssárga színét használják.
+
+### Javítás
+- A `Vissza` gomb első lépéses rejtése `visibility:hidden` helyett `display:none` lett, így nem foglal üres helyet bal oldalon.
+- JS léptetésben ennek megfelelően rejtés/megjelenítés frissítve.
+- A footer gombokra (`.va-wizard-footer .va-btn`) fix narancs színkényszer került minden állapotra (`normal/hover/focus/active`): `#ff8a00`.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357q — Keret infó áthelyezés a Lépések oszlopba
 
 ### Kérés
