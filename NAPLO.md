@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 13. – Session #357p — Kategória csempék vékonyítása
+
+### Kérés
+- A wizard 1. lépés kategória csempéi túl vastagok lettek.
+
+### Javítás
+- A `.va-cat-item` magasság/padding visszavéve laposabb megjelenésre:
+  - `min-height: 84px` → `56px`
+  - `padding: 14px 16px` → `10px 14px`
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
 ## 2026. 05. 13. – Session #357o — Modal eleje szétesés hotfix (kategória lista)
 
 ### Hiba
