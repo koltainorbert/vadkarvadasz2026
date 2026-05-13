@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 05. 13. – Session #357d — Kompakt lenyíló kategóriaválasztás
+
+### Elvegzett munkak
+- A nagy kategória-kártya rács helyett kompakt lenyíló (`select`) kategóriaválasztó lett az első lépésben.
+- A modalból kivezetve a panelt vágó fix magasság/scroll kényszer, így nem esik szét és nem marad nagy felső gap.
+- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+### Deploy
+- Eles deploy commit: `3777b37`.
+
+---
+
 ## 2026. 05. 13. – Session #357c — Számláló pozíció + belső scroll
 
 ### Elvegzett munkak
