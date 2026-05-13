@@ -490,167 +490,103 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
         <input type="hidden" name="nonce"  value="<?php echo esc_attr( wp_create_nonce( $edit_mode ? 'va_update_listing' : 'va_submit_listing' ) ); ?>">
         <?php if ( $edit_mode ): ?><input type="hidden" name="post_id" value="<?php echo esc_attr( (string) $edit_post_id ); ?>"><?php endif; ?>
 
-        <?php if ( ! $edit_mode ): ?>
-        <div class="va-notice va-notice--info va-submit-plan-notice">
-            <?php if ( $plan_has_allowance || $user_credit_balance > 0 ): ?>
-                <?php if ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Jelenlegi keretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-                    <?php if ( $gift_total > 0 ): ?>
-                        Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, ajándékkredit összesen: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>.
-                    <?php endif; ?>
-                <?php elseif ( $gift_total > 0 ): ?>
-                    <div class="va-plan-warning">
-                        <div>
-                            <strong class="va-plan-warning__title">Jelenlegi kereted elérve</strong><br>
-                            <span class="va-plan-warning__meta">Alapcsomag: <strong><?php echo esc_html( (string) $plan_limit ); ?> db</strong>, Ajándékkredit: <strong><?php echo esc_html( (string) $gift_total ); ?> db</strong>, Összesen: <strong><?php echo esc_html( (string) $plan_check['used'] ); ?>/<?php echo esc_html( (string) $effective_limit ); ?></strong></span>
-                        </div>
-                        <a href="<?php echo esc_url( $buy_url ); ?>" class="va-btn va-btn--primary va-plan-warning__btn">Csomag vasarlas</a>
-                    </div>
-                <?php elseif ( is_int( $plan_remaining ) && $plan_remaining > 0 ): ?>
-                    Csomagkeretedből még <strong><?php echo esc_html( (string) $plan_remaining ); ?> db</strong> hirdetést adhatsz fel.
-                <?php else: ?>
-                    Az előfizetésed alapján jelenleg tudsz hirdetést feladni.
-                <?php endif; ?>
-            <?php elseif ( $remaining_free > 0 ): ?>
-                <?php if ( $remaining_free === 1 ): ?>
-                    Ez az <strong>utolsó ingyenes</strong> hirdetésed. Utána minden új hirdetés díja <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft</strong> –
-                    <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">vásárolj most csomagot!</a>
-                <?php else: ?>
-                    Még <strong><?php echo esc_html( (string) $remaining_free ); ?> db</strong> ingyenes hirdetésed van.
-                    Utána: <strong><?php echo esc_html( number_format( $paid_price, 0, ',', ' ' ) ); ?> Ft / hirdetés</strong> –
-                    <a href="<?php echo esc_url( $buy_url ); ?>" style="color:#ff6060;font-weight:700;">csomagok megtekintése</a>
-                <?php endif; ?>
+        <?php $fb_form = 'va_listing_submit'; ?>
+
+        <!-- ═══ STEP 1: Kategória + Állapot ═══ -->
+        <div class="va-wstep is-active" data-step="1">
+            <h3 class="va-wstep-title">Mit árulsz? <em>Válaszd ki a kategóriát</em></h3>
+            <select name="category" id="va-category" style="display:none" required>
+                <option value="">– Válasszon –</option>
+                <?php foreach ( $categories as $cat ): ?>
+                <option value="<?php echo esc_attr( $cat->term_id ); ?>" data-slug="<?php echo esc_attr( (string)$cat->slug ); ?>"<?php selected( (int)($edit_meta['category'] ?? 0), $cat->term_id ); ?>><?php echo esc_html( $cat->name ); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?php if ( $site_type !== 'jarmu' ): ?>
+            <div class="va-cat-cards" id="va-cat-cards">
+                <?php foreach ( $categories as $cat ):
+                    $slug   = (string)$cat->slug;
+                    $icon   = $cat_icons_map[$slug] ?? '📦';
+                    $is_sel = (int)($edit_meta['category'] ?? 0) === $cat->term_id;
+                ?>
+                <button type="button" class="va-cat-card<?php echo $is_sel ? ' is-selected' : ''; ?>"
+                    data-term-id="<?php echo esc_attr( $cat->term_id ); ?>"
+                    data-slug="<?php echo esc_attr( $slug ); ?>">
+                    <span class="va-cat-card__icon"><?php echo $icon; ?></span>
+                    <span class="va-cat-card__label"><?php echo esc_html( $cat->name ); ?></span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+            <div class="va-form-group">
+                <label>Kategória <span class="required">*</span></label>
+                <select name="category" id="va-category" class="va-select" required>
+                    <option value="">– Válasszon –</option>
+                    <?php foreach ( $categories as $cat ): ?>
+                    <option value="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php selected((int)($edit_meta['category']??0),$cat->term_id); ?>><?php echo esc_html($cat->name); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             <?php endif; ?>
+            <div class="va-cond-group">
+                <label class="va-wiz-field-label">Állapot</label>
+                <div class="va-cond-btns" id="va-cond-btns">
+                    <?php foreach ( $conditions as $cond ):
+                        $is_cs = $cond_saved && $cond_saved === $cond->term_id;
+                    ?>
+                    <button type="button" class="va-cond-btn<?php echo $is_cs ? ' is-selected' : ''; ?>" data-term-id="<?php echo esc_attr($cond->term_id); ?>"><?php echo esc_html($cond->name); ?></button>
+                    <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="condition" id="va-condition-hidden" value="<?php echo esc_attr((string)$cond_saved); ?>">
+            </div>
         </div>
-        <?php endif; ?>
 
-        <?php
-        // Dinamikus form mezők VA_Form_Builder config alapján
-        $fb_form    = 'va_listing_submit';
-        $fb_fields  = VA_Form_Builder::get_fields( $fb_form );
-        usort( $fb_fields, fn( $a, $b ) => (int)( $a['order'] ?? 99 ) - (int)( $b['order'] ?? 99 ) );
-
-        // Csoportok: szekciókat nyit ha szükséges
-        $section_groups = [
-            'brand'       => 'Termék részletek',
-            'price'       => 'Ár',
-            'phone'       => 'Kapcsolat',
-        ];
-        $opened_sections = [];
-
-        // Párba rakandó mezők (2-oszlopos sor)
-        $pair_groups = $site_type === 'jarmu'
-            ? [
-                ['condition','location'],
-                ['brand',    'model'],
-                ['body_type','year'],
-                ['price',    'price_type'],
-            ]
-            : [
-                ['condition','location'],
-                ['brand',    'model'],
-                ['caliber',  'year'],
-                ['price',    'price_type'],
-            ];
-        $pair_map = [];
-        foreach ( $pair_groups as $pair ) {
-            $pair_map[ $pair[0] ] = $pair[1];
-            $pair_map[ $pair[1] ] = $pair[0]; // partner
-        }
-        $rendered_keys = [];
-
-        foreach ( $fb_fields as $field ):
-            $fkey = (string)( $field['key'] ?? '' );
-            if ( in_array( $fkey, $rendered_keys, true ) ) continue;
-            if ( $fkey === 'county' ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-            if ( $fkey === 'email_show' || $fkey === 'phone' ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-            if ( empty( $field['enabled'] ) ) {
-                $rendered_keys[] = $fkey;
-                continue;
-            }
-
-            $label = esc_html( (string)( $field['label'] ?? $fkey ) );
-            $ph    = esc_attr( (string)( $field['placeholder'] ?? '' ) );
-            $req   = ! empty( $field['required'] );
-            $req_html = $req ? ' <span class="required">*</span>' : '';
-            $req_attr = $req ? ' required' : '';
-
-            // Szekció fejléc
-            if ( isset( $section_groups[ $fkey ] ) && ! isset( $opened_sections[ $fkey ] ) ) {
-                $opened_sections[ $fkey ] = true;
-                echo '<h3 class="va-submit-section-title">'
-                    . esc_html( $section_groups[ $fkey ] ) . '</h3>';
-            }
-
-            // Pár-sor logika
-            $partner_key = $pair_map[ $fkey ] ?? null;
-            $partner_field = null;
-            if ( $partner_key ) {
-                foreach ( $fb_fields as $pf ) {
-                    if ( ( $pf['key'] ?? '' ) === $partner_key && ! empty( $pf['enabled'] ) ) {
-                        $partner_field = $pf;
-                        break;
-                    }
-                }
-            }
-
-            if ( $partner_field && ! in_array( $partner_key, $rendered_keys, true ) ):
-                // 2 oszlopos sor
-                $rendered_keys[] = $fkey;
-                $rendered_keys[] = $partner_key;
-                $p2_label   = esc_html( (string)( $partner_field['label'] ?? $partner_key ) );
-                $p2_ph      = esc_attr( (string)( $partner_field['placeholder'] ?? '' ) );
-                $p2_req     = ! empty( $partner_field['required'] );
-                $p2_req_html = $p2_req ? ' <span class="required">*</span>' : '';
-                $p2_req_attr = $p2_req ? ' required' : '';
-                echo '<div class="va-form-row">';
-                // Mező 1
-                echo '<div class="va-form-group">';
-                echo "<label>{$label}{$req_html}</label>";
-                self_render_listing_field( $fkey, $ph, $req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-                // Mező 2
-                echo '<div class="va-form-group">';
-                echo "<label>{$p2_label}{$p2_req_html}</label>";
-                self_render_listing_field( $partner_key, $p2_ph, $p2_req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-                echo '</div>';
-            else:
-                $rendered_keys[] = $fkey;
-                // Teljes soros mező
-                echo '<div class="va-form-group">';
-                echo "<label>{$label}{$req_html}</label>";
-                self_render_listing_field( $fkey, $ph, $req_attr, $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta );
-                echo '</div>';
-            endif;
-        endforeach;
-        ?>
-
-        <?php if ( $site_type !== 'jarmu' ): ?>
-        <datalist id="va-caliber-list">
-            <?php foreach ( $hunting_calibers as $cal ): ?>
-            <option value="<?php echo esc_attr( (string) $cal ); ?>"></option>
-            <?php endforeach; ?>
-        </datalist>
-        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
-            <label>Nagyítás (pl. 3-12x50)</label>
-            <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_zoom'] ?? '' ) ); ?>">
-        </div>
-        <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
-            <label>Objektív átmérő (mm)</label>
-            <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr( (string) ( $edit_meta['optic_objective'] ?? '' ) ); ?>">
-        </div>
-        <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
-            <label>Kutya életkor (hónap)</label>
-            <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr( (string) ( $edit_meta['dog_age_months'] ?? '' ) ); ?>">
-        </div>
-        <?php endif; ?>
+        <!-- ═══ STEP 2: Termék adatai ═══ -->
+        <div class="va-wstep" data-step="2">
+            <h3 class="va-wstep-title">Termék adatai</h3>
+            <div class="va-form-group">
+                <label>Hirdetés címe <span class="required">*</span></label>
+                <input type="text" name="title" id="va-title" class="va-input" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
+            </div>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Márka / gyártó</label>
+                    <?php self_render_listing_field( 'brand', 'pl. Blaser, Swarovski...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
+                </div>
+                <div class="va-form-group">
+                    <label>Modell / típus</label>
+                    <?php self_render_listing_field( 'model', 'pl. R8, Z6...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
+                </div>
+            </div>
+            <?php if ( $site_type !== 'jarmu' ): ?>
+            <div class="va-form-row">
+                <div class="va-form-group">
+                    <label>Kaliber</label>
+                    <input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="pl. .308 Win" value="<?php echo esc_attr((string)($edit_meta['caliber'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Gyártási év</label>
+                    <input type="number" name="year" class="va-input" min="1800" max="<?php echo (int)date('Y'); ?>" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>">
+                </div>
+            </div>
+            <datalist id="va-caliber-list">
+                <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
+            </datalist>
+            <div class="va-form-group">
+                <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+                <label>Nagyítás (pl. 3-12x50)</label>
+                <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
+                <label>Objektív átmérő (mm)</label>
+                <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Kutya életkor (hónap)</label>
+                <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
+            </div>
+            <?php endif; ?>
 
         <?php if ( $site_type === 'jarmu' ):
             $ev = $edit_meta;
