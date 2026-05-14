@@ -571,31 +571,46 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
     display: none;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, .65);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: none;
+    overflow: hidden;
+}
+body.va-modal-open {
+    overflow: hidden;
 }
 .va-other-cat-modal.is-open {
-    display: flex;
-    animation: va-modal-fadein 0.2s ease-out;
+    display: flex !important;
+    animation: va-modal-fadein 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes va-modal-fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
 }
 .va-other-cat-card {
-    width: min(520px, calc(100% - 24px));
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.15);
-    background: #0e0e0e;
-    box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    padding: 18px;
+    position: relative;
+    z-index: 100000;
+    width: 100%;
+    max-width: 500px;
+    min-width: 280px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.2);
+    background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+    box-shadow: 0 30px 80px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.1);
+    padding: 28px 24px;
+    animation: va-card-slide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes va-card-slide {
+    0% { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
 }
 .va-other-cat-card h4 {
     margin: 0 0 8px;
@@ -1156,11 +1171,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var $modal = $('#va-other-cat-modal');
         var $input = $('#va-other-cat-input');
         $input.val((($('#va-other-category').val() || '') + '').trim());
+        $('body').addClass('va-modal-open');
         $modal.addClass('is-open').attr('aria-hidden', 'false');
         setTimeout(function(){ $input.trigger('focus'); }, 30);
     }
 
     function closeOtherCategoryModal() {
+        $('body').removeClass('va-modal-open');
         $('#va-other-cat-modal').removeClass('is-open').attr('aria-hidden', 'true');
     }
 
