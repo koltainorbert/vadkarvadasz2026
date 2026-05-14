@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358r — Sidebar elválasztó csík felhúzása
+
+### Kérés
+- A sidebar jobb oldali elválasztó csík érjen fel teljesen a tetejéig.
+
+### Javítás
+- A wizard shell kapott egy külön `::after` felső separator szegmenst a bal oszlop jobb szélére.
+- Így a sidebar `border-right` vizuálisan folyamatos a felső gapen keresztül is.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358q — Sidebar és felső kitöltés egységes színre
 
 ### Kérés
