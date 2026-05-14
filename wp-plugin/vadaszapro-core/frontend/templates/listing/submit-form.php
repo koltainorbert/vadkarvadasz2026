@@ -592,13 +592,15 @@ body.va-page-modal-open{
     white-space: normal !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item:hover {
-    border-color: rgba(255,138,0,.55) !important;
-    background: rgba(255,138,0,.14) !important;
+    border-color: #ff8a00 !important;
+    background: #ff8a00 !important;
+    color: #111 !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item[data-selected="1"] {
-    border-color: rgba(255,138,0,.75) !important;
-    background: rgba(255,138,0,.22) !important;
-    box-shadow: inset 0 0 0 1px rgba(255,138,0,.22) !important;
+    border-color: #ff8a00 !important;
+    background: #ff8a00 !important;
+    color: #111 !important;
+    box-shadow: none !important;
 }
 @media (max-width:1200px){
     #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
@@ -618,6 +620,13 @@ body.va-page-modal-open{
     margin-top: 15px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cond-btn.is-selected {
+    background: #ff8a00 !important;
+    border-color: #ff8a00 !important;
+    color: #111 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-cond-btn:hover,
+#va-wizard-overlay.va-wizard-shell .va-cond-btn:focus,
+#va-wizard-overlay.va-wizard-shell .va-cond-btn:active {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
     color: #111 !important;
