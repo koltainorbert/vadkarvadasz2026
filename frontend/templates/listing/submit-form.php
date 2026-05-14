@@ -193,6 +193,14 @@ if ( is_array( $categories ) ) {
             $other_category = $cat;
             continue;
         }
+        $seen_category_names = [];
+        $category_name_key = function_exists( 'mb_strtolower' )
+            ? mb_strtolower( trim( (string) ( $cat->name ?? '' ) ), 'UTF-8' )
+            : strtolower( trim( (string) ( $cat->name ?? '' ) ) );
+        if ( $category_name_key !== '' && isset( $seen_category_names[ $category_name_key ] ) ) {
+            continue;
+        }
+        $seen_category_names[ $category_name_key ] = true;
         $ordered_categories[] = $cat;
     }
     if ( $other_category ) {
