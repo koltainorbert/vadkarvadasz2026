@@ -287,6 +287,7 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'optic_zoom'  => get_post_meta( $maybe_id, 'va_optic_zoom',  true ),
             'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
+            'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             // Jármű extra mezők
@@ -1141,6 +1142,13 @@ body.va-modal-open {
             <datalist id="va-caliber-list">
                 <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
             </datalist>
+            <div class="va-form-group va-cat-rule-field" data-categories="cipo-bakancs,bakancs-felcipo,ruhazat-labbeli">
+                <label>Cipőméret</label>
+                <div class="va-year-input-wrap">
+                    <input type="text" name="shoe_size" id="va-shoe-size-input" class="va-input" placeholder="pl. EU 43" readonly value="<?php echo esc_attr((string)($edit_meta['shoe_size'] ?? '')); ?>">
+                    <button type="button" class="va-year-open-btn" id="va-shoe-size-open">Mérettáblázat</button>
+                </div>
+            </div>
             <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
                 <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>

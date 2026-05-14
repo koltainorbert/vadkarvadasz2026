@@ -289,6 +289,7 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'optic_zoom'  => get_post_meta( $maybe_id, 'va_optic_zoom',  true ),
             'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
+            'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -902,12 +903,39 @@ body.va-page-modal-open{
     gap: 10px;
     margin-top: 14px;
 }
+.va-shoe-size-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+.va-shoe-size-item {
+    border: 1px solid rgba(255,255,255,.18);
+    background: #0f0f0f;
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .18s ease;
+}
+.va-shoe-size-item:hover {
+    border-color: #ff8a00;
+    transform: translateY(-1px);
+}
+.va-shoe-size-item.is-selected {
+    background: #ff8a00;
+    border-color: #ff8a00;
+    color: #111;
+}
 @media (max-width:640px) {
     .va-year-input-wrap {
         flex-direction: column;
         align-items: stretch;
     }
     .va-year-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .va-shoe-size-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
@@ -1113,6 +1141,18 @@ body.va-modal-open {
             </div>
         </div>
 
+        <div class="va-year-modal" id="va-shoe-size-modal" aria-hidden="true">
+            <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-shoe-size-title">
+                <div class="va-year-head">
+                    <h4 id="va-shoe-size-title">Cipőméret táblázat (EU)</h4>
+                </div>
+                <div class="va-shoe-size-grid" id="va-shoe-size-grid"></div>
+                <div class="va-year-actions">
+                    <button type="button" class="va-btn va-btn--ghost" id="va-shoe-size-cancel">Mégse</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══ STEP 2: Termék adatai ═══ -->
         <div class="va-wstep" data-step="2">
             <h3 class="va-wstep-title">Termék adatai</h3>
@@ -1147,6 +1187,13 @@ body.va-modal-open {
             <datalist id="va-caliber-list">
                 <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
             </datalist>
+            <div class="va-form-group va-cat-rule-field" data-categories="cipo-bakancs,bakancs-felcipo,ruhazat-labbeli">
+                <label>Cipőméret</label>
+                <div class="va-year-input-wrap">
+                    <input type="text" name="shoe_size" id="va-shoe-size-input" class="va-input" placeholder="pl. EU 43" readonly value="<?php echo esc_attr((string)($edit_meta['shoe_size'] ?? '')); ?>">
+                    <button type="button" class="va-year-open-btn" id="va-shoe-size-open">Mérettáblázat</button>
+                </div>
+            </div>
             <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
                 <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>
@@ -1751,6 +1798,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $(document).on('keydown', function(e){
             if (e.key === 'Escape' && $modal.hasClass('is-open')) closeYearPicker();
+        });
+    })();
+
+    /* ══ Cipőméret popup picker ════════════════════════ */
+    (function initShoeSizePicker(){
+        var $input = $('#va-shoe-size-input');
+        var $modal = $('#va-shoe-size-modal');
+        var $grid = $('#va-shoe-size-grid');
+        if (!$input.length || !$modal.length || !$grid.length) return;
+
+        var sizes = ['EU 35','EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42','EU 43','EU 44','EU 45','EU 46','EU 47','EU 48'];
+
+        function renderSizes() {
+            var selected = (($input.val() || '') + '').trim();
+            var html = '';
+            sizes.forEach(function(size){
+                var cls = 'va-shoe-size-item' + (selected === size ? ' is-selected' : '');
+                html += '<button type="button" class="' + cls + '" data-size="' + size + '">' + size + '</button>';
+            });
+            $grid.html(html);
+        }
+
+        function openShoeModal() {
+            renderSizes();
+            $modal.addClass('is-open').attr('aria-hidden', 'false');
+            $('body').addClass('va-modal-open');
+        }
+
+        function closeShoeModal() {
+            $modal.removeClass('is-open').attr('aria-hidden', 'true');
+            $('body').removeClass('va-modal-open');
+        }
+
+        $('#va-shoe-size-open').on('click', openShoeModal);
+        $('#va-shoe-size-cancel').on('click', closeShoeModal);
+
+        $grid.on('click', '.va-shoe-size-item', function(){
+            var size = (($(this).data('size') || '') + '').trim();
+            if (size) {
+                $input.val(size).trigger('input').trigger('change');
+            }
+            closeShoeModal();
+        });
+
+        $modal.on('click', function(e){
+            if (e.target === this) closeShoeModal();
+        });
+
+        $(document).on('keydown', function(e){
+            if (e.key === 'Escape' && $modal.hasClass('is-open')) closeShoeModal();
         });
     })();
 
@@ -2602,6 +2699,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
         var isJobCategory = /allas|munka|pozicio/.test(slug)
             || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
+            || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -2618,6 +2717,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
+                visible = true;
+            }
+            if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
                 visible = true;
             }
             $wrap.toggle(visible);
