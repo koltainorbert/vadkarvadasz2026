@@ -2563,6 +2563,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyCategorySpecificFieldVisibility() {
         if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
         var slug = getSelectedCategorySlug();
+        var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
 
@@ -2570,6 +2571,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var $wrap = $(this);
             var list = (($wrap.data('categories') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
             var visible = list.indexOf(slug) !== -1;
+            if (!visible && isBowCategory && $wrap.find('input[name="license_req"]').length) {
+                visible = true;
+            }
             $wrap.toggle(visible);
 
             $wrap.find('input,select,textarea').each(function(){
