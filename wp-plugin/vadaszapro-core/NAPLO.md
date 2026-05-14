@@ -2,6 +2,39 @@
 
 ---
 
+## 2026. 05. 14. – Session #358e — Elegáns fekete lenyíló UI datalist mezőkhöz
+
+### Kérés
+- A lenyílók legyenek designba illő, fekete, elegáns stílusúak.
+- Legyen szép, jól látható görgetősáv.
+
+### Javítás
+- Natív fehér datalist lenyílók helyett egyedi, sötét suggestion panel került be.
+- A panel stílusa: fekete gradient háttér, finom keret, mély shadow, vörös hover.
+- Egyedi scrollbar készült a panelhez (track + vöröses thumb).
+- Billentyűzetes navigáció támogatva: fel/le, Enter, ESC.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
+## 2026. 05. 14. – Session #358d — Wizard lépésszámok fehér színre
+
+### Kérés
+- A bal oldali lépésszámok (`1`, `2`, `3`, `4`) legyenek fehérek.
+
+### Javítás
+- Célzott CSS override került be a wizard sidebar pontokra:
+  - `.va-wdot__circle` és belső `span` színe fixen `#fff !important`.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358c — Submit popup layout finomhangolás (4 oszlop + alsó gap fix)
 
 ### Kérés

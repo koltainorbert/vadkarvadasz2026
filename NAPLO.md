@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 14. – Session #358e — Elegáns fekete lenyíló UI datalist mezőkhöz
+
+### Kérés
+- A lenyílók legyenek designba illő, fekete, elegáns stílusúak.
+- Legyen szép, jól látható görgetősáv.
+
+### Javítás
+- Natív fehér datalist lenyílók helyett egyedi, sötét suggestion panel került be.
+- A panel stílusa: fekete gradient háttér, finom keret, mély shadow, vörös hover.
+- Egyedi scrollbar készült a panelhez (track + vöröses thumb).
+- Billentyűzetes navigáció támogatva: fel/le, Enter, ESC.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358d — Wizard lépésszámok fehér színre
 
 ### Kérés
