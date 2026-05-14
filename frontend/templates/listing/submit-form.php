@@ -718,6 +718,15 @@ body.va-page-modal-open{
     margin-right: 0 !important;
     flex: 0 0 auto !important;
 }
+#va-wizard-overlay.va-wizard-shell .va-cond-group .va-wiz-field-label {
+    display: block !important;
+    color: rgba(255,255,255,.72) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .14em !important;
+    margin-bottom: 10px !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
