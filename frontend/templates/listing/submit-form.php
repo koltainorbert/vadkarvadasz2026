@@ -2600,14 +2600,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedCatText = (($('.va-cat-item[data-selected="1"]').text() || '') + '').toLowerCase();
         var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug)
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
+        var isJobCategory = /allas|munka|pozicio/.test(slug)
+            || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
+        required = required.slice();
+        if (isJobCategory) {
+            if (required.indexOf('job_location') === -1) required.push('job_location');
+            if (required.indexOf('job_type') === -1) required.push('job_type');
+        }
 
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
             var list = (($wrap.data('categories') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
             var visible = list.indexOf(slug) !== -1;
             if (!visible && isBowCategory && $wrap.find('input[name="license_req"]').length) {
+                visible = true;
+            }
+            if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
                 visible = true;
             }
             $wrap.toggle(visible);
