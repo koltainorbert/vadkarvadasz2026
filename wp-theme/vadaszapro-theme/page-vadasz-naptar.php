@@ -21,7 +21,34 @@ get_header();
 
 <style>
 /* ══ VN prefix – vadásznaptár oldal ══════════════════════════════════ */
-.vn-wrap{--vn-name-w:200px;max-width:1280px;margin:0 auto;padding:24px 16px 60px;}
+.vn-wrap{--vn-name-w:200px;max-width:1280px;margin:0 auto;padding:24px 16px 60px;position:relative;isolation:isolate;}
+body.page-template-page-vadasz-naptar,
+body.page.page-id,
+body{
+  background: rgb(6,6,6);
+}
+.vn-wrap::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255,0,0,.14), transparent 38%),
+    radial-gradient(circle at 88% 16%, rgba(255,0,0,.10), transparent 34%),
+    radial-gradient(circle at 50% 92%, rgba(255,120,0,.08), transparent 42%),
+    radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size:auto,auto,auto,16px 16px;
+  background-color:rgb(6,6,6);
+}
+.vn-wrap::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(6,6,6,.35) 0%, rgba(6,6,6,.86) 100%);
+}
 
 /* ── LEGEND ── */
 .vn-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-bottom:20px;}
@@ -34,6 +61,23 @@ get_header();
   border:1px solid rgba(255,0,0,.18);border-radius:10px;
   margin:0 0 24px;padding:20px;
   box-shadow:0 0 40px rgba(0,0,0,.6),inset 0 0 60px rgba(255,0,0,.03);
+}
+.vn-moon,
+.vn-chart,
+#vn-today-panel,
+.vn-op-box,
+.vn-cl-box{
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.vn-chart{
+  background: linear-gradient(180deg, rgba(14,14,14,.92), rgba(7,7,7,.96));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.vn-moon{
+  border-color:rgba(255,0,0,.28);
+  box-shadow:0 26px 60px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 80px rgba(255,0,0,.06);
 }
 .vn-moon-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .vn-moon-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;justify-content:center;margin:0 0 16px;}
