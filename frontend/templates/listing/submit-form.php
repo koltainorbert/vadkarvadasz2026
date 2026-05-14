@@ -628,6 +628,44 @@ body.va-modal-open {
     justify-content: flex-end;
     margin-top: 12px;
 }
+
+/* Submit Notice Modal - Teljes overlay */
+#va-submit-notice-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: none;
+    overflow: hidden;
+}
+#va-submit-notice-modal.is-open {
+    display: flex !important;
+    animation: va-modal-fadein 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.va-submit-notice-card {
+    position: relative;
+    z-index: 100000;
+    width: 100%;
+    max-width: 550px;
+    min-width: 280px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.2);
+    background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+    box-shadow: 0 30px 80px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.1);
+    padding: 28px 24px;
+    animation: va-card-slide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 85vh;
+    overflow-y: auto;
+}
 </style>
 
 <div class="va-submit-preview-shell">
@@ -1081,7 +1119,12 @@ body.va-modal-open {
                     <p class="va-img-hint">Húzd a képeket az átrendezéshez &bull; &#9733; = borítókép beállítása</p>
                 </div>
             </div>
-            <div id="va-submit-notice-modal"></div>
+            <div id="va-submit-notice-modal" role="dialog" aria-modal="true" aria-labelledby="va-submit-notice-title">
+                <div class="va-submit-notice-card" role="presentation">
+                    <h4 id="va-submit-notice-title" style="margin:0 0 12px; color:#fff; font-size:20px; font-weight:800;">Értesítés</h4>
+                    <div id="va-submit-notice-content"></div>
+                </div>
+            </div>
             <p class="va-wiz-publish-note">
                 <?php echo get_option('va_auto_publish_listings','0') === '1'
                     ? 'A hirdetés azonnal megjelenik.'
@@ -1180,6 +1223,27 @@ document.addEventListener('DOMContentLoaded', function() {
         $('body').removeClass('va-modal-open');
         $('#va-other-cat-modal').removeClass('is-open').attr('aria-hidden', 'true');
     }
+
+    /* Submit Notice Modal megnyitás/bezárás */
+    function openSubmitNoticeModal() {
+        $('body').addClass('va-modal-open');
+        $('#va-submit-notice-modal').addClass('is-open').attr('aria-hidden', 'false');
+    }
+
+    function closeSubmitNoticeModal() {
+        $('body').removeClass('va-modal-open');
+        $('#va-submit-notice-modal').removeClass('is-open').attr('aria-hidden', 'true');
+    }
+
+    /* Submit notice modal bezárása a háttér kattintásakor vagy ESC billentyűre */
+    $('#va-submit-notice-modal').on('click', function(e){
+        if(e.target === this) closeSubmitNoticeModal();
+    });
+    $(document).on('keydown', function(e){
+        if(e.keyCode === 27 && $('#va-submit-notice-modal').hasClass('is-open')){
+            closeSubmitNoticeModal();
+        }
+    });
 
     $(document).on('click', '.va-cat-item', function() {
         $('.va-cat-item').removeAttr('data-selected');
