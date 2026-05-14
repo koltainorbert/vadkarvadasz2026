@@ -681,6 +681,8 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__title,
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__desc,
