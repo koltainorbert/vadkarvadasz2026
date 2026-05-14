@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358d — Wizard lépésszámok fehér színre
+
+### Kérés
+- A bal oldali lépésszámok (`1`, `2`, `3`, `4`) legyenek fehérek.
+
+### Javítás
+- Célzott CSS override került be a wizard sidebar pontokra:
+  - `.va-wdot__circle` és belső `span` színe fixen `#fff !important`.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358c — Submit popup layout finomhangolás (4 oszlop + alsó gap fix)
 
 ### Kérés
