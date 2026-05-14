@@ -8070,3 +8070,15 @@ Márkafüggő modell-ajánló működik, és üres márka-találat esetén sem m
 
 ---
 
+## 2026. 05. 14. – Session: Modal középre igazítás visszaállítás
+
+### Mit csináltunk [x]
+- [x] Visszaállítva a teljes feladás modal vertikális középre igazítása
+- [x] Scroll logika áthelyezve belső konténerre (`.va-wizard-main`), hogy ne csússzon fel a teljes modal
+- [x] Root + plugin submit template CSS szinkron frissítve
+
+### Hol tartunk
+A feladás modal ismét középen marad, miközben a belső tartalom görgethető marad.
+
+---
+
