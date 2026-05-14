@@ -1181,28 +1181,28 @@ document.addEventListener('DOMContentLoaded', function() {
     function wizValidate(step) {
         if (step === 1) {
             if (!($('#va-category').val() || '')) {
-                window.va_toast && va_toast('Válassz kategóriát!', 'error');
+                showSubmitError('Válassz kategóriát!');
                 return false;
             }
             var slug = getSelectedCategorySlug();
             if (slug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
                 openOtherCategoryModal();
-                window.va_toast && va_toast('Add meg az egyéb kategóriát.', 'error');
+                showSubmitError('Add meg az egyéb kategóriát.');
                 return false;
             }
         } else if (step === 2) {
             if (!(($('[name="title"]').val() || '') + '').trim()) {
-                window.va_toast && va_toast('Add meg a hirdetés címét!', 'error');
+                showSubmitError('Add meg a hirdetés címét!');
                 return false;
             }
             var catErr = (typeof validateCategoryRequiredFields === 'function') ? validateCategoryRequiredFields() : '';
-            if (catErr) { window.va_toast && va_toast(catErr, 'error'); return false; }
+            if (catErr) { showSubmitError(catErr); return false; }
         } else if (step === 3) {
             var city  = (($('input[name="location"]').val() || '') + '').trim();
             var zip   = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
             var phone = (($('input[name="phone"]').val() || '') + '').trim();
-            if (!city && !zip) { window.va_toast && va_toast('Add meg a várost vagy irányítószámot!', 'error'); return false; }
-            if (!phone)        { window.va_toast && va_toast('Add meg a telefonszámot!', 'error'); return false; }
+            if (!city && !zip) { showSubmitError('Add meg a várost vagy irányítószámot!'); return false; }
+            if (!phone)        { showSubmitError('Add meg a telefonszámot!'); return false; }
         }
         return true;
     }
@@ -1234,6 +1234,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeSubmitNoticeModal() {
         $('body').removeClass('va-modal-open');
         $('#va-submit-notice-modal').removeClass('is-open').attr('aria-hidden', 'true');
+    }
+
+    function showSubmitError(message) {
+        var safe = $('<div>').text(message || 'Hiba történt.').html();
+        $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">' + safe + '</div>');
+        openSubmitNoticeModal();
+        window.va_toast && va_toast(message || 'Hiba történt.', 'error');
     }
 
     // Move modal to body so it is not constrained by wizard container stacking/transform contexts.
