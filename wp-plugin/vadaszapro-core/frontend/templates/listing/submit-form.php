@@ -2561,7 +2561,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyCategorySpecificFieldVisibility() {
         if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
         var slug = getSelectedCategorySlug();
-        var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug);
+        var selectedCatText = (($('.va-cat-item[data-selected="1"]').text() || '') + '').toLowerCase();
+        var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug)
+            || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
 
