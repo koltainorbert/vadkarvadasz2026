@@ -2020,18 +2020,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Ajax success response:', res);
                 $btn.prop('disabled', false).text(editMode ? '💾 Változások mentése' : '📤 Hirdetés feladása');
                 if(res.success){
-                    $notice.html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
+                    $('#va-submit-notice-content').html('<div class="va-notice va-notice--success" style="margin:0;">' + res.data.message + '</div>');
+                    openSubmitNoticeModal();
                     if (typeof window.va_toast === 'function') {
                         window.va_toast(res.data.message || 'Mentés sikeres.', 'success');
                     }
                     if(res.data.permalink){
-                        setTimeout(function(){ window.location.href = res.data.permalink; }, 2000);
+                        setTimeout(function(){
+                            closeSubmitNoticeModal();
+                            window.location.href = res.data.permalink;
+                        }, 2000);
                     }
                 } else {
                     if (res.data && res.data.need_credits) {
                         var price = res.data.paid_price ? Number(res.data.paid_price).toLocaleString('hu-HU') + ' Ft' : '';
                         var buyPage = '<?php echo esc_js( $buy_url_submit ); ?>';
-                        var html = '<div class="va-notice va-notice--warning" style="padding:18px;">'
+                        var html = '<div class="va-notice va-notice--warning" style="margin:0;padding:0;">'
                             + '<strong>Elfogyott az ingyenes hirdetési kereted.</strong><br>'
                             + (price ? 'Egy hirdetés ára: <strong>' + price + '</strong><br>' : '')
                             + '<a href="' + buyPage + '" class="va-btn va-btn--primary" style="margin-top:12px;display:inline-flex;">🛒 Hirdetési csomag vásárlása</a>'
@@ -2042,7 +2046,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else if (res.data && res.data.payment_required && res.data.payment_url) {
                         var amount = res.data.amount ? Number(res.data.amount).toLocaleString('hu-HU') + ' Ft' : '';
-                        var html2 = '<div class="va-notice va-notice--warning">'
+                        var html2 = '<div class="va-notice va-notice--warning" style="margin:0;padding:0;">'
                             + res.data.message
                             + (amount ? '<br><strong>Fizetendő: ' + amount + '</strong>' : '')
                             + '<br><a href="' + res.data.payment_url + '" class="va-btn va-btn--primary" style="margin-top:10px;display:inline-flex;">Bankkártyás fizetés</a>'
