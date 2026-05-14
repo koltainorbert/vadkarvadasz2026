@@ -674,6 +674,21 @@ body.va-page-modal-open{
     filter: brightness(1.03);
 }
 
+/* Final visual overrides requested */
+#va-wizard-overlay.va-wizard-shell .va-submit-page-close {
+    margin: 0 3px 0 auto !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
+    background: #ff8a00 !important;
+    border-color: #ff8a00 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__title,
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__desc,
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__circle,
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__circle span {
+    color: #111 !important;
+}
+
 /* Elegant dark datalist replacement */
 .va-datalist-panel {
     position: fixed;
