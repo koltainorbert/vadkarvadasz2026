@@ -1880,6 +1880,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✓ Submit button clicked');
         var $btn    = $(this);
         var editMode = !! VA_Data.edit_mode;
+        var $notice  = $('#va-submit-notice-modal');
 
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
@@ -2001,7 +2002,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }); // $.ajax end
         }); // $.when end
-    }); // submit end
+    }); // button click end
 })(jQuery);
 }); // DOMContentLoaded
 </script>
