@@ -1158,7 +1158,7 @@ body.va-modal-open {
                 <label>Hirdetés címe <span class="required">*</span></label>
                 <input type="text" name="title" id="va-title" class="va-input" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
             </div>
-            <div class="va-form-row">
+            <div class="va-form-row va-core-product-fields">
                 <div class="va-form-group">
                     <label>Márka / gyártó</label>
                     <?php self_render_listing_field( 'brand', 'pl. Blaser, Swarovski...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
@@ -1174,7 +1174,7 @@ body.va-modal-open {
                     <label>Kaliber</label>
                     <input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="pl. .308 Win" value="<?php echo esc_attr((string)($edit_meta['caliber'] ?? '')); ?>">
                 </div>
-                <div class="va-form-group">
+                <div class="va-form-group va-core-product-year">
                     <label>Gyártási év</label>
                     <div class="va-year-input-wrap">
                         <input type="text" name="year" id="va-year-input" class="va-input" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>" readonly>
@@ -2706,6 +2706,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (required.indexOf('job_location') === -1) required.push('job_location');
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
+
+        $('.va-core-product-fields, .va-core-product-year').toggle(!isJobCategory);
 
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
