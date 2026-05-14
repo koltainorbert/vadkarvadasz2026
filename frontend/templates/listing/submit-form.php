@@ -619,7 +619,7 @@ body.va-page-modal-open{
     margin: 0 0 10px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer {
-    justify-content: flex-start !important;
+    justify-content: flex-end !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn {
     background: #ff8a00 !important;
