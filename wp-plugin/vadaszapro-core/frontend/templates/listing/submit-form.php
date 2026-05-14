@@ -485,7 +485,7 @@ body.va-page-modal-open{
     align-items: center;
     justify-content: center;
     padding: 11px 14px;
-    margin: 0;
+    margin: 0 0 0 auto;
     background: #ff8a00 !important;
     border: 1px solid #ff8a00 !important;
     border-radius: 30px;
