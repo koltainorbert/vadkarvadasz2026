@@ -531,7 +531,7 @@ body.va-page-modal-open{
     margin: 0 0 14px !important;
     padding: 0 !important;
     display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
     gap: 8px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-list > li {
@@ -541,7 +541,7 @@ body.va-page-modal-open{
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item {
     width: 100% !important;
-    min-height: 44px !important;
+    min-height: 40px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
@@ -582,10 +582,13 @@ body.va-page-modal-open{
 }
 #va-wizard-overlay.va-wizard-shell .va-wstep-title,
 #va-wizard-overlay.va-wizard-shell .va-wstep-title em {
-    font-size: 30px !important;
+    font-size: 11px !important;
     font-style: normal !important;
     font-weight: 800 !important;
     color: #fff !important;
+@media (max-width:1400px){
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+}
     line-height: 1.1 !important;
     margin: 0 0 10px !important;
 }
