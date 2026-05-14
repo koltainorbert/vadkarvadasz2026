@@ -1190,6 +1190,8 @@ body.va-modal-open {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 (function($){
+    $('body').addClass('va-page-modal-open');
+
     /* ══ Wizard navigáció ════════════════════════════════ */
     var _wStep   = 1;
     var _wTotal  = 4;
@@ -1310,6 +1312,28 @@ document.addEventListener('DOMContentLoaded', function() {
             $('body').append($modal);
         }
     })();
+
+    function closeSubmitPageOverlay() {
+        $('body').removeClass('va-page-modal-open');
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    }
+
+    $('#va-submit-page-close').on('click', function(){
+        closeSubmitPageOverlay();
+    });
+
+    $(document).on('keydown', function(e){
+        if (e.keyCode === 27) {
+            if ($('#va-other-cat-modal').hasClass('is-open') || $('#va-submit-notice-modal').hasClass('is-open')) {
+                return;
+            }
+            closeSubmitPageOverlay();
+        }
+    });
 
     /* Submit notice modal bezárása a háttér kattintásakor vagy ESC billentyűre */
     $('#va-submit-notice-modal').on('click', function(e){
