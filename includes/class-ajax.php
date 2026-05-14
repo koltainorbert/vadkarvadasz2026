@@ -176,7 +176,7 @@ class VA_Ajax {
             'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
-            'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
+            'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -219,6 +219,10 @@ class VA_Ajax {
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
+            'dog_breed' => 'Kutya fajtája',
+            'dog_gender' => 'Neme',
+            'dog_color' => 'Színe',
+            'dog_purebred' => 'Fajtatisztaság',
             'job_location' => 'Hol van az állás?',
             'job_type' => 'Állás típusa',
         ];
@@ -416,6 +420,10 @@ class VA_Ajax {
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
+        $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
+        $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
+        $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
@@ -438,6 +446,10 @@ class VA_Ajax {
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
+            'dog_breed' => $dog_breed,
+            'dog_gender' => $dog_gender,
+            'dog_color' => $dog_color,
+            'dog_purebred' => $dog_purebred,
             'job_location' => $job_location,
             'job_type' => $job_type,
         ] );
@@ -484,6 +496,10 @@ class VA_Ajax {
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
+            'va_dog_breed'   => $dog_breed,
+            'va_dog_gender'  => $dog_gender,
+            'va_dog_color'   => $dog_color,
+            'va_dog_purebred'=> $dog_purebred,
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
             'va_shoe_size'   => $shoe_size,
@@ -632,6 +648,10 @@ class VA_Ajax {
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
+        $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
+        $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
+        $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -651,6 +671,10 @@ class VA_Ajax {
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
+            'dog_breed' => $dog_breed,
+            'dog_gender' => $dog_gender,
+            'dog_color' => $dog_color,
+            'dog_purebred' => $dog_purebred,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -727,6 +751,10 @@ class VA_Ajax {
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
+            'va_dog_breed'   => $dog_breed,
+            'va_dog_gender'  => $dog_gender,
+            'va_dog_color'   => $dog_color,
+            'va_dog_purebred'=> $dog_purebred,
             'va_views'       => 0,
         ];
 

@@ -252,7 +252,7 @@ $category_required_rules = [
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
-    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
+    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -289,6 +289,10 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'optic_zoom'  => get_post_meta( $maybe_id, 'va_optic_zoom',  true ),
             'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
+            'dog_breed' => get_post_meta( $maybe_id, 'va_dog_breed', true ),
+            'dog_gender' => get_post_meta( $maybe_id, 'va_dog_gender', true ),
+            'dog_color' => get_post_meta( $maybe_id, 'va_dog_color', true ),
+            'dog_purebred' => get_post_meta( $maybe_id, 'va_dog_purebred', true ),
             'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
@@ -1222,6 +1226,30 @@ body.va-modal-open {
             <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
                 <label>Kutya életkor (hónap)</label>
                 <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Kutya fajtája</label>
+                <input type="text" name="dog_breed" class="va-input" placeholder="pl. Magyar vizsla" value="<?php echo esc_attr((string)($edit_meta['dog_breed'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Neme</label>
+                <select name="dog_gender" class="va-select">
+                    <option value="">– Válasszon –</option>
+                    <option value="kan"<?php selected( (string)($edit_meta['dog_gender'] ?? ''), 'kan' ); ?>>Kan</option>
+                    <option value="szuka"<?php selected( (string)($edit_meta['dog_gender'] ?? ''), 'szuka' ); ?>>Szuka</option>
+                </select>
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Színe</label>
+                <input type="text" name="dog_color" class="va-input" placeholder="pl. barna-fehér" value="<?php echo esc_attr((string)($edit_meta['dog_color'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
+                <label>Fajtatisztaság</label>
+                <select name="dog_purebred" class="va-select">
+                    <option value="">– Válasszon –</option>
+                    <option value="igen"<?php selected( (string)($edit_meta['dog_purebred'] ?? ''), 'igen' ); ?>>Igen</option>
+                    <option value="nem"<?php selected( (string)($edit_meta['dog_purebred'] ?? ''), 'nem' ); ?>>Nem</option>
+                </select>
             </div>
             <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
                 <label>Hol van az állás?</label>
@@ -2816,6 +2844,10 @@ document.addEventListener('DOMContentLoaded', function() {
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
             dog_age_months: 'Kutya életkor (hónap)',
+            dog_breed: 'Kutya fajtája',
+            dog_gender: 'Neme',
+            dog_color: 'Színe',
+            dog_purebred: 'Fajtatisztaság',
             job_location: 'Hol van az állás?',
             job_type: 'Állás típusa'
         };
@@ -2868,6 +2900,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
         var isJobCategory = /allas|munka|pozicio/.test(slug)
             || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        var isDogCategory = /vadaszkutya|kutya/.test(slug)
+            || /(vadászkutya|vadaszkutya|kutya)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
@@ -2878,7 +2912,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!isJobCategory);
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isDogCategory));
 
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
@@ -2891,6 +2925,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
+                visible = true;
+            }
+            if (!visible && isDogCategory && $wrap.find('[name="dog_breed"], [name="dog_gender"], [name="dog_color"], [name="dog_purebred"], [name="dog_age_months"]').length) {
                 visible = true;
             }
             $wrap.toggle(visible);

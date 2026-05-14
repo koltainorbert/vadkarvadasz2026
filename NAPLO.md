@@ -8094,3 +8094,18 @@ A teljes feladás modal fixen középre van zárva minden lépésnél.
 
 ---
 
+## 2026. 05. 14. – Session: Vadászkutya mezők átalakítása
+
+### Mit csináltunk [x]
+- [x] Vadászkutya kategóriánál elrejtve a Márka / Modell / Gyártási év mezők
+- [x] Új mezők bevezetve: Kutya fajtája, Neme, Színe, Fajtatisztaság (Igen/Nem)
+- [x] Kategória-kötelező szabály átállítva kutyás mezőkre frontend oldalon
+- [x] Backend kategória-kötelező szabály és label map frissítve ugyanígy
+- [x] Új kutyás mezők mentése és edit visszatöltése bevezetve (`va_dog_breed`, `va_dog_gender`, `va_dog_color`, `va_dog_purebred`)
+- [x] Root + plugin mirror fájlok szinkronban frissítve
+
+### Hol tartunk
+Vadászkutya kategóriában már a kutyához releváns adatok jelennek meg és kötelezően validálódnak mentés előtt.
+
+---
+
