@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 14. – Session #358l — Bal oldali lépések panel top gap csökkentés
+
+### Kérés
+- A bal oldali lépések háttere érjen fel a panel tetejéig, ne maradjon nagy felső üres sáv.
+
+### Javítás
+- A wizard sidebar kapott egy magasabb specifikusságú `padding-top:8px !important` override-ot, így a lépések blokkja feljebb ül és jobban kitölti a bal oldali hátteret.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358k — Footer nyújtás + gomb teljes jobbra tolása
 
 ### Kérés

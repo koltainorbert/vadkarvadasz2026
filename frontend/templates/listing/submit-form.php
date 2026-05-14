@@ -151,6 +151,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 .ql-snow .ql-tooltip{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;color:#e8e8e8!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important;}
                 .ql-snow .ql-tooltip input[type=text]{background:#111!important;border-color:rgba(255,255,255,.2)!important;color:#e8e8e8!important;}
                 .ql-snow .ql-tooltip a.ql-action,.ql-snow .ql-tooltip a.ql-remove{color:#ff4444!important;}
+                #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar{padding-top:8px!important;}
                 </style>
                 <?php
                 break;
