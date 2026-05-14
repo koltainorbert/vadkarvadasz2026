@@ -738,6 +738,125 @@ body.va-page-modal-open{
     color: #111;
 }
 
+.va-year-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.va-year-input-wrap .va-input {
+    flex: 1;
+}
+.va-year-open-btn {
+    border: 1px solid rgba(255,138,0,.65);
+    background: linear-gradient(180deg,#111,#080808);
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+    white-space: nowrap;
+}
+.va-year-open-btn:hover {
+    border-color: #ff8a00;
+    background: #141414;
+    box-shadow: 0 0 16px rgba(255,138,0,.22);
+}
+.va-year-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.76);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.va-year-modal.is-open {
+    display: flex;
+}
+.va-year-card {
+    width: min(560px, calc(100vw - 24px));
+    border-radius: 20px;
+    border: 1px solid rgba(255,138,0,.45);
+    background: linear-gradient(160deg, #0f0f0f, #050505);
+    box-shadow: 0 30px 80px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.08);
+    padding: 18px;
+}
+.va-year-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.va-year-head h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+}
+.va-year-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 700;
+}
+.va-year-nav-btn {
+    border: 1px solid rgba(255,255,255,.2);
+    background: #121212;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.va-year-nav-btn:hover {
+    border-color: #ff8a00;
+    background: #1a1a1a;
+}
+.va-year-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+.va-year-item {
+    border: 1px solid rgba(255,255,255,.18);
+    background: #0f0f0f;
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .18s ease;
+}
+.va-year-item:hover {
+    border-color: #ff8a00;
+    transform: translateY(-1px);
+}
+.va-year-item.is-selected {
+    background: #ff8a00;
+    border-color: #ff8a00;
+    color: #111;
+}
+.va-year-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+}
+@media (max-width:640px) {
+    .va-year-input-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .va-year-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 /* Egyeb kategoria popup */
 .va-other-cat-modal {
     position: fixed;
@@ -890,8 +1009,8 @@ body.va-modal-open {
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, válassz kategóriát</h3>
             <ul class="va-cat-list" id="va-cat-list">
-                <?php foreach ( $categories as $cat ): ?>
-                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat->name); ?></button></li>
+                <?php foreach ( $categories as $cat ): $cat_label = str_ireplace( [ 'Puska', 'puska' ], [ 'Lőfegyver', 'lőfegyver' ], (string) $cat->name ); ?>
+                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat_label); ?></button></li>
                 <?php endforeach; ?>
             </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
@@ -921,6 +1040,24 @@ body.va-modal-open {
             </div>
         </div>
 
+        <div class="va-year-modal" id="va-year-modal" aria-hidden="true">
+            <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-year-title">
+                <div class="va-year-head">
+                    <h4 id="va-year-title">Gyártási év</h4>
+                    <div class="va-year-nav">
+                        <button type="button" class="va-year-nav-btn" id="va-year-prev" aria-label="Előző">←</button>
+                        <span id="va-year-range">-</span>
+                        <button type="button" class="va-year-nav-btn" id="va-year-next" aria-label="Következő">→</button>
+                    </div>
+                </div>
+                <div class="va-year-grid" id="va-year-grid"></div>
+                <div class="va-year-actions">
+                    <button type="button" class="va-btn va-btn--ghost" id="va-year-cancel">Mégse</button>
+                    <button type="button" class="va-btn va-btn--primary" id="va-year-now">Mai év</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══ STEP 2: Termék adatai ═══ -->
         <div class="va-wstep" data-step="2">
             <h3 class="va-wstep-title">Termék adatai</h3>
@@ -946,7 +1083,10 @@ body.va-modal-open {
                 </div>
                 <div class="va-form-group">
                     <label>Gyártási év</label>
-                    <input type="number" name="year" class="va-input" min="1800" max="<?php echo (int)date('Y'); ?>" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>">
+                    <div class="va-year-input-wrap">
+                        <input type="text" name="year" id="va-year-input" class="va-input" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>" readonly>
+                        <button type="button" class="va-year-open-btn" id="va-year-open">Év választása</button>
+                    </div>
                 </div>
             </div>
             <datalist id="va-caliber-list">
@@ -1462,6 +1602,85 @@ document.addEventListener('DOMContentLoaded', function() {
             if ($panel.is(':visible') && $activeInput.length) {
                 placePanel($activeInput);
             }
+        });
+    })();
+
+    /* ══ Gyártási év popup picker ════════════════════════ */
+    (function initYearPicker(){
+        var $input = $('#va-year-input');
+        var $modal = $('#va-year-modal');
+        if (!$input.length || !$modal.length) return;
+
+        var minYear = 1800;
+        var currentYear = (new Date()).getFullYear();
+        var $range = $('#va-year-range');
+        var $grid = $('#va-year-grid');
+        var viewStart = currentYear - 11;
+
+        function selectedYear() {
+            var v = parseInt((($input.val() || '') + '').replace(/\D+/g, ''), 10);
+            if (isNaN(v) || v < minYear || v > currentYear) return null;
+            return v;
+        }
+
+        function renderYears() {
+            var end = Math.min(currentYear, viewStart + 11);
+            $range.text(viewStart + ' - ' + end);
+            var selected = selectedYear();
+            var html = '';
+            for (var y = viewStart; y <= end; y++) {
+                var cls = 'va-year-item' + (selected === y ? ' is-selected' : '');
+                html += '<button type="button" class="' + cls + '" data-year="' + y + '">' + y + '</button>';
+            }
+            $grid.html(html);
+        }
+
+        function openYearPicker() {
+            var sel = selectedYear();
+            if (sel) viewStart = Math.max(minYear, sel - 5);
+            $modal.addClass('is-open').attr('aria-hidden', 'false');
+            $('body').addClass('va-modal-open');
+            renderYears();
+        }
+
+        function closeYearPicker() {
+            $modal.removeClass('is-open').attr('aria-hidden', 'true');
+            $('body').removeClass('va-modal-open');
+        }
+
+        $('#va-year-open').on('click', openYearPicker);
+
+        $('#va-year-prev').on('click', function(){
+            viewStart = Math.max(minYear, viewStart - 12);
+            renderYears();
+        });
+
+        $('#va-year-next').on('click', function(){
+            viewStart = Math.min(currentYear - 11, viewStart + 12);
+            renderYears();
+        });
+
+        $grid.on('click', '.va-year-item', function(){
+            var y = parseInt($(this).data('year'), 10);
+            if (!isNaN(y)) {
+                $input.val(String(y)).trigger('input').trigger('change');
+            }
+            closeYearPicker();
+        });
+
+        $('#va-year-now').on('click', function(){
+            $input.val(String(currentYear)).trigger('input').trigger('change');
+            closeYearPicker();
+        });
+
+        $('#va-year-cancel').on('click', closeYearPicker);
+
+        $modal.on('click', function(e){
+            if (e.target === this) closeYearPicker();
+        });
+
+        $(document).on('keydown', function(e){
+            if (e.key === 'Escape' && $modal.hasClass('is-open')) closeYearPicker();
         });
     })();
 
