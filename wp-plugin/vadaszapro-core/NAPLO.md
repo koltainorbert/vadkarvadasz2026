@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 14. – Session #358g — Wizard aktív lépés narancs + Bezárás 3px right align
+
+### Kérés
+- Az aktív lépéskártya háttere legyen itt is teljes narancssárga.
+- A `Bezárás` gomb legyen teljesen jobbra igazítva, 3px-re a széltől.
+
+### Javítás
+- Stabil, késői CSS override került be a wizard style blokkba, hogy a minified sorok ellenére biztosan felülírja az aktív step megjelenését.
+- `.va-wdot.is-active` teljes narancs háttér + narancs border lett, a benne lévő szövegek/szám sötét színre állítva a kontraszt miatt.
+- `.va-submit-page-close` fixen `margin: 0 3px 0 auto !important;`, így a gomb jobbszélen marad minden breakpointon.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+
+### Mi maradt
+- Frontend vizuális ellenőrzés élesen cache ürítés után (ha még eltérés látszik, további célzott override).
+
+### Holnap ezzel kezdjük
+- Wizard sidebar és footer végső pixel-check desktop + mobil nézeten.
+
+### Deploy
+- Deploy All futtatva, commit: `58dc70d`.
+
 ## 2026. 05. 14. – Session #358f — Lenyíló rétegzés fix + erősebb modal border
 
 ### Kérés
