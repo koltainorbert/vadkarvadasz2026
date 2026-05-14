@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 14. – Session #358u — Kutyás mezők 4 soros elrendezése
+
+### Kérés
+- A kutyás mezők 4 soros elrendezésben jelenjenek meg.
+
+### Javítás
+- A kutyás blokk 4 külön sorra lett bontva: `Kutya fajtája`, `Neme`, `Színe`, `Fajtatisztaság`.
+- A `Kutya életkor (hónap)` mező kikerült a frontend űrlapról.
+- A módosítás root + plugin mirror sablonban is egységesítve lett.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 14. – Session #358t — Duplikált kategóriák kiszűrése a submit wizardből
 
 ### Kérés
