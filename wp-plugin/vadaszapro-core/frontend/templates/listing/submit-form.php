@@ -188,11 +188,19 @@ $categories = get_terms( [ 'taxonomy' => 'va_category', 'hide_empty' => false ] 
 if ( is_array( $categories ) ) {
     $other_category = null;
     $ordered_categories = [];
+    $seen_category_names = [];
     foreach ( $categories as $cat ) {
         if ( isset( $cat->slug ) && (string) $cat->slug === 'egyeb' ) {
             $other_category = $cat;
             continue;
         }
+        $category_name_key = function_exists( 'mb_strtolower' )
+            ? mb_strtolower( trim( (string) ( $cat->name ?? '' ) ), 'UTF-8' )
+            : strtolower( trim( (string) ( $cat->name ?? '' ) ) );
+        if ( $category_name_key !== '' && isset( $seen_category_names[ $category_name_key ] ) ) {
+            continue;
+        }
+        $seen_category_names[ $category_name_key ] = true;
         $ordered_categories[] = $cat;
     }
     if ( $other_category ) {
