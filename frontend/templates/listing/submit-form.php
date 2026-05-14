@@ -1058,7 +1058,7 @@ body.va-modal-open {
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
             <input type="hidden" name="other_category" id="va-other-category" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
             <div class="va-cond-group">
-                <label class="va-wiz-field-label">Állapot</label>
+                <label class="va-wiz-field-label">Termék állapotának kiválasztása</label>
                 <div class="va-cond-btns" id="va-cond-btns">
                     <?php foreach ( $conditions as $cond ):
                         $is_cs = $cond_saved && $cond_saved === $cond->term_id;
