@@ -7996,3 +7996,21 @@ A Stripe fizetés most két csatornán is biztonságosan működik: visszairány
 
 ---
 
+## 2026. 05. 14. – Session: Jármű kötelező mezők validációja
+
+### Mit csináltunk [x]
+- [x] Frontend wizard Step 2 validációba bekerült a jármű kötelező mezőellenőrzés
+- [x] Submit előtti végső ellenőrzésbe is bekerült a jármű kötelező mezőellenőrzés
+- [x] Kötelező jármű mezők listája bevezetve: márka, modell, évjárat, futás, üzemanyag, váltó, hajtás, állapot, teljesítmény, hengerűrtartalom
+- [x] Backend oldali védelmi validáció bevezetve (AJAX submit + update útvonal)
+- [x] Egységes hibaüzenet bevezetve hiányzó kötelező jármű adatok esetére
+- [x] Plugin mirror fájl frissítve: `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Hol tartunk
+Jármű módban már nem engedhető át hiányos autós hirdetés: frontend és backend is blokkolja a mentést, ha az alap jármű adatok nincsenek kitöltve.
+
+### TODO
+- [ ] Éles felületen gyors ellenőrzés: jármű kategóriában minden kötelező mező látható és hibaüzenet rendben jelenik meg
+
+---
+

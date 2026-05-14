@@ -242,6 +242,42 @@ class VA_Ajax {
         );
     }
 
+    private static function validate_vehicle_required_fields( array $values ): string {
+        if ( get_option( 'va_site_type', 'vadaszat' ) !== 'jarmu' ) {
+            return '';
+        }
+
+        $labels = [
+            'brand'             => 'Márka / gyártó',
+            'model'             => 'Modell / típus',
+            'year'              => 'Gyártási év',
+            'mileage'           => 'Futásteljesítmény (km)',
+            'fuel_type'         => 'Üzemanyag',
+            'transmission'      => 'Sebességváltó',
+            'drive'             => 'Hajtás',
+            'vehicle_condition' => 'Jármű állapota',
+            'performance_kw'    => 'Teljesítmény (kW)',
+            'engine_size'       => 'Hengerűrtartalom (cm³)',
+        ];
+
+        $required = array_keys( $labels );
+        $missing = [];
+
+        foreach ( $required as $field ) {
+            $raw = $values[ $field ] ?? '';
+            $val = is_scalar( $raw ) ? trim( (string) $raw ) : '';
+            if ( $val === '' || $val === '0' ) {
+                $missing[] = $labels[ $field ];
+            }
+        }
+
+        if ( empty( $missing ) ) {
+            return '';
+        }
+
+        return 'Jármű hirdetéshez kötelező: ' . implode( ', ', $missing ) . '.';
+    }
+
     public static function init() {
         // Hirdetés feladás
         add_action( 'wp_ajax_va_submit_listing',  [ __CLASS__, 'submit_listing' ] );
@@ -381,6 +417,22 @@ class VA_Ajax {
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
+        }
+
+        $vehicle_error = self::validate_vehicle_required_fields( [
+            'brand' => $brand,
+            'model' => $model,
+            'year' => $year,
+            'mileage' => sanitize_text_field( wp_unslash( $_POST['mileage'] ?? '' ) ),
+            'fuel_type' => sanitize_key( wp_unslash( $_POST['fuel_type'] ?? '' ) ),
+            'transmission' => sanitize_key( wp_unslash( $_POST['transmission'] ?? '' ) ),
+            'drive' => sanitize_key( wp_unslash( $_POST['drive'] ?? '' ) ),
+            'vehicle_condition' => sanitize_key( wp_unslash( $_POST['vehicle_condition'] ?? '' ) ),
+            'performance_kw' => sanitize_text_field( wp_unslash( $_POST['performance_kw'] ?? '' ) ),
+            'engine_size' => sanitize_text_field( wp_unslash( $_POST['engine_size'] ?? '' ) ),
+        ] );
+        if ( $vehicle_error !== '' ) {
+            wp_send_json_error( [ 'message' => $vehicle_error ] );
         }
 
         wp_update_post( [
@@ -576,6 +628,22 @@ class VA_Ajax {
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
+        }
+
+        $vehicle_error = self::validate_vehicle_required_fields( [
+            'brand' => $brand,
+            'model' => $model,
+            'year' => $year,
+            'mileage' => sanitize_text_field( wp_unslash( $_POST['mileage'] ?? '' ) ),
+            'fuel_type' => sanitize_key( wp_unslash( $_POST['fuel_type'] ?? '' ) ),
+            'transmission' => sanitize_key( wp_unslash( $_POST['transmission'] ?? '' ) ),
+            'drive' => sanitize_key( wp_unslash( $_POST['drive'] ?? '' ) ),
+            'vehicle_condition' => sanitize_key( wp_unslash( $_POST['vehicle_condition'] ?? '' ) ),
+            'performance_kw' => sanitize_text_field( wp_unslash( $_POST['performance_kw'] ?? '' ) ),
+            'engine_size' => sanitize_text_field( wp_unslash( $_POST['engine_size'] ?? '' ) ),
+        ] );
+        if ( $vehicle_error !== '' ) {
+            wp_send_json_error( [ 'message' => $vehicle_error ] );
         }
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
