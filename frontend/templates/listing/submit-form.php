@@ -2045,7 +2045,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (price ? 'Egy hirdetés ára: <strong>' + price + '</strong><br>' : '')
                             + '<a href="' + buyPage + '" class="va-btn va-btn--primary" style="margin-top:12px;display:inline-flex;">🛒 Hirdetési csomag vásárlása</a>'
                             + '</div>';
-                        $('#va-submit-notice-content').html(html);\n                        openSubmitNoticeModal();
+                        $('#va-submit-notice-content').html(html);
+                        openSubmitNoticeModal();
                         if (typeof window.va_toast === 'function') {
                             window.va_toast('Elfogyott az ingyenes keret. Csomag vásárlás szükséges.', 'error');
                         }
@@ -2056,7 +2057,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             + (amount ? '<br><strong>Fizetendő: ' + amount + '</strong>' : '')
                             + '<br><a href="' + res.data.payment_url + '" class="va-btn va-btn--primary" style="margin-top:10px;display:inline-flex;">Bankkártyás fizetés</a>'
                             + '</div>';
-                        $('#va-submit-notice-content').html(html2);\n                        openSubmitNoticeModal();
+                        $('#va-submit-notice-content').html(html2);
+                        openSubmitNoticeModal();
                         if (typeof window.va_toast === 'function') {
                             window.va_toast(res.data.message || 'Fizetés szükséges a folytatáshoz.', 'error');
                         }
