@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 15. – Session #359a — Wizard gombok átrendezése (Bezárás jobb felső)
+
+### Kérés
+- A `Vissza` + `Tovább` + számozás maradjon a footerben, a `Bezárás` gomb kerüljön jobb felső pozícióba.
+
+### Javítás
+- A `Bezárás` gomb kikerült a wizard footerből.
+- Új felső jobb oldali blokkba került a wizard főpanel tetején.
+- A footer így a léptetésre maradt: `Vissza`, `1 / 4`, `Tovább` (és végén `Feladás/Mentés`).
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 14. – Session #358u — Vadászkutya fajta és szín választható lista
 
 ### Kérés
