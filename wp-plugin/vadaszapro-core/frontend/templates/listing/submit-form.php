@@ -1237,28 +1237,42 @@ body.va-modal-open {
                 <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
             </div>
             <?php
-                $dog_breed_options = [
-                    'magyar-vizsla-rovidszoru' => 'Magyar vizsla (rövidszőrű)',
-                    'magyar-vizsla-drotszoru'  => 'Magyar vizsla (drótszőrű)',
-                    'erdelyi-kopo'             => 'Erdélyi kopó',
-                    'magyar-agar'              => 'Magyar agár',
-                    'nemet-vizsla'             => 'Német vizsla',
-                    'weimari-vizsla'           => 'Weimari vizsla',
-                    'angol-pointer'            => 'Angol pointer',
-                    'angol-setter'             => 'Angol szetter',
-                    'gordon-setter'            => 'Gordon szetter',
-                    'breton-spaniel'           => 'Breton spániel',
-                    'cocker-spaniel'           => 'Cocker spániel',
-                    'labrador-retriever'       => 'Labrador retriever',
-                    'golden-retriever'         => 'Golden retriever',
-                    'bajor-hegyi-vereb'        => 'Bajor hegyi véreb',
-                    'hannoveri-vereb'          => 'Hannoveri véreb',
-                    'foxterrier'               => 'Foxterrier',
-                    'jagdterrier'              => 'Jagdterrier',
-                    'beagle'                   => 'Beagle',
-                    'drathaar'                 => 'Drathaar',
-                    'egyeb'                    => 'Egyéb'
-                ];
+                $dog_breed_options = [];
+                $dog_catalog = [];
+                if ( isset( $brand_models['vadaszkutya'] ) && is_array( $brand_models['vadaszkutya'] ) ) {
+                    $dog_catalog = $brand_models['vadaszkutya'];
+                }
+                foreach ( $dog_catalog as $dog_group => $dog_items ) {
+                    if ( ! is_array( $dog_items ) ) {
+                        continue;
+                    }
+                    foreach ( $dog_items as $dog_item ) {
+                        $dog_item = trim( (string) $dog_item );
+                        if ( $dog_item === '' ) {
+                            continue;
+                        }
+                        $opt_value = sanitize_title( $dog_item );
+                        $opt_label = ucwords( str_replace( [ '-', '_' ], ' ', $dog_item ) );
+                        $dog_breed_options[ $opt_value ] = $opt_label;
+                    }
+                }
+                if ( empty( $dog_breed_options ) ) {
+                    $dog_breed_options = [
+                        'magyar-vizsla-rovidszoru' => 'Magyar vizsla (rövidszőrű)',
+                        'magyar-vizsla-drotszoru'  => 'Magyar vizsla (drótszőrű)',
+                        'erdelyi-kopo'             => 'Erdélyi kopó',
+                        'magyar-agar'              => 'Magyar agár',
+                        'angol-pointer'            => 'Angol pointer',
+                        'angol-setter'             => 'Angol szetter',
+                        'gordon-setter'            => 'Gordon szetter',
+                        'labrador-retriever'       => 'Labrador retriever',
+                        'golden-retriever'         => 'Golden retriever',
+                        'beagle'                   => 'Beagle',
+                        'jagdterrier'              => 'Jagdterrier'
+                    ];
+                }
+                asort( $dog_breed_options, SORT_NATURAL | SORT_FLAG_CASE );
+                $dog_breed_options['egyeb'] = 'Egyéb';
                 $dog_color_options = [
                     'fekete'          => 'Fekete',
                     'feher'           => 'Fehér',

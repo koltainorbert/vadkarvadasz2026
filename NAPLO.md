@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 15. – Session #359b — Vadászkutya fajtalista dinamikus adatforrásból
+
+### Kérés
+- Az összes elérhető vadászkutya fajta kerüljön be a listába külső/forrás adatból, ne fix kézi felsorolásból.
+
+### Javítás
+- A `Kutya fajtája` legördülő már nem hardcoded lista.
+- A lista a rendszerben lévő `vadaszkutya` adatforrásból (`hunting-brand-models.json`) épül fel dinamikusan.
+- Ha ez az adatforrás hiányzik, egy rövidebb fallback lista marad aktív.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 15. – Session #359a — Wizard gombok átrendezése (Bezárás jobb felső)
 
 ### Kérés
