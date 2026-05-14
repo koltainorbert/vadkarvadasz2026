@@ -25,7 +25,7 @@ get_header();
 body.page-template-page-vadasz-naptar,
 body.page.page-id,
 body{
-  background: rgb(6,6,6);
+  background: rgb(2,2,2);
 }
 .vn-wrap::before{
   content:'';
@@ -34,12 +34,12 @@ body{
   z-index:-2;
   pointer-events:none;
   background:
-    radial-gradient(circle at 12% 8%, rgba(255,0,0,.14), transparent 38%),
-    radial-gradient(circle at 88% 16%, rgba(255,0,0,.10), transparent 34%),
-    radial-gradient(circle at 50% 92%, rgba(255,120,0,.08), transparent 42%),
-    radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+    radial-gradient(circle at 12% 8%, rgba(255,0,0,.05), transparent 40%),
+    radial-gradient(circle at 88% 16%, rgba(255,0,0,.03), transparent 36%),
+    radial-gradient(circle at 50% 92%, rgba(255,120,0,.025), transparent 44%),
+    radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
   background-size:auto,auto,auto,16px 16px;
-  background-color:rgb(6,6,6);
+  background-color:rgb(2,2,2);
 }
 .vn-wrap::after{
   content:'';
@@ -47,7 +47,7 @@ body{
   inset:0;
   z-index:-1;
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(6,6,6,.35) 0%, rgba(6,6,6,.86) 100%);
+  background:linear-gradient(180deg, rgba(0,0,0,.70) 0%, rgba(0,0,0,.93) 100%);
 }
 
 /* ── LEGEND ── */
@@ -71,13 +71,14 @@ body{
   -webkit-backdrop-filter: blur(8px);
 }
 .vn-chart{
-  background: linear-gradient(180deg, rgba(14,14,14,.92), rgba(7,7,7,.96));
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+  background: linear-gradient(180deg, rgba(8,8,8,.96), rgba(3,3,3,.99));
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 24px 60px rgba(0,0,0,.72), inset 0 1px 0 rgba(255,255,255,.03);
 }
 .vn-moon{
-  border-color:rgba(255,0,0,.28);
-  box-shadow:0 26px 60px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 80px rgba(255,0,0,.06);
+  background:linear-gradient(180deg,rgba(10,10,10,.97) 0%,rgba(2,2,2,.995) 100%);
+  border-color:rgba(255,0,0,.14);
+  box-shadow:0 26px 60px rgba(0,0,0,.76), inset 0 1px 0 rgba(255,255,255,.03), inset 0 0 60px rgba(255,0,0,.018);
 }
 .vn-moon-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .vn-moon-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:end;justify-content:center;margin:0 0 16px;}
