@@ -513,6 +513,8 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;height:min(95vh,980px)!important;max-height:min(95vh,980px)!important;overflow:hidden!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;height:100%;overflow:hidden;padding-top:0!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;overflow:auto!important;padding-right:4px}
+#va-submit-form{display:flex;flex-direction:column;min-height:100%}
+#va-submit-form .va-wizard-footer{margin-top:auto!important}
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:1fr!important}}
@@ -531,7 +533,7 @@ body.va-page-modal-open{
     margin: 0 0 14px !important;
     padding: 0 !important;
     display: grid !important;
-    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 8px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-list > li {
@@ -566,13 +568,10 @@ body.va-page-modal-open{
     box-shadow: inset 0 0 0 1px rgba(255,0,0,.22) !important;
 }
 @media (max-width:1200px){
-    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
 }
 @media (max-width:760px){
     #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-@media (max-width:1400px){
-    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice {
     margin-top: 14px;
