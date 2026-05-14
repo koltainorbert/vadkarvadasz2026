@@ -2,6 +2,37 @@
 
 ---
 
+## 2026. 05. 15. – Session #359f — Távcső kategória debug javítás (mező megjelenítés)
+
+### Probléma
+- A távcső kategóriában az új mezők nem jelentek meg (rejtve maradtak)
+
+### Okozat
+- Az `.va-cat-rule-field` elemek az `.each()` ciklusban externálisan rejtve voltak
+- Ezeknek nem volt `data-categories` attribútuma → `visible = false` logika
+- A wrapper `.va-telescope-fields-grid` nem tudta tartalmát kezelni
+
+### Megoldás
+- HTML: `.va-cat-rule-field` → `.va-telescope-field` elemek (grid belsejében)
+- JS: `applyCategorySpecificFieldVisibility()` selektor frissítés:
+  - `.va-telescope-field[data-visibility="tavcsovek"]` (objektív átmérő láthatóság)
+  - Separált távcső-specifikus required handling
+- CSS: `.va-telescope-field` új stílus (flex column, 6px gap)
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `style.css`
+
+### Teszthez szükséges
+- Böngésző cache ürítés (Ctrl+Shift+R)
+- Távcső kategória új hirdetés
+
+### Deploy
+- Push futtatandó
+
+---
+
 ## 2026. 05. 15. – Session #359e — Távcső kategória kompakt felépítés + 6 új mező
 
 ### Kérés (KRITIKUS - UX)
@@ -31,45 +62,6 @@
 - `tavcsovek`: brand, model, optic_zoom, optic_objective, scope_type, scope_coatings, twilight_value (kötelezők)
 - `ejjellato-tavcso`: brand, model, optic_zoom, scope_type, twilight_value (kötelezők)
 - `hokamerak`: brand, model, optic_zoom, scope_type (kötelezők)
-
-**Megjelenítés logika:**
-- A távcső rács csak távcső kategóriákban jelenik meg
-- `optic_objective` csak `tavcsovek` kategóriában látható
-- `applyCategorySpecificFieldVisibility()` frissítve az új kategória-felismerésre
-
-### Érintett fájlok
-- `frontend/templates/listing/submit-form.php`
-  - Meta feltöltés (line ~289) + 6 új mező
-  - category_required_rules (line ~250) + frissített rules
-  - HTML layout (line ~1233) + kompakt grid
-  - Labels (line ~2992) + 6 új label
-  - applyCategorySpecificFieldVisibility() (line ~3053) + távcső logika
-  
-- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
-  - Azonos módosítások (mirror szinkronizálva)
-
-- `style.css`
-  - `.va-telescope-fields-grid` – 2 oszlopos CSS grid + mobile fallback
-
-### CSS
-```css
-.va-telescope-fields-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-@media (max-width: 768px) {
-  .va-telescope-fields-grid {
-    grid-template-columns: 1fr;
-  }
-}
-```
-
-### Validáció
-- PHP szintaxis: ✓ Nincs hiba
-- Új select dropdown (scope_type): Monokuláris / Biokuláris ← rend szerű
-- Märka mezők JÓL LÁTHATÓK (előző limit-fix)
 
 ### Deploy
 - Push futtatandó az aktuális módosítások élesítéséhez.
