@@ -1236,15 +1236,36 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#va-submit-notice-modal').removeClass('is-open').attr('aria-hidden', 'true');
     }
 
+    function ensureSubmitNoticeModalDom() {
+        if ($('#va-submit-notice-modal').length) return;
+        var html = ''
+            + '<div id="va-submit-notice-modal" role="dialog" aria-modal="true" aria-labelledby="va-submit-notice-title">'
+            + '  <div class="va-submit-notice-card" role="presentation">'
+            + '    <h4 id="va-submit-notice-title" style="margin:0 0 12px; color:#fff; font-size:20px; font-weight:800;">Értesítés</h4>'
+            + '    <div id="va-submit-notice-content"></div>'
+            + '  </div>'
+            + '</div>';
+        $('body').append(html);
+    }
+
     function showSubmitError(message) {
+        ensureSubmitNoticeModalDom();
         var safe = $('<div>').text(message || 'Hiba történt.').html();
         $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">' + safe + '</div>');
         openSubmitNoticeModal();
+        setTimeout(function(){
+            var $modal = $('#va-submit-notice-modal');
+            var visible = $modal.length && $modal.is(':visible') && $modal.find('.va-submit-notice-card').length;
+            if (!visible) {
+                alert(message || 'Hiba történt.');
+            }
+        }, 60);
         window.va_toast && va_toast(message || 'Hiba történt.', 'error');
     }
 
     // Move modal to body so it is not constrained by wizard container stacking/transform contexts.
     (function ensureSubmitModalOnBody(){
+        ensureSubmitNoticeModalDom();
         var $modal = $('#va-submit-notice-modal');
         if ($modal.length && !$modal.parent().is('body')) {
             $('body').append($modal);
