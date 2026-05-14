@@ -680,6 +680,20 @@ body.va-page-modal-open{
 }
 
 /* Final visual overrides requested */
+#va-wizard-overlay.va-wizard-shell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 15px;
+    background: linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,138,0,.02));
+    pointer-events: none;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar {
+    position: relative;
+    z-index: 1;
+}
 #va-wizard-overlay.va-wizard-shell .va-submit-page-close {
     margin-left: auto !important;
     margin-right: 0 !important;

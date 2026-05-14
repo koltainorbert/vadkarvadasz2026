@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358o — Sidebar felső gap kitöltése
+
+### Kérés
+- A sidebar felső része és a border között látható fekete sáv is legyen kitöltve a sidebar háttérszínével.
+
+### Javítás
+- A wizard shell kapott egy célzott `::before` kitöltő réteget a bal felső 280x15 px sávra.
+- A sidebar `z-index` fölé lett emelve, így a kitöltés a border alatt látszik, de nem takarja a tartalmat.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358n — Utolsó sidebar háttérmódosítás visszavonása
 
 ### Kérés
