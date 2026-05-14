@@ -8029,3 +8029,17 @@ Jármű kategória kiválasztásakor már ténylegesen megjelennek és ellenőrz
 
 ---
 
+## 2026. 05. 14. – Session: Jármű márka/típus + modal scroll javítás
+
+### Mit csináltunk [x]
+- [x] Jármű kategóriánál márka/típus mezők dinamikus átváltása autós select listára
+- [x] Vadász kategóriáknál visszaváltás szabad szöveges márka/típus inputokra
+- [x] Mindkét adathalmaz átadása JS-nek (`vehicle_brands`, `vehicle_brand_models`, `hunting_brand_models`)
+- [x] Modal görgetés javítva: wizard overlay és fő tartalom vertikális scroll engedélyezve
+- [x] Root + plugin template fájlok szinkron frissítve
+
+### Hol tartunk
+Jármű kategória esetén már autóspecifikus márkák/típusok jelennek meg, és a hosszú űrlap a modalban legörgethető.
+
+---
+

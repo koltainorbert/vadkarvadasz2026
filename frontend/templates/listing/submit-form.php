@@ -495,6 +495,14 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 body.va-page-modal-open{
     overflow: hidden;
 }
+#va-wizard-overlay.va-wizard-shell{
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-main{
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
 .va-submit-page-close{
     display: inline-flex;
     align-items: center;
@@ -2420,11 +2428,12 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 
     function rebuildVehicleModelOptions() {
-        if (typeof VA_Data === 'undefined' || VA_Data.site_type !== 'jarmu') return;
+        if (!isVehicleCategorySelected()) return;
 
         var $brand = $('#va-brand');
         var $model = $('#va-model');
         if (!$brand.length || !$model.length) return;
+        if (!$model.is('select')) return;
 
         var brand = $brand.val() || '';
         var models = (VA_Data.vehicle_brand_models && VA_Data.vehicle_brand_models[brand]) ? VA_Data.vehicle_brand_models[brand] : [];
@@ -2476,6 +2485,76 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function applyVehicleCategoryVisibility() {
         $('.va-vehicle-only').toggle(isVehicleCategorySelected());
+    }
+
+    function ensureBrandModelDataLists() {
+        if (!$('#va-brand-list').length) {
+            $('<datalist id="va-brand-list"></datalist>').appendTo('#va-submit-form');
+        }
+        if (!$('#va-model-list').length) {
+            $('<datalist id="va-model-list"></datalist>').appendTo('#va-submit-form');
+        }
+    }
+
+    function switchBrandModelFieldMode() {
+        var $brand = $('#va-brand');
+        var $model = $('#va-model');
+        if (!$brand.length || !$model.length) return;
+
+        var brandValue = (($brand.val() || '') + '').trim();
+        var modelValue = (($model.val() || '') + '').trim();
+
+        if (isVehicleCategorySelected()) {
+            if (!$brand.is('select')) {
+                var brands = (typeof VA_Data !== 'undefined' && Array.isArray(VA_Data.vehicle_brands)) ? VA_Data.vehicle_brands : [];
+                var brandHtml = '<option value="">– Válasszon –</option>';
+                if (brandValue && brands.indexOf(brandValue) === -1) {
+                    var safeCurrentBrand = $('<div>').text(brandValue).html();
+                    brandHtml += '<option value="' + safeCurrentBrand + '" selected>' + safeCurrentBrand + '</option>';
+                }
+                brands.forEach(function(item){
+                    var safe = $('<div>').text(item).html();
+                    var selected = item === brandValue ? ' selected' : '';
+                    brandHtml += '<option value="' + safe + '"' + selected + '>' + safe + '</option>';
+                });
+                var $brandSelect = $('<select name="brand" id="va-brand" class="va-select"></select>').html(brandHtml);
+                $brand.replaceWith($brandSelect);
+                $brand = $brandSelect;
+            }
+
+            if (!$model.is('select')) {
+                var modelHtml = '<option value="">– Válasszon –</option>';
+                if (modelValue) {
+                    var safeCurrentModel = $('<div>').text(modelValue).html();
+                    modelHtml += '<option value="' + safeCurrentModel + '" selected>' + safeCurrentModel + '</option>';
+                }
+                var $modelSelect = $('<select name="model" id="va-model" class="va-select" data-placeholder="pl. R8, Z6..."></select>').html(modelHtml);
+                $model.replaceWith($modelSelect);
+                $model = $modelSelect;
+            }
+
+            if (modelValue) {
+                $model.data('selected', modelValue);
+            }
+            rebuildVehicleModelOptions();
+            return;
+        }
+
+        ensureBrandModelDataLists();
+
+        if (!$brand.is('input')) {
+            var $brandInput = $('<input type="text" name="brand" id="va-brand" class="va-input" list="va-brand-list" autocomplete="off" placeholder="pl. Blaser, Swarovski...">').val(brandValue);
+            $brand.replaceWith($brandInput);
+        }
+        if (!$model.is('input')) {
+            var $modelInput = $('<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="pl. R8, Z6...">').val(modelValue);
+            $model.replaceWith($modelInput);
+        }
+
+        rebuildHuntingBrandModelDatalists(false);
+        if (modelValue) {
+            $('#va-model').val(modelValue);
+        }
     }
 
     function rebuildHuntingBrandModelDatalists(clearModel) {
@@ -2563,6 +2642,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyCategorySpecificFieldVisibility();
         }
         applyVehicleCategoryVisibility();
+        switchBrandModelFieldMode();
     });
 
     $(document).on('input change blur', '#va-brand', function(){
@@ -2575,6 +2655,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyLearnedCaliberDatalist();
     applyCategorySpecificFieldVisibility();
     applyVehicleCategoryVisibility();
+    switchBrandModelFieldMode();
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;
