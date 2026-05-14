@@ -255,6 +255,8 @@ $category_required_rules = [
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+    'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
+    'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
 ];
 
@@ -288,6 +290,8 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
             'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
+            'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
+            'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             // Jármű extra mezők
@@ -1202,6 +1206,21 @@ body.va-modal-open {
             <div class="va-form-group va-cat-rule-field" data-categories="vadaszkutya">
                 <label>Kutya életkor (hónap)</label>
                 <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
+                <label>Hol van az állás?</label>
+                <input type="text" name="job_location" class="va-input" placeholder="pl. Budapest, XI. kerület" value="<?php echo esc_attr((string)($edit_meta['job_location'] ?? '')); ?>">
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
+                <label>Állás típusa</label>
+                <select name="job_type" class="va-select">
+                    <option value="">– Válasszon –</option>
+                    <option value="teljes"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'teljes' ); ?>>Teljes munkaidő</option>
+                    <option value="reszmunkaido"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'reszmunkaido' ); ?>>Részmunkaidő</option>
+                    <option value="projekt"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'projekt' ); ?>>Projekt / alkalmi</option>
+                    <option value="tavmunka"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'tavmunka' ); ?>>Távmunkás</option>
+                    <option value="egyeb"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'egyeb' ); ?>>Egyéb</option>
+                </select>
             </div>
             <?php endif; ?>
 
@@ -2628,11 +2647,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var selected = $cat.find('option:selected');
         var slug = (selected.data('slug') || '').toString();
+        var selectedCatText = ((selected.text() || '') + '').toLowerCase();
         if (!slug) return '';
 
         var rules = VA_Data.category_required_rules || {};
         var rule = rules[slug] || null;
-        if (!rule || !Array.isArray(rule.required) || !rule.required.length) return '';
+        var isJobCategory = /allas|munka|pozicio/.test(slug) || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        if (!rule && !isJobCategory) return '';
+        if (!rule) {
+            rule = { label: 'Állás', required: [] };
+        }
+        if (!Array.isArray(rule.required)) {
+            rule.required = [];
+        }
+        if (isJobCategory) {
+            if (rule.required.indexOf('job_location') === -1) rule.required.push('job_location');
+            if (rule.required.indexOf('job_type') === -1) rule.required.push('job_type');
+        }
+        if (!rule.required.length) return '';
 
         var labels = {
             brand: 'Márka / gyártó',
@@ -2640,7 +2672,9 @@ document.addEventListener('DOMContentLoaded', function() {
             caliber: 'Kaliber',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
-            dog_age_months: 'Kutya életkor (hónap)'
+            dog_age_months: 'Kutya életkor (hónap)',
+            job_location: 'Hol van az állás?',
+            job_type: 'Állás típusa'
         };
         var missing = [];
 
@@ -2661,10 +2695,17 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedCatText = (($('.va-cat-item[data-selected="1"]').text() || '') + '').toLowerCase();
         var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug)
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
+        var isJobCategory = /allas|munka|pozicio/.test(slug)
+            || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
+        required = required.slice();
+        if (isJobCategory) {
+            if (required.indexOf('job_location') === -1) required.push('job_location');
+            if (required.indexOf('job_type') === -1) required.push('job_type');
+        }
 
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
@@ -2674,6 +2715,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
+                visible = true;
+            }
+            if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
                 visible = true;
             }
             $wrap.toggle(visible);

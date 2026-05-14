@@ -179,6 +179,8 @@ class VA_Ajax {
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'brand', 'model', 'dog_age_months' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+            'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
+            'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
         ];
     }
@@ -217,6 +219,8 @@ class VA_Ajax {
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
+            'job_location' => 'Hol van az állás?',
+            'job_type' => 'Állás típusa',
         ];
 
         $missing = [];
@@ -350,6 +354,8 @@ class VA_Ajax {
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
+        $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
@@ -370,6 +376,8 @@ class VA_Ajax {
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
+            'job_location' => $job_location,
+            'job_type' => $job_type,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -398,6 +406,8 @@ class VA_Ajax {
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
+            'va_job_location' => $job_location,
+            'va_job_type'   => $job_type,
             'va_shoe_size'   => $shoe_size,
         ];
 
