@@ -244,7 +244,7 @@ $category_required_rules = [
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'hatastalanitott'    => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
+    'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
     'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
@@ -1060,7 +1060,7 @@ body.va-modal-open {
         <div class="va-wstep is-active" data-step="1">
             <h3 class="va-wstep-title">Hirdetés feladás, válassz kategóriát</h3>
             <ul class="va-cat-list" id="va-cat-list">
-                <?php foreach ( $categories as $cat ): $cat_label = str_ireplace( [ 'Puska', 'puska' ], [ 'Lőfegyver', 'lőfegyver' ], (string) $cat->name ); ?>
+                <?php foreach ( $categories as $cat ): $cat_label = str_ireplace( [ 'Puska', 'puska' ], [ 'Lőfegyver', 'lőfegyver' ], (string) $cat->name ); if ( (string)($cat->slug ?? '') === 'hatastalanitott' ) { $cat_label = 'Hatástalanított lőfegyver'; } ?>
                 <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat_label); ?></button></li>
                 <?php endforeach; ?>
             </ul>
