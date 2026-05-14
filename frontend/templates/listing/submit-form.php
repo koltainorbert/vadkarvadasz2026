@@ -581,9 +581,9 @@ body.va-page-modal-open{
 @media (max-width:760px){.va-loc-grid{grid-template-columns:1fr!important}}
 @media (max-width:760px){.va-submit-preview-shell{padding:8px}#va-wizard-overlay.va-wizard-shell{width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important}}
 @media (max-width:1100px){#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar{padding:16px}#va-wizard-overlay.va-wizard-shell .va-wizard-main{padding:16px}}
-.va-submit-preview-shell{overflow-y:auto!important;align-items:flex-start!important}
-#va-wizard-overlay.va-wizard-shell{overflow-y:auto!important;overflow-x:hidden!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-main{overflow:visible!important;max-height:none!important}
+.va-submit-preview-shell{align-items:center!important;overflow:hidden!important}
+#va-wizard-overlay.va-wizard-shell{overflow:hidden!important;overflow-x:hidden!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-main{overflow-y:auto!important;overflow-x:hidden!important;max-height:calc(min(92vh,960px) - 30px)!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important}
 </style>
 <style>
