@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358s — Separator top extension egységesítése
+
+### Kérés
+- A felsőre húzott elválasztó vonal ugyanannak a csíknak látszódjon, azonos színnel.
+
+### Javítás
+- A külön shell `::after` separator szegmens el lett távolítva.
+- A vonalhosszabbítás átkerült a sidebar saját `::before` elemére, így a jobb oldali separator egybefüggőbbnek látszik.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358r — Sidebar elválasztó csík felhúzása
 
 ### Kérés
