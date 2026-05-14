@@ -575,6 +575,10 @@ body.va-page-modal-open{
     margin-top: 14px;
     margin-bottom: 0;
 }
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle,
+#va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle span {
+    color: #fff !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn.is-selected {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
