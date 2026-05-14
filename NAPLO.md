@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 14. – Session #358u — Vadászkutya fajta és szín választható lista
+
+### Kérés
+- A vadászkutya kategóriában a fajta és szín mezők legyenek választható listák.
+
+### Javítás
+- A `Kutya fajtája` mező szövegmező helyett legördülő (`select`) lett előre definiált vadászkutya fajtákkal.
+- A `Színe` mező szintén legördülő (`select`) lett előre definiált színlistával.
+- Korábban mentett egyedi érték esetén az érték nem vész el, kiválasztva megjelenik (`korábban mentett`).
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 14. – Session #358t — Duplikált kategóriák kiszűrése a submit wizardből
 
 ### Kérés
