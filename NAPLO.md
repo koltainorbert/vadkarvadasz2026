@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 14. – Session #358j — Erősebb háttér blur + teljes jobb szélig húzott Bezárás
+
+### Kérés
+- A hirdetésfeladás popup háttér blurje legyen erősebb, kevésbé látszódjon át a háttér.
+- A `Bezárás` gomb menjen teljesen jobbra, illesztve a szélig.
+
+### Javítás
+- A submit popup overlay kapott sötétebb háttérszínt és erősebb blur szűrőt.
+- A wizard footer szélessége ki lett nyitva a shell jobb széléig, így a `Bezárás` gomb ténylegesen flush jobbra tud állni.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358i — Bezárás gomb jobbszélre húzása
 
 ### Kérés

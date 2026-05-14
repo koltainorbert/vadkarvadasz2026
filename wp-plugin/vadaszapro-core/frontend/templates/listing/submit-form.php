@@ -473,9 +473,9 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     align-items: center;
     justify-content: center;
     padding: 16px 10px;
-    background: rgba(0, 0, 0, 0.78);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 body.va-page-modal-open{
     overflow: hidden;
@@ -658,6 +658,9 @@ body.va-page-modal-open{
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer {
     justify-content: flex-end !important;
+    width: calc(100% + 28px) !important;
+    margin-right: -28px !important;
+    padding-right: 28px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn {
     background: #ff8a00 !important;
