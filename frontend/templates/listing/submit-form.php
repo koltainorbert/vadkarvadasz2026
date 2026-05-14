@@ -488,7 +488,7 @@ body.va-page-modal-open{
     margin: 0 0 0 auto;
     background: #ff8a00 !important;
     border: 1px solid #ff8a00 !important;
-    border-radius: 999px;
+    border-radius: 30px;
     color: #111 !important;
     font-size: 14px;
     line-height: 1;
