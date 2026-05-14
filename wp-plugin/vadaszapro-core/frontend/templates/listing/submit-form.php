@@ -1141,7 +1141,7 @@ body.va-modal-open {
             <datalist id="va-caliber-list">
                 <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
             </datalist>
-            <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso">
+            <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij">
                 <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>
             <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
