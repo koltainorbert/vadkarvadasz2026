@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 14. – Session #358t — Duplikált kategóriák kiszűrése a submit wizardből
+
+### Kérés
+- Az ismétlődő kategóriák tűnjenek el a hirdetésfeladási listából.
+
+### Javítás
+- A `va_category` taxonomy-ból betöltött kategóriák a render előtt normalizált név alapján deduplikálva lesznek.
+- Ha egy kategórianév többször szerepel, csak az első példány marad meg a listában.
+- Az `Egyéb` továbbra is a lista végére kerül.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358s — Separator top extension egységesítése
 
 ### Kérés
