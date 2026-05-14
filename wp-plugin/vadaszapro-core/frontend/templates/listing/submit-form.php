@@ -472,7 +472,7 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.78);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -510,9 +510,9 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
-#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1320px,calc(100vw - 36px))!important;height:min(92vh,980px)!important;max-height:min(92vh,980px)!important;overflow:hidden!important}
+#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;height:min(95vh,980px)!important;max-height:min(95vh,980px)!important;overflow:hidden!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;height:100%;overflow:hidden;padding-top:0!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;overflow:auto!important;padding-right:8px}
+#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;overflow:auto!important;padding-right:4px}
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:1fr!important}}
@@ -522,6 +522,7 @@ body.va-page-modal-open{
 @media (max-width:1200px){.va-loc-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){.va-loc-grid{grid-template-columns:1fr!important}}
 @media (max-width:760px){.va-submit-preview-shell{padding:8px}#va-wizard-overlay.va-wizard-shell{width:calc(100vw - 16px)!important;height:calc(100vh - 16px)!important;max-height:calc(100vh - 16px)!important}}
+@media (max-width:1100px){#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar{padding:16px}#va-wizard-overlay.va-wizard-shell .va-wizard-main{padding:16px}}
 </style>
 <style>
 /* Step 1 category list hotfix (current markup: .va-cat-list > li > .va-cat-item) */
@@ -530,8 +531,8 @@ body.va-page-modal-open{
     margin: 0 0 14px !important;
     padding: 0 !important;
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 12px !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 8px !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-list > li {
     list-style: none !important;
@@ -540,18 +541,19 @@ body.va-page-modal-open{
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item {
     width: 100% !important;
-    min-height: 56px !important;
+    min-height: 44px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
     text-align: left !important;
-    padding: 10px 14px !important;
-    border-radius: 14px !important;
+    padding: 8px 10px !important;
+    border-radius: 12px !important;
     border: 1px solid rgba(255,255,255,.16) !important;
     background: rgba(255,255,255,.04) !important;
     color: #fff !important;
     font-weight: 700 !important;
-    line-height: 1.25 !important;
+    font-size: 12px !important;
+    line-height: 1.15 !important;
     white-space: normal !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-cat-item:hover {
@@ -564,10 +566,10 @@ body.va-page-modal-open{
     box-shadow: inset 0 0 0 1px rgba(255,0,0,.22) !important;
 }
 @media (max-width:1200px){
-    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
 }
 @media (max-width:760px){
-    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: 1fr !important; }
+    #va-wizard-overlay.va-wizard-shell .va-cat-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice {
     margin-top: 14px;
