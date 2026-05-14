@@ -741,6 +741,17 @@ body.va-page-modal-open{
     margin-right: 0 !important;
     flex: 0 0 auto !important;
 }
+#va-wizard-overlay.va-wizard-shell .va-wizard-main {
+    position: relative;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-close-top {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 12px;
+}
+#va-wizard-overlay.va-wizard-shell .va-wizard-close-top .va-submit-page-close {
+    margin: 0 !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-cond-group .va-wiz-field-label {
     display: block !important;
     color: rgba(255,255,255,.72) !important;
@@ -1097,6 +1108,10 @@ body.va-modal-open {
         </aside>
 
         <div class="va-wizard-main">
+
+            <div class="va-wizard-close-top">
+                <button type="button" class="va-submit-page-close" id="va-submit-page-close" aria-label="Bezárás">Bezárás</button>
+            </div>
 
             <div class="va-wizard-body">
     <form id="va-submit-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" enctype="multipart/form-data">
@@ -1684,7 +1699,6 @@ body.va-modal-open {
             <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
             <button type="button" class="va-btn va-btn--primary" id="va-wizard-next">Tovább →</button>
             <button type="submit" form="va-submit-form" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
-            <button type="button" class="va-submit-page-close" id="va-submit-page-close" aria-label="Bezárás">Bezárás</button>
         </div>
         </div><!-- .va-wizard-main -->
     </div><!-- .va-wizard-shell -->
