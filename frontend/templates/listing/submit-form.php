@@ -1241,10 +1241,18 @@ body.va-modal-open {
             <?php
                 $dog_breed_options = [];
                 $dog_catalog = [];
-                if ( isset( $brand_models['vadaszkutya'] ) && is_array( $brand_models['vadaszkutya'] ) ) {
+                if ( isset( $hunting_brand_models['vadaszkutya'] ) && is_array( $hunting_brand_models['vadaszkutya'] ) ) {
+                    $dog_catalog = $hunting_brand_models['vadaszkutya'];
+                } elseif ( isset( $brand_models['vadaszkutya'] ) && is_array( $brand_models['vadaszkutya'] ) ) {
                     $dog_catalog = $brand_models['vadaszkutya'];
                 }
                 foreach ( $dog_catalog as $dog_group => $dog_items ) {
+                    $dog_group = trim( (string) $dog_group );
+                    if ( $dog_group !== '' ) {
+                        $group_value = sanitize_title( $dog_group );
+                        $group_label = ucwords( str_replace( [ '-', '_' ], ' ', $dog_group ) );
+                        $dog_breed_options[ $group_value ] = $group_label;
+                    }
                     if ( ! is_array( $dog_items ) ) {
                         continue;
                     }
@@ -1255,6 +1263,9 @@ body.va-modal-open {
                         }
                         $opt_value = sanitize_title( $dog_item );
                         $opt_label = ucwords( str_replace( [ '-', '_' ], ' ', $dog_item ) );
+                        if ( $dog_group !== '' ) {
+                            $opt_label .= ' (' . ucwords( str_replace( [ '-', '_' ], ' ', $dog_group ) ) . ')';
+                        }
                         $dog_breed_options[ $opt_value ] = $opt_label;
                     }
                 }

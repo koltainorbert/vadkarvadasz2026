@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 15. – Session #359c — Vadászkutya fajtalista nem görgetett (forrás javítás)
+
+### Kérés
+- A fajtalista nem görgethető/ túl rövidnek látszik.
+
+### Javítás
+- A kutyafajta lista forrása javítva lett: elsődlegesen a vadászati adatforrásból (`$hunting_brand_models['vadaszkutya']`) épül.
+- A korábbi rövid lista azért volt, mert rossz adatszerkezetből történt a beolvasás.
+- A lista most csoport + elem bontásban töltődik, ezért jóval hosszabb és görgethető.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 15. – Session #359b — Vadászkutya fajtalista dinamikus adatforrásból
 
 ### Kérés
