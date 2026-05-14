@@ -625,6 +625,7 @@ body.va-page-modal-open{
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
     color: #111 !important;
+    border-radius: 30px;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn:hover,
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn:focus,
