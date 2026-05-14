@@ -470,12 +470,12 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     bottom: 0;
     z-index: 999990;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding: 16px 10px 10px;
+    padding: 16px 10px;
     background: rgba(0, 0, 0, 0.78);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 body.va-page-modal-open{
     overflow: hidden;
