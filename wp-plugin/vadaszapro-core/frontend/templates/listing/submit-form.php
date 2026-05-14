@@ -685,6 +685,11 @@ body.va-page-modal-open{
     margin-right: 0 !important;
     flex: 0 0 auto !important;
 }
+#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar {
+    height: 100% !important;
+    min-height: 100% !important;
+    background: linear-gradient(180deg, rgba(255,138,0,.20) 0%, rgba(255,138,0,.12) 36%, rgba(255,138,0,.08) 100%), #130b04 !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;

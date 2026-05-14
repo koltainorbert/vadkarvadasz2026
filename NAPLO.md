@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 14. – Session #358m — Bal oldali fekete sáv kitöltése
+
+### Kérés
+- A lépések bal oldali paneljén a border alatt látható fekete sáv is kapjon hátteret.
+
+### Javítás
+- A wizard sidebar teljes magasságú, erősebb narancsos alapgradientet kapott, így az alsó fekete sáv is a panel háttérének része lett.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358l — Bal oldali lépések panel top gap csökkentés
 
 ### Kérés
