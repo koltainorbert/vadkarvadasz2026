@@ -2,6 +2,80 @@
 
 ---
 
+## 2026. 05. 15. – Session #359e — Távcső kategória kompakt felépítés + 6 új mező
+
+### Kérés (KRITIKUS - UX)
+- Távcső kategóriák (tavcsovek, ejjellato-tavcso, hokamerak) mezői szétszórtak, márkák alig látszanak
+- Szükséges új kötelező mezők: Típus (Monokuláris/Biokuláris), Szürkületi érték, Bevonatok
+- Keresőtávcső, Spektív mezők hiányoznak
+- Kompakt 2-oszlopos layout kívánatos
+
+### Megoldás
+**Új mezők hozzáadása:**
+- `finder_scope` – Keresőtávcső (text)
+- `spectiv_type` – Spektív (text)
+- `scope_type` – **Típus dropdown** (Monokuláris | Biokuláris) ← kötelező!
+- `scope_coatings` – Bevonatok (text)
+- `twilight_value` – Szürkületi érték (text) ← kötelező!
+- `scope_accessories` – Tartozékok (text)
+
+**Layout átalakítás:**
+- Új `va-telescope-fields-grid` CSS grid wrapper (2 oszlop)
+- 4 sor mezőpár: 
+  1. Nagyítás | Objektív átmérő
+  2. Keresőtávcső | Spektív
+  3. Típus | Szürkületi érték
+  4. Bevonatok | Tartozékok
+
+**Kategória-specifikus szükségletek:**
+- `tavcsovek`: brand, model, optic_zoom, optic_objective, scope_type, scope_coatings, twilight_value (kötelezők)
+- `ejjellato-tavcso`: brand, model, optic_zoom, scope_type, twilight_value (kötelezők)
+- `hokamerak`: brand, model, optic_zoom, scope_type (kötelezők)
+
+**Megjelenítés logika:**
+- A távcső rács csak távcső kategóriákban jelenik meg
+- `optic_objective` csak `tavcsovek` kategóriában látható
+- `applyCategorySpecificFieldVisibility()` frissítve az új kategória-felismerésre
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+  - Meta feltöltés (line ~289) + 6 új mező
+  - category_required_rules (line ~250) + frissített rules
+  - HTML layout (line ~1233) + kompakt grid
+  - Labels (line ~2992) + 6 új label
+  - applyCategorySpecificFieldVisibility() (line ~3053) + távcső logika
+  
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - Azonos módosítások (mirror szinkronizálva)
+
+- `style.css`
+  - `.va-telescope-fields-grid` – 2 oszlopos CSS grid + mobile fallback
+
+### CSS
+```css
+.va-telescope-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 768px) {
+  .va-telescope-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+### Validáció
+- PHP szintaxis: ✓ Nincs hiba
+- Új select dropdown (scope_type): Monokuláris / Biokuláris ← rend szerű
+- Märka mezők JÓL LÁTHATÓK (előző limit-fix)
+
+### Deploy
+- Push futtatandó az aktuális módosítások élesítéséhez.
+
+---
+
 ## 2026. 05. 15. – Session #359d — Fegyvergyártó lista vágási limit javítás
 
 ### Kérés
