@@ -733,7 +733,7 @@
         },
         {
             "taxonomy": "va_category",
-            "name": "Golyós puska",
+            "name": "Golyós lőfegyver",
             "slug": "golyos-puska",
             "description": "",
             "parent_slug": "fegyverek",
@@ -741,7 +741,7 @@
         },
         {
             "taxonomy": "va_category",
-            "name": "Sörétes puska",
+            "name": "Sörétes lőfegyver",
             "slug": "soretes-puska",
             "description": "",
             "parent_slug": "fegyverek",
@@ -749,7 +749,7 @@
         },
         {
             "taxonomy": "va_category",
-            "name": "Vegyescsövű puska",
+            "name": "Vegyescsövű lőfegyver",
             "slug": "vegyescsovu-puska",
             "description": "",
             "parent_slug": "fegyverek",
