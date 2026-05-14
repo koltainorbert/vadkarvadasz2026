@@ -581,6 +581,10 @@ body.va-page-modal-open{
 @media (max-width:760px){.va-loc-grid{grid-template-columns:1fr!important}}
 @media (max-width:760px){.va-submit-preview-shell{padding:8px}#va-wizard-overlay.va-wizard-shell{width:calc(100vw - 16px)!important;max-height:calc(100vh - 16px)!important}}
 @media (max-width:1100px){#va-wizard-overlay.va-wizard-shell .va-wizard-sidebar{padding:16px}#va-wizard-overlay.va-wizard-shell .va-wizard-main{padding:16px}}
+.va-submit-preview-shell{overflow-y:auto!important;align-items:flex-start!important}
+#va-wizard-overlay.va-wizard-shell{overflow-y:auto!important;overflow-x:hidden!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-main{overflow:visible!important;max-height:none!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important}
 </style>
 <style>
 /* Step 1 category list hotfix (current markup: .va-cat-list > li > .va-cat-item) */
@@ -2433,31 +2437,58 @@ document.addEventListener('DOMContentLoaded', function() {
         var $brand = $('#va-brand');
         var $model = $('#va-model');
         if (!$brand.length || !$model.length) return;
-        if (!$model.is('select')) return;
 
-        var brand = $brand.val() || '';
-        var models = (VA_Data.vehicle_brand_models && VA_Data.vehicle_brand_models[brand]) ? VA_Data.vehicle_brand_models[brand] : [];
+        var brand = (($brand.val() || '') + '').trim();
+        var catalog = (typeof VA_Data !== 'undefined' && VA_Data.vehicle_brand_models) ? VA_Data.vehicle_brand_models : {};
+        var models = catalog[brand] || [];
+        if ((!models || !models.length) && brand) {
+            var brandLower = brand.toLowerCase();
+            Object.keys(catalog).some(function(key){
+                if ((key || '').toLowerCase() === brandLower) {
+                    models = catalog[key] || [];
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        if ($model.is('input')) {
+            ensureBrandModelDataLists();
+            var $modelList = $('#va-model-list');
+            var currentInput = (($model.val() || '') + '').trim();
+            $modelList.empty();
+            models.forEach(function(modelName){
+                $('<option>').attr('value', modelName).appendTo($modelList);
+            });
+            if (currentInput) {
+                $model.val(currentInput);
+            }
+            return;
+        }
+
         var current = $model.data('selected') || $model.val() || '';
         var html = '<option value="">– Válasszon –</option>';
-
         if (current && models.indexOf(current) === -1) {
             html += '<option value="' + $('<div>').text(current).html() + '">' + $('<div>').text(current).html() + '</option>';
         }
-
-        models.forEach(function(model) {
-            var safe = $('<div>').text(model).html();
+        models.forEach(function(modelName) {
+            var safe = $('<div>').text(modelName).html();
             html += '<option value="' + safe + '">' + safe + '</option>';
         });
-
         $model.html(html);
         if (current) {
             $model.val(current);
         }
     }
 
-    $('#va-brand').on('change', function(){
-        $('#va-model').data('selected', '');
-        rebuildVehicleModelOptions();
+    $(document).on('change', '#va-brand', function(){
+        if (isVehicleCategorySelected()) {
+            rebuildVehicleModelOptions();
+            return;
+        }
+        if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
+            rebuildHuntingBrandModelDatalists(true);
+        }
     });
     rebuildVehicleModelOptions();
 
@@ -2522,19 +2553,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 $brand = $brandSelect;
             }
 
-            if (!$model.is('select')) {
-                var modelHtml = '<option value="">– Válasszon –</option>';
-                if (modelValue) {
-                    var safeCurrentModel = $('<div>').text(modelValue).html();
-                    modelHtml += '<option value="' + safeCurrentModel + '" selected>' + safeCurrentModel + '</option>';
-                }
-                var $modelSelect = $('<select name="model" id="va-model" class="va-select" data-placeholder="pl. R8, Z6..."></select>').html(modelHtml);
-                $model.replaceWith($modelSelect);
-                $model = $modelSelect;
-            }
-
-            if (modelValue) {
-                $model.data('selected', modelValue);
+            ensureBrandModelDataLists();
+            if (!$model.is('input')) {
+                var $modelInputVehicle = $('<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="Írd be a modellt vagy válassz a listából...">').val(modelValue);
+                $model.replaceWith($modelInputVehicle);
+                $model = $modelInputVehicle;
             }
             rebuildVehicleModelOptions();
             return;

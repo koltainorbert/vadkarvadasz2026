@@ -8043,3 +8043,17 @@ Jármű kategória esetén már autóspecifikus márkák/típusok jelennek meg, 
 
 ---
 
+## 2026. 05. 14. – Session: Modell beírás + scroll hard-fix
+
+### Mit csináltunk [x]
+- [x] Jármű módban a `model` mező visszaállítva beírható input + datalist működésre
+- [x] Márkaváltáskor a modell lista újratöltése delegált eventtel (`#va-brand` dinamikus csere mellett is)
+- [x] Autós modelllista betöltés javítva case-insensitive márka kulcs egyeztetéssel
+- [x] Scroll javítás megerősítve a legkésőbbi override CSS blokkban (`overflow-y:auto!important`)
+- [x] Root + plugin template fájlok szinkron frissítve
+
+### Hol tartunk
+Jármű kategóriánál a modell mező szabadon írható, közben ajánl autós modelleket, és a modal tartalom lefelé görgethető.
+
+---
+
