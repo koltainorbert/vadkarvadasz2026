@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358q — Sidebar és felső kitöltés egységes színre
+
+### Kérés
+- A felső kitöltés színe folytatódjon tovább ugyanazzal a színnel.
+
+### Javítás
+- A felső kitöltő `::before` sáv mellé maga a wizard sidebar is fix `#1F1305` háttérszínt kapott.
+- Így a bal felső rész és az alatta lévő sidebar egyetlen egységes színblokkot ad.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358p — Sidebar top-gap fix színre állítása
 
 ### Kérés

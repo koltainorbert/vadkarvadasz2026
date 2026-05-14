@@ -691,6 +691,7 @@ body.va-page-modal-open{
     pointer-events: none;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar {
+    background: #1F1305 !important;
     position: relative;
     z-index: 1;
 }
