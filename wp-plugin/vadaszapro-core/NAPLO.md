@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 14. – Session #358c — Submit popup layout finomhangolás (4 oszlop + alsó gap fix)
+
+### Kérés
+- A kategória rács legyen 4 oszlopos.
+- Felül maradjon jó a térköz, alul ne maradjon nagy üres fekete rész.
+
+### Javítás
+- A Step 1 kategória lista desktopon fixen 4 oszlopra állítva.
+- Breakpointok tisztítva:
+  - `<=1200px`: 3 oszlop,
+  - `<=760px`: 2 oszlop.
+- Ütköző `<=1400px` felülíró szabály eltávolítva.
+- A submit form flex oszlopos lett, a footer `margin-top:auto` beállítással az overlay aljához igazodik, így a nagy alsó üres sáv megszűnik.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358b — Teljes hirdetésfeladás popup mód
 
 ### Kérés
