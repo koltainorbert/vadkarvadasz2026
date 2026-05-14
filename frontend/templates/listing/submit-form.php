@@ -1236,13 +1236,48 @@ body.va-modal-open {
             <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
                 <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
-                <label>Nagyítás (pl. 3-12x50)</label>
-                <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
-            </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="tavcsovek">
-                <label>Objektív átmérő (mm)</label>
-                <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
+            <!-- Távcső kompakt grid layout -->
+            <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+                <!-- ROW 1: Nagyítás | Objektív átmérő -->
+                <div class="va-cat-rule-field">
+                    <label>Nagyítás (pl. 3-12x50)</label>
+                    <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
+                </div>
+                <div class="va-cat-rule-field" data-visibility="tavcsovek">
+                    <label>Objektív átmérő (mm)</label>
+                    <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
+                </div>
+                <!-- ROW 2: Keresőtávcső | Spektív -->
+                <div class="va-cat-rule-field">
+                    <label>Keresőtávcső</label>
+                    <input type="text" name="finder_scope" class="va-input" placeholder="pl. 1x20" value="<?php echo esc_attr((string)($edit_meta['finder_scope'] ?? '')); ?>">
+                </div>
+                <div class="va-cat-rule-field">
+                    <label>Spektív</label>
+                    <input type="text" name="spectiv_type" class="va-input" placeholder="pl. Spektív" value="<?php echo esc_attr((string)($edit_meta['spectiv_type'] ?? '')); ?>">
+                </div>
+                <!-- ROW 3: Típus | Szürkületi érték -->
+                <div class="va-cat-rule-field">
+                    <label>Típus</label>
+                    <select name="scope_type" class="va-input">
+                        <option value="">-- Válassz típust --</option>
+                        <option value="monokuláris"<?php echo ($edit_meta['scope_type'] ?? '') === 'monokuláris' ? ' selected' : ''; ?>>Monokuláris</option>
+                        <option value="biokuláris"<?php echo ($edit_meta['scope_type'] ?? '') === 'biokuláris' ? ' selected' : ''; ?>>Biokuláris</option>
+                    </select>
+                </div>
+                <div class="va-cat-rule-field">
+                    <label>Szürkületi érték</label>
+                    <input type="text" name="twilight_value" class="va-input" placeholder="pl. 15" value="<?php echo esc_attr((string)($edit_meta['twilight_value'] ?? '')); ?>">
+                </div>
+                <!-- ROW 4: Bevonatok | Tartozékok -->
+                <div class="va-cat-rule-field">
+                    <label>Bevonatok</label>
+                    <input type="text" name="scope_coatings" class="va-input" placeholder="pl. Multi-coated" value="<?php echo esc_attr((string)($edit_meta['scope_coatings'] ?? '')); ?>">
+                </div>
+                <div class="va-cat-rule-field">
+                    <label>Tartozékok</label>
+                    <input type="text" name="scope_accessories" class="va-input" placeholder="pl. Tartó, lencsevédő" value="<?php echo esc_attr((string)($edit_meta['scope_accessories'] ?? '')); ?>">
+                </div>
             </div>
             <?php
                 $dog_breed_options = [];
@@ -2960,6 +2995,12 @@ document.addEventListener('DOMContentLoaded', function() {
             caliber: 'Kaliber',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
+            finder_scope: 'Keresőtávcső',
+            spectiv_type: 'Spektív',
+            scope_type: 'Típus (Monokuláris/Biokuláris)',
+            scope_coatings: 'Bevonatok',
+            twilight_value: 'Szürkületi érték',
+            scope_accessories: 'Tartozékok',
             dog_age_months: 'Kutya életkor (hónap)',
             dog_breed: 'Kutya fajtája',
             dog_gender: 'Neme',
