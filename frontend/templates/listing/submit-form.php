@@ -494,10 +494,20 @@ body.va-page-modal-open{
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,.25);
     background: rgba(0,0,0,.55);
-    color: #fff;
-    font-size: 26px;
+    color: transparent;
+    font-size: 0;
     line-height: 1;
     cursor: pointer;
+}
+.va-submit-page-close::before{
+    content: '×';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -54%);
+    color: #fff;
+    font-size: 30px;
+    line-height: 1;
 }
 .va-submit-page-close:hover{
     border-color: rgba(255,0,0,.7);
