@@ -1239,25 +1239,25 @@ body.va-modal-open {
             <!-- Távcső kompakt grid layout -->
             <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
                 <!-- ROW 1: Nagyítás | Objektív átmérő -->
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Nagyítás (pl. 3-12x50)</label>
                     <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
                 </div>
-                <div class="va-cat-rule-field" data-visibility="tavcsovek">
+                <div class="va-telescope-field" data-visibility="tavcsovek">
                     <label>Objektív átmérő (mm)</label>
                     <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
                 </div>
                 <!-- ROW 2: Keresőtávcső | Spektív -->
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Keresőtávcső</label>
                     <input type="text" name="finder_scope" class="va-input" placeholder="pl. 1x20" value="<?php echo esc_attr((string)($edit_meta['finder_scope'] ?? '')); ?>">
                 </div>
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Spektív</label>
                     <input type="text" name="spectiv_type" class="va-input" placeholder="pl. Spektív" value="<?php echo esc_attr((string)($edit_meta['spectiv_type'] ?? '')); ?>">
                 </div>
                 <!-- ROW 3: Típus | Szürkületi érték -->
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Típus</label>
                     <select name="scope_type" class="va-input">
                         <option value="">-- Válassz típust --</option>
@@ -1265,16 +1265,16 @@ body.va-modal-open {
                         <option value="biokuláris"<?php echo ($edit_meta['scope_type'] ?? '') === 'biokuláris' ? ' selected' : ''; ?>>Biokuláris</option>
                     </select>
                 </div>
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Szürkületi érték</label>
                     <input type="text" name="twilight_value" class="va-input" placeholder="pl. 15" value="<?php echo esc_attr((string)($edit_meta['twilight_value'] ?? '')); ?>">
                 </div>
                 <!-- ROW 4: Bevonatok | Tartozékok -->
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Bevonatok</label>
                     <input type="text" name="scope_coatings" class="va-input" placeholder="pl. Multi-coated" value="<?php echo esc_attr((string)($edit_meta['scope_coatings'] ?? '')); ?>">
                 </div>
-                <div class="va-cat-rule-field">
+                <div class="va-telescope-field">
                     <label>Tartozékok</label>
                     <input type="text" name="scope_accessories" class="va-input" placeholder="pl. Tartó, lencsevédő" value="<?php echo esc_attr((string)($edit_meta['scope_accessories'] ?? '')); ?>">
                 </div>
@@ -3079,9 +3079,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Hide optic_objective for non-tavcsovek telescope categories
         if (isTelescopeCategory && !/^tavcsovek$/.test(slug)) {
-            $('.va-telescope-fields-grid .va-cat-rule-field[data-visibility="tavcsovek"]').hide();
+            $('.va-telescope-fields-grid .va-telescope-field[data-visibility="tavcsovek"]').hide();
         } else if (isTelescopeCategory) {
-            $('.va-telescope-fields-grid .va-cat-rule-field[data-visibility="tavcsovek"]').show();
+            $('.va-telescope-fields-grid .va-telescope-field[data-visibility="tavcsovek"]').show();
+        }
+        
+        // Apply required attributes to telescope fields
+        if (isTelescopeCategory) {
+            $('.va-telescope-fields-grid input, .va-telescope-fields-grid select, .va-telescope-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
         }
 
         $('.va-cat-rule-field').each(function(){
