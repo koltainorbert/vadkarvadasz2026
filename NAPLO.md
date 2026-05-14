@@ -2,6 +2,42 @@
 
 ---
 
+## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
+
+### Kérés
+- A felületen ne jelenjen meg a `puska` szó, helyette `lőfegyver` legyen.
+- A gyártási év mezőnél popup évválasztó jelenjen meg sötét (fekete) dizájnnal.
+
+### Javítás
+- A submit wizardben a kategória-megjelenítésnél futásidőben szövegcsere került be (`puska` → `lőfegyver`), így a listában már nem jelenik meg `puska`.
+- A kategória-szabályok user-facing labeljei átírva `lőfegyver` formára (submit template + AJAX validációs map).
+- Új gyártási év picker készült:
+  - fekete, blur hátteres modal,
+  - narancs akcentes gombok és év-grid,
+  - előző/következő évblokk léptetés,
+  - `Mai év` gyorsgomb,
+  - ESC és háttérkatt bezárás.
+- A gyártási év mező most popupból választható (readonly input + `Év választása` gomb).
+- A default taxonomy seed nevek is frissítve lettek (`Golyós/Sörétes/Vegyescsövű lőfegyver`).
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- `includes/factory-defaults.json`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+  - `wp-plugin/vadaszapro-core/includes/factory-defaults.json`
+
+### Mi maradt
+- Ha a régi taxonómia nevek már adatbázisban léteznek, admin oldali tömeges átnevezés/migráció még külön kör lehet.
+
+### Holnap ezzel kezdjük
+- Vizuális finomhangolás: évpicker mobilon (gombméret/rács), és teljes kategória-UI végigellenőrzése.
+
+### Deploy
+- Változások commitolva/pusholva (HEAD: `0ced45b`).
+
 ## 2026. 05. 14. – Session #358g — Wizard aktív lépés narancs + Bezárás 3px right align
 
 ### Kérés
