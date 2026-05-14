@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 15. – Session #359d — Fegyvergyártó lista vágási limit javítás
+
+### Kérés
+- Fegyvereknél a gyártó listában túl kevés elem jelenik meg, miközben sokkal több gyártó van feltöltve.
+
+### Javítás
+- A custom datalist panel 120-as globális limitje miatt a lista le volt vágva.
+- A limit dinamikus lett: `va-brand-list` esetén 2000 elem, egyéb listáknál 400.
+- Így a fegyvergyártó mezőben a teljesebb gyártólista megjelenik és görgethető.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
 ## 2026. 05. 15. – Session #359c — Vadászkutya fajtalista nem görgetett (forrás javítás)
 
 ### Kérés

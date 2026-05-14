@@ -1788,9 +1788,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function renderPanel($input) {
             var query = (($input.val() || '') + '').toLowerCase();
+            var listId = (($input.data('vaListId') || '') + '').toLowerCase();
+            var maxItems = listId === 'va-brand-list' ? 2000 : 400;
             var items = listValues($input).filter(function(v){
                 return !query || v.toLowerCase().indexOf(query) !== -1;
-            }).slice(0, 120);
+            }).slice(0, maxItems);
 
             if (!items.length) {
                 closePanel();
