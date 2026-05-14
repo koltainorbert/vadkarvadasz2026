@@ -610,6 +610,47 @@ body.va-page-modal-open{
     filter: brightness(1.03);
 }
 
+/* Elegant dark datalist replacement */
+.va-datalist-panel {
+    position: fixed;
+    z-index: 100002;
+    display: none;
+    width: 320px;
+    max-height: 260px;
+    overflow: auto;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(14,14,14,.98), rgba(8,8,8,.98));
+    box-shadow: 0 18px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.va-datalist-panel::-webkit-scrollbar {
+    width: 10px;
+}
+.va-datalist-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.05);
+    border-radius: 999px;
+}
+.va-datalist-panel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255,0,0,.7), rgba(255,80,0,.7));
+    border-radius: 999px;
+}
+.va-datalist-item {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.35;
+}
+.va-datalist-item:hover,
+.va-datalist-item.is-active {
+    background: rgba(255,0,0,.16);
+}
+
 /* Egyeb kategoria popup */
 .va-other-cat-modal {
     position: fixed;
@@ -1197,6 +1238,136 @@ body.va-modal-open {
 document.addEventListener('DOMContentLoaded', function() {
 (function($){
     $('body').addClass('va-page-modal-open');
+
+    /* ══ Custom dark datalist UI (native fehér lenyíló helyett) ══ */
+    (function initCustomDatalistUI(){
+        var $panel = $('<div class="va-datalist-panel" id="va-datalist-panel" aria-hidden="true"></div>').appendTo('body');
+        var $activeInput = $();
+        var activeIndex = -1;
+
+        function escapeHtml(v) {
+            return $('<div>').text(v == null ? '' : String(v)).html();
+        }
+
+        function listValues($input) {
+            var listId = ($input.data('vaListId') || '') + '';
+            if (!listId) return [];
+            var out = [];
+            var seen = {};
+            $('#' + listId + ' option').each(function(){
+                var v = (($(this).attr('value') || '') + '').trim();
+                if (!v) return;
+                var key = v.toLowerCase();
+                if (!seen[key]) {
+                    seen[key] = true;
+                    out.push(v);
+                }
+            });
+            return out;
+        }
+
+        function placePanel($input) {
+            if (!$input.length) return;
+            var rect = $input[0].getBoundingClientRect();
+            $panel.css({
+                width: rect.width + 'px',
+                left: Math.round(rect.left) + 'px',
+                top: Math.round(rect.bottom + 6) + 'px'
+            });
+        }
+
+        function closePanel() {
+            $panel.hide().attr('aria-hidden', 'true').empty();
+            $activeInput = $();
+            activeIndex = -1;
+        }
+
+        function renderPanel($input) {
+            var query = (($input.val() || '') + '').toLowerCase();
+            var items = listValues($input).filter(function(v){
+                return !query || v.toLowerCase().indexOf(query) !== -1;
+            }).slice(0, 120);
+
+            if (!items.length) {
+                closePanel();
+                return;
+            }
+
+            var html = '';
+            items.forEach(function(v, i){
+                html += '<button type="button" class="va-datalist-item' + (i === 0 ? ' is-active' : '') + '" data-value="' + escapeHtml(v) + '">' + escapeHtml(v) + '</button>';
+            });
+
+            $panel.html(html).show().attr('aria-hidden', 'false');
+            placePanel($input);
+            $activeInput = $input;
+            activeIndex = 0;
+        }
+
+        function moveActive(delta) {
+            var $items = $panel.find('.va-datalist-item');
+            if (!$items.length) return;
+            activeIndex = Math.max(0, Math.min($items.length - 1, activeIndex + delta));
+            $items.removeClass('is-active');
+            var $target = $items.eq(activeIndex).addClass('is-active');
+            var panel = $panel[0];
+            var node = $target[0];
+            if (panel && node) {
+                var t = node.offsetTop;
+                var b = t + node.offsetHeight;
+                if (t < panel.scrollTop) panel.scrollTop = t;
+                else if (b > panel.scrollTop + panel.clientHeight) panel.scrollTop = b - panel.clientHeight;
+            }
+        }
+
+        $(document).on('focus input click', 'input[list]', function(){
+            var $inp = $(this);
+            var listId = ($inp.attr('list') || '') + '';
+            if (listId && !$inp.data('vaListId')) {
+                $inp.data('vaListId', listId);
+            }
+            $inp.addClass('va-has-custom-list');
+            $inp.removeAttr('list');
+            renderPanel($inp);
+        });
+
+        $(document).on('keydown', 'input.va-has-custom-list', function(e){
+            if (!$panel.is(':visible')) return;
+            if (e.key === 'ArrowDown') { e.preventDefault(); moveActive(1); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); moveActive(-1); }
+            else if (e.key === 'Enter') {
+                var $a = $panel.find('.va-datalist-item.is-active').first();
+                if ($a.length) {
+                    e.preventDefault();
+                    $(this).val($a.data('value')).trigger('change').trigger('input');
+                    closePanel();
+                }
+            } else if (e.key === 'Escape') {
+                closePanel();
+            }
+        });
+
+        $panel.on('mousedown', '.va-datalist-item', function(e){
+            e.preventDefault();
+            var value = (($(this).data('value') || '') + '').trim();
+            if ($activeInput.length) {
+                $activeInput.val(value).trigger('change').trigger('input').focus();
+            }
+            closePanel();
+        });
+
+        $(document).on('mousedown', function(e){
+            if (!$(e.target).closest('#va-datalist-panel, input.va-has-custom-list, input[list]').length) {
+                closePanel();
+            }
+        });
+
+        $(window).on('resize scroll', function(){
+            if ($panel.is(':visible') && $activeInput.length) {
+                placePanel($activeInput);
+            }
+        });
+    })();
 
     /* ══ Wizard navigáció ════════════════════════════════ */
     var _wStep   = 1;
