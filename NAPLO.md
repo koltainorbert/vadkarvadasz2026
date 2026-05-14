@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 14. – Session #358p — Sidebar top-gap fix színre állítása
+
+### Kérés
+- A felső kitöltő sáv színe legyen fixen `#1F1305`.
+
+### Javítás
+- A wizard shell bal felső kitöltő `::before` rétegének háttere gradient helyett fix `#1F1305` lett.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358o — Sidebar felső gap kitöltése
 
 ### Kérés

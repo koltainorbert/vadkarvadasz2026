@@ -687,7 +687,7 @@ body.va-page-modal-open{
     left: 0;
     width: 280px;
     height: 15px;
-    background: linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,138,0,.02));
+    background: #1F1305;
     pointer-events: none;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar {
