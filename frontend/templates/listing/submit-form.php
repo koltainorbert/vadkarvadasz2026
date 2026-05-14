@@ -636,7 +636,7 @@ body.va-modal-open {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 99999;
+    z-index: 999999;
     display: none;
     flex-direction: column;
     align-items: center;
@@ -1226,18 +1226,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* Submit Notice Modal megnyitás/bezárás */
     function openSubmitNoticeModal() {
-        console.log('✓ openSubmitNoticeModal called');
         var $modal = $('#va-submit-notice-modal');
-        console.log('Modal found:', $modal.length > 0);
         $('body').addClass('va-modal-open');
         $modal.addClass('is-open').attr('aria-hidden', 'false');
-        console.log('Modal classes:', $modal.attr('class'));
     }
 
     function closeSubmitNoticeModal() {
         $('body').removeClass('va-modal-open');
         $('#va-submit-notice-modal').removeClass('is-open').attr('aria-hidden', 'true');
     }
+
+    // Move modal to body so it is not constrained by wizard container stacking/transform contexts.
+    (function ensureSubmitModalOnBody(){
+        var $modal = $('#va-submit-notice-modal');
+        if ($modal.length && !$modal.parent().is('body')) {
+            $('body').append($modal);
+        }
+    })();
 
     /* Submit notice modal bezárása a háttér kattintásakor vagy ESC billentyűre */
     $('#va-submit-notice-modal').on('click', function(e){
