@@ -481,12 +481,11 @@ body.va-page-modal-open{
     overflow: hidden;
 }
 .va-submit-page-close{
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 11px 14px;
-    margin: 0;
+    margin: 0 0 0 auto;
     background: #ff8a00 !important;
     border: 1px solid #ff8a00 !important;
     border-radius: 999px;
@@ -532,7 +531,7 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
-#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;max-height:min(92vh,960px)!important;overflow:hidden!important;border:2px solid rgba(255,138,0,.65)!important;box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06)!important}
+#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;max-height:min(92vh,960px)!important;overflow:hidden!important;border:2px solid rgba(255,138,0,.75)!important;box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06)!important}
 #va-wizard-overlay.va-wizard-shell{margin:0 auto!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;overflow:hidden;padding-top:0!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:none;overflow:visible!important;padding-right:4px}
