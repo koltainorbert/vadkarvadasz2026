@@ -1221,11 +1221,61 @@ body.va-modal-open {
                 <label>Objektív átmérő (mm)</label>
                 <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
             </div>
+            <?php
+                $dog_breed_options = [
+                    'magyar-vizsla-rovidszoru' => 'Magyar vizsla (rövidszőrű)',
+                    'magyar-vizsla-drotszoru'  => 'Magyar vizsla (drótszőrű)',
+                    'erdelyi-kopo'             => 'Erdélyi kopó',
+                    'magyar-agar'              => 'Magyar agár',
+                    'nemet-vizsla'             => 'Német vizsla',
+                    'weimari-vizsla'           => 'Weimari vizsla',
+                    'angol-pointer'            => 'Angol pointer',
+                    'angol-setter'             => 'Angol szetter',
+                    'gordon-setter'            => 'Gordon szetter',
+                    'breton-spaniel'           => 'Breton spániel',
+                    'cocker-spaniel'           => 'Cocker spániel',
+                    'labrador-retriever'       => 'Labrador retriever',
+                    'golden-retriever'         => 'Golden retriever',
+                    'bajor-hegyi-vereb'        => 'Bajor hegyi véreb',
+                    'hannoveri-vereb'          => 'Hannoveri véreb',
+                    'foxterrier'               => 'Foxterrier',
+                    'jagdterrier'              => 'Jagdterrier',
+                    'beagle'                   => 'Beagle',
+                    'drathaar'                 => 'Drathaar',
+                    'egyeb'                    => 'Egyéb'
+                ];
+                $dog_color_options = [
+                    'fekete'          => 'Fekete',
+                    'feher'           => 'Fehér',
+                    'barna'           => 'Barna',
+                    'csoki'           => 'Csoki',
+                    'voros'           => 'Vörös',
+                    'sarga'           => 'Sárga',
+                    'arany'           => 'Arany',
+                    'szurke'          => 'Szürke',
+                    'fekete-feher'    => 'Fekete-fehér',
+                    'barna-feher'     => 'Barna-fehér',
+                    'voros-feher'     => 'Vörös-fehér',
+                    'tricolor'        => 'Tricolor',
+                    'cifra-tarkas'    => 'Cifra / tarka',
+                    'egyeb'           => 'Egyéb'
+                ];
+                $saved_dog_breed = (string) ($edit_meta['dog_breed'] ?? '');
+                $saved_dog_color = (string) ($edit_meta['dog_color'] ?? '');
+            ?>
             <div class="va-cat-rule-field va-dog-fields-wrap" data-categories="vadaszkutya">
                 <div class="va-dog-row">
                     <div class="va-form-group">
                         <label>Kutya fajtája</label>
-                        <input type="text" name="dog_breed" class="va-input" placeholder="pl. Magyar vizsla" value="<?php echo esc_attr((string)($edit_meta['dog_breed'] ?? '')); ?>">
+                        <select name="dog_breed" class="va-select">
+                            <option value="">– Válasszon fajtát –</option>
+                            <?php if ( $saved_dog_breed !== '' && ! isset( $dog_breed_options[ $saved_dog_breed ] ) ): ?>
+                                <option value="<?php echo esc_attr( $saved_dog_breed ); ?>" selected><?php echo esc_html( $saved_dog_breed ); ?> (korábban mentett)</option>
+                            <?php endif; ?>
+                            <?php foreach ( $dog_breed_options as $opt_value => $opt_label ): ?>
+                                <option value="<?php echo esc_attr( $opt_value ); ?>"<?php selected( $saved_dog_breed, $opt_value ); ?>><?php echo esc_html( $opt_label ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="va-form-group">
                         <label>Neme</label>
@@ -1239,7 +1289,15 @@ body.va-modal-open {
                 <div class="va-dog-row">
                     <div class="va-form-group">
                         <label>Színe</label>
-                        <input type="text" name="dog_color" class="va-input" placeholder="pl. barna-fehér" value="<?php echo esc_attr((string)($edit_meta['dog_color'] ?? '')); ?>">
+                        <select name="dog_color" class="va-select">
+                            <option value="">– Válasszon színt –</option>
+                            <?php if ( $saved_dog_color !== '' && ! isset( $dog_color_options[ $saved_dog_color ] ) ): ?>
+                                <option value="<?php echo esc_attr( $saved_dog_color ); ?>" selected><?php echo esc_html( $saved_dog_color ); ?> (korábban mentett)</option>
+                            <?php endif; ?>
+                            <?php foreach ( $dog_color_options as $opt_value => $opt_label ): ?>
+                                <option value="<?php echo esc_attr( $opt_value ); ?>"<?php selected( $saved_dog_color, $opt_value ); ?>><?php echo esc_html( $opt_label ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="va-form-group">
                         <label>Fajtatisztaság</label>
