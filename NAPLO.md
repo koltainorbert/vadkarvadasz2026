@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358n — Utolsó sidebar háttérmódosítás visszavonása
+
+### Kérés
+- Az utolsó módosítás visszavonása.
+
+### Javítás
+- A legutóbb hozzáadott, bal oldali sidebar teljes magasságú háttérkitöltés override el lett távolítva.
+- A korábbi lépés- és layout igazítások változatlanul maradtak.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358m — Bal oldali fekete sáv kitöltése
 
 ### Kérés
