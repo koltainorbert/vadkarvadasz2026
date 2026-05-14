@@ -474,8 +474,8 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
     justify-content: center;
     padding: 16px 10px 10px;
     background: rgba(0, 0, 0, 0.78);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 body.va-page-modal-open{
     overflow: hidden;
