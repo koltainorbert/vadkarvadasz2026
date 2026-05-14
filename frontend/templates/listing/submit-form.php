@@ -1895,6 +1895,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showSubmitError('Add meg a hirdetés címét!');
                 return false;
             }
+            var vehicleErr = (typeof validateVehicleRequiredFields === 'function') ? validateVehicleRequiredFields() : '';
+            if (vehicleErr) { showSubmitError(vehicleErr); return false; }
             var catErr = (typeof validateCategoryRequiredFields === 'function') ? validateCategoryRequiredFields() : '';
             if (catErr) { showSubmitError(catErr); return false; }
         } else if (step === 3) {
@@ -2691,6 +2693,34 @@ document.addEventListener('DOMContentLoaded', function() {
         return (rule.label || 'A választott kategória') + ' kategóriában kötelező: ' + missing.join(', ') + '.';
     }
 
+    function validateVehicleRequiredFields() {
+        if (typeof VA_Data === 'undefined' || VA_Data.site_type !== 'jarmu') return '';
+
+        var requiredVehicleFields = [
+            { name: 'brand', label: 'Márka / gyártó' },
+            { name: 'model', label: 'Modell / típus' },
+            { name: 'year', label: 'Gyártási év' },
+            { name: 'mileage', label: 'Futásteljesítmény (km)' },
+            { name: 'fuel_type', label: 'Üzemanyag' },
+            { name: 'transmission', label: 'Sebességváltó' },
+            { name: 'drive', label: 'Hajtás' },
+            { name: 'vehicle_condition', label: 'Jármű állapota' },
+            { name: 'performance_kw', label: 'Teljesítmény (kW)' },
+            { name: 'engine_size', label: 'Hengerűrtartalom (cm³)' }
+        ];
+
+        var missing = [];
+        requiredVehicleFields.forEach(function(field){
+            var v = (($( '[name="' + field.name + '"]' ).val() || '') + '').trim();
+            if (!v) {
+                missing.push(field.label);
+            }
+        });
+
+        if (!missing.length) return '';
+        return 'Jármű hirdetéshez kötelező: ' + missing.join(', ') + '.';
+    }
+
     function applyCategorySpecificFieldVisibility() {
         if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
         var slug = getSelectedCategorySlug();
@@ -2746,6 +2776,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
             $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            openSubmitNoticeModal();
+            return;
+        }
+
+        var vehicleRuleError = validateVehicleRequiredFields();
+        if (vehicleRuleError) {
+            $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">' + $('<div>').text(vehicleRuleError).html() + '</div>');
             openSubmitNoticeModal();
             return;
         }
