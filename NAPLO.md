@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 14. – Session #358k — Footer nyújtás + gomb teljes jobbra tolása
+
+### Kérés
+- A `Bezárás` gomb tényleg a jobb oldali szélig menjen.
+
+### Javítás
+- A wizard footer most `display:flex`, `align-self:stretch` és `width:100%` beállítást kapott.
+- A `Bezárás` gomb `margin-left:auto` + `margin-right:0` szabállyal lett a sor jobb szélére kényszerítve.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358j — Erősebb háttér blur + teljes jobb szélig húzott Bezárás
 
 ### Kérés
