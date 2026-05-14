@@ -8014,3 +8014,18 @@ Jármű módban már nem engedhető át hiányos autós hirdetés: frontend és 
 
 ---
 
+## 2026. 05. 14. – Session: Jármű kategória tényleges aktiválási javítás
+
+### Mit csináltunk [x]
+- [x] Javítva: a jármű mezőblokk ne csak `site_type=jarmu` esetén renderelődjön
+- [x] Bevezetve frontend detektor: kiválasztott kategória slug/szöveg alapján is járműnek minősítés
+- [x] Jármű mezőblokk láthatóság kapcsolása kategóriaváltásra (`.va-vehicle-only`)
+- [x] Jármű kötelező validáció frontend oldalon kategóriaalapra átállítva
+- [x] Jármű kötelező validáció backend oldalon kategóriaalapra átállítva (`is_vehicle_category`)
+- [x] Root + plugin mirror fájlok szinkronban frissítve
+
+### Hol tartunk
+Jármű kategória kiválasztásakor már ténylegesen megjelennek és ellenőrzésre kerülnek a jármű-specifikus mezők, nem csak globális jármű site típusnál.
+
+---
+
