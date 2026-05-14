@@ -350,6 +350,7 @@ class VA_Ajax {
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -397,6 +398,7 @@ class VA_Ajax {
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
+            'va_shoe_size'   => $shoe_size,
         ];
 
         // Típus-specifikus extra mezők mentése
