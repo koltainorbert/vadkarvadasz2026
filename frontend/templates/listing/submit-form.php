@@ -579,6 +579,9 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle span {
     color: #fff !important;
 }
+#va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-group.va-title-group {
+    margin-top: 15px !important;
+}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn.is-selected {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
@@ -837,7 +840,7 @@ body.va-modal-open {
         <!-- ═══ STEP 2: Termék adatai ═══ -->
         <div class="va-wstep" data-step="2">
             <h3 class="va-wstep-title">Termék adatai</h3>
-            <div class="va-form-group">
+            <div class="va-form-group va-title-group">
                 <label>Hirdetés címe <span class="required">*</span></label>
                 <input type="text" name="title" id="va-title" class="va-input" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
             </div>
