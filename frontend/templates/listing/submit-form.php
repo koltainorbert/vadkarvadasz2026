@@ -611,22 +611,22 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice {
     margin-top: 14px;
     margin-bottom: 0;
-    border: 1px solid rgba(152, 255, 196, 0.95) !important;
-    background: linear-gradient(135deg, rgba(116, 224, 149, 0.97), rgba(74, 188, 114, 0.97)) !important;
-    box-shadow: 0 12px 28px rgba(24, 92, 48, 0.34), inset 0 1px 0 rgba(230, 255, 240, 0.48) !important;
-    color: #05260f !important;
+    border: 1px solid #2b9a0a !important;
+    background: #207E01 !important;
+    box-shadow: 0 12px 28px rgba(8, 34, 2, 0.45), inset 0 1px 0 rgba(170, 255, 140, 0.18) !important;
+    color: #efffe7 !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice,
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice p,
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice span {
-    color: #05260f !important;
+    color: #efffe7 !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice strong {
-    color: #031c0b !important;
+    color: #ffffff !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice a {
-    color: #063014 !important;
-    text-decoration-color: rgba(6, 48, 20, 0.45) !important;
+    color: #ffffff !important;
+    text-decoration-color: rgba(255, 255, 255, 0.55) !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle,
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle span {
