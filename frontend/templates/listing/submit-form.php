@@ -1951,7 +1951,9 @@ document.addEventListener('DOMContentLoaded', function() {
             data:        formData,
             processData: false,
             contentType: false,
+            beforeSend: function(){ console.log('Ajax request sending to:', VA_Data.ajax_url); },
             success: function(res){
+                console.log('Ajax success response:', res);
                 $btn.prop('disabled', false).text(editMode ? '💾 Változások mentése' : '📤 Hirdetés feladása');
                 if(res.success){
                     $notice.html('<div class="va-notice va-notice--success">' + res.data.message + '</div>');
@@ -1993,7 +1995,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             },
-            error: function(){
+            error: function(xhr, status, error){
+                console.error('Ajax error:', {status: xhr.status, statusText: xhr.statusText, error: error, response: xhr.responseText});
                 $btn.prop('disabled', false).text('📤 Hirdetés feladása');
                 $notice.html('<div class="va-notice va-notice--error">Hálózati hiba. Próbálja újra.</div>');
             }
