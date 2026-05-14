@@ -231,9 +231,9 @@ if ( is_array( $categories ) ) {
     }
 }
 $category_required_rules = [
-    'golyos-puska'       => [ 'label' => 'Golyós puska', 'required' => [ 'brand', 'caliber' ] ],
-    'soretes-puska'      => [ 'label' => 'Sörétes puska', 'required' => [ 'brand', 'caliber' ] ],
-    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű puska', 'required' => [ 'brand', 'caliber' ] ],
+    'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
