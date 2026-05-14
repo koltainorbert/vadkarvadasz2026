@@ -1875,10 +1875,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ══ Form submit ═════════════════════════════════════ */
     $('#va-submit-form').on('submit', function(e){
+        console.log('✓ Form submit handler triggered');
         e.preventDefault();
         var $btn    = $('#va-submit-btn');
         var editMode = !! VA_Data.edit_mode;
         var $notice  = $('#va-submit-notice-modal');
+        console.log('Button state:', $btn.length, 'Notice elem:', $notice.length);
 
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
