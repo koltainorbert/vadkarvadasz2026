@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 14. – Session #358f — Lenyíló rétegzés fix + erősebb modal border
+
+### Kérés
+- A lenyíló menü a popup mögött nyílt meg.
+- A teljes modal kapjon erősebb bordert.
+
+### Javítás
+- A custom datalist panel z-indexe extrém magas értékre emelve, hogy mindig a modal fölött jelenjen meg.
+- Az összes `input[list]` mező azonnal custom listára konvertálódik initkor, így a natív fehér datalist nem tud a háttérben megnyílni.
+- A modal kártya kapott erősebb, narancsos keretet és hangsúlyosabb shadow-t.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358e — Elegáns fekete lenyíló UI datalist mezőkhöz
 
 ### Kérés
