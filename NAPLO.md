@@ -2,6 +2,27 @@
 
 ---
 
+## 2026. 05. 14. – Session #358b — Teljes hirdetésfeladás popup mód
+
+### Kérés
+- A teljes hirdetésfeladás ne normál oldalként jelenjen meg, hanem popup overlayként viselkedjen.
+- Ugyanolyan modal élmény kell, mint az `Egyéb` kategória esetén.
+
+### Javítás
+- A teljes submit shell fullscreen overlay módba került (blur háttér, fix pozíció, magas z-index).
+- A wizard középre pozicionált, viewport magassághoz igazított popup-kártyaként működik.
+- Belső görgetés a wizard body-ban, mobilon is viewport-követő méret.
+- Beépült bezáró gomb (`×`) és ESC-es bezárás logika.
+- A body scroll lock aktiválódik popup módban.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a módosítás után.
+
 ## 2026. 05. 14. – Session #358a — Hirdetés feladás popup/modal véglegesítés
 
 ### Kérés
