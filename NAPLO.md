@@ -8057,3 +8057,16 @@ Jármű kategóriánál a modell mező szabadon írható, közben ajánl autós 
 
 ---
 
+## 2026. 05. 14. – Session: Modell ajánló fallback javítás
+
+### Mit csináltunk [x]
+- [x] Ha a kiválasztott márkához nincs találat, fallbackként globális autós modelllista töltődik
+- [x] Jármű modellajánló frissítés bekötve `focus` és `input` eseményre is
+- [x] Márkaváltás utáni modelllista töltés megtartva, de robusztusabb fallbackgel
+- [x] Root + plugin template fájlok szinkronban frissítve
+
+### Hol tartunk
+Márkafüggő modell-ajánló működik, és üres márka-találat esetén sem marad üres a modell lista.
+
+---
+

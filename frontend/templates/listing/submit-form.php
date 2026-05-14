@@ -2451,6 +2451,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             });
         }
+        if (!models || !models.length) {
+            var mergedModels = [];
+            Object.keys(catalog).forEach(function(key){
+                (catalog[key] || []).forEach(function(modelName){
+                    if (mergedModels.indexOf(modelName) === -1) mergedModels.push(modelName);
+                });
+            });
+            models = mergedModels.slice(0, 600);
+        }
 
         if ($model.is('input')) {
             ensureBrandModelDataLists();
@@ -2488,6 +2497,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             rebuildHuntingBrandModelDatalists(true);
+        }
+    });
+    $(document).on('focus input', '#va-model', function(){
+        if (isVehicleCategorySelected()) {
+            rebuildVehicleModelOptions();
         }
     });
     rebuildVehicleModelOptions();
