@@ -3060,6 +3060,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
         var isDogCategory = /vadaszkutya|kutya/.test(slug)
             || /(vadászkutya|vadaszkutya|kutya)/.test(selectedCatText);
+        var isTelescopeCategory = /tavcsovek|ejjellato-tavcso|hokamerak/.test(slug)
+            || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
@@ -3071,6 +3073,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isDogCategory));
+
+        // Handle telescope fields grid
+        $('.va-telescope-fields-grid').toggle(isTelescopeCategory);
+        
+        // Hide optic_objective for non-tavcsovek telescope categories
+        if (isTelescopeCategory && !/^tavcsovek$/.test(slug)) {
+            $('.va-telescope-fields-grid .va-cat-rule-field[data-visibility="tavcsovek"]').hide();
+        } else if (isTelescopeCategory) {
+            $('.va-telescope-fields-grid .va-cat-rule-field[data-visibility="tavcsovek"]').show();
+        }
 
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
@@ -3096,6 +3108,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 $(this).prop('required', requiredHere);
             });
         });
+        
+        // Apply required attributes to telescope fields
+        if (isTelescopeCategory) {
+            $('.va-telescope-fields-grid input, .va-telescope-fields-grid select, .va-telescope-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
     }
 
     /* ══ Form submit ═════════════════════════════════════ */

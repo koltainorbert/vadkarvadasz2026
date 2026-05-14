@@ -819,6 +819,22 @@ input::placeholder, textarea::placeholder { color: var(--t3); }
 select option { background: var(--bg3); color: #fff; }
 textarea { min-height: 110px; resize: vertical; }
 
+/* Távcső kategória kompakt grid layout */
+.va-telescope-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.va-telescope-fields-grid .va-cat-rule-field {
+  margin-bottom: 0;
+}
+@media (max-width: 768px) {
+  .va-telescope-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ──────────────────────────────────────────────────────────
    GOMBOK
 ────────────────────────────────────────────────────────── */
