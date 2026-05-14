@@ -585,6 +585,7 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell{overflow:hidden!important;overflow-x:hidden!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{overflow-y:auto!important;overflow-x:hidden!important;max-height:calc(min(92vh,960px) - 30px)!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{overflow:visible!important}
+#va-wizard-overlay.va-wizard-shell{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;margin:0!important}
 </style>
 <style>
 /* Step 1 category list hotfix (current markup: .va-cat-list > li > .va-cat-item) */

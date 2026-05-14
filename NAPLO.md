@@ -8082,3 +8082,15 @@ A feladás modal ismét középen marad, miközben a belső tartalom görgethet�
 
 ---
 
+## 2026. 05. 14. – Session: Modal középzár hard-fix
+
+### Mit csináltunk [x]
+- [x] Erős középzár beállítás a wizard overlay-re: `position: fixed`, `top/left: 50%`, `transform: translate(-50%, -50%)`
+- [x] Scroll maradt belső konténeren, hogy a modal ne csússzon fel
+- [x] Root + plugin submit template frissítve
+
+### Hol tartunk
+A teljes feladás modal fixen középre van zárva minden lépésnél.
+
+---
+
