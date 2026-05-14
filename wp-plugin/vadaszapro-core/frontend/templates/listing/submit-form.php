@@ -2047,7 +2047,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else if (res.data && res.data.payment_required && res.data.payment_url) {
                         var amount = res.data.amount ? Number(res.data.amount).toLocaleString('hu-HU') + ' Ft' : '';
-                        var html2 = '<div class="va-notice va-notice--warning">'
+                        var html2 = '<div class="va-notice va-notice--warning" style="margin:0;padding:0;">'
                             + res.data.message
                             + (amount ? '<br><strong>Fizetendő: ' + amount + '</strong>' : '')
                             + '<br><a href="' + res.data.payment_url + '" class="va-btn va-btn--primary" style="margin-top:10px;display:inline-flex;">Bankkártyás fizetés</a>'
