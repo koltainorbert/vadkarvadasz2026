@@ -512,9 +512,7 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
 #va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;height:min(95vh,980px)!important;max-height:min(95vh,980px)!important;overflow:hidden!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;height:100%;overflow:hidden;padding-top:0!important}
-#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;overflow:auto!important;padding-right:4px}
-#va-submit-form{display:flex;flex-direction:column;min-height:100%}
-#va-submit-form .va-wizard-footer{margin-top:auto!important}
+#va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:1 1 auto;overflow:auto!important;min-height:0;padding-right:4px}
 #va-wizard-overlay.va-wizard-shell .va-cat-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
 @media (max-width:1200px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){#va-wizard-overlay.va-wizard-shell .va-cat-cards{grid-template-columns:1fr!important}}
@@ -1175,15 +1173,15 @@ body.va-modal-open {
             </p>
         </div><!-- /va-wstep step 4 -->
 
-        <!-- Wizard navigációs lábléc (form-on belül) -->
+    </form>
+            </div><!-- .va-wizard-body -->
+        <!-- Wizard navigációs lábléc -->
         <div class="va-wizard-footer">
             <button type="button" class="va-btn va-btn--ghost" id="va-wizard-prev" style="display:none">← Vissza</button>
             <span class="va-wiz-foot-label" id="va-wiz-label">1 / 4</span>
             <button type="button" class="va-btn va-btn--primary" id="va-wizard-next">Tovább →</button>
-            <button type="submit" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
+            <button type="submit" form="va-submit-form" class="va-btn va-btn--primary" id="va-submit-btn" style="display:none"><?php echo $edit_mode ? '💾 Mentés' : '📤 Feladás'; ?></button>
         </div>
-    </form>
-            </div><!-- .va-wizard-body -->
         </div><!-- .va-wizard-main -->
     </div><!-- .va-wizard-shell -->
 </div><!-- .va-submit-preview-shell -->
