@@ -666,7 +666,15 @@ body.va-page-modal-open{
 }
 .va-datalist-item:hover,
 .va-datalist-item.is-active {
-    background: rgba(255,0,0,.16);
+    background: rgba(255,138,0,.24);
+}
+.va-submit-preview-shell ::selection {
+    background: #ff8a00;
+    color: #111;
+}
+.va-submit-preview-shell ::-moz-selection {
+    background: #ff8a00;
+    color: #111;
 }
 
 /* Egyeb kategoria popup */
