@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 14. – Session #358a — Hirdetés feladás popup/modal véglegesítés
+
+### Kérés
+- A hirdetés feladási felületen minden hiba popup/modal formában jelenjen meg, ne csak toastként.
+- A popup akkor is jelenjen meg, ha a renderelés környezetében eltérés van (cache/stacking).
+
+### Javítás
+- A wizard lépés-validációk (`Kategória`, `Termék`, `Ár & Helyszín`) átállítva modal-hibajelzésre.
+- A submit notice modal futáskor `body` alá kerül, így nem ragad be konténeren belül.
+- A submit notice modal `z-index` megemelve (`999999`).
+- Biztonsági fallback beépítve:
+  - ha hiányzik a modal DOM, JS-ből újra létrejön,
+  - ha mégsem látható, natív `alert()` jelenik meg.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva, éles commitok: `7665fe3`, `14bf12b`, `3bfed11`.
+
 ## 2026. 05. 13. – Session #357u — Ajándékkredit ledger: fogyás létrehozáskor, nincs visszatöltés törléskor
 
 ### Kérés
