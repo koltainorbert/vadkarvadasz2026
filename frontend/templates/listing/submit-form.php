@@ -658,9 +658,8 @@ body.va-page-modal-open{
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer {
     justify-content: flex-end !important;
-    width: calc(100% + 28px) !important;
-    margin-right: -28px !important;
-    padding-right: 28px !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer .va-btn {
     background: #ff8a00 !important;
@@ -680,6 +679,7 @@ body.va-page-modal-open{
 /* Final visual overrides requested */
 #va-wizard-overlay.va-wizard-shell .va-submit-page-close {
     margin: 0 0 0 auto !important;
+    flex: 0 0 auto !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;
