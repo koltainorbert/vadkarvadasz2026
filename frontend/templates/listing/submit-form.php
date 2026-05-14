@@ -1226,8 +1226,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* Submit Notice Modal megnyitás/bezárás */
     function openSubmitNoticeModal() {
+        console.log('✓ openSubmitNoticeModal called');
+        var $modal = $('#va-submit-notice-modal');
+        console.log('Modal found:', $modal.length > 0);
         $('body').addClass('va-modal-open');
-        $('#va-submit-notice-modal').addClass('is-open').attr('aria-hidden', 'false');
+        $modal.addClass('is-open').attr('aria-hidden', 'false');
+        console.log('Modal classes:', $modal.attr('class'));
     }
 
     function closeSubmitNoticeModal() {
@@ -1944,25 +1948,26 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✓ Submit button clicked');
         var $btn    = $(this);
         var editMode = !! VA_Data.edit_mode;
-        var $notice  = $('#va-submit-notice-modal');
+        console.log('✓ Handler initialized, editMode:', editMode);
 
         var categoryRuleError = validateCategoryRequiredFields();
         if (categoryRuleError) {
-            $notice.html('<div class="va-notice va-notice--error">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">' + $('<div>').text(categoryRuleError).html() + '</div>');
+            openSubmitNoticeModal();
             return;
         }
 
         var selectedSlug = getSelectedCategorySlug();
         if (selectedSlug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
             openOtherCategoryModal();
-            $notice.html('<div class="va-notice va-notice--error">Egyéb kategóriánál add meg a kategória nevét is.</div>');
             return;
         }
 
         var city = (($('input[name="location"]').val() || '') + '').trim();
         var zip  = (($('input[name="postal_code"]').val() || '') + '').replace(/\D+/g, '');
         if (!city && !zip) {
-            $notice.html('<div class="va-notice va-notice--error">Adja meg a várost vagy az irányítószámot.</div>');
+            $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">Adja meg a várost vagy az irányítószámot.</div>');
+            openSubmitNoticeModal();
             return;
         }
 
