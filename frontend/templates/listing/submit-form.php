@@ -676,7 +676,7 @@ body.va-page-modal-open{
 
 /* Final visual overrides requested */
 #va-wizard-overlay.va-wizard-shell .va-submit-page-close {
-    margin: 0 3px 0 auto !important;
+    margin: 0 0 0 auto !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;

@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 14. – Session #358i — Bezárás gomb jobbszélre húzása
+
+### Kérés
+- A hirdetésfeladás popupban a `Bezárom` gomb legyen még jobban a jobb szélhez húzva.
+
+### Javítás
+- A submit wizard footerben a `.va-submit-page-close` gomb jobboldali eltartása nullára lett állítva, így a gomb flush a jobb széléhez ül.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
 
 ### Kérés
