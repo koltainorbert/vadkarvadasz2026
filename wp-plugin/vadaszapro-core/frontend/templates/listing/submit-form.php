@@ -611,22 +611,22 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice {
     margin-top: 14px;
     margin-bottom: 0;
-    border: 1px solid rgba(110, 255, 170, 0.8) !important;
-    background: linear-gradient(135deg, rgba(32, 115, 64, 0.95), rgba(18, 82, 45, 0.95)) !important;
-    box-shadow: 0 10px 24px rgba(16, 58, 32, 0.45), inset 0 1px 0 rgba(190, 255, 220, 0.2) !important;
-    color: #eafff1 !important;
+    border: 1px solid rgba(152, 255, 196, 0.95) !important;
+    background: linear-gradient(135deg, rgba(116, 224, 149, 0.97), rgba(74, 188, 114, 0.97)) !important;
+    box-shadow: 0 12px 28px rgba(24, 92, 48, 0.34), inset 0 1px 0 rgba(230, 255, 240, 0.48) !important;
+    color: #05260f !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice,
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice p,
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice span {
-    color: #eafff1 !important;
+    color: #05260f !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice strong {
-    color: #ffffff !important;
+    color: #031c0b !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar .va-wiz-plan-notice a {
-    color: #d8ffd7 !important;
-    text-decoration-color: rgba(216, 255, 215, 0.7) !important;
+    color: #063014 !important;
+    text-decoration-color: rgba(6, 48, 20, 0.45) !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle,
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot__circle span {
