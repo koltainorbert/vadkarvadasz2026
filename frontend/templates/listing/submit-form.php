@@ -1128,7 +1128,7 @@ body.va-modal-open {
             </div>
             <?php if ( $site_type !== 'jarmu' ): ?>
             <div class="va-form-row">
-                <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny">
+                <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek">
                     <label>Kaliber</label>
                     <input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="pl. .308 Win" value="<?php echo esc_attr((string)($edit_meta['caliber'] ?? '')); ?>">
                 </div>
