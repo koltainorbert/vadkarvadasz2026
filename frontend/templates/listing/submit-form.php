@@ -1229,8 +1229,6 @@ body.va-modal-open {
                         <label>Kutya fajtája</label>
                         <input type="text" name="dog_breed" class="va-input" placeholder="pl. Magyar vizsla" value="<?php echo esc_attr((string)($edit_meta['dog_breed'] ?? '')); ?>">
                     </div>
-                </div>
-                <div class="va-dog-row">
                     <div class="va-form-group">
                         <label>Neme</label>
                         <select name="dog_gender" class="va-select">
@@ -1245,8 +1243,6 @@ body.va-modal-open {
                         <label>Színe</label>
                         <input type="text" name="dog_color" class="va-input" placeholder="pl. barna-fehér" value="<?php echo esc_attr((string)($edit_meta['dog_color'] ?? '')); ?>">
                     </div>
-                </div>
-                <div class="va-dog-row">
                     <div class="va-form-group">
                         <label>Fajtatisztaság</label>
                         <select name="dog_purebred" class="va-select">
@@ -1254,6 +1250,12 @@ body.va-modal-open {
                             <option value="igen"<?php selected( (string)($edit_meta['dog_purebred'] ?? ''), 'igen' ); ?>>Igen</option>
                             <option value="nem"<?php selected( (string)($edit_meta['dog_purebred'] ?? ''), 'nem' ); ?>>Nem</option>
                         </select>
+                    </div>
+                </div>
+                <div class="va-dog-row va-dog-row--single">
+                    <div class="va-form-group">
+                        <label>Kutya életkor (hónap)</label>
+                        <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
                     </div>
                 </div>
             </div>
@@ -1312,8 +1314,9 @@ body.va-modal-open {
         .va-extra-check input { accent-color:#ff3030;flex-shrink:0; }
         .va-vehicle-specs + button, .va-vehicle-specs ~ button { margin-top:20px; }
         .va-dog-fields-wrap { margin-bottom: 14px; }
-        .va-dog-fields-wrap .va-dog-row { display:block; margin-bottom:14px; }
-        .va-dog-fields-wrap .va-dog-row:last-child { margin-bottom:0; }
+        .va-dog-fields-wrap .va-dog-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+        .va-dog-fields-wrap .va-dog-row--single { grid-template-columns:1fr; margin-bottom:0; }
+        @media (max-width:760px){ .va-dog-fields-wrap .va-dog-row { grid-template-columns:1fr; } }
         </style>
         <div class="va-vehicle-only">
         <div class="va-vehicle-specs">
