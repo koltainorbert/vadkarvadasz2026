@@ -569,16 +569,25 @@ $cond_saved  = (int)( $edit_meta['condition'] ?? 0 );
 /* Egyeb kategoria popup */
 .va-other-cat-modal {
     position: fixed;
-    inset: 0;
-    z-index: 99999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, .45);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, .65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 .va-other-cat-modal.is-open {
     display: flex;
+    animation: va-modal-fadein 0.2s ease-out;
+}
+@keyframes va-modal-fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 .va-other-cat-card {
     width: min(520px, calc(100% - 24px));
