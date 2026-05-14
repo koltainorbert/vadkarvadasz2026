@@ -242,8 +242,34 @@ class VA_Ajax {
         );
     }
 
-    private static function validate_vehicle_required_fields( array $values ): string {
-        if ( get_option( 'va_site_type', 'vadaszat' ) !== 'jarmu' ) {
+    private static function is_vehicle_category( int $category_id ): bool {
+        if ( get_option( 'va_site_type', 'vadaszat' ) === 'jarmu' ) {
+            return true;
+        }
+        if ( $category_id <= 0 ) {
+            return false;
+        }
+
+        $term = get_term( $category_id, 'va_category' );
+        if ( ! $term || is_wp_error( $term ) ) {
+            return false;
+        }
+
+        $slug = sanitize_title( (string) $term->slug );
+        $name = sanitize_text_field( wp_strip_all_tags( (string) $term->name ) );
+
+        if ( preg_match( '/(jarmu|gepjarmu|auto|autok|kocsi|motor|teherauto|busz|utanfuto|munkagep)/u', $slug ) ) {
+            return true;
+        }
+        if ( preg_match( '/(jármű|gepjármű|autó|auto|kocsi|motor|teherautó|busz|utánfutó|utanfuto|munkagép|munkagep)/ui', $name ) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static function validate_vehicle_required_fields( int $category_id, array $values ): string {
+        if ( ! self::is_vehicle_category( $category_id ) ) {
             return '';
         }
 
@@ -419,7 +445,7 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => $rule_error ] );
         }
 
-        $vehicle_error = self::validate_vehicle_required_fields( [
+        $vehicle_error = self::validate_vehicle_required_fields( $category, [
             'brand' => $brand,
             'model' => $model,
             'year' => $year,
@@ -630,7 +656,7 @@ class VA_Ajax {
             wp_send_json_error( [ 'message' => $rule_error ] );
         }
 
-        $vehicle_error = self::validate_vehicle_required_fields( [
+        $vehicle_error = self::validate_vehicle_required_fields( $category, [
             'brand' => $brand,
             'model' => $model,
             'year' => $year,

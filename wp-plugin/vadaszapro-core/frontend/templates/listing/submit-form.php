@@ -2559,6 +2559,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
         }
+        applyVehicleCategoryVisibility();
     });
 
     $(document).on('input change blur', '#va-brand', function(){
@@ -2570,6 +2571,7 @@ document.addEventListener('DOMContentLoaded', function() {
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
     applyCategorySpecificFieldVisibility();
+    applyVehicleCategoryVisibility();
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;
@@ -2709,7 +2711,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateVehicleRequiredFields() {
-        if (typeof VA_Data === 'undefined' || VA_Data.site_type !== 'jarmu') return '';
+        if (!isVehicleCategorySelected()) return '';
 
         var requiredVehicleFields = [
             { name: 'brand', label: 'Márka / gyártó' },

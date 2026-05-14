@@ -1226,7 +1226,7 @@ body.va-modal-open {
             </div>
             <?php endif; ?>
 
-        <?php if ( $site_type === 'jarmu' ):
+        <?php
             $ev = $edit_meta;
             $drive_opts     = class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_drive_options() : [];
             $vcond_opts     = class_exists('VA_Vehicle_Catalog') ? VA_Vehicle_Catalog::get_vehicle_condition_options() : [];
@@ -1251,6 +1251,7 @@ body.va-modal-open {
             };
         ?>
         <style>
+        .va-vehicle-only { display:none; }
         .va-vehicle-specs { margin-top:28px; }
         .va-vehicle-specs h3.va-specs-heading { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin:22px 0 12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08); }
         .va-specs-grid { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
@@ -1263,6 +1264,7 @@ body.va-modal-open {
         .va-extra-check input { accent-color:#ff3030;flex-shrink:0; }
         .va-vehicle-specs + button, .va-vehicle-specs ~ button { margin-top:20px; }
         </style>
+        <div class="va-vehicle-only">
         <div class="va-vehicle-specs">
             <h3 class="va-specs-heading">⚙️ Motor / Hajtástechnika</h3>
             <div class="va-specs-grid">
@@ -1447,7 +1449,7 @@ body.va-modal-open {
             </div>
             <?php endforeach; ?>
         </div>
-        <?php endif; ?>
+        </div>
         </div><!-- /va-wstep step 2 -->
 
         <!-- ═══ STEP 3: Ár & Helyszín & Elérhetőség ═══ -->
@@ -2460,6 +2462,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return (VA_Data.category_slugs[String(id)] || VA_Data.category_slugs[id] || '').toString();
     }
 
+    function isVehicleCategorySelected() {
+        if (typeof VA_Data !== 'undefined' && VA_Data.site_type === 'jarmu') {
+            return true;
+        }
+        var slug = (getSelectedCategorySlug() || '').toLowerCase();
+        var selectedText = (($('#va-category option:selected').text() || '') + '').toLowerCase();
+        var vehicleBySlug = /(jarmu|gepjarmu|auto|autok|kocsi|motor|teherauto|busz|utanfuto|utanfutok|munkagep)/.test(slug);
+        var vehicleByText = /(jármű|gepjármű|autó|auto|kocsi|motor|teherautó|busz|utánfutó|utanfuto|munkagép|munkagep)/.test(selectedText);
+        return vehicleBySlug || vehicleByText;
+    }
+
+    function applyVehicleCategoryVisibility() {
+        $('.va-vehicle-only').toggle(isVehicleCategorySelected());
+    }
+
     function rebuildHuntingBrandModelDatalists(clearModel) {
         if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
 
@@ -2544,6 +2561,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
         }
+        applyVehicleCategoryVisibility();
     });
 
     $(document).on('input change blur', '#va-brand', function(){
@@ -2555,6 +2573,7 @@ document.addEventListener('DOMContentLoaded', function() {
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
     applyCategorySpecificFieldVisibility();
+    applyVehicleCategoryVisibility();
 
     /* ══ Utca autocomplete (3+ karakter) ═══════════════ */
     var addressTimer = null;
@@ -2694,7 +2713,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validateVehicleRequiredFields() {
-        if (typeof VA_Data === 'undefined' || VA_Data.site_type !== 'jarmu') return '';
+        if (!isVehicleCategorySelected()) return '';
 
         var requiredVehicleFields = [
             { name: 'brand', label: 'Márka / gyártó' },
