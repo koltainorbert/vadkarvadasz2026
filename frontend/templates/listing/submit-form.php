@@ -1545,7 +1545,7 @@ body.va-modal-open {
             </div>
 
             <!-- Kés mezők grid -->
-            <div class="va-form-group va-knife-fields-grid" data-categories="vadaszkes-vadasztor,taktikai-kes-taktikai-tor,konyhakes,svajci-bicska" style="display:none">
+            <div class="va-form-group va-knife-fields-grid" data-categories="bicska-tor-kard,vadaszkes-vadasztor,taktikai-kes-taktikai-tor,konyhakes,svajci-bicska,dobotor,machete-bozotvago,multiszerszam,tok-keslanc,keselezo" style="display:none">
                 <div class="va-step2-4col-inner">
                 <!-- Kés típusa -->
                 <div class="va-knife-field va-knife-type-wrap">
@@ -3794,7 +3794,9 @@ document.addEventListener('DOMContentLoaded', function() {
             job_type: 'Állás típusa',
             clothing_type: 'Ruhatípus',
             clothing_size_system: 'Méretrendszer',
-            clothing_size: 'Ruhaméret'
+            clothing_size: 'Ruhaméret',
+            knife_type: 'Kés típusa',
+            knife_blade_length: 'Penge hossza (cm)'
         };
         var missing = [];
 
@@ -3851,8 +3853,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isNonScopeTelescopeCategory = /ejjellato-tavcso|hokamerak/.test(slug)
             || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
-        var isKnifeCategory = /vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska/.test(slug)
-            || /(vadászkés|vadaszkes|taktikai kés|konyhakés|bicska)/.test(selectedCatText);
+        var isKnifeCategory = /bicska-tor-kard|vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska|dobotor|machete-bozotvago|multiszerszam|tok-keslanc|keselezo/.test(slug)
+            || /(kés|kes|bicska|tőr|tor|machete|bozótvágó|bozotvago|multiszerszám|multiszerszam)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var isClothingCategory = /ruhazat/.test(slug)
