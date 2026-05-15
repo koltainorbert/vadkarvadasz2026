@@ -3527,75 +3527,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var opticZoomData = {
         celtavcso: [
-            // Fix nagyítások
-            '1x20','2x20','4x20','6x20','8x20','10x20','12x20',
-            // Zoom nagyítások (1-4x)
-            '1-4x20','1-4x24','1-4x28',
-            // Zoom nagyítások (1-6x)
-            '1-6x24','1-6x28','1-6x32',
-            // Zoom nagyítások (1-8x)
-            '1-8x24','1-8x28','1-8x32',
-            // Zoom nagyítások (2-7x)
-            '2-7x32','2-7x40','2-7x42',
-            // Zoom nagyítások (3-9x)
-            '3-9x32','3-9x40','3-9x42','3-9x50','3-9x56',
-            // Zoom nagyítások (3-12x)
-            '3-12x32','3-12x40','3-12x42','3-12x50','3-12x56',
-            // Zoom nagyítások (3-15x)
-            '3-15x40','3-15x50','3-15x56',
-            // Zoom nagyítások (4-12x)
-            '4-12x40','4-12x42','4-12x50','4-12x56',
-            // Zoom nagyítások (4-14x)
-            '4-14x40','4-14x44','4-14x50',
-            // Zoom nagyítások (4-16x)
-            '4-16x40','4-16x42','4-16x50','4-16x56',
-            // Zoom nagyítások (5-15x)
-            '5-15x40','5-15x50','5-15x56',
-            // Zoom nagyítások (5-20x)
-            '5-20x40','5-20x50','5-20x56',
-            // Zoom nagyítások (5-25x)
-            '5-25x50','5-25x56',
-            // Zoom nagyítások (6-18x)
-            '6-18x40','6-18x50','6-18x56',
-            // Zoom nagyítások (6-24x)
-            '6-24x40','6-24x50','6-24x56',
-            // Zoom nagyítások (8-32x)
-            '8-32x40','8-32x50','8-32x56',
-            // Zoom nagyítások (10-40x)
-            '10-40x50','10-40x56'
+            // Fix nagyítású modellek
+            '1x','2x','4x32','6x42','8x56','10x','15-55x52',
+            // Variábel (zoom) nagyítású modellek
+            '1-4x24','1-6x24','1-8x24','1-10x24',
+            '1.5-6x44',
+            '2-10x50','2-12x50',
+            '3-9x40','3-12x56','3-15x50','3-18x50',
+            '4-16x44','4-20x50','4-24x50',
+            '5-25x56',
+            '6-24x50',
+            '7x50',
+            '8-32x','10-40x'
         ],
         kereso: [
-            // Fix nagyítások
-            '6x20','6x25','6x30',
-            '7x20','7x25','7x30','7x35','7x40','7x42','7x50','7x56',
-            '8x20','8x21','8x24','8x25','8x30','8x32','8x40','8x42','8x50','8x56',
-            '10x20','10x25','10x32','10x40','10x42','10x50','10x56',
-            '12x25','12x32','12x40','12x42','12x50','12x56',
-            '15x40','15x50','15x56',
-            '20x50','20x60','20x80'
+            // Kompakt / túra
+            '6x','7x','8x',
+            // Standard vadász
+            '10x',
+            // Nagy fényerejű
+            '8x56','10x56',
+            // Erős (stabil tartás kell)
+            '12x','15x',
+            // Nehéz/állványos
+            '20x','25x'
         ],
         spektiv: [
-            // Fix nagyítások
-            '15x60','15x65',
-            '16x65','16x80',
-            '20x60','20x65','20x80',
-            '25x75','25x80','25x100',
-            // Zoom nagyítások (15-45x)
-            '15-45x60','15-45x65','15-45x80',
-            // Zoom nagyítások (16-48x)
-            '16-48x65','16-48x80',
-            // Zoom nagyítások (20-60x)
-            '20-60x60','20-60x65','20-60x80','20-60x85',
-            // Zoom nagyítások (20-70x)
-            '20-70x80','20-70x85',
-            // Zoom nagyítások (25-75x)
-            '25-75x80','25-75x85','25-75x100',
-            // Zoom nagyítások (25-80x)
-            '25-80x80','25-80x85','25-80x100',
-            // Zoom nagyítások (30-90x)
-            '30-90x85','30-90x100',
-            // Extra premium zooms
-            '25-50x50','25-50x56','25-50x60','25-50x80'
+            // Fix (kompakt, zsebes)
+            '8x','10x','12x','30x','32x','40x','60x',
+            // Zoom – belépő
+            '15-45x','16-48x',
+            // Zoom – standard
+            '20-60x',
+            // Zoom – közepes
+            '22-66x',
+            // Zoom – prémium
+            '25-75x',
+            // Zoom – nagy objektív
+            '30-90x'
         ],
         egyeb: []
     };
