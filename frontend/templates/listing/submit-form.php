@@ -252,7 +252,7 @@ $category_required_rules = [
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
-    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective', 'scope_type', 'scope_coatings', 'twilight_value' ] ],
+    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
@@ -292,6 +292,7 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'model'       => get_post_meta( $maybe_id, 'va_model',       true ),
             'body_type'   => get_post_meta( $maybe_id, 'va_body_type',   true ),
             'caliber'     => get_post_meta( $maybe_id, 'va_caliber',     true ),
+            'optic_type'  => get_post_meta( $maybe_id, 'va_optic_type',  true ),
             'optic_zoom'  => get_post_meta( $maybe_id, 'va_optic_zoom',  true ),
             'optic_objective' => get_post_meta( $maybe_id, 'va_optic_objective', true ),
             'finder_scope' => get_post_meta( $maybe_id, 'va_finder_scope', true ),
@@ -693,6 +694,7 @@ body.va-page-modal-open{
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
 }
+.va-telescope-type-wrap { grid-column: 1 / -1; }
 .va-dog-4col .va-dog-row {
     display: contents;
 }
@@ -1474,25 +1476,50 @@ body.va-modal-open {
             <!-- Távcső kompakt grid layout -->
             <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
                 <div class="va-step2-4col-inner">
+                <!-- ROW 0: Távcső típusa (teljes szélesség) -->
+                <div class="va-telescope-field va-telescope-type-wrap">
+                    <label>Távcső típusa</label>
+                    <?php
+                    $optic_type_val = (string)($edit_meta['optic_type'] ?? '');
+                    ?>
+                    <select name="optic_type" id="va-optic-type" class="va-select">
+                        <option value="">– Válasszon típust –</option>
+                        <option value="celtavcso"<?php selected($optic_type_val, 'celtavcso'); ?>>Céltávcső</option>
+                        <option value="kereso"<?php selected($optic_type_val, 'kereso'); ?>>Kereső</option>
+                        <option value="spektiv"<?php selected($optic_type_val, 'spektiv'); ?>>Spektív</option>
+                        <option value="egyeb"<?php selected($optic_type_val, 'egyeb'); ?>>Egyéb</option>
+                    </select>
+                </div>
                 <!-- ROW 1: Nagyítás | Objektív átmérő -->
                 <div class="va-telescope-field">
-                    <label>Nagyítás (pl. 3-12x50)</label>
-                    <input type="text" name="optic_zoom" class="va-input" placeholder="pl. 3-12x50" value="<?php echo esc_attr((string)($edit_meta['optic_zoom'] ?? '')); ?>">
+                    <label>Nagyítás</label>
+                    <?php
+                    $optic_zoom_val = (string)($edit_meta['optic_zoom'] ?? '');
+                    ?>
+                    <select name="optic_zoom" id="va-optic-zoom" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php if ($optic_zoom_val !== ''): ?>
+                        <option value="<?php echo esc_attr($optic_zoom_val); ?>" selected><?php echo esc_html($optic_zoom_val); ?></option>
+                        <?php endif; ?>
+                    </select>
                 </div>
                 <div class="va-telescope-field" data-visibility="tavcsovek">
                     <label>Objektív átmérő (mm)</label>
-                    <input type="number" name="optic_objective" class="va-input" min="1" max="120" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['optic_objective'] ?? '')); ?>">
+                    <?php
+                    $optic_obj_val = (string)($edit_meta['optic_objective'] ?? '');
+                    $optic_obj_opts = ['20','21','24','25','30','32','35','40','42','44','50','56','60','62','72','80','100'];
+                    ?>
+                    <select name="optic_objective" id="va-optic-objective" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php if ($optic_obj_val !== '' && !in_array($optic_obj_val, $optic_obj_opts, true)): ?>
+                        <option value="<?php echo esc_attr($optic_obj_val); ?>" selected><?php echo esc_html($optic_obj_val); ?> mm</option>
+                        <?php endif; ?>
+                        <?php foreach ($optic_obj_opts as $omm): ?>
+                        <option value="<?php echo esc_attr($omm); ?>"<?php selected($optic_obj_val, $omm); ?>><?php echo esc_html($omm); ?> mm</option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-                <!-- ROW 2: Keresőtávcső | Spektív -->
-                <div class="va-telescope-field">
-                    <label>Keresőtávcső</label>
-                    <input type="text" name="finder_scope" class="va-input" placeholder="pl. 1x20" value="<?php echo esc_attr((string)($edit_meta['finder_scope'] ?? '')); ?>">
-                </div>
-                <div class="va-telescope-field">
-                    <label>Spektív</label>
-                    <input type="text" name="spectiv_type" class="va-input" placeholder="pl. Spektív" value="<?php echo esc_attr((string)($edit_meta['spectiv_type'] ?? '')); ?>">
-                </div>
-                <!-- ROW 3: Típus | Szürkületi érték -->
+                <!-- ROW 2: Típus | Szürkületi érték -->
                 <div class="va-telescope-field">
                     <label>Típus</label>
                     <select name="scope_type" class="va-input">
@@ -3498,6 +3525,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    var opticZoomData = {
+        celtavcso: ['1-4x20','1-4x24','1-6x24','1-8x24','2-7x32','3-9x40','3-9x50','3-12x42','3-12x50','4-12x50','4-14x44','4-16x50','5-20x50','5-25x56','6-18x50','6-24x50','6-24x56','8-32x50','10-40x50'],
+        kereso:    ['6x30','7x35','7x42','7x50','8x21','8x25','8x30','8x32','8x42','8x50','8x56','10x25','10x32','10x42','10x50','10x56','12x42','12x50','12x56','15x56','20x80'],
+        spektiv:   ['15-45x60','16-48x65','20-60x60','20-60x80','20x80','25-75x80','25-75x100','30-90x100'],
+        egyeb:     []
+    };
+
+    function rebuildOpticZoomOptions(type) {
+        var $zoom = $('#va-optic-zoom');
+        if (!$zoom.length) return;
+        var currentVal = ($zoom.val() || '').trim();
+        var options = opticZoomData[type] || [];
+        var html = '<option value="">\u2013 V\u00e1lasszon \u2013</option>';
+        if (currentVal && options.indexOf(currentVal) === -1) {
+            var safe = $('<div>').text(currentVal).html();
+            html += '<option value="' + safe + '" selected>' + safe + '</option>';
+        }
+        options.forEach(function(val) {
+            var safe = $('<div>').text(val).html();
+            var sel = currentVal === val ? ' selected' : '';
+            html += '<option value="' + safe + '"' + sel + '>' + safe + '</option>';
+        });
+        $zoom.html(html);
+        if (currentVal) $zoom.val(currentVal);
+        syncPopupSelectButton($zoom);
+    }
+
+    $(document).on('change', '#va-optic-type', function(){
+        rebuildOpticZoomOptions($(this).val());
+    });
+
     $(document).on('change', '#va-clothing-size-system', function(){
         rebuildClothingSizeOptions();
     });
@@ -3505,6 +3563,7 @@ document.addEventListener('DOMContentLoaded', function() {
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
     rebuildClothingSizeOptions();
+    rebuildOpticZoomOptions($('#va-optic-type').val() || '');
     (function(){
         var $list = $('#va-title-list');
         if (!$list.length) return;
@@ -3634,10 +3693,9 @@ document.addEventListener('DOMContentLoaded', function() {
             brand: 'Márka / gyártó',
             model: 'Modell / típus',
             caliber: 'Kaliber',
+            optic_type: 'Távcső típusa',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
-            finder_scope: 'Keresőtávcső',
-            spectiv_type: 'Spektív',
             scope_type: 'Típus (Monokuláris/Biokuláris)',
             scope_coatings: 'Bevonatok',
             twilight_value: 'Szürkületi érték',
