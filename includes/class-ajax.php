@@ -556,6 +556,7 @@ class VA_Ajax {
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
         self::learn_listing_terms( $category, [
+            'title'    => $title,
             'brand'    => $brand,
             'model'    => $model,
             'caliber'  => $caliber,
@@ -804,6 +805,7 @@ class VA_Ajax {
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
         self::learn_listing_terms( $category, [
+            'title'    => $title,
             'brand'    => $brand,
             'model'    => $model,
             'caliber'  => $caliber,
