@@ -178,7 +178,8 @@ class VA_Ajax {
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
-            'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+            'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
+            'egyeb-ruhazat'     => [ 'label' => 'Egyéb ruházat', 'required' => [ 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -226,6 +227,9 @@ class VA_Ajax {
             'dog_purebred' => 'Fajtatisztaság',
             'job_location' => 'Hol van az állás?',
             'job_type' => 'Állás típusa',
+            'clothing_type' => 'Ruhatípus',
+            'clothing_size_system' => 'Méretrendszer',
+            'clothing_size' => 'Ruhaméret',
         ];
 
         $missing = [];
@@ -428,6 +432,9 @@ class VA_Ajax {
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
+        $clothing_type = sanitize_text_field( wp_unslash( $_POST['clothing_type'] ?? '' ) );
+        $clothing_size_system = sanitize_text_field( wp_unslash( $_POST['clothing_size_system'] ?? '' ) );
+        $clothing_size = sanitize_text_field( wp_unslash( $_POST['clothing_size'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -453,6 +460,9 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'job_location' => $job_location,
             'job_type' => $job_type,
+            'clothing_type' => $clothing_type,
+            'clothing_size_system' => $clothing_size_system,
+            'clothing_size' => $clothing_size,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -504,6 +514,9 @@ class VA_Ajax {
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
             'va_shoe_size'   => $shoe_size,
+            'va_clothing_type' => $clothing_type,
+            'va_clothing_size_system' => $clothing_size_system,
+            'va_clothing_size' => $clothing_size,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -654,6 +667,9 @@ class VA_Ajax {
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $clothing_type = sanitize_text_field( wp_unslash( $_POST['clothing_type'] ?? '' ) );
+        $clothing_size_system = sanitize_text_field( wp_unslash( $_POST['clothing_size_system'] ?? '' ) );
+        $clothing_size = sanitize_text_field( wp_unslash( $_POST['clothing_size'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -677,6 +693,9 @@ class VA_Ajax {
             'dog_gender' => $dog_gender,
             'dog_color' => $dog_color,
             'dog_purebred' => $dog_purebred,
+            'clothing_type' => $clothing_type,
+            'clothing_size_system' => $clothing_size_system,
+            'clothing_size' => $clothing_size,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -757,6 +776,9 @@ class VA_Ajax {
             'va_dog_gender'  => $dog_gender,
             'va_dog_color'   => $dog_color,
             'va_dog_purebred'=> $dog_purebred,
+            'va_clothing_type' => $clothing_type,
+            'va_clothing_size_system' => $clothing_size_system,
+            'va_clothing_size' => $clothing_size,
             'va_views'       => 0,
         ];
 
