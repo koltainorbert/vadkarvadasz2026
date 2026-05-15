@@ -2003,6 +2003,7 @@ body.va-modal-open {
             <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában..." autocomplete="off">
             <div class="va-popup-select-list" id="va-popup-select-list"></div>
             <div class="va-year-actions">
+                <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-add">+ Hozzáadás</button>
                 <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-cancel">Mégse</button>
             </div>
         </div>
@@ -2469,6 +2470,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var value = (($(this).data('value') || '') + '').trim();
         $activePopupSelect.val(value).trigger('input').trigger('change');
         closePopupSelect();
+    });
+
+    $('#va-popup-select-add').on('click', function(){
+        if (!$activePopupSelect.length) return;
+        var customValue = (($popupSelectSearch.val() || '') + '').trim();
+        if (customValue) {
+            $activePopupSelect.val(customValue).trigger('input').trigger('change');
+            closePopupSelect();
+        }
     });
 
     $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
