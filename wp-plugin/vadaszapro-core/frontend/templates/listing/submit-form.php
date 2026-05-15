@@ -2465,6 +2465,17 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPopupSelectOptions($(this).val());
     });
 
+    $popupSelectSearch.on('keypress', function(e){
+        if (e.key === 'Enter' && !$activePopupSelect.length) return;
+        if (e.key === 'Enter') {
+            var customValue = (($popupSelectSearch.val() || '') + '').trim();
+            if (customValue) {
+                $activePopupSelect.val(customValue).trigger('input').trigger('change');
+                closePopupSelect();
+            }
+        }
+    });
+
     $popupSelectList.on('click', '.va-popup-select-item', function(){
         if (!$activePopupSelect.length) return;
         var value = (($(this).data('value') || '') + '').trim();
@@ -2475,10 +2486,12 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#va-popup-select-add').on('click', function(){
         if (!$activePopupSelect.length) return;
         var customValue = (($popupSelectSearch.val() || '') + '').trim();
-        if (customValue) {
-            $activePopupSelect.val(customValue).trigger('input').trigger('change');
-            closePopupSelect();
+        if (!customValue) {
+            alert('Kérlek írj be egy értéket!');
+            return;
         }
+        $activePopupSelect.val(customValue).trigger('input').trigger('change');
+        setTimeout(closePopupSelect, 50);
     });
 
     $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
