@@ -3631,7 +3631,8 @@ document.addEventListener('DOMContentLoaded', function() {
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
     rebuildClothingSizeOptions();
-    rebuildOpticZoomOptions($('#va-optic-type').val() || '');
+    var initialOpticType = $('#va-optic-type').val() || 'celtavcso';
+    rebuildOpticZoomOptions(initialOpticType);
     (function(){
         var $list = $('#va-title-list');
         if (!$list.length) return;
