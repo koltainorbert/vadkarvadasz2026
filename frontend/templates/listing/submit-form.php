@@ -1288,62 +1288,6 @@ body.va-modal-open {
 }
 </style>
 
-<div class="va-other-cat-modal" id="va-other-cat-modal" aria-hidden="true">
-            <div class="va-other-cat-card" role="dialog" aria-modal="true" aria-labelledby="va-other-cat-title">
-                <h4 id="va-other-cat-title">Egyéb kategória megadása</h4>
-                <p>Írd be pontosan, milyen kategóriát szeretnél megadni.</p>
-                <input type="text" id="va-other-cat-input" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb">
-                <div class="va-other-cat-actions">
-                    <button type="button" class="va-btn va-btn--ghost" id="va-other-cat-cancel">Mégse</button>
-                    <button type="button" class="va-btn va-btn--primary" id="va-other-cat-save">Mentés</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="va-year-modal" id="va-year-modal" aria-hidden="true">
-            <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-year-title">
-                <div class="va-year-head">
-                    <h4 id="va-year-title">Gyártási év</h4>
-                    <div class="va-year-nav">
-                        <button type="button" class="va-year-nav-btn" id="va-year-prev" aria-label="Előző">←</button>
-                        <span id="va-year-range">-</span>
-                        <button type="button" class="va-year-nav-btn" id="va-year-next" aria-label="Következő">→</button>
-                    </div>
-                </div>
-                <div class="va-year-grid" id="va-year-grid"></div>
-                <div class="va-year-actions">
-                    <button type="button" class="va-btn va-btn--ghost" id="va-year-cancel">Mégse</button>
-                    <button type="button" class="va-btn va-btn--primary" id="va-year-now">Mai év</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="va-year-modal" id="va-shoe-size-modal" aria-hidden="true">
-            <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-shoe-size-title">
-                <div class="va-year-head">
-                    <h4 id="va-shoe-size-title">Cipőméret táblázat (EU)</h4>
-                </div>
-                <div class="va-shoe-size-grid" id="va-shoe-size-grid"></div>
-                <div class="va-year-actions">
-                    <button type="button" class="va-btn va-btn--ghost" id="va-shoe-size-cancel">Mégse</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="va-year-modal" id="va-popup-select-modal" aria-hidden="true">
-            <div class="va-year-card va-popup-select-card" role="dialog" aria-modal="true" aria-labelledby="va-popup-select-title">
-                <div class="va-popup-select-head">
-                    <h4 id="va-popup-select-title">Választás</h4>
-                    <button type="button" class="va-year-nav-btn" id="va-popup-select-close" aria-label="Bezárás">×</button>
-                </div>
-                <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában..." autocomplete="off">
-                <div class="va-popup-select-list" id="va-popup-select-list"></div>
-                <div class="va-year-actions">
-                    <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-cancel">Mégse</button>
-                </div>
-            </div>
-        </div>
-
 <div class="va-submit-preview-shell">
     <div class="va-wizard-shell" id="va-wizard-overlay">
 
@@ -2007,6 +1951,63 @@ body.va-modal-open {
         </div>
         </div><!-- .va-wizard-main -->
     </div><!-- .va-wizard-shell -->
+
+    <div class="va-other-cat-modal" id="va-other-cat-modal" aria-hidden="true">
+        <div class="va-other-cat-card" role="dialog" aria-modal="true" aria-labelledby="va-other-cat-title">
+            <h4 id="va-other-cat-title">Egyéb kategória megadása</h4>
+            <p>Írd be pontosan, milyen kategóriát szeretnél megadni.</p>
+            <input type="text" id="va-other-cat-input" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb">
+            <div class="va-other-cat-actions">
+                <button type="button" class="va-btn va-btn--ghost" id="va-other-cat-cancel">Mégse</button>
+                <button type="button" class="va-btn va-btn--primary" id="va-other-cat-save">Mentés</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="va-year-modal" id="va-year-modal" aria-hidden="true">
+        <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-year-title">
+            <div class="va-year-head">
+                <h4 id="va-year-title">Gyártási év</h4>
+                <div class="va-year-nav">
+                    <button type="button" class="va-year-nav-btn" id="va-year-prev" aria-label="Előző">←</button>
+                    <span id="va-year-range">-</span>
+                    <button type="button" class="va-year-nav-btn" id="va-year-next" aria-label="Következő">→</button>
+                </div>
+            </div>
+            <div class="va-year-grid" id="va-year-grid"></div>
+            <div class="va-year-actions">
+                <button type="button" class="va-btn va-btn--ghost" id="va-year-cancel">Mégse</button>
+                <button type="button" class="va-btn va-btn--primary" id="va-year-now">Mai év</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="va-year-modal" id="va-shoe-size-modal" aria-hidden="true">
+        <div class="va-year-card" role="dialog" aria-modal="true" aria-labelledby="va-shoe-size-title">
+            <div class="va-year-head">
+                <h4 id="va-shoe-size-title">Cipőméret táblázat (EU)</h4>
+            </div>
+            <div class="va-shoe-size-grid" id="va-shoe-size-grid"></div>
+            <div class="va-year-actions">
+                <button type="button" class="va-btn va-btn--ghost" id="va-shoe-size-cancel">Mégse</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="va-year-modal" id="va-popup-select-modal" aria-hidden="true">
+        <div class="va-year-card va-popup-select-card" role="dialog" aria-modal="true" aria-labelledby="va-popup-select-title">
+            <div class="va-popup-select-head">
+                <h4 id="va-popup-select-title">Választás</h4>
+                <button type="button" class="va-year-nav-btn" id="va-popup-select-close" aria-label="Bezárás">×</button>
+            </div>
+            <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában..." autocomplete="off">
+            <div class="va-popup-select-list" id="va-popup-select-list"></div>
+            <div class="va-year-actions">
+                <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-cancel">Mégse</button>
+            </div>
+        </div>
+    </div>
+
 </div><!-- .va-submit-preview-shell -->
 
 <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css">
