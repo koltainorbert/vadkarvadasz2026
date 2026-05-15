@@ -2,6 +2,38 @@
 
 ---
 
+## 2026. 05. 15. – Session #359g — Címmező fekete lenyíló (custom datalist) + title learning
+
+### Kérés
+- A `Hirdetés címe` mező lenyílója is legyen fekete, mint a többi.
+
+### Javítás
+- A cím input bekötve a meglévő custom sötét datalist UI-ba:
+  - `list="va-title-list"`
+  - `autocomplete="off"`
+  - új `<datalist id="va-title-list"></datalist>`
+- A frontend learned terms átadás bővítve `title` típussal.
+- Új JS feltöltő logika: `applyLearnedTitleDatalist()`.
+- Backend tanuló szótár bővítve:
+  - `learn_listing_terms()` most címet is ment (`title`)
+  - `get_learned_terms_map()` elfogadja a `title` term típust.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Mi maradt
+- Frontend gyors vizuális ellenőrzés: a cím mezőnél a lenyíló már a custom fekete panelen jelenik-e meg minden fő böngészőben.
+
+### Holnap ezzel kezdjük
+- Rövid smoke teszt a hirdetésfeladás 2. lépésén: cím, márka, modell, kaliber lenyílók konzisztens működése.
+
+### Deploy
+- Deploy script futtatva (`.vscode/deploy.ps1`): `Everything up-to-date`, live workflow trigger rendben.
+
 ## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
 
 ### Kérés
