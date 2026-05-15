@@ -3802,6 +3802,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(vadászkutya|vadaszkutya|kutya)/.test(selectedCatText);
         var isTelescopeCategory = /tavcsovek|ejjellato-tavcso|hokamerak/.test(slug)
             || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
+        var isNonScopeTelescopeCategory = /ejjellato-tavcso|hokamerak/.test(slug)
+            || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var isClothingCategory = /ruhazat/.test(slug)
@@ -3818,6 +3820,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle telescope fields grid
         $('.va-telescope-fields-grid').toggle(isTelescopeCategory);
+        
+        // Hide spektiv option for non-scope telescope categories (hőkamera, éjjellátó)
+        var $opticType = $('#va-optic-type');
+        if (isNonScopeTelescopeCategory) {
+            $opticType.find('option[value="spektiv"]').hide();
+        } else if (isTelescopeCategory) {
+            $opticType.find('option[value="spektiv"]').show();
+        }
         
         // Hide optic_objective for non-tavcsovek telescope categories
         if (isTelescopeCategory && !/^tavcsovek$/.test(slug)) {
