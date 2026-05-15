@@ -418,6 +418,7 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
@@ -444,6 +445,7 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
@@ -494,6 +496,7 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
@@ -647,6 +650,7 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
@@ -670,6 +674,7 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
@@ -750,6 +755,7 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,

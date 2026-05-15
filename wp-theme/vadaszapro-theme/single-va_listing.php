@@ -377,6 +377,11 @@ $dog_color        = get_post_meta( $post_id, 'va_dog_color',        true );
 $dog_purebred     = get_post_meta( $post_id, 'va_dog_purebred',     true );
 $dog_age_months   = get_post_meta( $post_id, 'va_dog_age_months',   true );
 
+// Optikai mezők
+$optic_type       = get_post_meta( $post_id, 'va_optic_type',       true );
+$optic_zoom       = get_post_meta( $post_id, 'va_optic_zoom',       true );
+$optic_objective  = get_post_meta( $post_id, 'va_optic_objective',  true );
+
 
 
 
@@ -1403,6 +1408,15 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
 
 
                 if ( $year )           $specs[] = [ 'Gy&#225;rt&#225;si &#233;v',          $year,   false ];
+
+
+                // Optikai mezők
+                if ( $optic_type ) {
+                    $optic_type_labels = [ 'celtavcso' => 'Céltávcső', 'kereso' => 'Kereső', 'spektiv' => 'Spektív', 'egyeb' => 'Egyéb' ];
+                    $specs[] = [ 'Távcső típusa',        $optic_type_labels[$optic_type] ?? $optic_type, false ];
+                }
+                if ( $optic_zoom )      $specs[] = [ 'Nagyítás',             $optic_zoom,  false ];
+                if ( $optic_objective ) $specs[] = [ 'Objektív átmérő',     $optic_objective . ' mm', false ];
 
 
                 // Kutya-specifikus mezők
