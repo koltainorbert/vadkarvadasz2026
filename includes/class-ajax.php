@@ -172,7 +172,7 @@ class VA_Ajax {
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
-            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
+            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
@@ -218,6 +218,7 @@ class VA_Ajax {
             'brand'   => 'Márka / gyártó',
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
+            'optic_type' => 'Távcső típusa',
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
@@ -422,6 +423,7 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber']  ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
@@ -451,6 +453,7 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
@@ -504,6 +507,7 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,
@@ -660,6 +664,7 @@ class VA_Ajax {
         $caliber     = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
         $year        = intval( $_POST['year'] ?? 0 );
         $license_req = ! empty( $_POST['license_req'] ) ? '1' : '0';
+        $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
@@ -686,6 +691,7 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
             'dog_age_months' => $dog_age_months,
@@ -769,6 +775,7 @@ class VA_Ajax {
             'va_caliber'     => $caliber,
             'va_year'        => $year,
             'va_license_req' => $license_req,
+            'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
             'va_dog_age_months' => $dog_age_months,

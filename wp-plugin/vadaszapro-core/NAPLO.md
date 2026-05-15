@@ -2,6 +2,45 @@
 
 ---
 
+## 2026. 05. 15. – Session #359l — Távcső kategória reform: popup típus + választólistás nagyítás
+
+### Kérés
+- A távcső kategóriában a mostani `Keresőtávcső` és `Spektív` mezők kerüljenek ki a gridből.
+- Az első kérdés popupos mező legyen: `Kereső`, `Céltávcső`, `Spektív`, `Egyéb`.
+- A nagyítás és objektív mezők választólistás/popupos adatbázisból működjenek.
+
+### Javítás
+- Új első mező került be: `optic_type` popup select (`Céltávcső`, `Kereső`, `Spektív`, `Egyéb`).
+- A korábbi `finder_scope` és `spectiv_type` inputok kikerültek a feladási UI-ból.
+- A `Nagyítás` mező natív text input helyett popup select lett, és típusfüggő előre definiált értéklistát kapott.
+- Az `Objektív átmérő` mező szintén popup select lett tipikus mm értékekkel.
+- Frontend required szabály frissítve: a `tavcsovek` kategóriában az `optic_type` is kötelező.
+- Backend mentés és validáció bővítve: `va_optic_type` is mentésre kerül.
+- A termékoldali spec táblába bekerült a távcső típusa, nagyítása és objektív átmérője.
+- A root és mirror példányok szinkronba kerültek.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+- `single-va_listing.php`
+- `wp-theme/vadaszapro-theme/single-va_listing.php`
+
+### Validáció
+- `get_errors` lefuttatva az érintett PHP fájlokra: nincs hiba.
+- A távcső típus mentése backend oldalon is ellenőrizve (`optic_type`, `va_optic_type` jelen van update + submit ágon).
+
+### Mi maradt
+- Éles kézi teszt szükséges a popup mezőkön: `Céltávcső`, `Kereső`, `Spektív`, `Egyéb` váltás után a nagyítás lista megfelelően cserélődik-e.
+- Ha kell, a későbbiekben külön márka/modell adatbázis is adható optikai kategóriákhoz.
+
+### Holnap ezzel kezdjük
+- Ha a felhasználói teszt alapján kevés vagy pontatlan valamelyik nagyítási preset lista, kategóriánként bővítjük a készletet és finomítjuk az objektív mm listát.
+
+### Deploy
+- Deploy All futtatva.
+
 ## 2026. 05. 15. – Session #359k — Ruházat kategória: ruhatípus + EU/USA/EN méret popup
 
 ### Kérés
