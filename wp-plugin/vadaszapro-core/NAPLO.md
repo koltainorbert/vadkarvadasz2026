@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 15. – Session #359n — Szolgáltatás kategória egyszerűsítés (2 popup mező)
+
+### Kérés
+- A `szolgaltatas` kategóriában csak két mező maradjon: szolgáltatás típusa + szolgáltatás helye, popup választással.
+
+### Javítás
+- Frontend: `szolgaltatas` felvéve a kategória required szabályok közé (`job_location`, `job_type`).
+- Frontend: a `job_location` mező text input helyett `select.va-select` lett (popupban választható, egyedi érték továbbra is hozzáadható).
+- Frontend visibility: új `isServiceCategory` logika, amely a szolgáltatás kategóriában elrejti az alap termékmezőket, és csak a két szolgáltatás mezőt hagyja.
+- Backend: `includes/class-ajax.php` és `wp-plugin/vadaszapro-core/includes/class-ajax.php` fájlban szerveroldali kötelező mező validáció hozzáadva `szolgaltatas` slugra.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Deploy
+- Deploy All futtatva, workflow elindult.
+
+---
+
 ## 2026. 05. 15. – Session #359m — Komprehenzív nagyítási adatbázis: teljes optikai spektrum
 
 ### Kérés
