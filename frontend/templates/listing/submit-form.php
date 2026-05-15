@@ -971,6 +971,131 @@ body.va-page-modal-open{
     gap: 10px;
     margin-top: 14px;
 }
+.va-popup-select-native {
+    display: none !important;
+}
+.va-popup-select-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 48px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(8,8,8,.98));
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.va-popup-select-trigger:hover {
+    border-color: #ff8a00;
+    box-shadow: 0 0 18px rgba(255,138,0,.16);
+}
+.va-popup-select-trigger:focus-visible {
+    outline: none;
+    border-color: #ff8a00;
+    box-shadow: 0 0 0 3px rgba(255,138,0,.18);
+}
+.va-popup-select-trigger.is-placeholder .va-popup-select-trigger__value {
+    color: rgba(255,255,255,.52);
+}
+.va-popup-select-trigger[disabled] {
+    opacity: .55;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.va-popup-select-trigger__value {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+.va-popup-select-trigger__icon {
+    flex-shrink: 0;
+    font-size: 14px;
+    opacity: .85;
+}
+.va-popup-select-card {
+    width: min(620px, calc(100vw - 24px));
+}
+.va-popup-select-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.va-popup-select-head h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+}
+.va-popup-select-search {
+    width: 100%;
+    margin-bottom: 12px;
+}
+.va-popup-select-list {
+    max-height: min(52vh, 420px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+}
+.va-popup-select-list::-webkit-scrollbar {
+    width: 10px;
+}
+.va-popup-select-list::-webkit-scrollbar-track {
+    background: rgba(255,255,255,.05);
+    border-radius: 999px;
+}
+.va-popup-select-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(255,138,0,.8), rgba(255,170,0,.8));
+    border-radius: 999px;
+}
+.va-popup-select-item,
+.va-popup-select-empty {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 12px;
+    background: rgba(255,255,255,.03);
+    color: #fff;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.35;
+}
+.va-popup-select-item {
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+.va-popup-select-item:hover {
+    border-color: #ff8a00;
+    background: rgba(255,138,0,.12);
+    transform: translateY(-1px);
+}
+.va-popup-select-item.is-selected {
+    border-color: #ff8a00;
+    background: rgba(255,138,0,.18);
+    box-shadow: inset 0 0 0 1px rgba(255,138,0,.2);
+}
+.va-popup-select-item__label {
+    display: block;
+}
+.va-popup-select-item__meta {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,.58);
+    font-size: 12px;
+}
+.va-popup-select-empty {
+    color: rgba(255,255,255,.62);
+}
 .va-shoe-size-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1221,6 +1346,20 @@ body.va-modal-open {
                 <div class="va-shoe-size-grid" id="va-shoe-size-grid"></div>
                 <div class="va-year-actions">
                     <button type="button" class="va-btn va-btn--ghost" id="va-shoe-size-cancel">Mégse</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="va-year-modal" id="va-popup-select-modal" aria-hidden="true">
+            <div class="va-year-card va-popup-select-card" role="dialog" aria-modal="true" aria-labelledby="va-popup-select-title">
+                <div class="va-popup-select-head">
+                    <h4 id="va-popup-select-title">Választás</h4>
+                    <button type="button" class="va-year-nav-btn" id="va-popup-select-close" aria-label="Bezárás">×</button>
+                </div>
+                <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában..." autocomplete="off">
+                <div class="va-popup-select-list" id="va-popup-select-list"></div>
+                <div class="va-year-actions">
+                    <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-cancel">Mégse</button>
                 </div>
             </div>
         </div>
@@ -2084,6 +2223,204 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.key === 'Escape' && $modal.hasClass('is-open')) closeShoeModal();
         });
     })();
+
+    /* ══ Natív select helyett popup választó ═══════════ */
+    var $popupSelectModal = $('#va-popup-select-modal');
+    var $popupSelectTitle = $('#va-popup-select-title');
+    var $popupSelectSearch = $('#va-popup-select-search');
+    var $popupSelectList = $('#va-popup-select-list');
+    var $activePopupSelect = $();
+
+    function normalizePopupSelectText(value) {
+        return ((value || '') + '').replace(/\s+/g, ' ').trim();
+    }
+
+    function getPopupSelectPlaceholder($select) {
+        var attrPlaceholder = normalizePopupSelectText($select.attr('data-placeholder'));
+        if (attrPlaceholder) return attrPlaceholder;
+
+        var $firstOption = $select.find('option').first();
+        return normalizePopupSelectText($firstOption.text()) || 'Válassz';
+    }
+
+    function getPopupSelectButtonLabel($select) {
+        var $selected = $select.find('option:selected').first();
+        var selectedValue = normalizePopupSelectText($selected.val());
+        var selectedText = normalizePopupSelectText($selected.text());
+        if (selectedValue && selectedText) return selectedText;
+        return getPopupSelectPlaceholder($select);
+    }
+
+    function getPopupSelectFieldLabel($select) {
+        var $label = $select.closest('.va-form-group, .va-telescope-field').find('label').first().clone();
+        if ($label.length) {
+            $label.find('.required').remove();
+            var labelText = normalizePopupSelectText($label.text());
+            if (labelText) return labelText;
+        }
+        return getPopupSelectPlaceholder($select) || 'Választás';
+    }
+
+    function teardownPopupSelect($select) {
+        if (!$select || !$select.length) return;
+        var $button = $select.data('vaPopupButton');
+        if ($button && $button.length) {
+            $button.remove();
+        }
+        $select.removeData('vaPopupButton');
+        $select.removeData('vaPopupReady');
+        $select.off('.vaPopupSelect');
+        $select.removeClass('va-popup-select-native');
+    }
+
+    function syncPopupSelectButton($select) {
+        var $button = $select.data('vaPopupButton');
+        if (!$button || !$button.length) return;
+
+        var hasValue = normalizePopupSelectText($select.val()) !== '';
+        $button.find('.va-popup-select-trigger__value').text(getPopupSelectButtonLabel($select));
+        $button.toggleClass('is-placeholder', !hasValue);
+        $button.prop('disabled', $select.is(':disabled'));
+        $button.attr('aria-expanded', 'false');
+    }
+
+    function renderPopupSelectOptions(query) {
+        if (!$activePopupSelect.length) return;
+
+        var selectedValue = (($activePopupSelect.val() || '') + '').trim();
+        var filter = normalizePopupSelectText(query).toLocaleLowerCase('hu-HU');
+        var visibleCount = 0;
+
+        $popupSelectList.empty();
+
+        $activePopupSelect.find('option').each(function(){
+            var $option = $(this);
+            if ($option.is(':disabled')) return;
+
+            var value = (($option.attr('value') || '') + '').trim();
+            var text = normalizePopupSelectText($option.text());
+            var searchableText = text.toLocaleLowerCase('hu-HU');
+            if (filter && searchableText.indexOf(filter) === -1) return;
+
+            visibleCount++;
+
+            var $item = $('<button>', {
+                type: 'button',
+                class: 'va-popup-select-item' + (value === selectedValue ? ' is-selected' : ''),
+                'data-value': value,
+                'aria-pressed': value === selectedValue ? 'true' : 'false'
+            });
+
+            $('<span>', {
+                class: 'va-popup-select-item__label',
+                text: text || 'Üres érték'
+            }).appendTo($item);
+
+            if (value === '') {
+                $('<span>', {
+                    class: 'va-popup-select-item__meta',
+                    text: 'Nincs kiválasztva'
+                }).appendTo($item);
+            }
+
+            $popupSelectList.append($item);
+        });
+
+        if (!visibleCount) {
+            $('<div>', {
+                class: 'va-popup-select-empty',
+                text: 'Nincs találat a megadott szűrésre.'
+            }).appendTo($popupSelectList);
+        }
+    }
+
+    function openPopupSelect($select) {
+        if (!$select.length || $select.is(':disabled')) return;
+
+        $activePopupSelect = $select;
+        $popupSelectTitle.text(getPopupSelectFieldLabel($select));
+        $popupSelectSearch.val('');
+        renderPopupSelectOptions('');
+        $popupSelectModal.addClass('is-open').attr('aria-hidden', 'false');
+        $('body').addClass('va-modal-open');
+
+        var $button = $select.data('vaPopupButton');
+        if ($button && $button.length) {
+            $button.attr('aria-expanded', 'true');
+        }
+
+        setTimeout(function(){
+            $popupSelectSearch.trigger('focus');
+        }, 20);
+    }
+
+    function closePopupSelect() {
+        if ($activePopupSelect.length) {
+            var $button = $activePopupSelect.data('vaPopupButton');
+            if ($button && $button.length) {
+                $button.attr('aria-expanded', 'false').trigger('focus');
+            }
+        }
+
+        $activePopupSelect = $();
+        $popupSelectModal.removeClass('is-open').attr('aria-hidden', 'true');
+        $('body').removeClass('va-modal-open');
+    }
+
+    function enhancePopupSelects(context) {
+        var $scope = context ? $(context) : $(document);
+        $scope.find('#va-submit-form select, select#va-brand').each(function(){
+            var $select = $(this);
+            if (!$select.closest('#va-submit-form').length) return;
+            if ($select.closest('#va-popup-select-modal').length) return;
+            if ($select.is('[multiple]')) return;
+            if ($select.data('vaPopupReady')) {
+                syncPopupSelectButton($select);
+                return;
+            }
+
+            var $button = $('<button type="button" class="va-popup-select-trigger" aria-haspopup="dialog" aria-expanded="false"><span class="va-popup-select-trigger__value"></span><span class="va-popup-select-trigger__icon">▾</span></button>');
+            $select.addClass('va-popup-select-native');
+            $select.data('vaPopupReady', true);
+            $select.data('vaPopupButton', $button);
+            $select.after($button);
+
+            $button.on('click', function(){
+                openPopupSelect($select);
+            });
+
+            $select.on('change.vaPopupSelect input.vaPopupSelect', function(){
+                syncPopupSelectButton($select);
+            });
+
+            syncPopupSelectButton($select);
+        });
+    }
+
+    $popupSelectSearch.on('input', function(){
+        renderPopupSelectOptions($(this).val());
+    });
+
+    $popupSelectList.on('click', '.va-popup-select-item', function(){
+        if (!$activePopupSelect.length) return;
+        var value = (($(this).data('value') || '') + '').trim();
+        $activePopupSelect.val(value).trigger('input').trigger('change');
+        closePopupSelect();
+    });
+
+    $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
+
+    $popupSelectModal.on('click', function(e){
+        if (e.target === this) closePopupSelect();
+    });
+
+    $(document).on('keydown', function(e){
+        if (e.key === 'Escape' && $popupSelectModal.hasClass('is-open')) {
+            closePopupSelect();
+        }
+    });
+
+    enhancePopupSelects();
 
     /* ══ Wizard navigáció ════════════════════════════════ */
     var _wStep   = 1;
