@@ -3851,6 +3851,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isNonScopeTelescopeCategory = /ejjellato-tavcso|hokamerak/.test(slug)
             || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
+        var isKnifeCategory = /vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska/.test(slug)
+            || /(vadászkés|vadaszkes|taktikai kés|konyhakés|bicska)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var isClothingCategory = /ruhazat/.test(slug)
@@ -3864,6 +3866,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isDogCategory));
+
+        // Handle knife fields grid
+        $('.va-knife-fields-grid').toggle(isKnifeCategory);
 
         // Handle telescope fields grid
         $('.va-telescope-fields-grid').toggle(isTelescopeCategory);

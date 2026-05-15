@@ -183,6 +183,10 @@ class VA_Ajax {
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
+            'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
+            'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
+            'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_blade_length' ] ],
+            'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type' ] ],
         ];
     }
 
