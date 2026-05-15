@@ -2480,15 +2480,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    $('#va-popup-select-add').on('click', function(){
-        if (!$activePopupSelect.length) return;
-        var customValue = (($popupSelectSearch.val() || '') + '').trim();
-        if (customValue) {
-            $activePopupSelect.val(customValue).trigger('input').trigger('change');
-            closePopupSelect();
-        }
-    });
-
     $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
 
     $popupSelectModal.on('click', function(e){
