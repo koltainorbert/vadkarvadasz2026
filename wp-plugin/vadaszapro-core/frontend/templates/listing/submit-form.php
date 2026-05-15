@@ -1054,6 +1054,7 @@ body.va-page-modal-open{
     margin-bottom: 12px;
 }
 .va-popup-select-list {
+    flex: 1;
     min-height: 0;
     overflow: auto;
     display: flex;
