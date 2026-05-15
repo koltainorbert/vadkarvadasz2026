@@ -2,14 +2,6 @@
 
 ---
 
-## 2026. 05. 15. – Session #359h — Step 2 kompakt 4-oszlopos grid layout
-
-### Valtoztatas
-- Step 2 minden kategoriban 4-oszlopos kompakt grid (va-form-row, tavcsô, kutya, jarmu)
-- CSS override: frontend/templates/listing/submit-form.php inline style blokk
-
----
-
 ## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
 
 ### Kérés
@@ -300,14 +292,6 @@
 ### Uj deploy szabaly
 - Minden valtozas elesbe megy: `Deploy All` vagy `Push`.
 - A feltoltest a GitHub workflow intezi (`.github/workflows/deploy.yml`).
-
----
-
-## 2026. 05. 15. – Session #359h — Step 2 kompakt 4-oszlopos grid layout
-
-### Valtoztatas
-- Step 2 minden kategoriban 4-oszlopos kompakt grid (va-form-row, tavcsô, kutya, jarmu)
-- CSS override: frontend/templates/listing/submit-form.php inline style blokk
 
 ---
 
