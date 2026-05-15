@@ -897,7 +897,7 @@ body.va-page-modal-open{
     display: none;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+a vadászruházat, egyéb ruházat kategóriánál legyen EU , USA, EN ruhaméret popup kiválasztható nadrág, póló, kabát stb, lehessen a ruha tipusát is kiválasztni     padding: 16px;
     background: rgba(0,0,0,.76);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -3317,6 +3317,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var currentBrand = (($brand.val() || '') + '').trim();
         var currentModel = (($model.val() || '') + '').trim();
         var matchedBrandKey = '';
+
+        if (currentBrand) {
+            var hasCurrentBrand = Object.keys(catData).some(function(brandKey){
+                return (brandKey || '').toLowerCase() === currentBrand.toLowerCase();
+            });
+            if (!hasCurrentBrand) {
+                catData[currentBrand] = [];
+            }
+        }
 
         if ($brand.is('select')) {
             var brandOptHtml = '<option value="">– Válasszon –</option>';

@@ -3320,6 +3320,15 @@ document.addEventListener('DOMContentLoaded', function() {
         var currentModel = (($model.val() || '') + '').trim();
         var matchedBrandKey = '';
 
+        if (currentBrand) {
+            var hasCurrentBrand = Object.keys(catData).some(function(brandKey){
+                return (brandKey || '').toLowerCase() === currentBrand.toLowerCase();
+            });
+            if (!hasCurrentBrand) {
+                catData[currentBrand] = [];
+            }
+        }
+
         if ($brand.is('select')) {
             var brandOptHtml = '<option value="">– Válasszon –</option>';
             Object.keys(catData).forEach(function(brand) {
