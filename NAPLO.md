@@ -2,6 +2,48 @@
 
 ---
 
+## 2026. 05. 15. – Session #359p — Szállás + Vadászati lehetőség / Vadkárelhárítás popup űrlap
+
+### Kérés
+- A `szallas` kategóriából kikerüljenek a termékes mezők (márka/modell/év), booking jellegű adatkérés legyen (helyszín + idősávok + részletes opciók).
+- A `vadaszati-lehetoseg` és `vadkarelharitas` kategóriákra csökkentett, célzott mezők kellenek órás idősávval és szolgáltatás opciókkal.
+
+### Frontend (submit-form)
+- Új kötelező szabályok:
+  - `szallas`
+  - `vadaszati-lehetoseg`
+  - `vadkarelharitas`
+- Új mezőblokkok:
+  - `va-accommodation-fields-grid`
+  - `va-hunt-option-fields-grid`
+- Szállás mezők:
+  - szállás típusa, férőhely (fő), foglalási mód, foglalható idősáv (kezdő/vég), check-in/check-out sávok, ellátás típusa, parkoló
+- Vadászati/vadkárelhárítás mezők:
+  - órás idősáv (kezdő/vég), létszám/fő, vadászható fajok listája, lesbérleti/hozzáférési forma, kísérő szolgáltatás, utánkeresés, trófea kikészítés, bírálás, terepjáró, szállás lehetőség, elejtett vad megvásárolhatósága
+- Láthatósági logika bővítve:
+  - `isAccommodationCategory`
+  - `isHuntOptionCategory`
+- Következmény:
+  - ezeknél a kategóriáknál a core termék mezők rejtve (márka/modell/gyártási év)
+- Edit mód visszatöltés hozzáadva az összes új mezőre (`va_accommodation_*`, `va_hunt_*`).
+
+### Backend (class-ajax)
+- Kötelező mező validáció bekötve a 3 új kategóriára.
+- Új mezők sanitizálása + mentése mindkét útvonalon:
+  - `update_listing()`
+  - `submit_listing()`
+- Mentett meta kulcsok:
+  - `va_accommodation_type`, `va_accommodation_capacity`, `va_accommodation_slot_mode`, `va_accommodation_from_hour`, `va_accommodation_to_hour`, `va_accommodation_checkin_from`, `va_accommodation_checkin_to`, `va_accommodation_checkout_from`, `va_accommodation_checkout_to`, `va_accommodation_meal_type`, `va_accommodation_parking`
+  - `va_hunt_slot_from_hour`, `va_hunt_slot_to_hour`, `va_hunt_capacity`, `va_hunt_species_list`, `va_hunt_lease_type`, `va_hunt_has_guide`, `va_hunt_has_tracking`, `va_hunt_has_trophy_prep`, `va_hunt_has_trophy_judging`, `va_hunt_has_offroad`, `va_hunt_has_accommodation`, `va_hunt_can_buy_game`
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+---
+
 ## 2026. 05. 15. – Session #359o — Trófeaalátét popup űrlapok
 
 ### Kérés
