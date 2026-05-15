@@ -1503,7 +1503,7 @@ body.va-modal-open {
                         <?php endif; ?>
                     </select>
                 </div>
-                <div class="va-telescope-field" data-visibility="tavcsovek">
+                <div class="va-telescope-field" data-visibility="tavcsovek,ejjellato-tavcso,hokamerak">
                     <label>Objektív átmérő (mm)</label>
                     <?php
                     $optic_obj_val = (string)($edit_meta['optic_objective'] ?? '');
