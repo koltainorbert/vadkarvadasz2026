@@ -94,6 +94,7 @@ class VA_Ajax {
     private static function learn_listing_terms( int $category_id, array $values ): void {
         $category_slug = self::get_learning_category_slug( $category_id );
 
+        self::save_learning_term( 'title', (string) ( $values['title'] ?? '' ), '' );
         self::save_learning_term( 'brand', (string) ( $values['brand'] ?? '' ), $category_slug );
         self::save_learning_term( 'model', (string) ( $values['model'] ?? '' ), $category_slug );
         self::save_learning_term( 'caliber', (string) ( $values['caliber'] ?? '' ), $category_slug );
