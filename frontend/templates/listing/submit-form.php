@@ -679,23 +679,14 @@ body.va-page-modal-open{
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 14px !important;
 }
-#va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid {
+/* Inner grid wrapper — JS sosem toggolja, biztonságos display:grid !important */
+.va-step2-4col-inner {
     display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    padding: 0 !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
 }
-#va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid .va-telescope-field {
-    margin: 0 !important;
-}
-#va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    margin-bottom: 14px !important;
-}
-#va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap .va-dog-row {
-    display: contents !important;
+.va-dog-4col .va-dog-row {
+    display: contents;
 }
 #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -703,16 +694,14 @@ body.va-page-modal-open{
 }
 @media (max-width: 980px) {
     #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-row,
-    #va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid,
-    #va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap,
+    .va-step2-4col-inner,
     #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 }
 @media (max-width: 600px) {
     #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-row,
-    #va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid,
-    #va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap,
+    .va-step2-4col-inner,
     #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
         grid-template-columns: 1fr !important;
     }
@@ -1283,6 +1272,7 @@ body.va-modal-open {
             </div>
             <!-- Távcső kompakt grid layout -->
             <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
+                <div class="va-step2-4col-inner">
                 <!-- ROW 1: Nagyítás | Objektív átmérő -->
                 <div class="va-telescope-field">
                     <label>Nagyítás (pl. 3-12x50)</label>
@@ -1323,6 +1313,7 @@ body.va-modal-open {
                     <label>Tartozékok</label>
                     <input type="text" name="scope_accessories" class="va-input" placeholder="pl. Tartó, lencsevédő" value="<?php echo esc_attr((string)($edit_meta['scope_accessories'] ?? '')); ?>">
                 </div>
+                </div><!-- /va-step2-4col-inner -->
             </div>
             <?php
                 $dog_breed_options = [];
@@ -1392,6 +1383,7 @@ body.va-modal-open {
                 $saved_dog_color = (string) ($edit_meta['dog_color'] ?? '');
             ?>
             <div class="va-cat-rule-field va-dog-fields-wrap" data-categories="vadaszkutya">
+                <div class="va-step2-4col-inner va-dog-4col">
                 <div class="va-dog-row">
                     <div class="va-form-group">
                         <label>Kutya fajtája</label>
@@ -1442,6 +1434,7 @@ body.va-modal-open {
                         <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
                     </div>
                 </div>
+                </div><!-- /va-step2-4col-inner -->
             </div>
             <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
                 <label>Hol van az állás?</label>
