@@ -1712,25 +1712,14 @@ body.va-modal-open {
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div>
-            <?php
-                $job_location_val = (string)($edit_meta['job_location'] ?? '');
-                $job_location_opts = [];
-                if (isset($learned_terms['location']) && is_array($learned_terms['location'])) {
-                    $job_location_opts = array_keys($learned_terms['location']);
-                }
-                $job_location_opts = array_values(array_filter(array_map('trim', $job_location_opts), static fn($v) => $v !== ''));
-                natcasesort($job_location_opts);
-            ?>
+            <?php $job_location_val = (string)($edit_meta['job_location'] ?? ''); ?>
             <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
-                <label>Szolgáltatás helye</label>
+                <label>Szolgáltatás helyszíne</label>
                 <select name="job_location" class="va-select">
                     <option value="">– Válasszon –</option>
-                    <?php if ($job_location_val !== '' && !in_array($job_location_val, $job_location_opts, true)): ?>
+                    <?php if ($job_location_val !== ''): ?>
                         <option value="<?php echo esc_attr($job_location_val); ?>" selected><?php echo esc_html($job_location_val); ?></option>
                     <?php endif; ?>
-                    <?php foreach ($job_location_opts as $loc): ?>
-                        <option value="<?php echo esc_attr($loc); ?>"<?php selected($job_location_val, $loc); ?>><?php echo esc_html($loc); ?></option>
-                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
