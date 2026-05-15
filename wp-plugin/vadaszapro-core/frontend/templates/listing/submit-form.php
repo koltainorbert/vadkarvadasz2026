@@ -264,6 +264,9 @@ $category_required_rules = [
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+    'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_slot_mode', 'accommodation_from_hour', 'accommodation_to_hour' ] ],
+    'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+    'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
 ];
@@ -320,6 +323,29 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'trophy_fang_mount' => get_post_meta( $maybe_id, 'va_trophy_fang_mount', true ),
             'trophy_material' => get_post_meta( $maybe_id, 'va_trophy_material', true ),
             'trophy_finish' => get_post_meta( $maybe_id, 'va_trophy_finish', true ),
+            'accommodation_type' => get_post_meta( $maybe_id, 'va_accommodation_type', true ),
+            'accommodation_capacity' => get_post_meta( $maybe_id, 'va_accommodation_capacity', true ),
+            'accommodation_slot_mode' => get_post_meta( $maybe_id, 'va_accommodation_slot_mode', true ),
+            'accommodation_from_hour' => get_post_meta( $maybe_id, 'va_accommodation_from_hour', true ),
+            'accommodation_to_hour' => get_post_meta( $maybe_id, 'va_accommodation_to_hour', true ),
+            'accommodation_checkin_from' => get_post_meta( $maybe_id, 'va_accommodation_checkin_from', true ),
+            'accommodation_checkin_to' => get_post_meta( $maybe_id, 'va_accommodation_checkin_to', true ),
+            'accommodation_checkout_from' => get_post_meta( $maybe_id, 'va_accommodation_checkout_from', true ),
+            'accommodation_checkout_to' => get_post_meta( $maybe_id, 'va_accommodation_checkout_to', true ),
+            'accommodation_meal_type' => get_post_meta( $maybe_id, 'va_accommodation_meal_type', true ),
+            'accommodation_parking' => get_post_meta( $maybe_id, 'va_accommodation_parking', true ),
+            'hunt_slot_from_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_from_hour', true ),
+            'hunt_slot_to_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_to_hour', true ),
+            'hunt_capacity' => get_post_meta( $maybe_id, 'va_hunt_capacity', true ),
+            'hunt_species_list' => get_post_meta( $maybe_id, 'va_hunt_species_list', true ),
+            'hunt_lease_type' => get_post_meta( $maybe_id, 'va_hunt_lease_type', true ),
+            'hunt_has_guide' => get_post_meta( $maybe_id, 'va_hunt_has_guide', true ),
+            'hunt_has_tracking' => get_post_meta( $maybe_id, 'va_hunt_has_tracking', true ),
+            'hunt_has_trophy_prep' => get_post_meta( $maybe_id, 'va_hunt_has_trophy_prep', true ),
+            'hunt_has_trophy_judging' => get_post_meta( $maybe_id, 'va_hunt_has_trophy_judging', true ),
+            'hunt_has_offroad' => get_post_meta( $maybe_id, 'va_hunt_has_offroad', true ),
+            'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
+            'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -1689,6 +1715,254 @@ body.va-modal-open {
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div><!-- /.va-trophy-fields-grid -->
+
+            <!-- Szállás mezők grid -->
+            <div class="va-form-group va-accommodation-fields-grid" data-categories="szallas" style="display:none">
+                <div class="va-step2-4col-inner">
+                <?php
+                $hour_options = [];
+                for ( $h = 0; $h < 24; $h++ ) {
+                    $hour_options[] = sprintf( '%02d:00', $h );
+                }
+                $accommodation_type_val = (string)($edit_meta['accommodation_type'] ?? '');
+                $accommodation_capacity_val = (string)($edit_meta['accommodation_capacity'] ?? '');
+                $accommodation_slot_mode_val = (string)($edit_meta['accommodation_slot_mode'] ?? '');
+                $accommodation_from_hour_val = (string)($edit_meta['accommodation_from_hour'] ?? '');
+                $accommodation_to_hour_val = (string)($edit_meta['accommodation_to_hour'] ?? '');
+                $accommodation_checkin_from_val = (string)($edit_meta['accommodation_checkin_from'] ?? '');
+                $accommodation_checkin_to_val = (string)($edit_meta['accommodation_checkin_to'] ?? '');
+                $accommodation_checkout_from_val = (string)($edit_meta['accommodation_checkout_from'] ?? '');
+                $accommodation_checkout_to_val = (string)($edit_meta['accommodation_checkout_to'] ?? '');
+                $accommodation_meal_type_val = (string)($edit_meta['accommodation_meal_type'] ?? '');
+                $accommodation_parking_val = (string)($edit_meta['accommodation_parking'] ?? '');
+                ?>
+                <div class="va-form-group">
+                    <label>Szállás típusa</label>
+                    <select name="accommodation_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="vadaszhaz"<?php selected($accommodation_type_val, 'vadaszhaz'); ?>>Vadászház</option>
+                        <option value="vendeghaz"<?php selected($accommodation_type_val, 'vendeghaz'); ?>>Vendégház</option>
+                        <option value="apartman"<?php selected($accommodation_type_val, 'apartman'); ?>>Apartman</option>
+                        <option value="panzio"<?php selected($accommodation_type_val, 'panzio'); ?>>Panzió</option>
+                        <option value="hotel"<?php selected($accommodation_type_val, 'hotel'); ?>>Hotel</option>
+                        <option value="fahaz"<?php selected($accommodation_type_val, 'fahaz'); ?>>Faház</option>
+                        <option value="kemping"<?php selected($accommodation_type_val, 'kemping'); ?>>Kemping</option>
+                        <option value="egyeb"<?php selected($accommodation_type_val, 'egyeb'); ?>>Egyéb</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Férőhely (fő)</label>
+                    <select name="accommodation_capacity" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( ['1-2','3-4','5-8','9-12','13-20','20+'] as $cap): ?>
+                        <option value="<?php echo esc_attr($cap); ?>"<?php selected($accommodation_capacity_val, $cap); ?>><?php echo esc_html($cap); ?> fő</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Foglalási idősáv típusa</label>
+                    <select name="accommodation_slot_mode" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="oras"<?php selected($accommodation_slot_mode_val, 'oras'); ?>>Órás</option>
+                        <option value="felnapos"<?php selected($accommodation_slot_mode_val, 'felnapos'); ?>>Félnapos</option>
+                        <option value="ejszakas"<?php selected($accommodation_slot_mode_val, 'ejszakas'); ?>>Éjszakás</option>
+                        <option value="hetvegi"<?php selected($accommodation_slot_mode_val, 'hetvegi'); ?>>Hétvégi</option>
+                        <option value="heti"<?php selected($accommodation_slot_mode_val, 'heti'); ?>>Heti</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Foglalható idősáv kezdete</label>
+                    <select name="accommodation_from_hour" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_from_hour_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Foglalható idősáv vége</label>
+                    <select name="accommodation_to_hour" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_to_hour_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Check-in sáv (kezdete)</label>
+                    <select name="accommodation_checkin_from" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_checkin_from_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Check-in sáv (vége)</label>
+                    <select name="accommodation_checkin_to" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_checkin_to_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Check-out sáv (kezdete)</label>
+                    <select name="accommodation_checkout_from" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_checkout_from_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Check-out sáv (vége)</label>
+                    <select name="accommodation_checkout_to" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($accommodation_checkout_to_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Ellátás típusa</label>
+                    <select name="accommodation_meal_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="nincs"<?php selected($accommodation_meal_type_val, 'nincs'); ?>>Nincs</option>
+                        <option value="reggeli"<?php selected($accommodation_meal_type_val, 'reggeli'); ?>>Reggeli</option>
+                        <option value="felpanzio"<?php selected($accommodation_meal_type_val, 'felpanzio'); ?>>Félpanzió</option>
+                        <option value="teljes"<?php selected($accommodation_meal_type_val, 'teljes'); ?>>Teljes ellátás</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Saját parkoló</label>
+                    <select name="accommodation_parking" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($accommodation_parking_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($accommodation_parking_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                </div><!-- /va-step2-4col-inner -->
+            </div><!-- /.va-accommodation-fields-grid -->
+
+            <!-- Vadászati lehetőség / Vadkárelhárítás mezők grid -->
+            <div class="va-form-group va-hunt-option-fields-grid" data-categories="vadaszati-lehetoseg,vadkarelharitas" style="display:none">
+                <div class="va-step2-4col-inner">
+                <?php
+                $hunt_slot_from_hour_val = (string)($edit_meta['hunt_slot_from_hour'] ?? '');
+                $hunt_slot_to_hour_val = (string)($edit_meta['hunt_slot_to_hour'] ?? '');
+                $hunt_capacity_val = (string)($edit_meta['hunt_capacity'] ?? '');
+                $hunt_species_list_val = (string)($edit_meta['hunt_species_list'] ?? '');
+                $hunt_lease_type_val = (string)($edit_meta['hunt_lease_type'] ?? '');
+                $hunt_has_guide_val = (string)($edit_meta['hunt_has_guide'] ?? '');
+                $hunt_has_tracking_val = (string)($edit_meta['hunt_has_tracking'] ?? '');
+                $hunt_has_trophy_prep_val = (string)($edit_meta['hunt_has_trophy_prep'] ?? '');
+                $hunt_has_trophy_judging_val = (string)($edit_meta['hunt_has_trophy_judging'] ?? '');
+                $hunt_has_offroad_val = (string)($edit_meta['hunt_has_offroad'] ?? '');
+                $hunt_has_accommodation_val = (string)($edit_meta['hunt_has_accommodation'] ?? '');
+                $hunt_can_buy_game_val = (string)($edit_meta['hunt_can_buy_game'] ?? '');
+                ?>
+                <div class="va-form-group">
+                    <label>Idősáv kezdete (óra)</label>
+                    <select name="hunt_slot_from_hour" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($hunt_slot_from_hour_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Idősáv vége (óra)</label>
+                    <select name="hunt_slot_to_hour" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( $hour_options as $hour ): ?>
+                        <option value="<?php echo esc_attr($hour); ?>"<?php selected($hunt_slot_to_hour_val, $hour); ?>><?php echo esc_html($hour); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Létszám / fő</label>
+                    <select name="hunt_capacity" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php foreach ( ['1', '2-3', '4-6', '7-10', '10+'] as $cap ): ?>
+                        <option value="<?php echo esc_attr($cap); ?>"<?php selected($hunt_capacity_val, $cap); ?>><?php echo esc_html($cap); ?> fő</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Vadászható fajok listája</label>
+                    <input type="text" name="hunt_species_list" class="va-input" placeholder="pl. gímszarvas, dámszarvas, vaddisznó" value="<?php echo esc_attr( $hunt_species_list_val ); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Lesbérleti / hozzáférési forma</label>
+                    <select name="hunt_lease_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="alkalmi"<?php selected($hunt_lease_type_val, 'alkalmi'); ?>>Alkalmi</option>
+                        <option value="eves"<?php selected($hunt_lease_type_val, 'eves'); ?>>Éves</option>
+                        <option value="berles"<?php selected($hunt_lease_type_val, 'berles'); ?>>Bérlés</option>
+                        <option value="tagsag"<?php selected($hunt_lease_type_val, 'tagsag'); ?>>Tagság</option>
+                        <option value="tagsag-eladas"<?php selected($hunt_lease_type_val, 'tagsag-eladas'); ?>>Tagság eladása</option>
+                        <option value="berbeadas"<?php selected($hunt_lease_type_val, 'berbeadas'); ?>>Bérbeadás</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Kísérő szolgáltatás</label>
+                    <select name="hunt_has_guide" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_guide_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_guide_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Utánkeresés</label>
+                    <select name="hunt_has_tracking" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_tracking_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_tracking_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Trófea kikészítés</label>
+                    <select name="hunt_has_trophy_prep" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_trophy_prep_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_trophy_prep_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Trófea bírálás</label>
+                    <select name="hunt_has_trophy_judging" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_trophy_judging_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_trophy_judging_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Terepjáró biztosított</label>
+                    <select name="hunt_has_offroad" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_offroad_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_offroad_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Szállás lehetőség</label>
+                    <select name="hunt_has_accommodation" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_has_accommodation_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_has_accommodation_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Elejtett vad megvásárolható</label>
+                    <select name="hunt_can_buy_game" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected($hunt_can_buy_game_val, 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected($hunt_can_buy_game_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                </div><!-- /va-step2-4col-inner -->
+            </div><!-- /.va-hunt-option-fields-grid -->
 
             <?php
                 $dog_breed_options = [];
@@ -3908,7 +4182,17 @@ document.addEventListener('DOMContentLoaded', function() {
             trophy_style: 'Forma / stílus',
             trophy_fang_mount: 'Agyarfoglalat kivitel',
             trophy_material: 'Anyag',
-            trophy_finish: 'Felületkezelés'
+            trophy_finish: 'Felületkezelés',
+            accommodation_type: 'Szállás típusa',
+            accommodation_capacity: 'Férőhely (fő)',
+            accommodation_slot_mode: 'Foglalási idősáv típusa',
+            accommodation_from_hour: 'Foglalható idősáv kezdete',
+            accommodation_to_hour: 'Foglalható idősáv vége',
+            hunt_slot_from_hour: 'Idősáv kezdete (óra)',
+            hunt_slot_to_hour: 'Idősáv vége (óra)',
+            hunt_capacity: 'Létszám / fő',
+            hunt_species_list: 'Vadászható fajok listája',
+            hunt_lease_type: 'Lesbérleti / hozzáférési forma'
         };
         var missing = [];
 
@@ -3969,6 +4253,10 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isKnifeCategory = /bicska-tor-kard|vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska|dobotor|machete-bozotvago|multiszerszam|tok-keslanc|keselezo/.test(slug)
             || /(kés|kes|bicska|tőr|tor|machete|bozótvágó|bozotvago|multiszerszám|multiszerszam)/.test(selectedCatText);
+        var isAccommodationCategory = /szallas|ingatlan-szallas/.test(slug)
+            || /(szállás|szallas|booking|apartman|vendégház|vendeghaz|vadászház|vadaszhaz)/.test(selectedCatText);
+        var isHuntOptionCategory = /vadaszati-lehetoseg|vadkarelharitas|vadaszterulet-berlet|vadasz-lehetoseg/.test(slug)
+            || /(vadászati lehetőség|vadaszati lehetoseg|vadkárelhárítás|vadkarelharitas|lesbérlet|lesberlet|bérbeadás|berbeadas)/.test(selectedCatText);
         var isTrophyPlateCategory = /trofea-aletet|trofea|trofeak/.test(slug)
             || /(trófea|trofea|alátét|alatet|agyar|koponya)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
@@ -3983,13 +4271,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
 
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
 
         // Handle trophy mount fields grid
         $('.va-trophy-fields-grid').toggle(isTrophyPlateCategory);
+
+        // Handle accommodation fields grid
+        $('.va-accommodation-fields-grid').toggle(isAccommodationCategory);
+
+        // Handle hunting-option fields grid
+        $('.va-hunt-option-fields-grid').toggle(isHuntOptionCategory);
 
         // Handle telescope fields grid
         $('.va-telescope-fields-grid').toggle(isTelescopeCategory);
@@ -4021,6 +4315,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply required attributes to trophy fields
         if (isTrophyPlateCategory) {
             $('.va-trophy-fields-grid input, .va-trophy-fields-grid select, .va-trophy-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        // Apply required attributes to accommodation fields
+        if (isAccommodationCategory) {
+            $('.va-accommodation-fields-grid input, .va-accommodation-fields-grid select, .va-accommodation-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        // Apply required attributes to hunting-option fields
+        if (isHuntOptionCategory) {
+            $('.va-hunt-option-fields-grid input, .va-hunt-option-fields-grid select, .va-hunt-option-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim();
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);

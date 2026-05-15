@@ -184,6 +184,9 @@ class VA_Ajax {
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+            'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_slot_mode', 'accommodation_from_hour', 'accommodation_to_hour' ] ],
+            'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
@@ -243,6 +246,16 @@ class VA_Ajax {
             'trophy_fang_mount' => 'Agyarfoglalat kivitel',
             'trophy_material' => 'Anyag',
             'trophy_finish' => 'Felületkezelés',
+            'accommodation_type' => 'Szállás típusa',
+            'accommodation_capacity' => 'Férőhely (fő)',
+            'accommodation_slot_mode' => 'Foglalási idősáv típusa',
+            'accommodation_from_hour' => 'Foglalható idősáv kezdete',
+            'accommodation_to_hour' => 'Foglalható idősáv vége',
+            'hunt_slot_from_hour' => 'Idősáv kezdete (óra)',
+            'hunt_slot_to_hour' => 'Idősáv vége (óra)',
+            'hunt_capacity' => 'Létszám / fő',
+            'hunt_species_list' => 'Vadászható fajok listája',
+            'hunt_lease_type' => 'Lesbérleti / hozzáférési forma',
         ];
 
         $missing = [];
@@ -457,6 +470,29 @@ class VA_Ajax {
         $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
         $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
         $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
+        $accommodation_type = sanitize_key( wp_unslash( $_POST['accommodation_type'] ?? '' ) );
+        $accommodation_capacity = sanitize_text_field( wp_unslash( $_POST['accommodation_capacity'] ?? '' ) );
+        $accommodation_slot_mode = sanitize_key( wp_unslash( $_POST['accommodation_slot_mode'] ?? '' ) );
+        $accommodation_from_hour = sanitize_text_field( wp_unslash( $_POST['accommodation_from_hour'] ?? '' ) );
+        $accommodation_to_hour = sanitize_text_field( wp_unslash( $_POST['accommodation_to_hour'] ?? '' ) );
+        $accommodation_checkin_from = sanitize_text_field( wp_unslash( $_POST['accommodation_checkin_from'] ?? '' ) );
+        $accommodation_checkin_to = sanitize_text_field( wp_unslash( $_POST['accommodation_checkin_to'] ?? '' ) );
+        $accommodation_checkout_from = sanitize_text_field( wp_unslash( $_POST['accommodation_checkout_from'] ?? '' ) );
+        $accommodation_checkout_to = sanitize_text_field( wp_unslash( $_POST['accommodation_checkout_to'] ?? '' ) );
+        $accommodation_meal_type = sanitize_key( wp_unslash( $_POST['accommodation_meal_type'] ?? '' ) );
+        $accommodation_parking = sanitize_key( wp_unslash( $_POST['accommodation_parking'] ?? '' ) );
+        $hunt_slot_from_hour = sanitize_text_field( wp_unslash( $_POST['hunt_slot_from_hour'] ?? '' ) );
+        $hunt_slot_to_hour = sanitize_text_field( wp_unslash( $_POST['hunt_slot_to_hour'] ?? '' ) );
+        $hunt_capacity = sanitize_text_field( wp_unslash( $_POST['hunt_capacity'] ?? '' ) );
+        $hunt_species_list = sanitize_text_field( wp_unslash( $_POST['hunt_species_list'] ?? '' ) );
+        $hunt_lease_type = sanitize_key( wp_unslash( $_POST['hunt_lease_type'] ?? '' ) );
+        $hunt_has_guide = sanitize_key( wp_unslash( $_POST['hunt_has_guide'] ?? '' ) );
+        $hunt_has_tracking = sanitize_key( wp_unslash( $_POST['hunt_has_tracking'] ?? '' ) );
+        $hunt_has_trophy_prep = sanitize_key( wp_unslash( $_POST['hunt_has_trophy_prep'] ?? '' ) );
+        $hunt_has_trophy_judging = sanitize_key( wp_unslash( $_POST['hunt_has_trophy_judging'] ?? '' ) );
+        $hunt_has_offroad = sanitize_key( wp_unslash( $_POST['hunt_has_offroad'] ?? '' ) );
+        $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
+        $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -494,6 +530,16 @@ class VA_Ajax {
             'trophy_fang_mount' => $trophy_fang_mount,
             'trophy_material' => $trophy_material,
             'trophy_finish' => $trophy_finish,
+            'accommodation_type' => $accommodation_type,
+            'accommodation_capacity' => $accommodation_capacity,
+            'accommodation_slot_mode' => $accommodation_slot_mode,
+            'accommodation_from_hour' => $accommodation_from_hour,
+            'accommodation_to_hour' => $accommodation_to_hour,
+            'hunt_slot_from_hour' => $hunt_slot_from_hour,
+            'hunt_slot_to_hour' => $hunt_slot_to_hour,
+            'hunt_capacity' => $hunt_capacity,
+            'hunt_species_list' => $hunt_species_list,
+            'hunt_lease_type' => $hunt_lease_type,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -557,6 +603,29 @@ class VA_Ajax {
             'va_trophy_fang_mount' => $trophy_fang_mount,
             'va_trophy_material' => $trophy_material,
             'va_trophy_finish' => $trophy_finish,
+            'va_accommodation_type' => $accommodation_type,
+            'va_accommodation_capacity' => $accommodation_capacity,
+            'va_accommodation_slot_mode' => $accommodation_slot_mode,
+            'va_accommodation_from_hour' => $accommodation_from_hour,
+            'va_accommodation_to_hour' => $accommodation_to_hour,
+            'va_accommodation_checkin_from' => $accommodation_checkin_from,
+            'va_accommodation_checkin_to' => $accommodation_checkin_to,
+            'va_accommodation_checkout_from' => $accommodation_checkout_from,
+            'va_accommodation_checkout_to' => $accommodation_checkout_to,
+            'va_accommodation_meal_type' => $accommodation_meal_type,
+            'va_accommodation_parking' => $accommodation_parking,
+            'va_hunt_slot_from_hour' => $hunt_slot_from_hour,
+            'va_hunt_slot_to_hour' => $hunt_slot_to_hour,
+            'va_hunt_capacity' => $hunt_capacity,
+            'va_hunt_species_list' => $hunt_species_list,
+            'va_hunt_lease_type' => $hunt_lease_type,
+            'va_hunt_has_guide' => $hunt_has_guide,
+            'va_hunt_has_tracking' => $hunt_has_tracking,
+            'va_hunt_has_trophy_prep' => $hunt_has_trophy_prep,
+            'va_hunt_has_trophy_judging' => $hunt_has_trophy_judging,
+            'va_hunt_has_offroad' => $hunt_has_offroad,
+            'va_hunt_has_accommodation' => $hunt_has_accommodation,
+            'va_hunt_can_buy_game' => $hunt_can_buy_game,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -719,6 +788,29 @@ class VA_Ajax {
         $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
         $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
         $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
+        $accommodation_type = sanitize_key( wp_unslash( $_POST['accommodation_type'] ?? '' ) );
+        $accommodation_capacity = sanitize_text_field( wp_unslash( $_POST['accommodation_capacity'] ?? '' ) );
+        $accommodation_slot_mode = sanitize_key( wp_unslash( $_POST['accommodation_slot_mode'] ?? '' ) );
+        $accommodation_from_hour = sanitize_text_field( wp_unslash( $_POST['accommodation_from_hour'] ?? '' ) );
+        $accommodation_to_hour = sanitize_text_field( wp_unslash( $_POST['accommodation_to_hour'] ?? '' ) );
+        $accommodation_checkin_from = sanitize_text_field( wp_unslash( $_POST['accommodation_checkin_from'] ?? '' ) );
+        $accommodation_checkin_to = sanitize_text_field( wp_unslash( $_POST['accommodation_checkin_to'] ?? '' ) );
+        $accommodation_checkout_from = sanitize_text_field( wp_unslash( $_POST['accommodation_checkout_from'] ?? '' ) );
+        $accommodation_checkout_to = sanitize_text_field( wp_unslash( $_POST['accommodation_checkout_to'] ?? '' ) );
+        $accommodation_meal_type = sanitize_key( wp_unslash( $_POST['accommodation_meal_type'] ?? '' ) );
+        $accommodation_parking = sanitize_key( wp_unslash( $_POST['accommodation_parking'] ?? '' ) );
+        $hunt_slot_from_hour = sanitize_text_field( wp_unslash( $_POST['hunt_slot_from_hour'] ?? '' ) );
+        $hunt_slot_to_hour = sanitize_text_field( wp_unslash( $_POST['hunt_slot_to_hour'] ?? '' ) );
+        $hunt_capacity = sanitize_text_field( wp_unslash( $_POST['hunt_capacity'] ?? '' ) );
+        $hunt_species_list = sanitize_text_field( wp_unslash( $_POST['hunt_species_list'] ?? '' ) );
+        $hunt_lease_type = sanitize_key( wp_unslash( $_POST['hunt_lease_type'] ?? '' ) );
+        $hunt_has_guide = sanitize_key( wp_unslash( $_POST['hunt_has_guide'] ?? '' ) );
+        $hunt_has_tracking = sanitize_key( wp_unslash( $_POST['hunt_has_tracking'] ?? '' ) );
+        $hunt_has_trophy_prep = sanitize_key( wp_unslash( $_POST['hunt_has_trophy_prep'] ?? '' ) );
+        $hunt_has_trophy_judging = sanitize_key( wp_unslash( $_POST['hunt_has_trophy_judging'] ?? '' ) );
+        $hunt_has_offroad = sanitize_key( wp_unslash( $_POST['hunt_has_offroad'] ?? '' ) );
+        $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
+        $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -754,6 +846,16 @@ class VA_Ajax {
             'trophy_fang_mount' => $trophy_fang_mount,
             'trophy_material' => $trophy_material,
             'trophy_finish' => $trophy_finish,
+            'accommodation_type' => $accommodation_type,
+            'accommodation_capacity' => $accommodation_capacity,
+            'accommodation_slot_mode' => $accommodation_slot_mode,
+            'accommodation_from_hour' => $accommodation_from_hour,
+            'accommodation_to_hour' => $accommodation_to_hour,
+            'hunt_slot_from_hour' => $hunt_slot_from_hour,
+            'hunt_slot_to_hour' => $hunt_slot_to_hour,
+            'hunt_capacity' => $hunt_capacity,
+            'hunt_species_list' => $hunt_species_list,
+            'hunt_lease_type' => $hunt_lease_type,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -846,6 +948,29 @@ class VA_Ajax {
             'va_trophy_fang_mount' => $trophy_fang_mount,
             'va_trophy_material' => $trophy_material,
             'va_trophy_finish' => $trophy_finish,
+            'va_accommodation_type' => $accommodation_type,
+            'va_accommodation_capacity' => $accommodation_capacity,
+            'va_accommodation_slot_mode' => $accommodation_slot_mode,
+            'va_accommodation_from_hour' => $accommodation_from_hour,
+            'va_accommodation_to_hour' => $accommodation_to_hour,
+            'va_accommodation_checkin_from' => $accommodation_checkin_from,
+            'va_accommodation_checkin_to' => $accommodation_checkin_to,
+            'va_accommodation_checkout_from' => $accommodation_checkout_from,
+            'va_accommodation_checkout_to' => $accommodation_checkout_to,
+            'va_accommodation_meal_type' => $accommodation_meal_type,
+            'va_accommodation_parking' => $accommodation_parking,
+            'va_hunt_slot_from_hour' => $hunt_slot_from_hour,
+            'va_hunt_slot_to_hour' => $hunt_slot_to_hour,
+            'va_hunt_capacity' => $hunt_capacity,
+            'va_hunt_species_list' => $hunt_species_list,
+            'va_hunt_lease_type' => $hunt_lease_type,
+            'va_hunt_has_guide' => $hunt_has_guide,
+            'va_hunt_has_tracking' => $hunt_has_tracking,
+            'va_hunt_has_trophy_prep' => $hunt_has_trophy_prep,
+            'va_hunt_has_trophy_judging' => $hunt_has_trophy_judging,
+            'va_hunt_has_offroad' => $hunt_has_offroad,
+            'va_hunt_has_accommodation' => $hunt_has_accommodation,
+            'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_views'       => 0,
         ];
 
