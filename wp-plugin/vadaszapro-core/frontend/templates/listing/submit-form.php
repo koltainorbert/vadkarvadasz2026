@@ -56,8 +56,12 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'brand':
                 if ( $site_type !== 'jarmu' ) {
-                    echo '<input type="text" name="brand" id="va-brand" class="va-input" list="va-brand-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
-                    echo '<datalist id="va-brand-list"></datalist>';
+                    echo '<select name="brand" id="va-brand" class="va-select">';
+                    echo '<option value="">– Válasszon –</option>';
+                    if ( $val !== '' ) {
+                        echo '<option value="' . esc_attr( (string) $val ) . '" selected>' . esc_html( (string) $val ) . '</option>';
+                    }
+                    echo '</select>';
                     break;
                 }
                 echo '<select name="brand" id="va-brand" class="va-select">';
@@ -901,7 +905,7 @@ body.va-page-modal-open{
 .va-year-card {
     width: min(560px, calc(100vw - 24px));
     border-radius: 20px;
-    border: 1px solid rgba(255,138,0,.45);
+    border: none;
     background: linear-gradient(160deg, #0f0f0f, #050505);
     box-shadow: 0 30px 80px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.08);
     padding: 18px;
@@ -1384,7 +1388,18 @@ body.va-modal-open {
             <div class="va-form-row">
                 <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek">
                     <label>Kaliber</label>
-                    <input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="pl. .308 Win" value="<?php echo esc_attr((string)($edit_meta['caliber'] ?? '')); ?>">
+                    <select name="caliber" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php
+                        $caliber_val = (string)($edit_meta['caliber'] ?? '');
+                        if ( $caliber_val !== '' && ! in_array( $caliber_val, $hunting_calibers, true ) ):
+                        ?><option value="<?php echo esc_attr($caliber_val); ?>" selected><?php echo esc_html($caliber_val); ?></option><?php
+                        endif;
+                        foreach ( $hunting_calibers as $cal ):
+                        ?><option value="<?php echo esc_attr((string)$cal); ?>"<?php echo selected($caliber_val, (string)$cal, false); ?>><?php echo esc_html((string)$cal); ?></option><?php
+                        endforeach;
+                        ?>
+                    </select>
                 </div>
                 <div class="va-form-group va-core-product-year">
                     <label>Gyártási év</label>
@@ -1394,9 +1409,7 @@ body.va-modal-open {
                     </div>
                 </div>
             </div>
-            <datalist id="va-caliber-list">
-                <?php foreach ( $hunting_calibers as $cal ): ?><option value="<?php echo esc_attr((string)$cal); ?>"></option><?php endforeach; ?>
-            </datalist>
+            <datalist id="va-caliber-list"></datalist>
             <div class="va-form-group va-cat-rule-field" data-categories="cipo-bakancs,bakancs-felcipo,ruhazat-labbeli">
                 <label>Cipőméret</label>
                 <div class="va-year-input-wrap">
@@ -3135,10 +3148,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         ensureBrandModelDataLists();
 
-        if (!$brand.is('input')) {
+        if (!$brand.is('select')) {
             teardownPopupSelect($brand);
-            var $brandInput = $('<input type="text" name="brand" id="va-brand" class="va-input" list="va-brand-list" autocomplete="off" placeholder="pl. Blaser, Swarovski...">').val(brandValue);
-            $brand.replaceWith($brandInput);
+            var $brandSelect = $('<select name="brand" id="va-brand" class="va-select"></select>');
+            $brandSelect.append('<option value="">– Válasszon –</option>');
+            if (brandValue) {
+                var safeBV = $('<div>').text(brandValue).html();
+                $brandSelect.append('<option value="' + safeBV + '" selected>' + safeBV + '</option>');
+            }
+            $brand.replaceWith($brandSelect);
+            $brand = $brandSelect;
+            enhancePopupSelects($brand.parent());
         }
         if (!$model.is('input')) {
             teardownPopupSelect($model);
@@ -3159,7 +3179,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var $model = $('#va-model');
         var $brandList = $('#va-brand-list');
         var $modelList = $('#va-model-list');
-        if (!$brand.length || !$model.length || !$brandList.length || !$modelList.length) return;
+        if (!$brand.length || !$model.length) return;
+        if (!$brand.is('select') && !$brandList.length) return;
+        if (!$modelList.length) return;
 
         var categorySlug = getSelectedCategorySlug();
         var categoryData = (VA_Data.hunting_brand_models && VA_Data.hunting_brand_models[categorySlug]) ? VA_Data.hunting_brand_models[categorySlug] : {};
@@ -3188,13 +3210,27 @@ document.addEventListener('DOMContentLoaded', function() {
         var currentModel = (($model.val() || '') + '').trim();
         var matchedBrandKey = '';
 
-        $brandList.empty();
-        Object.keys(catData).forEach(function(brand) {
-            if (currentBrand.toLowerCase() === brand.toLowerCase()) {
-                matchedBrandKey = brand;
-            }
-            $('<option>').attr('value', brand).appendTo($brandList);
-        });
+        if ($brand.is('select')) {
+            var brandOptHtml = '<option value="">– Válasszon –</option>';
+            Object.keys(catData).forEach(function(brand) {
+                if (currentBrand.toLowerCase() === brand.toLowerCase()) {
+                    matchedBrandKey = brand;
+                }
+                var safeB = $('<div>').text(brand).html();
+                var selB = (currentBrand && currentBrand.toLowerCase() === brand.toLowerCase()) ? ' selected' : '';
+                brandOptHtml += '<option value="' + safeB + '"' + selB + '>' + safeB + '</option>';
+            });
+            $brand.html(brandOptHtml);
+            syncPopupSelectButton($brand);
+        } else if ($brandList.length) {
+            $brandList.empty();
+            Object.keys(catData).forEach(function(brand) {
+                if (currentBrand.toLowerCase() === brand.toLowerCase()) {
+                    matchedBrandKey = brand;
+                }
+                $('<option>').attr('value', brand).appendTo($brandList);
+            });
+        }
 
         var modelSource = matchedBrandKey ? (catData[matchedBrandKey] || []) : [];
         modelSource = vaUniqueStrings(modelSource.concat(vaGetLearnedTerms('model', categorySlug)));
@@ -3212,21 +3248,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function applyLearnedCaliberDatalist() {
         if (typeof VA_Data === 'undefined' || VA_Data.site_type === 'jarmu') return;
-        var $caliber = $('input[name="caliber"]');
+        var $caliberSel = $('select[name="caliber"]');
+        var $caliberInp = $('input[name="caliber"]');
         var $list = $('#va-caliber-list');
-        if (!$caliber.length || !$list.length) return;
-
-        var seedValues = [];
-        $list.find('option').each(function() {
-            seedValues.push($(this).attr('value') || '');
-        });
         var categorySlug = getSelectedCategorySlug();
-        var merged = vaUniqueStrings(seedValues.concat(vaGetLearnedTerms('caliber', categorySlug)));
+        var learnedCalibers = vaGetLearnedTerms('caliber', categorySlug);
 
-        $list.empty();
-        merged.forEach(function(caliber) {
-            $('<option>').attr('value', caliber).appendTo($list);
-        });
+        if ($caliberSel.length && learnedCalibers.length) {
+            var existing = [];
+            $caliberSel.find('option').each(function() { existing.push($(this).val() || ''); });
+            learnedCalibers.forEach(function(caliber) {
+                if (caliber && existing.indexOf(caliber) === -1) {
+                    var safe = $('<div>').text(caliber).html();
+                    $caliberSel.append('<option value="' + safe + '">' + safe + '</option>');
+                }
+            });
+            syncPopupSelectButton($caliberSel);
+        } else if ($caliberInp.length && $list.length) {
+            var seedValues = [];
+            $list.find('option').each(function() { seedValues.push($(this).attr('value') || ''); });
+            var merged = vaUniqueStrings(seedValues.concat(learnedCalibers));
+            $list.empty();
+            merged.forEach(function(caliber) { $('<option>').attr('value', caliber).appendTo($list); });
+        }
     }
 
     $('#va-category').on('change', function(){
