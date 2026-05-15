@@ -226,6 +226,7 @@ if ( file_exists( $address_seed_path ) ) {
     }
 }
 $learned_terms = class_exists( 'VA_Ajax' ) ? [
+    'title'    => VA_Ajax::get_learned_terms_map( 'title', 1200 ),
     'brand'    => VA_Ajax::get_learned_terms_map( 'brand', 1200 ),
     'model'    => VA_Ajax::get_learned_terms_map( 'model', 1500 ),
     'caliber'  => VA_Ajax::get_learned_terms_map( 'caliber', 1200 ),
@@ -1197,7 +1198,8 @@ body.va-modal-open {
             <h3 class="va-wstep-title">Termék adatai</h3>
             <div class="va-form-group va-title-group">
                 <label>Hirdetés címe <span class="required">*</span></label>
-                <input type="text" name="title" id="va-title" class="va-input" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
+                <input type="text" name="title" id="va-title" class="va-input" list="va-title-list" autocomplete="off" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
+                <datalist id="va-title-list"></datalist>
             </div>
             <div class="va-form-row va-core-product-fields">
                 <div class="va-form-group">
@@ -2852,6 +2854,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyLearnedTitleDatalist() {
+        var $title = $('#va-title');
+        var $list = $('#va-title-list');
+        if (!$title.length || !$list.length) return;
+
+        var categorySlug = getSelectedCategorySlug();
+        var merged = vaUniqueStrings(vaGetLearnedTerms('title', categorySlug));
+
+        $list.empty();
+        merged.forEach(function(title) {
+            $('<option>').attr('value', title).appendTo($list);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
@@ -2870,6 +2886,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     rebuildHuntingBrandModelDatalists(false);
+    applyLearnedTitleDatalist();
     applyLearnedCaliberDatalist();
     applyCategorySpecificFieldVisibility();
     applyVehicleCategoryVisibility();
