@@ -897,6 +897,7 @@ body.va-page-modal-open{
     display: none;
     align-items: center;
     justify-content: center;
+    padding: 16px;
     background: rgba(0,0,0,.76);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -906,6 +907,7 @@ body.va-page-modal-open{
 }
 .va-year-card {
     width: min(560px, calc(100vw - 24px));
+    max-width: 100%;
     border-radius: 20px;
     border: none;
     background: linear-gradient(160deg, #0f0f0f, #050505);
@@ -1025,6 +1027,13 @@ body.va-page-modal-open{
 }
 .va-popup-select-card {
     width: min(620px, calc(100vw - 24px));
+    max-width: 100%;
+    max-height: min(calc(100vh - 32px), 760px);
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: 0;
+    border: 1px solid rgba(255,138,0,.75);
+    overflow: hidden;
 }
 .va-popup-select-head {
     display: flex;
@@ -1128,6 +1137,40 @@ body.va-page-modal-open{
     .va-year-input-wrap {
         flex-direction: column;
         align-items: stretch;
+    }
+    .va-year-modal {
+        align-items: flex-start;
+        padding: 10px;
+    }
+    .va-year-card,
+    .va-popup-select-card {
+        width: 100%;
+        max-height: calc(100vh - 20px);
+        border-radius: 16px;
+        padding: 14px;
+    }
+    .va-popup-select-head {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .va-popup-select-head h4 {
+        font-size: 18px;
+        line-height: 1.2;
+    }
+    .va-popup-select-search {
+        margin-bottom: 10px;
+    }
+    .va-popup-select-list {
+        gap: 6px;
+        padding-right: 2px;
+    }
+    .va-popup-select-item,
+    .va-popup-select-empty {
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+    .va-year-actions {
+        margin-top: 10px;
     }
     .va-year-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));

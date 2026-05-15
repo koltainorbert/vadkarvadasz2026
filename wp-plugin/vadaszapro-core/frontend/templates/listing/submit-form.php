@@ -17,7 +17,6 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
             case 'category':
                 echo '<select name="category" id="va-category" class="va-select"' . $req_attr . '>';
                 echo '<option value="">– Válasszon –</option>';
-            padding: 16px;
                 foreach ( $categories as $cat ) {
                     $indent   = $cat->parent ? '&nbsp;&nbsp;' : '';
                     $selected = selected( (int) $val, $cat->term_id, false );
@@ -27,7 +26,6 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'county':
                 echo '<select name="county" class="va-select"' . $req_attr . '>';
-            max-width: 100%;
                 echo '<option value="">– Válasszon –</option>';
                 foreach ( $counties as $county ) {
                     $selected = selected( (int) $val, $county->term_id, false );
@@ -36,12 +34,6 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '</select>';
                 break;
             case 'condition':
-            max-height: min(calc(100vh - 32px), 760px);
-            display: grid;
-            grid-template-rows: auto auto minmax(0, 1fr) auto;
-            gap: 0;
-            border: 1px solid rgba(255,138,0,.75);
-            overflow: hidden;
                 echo '<select name="condition" class="va-select">';
                 echo '<option value="">– Válasszon –</option>';
                 foreach ( $conditions as $cond ) {
@@ -50,6 +42,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 }
                 echo '</select>';
                 break;
+            case 'location':
                 $location_val = (string) ( $ev['location'] ?? '' );
                 $postal_val   = (string) ( $ev['postal_code'] ?? '' );
                 $street_val   = (string) ( $ev['street'] ?? '' );
@@ -63,40 +56,6 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'brand':
                 if ( $site_type !== 'jarmu' ) {
-            .va-year-modal {
-                align-items: flex-start;
-                padding: 10px;
-            }
-            .va-year-card,
-            .va-popup-select-card {
-                width: 100%;
-                max-height: calc(100vh - 20px);
-                border-radius: 16px;
-                padding: 14px;
-            }
-            .va-popup-select-head {
-                gap: 10px;
-                margin-bottom: 10px;
-            }
-            .va-popup-select-head h4 {
-                font-size: 18px;
-                line-height: 1.2;
-            }
-            .va-popup-select-search {
-                margin-bottom: 10px;
-            }
-            .va-popup-select-list {
-                gap: 6px;
-                padding-right: 2px;
-            }
-            .va-popup-select-item,
-            .va-popup-select-empty {
-                padding: 11px 12px;
-                font-size: 13px;
-            }
-            .va-year-actions {
-                margin-top: 10px;
-            }
                     echo '<select name="brand" id="va-brand" class="va-select">';
                     echo '<option value="">– Válasszon –</option>';
                     if ( $val !== '' ) {
@@ -623,7 +582,7 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-cat-card__label{display:block!important;font-size:13px!important;font-weight:700!important;color:#fff!important;text-transform:none!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btns{display:flex!important;flex-wrap:wrap!important;gap:10px!important}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:10px 16px!important;margin:0!important;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.20)!important;border-radius:999px!important;color:#fff!important;white-space:nowrap!important}
-#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;max-height:min(92vh,960px)!important;overflow:hidden!important;border:2px solid rgba(255,138,0,.75)!important;box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06)!important}
+#va-wizard-overlay.va-wizard-shell{position:relative!important;width:min(1440px,calc(100vw - 20px))!important;max-height:min(92vh,960px)!important;overflow:hidden!important;border:none!important;box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06)!important}
 #va-wizard-overlay.va-wizard-shell{margin:0 auto!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-main{display:flex;flex-direction:column;overflow:hidden;padding-top:0!important}
 #va-wizard-overlay.va-wizard-shell .va-wizard-body{flex:none;overflow:visible!important;padding-right:4px}
@@ -848,6 +807,8 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__title,
 #va-wizard-overlay.va-wizard-shell .va-wizard-dots--stack .va-wdot.is-active .va-wdot__desc,
@@ -1083,7 +1044,7 @@ body.va-page-modal-open{
     margin-bottom: 12px;
 }
 .va-popup-select-list {
-    max-height: min(52vh, 420px);
+    min-height: 0;
     overflow: auto;
     display: flex;
     flex-direction: column;
@@ -3569,13 +3530,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!visible && isBowCategory && $wrap.find('input[name="license_req"]').length) {
                 visible = true;
             }
+            if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
+                visible = true;
+            }
             if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
                 visible = true;
             }
             if (!visible && isDogCategory && $wrap.find('[name="dog_breed"], [name="dog_gender"], [name="dog_color"], [name="dog_purebred"], [name="dog_age_months"]').length) {
-                visible = true;
-            }
-            if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
                 visible = true;
             }
             $wrap.toggle(visible);
