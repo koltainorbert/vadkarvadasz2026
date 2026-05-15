@@ -1543,6 +1543,53 @@ body.va-modal-open {
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div>
+
+            <!-- Kés mezők grid -->
+            <div class="va-form-group va-knife-fields-grid" data-categories="vadaszkes-vadasztor,taktikai-kes-taktikai-tor,konyhakes,svajci-bicska" style="display:none">
+                <div class="va-step2-4col-inner">
+                <!-- Kés típusa -->
+                <div class="va-knife-field va-knife-type-wrap">
+                    <label>Kés típusa</label>
+                    <?php $knife_type_val = (string)($edit_meta['knife_type'] ?? ''); ?>
+                    <select name="knife_type" id="va-knife-type" class="va-select">
+                        <option value="">– Válasszon típust –</option>
+                        <option value="vadaszkes"<?php selected($knife_type_val,'vadaszkes'); ?>>Vadászkés</option>
+                        <option value="vadasztor"<?php selected($knife_type_val,'vadasztor'); ?>>Vadásztőr</option>
+                        <option value="vadasz-bicska"<?php selected($knife_type_val,'vadasz-bicska'); ?>>Vadászbicska</option>
+                        <option value="nyuzoces"<?php selected($knife_type_val,'nyuzoces'); ?>>Nyúzókés</option>
+                        <option value="felezo-kes"<?php selected($knife_type_val,'felezo-kes'); ?>>Filéző kés</option>
+                        <option value="zsigereloces"<?php selected($knife_type_val,'zsigereloces'); ?>>Zsigerelő kés</option>
+                        <option value="szeleloces"<?php selected($knife_type_val,'szeleloces'); ?>>Szeletelő kés</option>
+                        <option value="csontfuresz-kes"<?php selected($knife_type_val,'csontfuresz-kes'); ?>>Csontfűrész kés</option>
+                        <option value="csontozo-kes"<?php selected($knife_type_val,'csontozo-kes'); ?>>Csontozó kés</option>
+                        <option value="boros-kes"<?php selected($knife_type_val,'boros-kes'); ?>>Bőrös kés</option>
+                        <option value="taktikai-kes"<?php selected($knife_type_val,'taktikai-kes'); ?>>Taktikai kés</option>
+                        <option value="tura-survival"<?php selected($knife_type_val,'tura-survival'); ?>>Túra / Survival kés</option>
+                        <option value="konyhai-kes"<?php selected($knife_type_val,'konyhai-kes'); ?>>Konyhakés</option>
+                        <option value="egyedi-kes"<?php selected($knife_type_val,'egyedi-kes'); ?>>Egyedi / Kézzel készített</option>
+                        <option value="egyeb"<?php selected($knife_type_val,'egyeb'); ?>>Egyéb</option>
+                    </select>
+                </div>
+                <!-- Penge hossza -->
+                <div class="va-knife-field">
+                    <label>Penge hossza (cm)</label>
+                    <?php
+                    $knife_blade_val = (string)($edit_meta['knife_blade_length'] ?? '');
+                    $knife_blade_opts = ['5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','22','24','25','28','30'];
+                    ?>
+                    <select name="knife_blade_length" id="va-knife-blade-length" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <?php if ($knife_blade_val !== '' && !in_array($knife_blade_val, $knife_blade_opts, true)): ?>
+                        <option value="<?php echo esc_attr($knife_blade_val); ?>" selected><?php echo esc_html($knife_blade_val); ?> cm</option>
+                        <?php endif; ?>
+                        <?php foreach ($knife_blade_opts as $cm): ?>
+                        <option value="<?php echo esc_attr($cm); ?>"<?php selected($knife_blade_val,$cm); ?>><?php echo esc_html($cm); ?> cm</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                </div><!-- /va-step2-4col-inner -->
+            </div><!-- /.va-knife-fields-grid -->
+
             <?php
                 $dog_breed_options = [];
                 $dog_catalog = [];
