@@ -2,6 +2,35 @@
 
 ---
 
+## 2026. 05. 15. – Session #359i — Submit wizard: minden lenyíló helyett popup választó
+
+### Kérés
+- A teljes hirdetésfeladásban a natív lenyíló mezők tűnjenek el.
+- Minden select mező popupos választót kapjon, a gyártási év picker mintájára.
+
+### Javítás
+- A submit wizardben új, egységes popup-select modal készült keresőmezővel és sötét overlay-jel.
+- A natív `select` mezők vizuálisan elrejtésre kerültek, helyettük trigger gomb nyitja a popup listát.
+- A kiválasztott érték visszaszinkronizálódik az eredeti mezőbe, ezért a meglévő validáció és mentési logika változatlan maradt.
+- A megoldás nem csak a statikus mezőkre került rá, hanem a dinamikusan létrejövő jármű-márka selectre is.
+- Így a távcső `Típus`, kutya mezők, állás típus, ár típusa, megye és minden további select ugyanazt a popup UX-et használja.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Validáció
+- `get_errors` lefuttatva mindkét módosított template-re: nincs hiba.
+
+### Mi maradt
+- Böngészős végigkattintás ajánlott az összes speciális kategórián (távcső, kutya, állás, jármű), hogy a popup címkék és hosszú listák UX-e végig rendben van-e.
+
+### Holnap ezzel kezdjük
+- Ha bárhol maradt natív select vagy kell még finomhangolni a popup listák méretét/keresését, azt célzottan a submit wizard popup-select rétegében kell folytatni.
+
+### Deploy
+- Deploy All futtatva.
+
 ## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
 
 ### Kérés
