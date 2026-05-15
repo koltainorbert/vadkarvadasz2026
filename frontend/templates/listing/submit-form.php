@@ -972,6 +972,7 @@ body.va-page-modal-open{
     color: #111;
 }
 .va-year-actions {
+    flex-shrink: 0;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -1029,13 +1030,12 @@ body.va-page-modal-open{
     width: min(620px, calc(100vw - 24px));
     max-width: 100%;
     max-height: min(calc(100vh - 32px), 760px);
-    display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: 0;
+    display: flex;
+    flex-direction: column;
     border: 1px solid rgba(255,138,0,.75);
-    overflow: hidden;
 }
 .va-popup-select-head {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1049,10 +1049,12 @@ body.va-page-modal-open{
     font-weight: 800;
 }
 .va-popup-select-search {
+    flex-shrink: 0;
     width: 100%;
     margin-bottom: 12px;
 }
 .va-popup-select-list {
+    flex: 1;
     min-height: 0;
     overflow: auto;
     display: flex;
