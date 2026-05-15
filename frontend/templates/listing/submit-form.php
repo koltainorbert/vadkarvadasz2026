@@ -258,7 +258,8 @@ $category_required_rules = [
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
-    'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+    'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
+    'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -305,6 +306,9 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'dog_color' => get_post_meta( $maybe_id, 'va_dog_color', true ),
             'dog_purebred' => get_post_meta( $maybe_id, 'va_dog_purebred', true ),
             'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
+            'clothing_type' => get_post_meta( $maybe_id, 'va_clothing_type', true ),
+            'clothing_size_system' => get_post_meta( $maybe_id, 'va_clothing_size_system', true ),
+            'clothing_size' => get_post_meta( $maybe_id, 'va_clothing_size', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -897,7 +901,7 @@ body.va-page-modal-open{
     display: none;
     align-items: center;
     justify-content: center;
-a vadászruházat, egyéb ruházat kategóriánál legyen EU , USA, EN ruhaméret popup kiválasztható nadrág, póló, kabát stb, lehessen a ruha tipusát is kiválasztni     padding: 16px;
+    padding: 16px;
     background: rgba(0,0,0,.76);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -1409,6 +1413,56 @@ body.va-modal-open {
                 <div class="va-year-input-wrap">
                     <input type="text" name="shoe_size" id="va-shoe-size-input" class="va-input" placeholder="pl. EU 43" readonly value="<?php echo esc_attr((string)($edit_meta['shoe_size'] ?? '')); ?>">
                     <button type="button" class="va-year-open-btn" id="va-shoe-size-open">Mérettáblázat</button>
+                </div>
+            </div>
+            <div class="va-cat-rule-field" data-categories="vadasz-ruhazat,egyeb-ruhazat">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Ruhatípus</label>
+                        <select name="clothing_type" id="va-clothing-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <?php
+                            $clothing_type_val = (string)($edit_meta['clothing_type'] ?? '');
+                            $clothing_type_options = [
+                                'nadrag' => 'Nadrág',
+                                'polo' => 'Póló',
+                                'ing' => 'Ing',
+                                'pulover' => 'Pulóver',
+                                'melleny' => 'Mellény',
+                                'kabat' => 'Kabát',
+                                'dzseki' => 'Dzseki',
+                                'overal' => 'Overál',
+                                'sapka' => 'Sapka',
+                                'kesztyu' => 'Kesztyű',
+                                'egyeb' => 'Egyéb'
+                            ];
+                            if ( $clothing_type_val !== '' && ! array_key_exists( $clothing_type_val, $clothing_type_options ) ) {
+                                echo '<option value="' . esc_attr( $clothing_type_val ) . '" selected>' . esc_html( $clothing_type_val ) . '</option>';
+                            }
+                            foreach ( $clothing_type_options as $ct_key => $ct_label ) {
+                                echo '<option value="' . esc_attr( $ct_key ) . '"' . selected( $clothing_type_val, $ct_key, false ) . '>' . esc_html( $ct_label ) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Méretrendszer</label>
+                        <select name="clothing_size_system" id="va-clothing-size-system" class="va-select">
+                            <?php
+                            $clothing_size_system_val = (string)($edit_meta['clothing_size_system'] ?? 'eu');
+                            if ( $clothing_size_system_val === '' ) $clothing_size_system_val = 'eu';
+                            ?>
+                            <option value="eu"<?php echo selected( $clothing_size_system_val, 'eu', false ); ?>>EU</option>
+                            <option value="usa"<?php echo selected( $clothing_size_system_val, 'usa', false ); ?>>USA</option>
+                            <option value="en"<?php echo selected( $clothing_size_system_val, 'en', false ); ?>>EN</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ruhaméret</label>
+                        <select name="clothing_size" id="va-clothing-size" class="va-select" data-selected="<?php echo esc_attr((string)($edit_meta['clothing_size'] ?? '')); ?>">
+                            <option value="">– Válasszon –</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
@@ -3390,12 +3444,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function rebuildClothingSizeOptions() {
+        var $sizeSystem = $('#va-clothing-size-system');
+        var $size = $('#va-clothing-size');
+        if (!$sizeSystem.length || !$size.length) return;
+
+        var system = (($sizeSystem.val() || 'eu') + '').toLowerCase();
+        var selectedSize = (($size.val() || $size.data('selected') || '') + '').trim();
+        var sizeMap = {
+            eu: ['XS','S','M','L','XL','XXL','3XL','4XL','44','46','48','50','52','54','56','58','60'],
+            usa: ['XS','S','M','L','XL','XXL','3XL','4XL','30','32','34','36','38','40','42','44','46'],
+            en: ['XS','S','M','L','XL','XXL','3XL','4XL','34','36','38','40','42','44','46','48','50']
+        };
+        var options = sizeMap[system] || sizeMap.eu;
+        var html = '<option value="">– Válasszon –</option>';
+
+        if (selectedSize && options.indexOf(selectedSize) === -1) {
+            var safeCurrent = $('<div>').text(selectedSize).html();
+            html += '<option value="' + safeCurrent + '" selected>' + safeCurrent + '</option>';
+        }
+
+        options.forEach(function(sizeVal){
+            var safe = $('<div>').text(sizeVal).html();
+            var selected = selectedSize === sizeVal ? ' selected' : '';
+            html += '<option value="' + safe + '"' + selected + '>' + safe + '</option>';
+        });
+
+        $size.html(html);
+        if (selectedSize) {
+            $size.val(selectedSize);
+        }
+        syncPopupSelectButton($size);
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
             rebuildHuntingBrandModelDatalists(true);
             applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
+            rebuildClothingSizeOptions();
         }
         applyVehicleCategoryVisibility();
         switchBrandModelFieldMode();
@@ -3407,8 +3495,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    $(document).on('change', '#va-clothing-size-system', function(){
+        rebuildClothingSizeOptions();
+    });
+
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
+    rebuildClothingSizeOptions();
     (function(){
         var $list = $('#va-title-list');
         if (!$list.length) return;
@@ -3552,7 +3645,10 @@ document.addEventListener('DOMContentLoaded', function() {
             dog_color: 'Színe',
             dog_purebred: 'Fajtatisztaság',
             job_location: 'Hol van az állás?',
-            job_type: 'Állás típusa'
+            job_type: 'Állás típusa',
+            clothing_type: 'Ruhatípus',
+            clothing_size_system: 'Méretrendszer',
+            clothing_size: 'Ruhaméret'
         };
         var missing = [];
 
@@ -3609,6 +3705,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
+        var isClothingCategory = /ruhazat/.test(slug)
+            || /(ruházat|ruhazat|nadrág|nadrag|póló|polo|kabát|kabat)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -3649,6 +3747,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
+                visible = true;
+            }
+            if (!visible && isClothingCategory && $wrap.find('[name="clothing_type"], [name="clothing_size_system"], [name="clothing_size"]').length) {
                 visible = true;
             }
             if (!visible && isDogCategory && $wrap.find('[name="dog_breed"], [name="dog_gender"], [name="dog_color"], [name="dog_purebred"], [name="dog_age_months"]').length) {
