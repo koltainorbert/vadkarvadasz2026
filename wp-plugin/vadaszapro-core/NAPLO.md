@@ -2,6 +2,38 @@
 
 ---
 
+## 2026. 05. 15. – Session #359k — Ruházat kategória: ruhatípus + EU/USA/EN méret popup
+
+### Kérés
+- A vadászruházat és egyéb ruházat kategóriáknál lehessen ruhatípust választani (pl. nadrág, póló, kabát).
+- Legyen EU/USA/EN ruhaméret választás popupos select UX-szel.
+
+### Javítás
+- Új mezőcsoport került Step 2-be: `clothing_type`, `clothing_size_system`, `clothing_size`.
+- A mezők csak ruházat kategóriában látszanak (`vadasz-ruhazat`, `egyeb-ruhazat`), popup selectként működnek.
+- Dinamikus méretlista készült méretrendszer szerint (EU/USA/EN), és változásra újraépül.
+- Kategória-specifikus validáció bővítve frontenden és backendben is új címkékkel.
+- Backend mentés bővítve: `va_clothing_type`, `va_clothing_size_system`, `va_clothing_size`.
+- Javítva lett egy véletlenül beszúrt szöveg a CSS blokkban, ami törte a `.va-year-modal` szabályt.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+
+### Validáció
+- `get_errors` lefuttatva: nincs hiba a módosított fájlokban.
+- Root és plugin mirror template SHA256 alapján azonos.
+
+### Mi maradt
+- Éles kézi teszt: vadászruházat / egyéb ruházat kategória alatt ruhatípus + méretrendszer + méret végigkattintás.
+
+### Holnap ezzel kezdjük
+- Ha kérés van rá, ruhatípus-függő méretsorokat adunk (pl. nadrág külön, kabát külön), és admin oldali szűrőbe is bevezetjük.
+
+### Deploy
+- Deploy All futtatva.
+
 ## 2026. 05. 15. – Session #359j — Popup selector reszponzív finomhangolás
 
 ### Kérés
