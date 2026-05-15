@@ -433,6 +433,8 @@ class VA_Ajax {
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
+        $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
+        $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -459,6 +461,8 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'job_location' => $job_location,
             'job_type' => $job_type,
+            'knife_type' => $knife_type,
+            'knife_blade_length' => $knife_blade_length,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -511,6 +515,8 @@ class VA_Ajax {
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
             'va_shoe_size'   => $shoe_size,
+            'va_knife_type' => $knife_type,
+            'va_knife_blade_length' => $knife_blade_length,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -662,6 +668,8 @@ class VA_Ajax {
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
+        $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -686,6 +694,8 @@ class VA_Ajax {
             'dog_gender' => $dog_gender,
             'dog_color' => $dog_color,
             'dog_purebred' => $dog_purebred,
+            'knife_type' => $knife_type,
+            'knife_blade_length' => $knife_blade_length,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -767,6 +777,8 @@ class VA_Ajax {
             'va_dog_gender'  => $dog_gender,
             'va_dog_color'   => $dog_color,
             'va_dog_purebred'=> $dog_purebred,
+            'va_knife_type' => $knife_type,
+            'va_knife_blade_length' => $knife_blade_length,
             'va_views'       => 0,
         ];
 
