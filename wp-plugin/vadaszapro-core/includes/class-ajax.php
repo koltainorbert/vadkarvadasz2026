@@ -94,7 +94,6 @@ class VA_Ajax {
     private static function learn_listing_terms( int $category_id, array $values ): void {
         $category_slug = self::get_learning_category_slug( $category_id );
 
-        self::save_learning_term( 'title', (string) ( $values['title'] ?? '' ), '' );
         self::save_learning_term( 'brand', (string) ( $values['brand'] ?? '' ), $category_slug );
         self::save_learning_term( 'model', (string) ( $values['model'] ?? '' ), $category_slug );
         self::save_learning_term( 'caliber', (string) ( $values['caliber'] ?? '' ), $category_slug );
@@ -104,7 +103,7 @@ class VA_Ajax {
 
     public static function get_learned_terms_map( string $term_type, int $limit = 500 ): array {
         $term_type = sanitize_key( $term_type );
-        if ( ! in_array( $term_type, [ 'title', 'brand', 'model', 'caliber', 'location', 'street' ], true ) ) {
+        if ( ! in_array( $term_type, [ 'brand', 'model', 'caliber', 'location', 'street' ], true ) ) {
             return [ '__global' => [] ];
         }
 
@@ -556,7 +555,6 @@ class VA_Ajax {
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
         self::learn_listing_terms( $category, [
-            'title'    => $title,
             'brand'    => $brand,
             'model'    => $model,
             'caliber'  => $caliber,
@@ -805,7 +803,6 @@ class VA_Ajax {
         if ( $condition) wp_set_post_terms( $post_id, [ $condition ], 'va_condition' );
 
         self::learn_listing_terms( $category, [
-            'title'    => $title,
             'brand'    => $brand,
             'model'    => $model,
             'caliber'  => $caliber,
