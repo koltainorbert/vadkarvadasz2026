@@ -2,6 +2,49 @@
 
 ---
 
+## 2026. 05. 15. – Session #359o — Trófeaalátét popup űrlapok
+
+### Kérés
+- A `trofea-aletet` kategóriához popupos, kategória-specifikus mezők kellettek (vadfaj, típus, stílus, anyag, felületkezelés, agyarfoglalat kivitel).
+
+### Javítás
+- Új frontend blokk: `va-trophy-fields-grid` (`data-categories="trofea-aletet"`) popup select mezőkkel.
+- Új mezők:
+  - `trophy_species`
+  - `trophy_mount_type`
+  - `trophy_style`
+  - `trophy_fang_mount`
+  - `trophy_material`
+  - `trophy_finish`
+- Kategóriafelismerés bővítve: `isTrophyPlateCategory` (slug + név alapján).
+- Required logika bekötve a trófea mezőblokkra is (category_required_rules szerint).
+- Edit mode visszatöltés hozzáadva (`va_trophy_*` meta kulcsok olvasása).
+
+### Backend
+- Szerveroldali required szabály hozzáadva:
+  - `trofea-aletet` => kötelező: `trophy_species`, `trophy_mount_type`, `trophy_style`, `trophy_material`, `trophy_finish`
+- Sanitizálás + validáció + mentés hozzáadva mindkét ágba:
+  - `update_listing()`
+  - `submit_listing()`
+- Mentett meta kulcsok:
+  - `va_trophy_species`
+  - `va_trophy_mount_type`
+  - `va_trophy_style`
+  - `va_trophy_fang_mount`
+  - `va_trophy_material`
+  - `va_trophy_finish`
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Deploy
+- Deploy All futtatva, workflow elindult.
+
+---
+
 ## 2026. 05. 15. – Session #359n — Szolgáltatás kategória egyszerűsítés (2 popup mező)
 
 ### Kérés
