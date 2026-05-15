@@ -370,6 +370,13 @@ $extras_raw       = get_post_meta( $post_id, 'va_extras',           true );
 $extras_arr       = ( is_string( $extras_raw ) && $extras_raw !== '' ) ? json_decode( $extras_raw, true ) : [];
 $extras_arr       = is_array( $extras_arr ) ? $extras_arr : [];
 
+// Kutya mezők
+$dog_breed        = get_post_meta( $post_id, 'va_dog_breed',        true );
+$dog_gender       = get_post_meta( $post_id, 'va_dog_gender',       true );
+$dog_color        = get_post_meta( $post_id, 'va_dog_color',        true );
+$dog_purebred     = get_post_meta( $post_id, 'va_dog_purebred',     true );
+$dog_age_months   = get_post_meta( $post_id, 'va_dog_age_months',   true );
+
 
 
 
@@ -1396,6 +1403,21 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
 
 
                 if ( $year )           $specs[] = [ 'Gy&#225;rt&#225;si &#233;v',          $year,   false ];
+
+
+                // Kutya-specifikus mezők
+                if ( $dog_breed )      $specs[] = [ 'Kutya fajt&#225;ja',        $dog_breed,  false ];
+                if ( $dog_gender ) {
+                    $dog_gender_labels = [ 'kan' => 'Kan', 'szuka' => 'Szuka' ];
+                    $specs[] = [ 'Neme',                  $dog_gender_labels[$dog_gender] ?? $dog_gender, false ];
+                }
+                if ( $dog_color )      $specs[] = [ 'Sz&#237;ne',                 $dog_color,  false ];
+                if ( $dog_purebred ) {
+                    $specs[] = [ 'Fajtatisztas&#225;g',       $dog_purebred === '1' ? 'Igen' : 'Nem', false ];
+                }
+                if ( $dog_age_months && (int)$dog_age_months > 0 ) {
+                    $specs[] = [ 'Kutyakor',               (int)$dog_age_months . ' h&#243;nap', false ];
+                }
 
 
             }

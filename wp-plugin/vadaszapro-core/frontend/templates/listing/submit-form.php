@@ -1432,6 +1432,9 @@ body.va-modal-open {
                                 'kabat' => 'Kabát',
                                 'dzseki' => 'Dzseki',
                                 'overal' => 'Overál',
+                                'kamasli' => 'Kamásli',
+                                'esoruha' => 'Esőruházat',
+                                'vadasz-kalap' => 'Vadász kalap',
                                 'sapka' => 'Sapka',
                                 'kesztyu' => 'Kesztyű',
                                 'egyeb' => 'Egyéb'
