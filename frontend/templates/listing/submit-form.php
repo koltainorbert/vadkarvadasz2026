@@ -2469,7 +2469,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') {
             var customValue = (($popupSelectSearch.val() || '') + '').trim();
             if (customValue) {
-                $activePopupSelect.val(customValue).trigger('input').trigger('change');
+                console.log('[VA] Enter key: setting custom value', customValue);
+                var $existing = $activePopupSelect.find('option[value="' + customValue + '"]');
+                if (!$existing.length) {
+                    console.log('[VA] Enter key: creating new option for', customValue);
+                    $('<option>', { value: customValue, text: customValue, selected: true }).appendTo($activePopupSelect);
+                } else {
+                    $activePopupSelect.val(customValue);
+                }
+                $activePopupSelect.trigger('input').trigger('change');
                 closePopupSelect();
             }
         }
@@ -2494,7 +2502,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         console.log('[VA] Setting value on', $activePopupSelect.attr('name'));
-        $activePopupSelect.val(customValue).trigger('input').trigger('change');
+        var $existing = $activePopupSelect.find('option[value="' + customValue + '"]');
+        if (!$existing.length) {
+            console.log('[VA] Creating new option for', customValue);
+            $('<option>', { value: customValue, text: customValue, selected: true }).appendTo($activePopupSelect);
+        } else {
+            $activePopupSelect.val(customValue);
+        }
+        $activePopupSelect.trigger('input').trigger('change');
         setTimeout(closePopupSelect, 100);
     });
 

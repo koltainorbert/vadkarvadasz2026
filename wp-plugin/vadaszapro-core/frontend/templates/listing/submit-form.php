@@ -2466,11 +2466,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $popupSelectSearch.on('keypress', function(e){
+
         if (e.key === 'Enter' && !$activePopupSelect.length) return;
         if (e.key === 'Enter') {
             var customValue = (($popupSelectSearch.val() || '') + '').trim();
             if (customValue) {
-                $activePopupSelect.val(customValue).trigger('input').trigger('change');
+                console.log('[VA] Enter key: setting custom value', customValue);
+                var $existing = $activePopupSelect.find('option[value="' + customValue + '"]');
+                if (!$existing.length) {
+                    console.log('[VA] Enter key: creating new option for', customValue);
+                    $('<option>', { value: customValue, text: customValue, selected: true }).appendTo($activePopupSelect);
+                } else {
+                    $activePopupSelect.val(customValue);
+                }
+                $activePopupSelect.trigger('input').trigger('change');
                 closePopupSelect();
             }
         }
@@ -2484,14 +2493,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#va-popup-select-add').on('click', function(){
-        if (!$activePopupSelect.length) return;
+        if (!$activePopupSelect.length) {
+            console.error('[VA] Add button: no active select');
+            return;
+        }
         var customValue = (($popupSelectSearch.val() || '') + '').trim();
+        console.log('[VA] Add button clicked, customValue:', customValue);
         if (!customValue) {
             alert('Kérlek írj be egy értéket!');
             return;
         }
-        $activePopupSelect.val(customValue).trigger('input').trigger('change');
-        setTimeout(closePopupSelect, 50);
+        console.log('[VA] Setting value on', $activePopupSelect.attr('name'));
+        var $existing = $activePopupSelect.find('option[value="' + customValue + '"]');
+        if (!$existing.length) {
+            console.log('[VA] Creating new option for', customValue);
+            $('<option>', { value: customValue, text: customValue, selected: true }).appendTo($activePopupSelect);
+        } else {
+            $activePopupSelect.val(customValue);
+        }
+        $activePopupSelect.trigger('input').trigger('change');
+        setTimeout(closePopupSelect, 100);
     });
 
     $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
