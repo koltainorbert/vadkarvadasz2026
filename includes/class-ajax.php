@@ -708,6 +708,8 @@ class VA_Ajax {
             'clothing_type' => $clothing_type,
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
+            'knife_type' => $knife_type,
+            'knife_blade_length' => $knife_blade_length,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -792,6 +794,8 @@ class VA_Ajax {
             'va_clothing_type' => $clothing_type,
             'va_clothing_size_system' => $clothing_size_system,
             'va_clothing_size' => $clothing_size,
+            'va_knife_type' => $knife_type,
+            'va_knife_blade_length' => $knife_blade_length,
             'va_views'       => 0,
         ];
 
