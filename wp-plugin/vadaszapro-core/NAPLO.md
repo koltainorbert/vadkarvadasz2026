@@ -2,6 +2,41 @@
 
 ---
 
+## 2026. 05. 15. – Session #359m — Komprehenzív nagyítási adatbázis: teljes optikai spektrum
+
+### Kérés
+- "Szedd le ide komplex cucc kell rohadtul fontos listázza az összes nagyítási fajtát!!!!! minden tipusra kereso, céltávcső, spektiv"
+- Kiterjeszteni az előző session-ből származó minimális nagyítási listákat (15-20 db per típus) egy teljes, professzionális katalógusra.
+
+### Javítás
+- Az `opticZoomData` JavaScript objeto felépítve az összes valódi nagyítási kombinációval:
+  - **Céltávcső** (celtavcso): Fix (1x-12x), 1-4x sorozat, 1-6x, 1-8x, 2-7x, 3-9x, 3-12x, 3-15x, 4-12x, 4-14x, 4-16x, 5-15x, 5-20x, 5-25x, 6-18x, 6-24x, 8-32x, 10-40x — ~80 variáció
+  - **Kereső** (kereso): 6x, 7x, 8x, 10x, 12x, 15x, 20x fix nagyítások különféle objektív lencsemérettel (20-80 mm) — ~50 variáció
+  - **Spektív** (spektiv): 15x-30x nagyítások, nagy fokozatú zoomok (15-45x, 16-48x, 20-60x, 20-70x, 25-75x, 25-80x, 30-90x), objektív 60-100 mm — ~40 variáció
+  - **Egyéb**: Üres (jövőbeli kiterjesztésre fenntartva)
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php` — sorban ~3478-3485 nagyítási adatok
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php` — szinkron másolat
+
+### Tartalmi szintek
+- **Fix nagyítások**: 6x, 7x, 8x, 10x, 12x stb. — szakmai megfigyelő/vadász eszközök
+- **Zoom nagyítások**: 1-4x, 3-9x, 4-12x stb. — adaptív alkalmazás
+- **Objektív variáció**: 20 mm (kompakt, könnyed), 40-50 mm (általános), 56+ mm (nagyobb fénybeszerzés)
+
+### Deploy
+- Deploy All futtatva: `Deploy_2026.05.15_13.53` commit.
+- Workflow automatikusan indult a vadkarvadasz.hu-ra.
+
+### Mi maradt
+- Éles tesztelés szükséges a popup nagy lista teljesítménye: 80+ opcióval a DOM renderelés nem lassít-e.
+- Ha szükséges: virtuális scrolling vagy csoportosítás (pl. zoom-sorozat szerint besorolva).
+
+### Holnap ezzel kezdjük
+- Ha a felhasználó további szűkítést igényel: márka/modell-specifikus nagyítás filter hozzáadása vagy újabb kategória-specifikus testreszabás.
+
+---
+
 ## 2026. 05. 15. – Session #359l — Távcső kategória reform: popup típus + választólistás nagyítás
 
 ### Kérés
