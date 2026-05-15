@@ -2083,7 +2083,7 @@ body.va-modal-open {
                 <h4 id="va-popup-select-title">Választás</h4>
                 <button type="button" class="va-year-nav-btn" id="va-popup-select-close" aria-label="Bezárás">×</button>
             </div>
-            <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában..." autocomplete="off">
+            <input type="search" id="va-popup-select-search" class="va-input va-popup-select-search" placeholder="Keresés a listában vagy írja be a típust" autocomplete="off">
             <div class="va-popup-select-list" id="va-popup-select-list"></div>
             <div class="va-year-actions">
                 <button type="button" class="va-btn va-btn--ghost" id="va-popup-select-add">+ Hozzáadás</button>
