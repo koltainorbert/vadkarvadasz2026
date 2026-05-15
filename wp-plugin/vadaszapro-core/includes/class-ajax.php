@@ -188,6 +188,7 @@ class VA_Ajax {
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
             'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_blade_length' ] ],
             'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type' ] ],
+            'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
         ];
     }
 
@@ -231,6 +232,12 @@ class VA_Ajax {
             'dog_purebred' => 'Fajtatisztaság',
             'job_location' => 'Hol van az állás?',
             'job_type' => 'Állás típusa',
+            'trophy_species' => 'Vadfaj',
+            'trophy_mount_type' => 'Trófeaalátét típus',
+            'trophy_style' => 'Forma / stílus',
+            'trophy_fang_mount' => 'Agyarfoglalat kivitel',
+            'trophy_material' => 'Anyag',
+            'trophy_finish' => 'Felületkezelés',
         ];
 
         $missing = [];
@@ -436,6 +443,12 @@ class VA_Ajax {
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
+        $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
+        $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
+        $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
+        $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
+        $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -464,6 +477,12 @@ class VA_Ajax {
             'job_type' => $job_type,
             'knife_type' => $knife_type,
             'knife_blade_length' => $knife_blade_length,
+            'trophy_species' => $trophy_species,
+            'trophy_mount_type' => $trophy_mount_type,
+            'trophy_style' => $trophy_style,
+            'trophy_fang_mount' => $trophy_fang_mount,
+            'trophy_material' => $trophy_material,
+            'trophy_finish' => $trophy_finish,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -518,6 +537,12 @@ class VA_Ajax {
             'va_shoe_size'   => $shoe_size,
             'va_knife_type' => $knife_type,
             'va_knife_blade_length' => $knife_blade_length,
+            'va_trophy_species' => $trophy_species,
+            'va_trophy_mount_type' => $trophy_mount_type,
+            'va_trophy_style' => $trophy_style,
+            'va_trophy_fang_mount' => $trophy_fang_mount,
+            'va_trophy_material' => $trophy_material,
+            'va_trophy_finish' => $trophy_finish,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -671,6 +696,12 @@ class VA_Ajax {
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
+        $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
+        $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
+        $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
+        $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
+        $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -697,6 +728,12 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'knife_type' => $knife_type,
             'knife_blade_length' => $knife_blade_length,
+            'trophy_species' => $trophy_species,
+            'trophy_mount_type' => $trophy_mount_type,
+            'trophy_style' => $trophy_style,
+            'trophy_fang_mount' => $trophy_fang_mount,
+            'trophy_material' => $trophy_material,
+            'trophy_finish' => $trophy_finish,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -780,6 +817,12 @@ class VA_Ajax {
             'va_dog_purebred'=> $dog_purebred,
             'va_knife_type' => $knife_type,
             'va_knife_blade_length' => $knife_blade_length,
+            'va_trophy_species' => $trophy_species,
+            'va_trophy_mount_type' => $trophy_mount_type,
+            'va_trophy_style' => $trophy_style,
+            'va_trophy_fang_mount' => $trophy_fang_mount,
+            'va_trophy_material' => $trophy_material,
+            'va_trophy_finish' => $trophy_finish,
             'va_views'       => 0,
         ];
 

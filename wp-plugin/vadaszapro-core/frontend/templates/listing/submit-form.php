@@ -312,6 +312,14 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'clothing_type' => get_post_meta( $maybe_id, 'va_clothing_type', true ),
             'clothing_size_system' => get_post_meta( $maybe_id, 'va_clothing_size_system', true ),
             'clothing_size' => get_post_meta( $maybe_id, 'va_clothing_size', true ),
+            'knife_type' => get_post_meta( $maybe_id, 'va_knife_type', true ),
+            'knife_blade_length' => get_post_meta( $maybe_id, 'va_knife_blade_length', true ),
+            'trophy_species' => get_post_meta( $maybe_id, 'va_trophy_species', true ),
+            'trophy_mount_type' => get_post_meta( $maybe_id, 'va_trophy_mount_type', true ),
+            'trophy_style' => get_post_meta( $maybe_id, 'va_trophy_style', true ),
+            'trophy_fang_mount' => get_post_meta( $maybe_id, 'va_trophy_fang_mount', true ),
+            'trophy_material' => get_post_meta( $maybe_id, 'va_trophy_material', true ),
+            'trophy_finish' => get_post_meta( $maybe_id, 'va_trophy_finish', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -4004,6 +4012,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply required attributes to telescope fields
         if (isTelescopeCategory) {
             $('.va-telescope-fields-grid input, .va-telescope-fields-grid select, .va-telescope-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        // Apply required attributes to trophy fields
+        if (isTrophyPlateCategory) {
+            $('.va-trophy-fields-grid input, .va-trophy-fields-grid select, .va-trophy-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim();
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
