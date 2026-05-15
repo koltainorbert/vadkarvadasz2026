@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 15. – Session #359h — Step 2 kompakt 4-oszlopos grid layout
+
+### Változtatás
+- **Minden kategóriában** a step 2 (Termék adatai) mezői kompakt 4-oszlopos grid elrendezést kaptak
+- Korábban: `.va-form-row` = 2 oszlop, távcső = 1 oszlop (8 sor), kutya = 2 oszlop
+- Most: minden grid 4 oszlopos → kevesebb függőleges görgetés
+
+### CSS override helye
+- `frontend/templates/listing/submit-form.php` inline `<style>` blokk (~677. sor)
+- Érintett elemek:
+  - `.va-wstep[data-step="2"] .va-form-row` → `repeat(4, minmax(0, 1fr))`
+  - `.va-telescope-fields-grid` → `display:grid; repeat(4, minmax(0, 1fr))` (8 mező = 2 sor)
+  - `.va-dog-fields-wrap` → `repeat(4, minmax(0, 1fr))` + `.va-dog-row { display: contents }`
+  - `.va-specs-grid` (jármű) → `repeat(4, minmax(0, 1fr))`
+- Reszponzív: 980px alatt → 2 col, 600px alatt → 1 col
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+---
+
 ## 2026. 05. 15. – Session #359f — Távcső kategória debug javítás (mező megjelenítés)
 
 ### Probléma

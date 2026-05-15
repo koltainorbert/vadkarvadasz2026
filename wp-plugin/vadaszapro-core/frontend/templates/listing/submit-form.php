@@ -674,6 +674,49 @@ body.va-page-modal-open{
 #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-group.va-title-group {
     margin-top: 15px !important;
 }
+/* Step 2: kompakt 4-oszlopos grid minden kategóriában */
+#va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    padding: 0 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid .va-telescope-field {
+    margin: 0 !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    margin-bottom: 14px !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap .va-dog-row {
+    display: contents !important;
+}
+#va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+}
+@media (max-width: 980px) {
+    #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-row,
+    #va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid,
+    #va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap,
+    #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+@media (max-width: 600px) {
+    #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-form-row,
+    #va-wizard-overlay.va-wizard-shell .va-telescope-fields-grid,
+    #va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap,
+    #va-wizard-overlay.va-wizard-shell .va-wstep[data-step="2"] .va-specs-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
 #va-wizard-overlay.va-wizard-shell .va-cond-btn.is-selected {
     background: #ff8a00 !important;
     border-color: #ff8a00 !important;
