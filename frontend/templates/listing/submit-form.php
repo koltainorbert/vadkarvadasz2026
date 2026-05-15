@@ -689,7 +689,7 @@ body.va-page-modal-open{
     margin: 0 !important;
 }
 #va-wizard-overlay.va-wizard-shell .va-dog-fields-wrap {
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 14px !important;
     margin-bottom: 14px !important;
