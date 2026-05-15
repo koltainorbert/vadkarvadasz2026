@@ -263,6 +263,7 @@ $category_required_rules = [
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
+    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
 ];
 
@@ -1711,12 +1712,29 @@ body.va-modal-open {
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
-                <label>Hol van az állás?</label>
-                <input type="text" name="job_location" class="va-input" placeholder="pl. Budapest, XI. kerület" value="<?php echo esc_attr((string)($edit_meta['job_location'] ?? '')); ?>">
+            <?php
+                $job_location_val = (string)($edit_meta['job_location'] ?? '');
+                $job_location_opts = [];
+                if (isset($learned_terms['location']) && is_array($learned_terms['location'])) {
+                    $job_location_opts = array_keys($learned_terms['location']);
+                }
+                $job_location_opts = array_values(array_filter(array_map('trim', $job_location_opts), static fn($v) => $v !== ''));
+                natcasesort($job_location_opts);
+            ?>
+            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
+                <label>Szolgáltatás helye</label>
+                <select name="job_location" class="va-select">
+                    <option value="">– Válasszon –</option>
+                    <?php if ($job_location_val !== '' && !in_array($job_location_val, $job_location_opts, true)): ?>
+                        <option value="<?php echo esc_attr($job_location_val); ?>" selected><?php echo esc_html($job_location_val); ?></option>
+                    <?php endif; ?>
+                    <?php foreach ($job_location_opts as $loc): ?>
+                        <option value="<?php echo esc_attr($loc); ?>"<?php selected($job_location_val, $loc); ?>><?php echo esc_html($loc); ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek">
-                <label>Állás típusa</label>
+            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
+                <label>Szolgáltatás típusa</label>
                 <select name="job_type" class="va-select">
                     <option value="">– Válasszon –</option>
                     <option value="teljes"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'teljes' ); ?>>Teljes munkaidő</option>
@@ -3847,6 +3865,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
         var isJobCategory = /allas|munka|pozicio/.test(slug)
             || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        var isServiceCategory = /szolgaltatas|szolg/.test(slug)
+            || /(szolgáltatás|szolgaltatas)/.test(selectedCatText);
         var isDogCategory = /vadaszkutya|kutya/.test(slug)
             || /(vadászkutya|vadaszkutya|kutya)/.test(selectedCatText);
         var isTelescopeCategory = /tavcsovek|ejjellato-tavcso|hokamerak/.test(slug)
@@ -3862,12 +3882,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
-        if (isJobCategory) {
+        if (isJobCategory || isServiceCategory) {
             if (required.indexOf('job_location') === -1) required.push('job_location');
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isDogCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory));
 
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
@@ -3906,7 +3926,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!visible && isBowCategory && $wrap.find('input[name="license_req"]').length) {
                 visible = true;
             }
-            if (!visible && isJobCategory && $wrap.find('[name="job_location"], [name="job_type"]').length) {
+            if (!visible && (isJobCategory || isServiceCategory) && $wrap.find('[name="job_location"], [name="job_type"]').length) {
                 visible = true;
             }
             if (!visible && isShoeCategory && $wrap.find('[name="shoe_size"]').length) {
