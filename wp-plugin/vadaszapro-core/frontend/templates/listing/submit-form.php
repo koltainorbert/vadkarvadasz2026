@@ -17,6 +17,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
             case 'category':
                 echo '<select name="category" id="va-category" class="va-select"' . $req_attr . '>';
                 echo '<option value="">– Válasszon –</option>';
+            padding: 16px;
                 foreach ( $categories as $cat ) {
                     $indent   = $cat->parent ? '&nbsp;&nbsp;' : '';
                     $selected = selected( (int) $val, $cat->term_id, false );
@@ -26,6 +27,7 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'county':
                 echo '<select name="county" class="va-select"' . $req_attr . '>';
+            max-width: 100%;
                 echo '<option value="">– Válasszon –</option>';
                 foreach ( $counties as $county ) {
                     $selected = selected( (int) $val, $county->term_id, false );
@@ -34,6 +36,12 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 echo '</select>';
                 break;
             case 'condition':
+            max-height: min(calc(100vh - 32px), 760px);
+            display: grid;
+            grid-template-rows: auto auto minmax(0, 1fr) auto;
+            gap: 0;
+            border: 1px solid rgba(255,138,0,.75);
+            overflow: hidden;
                 echo '<select name="condition" class="va-select">';
                 echo '<option value="">– Válasszon –</option>';
                 foreach ( $conditions as $cond ) {
@@ -42,7 +50,6 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 }
                 echo '</select>';
                 break;
-            case 'location':
                 $location_val = (string) ( $ev['location'] ?? '' );
                 $postal_val   = (string) ( $ev['postal_code'] ?? '' );
                 $street_val   = (string) ( $ev['street'] ?? '' );
@@ -56,6 +63,40 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'brand':
                 if ( $site_type !== 'jarmu' ) {
+            .va-year-modal {
+                align-items: flex-start;
+                padding: 10px;
+            }
+            .va-year-card,
+            .va-popup-select-card {
+                width: 100%;
+                max-height: calc(100vh - 20px);
+                border-radius: 16px;
+                padding: 14px;
+            }
+            .va-popup-select-head {
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            .va-popup-select-head h4 {
+                font-size: 18px;
+                line-height: 1.2;
+            }
+            .va-popup-select-search {
+                margin-bottom: 10px;
+            }
+            .va-popup-select-list {
+                gap: 6px;
+                padding-right: 2px;
+            }
+            .va-popup-select-item,
+            .va-popup-select-empty {
+                padding: 11px 12px;
+                font-size: 13px;
+            }
+            .va-year-actions {
+                margin-top: 10px;
+            }
                     echo '<select name="brand" id="va-brand" class="va-select">';
                     echo '<option value="">– Válasszon –</option>';
                     if ( $val !== '' ) {
