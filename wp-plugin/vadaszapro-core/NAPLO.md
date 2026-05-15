@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 05. 15. – Session #359j — Popup selector reszponzív finomhangolás
+
+### Kérés
+- A márka és kaliber popup ne vágódjon le mobilon, legyen szépen használható.
+- A teljes nagy wizard/modal külső narancs kerete tűnjön el.
+- Csak maga a popup kártya kapjon narancssárga keretet.
+
+### Javítás
+- A popup selector kártya fix belső rácsot és viewporthoz kötött max magasságot kapott, így a lista külön scrollozható és nem lóg ki mobilon.
+- A popup overlay belső paddinget kapott, mobilon felülre igazítással és kisebb belső margókkal.
+- A popup kártya saját narancssárga borderrel jelenik meg, miközben a teljes wizard külső borderje lekerült.
+- A plugin mirror fájl a jó root template-ből újra szinkronizálva lett, hogy biztosan azonos maradjon.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Validáció
+- `get_errors` lefuttatva mindkét template-re: nincs hiba.
+- A root és a plugin mirror `submit-form.php` SHA256 hash alapján byte-azonos.
+
+### Mi maradt
+- Élő böngészős ellenőrzés érdemes telefon nézetben a márka, kaliber és év popupokon.
+
+### Holnap ezzel kezdjük
+- Ha még marad túl magas popup vagy takarás, akkor a popup-select lista és action sáv mobil töréspontjait kell finomítani.
+
+### Deploy
+- Deploy All futtatva.
+
 ## 2026. 05. 15. – Session #359i — Submit wizard: minden lenyíló helyett popup választó
 
 ### Kérés
