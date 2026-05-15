@@ -2483,14 +2483,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     $('#va-popup-select-add').on('click', function(){
-        if (!$activePopupSelect.length) return;
+        if (!$activePopupSelect.length) {
+            console.error('[VA] Add button: no active select');
+            return;
+        }
         var customValue = (($popupSelectSearch.val() || '') + '').trim();
+        console.log('[VA] Add button clicked, customValue:', customValue);
         if (!customValue) {
             alert('Kérlek írj be egy értéket!');
             return;
         }
+        console.log('[VA] Setting value on', $activePopupSelect.attr('name'));
         $activePopupSelect.val(customValue).trigger('input').trigger('change');
-        setTimeout(closePopupSelect, 50);
+        setTimeout(closePopupSelect, 100);
     });
 
     $('#va-popup-select-close, #va-popup-select-cancel').on('click', closePopupSelect);
