@@ -3119,10 +3119,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 var $brandSelect = $('<select name="brand" id="va-brand" class="va-select"></select>').html(brandHtml);
                 $brand.replaceWith($brandSelect);
                 $brand = $brandSelect;
+                enhancePopupSelects($brand.parent());
             }
 
             ensureBrandModelDataLists();
             if (!$model.is('input')) {
+                teardownPopupSelect($model);
                 var $modelInputVehicle = $('<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="Írd be a modellt vagy válassz a listából...">').val(modelValue);
                 $model.replaceWith($modelInputVehicle);
                 $model = $modelInputVehicle;
@@ -3134,10 +3136,12 @@ document.addEventListener('DOMContentLoaded', function() {
         ensureBrandModelDataLists();
 
         if (!$brand.is('input')) {
+            teardownPopupSelect($brand);
             var $brandInput = $('<input type="text" name="brand" id="va-brand" class="va-input" list="va-brand-list" autocomplete="off" placeholder="pl. Blaser, Swarovski...">').val(brandValue);
             $brand.replaceWith($brandInput);
         }
         if (!$model.is('input')) {
+            teardownPopupSelect($model);
             var $modelInput = $('<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="pl. R8, Z6...">').val(modelValue);
             $model.replaceWith($modelInput);
         }
