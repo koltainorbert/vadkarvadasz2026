@@ -777,20 +777,14 @@ body.va-weather-modal-open{overflow:hidden;}
     ctx.setLineDash([]);
     ctx.shadowBlur=0;
 
-    var maxWind=0,maxWindIdx=0;
-    for(var mw=0;mw<n;mw++){
-      if(wVals[mw]>maxWind){maxWind=wVals[mw];maxWindIdx=mw;}
-    }
     for(var wi2=0;wi2<n;wi2++){
       var wx2=leftPad+wi2*step;
       var wy2=b3y+bandH-4-((wVals[wi2]/wMax)*(bandH-14));
       ctx.fillStyle='rgba(255,156,47,.98)';
       ctx.beginPath();ctx.arc(wx2,wy2,2.7,0,Math.PI*2);ctx.fill();
-      if(wi2===maxWindIdx){
-        var wLabelY=wy2-10;
-        wLabelY=Math.max(b3y+12,Math.min(b3y+bandH-8,wLabelY));
-        drawSafeText('max '+Math.round(wVals[wi2])+' km/h',wx2,wLabelY,compact?'700 8px Segoe UI':'700 9px Segoe UI','rgba(255,188,130,.98)','rgba(8,14,24,.9)',leftPad,w-rightPad);
-      }
+      var wLabelY=wy2+((wi2%2===0)?-10:12);
+      wLabelY=Math.max(b3y+12,Math.min(b3y+bandH-8,wLabelY));
+      drawSafeText(Math.round(wVals[wi2])+' km/h',wx2,wLabelY,compact?'700 8px Segoe UI':'700 9px Segoe UI','rgba(255,188,130,.98)','rgba(8,14,24,.9)',leftPad,w-rightPad);
     }
 
     var tMaxIdx=0,tMinIdx=0;
