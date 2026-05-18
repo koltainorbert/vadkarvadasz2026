@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 18. – Session #360e — Vadkár Radar brutális vizuális újrahúzás
+
+### Kérés
+- A radar ne csak működjön, hanem legyen sokkal komolyabb, látványosabb, prémiumabb és egyedibb minden tekintetben.
+
+### Javítás
+- A főoldali Vadkár Radar teljes vizuális rétege újra lett tervezve.
+- Új elemek:
+  - ambient glow és scan effekt
+  - erősebb státusz/HUD fejléc
+  - hangsúlyosabb risk score panel
+  - taktikai összkép blokk
+  - gazdagabb meta kártyák
+  - prémiumabb detail modal és picker modal
+- A widget kockázati szint alapján dinamikusan vált accent színeket, így a vizuális intenzitás követi az aktuális előrejelzést.
+- A teljes redesign megtartotta a korábbi radarlogikát, popup választókat és fajspecifikus becslést.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 18. – Session #360d — Vadkár Radar popup választók a fekete lenyílók helyett
 
 ### Kérés

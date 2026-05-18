@@ -295,13 +295,19 @@ body.va-weather-modal-open{overflow:hidden;}
 </style>
 <?php endif; ?>
 
-<section class="va-home-radar" id="va-home-radar">
+<section class="va-home-radar" id="va-home-radar" data-risk="low">
+  <div class="va-home-radar__ambient"></div>
+  <div class="va-home-radar__scan"></div>
   <div class="va-home-radar__hd">
     <div>
       <div class="va-home-radar__eyebrow">Vadkár előrejelzés</div>
       <div class="va-home-radar__title">Vadkár Radar</div>
+      <div class="va-home-radar__subtitle">Fajspecifikus éjszakai mozgás, meteorológia és zavarási nyomok egy képen.</div>
     </div>
-    <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
+    <div class="va-home-radar__status-stack">
+      <div class="va-home-radar__status"><span></span>Live field intelligence</div>
+      <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
+    </div>
   </div>
   <div class="va-home-radar__controls">
     <label class="va-home-radar__field">
@@ -338,6 +344,7 @@ body.va-weather-modal-open{overflow:hidden;}
   </div>
   <div class="va-home-radar__hero">
     <div class="va-home-radar__scorebox">
+      <div class="va-home-radar__scorelabel">Risk Index</div>
       <div class="va-home-radar__score" id="vhrScore">--</div>
       <div class="va-home-radar__level" id="vhrLevel">Előrejelzés készül</div>
     </div>
@@ -346,6 +353,10 @@ body.va-weather-modal-open{overflow:hidden;}
       <div class="va-home-radar__meta-item"><span>Időablak</span><strong id="vhrWindow">--</strong></div>
       <div class="va-home-radar__meta-item"><span>Konfidencia</span><strong id="vhrConfidence">--</strong></div>
     </div>
+  </div>
+  <div class="va-home-radar__intel">
+    <div class="va-home-radar__intel-label">Taktikai összkép</div>
+    <div class="va-home-radar__intel-line" id="vhrIntel">Élő mező- és időjárási mintaillesztés folyamatban...</div>
   </div>
   <div class="va-home-radar__reason" id="vhrReason">Meteorológia és lokáció betöltése...</div>
   <div class="va-home-radar__days" id="vhrDays"></div>
@@ -415,77 +426,97 @@ body.va-weather-modal-open{overflow:hidden;}
 </section>
 
 <style>
-.va-home-radar{margin:0 0 12px;padding:10px;border-radius:18px;border:1px solid rgba(255,0,0,.18);background:radial-gradient(120% 140% at 0% 0%,rgba(255,0,0,.18),transparent 48%),radial-gradient(120% 140% at 100% 100%,rgba(255,160,0,.1),transparent 44%),linear-gradient(160deg,rgba(10,10,10,.96),rgba(18,11,11,.96));box-shadow:0 14px 34px rgba(0,0,0,.34),inset 0 0 18px rgba(255,255,255,.03);color:#fff;}
-.va-home-radar__hd{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:9px;}
-.va-home-radar__eyebrow{font-size:.55rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,204,204,.72);}
-.va-home-radar__title{font-size:1.02rem;font-weight:900;line-height:1.1;color:#fff;}
-.va-home-radar__loc{font-size:.56rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#ffd0d0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 8px;white-space:nowrap;}
-.va-home-radar__controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px;}
-.va-home-radar__field{display:flex;flex-direction:column;gap:4px;}
-.va-home-radar__field span{font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,214,214,.78);}
+.va-home-radar{--radar-accent:#ff3b2f;--radar-accent-soft:rgba(255,59,47,.22);--radar-glow:rgba(255,78,52,.28);position:relative;isolation:isolate;overflow:hidden;margin:0 0 14px;padding:14px;border-radius:24px;border:1px solid rgba(255,70,70,.26);background:linear-gradient(135deg,rgba(6,6,6,.98),rgba(14,10,10,.98) 42%,rgba(28,13,10,.97) 100%);box-shadow:0 30px 80px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,255,255,.03),inset 0 0 42px rgba(255,70,70,.05);color:#fff;}
+.va-home-radar::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.08) 1px,transparent 0);background-size:18px 18px;opacity:.14;pointer-events:none;}
+.va-home-radar::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 18%,transparent 82%,rgba(255,74,74,.08));pointer-events:none;}
+.va-home-radar[data-risk="moderate"]{--radar-accent:#d0a720;--radar-accent-soft:rgba(208,167,32,.22);--radar-glow:rgba(208,167,32,.24);}
+.va-home-radar[data-risk="high"]{--radar-accent:#ff8a2b;--radar-accent-soft:rgba(255,138,43,.22);--radar-glow:rgba(255,138,43,.24);}
+.va-home-radar[data-risk="very-high"]{--radar-accent:#ff5b2f;--radar-accent-soft:rgba(255,91,47,.24);--radar-glow:rgba(255,91,47,.28);}
+.va-home-radar[data-risk="critical"]{--radar-accent:#ff1f3d;--radar-accent-soft:rgba(255,31,61,.26);--radar-glow:rgba(255,31,61,.34);}
+.va-home-radar__ambient{position:absolute;inset:-20% -10% auto auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,60,.22),transparent 68%);filter:blur(6px);pointer-events:none;z-index:0;}
+.va-home-radar__scan{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.32;background:linear-gradient(180deg,transparent 0,rgba(255,255,255,.035) 48%,transparent 100%);animation:vaRadarSweep 5.2s linear infinite;}
+@keyframes vaRadarSweep{0%{transform:translateY(-105%);}100%{transform:translateY(105%);}}
+.va-home-radar > *{position:relative;z-index:1;}
+.va-home-radar__hd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px;}
+.va-home-radar__eyebrow{font-size:.58rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,220,220,.76);}
+.va-home-radar__title{font-size:1.28rem;font-weight:900;line-height:1.05;color:#fff;text-shadow:0 0 22px rgba(255,255,255,.06);}
+.va-home-radar__subtitle{max-width:420px;margin-top:6px;font-size:.68rem;line-height:1.45;color:rgba(255,240,240,.76);}
+.va-home-radar__status-stack{display:grid;gap:8px;justify-items:end;}
+.va-home-radar__status{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);font-size:.58rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#fff0f0;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset;}
+.va-home-radar__status span{width:8px;height:8px;border-radius:50%;background:var(--radar-accent);box-shadow:0 0 0 5px var(--radar-accent-soft),0 0 18px var(--radar-glow);animation:vaRadarPulse 1.8s ease-in-out infinite;}
+@keyframes vaRadarPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(.78);opacity:.74;}}
+.va-home-radar__loc{font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;border-radius:999px;padding:6px 10px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;}
+.va-home-radar__controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:12px;}
+.va-home-radar__field{display:flex;flex-direction:column;gap:5px;}
+.va-home-radar__field span{font-size:.56rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,224,224,.82);}
 .va-home-radar__field select{display:none;}
-.va-home-radar__picker-btn{width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff;padding:9px 11px;font-size:.7rem;font-weight:700;text-align:left;cursor:pointer;position:relative;}
-.va-home-radar__picker-btn::after{content:'+';position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:1rem;line-height:1;color:#ffd3d3;opacity:.9;}
-.va-home-radar__picker-btn:hover{background:rgba(255,255,255,.12);}
-.va-home-radar__picker-btn span{display:block;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:18px;}
-.va-home-radar__hero{display:grid;grid-template-columns:88px 1fr;gap:9px;align-items:center;margin-bottom:10px;}
-.va-home-radar__scorebox{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:9px 6px;background:rgba(255,255,255,.04);}
-.va-home-radar__score{font-size:1.9rem;font-weight:900;line-height:1;color:#fff;}
-.va-home-radar__level{margin-top:4px;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:#ffe1e1;}
-.va-home-radar__meta{display:grid;gap:6px;}
-.va-home-radar__meta-item{border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.03);padding:6px 8px;}
-.va-home-radar__meta-item span{display:block;font-size:.5rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,220,220,.66);margin-bottom:2px;}
-.va-home-radar__meta-item strong{font-size:.7rem;color:#fff;}
-.va-home-radar__reason{font-size:.67rem;line-height:1.45;color:rgba(255,255,255,.86);padding:8px 9px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
-.va-home-radar__days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px;}
-.va-home-radar__day{border-radius:12px;padding:7px 5px;border:1px solid rgba(255,255,255,.1);text-align:center;background:rgba(255,255,255,.04);}
-.va-home-radar__dayname{font-size:.52rem;font-weight:900;letter-spacing:.07em;color:#fff;opacity:.82;}
-.va-home-radar__dayscore{font-size:.84rem;font-weight:900;color:#fff;margin-top:3px;}
-.va-home-radar__dayspecies{font-size:.52rem;color:rgba(255,255,255,.72);margin-top:2px;}
-.va-home-radar__toggle{width:100%;margin-top:10px;border-radius:14px;border:1px solid rgba(255,120,60,.35);background:linear-gradient(135deg,#291318 0%,#4d1416 46%,#9b2c00 100%);color:#fff;padding:10px 12px;font-size:.73rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 28px rgba(255,70,0,.18), inset 0 0 18px rgba(255,255,255,.06);}
-.va-home-radar__toggle:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.va-home-radar__picker-btn{width:100%;min-height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));color:#fff;padding:12px 40px 12px 12px;font-size:.74rem;font-weight:800;text-align:left;cursor:pointer;position:relative;box-shadow:0 12px 28px rgba(0,0,0,.24),inset 0 0 0 1px rgba(255,255,255,.025);transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;}
+.va-home-radar__picker-btn::after{content:'+';position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:1.05rem;line-height:1;color:#fff;opacity:.95;}
+.va-home-radar__picker-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.22);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));box-shadow:0 16px 30px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.03) inset;}
+.va-home-radar__picker-btn span{display:block;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.va-home-radar__hero{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:stretch;margin-bottom:12px;}
+.va-home-radar__scorebox{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px 10px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 18px 36px rgba(0,0,0,.26);}
+.va-home-radar__scorebox::before{content:'';position:absolute;inset:9px;border-radius:18px;border:1px solid var(--radar-accent-soft);pointer-events:none;}
+.va-home-radar__scorelabel{font-size:.54rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,228,228,.7);}
+.va-home-radar__score{margin-top:5px;font-size:2.45rem;font-weight:900;line-height:1;color:#fff;text-shadow:0 0 24px var(--radar-glow);}
+.va-home-radar__level{margin-top:7px;font-size:.58rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:#fff;}
+.va-home-radar__meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.va-home-radar__meta-item{border:1px solid rgba(255,255,255,.1);border-radius:15px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));padding:10px 10px 9px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);}
+.va-home-radar__meta-item span{display:block;font-size:.52rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,225,225,.68);margin-bottom:5px;}
+.va-home-radar__meta-item strong{display:block;font-size:.78rem;color:#fff;line-height:1.35;}
+.va-home-radar__intel{margin-bottom:10px;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(135deg,var(--radar-accent-soft),rgba(255,255,255,.04) 45%,rgba(255,255,255,.03));box-shadow:0 16px 28px rgba(0,0,0,.22);}
+.va-home-radar__intel-label{font-size:.52rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#ffe3e3;margin-bottom:4px;}
+.va-home-radar__intel-line{font-size:.74rem;line-height:1.45;color:#fff;}
+.va-home-radar__reason{font-size:.7rem;line-height:1.55;color:rgba(255,255,255,.92);padding:11px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);}
+.va-home-radar__days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;}
+.va-home-radar__day{position:relative;overflow:hidden;border-radius:16px;padding:10px 8px 9px;border:1px solid rgba(255,255,255,.1);text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));box-shadow:0 12px 24px rgba(0,0,0,.18);}
+.va-home-radar__day::before{content:'';position:absolute;inset:auto 0 0 0;height:3px;background:var(--radar-accent);opacity:.9;}
+.va-home-radar__dayname{font-size:.54rem;font-weight:900;letter-spacing:.12em;color:#fff;opacity:.84;text-transform:uppercase;}
+.va-home-radar__dayscore{font-size:1rem;font-weight:900;color:#fff;margin-top:5px;}
+.va-home-radar__dayspecies{font-size:.55rem;color:rgba(255,255,255,.76);margin-top:4px;letter-spacing:.08em;}
+.va-home-radar__toggle{width:100%;margin-top:12px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(135deg,var(--radar-accent-soft),rgba(64,14,14,.92) 38%,rgba(255,60,40,.35) 100%);color:#fff;padding:12px 14px;font-size:.76rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 18px 36px rgba(0,0,0,.26),0 0 40px var(--radar-glow) inset;transition:transform .16s ease,filter .16s ease,border-color .16s ease;}
+.va-home-radar__toggle:hover{filter:brightness(1.08);transform:translateY(-1px);border-color:rgba(255,255,255,.2);}
 .va-home-radar__modal{position:fixed;inset:0;z-index:12020;display:block;}
 .va-home-radar__modal[hidden]{display:none !important;}
-.va-home-radar__modal-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,70,40,.22),transparent 44%),radial-gradient(circle at 80% 80%,rgba(255,190,80,.14),transparent 42%),rgba(4,6,10,.84);backdrop-filter:blur(8px);}
-.va-home-radar__modal-card{position:relative;width:min(920px,calc(100vw - 28px));max-height:min(88vh,920px);margin:6vh auto;overflow:hidden;border-radius:22px;border:1px solid rgba(255,110,60,.5);background:linear-gradient(160deg,rgba(8,10,14,.97) 0%,rgba(19,11,13,.96) 48%,rgba(39,18,10,.94) 100%);box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(255,70,0,.18),0 0 0 1px rgba(255,145,0,.18) inset;padding:20px 18px 16px;}
-.va-home-radar__modal-card::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(120deg,rgba(255,130,70,.12),transparent 40%,rgba(255,40,40,.08));}
-.va-home-radar__modal-close{position:absolute;top:12px;right:12px;z-index:3;width:36px;height:36px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.28);color:#fff;background:rgba(255,255,255,.08);}
-.va-home-radar__modal-close:hover{background:rgba(255,70,70,.2);border-color:rgba(255,90,90,.55);}
-.va-home-radar__modal-head{position:relative;z-index:1;margin-bottom:12px;padding-right:44px;}
-.va-home-radar__modal-eyebrow{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,212,212,.85);font-weight:800;}
-.va-home-radar__modal-title{margin:4px 0 0;font-size:1.3rem;letter-spacing:.03em;color:#fff;}
-.va-home-radar__modal-scroll{position:relative;z-index:1;max-height:calc(min(88vh,920px) - 104px);overflow:auto;padding-right:2px;margin-right:-3px;border-radius:14px;}
-.va-home-radar__detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px;}
-.va-home-radar__modal-summary{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;margin-bottom:12px;}
-.va-home-radar__modal-scorewrap{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 8px;background:rgba(255,255,255,.04);}
-.va-home-radar__modal-score{font-size:2.4rem;line-height:1;font-weight:900;color:#fff;}
-.va-home-radar__modal-level{margin-top:5px;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:#ffd7d7;}
-.va-home-radar__modal-meta{display:grid;gap:8px;}
-.va-home-radar__detail-block{margin-top:12px;}
-.va-home-radar__detail-title{font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#ffc7c7;margin-bottom:8px;}
-.va-home-radar__factors{margin:0;padding-left:16px;display:grid;gap:6px;}
-.va-home-radar__factors li{font-size:.69rem;line-height:1.45;color:rgba(255,255,255,.87);}
-.va-home-radar__week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;}
-.va-home-radar__note{margin-top:12px;font-size:.64rem;line-height:1.55;color:rgba(255,255,255,.6);}
+.va-home-radar__modal-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 20% 16%,var(--radar-accent-soft),transparent 34%),radial-gradient(circle at 80% 84%,rgba(255,205,110,.12),transparent 38%),rgba(4,6,10,.88);backdrop-filter:blur(10px);}
+.va-home-radar__modal-card{position:relative;width:min(980px,calc(100vw - 28px));max-height:min(88vh,920px);margin:5vh auto;overflow:hidden;border-radius:28px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(5,6,8,.985) 0%,rgba(15,11,12,.98) 45%,rgba(30,12,10,.97) 100%);box-shadow:0 50px 110px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.03) inset,0 0 70px var(--radar-glow);padding:22px 20px 18px;}
+.va-home-radar__modal-card::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.05),transparent 18%,transparent 78%,rgba(255,80,80,.08));}
+.va-home-radar__modal-close,.va-home-radar__picker-close{position:absolute;top:12px;right:12px;z-index:3;width:38px;height:38px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.18);color:#fff;background:rgba(255,255,255,.06);box-shadow:0 10px 18px rgba(0,0,0,.22);}
+.va-home-radar__modal-close:hover,.va-home-radar__picker-close:hover{background:rgba(255,85,85,.18);border-color:rgba(255,125,125,.42);}
+.va-home-radar__modal-head{position:relative;z-index:1;margin-bottom:14px;padding-right:48px;}
+.va-home-radar__modal-eyebrow,.va-home-radar__picker-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,226,226,.82);font-weight:900;}
+.va-home-radar__modal-title{margin:6px 0 0;font-size:1.5rem;letter-spacing:.02em;color:#fff;}
+.va-home-radar__modal-scroll{position:relative;z-index:1;max-height:calc(min(88vh,920px) - 108px);overflow:auto;padding-right:4px;margin-right:-4px;border-radius:18px;}
+.va-home-radar__detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.va-home-radar__modal-summary{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:stretch;margin-bottom:14px;}
+.va-home-radar__modal-scorewrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:16px 10px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));}
+.va-home-radar__modal-scorewrap::before{content:'';position:absolute;inset:10px;border-radius:18px;border:1px solid var(--radar-accent-soft);pointer-events:none;}
+.va-home-radar__modal-score{font-size:2.85rem;line-height:1;font-weight:900;color:#fff;text-shadow:0 0 24px var(--radar-glow);}
+.va-home-radar__modal-level{margin-top:7px;font-size:.6rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:#fff;}
+.va-home-radar__modal-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+.va-home-radar__detail-block{margin-top:14px;padding:14px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));}
+.va-home-radar__detail-title{font-size:.62rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#ffd7d7;margin-bottom:10px;}
+.va-home-radar__factors{margin:0;padding-left:18px;display:grid;gap:8px;}
+.va-home-radar__factors li{font-size:.73rem;line-height:1.5;color:rgba(255,255,255,.9);}
+.va-home-radar__week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;}
+.va-home-radar__note{margin-top:14px;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);font-size:.68rem;line-height:1.6;color:rgba(255,255,255,.72);}
 body.va-home-radar-modal-open{overflow:hidden;}
 .va-home-radar__picker{position:fixed;inset:0;z-index:12030;display:block;}
 .va-home-radar__picker[hidden]{display:none !important;}
-.va-home-radar__picker-backdrop{position:absolute;inset:0;background:rgba(4,6,10,.84);backdrop-filter:blur(6px);}
-.va-home-radar__picker-card{position:relative;width:min(460px,calc(100vw - 28px));max-height:min(80vh,760px);margin:10vh auto 0;border-radius:22px;border:1px solid rgba(255,120,60,.34);background:linear-gradient(160deg,rgba(11,11,14,.98),rgba(28,14,14,.96));box-shadow:0 26px 60px rgba(0,0,0,.56);padding:16px 14px 14px;overflow:auto;}
-.va-home-radar__picker-close{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;}
-.va-home-radar__picker-eyebrow{font-size:.58rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,204,204,.72);}
-.va-home-radar__picker-title{margin:6px 0 12px;font-size:1rem;color:#fff;}
-.va-home-radar__picker-options{display:grid;gap:8px;}
-.va-home-radar__picker-option{border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;padding:12px 12px;font-size:.78rem;font-weight:800;text-align:left;cursor:pointer;}
-.va-home-radar__picker-option:hover,.va-home-radar__picker-option.is-active{background:linear-gradient(135deg,rgba(255,90,50,.22),rgba(255,130,50,.18));border-color:rgba(255,150,90,.45);}
+.va-home-radar__picker-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 50% 10%,var(--radar-accent-soft),transparent 36%),rgba(4,6,10,.88);backdrop-filter:blur(8px);}
+.va-home-radar__picker-card{position:relative;width:min(520px,calc(100vw - 28px));max-height:min(80vh,760px);margin:9vh auto 0;border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(8,8,10,.99),rgba(22,12,12,.97));box-shadow:0 36px 90px rgba(0,0,0,.62),0 0 60px var(--radar-glow);padding:18px 16px 16px;overflow:auto;}
+.va-home-radar__picker-title{margin:8px 0 14px;font-size:1.08rem;color:#fff;}
+.va-home-radar__picker-options{display:grid;gap:10px;}
+.va-home-radar__picker-option{border-radius:14px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));color:#fff;padding:14px 14px;font-size:.82rem;font-weight:900;text-align:left;cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease;}
+.va-home-radar__picker-option:hover,.va-home-radar__picker-option.is-active{transform:translateY(-1px);background:linear-gradient(135deg,var(--radar-accent-soft),rgba(255,255,255,.06));border-color:rgba(255,255,255,.18);}
 body.va-home-radar-picker-open{overflow:hidden;}
-.va-home-radar__day.is-low{background:rgba(20,110,55,.26);border-color:rgba(50,190,95,.42);}
-.va-home-radar__day.is-moderate{background:rgba(165,145,20,.24);border-color:rgba(225,190,50,.42);}
-.va-home-radar__day.is-high{background:rgba(185,105,20,.24);border-color:rgba(255,160,65,.42);}
-.va-home-radar__day.is-very-high{background:rgba(175,45,30,.24);border-color:rgba(255,95,75,.48);}
-.va-home-radar__day.is-critical{background:rgba(110,18,26,.36);border-color:rgba(170,40,60,.58);}
-@media (max-width:760px){.va-home-radar__modal-card{margin:3vh auto;padding:16px 12px 12px;border-radius:16px;}.va-home-radar__detail-grid,.va-home-radar__week{grid-template-columns:1fr 1fr;}.va-home-radar__modal-summary{grid-template-columns:1fr;}.va-home-radar__modal-title{font-size:1.02rem;}}
-@media (max-width:640px){.va-home-radar__controls,.va-home-radar__days,.va-home-radar__detail-grid,.va-home-radar__week{grid-template-columns:1fr;}.va-home-radar__hero{grid-template-columns:1fr;}}
+.va-home-radar__day.is-low{background:linear-gradient(180deg,rgba(18,110,62,.28),rgba(10,42,23,.5));border-color:rgba(70,210,115,.35);}
+.va-home-radar__day.is-moderate{background:linear-gradient(180deg,rgba(150,128,18,.24),rgba(66,52,10,.52));border-color:rgba(225,190,70,.4);}
+.va-home-radar__day.is-high{background:linear-gradient(180deg,rgba(175,95,18,.24),rgba(66,34,10,.56));border-color:rgba(255,160,65,.42);}
+.va-home-radar__day.is-very-high{background:linear-gradient(180deg,rgba(168,45,22,.26),rgba(70,18,10,.6));border-color:rgba(255,95,75,.48);}
+.va-home-radar__day.is-critical{background:linear-gradient(180deg,rgba(120,18,34,.34),rgba(56,8,20,.72));border-color:rgba(255,70,95,.55);}
+@media (max-width:760px){.va-home-radar{padding:12px;}.va-home-radar__hd,.va-home-radar__modal-summary,.va-home-radar__hero{grid-template-columns:1fr;display:grid;}.va-home-radar__status-stack{justify-items:start;}.va-home-radar__meta,.va-home-radar__modal-meta,.va-home-radar__detail-grid,.va-home-radar__week{grid-template-columns:1fr 1fr;}.va-home-radar__modal-card{margin:3vh auto;padding:18px 14px 14px;border-radius:20px;}.va-home-radar__modal-title{font-size:1.14rem;}}
+@media (max-width:640px){.va-home-radar__controls,.va-home-radar__days,.va-home-radar__meta,.va-home-radar__modal-meta,.va-home-radar__detail-grid,.va-home-radar__week{grid-template-columns:1fr;}.va-home-radar__subtitle{max-width:none;}.va-home-radar__loc{max-width:none;}.va-home-radar__picker-card{margin:6vh auto 0;}}
 </style>
 
 </aside>
@@ -1227,6 +1258,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var factorsEl=document.getElementById('vhrFactors');
   var weekEl=document.getElementById('vhrWeek');
   var noteEl=document.getElementById('vhrNote');
+  var intelEl=document.getElementById('vhrIntel');
   var pickerButtons={};
   var activePickerSelect=null;
   var phenologyMap={maize:[['sowing','Vetés'],['emergence','Kelés'],['milk_stage','Tejes érés'],['wax_stage','Viaszérés'],['pre_harvest','Betakarítás előtt']],rapeseed:[['autumn_green','Őszi zöld'],['spring_regrowth','Tavaszi újrahajtás'],['flowering','Virágzás'],['ripening','Érés']],sunflower:[['emergence','Kelés'],['head_stage','Tányérképzés'],['ripening','Érés'],['pre_harvest','Betakarítás előtt']],cereal:[['young','Fiatal állomány'],['heading','Kalászolás'],['ripening','Érés']],alfalfa:[['fresh_regrowth','Friss sarjadás'],['post_cut','Kaszálás utáni 3-10 nap'],['mature','Fejlett állomány']],orchard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']],vineyard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']]};
@@ -1255,7 +1287,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function dayContext(data,dayIndex){var rows=hourlyRows(data),dayStr=data.daily.time[dayIndex],target=dayStr+'T22:00',night=null;for(var i=0;i<rows.length;i++){if(rows[i].time===target||rows[i].time.indexOf(dayStr+'T21:00')===0||rows[i].time.indexOf(dayStr+'T23:00')===0){night=rows[i];if(rows[i].time===target){break;}}}var recent=[];if(night){for(var j=0;j<rows.length;j++){if(rows[j].time===night.time){recent=rows.slice(Math.max(0,j-47),j+1);break;}}}var precip48=recent.reduce(function(sum,row){return sum+row.precip;},0);var prior24=recent.length>=24?recent[recent.length-24]:null;return {day:dayStr,tempNight:night?night.temp:0,humidity:night?night.humidity:0,wind:night?night.wind:0,pressureDrop:night&&prior24?(night.pressure-prior24.pressure):0,cloud:night?night.cloud:0,soil:night?night.soil:0,precip48:precip48,tempMin:Number(data.daily.temperature_2m_min[dayIndex]||0),rainSum:Number(data.daily.precipitation_sum[dayIndex]||0),moon:moonIllumination(new Date(dayStr+'T22:00:00'))};}
   function scoreSpecies(species,ctx,ctl){var score=(speciesBase[species]||4)+((cropScores[ctl.crop]&&cropScores[ctl.crop][species])||0)+(forestScores[ctl.forest]||0)+(damageScores[ctl.damage]||0)+((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])||0)+((huntingScores[ctl.hunting]&&huntingScores[ctl.hunting][species])||0),reasons=[];if((forestScores[ctl.forest]||0)>0){reasons.push('erdőközeli kijárás');}if((damageScores[ctl.damage]||0)>0){reasons.push('friss kárelőzmény');}reasons.push((cropLabels[ctl.crop]||ctl.crop)+' vonzó táplálék');if((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])>0){reasons.push('aktuális fenológia erős trigger');}if(ctl.fence){score-=15;}if(species==='wild_boar'&&ctx.precip48>5&&ctx.soil>0.18){score+=5;reasons.push('eső utáni puha talaj');}if(species==='wild_boar'&&ctx.tempNight>12&&ctx.humidity>75){score+=4;reasons.push('meleg, párás éjszaka');}if((species==='red_deer'||species==='roe_deer'||species==='fallow_deer'||species==='mouflon')&&ctx.tempMin<=2&&(ctl.crop==='rapeseed'||ctl.crop==='cereal'||ctl.crop==='alfalfa')){score+=4;reasons.push('hidegben felértékelődő zöld kultúra');}if(ctx.wind>30){score-=5;}else if(ctx.wind<8){score+=2;reasons.push('szélcsend');}if(ctx.pressureDrop<=-5){score+=3;reasons.push('front előtti nyomásesés');}if(ctx.rainSum>6){score+=2;reasons.push('csapadék utáni mozgás');}var effMoon=ctx.moon*(1-(ctx.cloud/100));if(species==='wild_boar'){if(effMoon>0.6&&ctl.hunting!=='low'){score-=1;}if(effMoon>0.9&&ctl.hunting==='high'){score-=1;}}else if(effMoon>0.9){score+=2;reasons.push('erős holdfény');}if(ctl.fence){reasons.push('villanypásztor fékezi a kijárást');}return {score:clamp(Math.round(score),0,100),reasons:reasons};}
   function computeForecast(data){var ctl=controls(),keys=Object.keys(speciesMeta),days=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),best=null;for(var i=0;i<keys.length;i++){var key=keys[i],res=scoreSpecies(key,ctx,ctl);if(!best||res.score>best.result.score){best={species:key,result:res,ctx:ctx};}}days.push({day:ctx.day,species:best.species,score:best.result.score,result:best.result,ctx:ctx});}return days;}
-  function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var top=forecast[0],level=riskLevel(top.score),confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88);locEl.textContent=label;scoreEl.textContent=String(top.score);levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[top.species].label;windowEl.textContent=speciesMeta[top.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';reasonEl.textContent='Fő trigger: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,3).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');modalScoreEl.textContent=String(top.score);modalLevelEl.textContent=level.label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • Ez a nézet már faj-, meteorológia-, holdfény- és zavarásalapú becslést ad.';}
+  function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var top=forecast[0],level=riskLevel(top.score),confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88);root.setAttribute('data-risk',level.cls);if(modalEl){modalEl.setAttribute('data-risk',level.cls);}locEl.textContent=label;scoreEl.textContent=String(top.score);levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[top.species].label;windowEl.textContent=speciesMeta[top.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';if(intelEl){intelEl.textContent=speciesMeta[top.species].label+' fókusz, '+speciesMeta[top.species].window+' kritikus kijárási sáv, '+confidenceLabel(confidence).toLowerCase()+' megbízhatósággal.';}reasonEl.textContent='Fő trigger: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,3).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');modalScoreEl.textContent=String(top.score);modalLevelEl.textContent=level.label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • Ez a nézet már faj-, meteorológia-, holdfény- és zavarásalapú becslést ad.';}
   function fetchForecast(lat,lon,label){var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&past_days=2&forecast_days=7&timezone=auto&wind_speed_unit=kmh';fetch(url).then(function(r){return r.json();}).then(function(json){render(json,label);}).catch(function(){locEl.textContent='Offline';reasonEl.textContent='Az élő meteorológia most nem elérhető, ezért nincs friss vadkár-index.';});}
   function rerender(){if(weatherData){render(weatherData,locEl.textContent||'Aktuális hely');}}
   if(toggleEl){toggleEl.addEventListener('click',function(){setRadarModal(true);});setRadarModal(false);}
