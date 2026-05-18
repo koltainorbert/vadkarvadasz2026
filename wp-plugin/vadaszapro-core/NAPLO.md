@@ -7797,3 +7797,20 @@ Az időjárás popup már valódi grafikonos nézetet ad, a vizuál jelentősen 
 
 ---
 
+## 2026. 05. 18. – Session: Időjárás popup title+border+betöltés fix
+
+### Mit csináltunk [x]
+- [x] A popup főcím színe erőltetve fehérre (`!important`), hogy ne öröklődjön sötét szín
+- [x] Narancssárga keret hozzáadva a modal card köré (kért vizuális kiemelés)
+- [x] Hibabiztos render: ha a grafikon rajzolás hibázik, a 7 napos lista akkor is betöltődik
+- [x] Fallback indexelés: ha a mai nap szűrés üres listát adna, akkor is kerül be 7 nap adat
+- [x] Popup nyitáskor újrarajzolás cache-elt adatokból (`lastDailyData`)
+
+### Hol tartunk
+A 7 napos előrejelzés szöveg tartalma megbízhatóan megjelenik, a cím fehér, a popup kerete narancssárga.
+
+### TODO
+- [ ] Live vizuális ellenőrzés: border vastagság/árnyék finomhangolása igény szerint
+
+---
+
