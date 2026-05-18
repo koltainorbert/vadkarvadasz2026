@@ -296,7 +296,17 @@ body.va-weather-modal-open{overflow:hidden;}
 </style>
 <?php endif; ?>
 
-</aside>
+<?php if ( $va_show_damage_forecast_widget ): ?>
+<section class="va-damage-forecast" id="va-damage-forecast">
+  <div class="va-damage-forecast__hd">
+    <span class="va-damage-forecast__title">🦌 Vadkár előrejelzés</span>
+    <span class="va-damage-forecast__loc" id="vdfLoc">Helyzet…</span>
+  </div>
+  <div class="va-damage-forecast__summary" id="vdfSummary">Előrejelzés betöltése…</div>
+  <div class="va-damage-forecast__meta" id="vdfMeta">Időjárás, hold és terményidőszak alapján számol.</div>
+  <button type="button" class="va-damage-forecast__toggle" id="vdfToggle" aria-expanded="false" aria-controls="vdfModal">Részletes előrejelzés ✦</button>
+</section>
+<?php endif; ?>
 
 </aside>
 <?php if ( $va_show_moon_widget ): ?>
@@ -434,47 +444,38 @@ body.va-weather-modal-open{overflow:hidden;}
       }
     }
     ctx.putImageData(d,0,0);
-    texCache[size]=t;
-    return t;
-  }
-  function drawMoonSkin(ctx,cx,cy,R,tone){
-    if(moonPhotoReady&&moonPhoto.naturalWidth>0&&moonPhoto.naturalHeight>0){
-      var sw=Math.min(moonPhoto.naturalWidth,moonPhoto.naturalHeight);
-      var sx=(moonPhoto.naturalWidth-sw)/2,sy=(moonPhoto.naturalHeight-sw)/2;
-      ctx.filter=(tone&&tone.filter)?tone.filter:'contrast(1.08) brightness(1.02) saturate(1)';
-      ctx.drawImage(moonPhoto,sx,sy,sw,sw,cx-R,cy-R,R*2,R*2);
-      ctx.filter='none';
-      return;
-    }
-    var tex=moonTexture(Math.round(R*2));
-    ctx.drawImage(tex,cx-R,cy-R,R*2,R*2);
-  }
-  /* ── Canvas holdrajz — valósághű felszín ── */
-  function draw(cv,phase,frac,now){
-    var W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=W/2-7,ctx=cv.getContext('2d');
-    var tone=moonTone(now,frac);
-    ctx.clearRect(0,0,W,H);
+    </script>
+    <?php endif; ?>
 
-    if(frac>.55){
-      var gw=ctx.createRadialGradient(cx,cy,R*.62,cx,cy,R*2.18);
-      var ga=(frac-.55)/.45*.2;
-      gw.addColorStop(0,tone.glowCore.replace('ALPHA',ga));
-      gw.addColorStop(.6,'rgba(170,180,160,'+(ga*.36)+')');
-      gw.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=gw;ctx.fillRect(0,0,W,H);
-    }
-
-    ctx.beginPath();ctx.arc(cx,cy,R,0,2*PI);
-    var dark=ctx.createRadialGradient(cx-R*.12,cy-R*.18,R*.04,cx,cy,R*1.08);
-    dark.addColorStop(0,'#1c1d27');dark.addColorStop(1,'#07070d');
-    ctx.fillStyle=dark;ctx.fill();
-
-    var tx=R*Math.abs(cos(phase*2*PI)),wax=phase<=0.5,gibb=phase>=0.25&&phase<=0.75,tcw=!gibb;
-
-    if(frac>0.01){
-      ctx.save();
-      ctx.beginPath();ctx.arc(cx,cy,R,0,2*PI);ctx.clip();
-      ctx.beginPath();ctx.moveTo(cx,cy-R);
+    <?php if ( $va_show_damage_forecast_widget ): ?>
+    <div class="va-damage-forecast__modal" id="vdfModal" hidden>
+      <div class="va-damage-forecast__modal-backdrop" id="vdfModalBackdrop"></div>
+      <div class="va-damage-forecast__modal-card" role="dialog" aria-modal="true" aria-labelledby="vdfModalTitle">
+        <button type="button" class="va-damage-forecast__modal-close" id="vdfModalClose" aria-label="Bezárás">✕</button>
+        <div class="va-damage-forecast__modal-head">
+          <div class="va-damage-forecast__modal-eyebrow">Részletes vadkár-modell</div>
+          <h3 class="va-damage-forecast__modal-title" id="vdfModalTitle">7 napos vadkár-előrejelzés</h3>
+        </div>
+        <div class="va-damage-forecast__modal-scroll">
+          <div class="va-damage-forecast__jump" id="vdfJumpNav" role="tablist" aria-label="Vadkár szekciók">
+            <button type="button" class="va-damage-forecast__jump-btn is-active" id="vdfJumpRisk" data-target="vdfSectionRisk">Pontszám</button>
+            <button type="button" class="va-damage-forecast__jump-btn" id="vdfJumpDays" data-target="vdfSectionDays">7 nap</button>
+            <button type="button" class="va-damage-forecast__jump-btn" id="vdfJumpFactors" data-target="vdfSectionFactors">Miből számol?</button>
+          </div>
+          <div class="va-damage-forecast__section va-damage-forecast__section--risk" id="vdfSectionRisk">
+            <div class="va-damage-forecast__chart" id="vdfChart"></div>
+            <div class="va-damage-forecast__legend">
+              <span class="va-damage-forecast__legend-item"><i class="va-damage-forecast__legend-dot va-damage-forecast__legend-dot--risk"></i>Várható kockázat</span>
+              <span class="va-damage-forecast__legend-item"><i class="va-damage-forecast__legend-dot va-damage-forecast__legend-dot--crop"></i>Érintett termény</span>
+            </div>
+          </div>
+          <div class="va-damage-forecast__section" id="vdfSectionDays"><div class="va-damage-forecast__days" id="vdfDays"></div></div>
+          <div class="va-damage-forecast__section" id="vdfSectionFactors"><div class="va-damage-forecast__factors" id="vdfFactors"></div></div>
+          <div class="va-damage-forecast__note" id="vdfNote">A pontszám becslés: helyi időjárás, hold, felhőzet, szél, napszak és terményállapot alapján számolunk.</div>
+        </div>
+        <button type="button" class="va-damage-forecast__more" id="vdfMoreHint" aria-label="Görgess le">Lejjebb még több adat ⤵</button>
+      </div>
+    </div>
       ctx.arc(cx,cy,R,-PI/2,PI/2,!wax);
       ctx.ellipse(cx,cy,Math.max(1,tx),R,0,PI/2,-PI/2,tcw);
       ctx.closePath();ctx.clip();
