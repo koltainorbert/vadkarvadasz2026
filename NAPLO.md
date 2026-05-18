@@ -8751,3 +8751,22 @@ A diagram most már külön sávokban olvasható, és az agrár időablakok vad�
 
 ---
 
+## 2026. 05. 18. – Session: Prémium meteo popup UX (rejtett tartalom jelzés)
+
+### Mit csináltunk [x]
+- [x] Új gyors-navigáció a popup tetején: `Diagram` / `7 nap` / `Agrár`
+- [x] Kattintható szekció-ugrások smooth scrollal
+- [x] Aktív szekció vizuális kiemelése görgetés közben
+- [x] Új "Lejjebb még több adat" lebegő CTA, ami csak akkor látszik, ha tényleg van lejjebb tartalom
+- [x] CTA kattintásra automatikus lejjebb görgetés
+- [x] Diagram panel vizuál finomítás (rétegzett háttér, mélyebb kontraszt, modernebb kártyahatás)
+- [x] Root + theme mirror index szinkron
+
+### Hol tartunk
+Most már nem marad rejtve az alsó tartalom: látható jelzés és gyors navigáció segít azonnal eljutni minden blokkhoz.
+
+### TODO
+- [ ] Ha kell, következő körben sticky mini progress csík a modal jobb oldalára
+
+---
+
