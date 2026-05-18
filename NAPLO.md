@@ -2,6 +2,43 @@
 
 ---
 
+<<<<<<< HEAD
+=======
+## 2026. 05. 18. – Session #360a — Jobb oldalsáv Vadkár Radar MVP
+
+### Kérés
+- Kerüljön az oldal jobb sidebarjába egy tényleges, látható előrejelző blokk, a holdnaptárhoz hasonló widgetként, de vadkár-logikával.
+
+### Javítás
+- A jobb oldalsávba bekerült egy új `Vadkár Radar` kártya.
+- A widget nem sima időjárásdoboz: fajspecifikus, pontozásos becslést ad ezekből:
+  - kultúra
+  - fenológia
+  - erdőtávolság
+  - korábbi kár
+  - vadászati nyomás
+  - villanypásztor
+  - Open-Meteo meteorológiai adatok
+  - holdfény/felhőzet korrekció
+- Kimenetek:
+  - napi vadkár-index
+  - fő kockázati faj
+  - kritikus időablak
+  - konfidencia
+  - fő kockázati okok
+  - 7 napos heti trend
+- Mobilon is látható marad: a jobb sidebar 1100 px alatt is megjeleníthető a widgethez igazított layouttal.
+
+### Érintett fájlok
+- `footer.php`
+- `wp-theme/vadaszapro-theme/footer.php`
+
+### Megjegyzés
+- A repo jelenleg detached HEAD állapotban van; ezért automatikus push nem történt.
+
+---
+
+>>>>>>> 43d08e3 (Auto_2026.05.18_22.28)
 ## 2026. 05. 15. – Session #359p — Szállás + Vadászati lehetőség / Vadkárelhárítás popup űrlap
 
 ### Kérés

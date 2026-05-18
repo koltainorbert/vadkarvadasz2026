@@ -5,6 +5,482 @@
             <!-- Jobb oldalsáv -->
             <aside class="va-sidebar va-sidebar--right">
                 <?php if ( class_exists('VA_Ad_Zones') ) VA_Ad_Zones::render('sidebar_right'); ?>
+<<<<<<< HEAD
+=======
+                <section class="va-sidebar__widget va-vadkar-radar" id="va-vadkar-radar">
+                    <div class="va-vadkar__hd">
+                        <div>
+                            <div class="va-vadkar__eyebrow">Decision Support</div>
+                            <h3 class="va-vadkar__title">Vadkár Radar</h3>
+                        </div>
+                        <div class="va-vadkar__status" id="vkrStatus">Betöltés...</div>
+                    </div>
+                    <p class="va-vadkar__lead">Fajspecifikus becslés időjárás, holdfény, fenológia, erdőtávolság és kárelőzmény alapján.</p>
+
+                    <div class="va-vadkar__controls">
+                        <label class="va-vadkar__field">
+                            <span>Kultúra</span>
+                            <select id="vkrCrop">
+                                <option value="maize">Kukorica</option>
+                                <option value="rapeseed">Repce</option>
+                                <option value="sunflower">Napraforgó</option>
+                                <option value="cereal">Kalászos</option>
+                                <option value="alfalfa">Lucerna</option>
+                                <option value="orchard">Gyümölcsös</option>
+                                <option value="vineyard">Szőlő</option>
+                            </select>
+                        </label>
+                        <label class="va-vadkar__field">
+                            <span>Fenológia</span>
+                            <select id="vkrPhenology"></select>
+                        </label>
+                        <label class="va-vadkar__field">
+                            <span>Erdőtávolság</span>
+                            <select id="vkrForest">
+                                <option value="under_100">0-100 m</option>
+                                <option value="100_300">100-300 m</option>
+                                <option value="300_700">300-700 m</option>
+                                <option value="700_1500">700-1500 m</option>
+                                <option value="over_1500">1500 m felett</option>
+                            </select>
+                        </label>
+                        <label class="va-vadkar__field">
+                            <span>Korábbi kár</span>
+                            <select id="vkrDamage">
+                                <option value="7">7 napon belül</option>
+                                <option value="30">30 napon belül</option>
+                                <option value="90">90 napon belül</option>
+                                <option value="none">Nincs ismert kár</option>
+                            </select>
+                        </label>
+                        <label class="va-vadkar__field">
+                            <span>Vadásznyomás</span>
+                            <select id="vkrHunting">
+                                <option value="low">Alacsony</option>
+                                <option value="medium">Közepes</option>
+                                <option value="high">Magas</option>
+                            </select>
+                        </label>
+                        <label class="va-vadkar__field">
+                            <span>Villanypásztor</span>
+                            <select id="vkrFence">
+                                <option value="0">Nincs</option>
+                                <option value="1">Van, jó állapotú</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="va-vadkar__hero">
+                        <div class="va-vadkar__scorewrap">
+                            <div class="va-vadkar__score" id="vkrScore">--</div>
+                            <div class="va-vadkar__level" id="vkrLevel">Előrejelzés készül...</div>
+                        </div>
+                        <div class="va-vadkar__meta">
+                            <div class="va-vadkar__metaitem">
+                                <span class="va-vadkar__metak">Fő faj</span>
+                                <strong id="vkrSpecies">--</strong>
+                            </div>
+                            <div class="va-vadkar__metaitem">
+                                <span class="va-vadkar__metak">Kritikus idő</span>
+                                <strong id="vkrWindow">--</strong>
+                            </div>
+                            <div class="va-vadkar__metaitem">
+                                <span class="va-vadkar__metak">Konfidencia</span>
+                                <strong id="vkrConfidence">--</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="va-vadkar__block">
+                        <div class="va-vadkar__blocktitle">Fő kockázati okok</div>
+                        <ul class="va-vadkar__factors" id="vkrFactors">
+                            <li>Időjárási és szezonális adatok betöltése...</li>
+                        </ul>
+                    </div>
+
+                    <div class="va-vadkar__block">
+                        <div class="va-vadkar__blocktitle">Heti trend</div>
+                        <div class="va-vadkar__week" id="vkrWeek"></div>
+                    </div>
+
+                    <div class="va-vadkar__note" id="vkrNote">Valid előrejelzéshez lokális táblaadat, kárnapló, kamera és vadlétszám kell. Ez az MVP ezek hiányában konzervatív becslés.</div>
+                </section>
+                <style>
+                .va-vadkar-radar{
+                    margin-top:12px;
+                    border:1px solid rgba(255,255,255,.14);
+                    background:
+                        radial-gradient(130% 120% at 0% 0%,rgba(255,0,0,.14),transparent 52%),
+                        radial-gradient(120% 120% at 100% 100%,rgba(255,160,0,.10),transparent 46%),
+                        linear-gradient(160deg,rgba(10,10,10,.96),rgba(20,12,12,.96));
+                    box-shadow:0 18px 34px rgba(0,0,0,.38), inset 0 0 22px rgba(255,255,255,.025);
+                    color:#fff;
+                }
+                .va-vadkar__eyebrow{font-size:.58rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,186,186,.76);margin-bottom:4px;}
+                .va-vadkar__hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px;}
+                .va-vadkar__title{margin:0;font-size:1.05rem;font-weight:900;line-height:1.1;color:#fff;}
+                .va-vadkar__status{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#ffb3b3;background:rgba(255,0,0,.12);border:1px solid rgba(255,0,0,.25);padding:5px 8px;border-radius:999px;white-space:nowrap;}
+                .va-vadkar__lead{margin:0 0 12px;font-size:.68rem;line-height:1.55;color:rgba(255,255,255,.76);}
+                .va-vadkar__controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+                .va-vadkar__field{display:flex;flex-direction:column;gap:4px;}
+                .va-vadkar__field span{font-size:.56rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,214,214,.78);}
+                .va-vadkar__field select{width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;padding:8px 10px;font-size:.7rem;outline:none;}
+                .va-vadkar__field select option{color:#111;}
+                .va-vadkar__hero{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center;margin-bottom:12px;}
+                .va-vadkar__scorewrap{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:10px 8px;background:rgba(255,255,255,.04);}
+                .va-vadkar__score{font-size:2rem;line-height:1;font-weight:900;color:#fff;}
+                .va-vadkar__level{margin-top:5px;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:#ffd7d7;}
+                .va-vadkar__meta{display:grid;grid-template-columns:1fr;gap:7px;}
+                .va-vadkar__metaitem{border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.03);padding:7px 9px;}
+                .va-vadkar__metak{display:block;font-size:.54rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,220,220,.65);margin-bottom:2px;}
+                .va-vadkar__metaitem strong{font-size:.72rem;color:#fff;}
+                .va-vadkar__block{margin-top:12px;}
+                .va-vadkar__blocktitle{font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#ffc7c7;margin-bottom:8px;}
+                .va-vadkar__factors{margin:0;padding-left:16px;display:grid;gap:6px;}
+                .va-vadkar__factors li{font-size:.69rem;line-height:1.45;color:rgba(255,255,255,.87);}
+                .va-vadkar__week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;}
+                .va-vadkar__weekcell{border-radius:12px;padding:8px 4px 7px;border:1px solid rgba(255,255,255,.1);text-align:center;background:rgba(255,255,255,.04);}
+                .va-vadkar__weekday{font-size:.52rem;font-weight:900;letter-spacing:.08em;color:#fff;opacity:.8;}
+                .va-vadkar__weekscore{font-size:.82rem;font-weight:900;color:#fff;margin-top:4px;}
+                .va-vadkar__weekspecies{font-size:.52rem;color:rgba(255,255,255,.72);margin-top:2px;}
+                .va-vadkar__weekcell.is-low{background:rgba(20,110,55,.26);border-color:rgba(50,190,95,.42);}
+                .va-vadkar__weekcell.is-moderate{background:rgba(165,145,20,.24);border-color:rgba(225,190,50,.42);}
+                .va-vadkar__weekcell.is-high{background:rgba(185,105,20,.24);border-color:rgba(255,160,65,.42);}
+                .va-vadkar__weekcell.is-very-high{background:rgba(175,45,30,.24);border-color:rgba(255,95,75,.48);}
+                .va-vadkar__weekcell.is-critical{background:rgba(110,18,26,.36);border-color:rgba(170,40,60,.58);}
+                .va-vadkar__note{margin-top:12px;font-size:.62rem;line-height:1.5;color:rgba(255,255,255,.58);}
+                @media (max-width:1100px){
+                    .va-content-layout{display:block;}
+                    .va-sidebar.va-sidebar--right{display:block !important;position:static !important;top:auto !important;width:auto !important;height:auto !important;border-left:none !important;padding:12px 0 0 !important;overflow:visible !important;}
+                }
+                @media (max-width:640px){
+                    .va-vadkar__controls{grid-template-columns:1fr;}
+                    .va-vadkar__week{grid-template-columns:repeat(4,minmax(0,1fr));}
+                    .va-vadkar__hero{grid-template-columns:1fr;}
+                }
+                </style>
+                <script>
+                (function(){
+                    var root=document.getElementById('va-vadkar-radar');
+                    if(!root){return;}
+
+                    var statusEl=document.getElementById('vkrStatus');
+                    var cropEl=document.getElementById('vkrCrop');
+                    var phenologyEl=document.getElementById('vkrPhenology');
+                    var forestEl=document.getElementById('vkrForest');
+                    var damageEl=document.getElementById('vkrDamage');
+                    var huntingEl=document.getElementById('vkrHunting');
+                    var fenceEl=document.getElementById('vkrFence');
+                    var scoreEl=document.getElementById('vkrScore');
+                    var levelEl=document.getElementById('vkrLevel');
+                    var speciesEl=document.getElementById('vkrSpecies');
+                    var windowEl=document.getElementById('vkrWindow');
+                    var confidenceEl=document.getElementById('vkrConfidence');
+                    var factorsEl=document.getElementById('vkrFactors');
+                    var weekEl=document.getElementById('vkrWeek');
+                    var noteEl=document.getElementById('vkrNote');
+
+                    var phenologyMap={
+                        maize:[['sowing','Vetés'],['emergence','Kelés'],['milk_stage','Tejes érés'],['wax_stage','Viaszérés'],['pre_harvest','Betakarítás előtt']],
+                        rapeseed:[['autumn_green','Őszi zöld'],['spring_regrowth','Tavaszi újrahajtás'],['flowering','Virágzás'],['ripening','Érés']],
+                        sunflower:[['emergence','Kelés'],['head_stage','Tányérképzés'],['ripening','Érés'],['pre_harvest','Betakarítás előtt']],
+                        cereal:[['young','Fiatal állomány'],['heading','Kalászolás'],['ripening','Érés']],
+                        alfalfa:[['fresh_regrowth','Friss sarjadás'],['post_cut','Kaszálás utáni 3-10 nap'],['mature','Fejlett állomány']],
+                        orchard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']],
+                        vineyard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']]
+                    };
+                    var speciesMeta={
+                        wild_boar:{label:'Vaddisznó',short:'VD',window:'21:00-02:00'},
+                        red_deer:{label:'Gímszarvas',short:'GÍM',window:'20:00-23:30'},
+                        roe_deer:{label:'Őz',short:'ŐZ',window:'04:00-07:00'},
+                        fallow_deer:{label:'Dámvad',short:'DÁM',window:'20:30-23:00'},
+                        mouflon:{label:'Muflon',short:'MUF',window:'19:30-22:30'}
+                    };
+                    var cropLabels={maize:'kukorica',rapeseed:'repce',sunflower:'napraforgó',cereal:'kalászos',alfalfa:'lucerna',orchard:'gyümölcsös',vineyard:'szőlő'};
+                    var speciesBase={wild_boar:9,red_deer:7,roe_deer:5,fallow_deer:6,mouflon:4};
+                    var cropScores={
+                        maize:{wild_boar:15,red_deer:10,roe_deer:4,fallow_deer:8,mouflon:3},
+                        sunflower:{wild_boar:11,red_deer:6,roe_deer:7,fallow_deer:5,mouflon:2},
+                        rapeseed:{wild_boar:5,red_deer:13,roe_deer:14,fallow_deer:12,mouflon:9},
+                        cereal:{wild_boar:6,red_deer:9,roe_deer:7,fallow_deer:8,mouflon:7},
+                        alfalfa:{wild_boar:9,red_deer:11,roe_deer:10,fallow_deer:10,mouflon:8},
+                        orchard:{wild_boar:4,red_deer:8,roe_deer:7,fallow_deer:8,mouflon:4},
+                        vineyard:{wild_boar:3,red_deer:9,roe_deer:8,fallow_deer:7,mouflon:4}
+                    };
+                    var forestScores={under_100:10,'100_300':8,'300_700':5,'700_1500':2,over_1500:0};
+                    var damageScores={7:12,30:8,90:5,none:0};
+                    var huntingScores={
+                        low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,mouflon:2},
+                        medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,mouflon:0},
+                        high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,mouflon:-2}
+                    };
+                    var phenologyScores={
+                        maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},
+                        rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,mouflon:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,mouflon:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},
+                        sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},
+                        cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,mouflon:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},
+                        alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,mouflon:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},
+                        orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},
+                        vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}
+                    };
+
+                    var weatherData=null;
+                    var locationLabel='Veszprém mintahely';
+
+                    function setPhenologyOptions(){
+                        var crop=cropEl.value;
+                        var list=phenologyMap[crop] || [];
+                        var current=phenologyEl.value;
+                        phenologyEl.innerHTML='';
+                        for(var i=0;i<list.length;i++){
+                            var opt=document.createElement('option');
+                            opt.value=list[i][0];
+                            opt.textContent=list[i][1];
+                            phenologyEl.appendChild(opt);
+                        }
+                        if(list.some(function(item){ return item[0]===current; })){ phenologyEl.value=current; }
+                    }
+
+                    function clamp(num,min,max){ return Math.max(min,Math.min(max,num)); }
+                    function riskLevel(score){
+                        if(score >= 85){ return {label:'Kritikus',cls:'critical'}; }
+                        if(score >= 70){ return {label:'Nagyon magas',cls:'very-high'}; }
+                        if(score >= 50){ return {label:'Magas',cls:'high'}; }
+                        if(score >= 25){ return {label:'Mérsékelt',cls:'moderate'}; }
+                        return {label:'Alacsony',cls:'low'};
+                    }
+                    function confidenceLabel(score){
+                        if(score >= 75){ return 'Magas'; }
+                        if(score >= 50){ return 'Közepes'; }
+                        return 'Alacsony';
+                    }
+                    function moonIllumination(date){
+                        var synodic=29.53058867;
+                        var knownNewMoon=Date.UTC(2024,0,11,11,57,0);
+                        var days=(date.getTime()-knownNewMoon)/86400000;
+                        var phase=((days % synodic)+synodic)%synodic/synodic;
+                        return (1-Math.cos(2*Math.PI*phase))/2;
+                    }
+                    function dayName(index){ return ['V','H','K','Sze','Cs','P','Szo'][index] || ''; }
+                    function getCurrentControls(){
+                        return {
+                            crop:cropEl.value,
+                            phenology:phenologyEl.value,
+                            forest:forestEl.value,
+                            damage:damageEl.value,
+                            hunting:huntingEl.value,
+                            fence:fenceEl.value === '1'
+                        };
+                    }
+                    function getHourlyRows(data){
+                        if(!data || !data.hourly || !data.hourly.time){ return []; }
+                        var out=[];
+                        for(var i=0;i<data.hourly.time.length;i++){
+                            out.push({
+                                time:data.hourly.time[i],
+                                temp:Number(data.hourly.temperature_2m[i] || 0),
+                                humidity:Number(data.hourly.relative_humidity_2m[i] || 0),
+                                precip:Number(data.hourly.precipitation[i] || 0),
+                                wind:Number(data.hourly.wind_speed_10m[i] || 0),
+                                pressure:Number(data.hourly.pressure_msl[i] || 0),
+                                cloud:Number(data.hourly.cloud_cover[i] || 0),
+                                soil:Number(data.hourly.soil_moisture_0_to_1cm && data.hourly.soil_moisture_0_to_1cm[i] || 0)
+                            });
+                        }
+                        return out;
+                    }
+                    function findHour(rows,target){
+                        for(var i=0;i<rows.length;i++){
+                            if(rows[i].time === target){ return rows[i]; }
+                        }
+                        return null;
+                    }
+                    function hoursBefore(rows,targetTime,count){
+                        var idx=-1;
+                        for(var i=0;i<rows.length;i++){
+                            if(rows[i].time === targetTime){ idx=i; break; }
+                        }
+                        if(idx < 0){ return []; }
+                        return rows.slice(Math.max(0,idx-count+1),idx+1);
+                    }
+                    function dayContext(data,dayIndex){
+                        var rows=getHourlyRows(data);
+                        var dayStr=data.daily.time[dayIndex];
+                        var target=dayStr+'T22:00';
+                        var night=findHour(rows,target);
+                        if(!night && rows.length){
+                            for(var i=0;i<rows.length;i++){
+                                if(rows[i].time.indexOf(dayStr+'T21:00')===0 || rows[i].time.indexOf(dayStr+'T23:00')===0){ night=rows[i]; break; }
+                            }
+                        }
+                        var current=data.current || {};
+                        var recent=night ? hoursBefore(rows,night.time,48) : [];
+                        var precip48=recent.reduce(function(sum,row){ return sum + row.precip; },0);
+                        var prior24=recent.length >= 24 ? recent[recent.length-24] : null;
+                        return {
+                            day:dayStr,
+                            weatherCode:Number(data.daily.weather_code[dayIndex] || current.weather_code || 0),
+                            tempNight:night ? night.temp : Number(current.temperature_2m || 0),
+                            humidity:night ? night.humidity : Number(current.relative_humidity_2m || 0),
+                            wind:night ? night.wind : Number(current.wind_speed_10m || 0),
+                            pressureDrop:night && prior24 ? (night.pressure - prior24.pressure) : 0,
+                            cloud:night ? night.cloud : Number(current.cloud_cover || 0),
+                            soil:night ? night.soil : 0,
+                            precip48:precip48,
+                            tempMin:Number(data.daily.temperature_2m_min[dayIndex] || 0),
+                            tempMax:Number(data.daily.temperature_2m_max[dayIndex] || 0),
+                            rainSum:Number(data.daily.precipitation_sum[dayIndex] || 0),
+                            moon:moonIllumination(new Date(dayStr+'T22:00:00'))
+                        };
+                    }
+                    function speciesFactor(scoreBag,points,text){
+                        if(points === 0){ return; }
+                        scoreBag.score += points;
+                        if(points > 0){ scoreBag.factors.push({points:points,text:text}); }
+                        else { scoreBag.dampeners.push({points:points,text:text}); }
+                    }
+                    function scoreSpecies(species,ctx,controls){
+                        var bag={score:0,factors:[],dampeners:[]};
+                        var speciesLabel=speciesMeta[species].label;
+                        var cropLabel=cropLabels[controls.crop] || controls.crop;
+                        speciesFactor(bag,speciesBase[species] || 4,speciesLabel+' alapnyomás a térségben');
+                        speciesFactor(bag,(cropScores[controls.crop] && cropScores[controls.crop][species]) || 0,cropLabel+' erős táplálék-vonzás');
+                        speciesFactor(bag,(((phenologyScores[controls.crop] || {})[controls.phenology] || {})[species]) || 0,'Fenológiai állapot: '+phenologyEl.options[phenologyEl.selectedIndex].text.toLowerCase());
+                        speciesFactor(bag,forestScores[controls.forest] || 0,'Erdőközeli megközelítés és takart kijárás');
+                        speciesFactor(bag,damageScores[controls.damage] || 0,controls.damage === 'none' ? '' : 'Korábbi káresemény erős prediktor');
+                        speciesFactor(bag,(huntingScores[controls.hunting] && huntingScores[controls.hunting][species]) || 0,controls.hunting === 'high' ? 'Magas vadászati nyomás fékezi az aktivitást' : 'Alacsony zavarás növeli a kijárást');
+                        if(controls.fence){ speciesFactor(bag,-15,'Villanypásztor jelentős levonás'); }
+
+                        if(species === 'wild_boar' && ctx.precip48 > 5 && ctx.soil > 0.18){ speciesFactor(bag,5,'Eső utáni puha talaj és túrási hajlam'); }
+                        if(species === 'wild_boar' && ctx.tempNight > 12 && ctx.humidity > 75){ speciesFactor(bag,4,'Meleg, párás éjszaka kedvez a vaddisznónak'); }
+                        if((species === 'red_deer' || species === 'roe_deer' || species === 'fallow_deer' || species === 'mouflon') && ctx.tempMin <= 2 && (controls.crop === 'rapeseed' || controls.crop === 'cereal' || controls.crop === 'alfalfa')){
+                            speciesFactor(bag,4,'Hidegben a zöld kultúra felértékelődik');
+                        }
+                        if(ctx.wind > 30){ speciesFactor(bag,-5,'Erős szél csökkenti a biztonságos kijárást'); }
+                        else if(ctx.wind < 8){ speciesFactor(bag,2,'Szélcsend támogatja az éjszakai mozgást'); }
+                        else if(ctx.wind >= 12 && ctx.wind <= 25){ speciesFactor(bag,1,'Mérsékelt szél részben takarja a mozgást'); }
+                        if(ctx.pressureDrop <= -5){ speciesFactor(bag,3,'Front előtti nyomásesés aktivitásnövelő'); }
+                        if(ctx.rainSum > 6){ speciesFactor(bag,2,'Csapadékos nap után nő az éjszakai mozgás'); }
+
+                        var effMoon=ctx.moon * (1 - (ctx.cloud / 100));
+                        if(species === 'wild_boar'){
+                            if(effMoon > 0.9 && controls.hunting === 'high'){ speciesFactor(bag,-2,'Világos éj és nagy vadászati nyomás óvatossá teszi'); }
+                            else if(effMoon > 0.6 && controls.hunting !== 'low'){ speciesFactor(bag,-1,'Erősebb holdfény óvatosságot hoz'); }
+                        } else {
+                            if(effMoon > 0.9){ speciesFactor(bag,2,'Erős holdfény javítja a kijárási biztonságot'); }
+                            else if(effMoon > 0.6){ speciesFactor(bag,1,'Közepes holdfény segíti a mozgást'); }
+                        }
+
+                        speciesFactor(bag,5,'Fajspecifikus esti mozgási ablak aktív');
+                        bag.score=clamp(Math.round(bag.score),0,100);
+                        bag.factors.sort(function(a,b){ return b.points-a.points; });
+                        return bag;
+                    }
+                    function computeForecast(data){
+                        var controls=getCurrentControls();
+                        var speciesKeys=Object.keys(speciesMeta);
+                        var daily=[];
+                        for(var dayIndex=0;dayIndex<data.daily.time.length && dayIndex<7;dayIndex++){
+                            var ctx=dayContext(data,dayIndex);
+                            var ranked=speciesKeys.map(function(key){
+                                return {key:key,result:scoreSpecies(key,ctx,controls)};
+                            }).sort(function(a,b){ return b.result.score-a.result.score; });
+                            daily.push({day:ctx.day,species:ranked[0].key,score:ranked[0].result.score,result:ranked[0].result,ctx:ctx});
+                        }
+                        return daily;
+                    }
+                    function renderForecast(data){
+                        var forecast=computeForecast(data);
+                        var today=forecast[0];
+                        var level=riskLevel(today.score);
+                        var confidence=clamp(55 + (damageEl.value !== 'none' ? 12 : 0) + (forestEl.value !== 'over_1500' ? 8 : 0) + 10 + (navigator.geolocation ? 5 : 0),0,85);
+                        scoreEl.textContent=String(today.score);
+                        levelEl.textContent=level.label;
+                        speciesEl.textContent=speciesMeta[today.species].label;
+                        windowEl.textContent=speciesMeta[today.species].window;
+                        confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';
+                        statusEl.textContent=locationLabel;
+                        statusEl.style.color='rgba(255,220,220,.92)';
+                        statusEl.style.background='rgba(255,255,255,.06)';
+                        statusEl.style.borderColor='rgba(255,255,255,.14)';
+
+                        root.classList.remove('is-low','is-moderate','is-high','is-very-high','is-critical');
+                        root.classList.add('is-'+level.cls);
+
+                        var factorItems=today.result.factors.slice(0,4);
+                        if(!factorItems.length && today.result.dampeners.length){ factorItems=today.result.dampeners.slice(0,3); }
+                        factorsEl.innerHTML=factorItems.map(function(item){ return '<li>'+item.text+'</li>'; }).join('');
+                        noteEl.textContent='Helyzet: '+locationLabel+' • Kultúra: '+(cropLabels[cropEl.value] || cropEl.value)+' • Ez az MVP a fajspecifikus viselkedést, az időjárást, a holdfényt és a fő térbeli triggert már figyelembe veszi, de a teljes validációhoz valós káresemény és táblaadat kell.';
+
+                        weekEl.innerHTML=forecast.map(function(day){
+                            var d=new Date(day.day+'T12:00:00');
+                            var l=riskLevel(day.score);
+                            return '<div class="va-vadkar__weekcell is-'+l.cls+'">'
+                                +'<div class="va-vadkar__weekday">'+dayName(d.getDay())+'</div>'
+                                +'<div class="va-vadkar__weekscore">'+day.score+'</div>'
+                                +'<div class="va-vadkar__weekspecies">'+speciesMeta[day.species].short+'</div>'
+                                +'</div>';
+                        }).join('');
+                    }
+                    function fetchForecast(lat,lon,label){
+                        locationLabel=label;
+                        statusEl.textContent='Meteorológia...';
+                        var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)
+                            +'&longitude='+encodeURIComponent(lon)
+                            +'&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover'
+                            +'&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm'
+                            +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max'
+                            +'&past_days=2&forecast_days=7&timezone=auto&wind_speed_unit=kmh';
+                        fetch(url).then(function(r){ return r.json(); }).then(function(json){
+                            weatherData=json;
+                            renderForecast(json);
+                        }).catch(function(){
+                            if(label === 'Veszprém mintahely'){
+                                statusEl.textContent='Offline';
+                                levelEl.textContent='Meteorológia nem elérhető';
+                                factorsEl.innerHTML='<li>Az Open-Meteo jelenleg nem válaszol.</li><li>A widgethez élő meteorológiai adat kell a validabb becsléshez.</li>';
+                                weekEl.innerHTML='';
+                                noteEl.textContent='Az élő időjárási adat nem elérhető. A teljes validációhoz ettől függetlenül lokális kárnapló, táblaadat és vadkamera-adat szükséges.';
+                                return;
+                            }
+                            statusEl.textContent='Alap mód';
+                            fetchForecast(47.093,17.911,'Veszprém mintahely');
+                        });
+                    }
+                    function fallbackLocation(){
+                        fetch('https://ipapi.co/json/').then(function(r){ return r.json(); }).then(function(json){
+                            if(json && json.latitude && json.longitude){
+                                var label=(json.city ? json.city+', ' : '') + (json.region || json.country_name || 'IP helyzet');
+                                fetchForecast(json.latitude,json.longitude,label);
+                            } else {
+                                fetchForecast(47.093,17.911,'Veszprém mintahely');
+                            }
+                        }).catch(function(){
+                            fetchForecast(47.093,17.911,'Veszprém mintahely');
+                        });
+                    }
+                    function rerender(){ if(weatherData){ renderForecast(weatherData); } }
+
+                    setPhenologyOptions();
+                    cropEl.addEventListener('change',function(){ setPhenologyOptions(); rerender(); });
+                    phenologyEl.addEventListener('change',rerender);
+                    forestEl.addEventListener('change',rerender);
+                    damageEl.addEventListener('change',rerender);
+                    huntingEl.addEventListener('change',rerender);
+                    fenceEl.addEventListener('change',rerender);
+
+                    if(navigator.geolocation){
+                        navigator.geolocation.getCurrentPosition(function(pos){
+                            fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
+                        }, function(){
+                            fallbackLocation();
+                        }, {enableHighAccuracy:true,timeout:7000,maximumAge:900000});
+                    } else {
+                        fallbackLocation();
+                    }
+                })();
+                </script>
+>>>>>>> 43d08e3 (Auto_2026.05.18_22.28)
             </aside>
 
         </div><!-- .va-content-layout -->
