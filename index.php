@@ -1,3 +1,21 @@
+  var modalCloseEl=document.getElementById('vhrModalClose');
+  var pickerEl=document.getElementById('vhrPicker');
+  var pickerBackdropEl=document.getElementById('vhrPickerBackdrop');
+  var noteEl=document.getElementById('vhrNote');
+  var pickerButtons={};
+  var activePickerSelect=null;
+  function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
+  function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
+  function setPickerModal(open){if(!pickerEl)return;pickerEl.hidden=!open;document.body.classList.toggle('va-home-radar-picker-open',open);if(!open){activePickerSelect=null;}}
+  if(pickerCloseEl){pickerCloseEl.addEventListener('click',function(){setPickerModal(false);});}
+  if(pickerBackdropEl){pickerBackdropEl.addEventListener('click',function(){setPickerModal(false);});}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
+  setupPicker(cropEl,'Kultúra');
+  setupPicker(forestEl,'Erdőközel');
+  setupPicker(damageEl,'Kárelőzmény');
+  forestEl.addEventListener('change',function(){syncPickerButton(forestEl);rerender();});
+  damageEl.addEventListener('change',function(){syncPickerButton(damageEl);rerender();});
+  cropEl.addEventListener('change',function(){syncPickerButton(cropEl);setPhenologyOptions();rerender();});
 <?php
 /**
  * index.php – Főoldal / fallback template
