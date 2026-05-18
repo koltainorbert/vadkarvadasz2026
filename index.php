@@ -78,6 +78,12 @@ if ( $va_home_h1 === '' ) {
         <h3 class="va-weather__modal-title" id="vwModalTitle">7 napos előrejelzés</h3>
       </div>
       <div class="va-weather__modal-scroll">
+        <div class="va-weather__jump" id="vwJumpNav" role="tablist" aria-label="Időjárás szekciók">
+          <button type="button" class="va-weather__jump-btn is-active" id="vwJumpChart" data-target="vwSectionChart">Diagram</button>
+          <button type="button" class="va-weather__jump-btn" id="vwJumpDays" data-target="vwSectionDays">7 nap</button>
+          <button type="button" class="va-weather__jump-btn" id="vwJumpAgri" data-target="vwSectionAgri">Agrár</button>
+        </div>
+        <div class="va-weather__section va-weather__section--chart" id="vwSectionChart">
         <div class="va-weather__modal-graph">
           <canvas id="vwChart" class="va-weather__modal-chart" height="210"></canvas>
           <div class="va-weather__modal-legend">
@@ -86,10 +92,12 @@ if ( $va_home_h1 === '' ) {
             <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--wind"></i>Szél (km/h)</span>
           </div>
         </div>
-        <div class="va-weather__days" id="vwDays"></div>
-        <div class="va-weather__agri" id="vwAgri"></div>
+        </div>
+        <div class="va-weather__section" id="vwSectionDays"><div class="va-weather__days" id="vwDays"></div></div>
+        <div class="va-weather__section" id="vwSectionAgri"><div class="va-weather__agri" id="vwAgri"></div></div>
         <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
       </div>
+      <button type="button" class="va-weather__more" id="vwMoreHint" aria-label="Görgess le">Lejjebb még több adat ⤵</button>
     </div>
   </div>
 </section>
@@ -144,8 +152,11 @@ if ( $va_home_h1 === '' ) {
 .va-weather__modal-graph{
   position:relative;z-index:1;margin:0 0 14px;padding:12px 12px 8px;
   border:1px solid rgba(255,255,255,.12);border-radius:14px;
-  background:linear-gradient(155deg,rgba(5,25,42,.72),rgba(44,10,33,.6));
-  box-shadow:inset 0 0 22px rgba(0,180,255,.08),0 0 24px rgba(255,40,90,.07);
+  background:
+    radial-gradient(120% 140% at 0% 0%,rgba(70,170,255,.14),transparent 60%),
+    radial-gradient(120% 140% at 100% 100%,rgba(255,80,30,.12),transparent 62%),
+    linear-gradient(155deg,rgba(5,25,42,.78),rgba(44,10,33,.66));
+  box-shadow:inset 0 0 22px rgba(0,180,255,.08),0 0 24px rgba(255,40,90,.07),0 18px 36px rgba(0,0,0,.28);
 }
 .va-weather__modal-chart{display:block;width:100%;height:210px;}
 .va-weather__modal-legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;font-size:.72rem;color:#fff;}
@@ -191,6 +202,14 @@ if ( $va_home_h1 === '' ) {
 .va-weather__agri-tag{font-size:.58rem;font-weight:800;letter-spacing:.05em;border-radius:999px;padding:2px 7px;white-space:nowrap;}
 .va-weather__agri-tag.is-now{background:rgba(0,200,85,.18);border:1px solid rgba(0,240,100,.45);color:#72ffb0;}
 .va-weather__agri-tag.is-off{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:rgba(226,238,255,.85);}
+.va-weather__section{scroll-margin-top:86px;}
+.va-weather__jump{position:sticky;top:0;z-index:4;display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px;padding:6px;background:linear-gradient(180deg,rgba(6,13,22,.94),rgba(6,13,22,.58));backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.08);border-radius:12px;}
+.va-weather__jump-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#e8f3ff;border-radius:999px;padding:6px 10px;font-size:.67rem;font-weight:800;letter-spacing:.03em;cursor:pointer;transition:all .16s ease;}
+.va-weather__jump-btn:hover{background:rgba(255,255,255,.13);transform:translateY(-1px);}
+.va-weather__jump-btn.is-active{border-color:rgba(255,145,0,.65);background:linear-gradient(135deg,rgba(255,125,0,.28),rgba(255,68,0,.24));box-shadow:0 0 0 1px rgba(255,145,0,.25) inset,0 0 16px rgba(255,120,0,.18);color:#fff3dc;}
+.va-weather__more{position:absolute;left:50%;bottom:10px;transform:translate(-50%,8px);opacity:0;pointer-events:none;border:1px solid rgba(255,160,40,.6);background:linear-gradient(180deg,rgba(255,115,0,.25),rgba(255,70,0,.2));color:#fff3e3;border-radius:999px;padding:6px 12px;font-size:.66rem;font-weight:800;letter-spacing:.02em;z-index:5;box-shadow:0 10px 26px rgba(0,0,0,.35);transition:all .22s ease;}
+.va-weather__more.is-visible{opacity:1;pointer-events:auto;transform:translate(-50%,0);animation:vaMorePulse 1.35s ease-in-out infinite;}
+@keyframes vaMorePulse{0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.35),0 0 0 0 rgba(255,140,0,.34);}50%{box-shadow:0 10px 24px rgba(0,0,0,.4),0 0 0 6px rgba(255,140,0,0);}}
 .va-weather__modal .va-weather__note{position:relative;z-index:1;margin-top:12px;font-size:.68rem;opacity:.92;}
 body.va-weather-modal-open{overflow:hidden;}
 @media (max-width:980px){
@@ -206,6 +225,8 @@ body.va-weather-modal-open{overflow:hidden;}
   .va-weather__modal-legend{font-size:.64rem;gap:6px 10px;}
   .va-weather__legend-dot{width:9px;height:9px;}
   .va-weather__agri-grid{grid-template-columns:1fr;}
+  .va-weather__jump{gap:6px;padding:5px;}
+  .va-weather__jump-btn{font-size:.62rem;padding:6px 9px;}
 }
 </style>
 <?php endif; ?>
@@ -483,10 +504,13 @@ body.va-weather-modal-open{overflow:hidden;}
   var daysEl=document.getElementById('vwDays');
   var agriEl=document.getElementById('vwAgri');
   var chartEl=document.getElementById('vwChart');
+  var jumpNavEl=document.getElementById('vwJumpNav');
+  var moreHintEl=document.getElementById('vwMoreHint');
   var toggleEl=document.getElementById('vwToggle');
   var modalEl=document.getElementById('vwModal');
   var modalBackdropEl=document.getElementById('vwModalBackdrop');
   var modalCloseEl=document.getElementById('vwModalClose');
+  var scrollEl=modalEl?modalEl.querySelector('.va-weather__modal-scroll'):null;
   var lastDailyData=null;
   var lastIdx=[];
   var lastWindUnitRaw='km/h';
@@ -496,6 +520,7 @@ body.va-weather-modal-open{overflow:hidden;}
     toggleEl.setAttribute('aria-expanded',open?'true':'false');
     modalEl.hidden=!open;
     document.body.classList.toggle('va-weather-modal-open',open);
+    syncMoreHint();
     if(open&&lastDailyData&&lastIdx.length){
       try{drawForecastChart(lastDailyData,lastIdx,lastWindUnitRaw);}catch(_e){}
     }
@@ -526,7 +551,58 @@ body.va-weather-modal-open{overflow:hidden;}
     if(modalEl&&!modalEl.hidden&&lastDailyData&&lastIdx.length){
       try{drawForecastChart(lastDailyData,lastIdx,lastWindUnitRaw);}catch(_e){}
     }
+    syncMoreHint();
+    syncJumpActive();
   });
+  function smoothScrollToSection(id){
+    if(!scrollEl)return;
+    var el=document.getElementById(id);
+    if(!el)return;
+    scrollEl.scrollTo({top:Math.max(0,el.offsetTop-58),behavior:'smooth'});
+  }
+  function syncJumpActive(){
+    if(!jumpNavEl||!scrollEl)return;
+    var map=['vwSectionChart','vwSectionDays','vwSectionAgri'];
+    var best='vwSectionChart',bestDist=999999;
+    for(var i=0;i<map.length;i++){
+      var sec=document.getElementById(map[i]);
+      if(!sec)continue;
+      var d=Math.abs(sec.offsetTop-scrollEl.scrollTop-58);
+      if(d<bestDist){bestDist=d;best=map[i];}
+    }
+    var btns=jumpNavEl.querySelectorAll('.va-weather__jump-btn');
+    for(var b=0;b<btns.length;b++){
+      btns[b].classList.toggle('is-active',btns[b].getAttribute('data-target')===best);
+    }
+  }
+  function syncMoreHint(){
+    if(!moreHintEl||!scrollEl||!modalEl||modalEl.hidden){
+      if(moreHintEl)moreHintEl.classList.remove('is-visible');
+      return;
+    }
+    var hasOverflow=scrollEl.scrollHeight>scrollEl.clientHeight+24;
+    var nearBottom=(scrollEl.scrollTop+scrollEl.clientHeight)>=(scrollEl.scrollHeight-36);
+    moreHintEl.classList.toggle('is-visible',hasOverflow&&!nearBottom);
+  }
+  if(jumpNavEl){
+    jumpNavEl.addEventListener('click',function(e){
+      var btn=e.target&&e.target.closest?e.target.closest('.va-weather__jump-btn'):null;
+      if(!btn)return;
+      smoothScrollToSection(btn.getAttribute('data-target'));
+    });
+  }
+  if(scrollEl){
+    scrollEl.addEventListener('scroll',function(){
+      syncMoreHint();
+      syncJumpActive();
+    },{passive:true});
+  }
+  if(moreHintEl){
+    moreHintEl.addEventListener('click',function(){
+      if(!scrollEl)return;
+      scrollEl.scrollBy({top:Math.max(180,Math.floor(scrollEl.clientHeight*0.55)),behavior:'smooth'});
+    });
+  }
 
   function wcText(code){
     var map={
