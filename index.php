@@ -1756,7 +1756,7 @@ updateHnOverflowState();
 <?php endif; ?>
 
 <!-- HIRDETÉSEK -->
-<div style="margin-bottom:24px;">
+<div id="va-latest-section" style="margin-bottom:24px;">
   <?php
   $home_latest_label = (string) get_option( 'va_home_latest_label_text', 'ÚJ' );
   $home_all_text     = (string) get_option( 'va_home_all_link_text', 'Összes →' );
@@ -1774,7 +1774,7 @@ updateHnOverflowState();
     </div>
 
     <?php
-    // Legújabb hirdetések – boost-aware rendezés
+    // Legújabb hirdetések – boost-aware rendezés (max 100, lapozás JS-ben)
     global $wpdb;
     $_boost_cfg     = class_exists('VA_User_Roles') ? VA_User_Roles::get_all_plan_configs() : [];
     $_boost_window  = (int) ( $_boost_cfg['_global']['boost_badge_window'] ?? 7 );
@@ -1784,7 +1784,7 @@ updateHnOverflowState();
          LEFT JOIN {$wpdb->postmeta} bst ON ( bst.post_id = p.ID AND bst.meta_key = 'va_boost_time' )
          WHERE p.post_type = 'va_listing' AND p.post_status = 'publish'
          ORDER BY CASE WHEN CAST(bst.meta_value AS UNSIGNED) > %d THEN 1 ELSE 0 END DESC, p.post_date DESC
-         LIMIT 8",
+         LIMIT 100",
         $_boost_cutoff
     ) );
     $latest = $_latest_ids ? new WP_Query([
@@ -1792,18 +1792,110 @@ updateHnOverflowState();
         'post_status'    => 'publish',
         'post__in'       => array_map('intval', $_latest_ids),
         'orderby'        => 'post__in',
-        'posts_per_page' => 8,
+        'posts_per_page' => 100,
         'no_found_rows'  => true,
     ]) : null;
     ?>
     <?php if ($latest && $latest->have_posts()): ?>
-        <div class="va-grid">
+        <!-- Rejtett tároló – JS lapoz belőle -->
+        <div id="va-latest-all" style="display:none;" aria-hidden="true">
             <?php while ($latest->have_posts()): $latest->the_post();
                 if (class_exists('VA_Shortcodes')) va_template('listing/card', ['post' => get_post()]);
             endwhile; wp_reset_postdata(); ?>
         </div>
+        <!-- Aktív oldal megjelenítő -->
+        <div id="va-latest-grid" class="va-grid"></div>
+        <!-- Lapozó -->
+        <div id="va-latest-pager" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;">
+          <button id="va-latest-prev" style="display:none;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;padding:7px 18px;font-size:.72rem;font-weight:700;letter-spacing:.04em;transition:all .15s;">← Előző</button>
+          <span id="va-latest-pageinfo" style="font-size:.68rem;color:rgba(255,255,255,.5);flex:1;text-align:center;"></span>
+          <button id="va-latest-next" style="display:none;cursor:pointer;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;padding:7px 18px;font-size:.72rem;font-weight:700;letter-spacing:.04em;transition:all .15s;">Következő →</button>
+        </div>
     <?php endif; ?>
 </div>
+<style>
+#va-latest-prev:hover,#va-latest-next:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.38);}
+#va-latest-prev:disabled,#va-latest-next:disabled{opacity:.3;cursor:default;}
+</style>
+<script>
+(function(){
+  var allEl   = document.getElementById('va-latest-all');
+  var gridEl  = document.getElementById('va-latest-grid');
+  var prevBtn = document.getElementById('va-latest-prev');
+  var nextBtn = document.getElementById('va-latest-next');
+  var infoEl  = document.getElementById('va-latest-pageinfo');
+  var sidebar = document.querySelector('.va-home-sidebar');
+  var section = document.getElementById('va-latest-section');
+  if (!allEl || !gridEl || !sidebar || !section) return;
+
+  var cards = Array.from(allEl.children);
+  var total = cards.length;
+  if (!total) return;
+
+  var PAGE_SIZE = 4; // alap fallback
+  var currentPage = 0;
+
+  function calcPageSize() {
+    var sidebarH   = sidebar.getBoundingClientRect().height;
+    var sectionTop = section.getBoundingClientRect().top;
+    var headerH    = document.querySelector('.va-latest-hd-row') ? document.querySelector('.va-latest-hd-row').getBoundingClientRect().height : 52;
+    var pagerH     = 50;
+    var gap        = 16;
+    var availH     = sidebarH - (sectionTop - sidebar.getBoundingClientRect().top) - headerH - pagerH - gap;
+    if (availH < 100) availH = sidebarH * 0.8;
+    // mérjük egy kártya magasságát
+    var cardH = 0;
+    if (gridEl.firstElementChild) {
+      cardH = gridEl.firstElementChild.getBoundingClientRect().height + gap;
+    } else if (cards[0]) {
+      // temp insert to measure
+      var tmp = cards[0].cloneNode(true);
+      tmp.style.visibility = 'hidden';
+      tmp.style.position = 'absolute';
+      gridEl.appendChild(tmp);
+      cardH = tmp.getBoundingClientRect().height + gap;
+      gridEl.removeChild(tmp);
+    }
+    var cols = getComputedStyle(gridEl).gridTemplateColumns.split(' ').length || 1;
+    if (cardH < 1) cardH = 220 + gap;
+    var rows = Math.max(1, Math.floor(availH / cardH));
+    return rows * cols;
+  }
+
+  function render(page) {
+    PAGE_SIZE = calcPageSize();
+    var start = page * PAGE_SIZE;
+    var end   = Math.min(start + PAGE_SIZE, total);
+    var totalPages = Math.ceil(total / PAGE_SIZE);
+    // fill grid
+    while (gridEl.firstChild) gridEl.removeChild(gridEl.firstChild);
+    for (var i = start; i < end; i++) {
+      gridEl.appendChild(cards[i].cloneNode(true));
+    }
+    // pager
+    prevBtn.style.display = page > 0 ? '' : 'none';
+    nextBtn.style.display = end < total ? '' : 'none';
+    infoEl.textContent = total > PAGE_SIZE ? (page + 1) + ' / ' + totalPages + ' oldal  (' + total + ' hirdetés)' : total + ' hirdetés';
+    currentPage = page;
+  }
+
+  function init() {
+    render(0);
+  }
+
+  // Lapozó gombok
+  prevBtn.addEventListener('click', function(){ render(currentPage - 1); section.scrollIntoView({behavior:'smooth',block:'start'}); });
+  nextBtn.addEventListener('click', function(){ render(currentPage + 1); section.scrollIntoView({behavior:'smooth',block:'start'}); });
+
+  // Init: várjuk meg a layout végleges mérését
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+  window.addEventListener('resize', function(){ render(currentPage); });
+})();
+</script>
 
 <!-- Kiemelt hirdetések -->
 <?php $featured = new WP_Query(['post_type' => 'va_listing', 'post_status' => 'publish', 'posts_per_page' => $va_home_cards_per_row, 'meta_key' => 'va_featured', 'meta_value' => '1']);
