@@ -1000,7 +1000,7 @@ body.va-weather-modal-open{overflow:hidden;}
 </script>
 <?php endif; ?>
 
-<?php if ( $va_show_damage_forecast_widget ): ?>
+<?php if ( false && $va_show_damage_forecast_widget ): ?>
 <section class="va-damage-forecast" id="va-damage-forecast">
   <div class="va-damage-forecast__hd">
     <span class="va-damage-forecast__title">🦌 Vadkár előrejelzés</span>
