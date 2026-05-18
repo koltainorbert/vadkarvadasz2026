@@ -8770,3 +8770,21 @@ Most már nem marad rejtve az alsó tartalom: látható jelzés és gyors navig�
 
 ---
 
+## 2026. 05. 18. – Session: Chart torzítás + zsúfoltság csökkentés
+
+### Mit csináltunk [x]
+- [x] Torz megjelenítés javítva: canvas CSS magasság és rajzolási magasság szinkronba hozva
+- [x] Diagram felirat-zsúfoltság csökkentve:
+  - szél feliratok közül csak a maximum kap külön címkét
+  - hőmérséklet címkézés ritkítva (min/max + szélek + ritkább pontok)
+  - csapadék érték feliratok eltávolítva a sávból (vizuális tisztítás)
+- [x] Nap rövidítések ritkítva és külön alsó tengelyvonalra rendezve
+
+### Hol tartunk
+A grafikon kevésbé zsúfolt, olvashatóbb és arányhelyes desktopon is.
+
+### TODO
+- [ ] Igény esetén kapcsoló: "részletes címkék be/ki"
+
+---
+
