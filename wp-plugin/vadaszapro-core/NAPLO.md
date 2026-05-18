@@ -7939,3 +7939,25 @@ A grafikon kevésbé zsúfolt, olvashatóbb és arányhelyes desktopon is.
 
 ---
 
+## 2026. 05. 18. – Session: Teljes hét + kilógó/hiányos adatok javítása
+
+### Mit csináltunk [x]
+- [x] A grafikon most mindig teljes 7 napot épít fel (mai naptól számolva)
+- [x] Kilógó feliratok fix:
+  - szélső napcímkék bal/jobb igazítással a charton belül maradnak
+  - hőmérséklet/szél címkék rajzolása "safe clamp" logikával
+- [x] Hiányos számérzet ellen új heti adatcsík bekerült a grafikon alá:
+  - nap rövidítés
+  - max hőfok
+  - csapadék (mm vagy %)
+  - szél km/h
+- [x] Root + theme mirror `index.php` szinkron
+
+### Hol tartunk
+Most a teljes hét minden fontos száma látszik, és a szélső értékek sem lógnak ki a keretből.
+
+### TODO
+- [ ] Ha kell, következő körben a heti adatcsíkra hover részletező tooltip (min/max, időjárás-kód)
+
+---
+
