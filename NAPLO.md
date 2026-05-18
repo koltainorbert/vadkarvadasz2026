@@ -8576,3 +8576,22 @@ A vadásznaptár sávjain hover tooltip teljes szöveggel, stabilan olvashatóan
 
 ---
 
+## 2026. 05. 18. – Session: Főoldali mini naptár tooltip fix
+
+### Mit csináltunk [x]
+- [x] Azonosítottuk, hogy a hiba nem csak az oldal sablonban, hanem a főoldali mini naptár CSS-ben is jelen volt
+- [x] `index.php` és `wp-theme/vadaszapro-theme/index.php` fájlokban javítva a tooltip clipping:
+- [x] konténer overflow feloldva (`.va-hnaptar`, `.va-hnaptar__scroll`, `.va-hnaptar__chart`)
+- [x] tooltip pozíció balra igazítva (`left: 0`, `transform: none`)
+- [x] tooltip tördelés + max szélesség beállítva
+- [x] sáv/tooltip z-index emelve sticky oszlop fölé
+- [x] Deploy All lefuttatva, commit+push megtörtént (`30cf25c`)
+
+### Hol tartunk
+A főoldali mini vadásznaptár tooltipje nem vágódik le a bal oldali sticky oszlopnál és hosszabb szöveg esetén is olvasható.
+
+### TODO
+- [ ] Gyors élő ellenőrzés: bal szélső oszlop és erősen jobbra scrollozott állapot tooltip hover
+
+---
+
