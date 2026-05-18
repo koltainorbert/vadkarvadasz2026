@@ -111,9 +111,9 @@ if ( $va_home_h1 === '' ) {
   margin:6vh auto;
   overflow:auto;
   border-radius:22px;
-  border:1px solid rgba(130,210,255,.35);
+  border:1px solid rgba(255,140,0,.65);
   background:linear-gradient(160deg,rgba(6,16,28,.96) 0%,rgba(10,22,40,.95) 45%,rgba(36,12,24,.94) 100%);
-  box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(0,120,255,.2),0 0 70px rgba(255,0,70,.12);
+  box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(0,120,255,.2),0 0 70px rgba(255,0,70,.12),0 0 0 1px rgba(255,165,0,.28) inset;
   padding:20px 18px 16px;
 }
 .va-weather__modal-card::before{
@@ -123,7 +123,8 @@ if ( $va_home_h1 === '' ) {
 }
 .va-weather__modal-head{position:relative;z-index:1;margin-bottom:12px;padding-right:44px;}
 .va-weather__modal-eyebrow{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(190,225,255,.85);font-weight:800;}
-.va-weather__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff;text-shadow:0 0 18px rgba(80,180,255,.35);}
+.va-weather__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff!important;text-shadow:0 0 18px rgba(80,180,255,.35);}
+.va-weather__modal-title,.va-weather__modal-title *{color:#fff!important;}
 .va-weather__modal-graph{
   position:relative;z-index:1;margin:0 0 14px;padding:10px 10px 6px;
   border:1px solid rgba(255,255,255,.12);border-radius:14px;
@@ -441,12 +442,17 @@ body.va-weather-modal-open{overflow:hidden;}
   var modalEl=document.getElementById('vwModal');
   var modalBackdropEl=document.getElementById('vwModalBackdrop');
   var modalCloseEl=document.getElementById('vwModalClose');
+  var lastDailyData=null;
+  var lastIdx=[];
 
   function setForecastModal(open){
     if(!toggleEl||!modalEl)return;
     toggleEl.setAttribute('aria-expanded',open?'true':'false');
     modalEl.hidden=!open;
     document.body.classList.toggle('va-weather-modal-open',open);
+    if(open&&lastDailyData&&lastIdx.length){
+      try{drawForecastChart(lastDailyData,lastIdx);}catch(_e){}
+    }
   }
   if(toggleEl){
     toggleEl.addEventListener('click',function(){setForecastModal(true);});
@@ -599,7 +605,9 @@ body.va-weather-modal-open{overflow:hidden;}
     for(var ii=0;ii<d.time.length;ii++){
       if(d.time[ii]!==todayIso)idx.push(ii);
     }
-    drawForecastChart(d,idx);
+    if(!idx.length){
+      for(var ff=0;ff<d.time.length&&ff<7;ff++)idx.push(ff);
+    }
     for(var j=0;j<idx.length&&j<7;j++){
       var i=idx[j];
       var prefix=dayHu(d.time[i]);
@@ -611,6 +619,9 @@ body.va-weather-modal-open{overflow:hidden;}
         +'</div>';
     }
     daysEl.innerHTML=html;
+    lastDailyData=d;
+    lastIdx=idx.slice(0,7);
+    try{drawForecastChart(d,lastIdx);}catch(_err){}
   }
   function weather(lat,lon,label){
     var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)
