@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 05. 18. – Session #360a — Vadkár előrejelzés widget popup
+
+### Kérés
+- A főoldalra kerüljön egy külön vadkár előrejelzés widget, amely ugyanúgy popupban nyitható meg, mint az időjárás előrejelzés.
+- Előtte pontosan legyen leírva, hogyan dolgozik és milyen tényezőket vesz figyelembe.
+
+### Megvalósítás
+- Új beállítási kapcsoló: `va_show_damage_forecast_widget`.
+- Új főoldali widget a `index.php` fájlban és a theme másolatban is.
+- Popup tartalom:
+  - 7 napos kockázati pontszám
+  - napi bontás
+  - faktorlista
+  - magyarázó blokk arról, miből számol
+- Számítási logika:
+  - Open-Meteo helyi időjárási adatok
+  - csapadék, csapadékesély, szél, felhőzet
+  - holdfázis és holdfény becslés
+  - terményidőszak alapú kockázati súlyozás
+- Admin beállítások és factory defaultok frissítve.
+- PHP szintaxis ellenőrizve az érintett fájlokon.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+- `admin/class-settings-page.php`
+- `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+- `includes/factory-defaults.json`
+- `wp-plugin/vadaszapro-core/includes/factory-defaults.json`
+
 ## 2026. 05. 15. – Session #359p — Szállás + Vadászati lehetőség / Vadkárelhárítás popup űrlap
 
 ### Kérés

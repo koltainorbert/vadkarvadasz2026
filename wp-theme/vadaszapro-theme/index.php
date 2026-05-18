@@ -10,6 +10,7 @@ $va_show_season_widget = get_option( 'va_show_hunting_season_widget', '1' ) === 
 $va_show_agri_widget   = get_option( 'va_show_agri_widget', '1' ) === '1';
 $va_show_moon_widget   = get_option( 'va_show_moon_widget', '1' ) === '1';
 $va_show_weather_widget = get_option( 'va_show_weather_widget', '1' ) === '1';
+$va_show_damage_forecast_widget = get_option( 'va_show_damage_forecast_widget', '1' ) === '1';
 $va_show_home_hunting_calendar = get_option( 'va_show_home_hunting_calendar', '1' ) === '1';
 $va_home_cards_per_row = max( 2, min( 10, (int) get_option( 'va_layout_grid_cols_desktop', 4 ) ) );
 $va_home_h1 = trim( wp_strip_all_tags( (string) get_option( 'va_home_hero_title', '' ) ) );
@@ -995,6 +996,415 @@ body.va-weather-modal-open{overflow:hidden;}
   }else{
     ipFallback();
   }
+})();
+</script>
+<?php endif; ?>
+
+<?php if ( $va_show_damage_forecast_widget ): ?>
+<section class="va-damage-forecast" id="va-damage-forecast">
+  <div class="va-damage-forecast__hd">
+    <span class="va-damage-forecast__title">🦌 Vadkár előrejelzés</span>
+    <span class="va-damage-forecast__loc" id="vdfLoc">Helyzet…</span>
+  </div>
+  <div class="va-damage-forecast__summary" id="vdfSummary">Előrejelzés betöltése…</div>
+  <div class="va-damage-forecast__meta" id="vdfMeta">Időjárás, hold és terményidőszak alapján számol.</div>
+  <button type="button" class="va-damage-forecast__toggle" id="vdfToggle" aria-expanded="false" aria-controls="vdfModal">7 napos kockázat ✦</button>
+  <div class="va-damage-forecast__modal" id="vdfModal" hidden>
+    <div class="va-damage-forecast__modal-backdrop" id="vdfModalBackdrop"></div>
+    <div class="va-damage-forecast__modal-card" role="dialog" aria-modal="true" aria-labelledby="vdfModalTitle">
+      <button type="button" class="va-damage-forecast__modal-close" id="vdfModalClose" aria-label="Bezárás">✕</button>
+      <div class="va-damage-forecast__modal-head">
+        <div class="va-damage-forecast__modal-eyebrow">Részletes vadkár-modell</div>
+        <h3 class="va-damage-forecast__modal-title" id="vdfModalTitle">7 napos vadkár-előrejelzés</h3>
+      </div>
+      <div class="va-damage-forecast__modal-scroll">
+        <div class="va-damage-forecast__jump" id="vdfJumpNav" role="tablist" aria-label="Vadkár szekciók">
+          <button type="button" class="va-damage-forecast__jump-btn is-active" id="vdfJumpRisk" data-target="vdfSectionRisk">Pontszám</button>
+          <button type="button" class="va-damage-forecast__jump-btn" id="vdfJumpDays" data-target="vdfSectionDays">7 nap</button>
+          <button type="button" class="va-damage-forecast__jump-btn" id="vdfJumpFactors" data-target="vdfSectionFactors">Miből számol?</button>
+        </div>
+        <div class="va-damage-forecast__section va-damage-forecast__section--risk" id="vdfSectionRisk">
+          <div class="va-damage-forecast__chart" id="vdfChart"></div>
+          <div class="va-damage-forecast__legend">
+            <span class="va-damage-forecast__legend-item"><i class="va-damage-forecast__legend-dot va-damage-forecast__legend-dot--risk"></i>Várható kockázat</span>
+            <span class="va-damage-forecast__legend-item"><i class="va-damage-forecast__legend-dot va-damage-forecast__legend-dot--crop"></i>Érintett termény</span>
+          </div>
+        </div>
+        <div class="va-damage-forecast__section" id="vdfSectionDays"><div class="va-damage-forecast__days" id="vdfDays"></div></div>
+        <div class="va-damage-forecast__section" id="vdfSectionFactors"><div class="va-damage-forecast__factors" id="vdfFactors"></div></div>
+        <div class="va-damage-forecast__note" id="vdfNote">A pontszám becslés: helyi időjárás, hold, felhőzet, szél, napszak és terményállapot alapján számolunk.</div>
+      </div>
+      <button type="button" class="va-damage-forecast__more" id="vdfMoreHint" aria-label="Görgess le">Lejjebb még több adat ⤵</button>
+    </div>
+  </div>
+</section>
+
+<style>
+.va-damage-forecast{background:linear-gradient(145deg,rgba(36,12,16,.92),rgba(13,12,18,.94));border:1px solid rgba(255,85,85,.28);border-radius:12px;padding:8px;margin:0 0 10px;box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(255,0,0,.06);}
+.va-damage-forecast__hd{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;}
+.va-damage-forecast__title{font-weight:900;font-size:.82rem;color:#fff;line-height:1.15;}
+.va-damage-forecast__loc{font-size:.56rem;color:rgba(255,224,224,.82);}
+.va-damage-forecast__summary{font-size:.66rem;color:rgba(255,244,244,.94);line-height:1.3;margin-bottom:4px;}
+.va-damage-forecast__meta{font-size:.56rem;color:rgba(255,208,208,.8);margin-bottom:7px;}
+.va-damage-forecast__toggle{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,110,110,.36);background:linear-gradient(135deg,#2a0f12 0%,#4b1116 45%,#7f1616 100%);color:#fff;border-radius:10px;padding:9px 10px;font-size:.68rem;font-weight:900;letter-spacing:.03em;cursor:pointer;transition:all .16s ease;box-shadow:0 10px 28px rgba(255,0,0,.12),inset 0 0 18px rgba(255,255,255,.05);}
+.va-damage-forecast__toggle:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.va-damage-forecast__modal{position:fixed;inset:0;z-index:12100;display:block;}
+.va-damage-forecast__modal[hidden]{display:none!important;}
+.va-damage-forecast__modal-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,80,80,.18),transparent 45%),radial-gradient(circle at 80% 80%,rgba(255,200,80,.12),transparent 42%),rgba(4,4,6,.82);backdrop-filter:blur(8px);}
+.va-damage-forecast__modal-card{position:relative;width:min(960px,calc(100vw - 28px));max-height:min(88vh,920px);margin:6vh auto;overflow:hidden;border-radius:22px;border:1px solid rgba(255,90,90,.58);background:linear-gradient(160deg,rgba(26,10,12,.97) 0%,rgba(14,12,18,.96) 52%,rgba(42,12,16,.95) 100%);box-shadow:0 40px 90px rgba(0,0,0,.7),0 0 70px rgba(255,0,0,.12),0 0 0 1px rgba(255,120,120,.22) inset;padding:20px 18px 16px;}
+.va-damage-forecast__modal-scroll{position:relative;z-index:1;max-height:calc(88vh - 76px);overflow:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:#ff4b4b rgba(255,255,255,.08);}
+.va-damage-forecast__modal-scroll::-webkit-scrollbar{width:10px;}.va-damage-forecast__modal-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:999px;}.va-damage-forecast__modal-scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff7a7a,#ff2f2f);border-radius:999px;border:2px solid rgba(7,10,18,.8);}
+.va-damage-forecast__modal-head{position:relative;z-index:1;margin-bottom:12px;padding-right:44px;}
+.va-damage-forecast__modal-eyebrow{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,205,205,.86);font-weight:800;}
+.va-damage-forecast__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff!important;text-shadow:0 0 18px rgba(255,110,110,.35);}
+.va-damage-forecast__modal-title,.va-damage-forecast__modal-title *{color:#fff!important;}
+.va-damage-forecast__jump{position:sticky;top:0;z-index:4;display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px;padding:6px;background:linear-gradient(180deg,rgba(24,10,14,.94),rgba(24,10,14,.58));backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.08);border-radius:12px;}
+.va-damage-forecast__jump-btn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#ffecec;border-radius:999px;padding:6px 10px;font-size:.67rem;font-weight:800;letter-spacing:.03em;cursor:pointer;transition:all .16s ease;}
+.va-damage-forecast__jump-btn:hover{background:rgba(255,255,255,.13);transform:translateY(-1px);}
+.va-damage-forecast__jump-btn.is-active{background:rgba(255,72,72,.22);border-color:rgba(255,102,102,.55);box-shadow:0 0 0 1px rgba(255,0,0,.12) inset;}
+.va-damage-forecast__section{scroll-margin-top:86px;}
+.va-damage-forecast__chart{display:grid;grid-template-columns:repeat(7,minmax(74px,1fr));gap:8px;margin-top:4px;}
+.va-damage-forecast__chartcell{border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(10,10,14,.62);padding:8px 7px 7px;text-align:center;}
+.va-damage-forecast__chartday{font-size:.58rem;font-weight:800;color:#ffdede;letter-spacing:.05em;text-transform:uppercase;}
+.va-damage-forecast__chartscore{font-size:1.45rem;font-weight:900;color:#fff;line-height:1.1;text-shadow:0 0 14px rgba(255,120,120,.35);margin-top:2px;}
+.va-damage-forecast__chartcrop{font-size:.6rem;font-weight:700;color:#ffcba7;min-height:2.3em;display:flex;align-items:center;justify-content:center;margin:2px 0 4px;}
+.va-damage-forecast__bar{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.12);}
+.va-damage-forecast__bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#72ffb0 0%,#ffc44d 55%,#ff4d4d 100%);box-shadow:0 0 12px rgba(255,90,90,.25);}
+.va-damage-forecast__legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;font-size:.72rem;color:#fff;}
+.va-damage-forecast__legend-item{display:inline-flex;align-items:center;gap:7px;letter-spacing:.02em;}
+.va-damage-forecast__legend-dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+.va-damage-forecast__legend-dot--risk{background:#ff6a6a;box-shadow:0 0 10px rgba(255,106,106,.65);}
+.va-damage-forecast__legend-dot--crop{background:#ffc46a;box-shadow:0 0 10px rgba(255,196,106,.6);}
+.va-damage-forecast__days{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1;}
+.va-damage-forecast__day{border:1px solid rgba(255,255,255,.12);border-radius:14px;background:linear-gradient(145deg,rgba(39,14,17,.9),rgba(16,12,16,.92));padding:10px 10px 11px;box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(255,60,60,.05);}
+.va-damage-forecast__dayhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.va-damage-forecast__dayname{font-size:.78rem;letter-spacing:.04em;color:#ffdede;font-weight:800;}
+.va-damage-forecast__dayrisk{font-size:1.45rem;font-weight:900;color:#fff;text-shadow:0 0 16px rgba(255,105,105,.35);}
+.va-damage-forecast__daymeta{font-size:.72rem;color:#f8efef;margin-top:4px;line-height:1.35;}
+.va-damage-forecast__daybar{margin-top:8px;height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.12);}
+.va-damage-forecast__daybar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#72ffb0 0%,#ffc44d 50%,#ff5151 100%);}
+.va-damage-forecast__dayfactors{font-size:.62rem;color:rgba(255,228,228,.86);margin-top:8px;line-height:1.45;}
+.va-damage-forecast__factor{border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(10,10,14,.56);padding:10px 11px;margin:0 0 8px;}
+.va-damage-forecast__factor-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.va-damage-forecast__factor-title{font-size:.78rem;font-weight:800;color:#fff;}
+.va-damage-forecast__factor-text{font-size:.68rem;color:rgba(255,231,231,.88);margin-top:4px;line-height:1.45;}
+.va-damage-forecast__factor-score{font-size:.62rem;font-weight:900;letter-spacing:.05em;color:#ffbfbf;text-transform:uppercase;}
+.va-damage-forecast__note{margin-top:10px;font-size:.66rem;color:rgba(255,214,214,.8);line-height:1.45;}
+.va-damage-forecast__modal-close{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,150,150,.35);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;}
+.va-damage-forecast__modal-close:hover{background:rgba(255,70,70,.2);border-color:rgba(255,100,100,.6);}
+.va-damage-forecast__more{position:sticky;bottom:0;margin:12px auto 0;display:block;border:0;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.08);color:rgba(255,235,235,.85);font-size:.68rem;font-weight:800;opacity:0;pointer-events:none;transition:opacity .16s ease;}
+.va-damage-forecast__more.is-visible{opacity:1;pointer-events:auto;}
+@media (max-width: 720px){
+  .va-damage-forecast__chart,.va-damage-forecast__days{grid-template-columns:1fr;}
+  .va-damage-forecast__modal-card{width:min(960px,calc(100vw - 18px));margin:4vh auto;padding:18px 14px 14px;}
+}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById('va-damage-forecast');
+  if(!root)return;
+
+  var locEl=document.getElementById('vdfLoc');
+  var summaryEl=document.getElementById('vdfSummary');
+  var metaEl=document.getElementById('vdfMeta');
+  var chartEl=document.getElementById('vdfChart');
+  var daysEl=document.getElementById('vdfDays');
+  var factorsEl=document.getElementById('vdfFactors');
+  var noteEl=document.getElementById('vdfNote');
+  var toggleEl=document.getElementById('vdfToggle');
+  var modalEl=document.getElementById('vdfModal');
+  var modalBackdropEl=document.getElementById('vdfModalBackdrop');
+  var modalCloseEl=document.getElementById('vdfModalClose');
+  var jumpNavEl=document.getElementById('vdfJumpNav');
+  var moreHintEl=document.getElementById('vdfMoreHint');
+  var scrollEl=modalEl?modalEl.querySelector('.va-damage-forecast__modal-scroll'):null;
+  var lastDailyData=null;
+  var lastDayItems=[];
+  var lastRiskRows=[];
+  var lastCropRows=[];
+  var lastWindUnit='km/h';
+
+  function setModal(open){
+    if(!toggleEl||!modalEl)return;
+    toggleEl.setAttribute('aria-expanded',open?'true':'false');
+    modalEl.hidden=!open;
+    document.body.classList.toggle('va-damage-forecast-open',open);
+    syncMoreHint();
+    syncJumpActive();
+  }
+
+  function closeModal(){ setModal(false); }
+  if(toggleEl){ toggleEl.addEventListener('click',function(){ setModal(true); }); setModal(false); }
+  if(modalCloseEl){ modalCloseEl.addEventListener('click',closeModal); }
+  if(modalBackdropEl){ modalBackdropEl.addEventListener('click',closeModal); }
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&modalEl&&!modalEl.hidden){ closeModal(); } });
+
+  function toWindKmh(value,unitRaw){
+    var v=Number(value||0);
+    if(!isFinite(v))return 0;
+    var u=String(unitRaw||'km/h').toLowerCase();
+    if(u.indexOf('km/h')!==-1||u.indexOf('kmh')!==-1)return v;
+    if(u.indexOf('m/s')!==-1||u.indexOf('ms')!==-1)return v*3.6;
+    if(u.indexOf('mph')!==-1)return v*1.60934;
+    if(u.indexOf('kn')!==-1)return v*1.852;
+    return v;
+  }
+  function dayHu(iso){ return new Intl.DateTimeFormat('hu-HU',{timeZone:'Europe/Budapest',weekday:'short'}).format(new Date(iso+'T12:00:00')); }
+  function dateHu(iso){ return new Intl.DateTimeFormat('hu-HU',{timeZone:'Europe/Budapest',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso+'T12:00:00')); }
+  function monthOf(iso){ return new Date(iso+'T12:00:00').getMonth()+1; }
+  function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+  function moonInfo(dateObj){
+    var syn=29.53058867;
+    var ref=Date.UTC(2000,0,6,18,14,0);
+    var age=((dateObj.getTime()-ref)/86400000)%syn;
+    if(age<0)age+=syn;
+    var phase=age/syn;
+    var illum=0.5*(1-Math.cos(2*Math.PI*phase));
+    return { age: age, phase: phase, illum: illum*100 };
+  }
+  function moonLabel(phase){
+    if(phase<0.03||phase>0.97)return 'Újhold';
+    if(phase<0.22)return 'Növő sarló';
+    if(phase<0.28)return 'Első negyed';
+    if(phase<0.47)return 'Növő hold';
+    if(phase<0.53)return 'Telihold';
+    if(phase<0.72)return 'Fogyó hold';
+    if(phase<0.78)return 'Utolsó negyed';
+    return 'Fogyó sarló';
+  }
+  function isRange(month,from,to){ return from<=to ? (month>=from&&month<=to) : (month>=from||month<=to); }
+  function cropRiskList(month){
+    var crops=[
+      { name:'Kukorica', risk: isRange(month,7,10) ? 9 : (isRange(month,4,5) ? 4 : 0), detail: isRange(month,9,10) ? 'Érés / aratás' : (isRange(month,7,8) ? 'Virágzás / tejérés' : (isRange(month,4,5) ? 'Vetés / kelés' : 'Alacsonyabb érzékenység')) },
+      { name:'Napraforgó', risk: isRange(month,7,9) ? 8 : (isRange(month,4,4) ? 3 : 0), detail: isRange(month,9,9) ? 'Érés / tányérterhelés' : (isRange(month,7,7) ? 'Virágzás' : (isRange(month,4,4) ? 'Vetés / kelés' : 'Alacsonyabb érzékenység')) },
+      { name:'Őszi repce', risk: isRange(month,4,7) ? 7 : (isRange(month,8,9) ? 3 : 0), detail: isRange(month,4,5) ? 'Virágzás' : (isRange(month,6,7) ? 'Érés / betakarítás' : (isRange(month,8,9) ? 'Vetés' : 'Alacsonyabb érzékenység')) },
+      { name:'Őszi búza', risk: isRange(month,5,8) ? 6 : (isRange(month,9,10) ? 3 : 0), detail: isRange(month,5,6) ? 'Virágzás' : (isRange(month,7,8) ? 'Érés / aratás' : (isRange(month,9,10) ? 'Vetés' : 'Alacsonyabb érzékenység')) },
+      { name:'Őszi árpa', risk: isRange(month,4,7) ? 5 : 0, detail: isRange(month,4,5) ? 'Virágzás' : (isRange(month,6,7) ? 'Érés / aratás' : 'Alacsonyabb érzékenység') },
+      { name:'Szója', risk: isRange(month,6,10) ? 6 : (isRange(month,4,5) ? 3 : 0), detail: isRange(month,9,10) ? 'Érés / betakarítás' : (isRange(month,6,7) ? 'Virágzás' : (isRange(month,4,5) ? 'Vetés / kelés' : 'Alacsonyabb érzékenység')) }
+    ];
+    crops.sort(function(a,b){ return b.risk-a.risk; });
+    return crops;
+  }
+  function riskLabel(score){ if(score>=66)return 'magas'; if(score>=35)return 'közepes'; return 'alacsony'; }
+  function scoreDay(d,i){
+    var tempMin=Number(d.temperature_2m_min[i]||0);
+    var tempMax=Number(d.temperature_2m_max[i]||0);
+    var tempMid=(tempMin+tempMax)/2;
+    var rain=Number(d.precipitation_sum[i]||0);
+    var rainProb=Number(d.precipitation_probability_max[i]||0);
+    var wind=toWindKmh(d.wind_speed_10m_max[i],lastWindUnit);
+    var cloud=Number(d.cloud_cover_mean&&d.cloud_cover_mean[i]!=null ? d.cloud_cover_mean[i] : rainProb);
+    var code=Number(d.weather_code&&d.weather_code[i]!=null ? d.weather_code[i] : 0);
+    var moon=moonInfo(new Date(d.time[i]+'T12:00:00'));
+    var month=monthOf(d.time[i]);
+    var crops=cropRiskList(month);
+    var score=12;
+    var factors=[];
+    function add(points,title,desc){ if(points===0)return; score+=points; factors.push({ points: points, title: title, desc: desc }); }
+
+    if(tempMid>=8&&tempMid<=22){ add(8,'Kellemes, aktív mozgást támogató hőmérséklet','A vaddisznó és az őz is jobban mozog enyhe időben.'); }
+    else if(tempMid>=0&&tempMid<8){ add(3,'Enyhe hideg','Még használható mozgási ablak, de kisebb aktivitással.'); }
+    else if(tempMid>22&&tempMid<=28){ add(4,'Meleg éjszaka','A sötétebb, hűvösebb órákban erősebb lehet a táplálkozás.'); }
+    else if(tempMid<0||tempMid>30){ add(-4,'Szélsőséges hőmérséklet','A túl hideg vagy túl forró nap általában visszafogja a mozgást.'); }
+
+    if(wind<=8){ add(7,'Gyenge szél','A csendes idő kedvez a kilépésnek és a hallásnak.'); }
+    else if(wind<=15){ add(3,'Mérsékelt szél','Még elfogadható mozgási környezet.'); }
+    else { add(-4,'Erős szél','A nagy szél általában csökkenti a látható mozgást.'); }
+
+    if(rain>=8){ add(6,'Nedves talaj / csapadék után','Az eső előtti vagy utáni időszak gyakran fokozza a kilépést.'); }
+    else if(rain>=3){ add(4,'Enyhe csapadék','A friss nedvesség javíthatja a táplálkozási feltételeket.'); }
+    else if(rainProb>=45){ add(2,'Eső esélye','A mozgás időzítése ilyenkor gyakran a csapadék elé tolódik.'); }
+
+    if(cloud>=70){ add(5,'Borult ég','A takart égbolt és a sötétebb környezet fokozhatja a kilépést.'); }
+    else if(cloud>=40){ add(2,'Részben felhős','A mozgási ablak még kedvező lehet.'); }
+
+    if(moon.illum>=70){ add(5,'Erős holdfény','A holdfényben jobban látszanak a táplálkozó vadak.'); }
+    else if(moon.illum>=40){ add(2,'Közepes holdfény','Még mindig számottevő lehet az éjszakai aktivitás.'); }
+    else { add(-1,'Gyenge holdfény','Kisebb a fényhatásból eredő mozgás.'); }
+
+    if(moon.illum>=55&&cloud>=50){ add(3,'Holdfény + felhőmozgás','A felhőzet és a hold kombinációja megnyithatja az esti kilépést.'); }
+
+    if(code===45||code===48||code===61||code===63||code===65||code===80||code===81||code===82){ add(2,'Időjárási aktivitás','A köd, eső vagy zápor gyakran átrendezi a mozgásidőket.'); }
+
+    var cropTop=crops.filter(function(c){ return c.risk>0; }).slice(0,3);
+    var cropScore=0;
+    cropTop.forEach(function(c){ cropScore+=c.risk; });
+    score+=cropScore;
+    factors.push({ points: cropScore, title: cropTop.length ? 'Érintett termények' : 'Terményhatás', desc: cropTop.length ? cropTop.map(function(c){ return c.name + ' (' + c.detail + ')'; }).join('; ') : 'Ebben az időszakban kisebb a nyomás a vetésen és az érésen.' });
+
+    score=clamp(Math.round(score),0,100);
+    return {
+      score: score,
+      label: riskLabel(score),
+      tempMin: tempMin,
+      tempMax: tempMax,
+      rain: rain,
+      rainProb: rainProb,
+      wind: wind,
+      cloud: cloud,
+      moon: moon,
+      factors: factors.sort(function(a,b){ return Math.abs(b.points)-Math.abs(a.points); }).slice(0,4),
+      crops: cropTop
+    };
+  }
+
+  function renderModal(){
+    if(!lastDailyData||!lastDayItems.length||!daysEl||!factorsEl||!chartEl)return;
+    var dayHtml='';
+    var chartHtml='';
+    var factorHtml='';
+    var bestDay=null;
+    var bestCrops=[];
+    var bestScore=-1;
+
+    lastDayItems.forEach(function(item){
+      var barScore=clamp(item.score,0,100);
+      var cropTxt=item.crops.length ? item.crops[0].name + ' · ' + item.crops[0].detail : 'Általános terhelés';
+      if(barScore>bestScore){ bestScore=barScore; bestDay=item; bestCrops=item.crops.slice(0,2); }
+      dayHtml += '<div class="va-damage-forecast__day">'
+        + '<div class="va-damage-forecast__dayhead"><div><div class="va-damage-forecast__dayname">' + dayHu(lastDailyData.time[item.index]).toUpperCase() + ' · ' + dateHu(lastDailyData.time[item.index]) + '</div><div class="va-damage-forecast__daymeta">' + item.label.toUpperCase() + ' kockázat · Hold: ' + Math.round(item.moon.illum) + '% · Szél: ' + Math.round(item.wind) + ' km/h</div></div><div class="va-damage-forecast__dayrisk">' + barScore + '%</div></div>'
+        + '<div class="va-damage-forecast__daybar"><span style="width:' + barScore + '%"></span></div>'
+        + '<div class="va-damage-forecast__daymeta">' + cropTxt + '</div>'
+        + '<div class="va-damage-forecast__dayfactors">' + item.factors.map(function(f){ return '<div>• <b>' + f.title + '</b>: ' + f.desc + '</div>'; }).join('') + '</div>'
+        + '</div>';
+
+      chartHtml += '<div class="va-damage-forecast__chartcell">'
+        + '<div class="va-damage-forecast__chartday">' + dayHu(lastDailyData.time[item.index]).toUpperCase().slice(0,2) + '</div>'
+        + '<div class="va-damage-forecast__chartscore">' + barScore + '%</div>'
+        + '<div class="va-damage-forecast__chartcrop">' + (item.crops[0] ? item.crops[0].name : 'Általános') + '</div>'
+        + '<div class="va-damage-forecast__bar"><span style="width:' + barScore + '%"></span></div>'
+        + '</div>';
+    });
+
+    lastRiskRows = lastDayItems.slice().sort(function(a,b){ return b.score-a.score; });
+    lastCropRows = [];
+    lastDayItems.forEach(function(item){
+      item.crops.forEach(function(c){
+        lastCropRows.push(c);
+      });
+    });
+
+    factorHtml = lastRiskRows.slice(0,4).map(function(item){
+      return '<div class="va-damage-forecast__factor">'
+        + '<div class="va-damage-forecast__factor-head"><div class="va-damage-forecast__factor-title">' + dayHu(lastDailyData.time[item.index]).toUpperCase() + ' · ' + dateHu(lastDailyData.time[item.index]) + '</div><div class="va-damage-forecast__factor-score">' + item.score + '% · ' + item.label + '</div></div>'
+        + '<div class="va-damage-forecast__factor-text">' + item.factors.map(function(f){ return '<div>• ' + f.title + '</div>'; }).join('') + '</div>'
+        + '</div>';
+    }).join('');
+
+    if(!factorHtml){
+      factorHtml = '<div class="va-damage-forecast__factor"><div class="va-damage-forecast__factor-title">Nincs elegendő adat</div><div class="va-damage-forecast__factor-text">A hely alapú számításhoz engedélyezd a geolokációt, vagy próbáld újra IP-alapú becsléssel.</div></div>';
+    }
+
+    chartEl.innerHTML = chartHtml;
+    daysEl.innerHTML = dayHtml;
+    factorsEl.innerHTML = factorHtml;
+
+    if(bestDay){
+      var cropSummary = bestCrops.length ? bestCrops.map(function(c){ return c.name; }).join(', ') : 'a főbb termények';
+      summaryEl.textContent = 'Legmagasabb kockázat: ' + dayHu(lastDailyData.time[bestDay.index]).toUpperCase() + ' · ' + bestDay.score + '% · ' + cropSummary + '.';
+      metaEl.textContent = 'A pontszám az aktuális hely, az időjárás, a holdfény és a szezonális terményérzékenység kombinációja.';
+      noteEl.textContent = 'A modell nem helyettesíti a helyszíni megfigyelést. A legjobb napok általában a szélcsendes, enyhe, holdfényes vagy borult esti időszakok.';
+    }
+  }
+
+  function syncJumpActive(){
+    if(!jumpNavEl||!scrollEl)return;
+    var map=['vdfSectionRisk','vdfSectionDays','vdfSectionFactors'];
+    var best='vdfSectionRisk',bestDist=999999;
+    for(var i=0;i<map.length;i++){
+      var sec=document.getElementById(map[i]);
+      if(!sec)continue;
+      var d=Math.abs(sec.offsetTop-scrollEl.scrollTop-58);
+      if(d<bestDist){bestDist=d;best=map[i];}
+    }
+    var btns=jumpNavEl.querySelectorAll('.va-damage-forecast__jump-btn');
+    for(var b=0;b<btns.length;b++){
+      btns[b].classList.toggle('is-active',btns[b].getAttribute('data-target')===best);
+    }
+  }
+
+  function syncMoreHint(){
+    if(!moreHintEl||!scrollEl||!modalEl||modalEl.hidden){ if(moreHintEl)moreHintEl.classList.remove('is-visible'); return; }
+    var hasOverflow=scrollEl.scrollHeight>scrollEl.clientHeight+24;
+    var nearBottom=(scrollEl.scrollTop+scrollEl.clientHeight)>=(scrollEl.scrollHeight-36);
+    moreHintEl.classList.toggle('is-visible',hasOverflow&&!nearBottom);
+  }
+
+  function smoothScrollToSection(id){
+    if(!scrollEl)return;
+    var el=document.getElementById(id);
+    if(!el)return;
+    scrollEl.scrollTo({ top: Math.max(0,el.offsetTop-58), behavior: 'smooth' });
+  }
+
+  if(jumpNavEl){
+    jumpNavEl.addEventListener('click',function(e){
+      var btn=e.target&&e.target.closest?e.target.closest('.va-damage-forecast__jump-btn'):null;
+      if(!btn)return;
+      smoothScrollToSection(btn.getAttribute('data-target'));
+    });
+  }
+  if(scrollEl){
+    scrollEl.addEventListener('scroll',function(){ syncMoreHint(); syncJumpActive(); },{passive:true});
+  }
+  if(moreHintEl){
+    moreHintEl.addEventListener('click',function(){ if(!scrollEl)return; scrollEl.scrollBy({ top: Math.max(180,Math.floor(scrollEl.clientHeight*0.55)), behavior: 'smooth' }); });
+  }
+  window.addEventListener('resize',function(){ syncMoreHint(); syncJumpActive(); });
+
+  function render(d,label){
+    if(!d||!d.daily||!d.daily.time){
+      summaryEl.textContent='Előrejelzés nem elérhető.';
+      metaEl.textContent='Hely és adatforrás ellenőrzése szükséges.';
+      return;
+    }
+    lastDailyData=d.daily;
+    lastDayItems=[];
+    lastWindUnit='km/h';
+    for(var i=0;i<Math.min(7,d.daily.time.length);i++){
+      var item=scoreDay(d.daily,i);
+      item.index=i;
+      lastDayItems.push(item);
+    }
+    var best=lastDayItems.slice().sort(function(a,b){ return b.score-a.score; })[0];
+    locEl.textContent=label || 'Helyzet';
+    if(best){
+      summaryEl.textContent='Legmagasabb kockázat: ' + dayHu(d.daily.time[best.index]).toUpperCase() + ' · ' + best.score + '% · ' + (best.crops[0] ? best.crops[0].name : 'vegyes termény') + '.';
+      metaEl.textContent='Szél: ' + Math.round(best.wind) + ' km/h · Csapadék: ' + (best.rain>0 ? best.rain.toFixed(1) + ' mm' : Math.round(best.rainProb) + '%') + ' · Hold: ' + Math.round(best.moon.illum) + '% (' + moonLabel(best.moon.phase) + ').';
+    }else{
+      summaryEl.textContent='Nincs értékelhető napi adat.';
+    }
+    renderModal();
+  }
+
+  function weather(lat,lon,label){
+    var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)
+      +'&longitude='+encodeURIComponent(lon)
+      +'&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m,cloud_cover'
+      +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,cloud_cover_mean,sunrise,sunset'
+      +'&forecast_days=8&timezone=auto&wind_speed_unit=kmh';
+    fetch(url).then(function(r){ return r.json(); }).then(function(json){ render(json,label); }).catch(function(){ summaryEl.textContent='Előrejelzés nem elérhető.'; metaEl.textContent='Hálózati hiba a becslés lekérése közben.'; });
+  }
+
+  function ipFallback(){
+    fetch('https://ipapi.co/json/').then(function(r){ return r.json(); }).then(function(json){
+      if(json&&json.latitude&&json.longitude){
+        var lbl=(json.city?json.city+', ':'')+(json.region||json.country_name||'IP helyzet');
+        weather(json.latitude,json.longitude,lbl+' (IP)');
+      }else{
+        summaryEl.textContent='Helyadat nem elérhető.';
+        metaEl.textContent='A böngésző nem adott helyet és IP-fallback sem érhető el.';
+      }
+    }).catch(function(){
+      summaryEl.textContent='Helyadat nem elérhető.';
+      metaEl.textContent='A böngésző nem adott helyet és IP-fallback sem érhető el.';
+    });
+  }
+
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(pos){ weather(pos.coords.latitude,pos.coords.longitude,'Aktuális hely'); },function(){ ipFallback(); },{ enableHighAccuracy:true, timeout:7000, maximumAge:900000 });
+  }else{ ipFallback(); }
 })();
 </script>
 <?php endif; ?>
