@@ -2,8 +2,6 @@
 
 ---
 
-<<<<<<< HEAD
-=======
 ## 2026. 05. 18. – Session #360a — Jobb oldalsáv Vadkár Radar MVP
 
 ### Kérés
@@ -37,8 +35,6 @@
 - A repo jelenleg detached HEAD állapotban van; ezért automatikus push nem történt.
 
 ---
-
->>>>>>> 43d08e3 (Auto_2026.05.18_22.28)
 ## 2026. 05. 15. – Session #359p — Szállás + Vadászati lehetőség / Vadkárelhárítás popup űrlap
 
 ### Kérés

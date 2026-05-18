@@ -5,8 +5,6 @@
             <!-- Jobb oldalsáv -->
             <aside class="va-sidebar va-sidebar--right">
                 <?php if ( class_exists('VA_Ad_Zones') ) VA_Ad_Zones::render('sidebar_right'); ?>
-<<<<<<< HEAD
-=======
                 <section class="va-sidebar__widget va-vadkar-radar" id="va-vadkar-radar">
                     <div class="va-vadkar__hd">
                         <div>
@@ -480,7 +478,6 @@
                     }
                 })();
                 </script>
->>>>>>> 43d08e3 (Auto_2026.05.18_22.28)
             </aside>
 
         </div><!-- .va-content-layout -->
