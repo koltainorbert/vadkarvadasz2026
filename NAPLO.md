@@ -8810,3 +8810,21 @@ Most a teljes hét minden fontos száma látszik, és a szélső értékek sem l
 
 ---
 
+## 2026. 05. 18. – Session: Hiányzó hőfok/csapadék számok + szélső oszlop kilógás fix
+
+### Mit csináltunk [x]
+- [x] Hőmérséklet értékek most minden pontra kiírásra kerülnek
+- [x] Csapadék értékek most minden oszlopra kiírásra kerülnek (mm vagy % fallback)
+- [x] Első/utolsó csapadék oszlop kilógás fix:
+  - oszlop középpont clampelve a chart belső szélei közé
+- [x] Szöveg-kiírások biztonsági pozicionálása megmaradt (safe text clamp), így széleken sem vágódik le
+- [x] Root + theme mirror `index.php` szinkronban frissítve
+
+### Hol tartunk
+A hőfok- és csapadék-számok teljesek, a csapadék első/utolsó oszlop nem lóg ki.
+
+### TODO
+- [ ] Ha igény van rá, külön kapcsoló: "összes csapadék címke" vs "ritkított címke"
+
+---
+
