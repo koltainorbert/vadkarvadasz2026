@@ -68,12 +68,82 @@ if ( $va_home_h1 === '' ) {
   </div>
   <div class="va-weather__now" id="vwNow">Adatok betöltése…</div>
   <div class="va-weather__meta" id="vwMeta">–</div>
-  <button type="button" class="va-weather__toggle" id="vwToggle" aria-expanded="false" aria-controls="vwPanel">7 napos előrejelzés ▼</button>
-  <div class="va-weather__panel" id="vwPanel" hidden>
-    <div class="va-weather__days" id="vwDays"></div>
+  <button type="button" class="va-weather__toggle" id="vwToggle" aria-expanded="false" aria-controls="vwModal">7 napos előrejelzés ✦</button>
+  <div class="va-weather__modal" id="vwModal" hidden>
+    <div class="va-weather__modal-backdrop" id="vwModalBackdrop"></div>
+    <div class="va-weather__modal-card" role="dialog" aria-modal="true" aria-labelledby="vwModalTitle">
+      <button type="button" class="va-weather__modal-close" id="vwModalClose" aria-label="Bezárás">✕</button>
+      <div class="va-weather__modal-head">
+        <div class="va-weather__modal-eyebrow">Részletes Meteo</div>
+        <h3 class="va-weather__modal-title" id="vwModalTitle">7 napos előrejelzés</h3>
+      </div>
+      <div class="va-weather__days" id="vwDays"></div>
+      <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
+    </div>
   </div>
-  <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
 </section>
+
+<style>
+.va-weather__toggle{
+  background:linear-gradient(135deg,#0b1f39 0%,#0a2749 35%,#5b102a 100%);
+  border:1px solid rgba(120,190,255,.35);
+  box-shadow:0 10px 28px rgba(0,130,255,.18), inset 0 0 26px rgba(255,70,70,.08);
+}
+.va-weather__toggle:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.va-weather__modal{position:fixed;inset:0;z-index:12000;display:block;}
+.va-weather__modal[hidden]{display:none!important;}
+.va-weather__modal-backdrop{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 20%,rgba(0,170,255,.25),transparent 45%),radial-gradient(circle at 80% 80%,rgba(255,50,50,.23),transparent 42%),rgba(4,6,10,.8);
+  backdrop-filter:blur(8px);
+}
+.va-weather__modal-card{
+  position:relative;
+  width:min(960px,calc(100vw - 28px));
+  max-height:min(88vh,920px);
+  margin:6vh auto;
+  overflow:auto;
+  border-radius:22px;
+  border:1px solid rgba(130,210,255,.35);
+  background:linear-gradient(160deg,rgba(6,16,28,.96) 0%,rgba(10,22,40,.95) 45%,rgba(36,12,24,.94) 100%);
+  box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(0,120,255,.2),0 0 70px rgba(255,0,70,.12);
+  padding:20px 18px 16px;
+}
+.va-weather__modal-card::before{
+  content:'';
+  position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(0,160,255,.12),transparent 35%,rgba(255,60,60,.1));
+}
+.va-weather__modal-head{position:relative;z-index:1;margin-bottom:12px;padding-right:44px;}
+.va-weather__modal-eyebrow{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(190,225,255,.85);font-weight:800;}
+.va-weather__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff;text-shadow:0 0 18px rgba(80,180,255,.35);}
+.va-weather__modal-close{
+  position:absolute;top:12px;right:12px;z-index:3;
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(255,255,255,.28);color:#fff;
+  background:rgba(255,255,255,.08);
+}
+.va-weather__modal-close:hover{background:rgba(255,70,70,.2);border-color:rgba(255,90,90,.55);}
+.va-weather__modal .va-weather__days{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1;}
+.va-weather__modal .va-weather__day{
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(145deg,rgba(13,26,44,.86),rgba(9,18,33,.92));
+  box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(0,170,255,.05);
+}
+.va-weather__modal .va-weather__day:nth-child(2n){background:linear-gradient(145deg,rgba(30,16,38,.9),rgba(16,14,31,.92));box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(255,70,110,.05);}
+.va-weather__modal .va-weather__d1{font-size:.78rem;letter-spacing:.04em;color:#d4ebff;}
+.va-weather__modal .va-weather__d2{font-size:1.45rem;font-weight:900;color:#fff;text-shadow:0 0 16px rgba(100,190,255,.35);}
+.va-weather__modal .va-weather__d3{font-size:1rem;color:#f2f8ff;}
+.va-weather__modal .va-weather__d4{font-size:.72rem;color:rgba(228,238,255,.9);}
+.va-weather__modal .va-weather__note{position:relative;z-index:1;margin-top:12px;font-size:.68rem;opacity:.92;}
+body.va-weather-modal-open{overflow:hidden;}
+@media (max-width:760px){
+  .va-weather__modal-card{margin:3vh auto;padding:16px 12px 12px;border-radius:16px;}
+  .va-weather__modal .va-weather__days{grid-template-columns:1fr;gap:8px;}
+  .va-weather__modal-title{font-size:1.05rem;}
+}
+</style>
 <?php endif; ?>
 
 </aside>
@@ -348,18 +418,37 @@ if ( $va_home_h1 === '' ) {
   var metaEl=document.getElementById('vwMeta');
   var daysEl=document.getElementById('vwDays');
   var toggleEl=document.getElementById('vwToggle');
-  var panelEl=document.getElementById('vwPanel');
+  var modalEl=document.getElementById('vwModal');
+  var modalBackdropEl=document.getElementById('vwModalBackdrop');
+  var modalCloseEl=document.getElementById('vwModalClose');
 
-  function toggleForecast(forceOpen){
-    if(!toggleEl||!panelEl)return;
-    var open=typeof forceOpen==='boolean' ? forceOpen : toggleEl.getAttribute('aria-expanded')!=='true';
+  function setForecastModal(open){
+    if(!toggleEl||!modalEl)return;
     toggleEl.setAttribute('aria-expanded',open?'true':'false');
-    toggleEl.textContent=open?'7 napos előrejelzés ▲':'7 napos előrejelzés ▼';
-    panelEl.hidden=!open;
+    modalEl.hidden=!open;
+    document.body.classList.toggle('va-weather-modal-open',open);
   }
   if(toggleEl){
-    toggleEl.addEventListener('click',function(){toggleForecast();});
-    toggleForecast(false);
+    toggleEl.addEventListener('click',function(){setForecastModal(true);});
+    setForecastModal(false);
+  }
+  if(modalCloseEl){
+    modalCloseEl.addEventListener('click',function(){setForecastModal(false);});
+  }
+  if(modalBackdropEl){
+    modalBackdropEl.addEventListener('click',function(){setForecastModal(false);});
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&modalEl&&!modalEl.hidden){
+      setForecastModal(false);
+    }
+  });
+  if(modalEl){
+    modalEl.addEventListener('click',function(e){
+      if(e.target===modalEl){
+        setForecastModal(false);
+      }
+    });
   }
 
   function wcText(code){
