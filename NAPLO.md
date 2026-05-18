@@ -8612,3 +8612,20 @@ Nem számol többé éjféltől a rendszer: a napi lőhetőség kezdete tényleg
 
 ---
 
+## 2026. 05. 18. – Session: Időjárás 7 napos popup redesign
+
+### Mit csináltunk [x]
+- [x] A lefelé nyíló 7 napos időjárás panelt középre ugró modal popupra cseréltük
+- [x] Új bezárási módok: X gomb, háttérkattintás, Esc billentyű
+- [x] Erős, színes vizuális stílus készült (neon gradient háttér, glow, kiemelt hőmérséklet tipográfia)
+- [x] A 7 napos napkártyák popup gridben jelennek meg, mobilon 1 oszlopra váltanak
+- [x] Root + theme mirror `index.php` szinkron frissítve
+
+### Hol tartunk
+Az időjárás előrejelzés már nem lefelé nyílik, hanem a teljes oldal stílusához illesztett középre pozicionált popupban jelenik meg.
+
+### TODO
+- [ ] Élő ellenőrzés: popup megnyitás/bezárás minden eszközméreten (desktop + mobil)
+
+---
+
