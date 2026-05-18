@@ -234,12 +234,14 @@ body{
   position:absolute;top:50%;transform:translateY(-50%);
   height:18px;border-radius:4px;opacity:.85;cursor:default;
   transition:opacity .15s,height .15s;
+  z-index:25;
 }
-.vn-sbar:hover{opacity:1;height:24px}
+.vn-sbar:hover{opacity:1;height:24px;z-index:120}
 .vn-sbar::after{
-  content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:0;transform:none;
   background:rgba(0,0,0,.95);color:#fff;font-size:.68rem;padding:4px 10px;border-radius:5px;
-  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:100;
+  white-space:normal;max-width:min(280px,70vw);line-height:1.35;
+  pointer-events:none;opacity:0;transition:opacity .15s;z-index:140;
   border:1px solid rgba(255,255,255,.12);
 }
 .vn-sbar:hover::after{opacity:1}
