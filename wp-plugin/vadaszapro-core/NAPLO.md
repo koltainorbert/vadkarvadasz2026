@@ -7710,3 +7710,20 @@ A Stripe fizetés most két csatornán is biztonságosan működik: visszairány
 
 ---
 
+## 2026. 05. 18. – Session: Vadásznaptár tooltip levágás javítás
+
+### Mit csináltunk [x]
+- [x] Az idény sáv tooltip pozicionálása középről balra igazításra lett cserélve (`left: 0`, `transform: none`), hogy ne lógjon be a ragadós névoszlop alá
+- [x] A tooltip tördelhetővé téve (`white-space: normal`, `max-width`), így hosszabb szöveg sem vágódik le
+- [x] A sáv és tooltip réteg-sorrend emelve (`z-index`), hoveren biztosan felül jelenik meg
+- [x] Root + theme mirror `page-vadasz-naptar.php` szinkron frissítve
+- [x] Deploy All lefuttatva, commit+push megtörtént (`483f53c`)
+
+### Hol tartunk
+A vadásznaptár sávjain hover tooltip teljes szöveggel, stabilan olvashatóan jelenik meg.
+
+### TODO
+- [ ] Élő oldalon gyors mobil+desktop vizuális ellenőrzés (bal szélső sávok hover)
+
+---
+
