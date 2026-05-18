@@ -531,7 +531,17 @@ body.va-weather-modal-open{overflow:hidden;}
     if(!raw)return 'Ismeretlen hely';
     return raw;
   }
-  function drawForecastChart(d,idx){
+  function toWindKmh(value,unitRaw){
+    var v=Number(value||0);
+    if(!isFinite(v))return 0;
+    var u=String(unitRaw||'km/h').toLowerCase();
+    if(u.indexOf('km/h')!==-1||u.indexOf('kmh')!==-1){return v;}
+    if(u.indexOf('m/s')!==-1||u.indexOf('ms')!==-1){return v*3.6;}
+    if(u.indexOf('mph')!==-1){return v*1.60934;}
+    if(u.indexOf('kn')!==-1){return v*1.852;}
+    return v;
+  }
+  function drawForecastChart(d,idx,windUnitRaw){
     if(!chartEl)return;
     var n=Math.min(7,idx.length);
     var ctx=chartEl.getContext('2d');
@@ -552,7 +562,7 @@ body.va-weather-modal-open{overflow:hidden;}
       tVals.push(Number(d.temperature_2m_max[i]||0));
       rVals.push(Number(d.precipitation_sum[i]||0));
       rProbVals.push(Number(d.precipitation_probability_max[i]||0));
-      wVals.push(Number(d.wind_speed_10m_max[i]||0));
+      wVals.push(toWindKmh(d.wind_speed_10m_max[i],windUnitRaw));
       labels.push(dayHu(d.time[i]).toUpperCase().slice(0,2));
     }
     var hasRainAmount=false;
@@ -600,10 +610,10 @@ body.va-weather-modal-open{overflow:hidden;}
     ctx.shadowBlur=0;
 
     ctx.beginPath();
-    for(var w=0;w<n;w++){
-      var wx=leftPad+w*step;
-      var wy=topPad+ch-((wVals[w]/wMax)*ch*0.86);
-      if(w===0){ctx.moveTo(wx,wy);}else{ctx.lineTo(wx,wy);}
+    for(var wi=0;wi<n;wi++){
+      var wx=leftPad+wi*step;
+      var wy=topPad+ch-((wVals[wi]/wMax)*ch*0.86);
+      if(wi===0){ctx.moveTo(wx,wy);}else{ctx.lineTo(wx,wy);}
     }
     ctx.strokeStyle='rgba(255,156,47,.95)';
     ctx.lineWidth=2;
@@ -613,6 +623,17 @@ body.va-weather-modal-open{overflow:hidden;}
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.shadowBlur=0;
+
+    for(var wi2=0;wi2<n;wi2++){
+      var wx2=leftPad+wi2*step;
+      var wy2=topPad+ch-((wVals[wi2]/wMax)*ch*0.86);
+      ctx.fillStyle='rgba(255,156,47,.98)';
+      ctx.beginPath();ctx.arc(wx2,wy2,2.7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,188,130,.96)';
+      ctx.font='700 9px Segoe UI';
+      ctx.textAlign='center';
+      ctx.fillText(Math.round(wVals[wi2])+' km/h',wx2,wy2+12);
+    }
 
     for(var p2=0;p2<n;p2++){
       var px2=leftPad+p2*step;
@@ -635,10 +656,12 @@ body.va-weather-modal-open{overflow:hidden;}
     }
     var c=data.current;
     var d=data.daily;
+    var windUnitRaw=(data.daily_units&&data.daily_units.wind_speed_10m_max)||(data.current_units&&data.current_units.wind_speed_10m)||'km/h';
+    var currentWindKmh=toWindKmh(c.wind_speed_10m,windUnitRaw);
     var todayIso=todayIsoBp();
     locEl.textContent=fmtLoc(label);
     nowEl.innerHTML='<strong>'+Math.round(c.temperature_2m)+'°C</strong> • '+wcText(c.weather_code)+' <span class="va-weather__stamp">('+dateTimeHu(new Date())+')</span>';
-    metaEl.textContent='Hőérzet '+Math.round(c.apparent_temperature)+'°C • Pára '+Math.round(c.relative_humidity_2m)+'% • Szél '+Math.round(c.wind_speed_10m)+' km/h ('+wdText(c.wind_direction_10m)+') • Csapadék '+(c.precipitation||0)+' mm/h • Dátum: '+dateHu(d.time[0]);
+    metaEl.textContent='Hőérzet '+Math.round(c.apparent_temperature)+'°C • Pára '+Math.round(c.relative_humidity_2m)+'% • Szél '+Math.round(currentWindKmh)+' km/h ('+wdText(c.wind_direction_10m)+') • Csapadék '+(c.precipitation||0)+' mm/h • Dátum: '+dateHu(d.time[0]);
 
     var html='';
     var idx=[];
@@ -655,13 +678,13 @@ body.va-weather-modal-open{overflow:hidden;}
         +'<div class="va-weather__d1">'+prefix+' · '+dateHu(d.time[i])+'</div>'
         +'<div class="va-weather__d2">'+Math.round(d.temperature_2m_min[i])+' / '+Math.round(d.temperature_2m_max[i])+'°C</div>'
         +'<div class="va-weather__d3">'+wcText(d.weather_code[i])+'</div>'
-        +'<div class="va-weather__d4">Csap. '+Math.round(d.precipitation_probability_max[i]||0)+'% · '+(d.precipitation_sum[i]||0).toFixed(1)+' mm · Szél '+Math.round(d.wind_speed_10m_max[i]||0)+' km/h</div>'
+        +'<div class="va-weather__d4">Csap. '+Math.round(d.precipitation_probability_max[i]||0)+'% · '+(d.precipitation_sum[i]||0).toFixed(1)+' mm · Szél '+Math.round(toWindKmh(d.wind_speed_10m_max[i],windUnitRaw))+' km/h</div>'
         +'</div>';
     }
     daysEl.innerHTML=html;
     lastDailyData=d;
     lastIdx=idx.slice(0,7);
-    try{drawForecastChart(d,lastIdx);}catch(_err){}
+      try{drawForecastChart(d,lastIdx,windUnitRaw);}catch(_err){}
   }
   function weather(lat,lon,label){
     var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)
