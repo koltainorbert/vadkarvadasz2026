@@ -8828,3 +8828,19 @@ A hőfok- és csapadék-számok teljesek, a csapadék első/utolsó oszlop nem l
 
 ---
 
+## 2026. 05. 18. – Session: Szél felirat minden pöttyre
+
+### Mit csináltunk [x]
+- [x] Szél grafikon felirat-logika módosítva: nem csak max pont, hanem minden pont kiírja az értéket
+- [x] Alternált feliratpozíció (fel/le) a jobb olvashatóságért
+- [x] Szöveg clamp maradt aktív, így a széleken sem vágódik le a km/h címke
+- [x] Root + theme mirror `index.php` szinkron
+
+### Hol tartunk
+A szél értékek minden pötty mellett látszanak km/h-ban.
+
+### TODO
+- [ ] Opcionális kapcsoló: "max only" vs "minden pont"
+
+---
+
