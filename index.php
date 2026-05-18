@@ -77,15 +77,18 @@ if ( $va_home_h1 === '' ) {
         <div class="va-weather__modal-eyebrow">Részletes Meteo</div>
         <h3 class="va-weather__modal-title" id="vwModalTitle">7 napos előrejelzés</h3>
       </div>
-      <div class="va-weather__modal-graph">
-        <canvas id="vwChart" class="va-weather__modal-chart" height="210"></canvas>
-        <div class="va-weather__modal-legend">
-          <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--temp"></i>Max hőmérséklet</span>
-          <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm)</span>
+      <div class="va-weather__modal-scroll">
+        <div class="va-weather__modal-graph">
+          <canvas id="vwChart" class="va-weather__modal-chart" height="210"></canvas>
+          <div class="va-weather__modal-legend">
+            <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--temp"></i>Max hőmérséklet</span>
+            <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm)</span>
+            <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--wind"></i>Szél (km/h)</span>
+          </div>
         </div>
+        <div class="va-weather__days" id="vwDays"></div>
+        <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
       </div>
-      <div class="va-weather__days" id="vwDays"></div>
-      <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
     </div>
   </div>
 </section>
@@ -109,13 +112,24 @@ if ( $va_home_h1 === '' ) {
   width:min(960px,calc(100vw - 28px));
   max-height:min(88vh,920px);
   margin:6vh auto;
-  overflow:auto;
+  overflow:hidden;
   border-radius:22px;
   border:1px solid rgba(255,140,0,.65);
   background:linear-gradient(160deg,rgba(6,16,28,.96) 0%,rgba(10,22,40,.95) 45%,rgba(36,12,24,.94) 100%);
   box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 60px rgba(0,120,255,.2),0 0 70px rgba(255,0,70,.12),0 0 0 1px rgba(255,165,0,.28) inset;
   padding:20px 18px 16px;
 }
+.va-weather__modal-scroll{
+  position:relative;z-index:1;
+  max-height:calc(min(88vh,920px) - 104px);
+  overflow:auto;
+  padding-right:2px;
+  border-radius:14px;
+}
+.va-weather__modal-scroll::-webkit-scrollbar{width:10px;}
+.va-weather__modal-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:999px;}
+.va-weather__modal-scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff7a00,#ff3d00);border-radius:999px;border:2px solid rgba(7,10,18,.8);}
+.va-weather__modal-scroll{scrollbar-width:thin;scrollbar-color:#ff5a00 rgba(255,255,255,.08);}
 .va-weather__modal-card::before{
   content:'';
   position:absolute;inset:0;pointer-events:none;border-radius:inherit;
@@ -137,6 +151,7 @@ if ( $va_home_h1 === '' ) {
 .va-weather__legend-dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
 .va-weather__legend-dot--temp{background:#ffffff;box-shadow:0 0 10px rgba(255,255,255,.6);}
 .va-weather__legend-dot--rain{background:#45d3ff;box-shadow:0 0 10px rgba(69,211,255,.65);}
+.va-weather__legend-dot--wind{background:#ff9c2f;box-shadow:0 0 10px rgba(255,156,47,.7);}
 .va-weather__modal-close{
   position:absolute;top:12px;right:12px;z-index:3;
   width:36px;height:36px;border-radius:50%;cursor:pointer;
@@ -530,15 +545,17 @@ body.va-weather-modal-open{overflow:hidden;}
 
     var topPad=18,rightPad=16,bottomPad=34,leftPad=16;
     var cw=w-leftPad-rightPad,ch=h-topPad-bottomPad;
-    var tVals=[],rVals=[],labels=[];
+    var tVals=[],rVals=[],wVals=[],labels=[];
     for(var k=0;k<n;k++){
       var i=idx[k];
       tVals.push(Number(d.temperature_2m_max[i]||0));
       rVals.push(Number(d.precipitation_sum[i]||0));
+      wVals.push(Number(d.wind_speed_10m_max[i]||0));
       labels.push(dayHu(d.time[i]).toUpperCase().slice(0,2));
     }
     var tMin=Math.min.apply(null,tVals),tMax=Math.max.apply(null,tVals);
     var rMax=Math.max(0.5,Math.max.apply(null,rVals));
+    var wMax=Math.max(1,Math.max.apply(null,wVals));
     if(tMax===tMin){tMax=tMin+1;}
     var step=n>1?cw/(n-1):cw;
 
@@ -572,6 +589,21 @@ body.va-weather-modal-open{overflow:hidden;}
     ctx.shadowColor='rgba(255,255,255,.65)';
     ctx.shadowBlur=12;
     ctx.stroke();
+    ctx.shadowBlur=0;
+
+    ctx.beginPath();
+    for(var w=0;w<n;w++){
+      var wx=leftPad+w*step;
+      var wy=topPad+ch-((wVals[w]/wMax)*ch*0.86);
+      if(w===0){ctx.moveTo(wx,wy);}else{ctx.lineTo(wx,wy);}
+    }
+    ctx.strokeStyle='rgba(255,156,47,.95)';
+    ctx.lineWidth=2;
+    ctx.setLineDash([6,4]);
+    ctx.shadowColor='rgba(255,156,47,.45)';
+    ctx.shadowBlur=10;
+    ctx.stroke();
+    ctx.setLineDash([]);
     ctx.shadowBlur=0;
 
     for(var p2=0;p2<n;p2++){
