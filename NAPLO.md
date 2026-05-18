@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 18. – Session #360b — Vadkár Radar áthelyezés a tényleges főoldali widgetzónába
+
+### Kérés
+- A widget továbbra sem látszott; ki kellett deríteni, hogy a nézett főoldali kártyák nem a `footer.php` jobb oldalsávjából jönnek.
+
+### Javítás
+- Kiderült, hogy a Holdnaptár, Időjárás, Agrár naptár és Vadászati idény közvetlenül az `index.php` főoldali widget-stackjében renderelődik.
+- A `Vadkár Radar` ezért bekerült közvetlenül ebbe a kezdőoldali widgetoszlopba is.
+- A blokk most rövid, látható kártyaként jelenik meg saját lokációval, kockázati pontszámmal, fő fajjal, időablakkal, konfidenciával és 3 napos mini trenddel.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 18. – Session #360a — Jobb oldalsáv Vadkár Radar MVP
 
 ### Kérés

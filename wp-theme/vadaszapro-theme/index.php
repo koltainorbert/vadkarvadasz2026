@@ -295,6 +295,95 @@ body.va-weather-modal-open{overflow:hidden;}
 </style>
 <?php endif; ?>
 
+<section class="va-home-radar" id="va-home-radar">
+  <div class="va-home-radar__hd">
+    <div>
+      <div class="va-home-radar__eyebrow">Vadkár előrejelzés</div>
+      <div class="va-home-radar__title">Vadkár Radar</div>
+    </div>
+    <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
+  </div>
+  <div class="va-home-radar__controls">
+    <label class="va-home-radar__field">
+      <span>Kultúra</span>
+      <select id="vhrCrop">
+        <option value="maize">Kukorica</option>
+        <option value="rapeseed">Repce</option>
+        <option value="sunflower">Napraforgó</option>
+        <option value="cereal">Kalászos</option>
+        <option value="alfalfa">Lucerna</option>
+        <option value="orchard">Gyümölcsös</option>
+        <option value="vineyard">Szőlő</option>
+      </select>
+    </label>
+    <label class="va-home-radar__field">
+      <span>Erdőközel</span>
+      <select id="vhrForest">
+        <option value="under_100">0-100 m</option>
+        <option value="100_300">100-300 m</option>
+        <option value="300_700">300-700 m</option>
+        <option value="700_1500">700-1500 m</option>
+        <option value="over_1500">1500 m felett</option>
+      </select>
+    </label>
+    <label class="va-home-radar__field">
+      <span>Kárelőzmény</span>
+      <select id="vhrDamage">
+        <option value="7">7 napon belül</option>
+        <option value="30">30 napon belül</option>
+        <option value="90">90 napon belül</option>
+        <option value="none">Nincs ismert kár</option>
+      </select>
+    </label>
+  </div>
+  <div class="va-home-radar__hero">
+    <div class="va-home-radar__scorebox">
+      <div class="va-home-radar__score" id="vhrScore">--</div>
+      <div class="va-home-radar__level" id="vhrLevel">Előrejelzés készül</div>
+    </div>
+    <div class="va-home-radar__meta">
+      <div class="va-home-radar__meta-item"><span>Fő faj</span><strong id="vhrSpecies">--</strong></div>
+      <div class="va-home-radar__meta-item"><span>Időablak</span><strong id="vhrWindow">--</strong></div>
+      <div class="va-home-radar__meta-item"><span>Konfidencia</span><strong id="vhrConfidence">--</strong></div>
+    </div>
+  </div>
+  <div class="va-home-radar__reason" id="vhrReason">Meteorológia és lokáció betöltése...</div>
+  <div class="va-home-radar__days" id="vhrDays"></div>
+</section>
+
+<style>
+.va-home-radar{margin:0 0 12px;padding:10px;border-radius:18px;border:1px solid rgba(255,0,0,.18);background:radial-gradient(120% 140% at 0% 0%,rgba(255,0,0,.18),transparent 48%),radial-gradient(120% 140% at 100% 100%,rgba(255,160,0,.1),transparent 44%),linear-gradient(160deg,rgba(10,10,10,.96),rgba(18,11,11,.96));box-shadow:0 14px 34px rgba(0,0,0,.34),inset 0 0 18px rgba(255,255,255,.03);color:#fff;}
+.va-home-radar__hd{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:9px;}
+.va-home-radar__eyebrow{font-size:.55rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,204,204,.72);}
+.va-home-radar__title{font-size:1.02rem;font-weight:900;line-height:1.1;color:#fff;}
+.va-home-radar__loc{font-size:.56rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#ffd0d0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 8px;white-space:nowrap;}
+.va-home-radar__controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px;}
+.va-home-radar__field{display:flex;flex-direction:column;gap:4px;}
+.va-home-radar__field span{font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,214,214,.78);}
+.va-home-radar__field select{width:100%;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;padding:7px 8px;font-size:.67rem;outline:none;}
+.va-home-radar__field select option{color:#111;}
+.va-home-radar__hero{display:grid;grid-template-columns:88px 1fr;gap:9px;align-items:center;margin-bottom:10px;}
+.va-home-radar__scorebox{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:9px 6px;background:rgba(255,255,255,.04);}
+.va-home-radar__score{font-size:1.9rem;font-weight:900;line-height:1;color:#fff;}
+.va-home-radar__level{margin-top:4px;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:#ffe1e1;}
+.va-home-radar__meta{display:grid;gap:6px;}
+.va-home-radar__meta-item{border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.03);padding:6px 8px;}
+.va-home-radar__meta-item span{display:block;font-size:.5rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,220,220,.66);margin-bottom:2px;}
+.va-home-radar__meta-item strong{font-size:.7rem;color:#fff;}
+.va-home-radar__reason{font-size:.67rem;line-height:1.45;color:rgba(255,255,255,.86);padding:8px 9px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+.va-home-radar__days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px;}
+.va-home-radar__day{border-radius:12px;padding:7px 5px;border:1px solid rgba(255,255,255,.1);text-align:center;background:rgba(255,255,255,.04);}
+.va-home-radar__dayname{font-size:.52rem;font-weight:900;letter-spacing:.07em;color:#fff;opacity:.82;}
+.va-home-radar__dayscore{font-size:.84rem;font-weight:900;color:#fff;margin-top:3px;}
+.va-home-radar__dayspecies{font-size:.52rem;color:rgba(255,255,255,.72);margin-top:2px;}
+.va-home-radar__day.is-low{background:rgba(20,110,55,.26);border-color:rgba(50,190,95,.42);}
+.va-home-radar__day.is-moderate{background:rgba(165,145,20,.24);border-color:rgba(225,190,50,.42);}
+.va-home-radar__day.is-high{background:rgba(185,105,20,.24);border-color:rgba(255,160,65,.42);}
+.va-home-radar__day.is-very-high{background:rgba(175,45,30,.24);border-color:rgba(255,95,75,.48);}
+.va-home-radar__day.is-critical{background:rgba(110,18,26,.36);border-color:rgba(170,40,60,.58);}
+@media (max-width:640px){.va-home-radar__controls,.va-home-radar__days{grid-template-columns:1fr;}.va-home-radar__hero{grid-template-columns:1fr;}}
+</style>
+
 </aside>
 
 </aside>
@@ -998,6 +1087,48 @@ body.va-weather-modal-open{overflow:hidden;}
 })();
 </script>
 <?php endif; ?>
+
+<script>
+(function(){
+  var root=document.getElementById('va-home-radar');
+  if(!root)return;
+  var locEl=document.getElementById('vhrLoc');
+  var cropEl=document.getElementById('vhrCrop');
+  var forestEl=document.getElementById('vhrForest');
+  var damageEl=document.getElementById('vhrDamage');
+  var scoreEl=document.getElementById('vhrScore');
+  var levelEl=document.getElementById('vhrLevel');
+  var speciesEl=document.getElementById('vhrSpecies');
+  var windowEl=document.getElementById('vhrWindow');
+  var confidenceEl=document.getElementById('vhrConfidence');
+  var reasonEl=document.getElementById('vhrReason');
+  var daysEl=document.getElementById('vhrDays');
+  var speciesMeta={wild_boar:{label:'Vaddisznó',short:'VD',window:'21:00-02:00'},red_deer:{label:'Gímszarvas',short:'GÍM',window:'20:00-23:30'},roe_deer:{label:'Őz',short:'ŐZ',window:'04:00-07:00'},fallow_deer:{label:'Dámvad',short:'DÁM',window:'20:30-23:00'},mouflon:{label:'Muflon',short:'MUF',window:'19:30-22:30'}};
+  var cropLabels={maize:'kukorica',rapeseed:'repce',sunflower:'napraforgó',cereal:'kalászos',alfalfa:'lucerna',orchard:'gyümölcsös',vineyard:'szőlő'};
+  var speciesBase={wild_boar:9,red_deer:7,roe_deer:5,fallow_deer:6,mouflon:4};
+  var cropScores={maize:{wild_boar:15,red_deer:10,roe_deer:4,fallow_deer:8,mouflon:3},sunflower:{wild_boar:11,red_deer:6,roe_deer:7,fallow_deer:5,mouflon:2},rapeseed:{wild_boar:5,red_deer:13,roe_deer:14,fallow_deer:12,mouflon:9},cereal:{wild_boar:6,red_deer:9,roe_deer:7,fallow_deer:8,mouflon:7},alfalfa:{wild_boar:9,red_deer:11,roe_deer:10,fallow_deer:10,mouflon:8},orchard:{wild_boar:4,red_deer:8,roe_deer:7,fallow_deer:8,mouflon:4},vineyard:{wild_boar:3,red_deer:9,roe_deer:8,fallow_deer:7,mouflon:4}};
+  var forestScores={under_100:10,'100_300':8,'300_700':5,'700_1500':2,over_1500:0};
+  var damageScores={7:12,30:8,90:5,none:0};
+  var weatherData=null;
+  function clamp(num,min,max){return Math.max(min,Math.min(max,num));}
+  function riskLevel(score){if(score>=85){return {label:'Kritikus',cls:'critical'};}if(score>=70){return {label:'Nagyon magas',cls:'very-high'};}if(score>=50){return {label:'Magas',cls:'high'};}if(score>=25){return {label:'Mérsékelt',cls:'moderate'};}return {label:'Alacsony',cls:'low'};}
+  function confidenceLabel(score){if(score>=75){return 'Magas';}if(score>=50){return 'Közepes';}return 'Alacsony';}
+  function dayName(index){return ['V','H','K','Sze','Cs','P','Szo'][index]||'';}
+  function moonIllumination(date){var synodic=29.53058867,knownNewMoon=Date.UTC(2024,0,11,11,57,0),days=(date.getTime()-knownNewMoon)/86400000,phase=((days%synodic)+synodic)%synodic/synodic;return (1-Math.cos(2*Math.PI*phase))/2;}
+  function controls(){return {crop:cropEl.value,forest:forestEl.value,damage:damageEl.value};}
+  function hourlyRows(data){if(!data||!data.hourly||!data.hourly.time){return [];}var out=[];for(var i=0;i<data.hourly.time.length;i++){out.push({time:data.hourly.time[i],temp:Number(data.hourly.temperature_2m[i]||0),humidity:Number(data.hourly.relative_humidity_2m[i]||0),precip:Number(data.hourly.precipitation[i]||0),wind:Number(data.hourly.wind_speed_10m[i]||0),pressure:Number(data.hourly.pressure_msl[i]||0),cloud:Number(data.hourly.cloud_cover[i]||0),soil:Number(data.hourly.soil_moisture_0_to_1cm&&data.hourly.soil_moisture_0_to_1cm[i]||0)});}return out;}
+  function dayContext(data,dayIndex){var rows=hourlyRows(data),dayStr=data.daily.time[dayIndex],target=dayStr+'T22:00',night=null;for(var i=0;i<rows.length;i++){if(rows[i].time===target||rows[i].time.indexOf(dayStr+'T21:00')===0||rows[i].time.indexOf(dayStr+'T23:00')===0){night=rows[i];if(rows[i].time===target){break;}}}var recent=[];if(night){for(var j=0;j<rows.length;j++){if(rows[j].time===night.time){recent=rows.slice(Math.max(0,j-47),j+1);break;}}}var precip48=recent.reduce(function(sum,row){return sum+row.precip;},0);var prior24=recent.length>=24?recent[recent.length-24]:null;return {day:dayStr,tempNight:night?night.temp:0,humidity:night?night.humidity:0,wind:night?night.wind:0,pressureDrop:night&&prior24?(night.pressure-prior24.pressure):0,cloud:night?night.cloud:0,soil:night?night.soil:0,precip48:precip48,tempMin:Number(data.daily.temperature_2m_min[dayIndex]||0),rainSum:Number(data.daily.precipitation_sum[dayIndex]||0),moon:moonIllumination(new Date(dayStr+'T22:00:00'))};}
+  function scoreSpecies(species,ctx,ctl){var score=(speciesBase[species]||4)+((cropScores[ctl.crop]&&cropScores[ctl.crop][species])||0)+(forestScores[ctl.forest]||0)+(damageScores[ctl.damage]||0),reasons=[];if((forestScores[ctl.forest]||0)>0){reasons.push('erdőközeli kijárás');}if((damageScores[ctl.damage]||0)>0){reasons.push('friss kárelőzmény');}reasons.push((cropLabels[ctl.crop]||ctl.crop)+' vonzó táplálék');if(species==='wild_boar'&&ctx.precip48>5&&ctx.soil>0.18){score+=5;reasons.push('eső utáni puha talaj');}if(species==='wild_boar'&&ctx.tempNight>12&&ctx.humidity>75){score+=4;reasons.push('meleg, párás éjszaka');}if((species==='red_deer'||species==='roe_deer'||species==='fallow_deer'||species==='mouflon')&&ctx.tempMin<=2&&(ctl.crop==='rapeseed'||ctl.crop==='cereal'||ctl.crop==='alfalfa')){score+=4;reasons.push('hidegben felértékelődő zöld kultúra');}if(ctx.wind>30){score-=5;}else if(ctx.wind<8){score+=2;reasons.push('szélcsend');}if(ctx.pressureDrop<=-5){score+=3;reasons.push('front előtti nyomásesés');}if(ctx.rainSum>6){score+=2;reasons.push('csapadék utáni mozgás');}var effMoon=ctx.moon*(1-(ctx.cloud/100));if(species==='wild_boar'&&effMoon>0.6){score-=1;}if(species!=='wild_boar'&&effMoon>0.9){score+=2;reasons.push('erős holdfény');}return {score:clamp(Math.round(score),0,100),reasons:reasons};}
+  function computeForecast(data){var ctl=controls(),keys=Object.keys(speciesMeta),days=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<3;dayIndex++){var ctx=dayContext(data,dayIndex),best=null;for(var i=0;i<keys.length;i++){var key=keys[i],res=scoreSpecies(key,ctx,ctl);if(!best||res.score>best.result.score){best={species:key,result:res,ctx:ctx};}}days.push({day:ctx.day,species:best.species,score:best.result.score,result:best.result});}return days;}
+  function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var top=forecast[0],level=riskLevel(top.score),confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+10,0,85);locEl.textContent=label;scoreEl.textContent=String(top.score);levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[top.species].label;windowEl.textContent=speciesMeta[top.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';reasonEl.textContent='Fő trigger: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');}
+  function fetchForecast(lat,lon,label){var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&past_days=2&forecast_days=3&timezone=auto&wind_speed_unit=kmh';fetch(url).then(function(r){return r.json();}).then(function(json){render(json,label);}).catch(function(){locEl.textContent='Offline';reasonEl.textContent='Az élő meteorológia most nem elérhető, ezért nincs friss vadkár-index.';});}
+  function rerender(){if(weatherData){render(weatherData,locEl.textContent||'Aktuális hely');}}
+  cropEl.addEventListener('change',rerender);
+  forestEl.addEventListener('change',rerender);
+  damageEl.addEventListener('change',rerender);
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');},function(){fetchForecast(47.093,17.911,'Veszprém mintahely');},{enableHighAccuracy:true,timeout:7000,maximumAge:900000});}else{fetchForecast(47.093,17.911,'Veszprém mintahely');}
+})();
+</script>
 
 <?php if ( $va_show_season_widget ): ?>
 <script>
