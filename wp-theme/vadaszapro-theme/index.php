@@ -733,16 +733,20 @@ body.va-weather-modal-open{overflow:hidden;}
     }
 
     for(var b=0;b<n;b++){
-      var bx=leftPad+b*step;
+      var barW=Math.max(8,step*0.42);
+      var bxRaw=leftPad+b*step;
+      var bx=Math.max(leftPad+barW/2+1,Math.min(w-rightPad-barW/2-1,bxRaw));
       var bh=(rPlotVals[b]/rMax)*(bandH*0.72);
       if(!hasRainAmount&&rPlotVals[b]<=0){bh=2;}
       var by=b2y+bandH-bh-4;
-      var barW=Math.max(8,step*0.42);
       var grad=ctx.createLinearGradient(0,by,0,topPad+ch);
       grad.addColorStop(0,'rgba(69,211,255,.95)');
       grad.addColorStop(1,'rgba(69,211,255,.2)');
       ctx.fillStyle=grad;
       ctx.fillRect(bx-barW/2,by,barW,bh);
+      var rainTxt=hasRainAmount?((rPlotVals[b]||0).toFixed(1)+' mm'):(Math.round(rPlotVals[b]||0)+'%');
+      var rainY=Math.max(b2y+12,by-4);
+      drawSafeText(rainTxt,bx,rainY,compact?'700 8px Segoe UI':'700 9px Segoe UI','rgba(130,228,255,.96)','rgba(8,14,24,.85)',leftPad,w-rightPad);
     }
 
     ctx.beginPath();
@@ -794,17 +798,20 @@ body.va-weather-modal-open{overflow:hidden;}
       if(tVals[ti]>tVals[tMaxIdx])tMaxIdx=ti;
       if(tVals[ti]<tVals[tMinIdx])tMinIdx=ti;
     }
+    var prevTempLabelY=null;
     for(var p2=0;p2<n;p2++){
       var px2=leftPad+p2*step;
       var py2=b1y+4+((tMax-tVals[p2])/(tMax-tMin))*(bandH-14);
       ctx.fillStyle='#fff';
       ctx.beginPath();ctx.arc(px2,py2,3.2,0,Math.PI*2);ctx.fill();
       ctx.textAlign='center';
-      if(p2===tMaxIdx||p2===tMinIdx||p2===0||p2===n-1||(!compact&&p2%labelEvery===0)){
-        var tLabelY=py2-10;
-        tLabelY=Math.max(b1y+12,tLabelY);
-        drawSafeText(Math.round(tVals[p2])+'°',px2,tLabelY,compact?'700 10px Segoe UI':'700 11px Segoe UI','rgba(255,255,255,.96)','rgba(8,14,24,.9)',leftPad,w-rightPad);
+      var tLabelY=py2-10;
+      if(prevTempLabelY!==null&&Math.abs(tLabelY-prevTempLabelY)<11){
+        tLabelY=py2+12;
       }
+      tLabelY=Math.max(b1y+12,Math.min(b1y+bandH-6,tLabelY));
+      drawSafeText(Math.round(tVals[p2])+'°',px2,tLabelY,compact?'700 9px Segoe UI':'700 10px Segoe UI','rgba(255,255,255,.96)','rgba(8,14,24,.9)',leftPad,w-rightPad);
+      prevTempLabelY=tLabelY;
       ctx.fillStyle='rgba(205,230,255,.8)';
       ctx.font=compact?'700 9px Segoe UI':'700 10px Segoe UI';
       var dx=px2;
