@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 18. – Session #360c — Vadkár Radar popup részletes nézettel
+
+### Kérés
+- A főoldali Vadkár Radar ne csak egy kártya legyen, hanem megnyitható popupban részletes nézettel is.
+
+### Javítás
+- A főoldali radar kapott egy `Részletes radar` gombot.
+- A gomb egy modal/popup nézetet nyit, ahol bent van:
+  - fenológia
+  - vadászati nyomás
+  - villanypásztor
+  - részletes fajspecifikus fő kockázati okok
+  - 7 napos trend
+  - kibővített konfidencia és időablak megjelenítés
+- A popup ugyanabból az élő meteorológiai alapból dolgozik, mint a fő kártya, de részletesebb vadkár-logikát futtat.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 18. – Session #360b — Vadkár Radar áthelyezés a tényleges főoldali widgetzónába
 
 ### Kérés
