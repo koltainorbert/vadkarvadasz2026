@@ -902,7 +902,7 @@ body.va-weather-modal-open{overflow:hidden;}
         +row('Virágzás',c.bloom,monthInRange(m,c.bloom[0],c.bloom[1]))
         +row('Érés',c.ripen,monthInRange(m,c.ripen[0],c.ripen[1]))
         +row('Aratás',c.harvest,monthInRange(m,c.harvest[0],c.harvest[1]))
-        +'</div>;
+        +'</div>';
     }
     html+='</div>';
     agriEl.innerHTML=html;
