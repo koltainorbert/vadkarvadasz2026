@@ -1000,7 +1000,7 @@ body.va-weather-modal-open{overflow:hidden;}
 </script>
 <?php endif; ?>
 
-<?php if ( false && $va_show_damage_forecast_widget ): ?>
+<?php if ( $va_show_damage_forecast_widget ): ?>
 <section class="va-damage-forecast" id="va-damage-forecast">
   <div class="va-damage-forecast__hd">
     <span class="va-damage-forecast__title">🦌 Vadkár előrejelzés</span>
@@ -1008,7 +1008,7 @@ body.va-weather-modal-open{overflow:hidden;}
   </div>
   <div class="va-damage-forecast__summary" id="vdfSummary">Előrejelzés betöltése…</div>
   <div class="va-damage-forecast__meta" id="vdfMeta">Időjárás, hold és terményidőszak alapján számol.</div>
-  <button type="button" class="va-damage-forecast__toggle" id="vdfToggle" aria-expanded="false" aria-controls="vdfModal">7 napos kockázat ✦</button>
+  <button type="button" class="va-damage-forecast__toggle" id="vdfToggle" aria-expanded="false" aria-controls="vdfModal">Részletes előrejelzés ✦</button>
   <div class="va-damage-forecast__modal" id="vdfModal" hidden>
     <div class="va-damage-forecast__modal-backdrop" id="vdfModalBackdrop"></div>
     <div class="va-damage-forecast__modal-card" role="dialog" aria-modal="true" aria-labelledby="vdfModalTitle">
@@ -1040,7 +1040,7 @@ body.va-weather-modal-open{overflow:hidden;}
 </section>
 
 <style>
-.va-damage-forecast{background:linear-gradient(145deg,rgba(36,12,16,.92),rgba(13,12,18,.94));border:1px solid rgba(255,85,85,.28);border-radius:12px;padding:8px;margin:0 0 10px;box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(255,0,0,.06);}
+.va-damage-forecast{order:-999;background:linear-gradient(145deg,rgba(36,12,16,.92),rgba(13,12,18,.94));border:1px solid rgba(255,85,85,.28);border-radius:12px;padding:8px;margin:0 0 10px;box-shadow:0 8px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(255,0,0,.06);}
 .va-damage-forecast__hd{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;}
 .va-damage-forecast__title{font-weight:900;font-size:.82rem;color:#fff;line-height:1.15;}
 .va-damage-forecast__loc{font-size:.56rem;color:rgba(255,224,224,.82);}
