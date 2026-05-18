@@ -91,6 +91,7 @@ if ( $va_home_h1 === '' ) {
             <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm / %)</span>
             <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--wind"></i>Szél (km/h)</span>
           </div>
+          <div class="va-weather__weekline" id="vwWeekline"></div>
         </div>
         </div>
         <div class="va-weather__section" id="vwSectionDays"><div class="va-weather__days" id="vwDays"></div></div>
@@ -165,6 +166,12 @@ if ( $va_home_h1 === '' ) {
 .va-weather__legend-dot--temp{background:#ffffff;box-shadow:0 0 10px rgba(255,255,255,.6);}
 .va-weather__legend-dot--rain{background:#45d3ff;box-shadow:0 0 10px rgba(69,211,255,.65);}
 .va-weather__legend-dot--wind{background:#ff9c2f;box-shadow:0 0 10px rgba(255,156,47,.7);}
+.va-weather__weekline{display:grid;grid-template-columns:repeat(7,minmax(74px,1fr));gap:6px;margin-top:8px;}
+.va-weather__weekcell{border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(7,13,22,.6);padding:5px 5px 4px;text-align:center;}
+.va-weather__weekd{font-size:.58rem;font-weight:800;color:rgba(205,230,255,.92);letter-spacing:.05em;}
+.va-weather__weekt{font-size:.7rem;font-weight:900;color:#fff;}
+.va-weather__weekr{font-size:.6rem;font-weight:700;color:#7de0ff;}
+.va-weather__weekw{font-size:.6rem;font-weight:700;color:#ffbe7a;}
 .va-weather__modal-close{
   position:absolute;top:12px;right:12px;z-index:3;
   width:36px;height:36px;border-radius:50%;cursor:pointer;
@@ -504,6 +511,7 @@ body.va-weather-modal-open{overflow:hidden;}
   var daysEl=document.getElementById('vwDays');
   var agriEl=document.getElementById('vwAgri');
   var chartEl=document.getElementById('vwChart');
+  var weeklineEl=document.getElementById('vwWeekline');
   var jumpNavEl=document.getElementById('vwJumpNav');
   var moreHintEl=document.getElementById('vwMoreHint');
   var toggleEl=document.getElementById('vwToggle');
@@ -714,6 +722,16 @@ body.va-weather-modal-open{overflow:hidden;}
     drawBand(b2y,hasRainAmount?'Csapadék (mm)':'Csapadék valószínűség (%)','rgba(94,220,255,.95)');
     drawBand(b3y,'Szél (km/h)','rgba(255,178,110,.95)');
 
+    function drawSafeText(text,x,y,font,fill,stroke,minX,maxX){
+      ctx.font=font;
+      ctx.textAlign='center';
+      var tw=ctx.measureText(text).width;
+      var cx=Math.max(minX+tw/2+2,Math.min(maxX-tw/2-2,x));
+      if(stroke){ctx.lineWidth=3;ctx.strokeStyle=stroke;ctx.strokeText(text,cx,y);}
+      ctx.fillStyle=fill;
+      ctx.fillText(text,cx,y);
+    }
+
     for(var b=0;b<n;b++){
       var bx=leftPad+b*step;
       var bh=(rPlotVals[b]/rMax)*(bandH*0.72);
@@ -767,13 +785,7 @@ body.va-weather-modal-open{overflow:hidden;}
       if(wi2===maxWindIdx){
         var wLabelY=wy2-10;
         wLabelY=Math.max(b3y+12,Math.min(b3y+bandH-8,wLabelY));
-        ctx.textAlign='center';
-        ctx.lineWidth=3;
-        ctx.strokeStyle='rgba(8,14,24,.9)';
-        ctx.font=compact?'700 8px Segoe UI':'700 9px Segoe UI';
-        ctx.strokeText('max '+Math.round(wVals[wi2])+' km/h',wx2,wLabelY);
-        ctx.fillStyle='rgba(255,188,130,.98)';
-        ctx.fillText('max '+Math.round(wVals[wi2])+' km/h',wx2,wLabelY);
+        drawSafeText('max '+Math.round(wVals[wi2])+' km/h',wx2,wLabelY,compact?'700 8px Segoe UI':'700 9px Segoe UI','rgba(255,188,130,.98)','rgba(8,14,24,.9)',leftPad,w-rightPad);
       }
     }
 
@@ -791,18 +803,15 @@ body.va-weather-modal-open{overflow:hidden;}
       if(p2===tMaxIdx||p2===tMinIdx||p2===0||p2===n-1||(!compact&&p2%labelEvery===0)){
         var tLabelY=py2-10;
         tLabelY=Math.max(b1y+12,tLabelY);
-        ctx.lineWidth=3;
-        ctx.strokeStyle='rgba(8,14,24,.9)';
-        ctx.font=compact?'700 10px Segoe UI':'700 11px Segoe UI';
-        ctx.strokeText(Math.round(tVals[p2])+'°',px2,tLabelY);
-        ctx.fillStyle='rgba(255,255,255,.96)';
-        ctx.fillText(Math.round(tVals[p2])+'°',px2,tLabelY);
+        drawSafeText(Math.round(tVals[p2])+'°',px2,tLabelY,compact?'700 10px Segoe UI':'700 11px Segoe UI','rgba(255,255,255,.96)','rgba(8,14,24,.9)',leftPad,w-rightPad);
       }
       ctx.fillStyle='rgba(205,230,255,.8)';
       ctx.font=compact?'700 9px Segoe UI':'700 10px Segoe UI';
-      if((p2%labelEvery===0)||p2===n-1){
-        ctx.fillText(labels[p2],px2,h-9);
-      }
+      var dx=px2;
+      ctx.textAlign='center';
+      if(p2===0){ctx.textAlign='left';dx=leftPad+2;}
+      else if(p2===n-1){ctx.textAlign='right';dx=w-rightPad-2;}
+      ctx.fillText(labels[p2],dx,h-9);
     }
   }
   function monthInRange(m,start,end){
@@ -856,11 +865,13 @@ body.va-weather-modal-open{overflow:hidden;}
 
     var html='';
     var idx=[];
+    var startIdx=0;
     for(var ii=0;ii<d.time.length;ii++){
-      if(d.time[ii]!==todayIso)idx.push(ii);
+      if(d.time[ii]===todayIso){startIdx=ii;break;}
     }
-    if(!idx.length){
-      for(var ff=0;ff<d.time.length&&ff<7;ff++)idx.push(ff);
+    for(var ff=startIdx;ff<d.time.length&&idx.length<7;ff++){idx.push(ff);}
+    for(var ff2=0;ff2<d.time.length&&idx.length<7;ff2++){
+      if(idx.indexOf(ff2)===-1)idx.push(ff2);
     }
     for(var j=0;j<idx.length&&j<7;j++){
       var i=idx[j];
@@ -873,6 +884,22 @@ body.va-weather-modal-open{overflow:hidden;}
         +'</div>';
     }
     daysEl.innerHTML=html;
+    if(weeklineEl){
+      var wh='';
+      for(var wj=0;wj<idx.length&&wj<7;wj++){
+        var wi=idx[wj];
+        var rainV=Number(d.precipitation_sum[wi]||0);
+        var rainP=Math.round(d.precipitation_probability_max[wi]||0);
+        var rainText=rainV>0.01?(rainV.toFixed(1)+' mm'):(rainP+'%');
+        wh+='<div class="va-weather__weekcell">'
+          +'<div class="va-weather__weekd">'+dayHu(d.time[wi]).toUpperCase().slice(0,2)+'</div>'
+          +'<div class="va-weather__weekt">'+Math.round(d.temperature_2m_max[wi]||0)+'°</div>'
+          +'<div class="va-weather__weekr">'+rainText+'</div>'
+          +'<div class="va-weather__weekw">'+Math.round(toWindKmh(d.wind_speed_10m_max[wi],windUnitRaw))+' km/h</div>'
+          +'</div>';
+      }
+      weeklineEl.innerHTML=wh;
+    }
     renderAgriCalendar();
     lastDailyData=d;
     lastIdx=idx.slice(0,7);
