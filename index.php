@@ -77,6 +77,13 @@ if ( $va_home_h1 === '' ) {
         <div class="va-weather__modal-eyebrow">Részletes Meteo</div>
         <h3 class="va-weather__modal-title" id="vwModalTitle">7 napos előrejelzés</h3>
       </div>
+      <div class="va-weather__modal-graph">
+        <canvas id="vwChart" class="va-weather__modal-chart" height="210"></canvas>
+        <div class="va-weather__modal-legend">
+          <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--temp"></i>Max hőmérséklet</span>
+          <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm)</span>
+        </div>
+      </div>
       <div class="va-weather__days" id="vwDays"></div>
       <div class="va-weather__note" id="vwNote">Forrás: Open-Meteo (DWD/ECMWF/NCEP modellek).</div>
     </div>
@@ -117,6 +124,18 @@ if ( $va_home_h1 === '' ) {
 .va-weather__modal-head{position:relative;z-index:1;margin-bottom:12px;padding-right:44px;}
 .va-weather__modal-eyebrow{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(190,225,255,.85);font-weight:800;}
 .va-weather__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff;text-shadow:0 0 18px rgba(80,180,255,.35);}
+.va-weather__modal-graph{
+  position:relative;z-index:1;margin:0 0 14px;padding:10px 10px 6px;
+  border:1px solid rgba(255,255,255,.12);border-radius:14px;
+  background:linear-gradient(155deg,rgba(5,25,42,.72),rgba(44,10,33,.6));
+  box-shadow:inset 0 0 22px rgba(0,180,255,.08),0 0 24px rgba(255,40,90,.07);
+}
+.va-weather__modal-chart{display:block;width:100%;height:210px;}
+.va-weather__modal-legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;font-size:.72rem;color:#fff;}
+.va-weather__legend-item{display:inline-flex;align-items:center;gap:7px;letter-spacing:.02em;}
+.va-weather__legend-dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+.va-weather__legend-dot--temp{background:#ffffff;box-shadow:0 0 10px rgba(255,255,255,.6);}
+.va-weather__legend-dot--rain{background:#45d3ff;box-shadow:0 0 10px rgba(69,211,255,.65);}
 .va-weather__modal-close{
   position:absolute;top:12px;right:12px;z-index:3;
   width:36px;height:36px;border-radius:50%;cursor:pointer;
@@ -417,6 +436,7 @@ body.va-weather-modal-open{overflow:hidden;}
   var nowEl=document.getElementById('vwNow');
   var metaEl=document.getElementById('vwMeta');
   var daysEl=document.getElementById('vwDays');
+  var chartEl=document.getElementById('vwChart');
   var toggleEl=document.getElementById('vwToggle');
   var modalEl=document.getElementById('vwModal');
   var modalBackdropEl=document.getElementById('vwModalBackdrop');
@@ -489,6 +509,79 @@ body.va-weather-modal-open{overflow:hidden;}
     if(!raw)return 'Ismeretlen hely';
     return raw;
   }
+  function drawForecastChart(d,idx){
+    if(!chartEl)return;
+    var n=Math.min(7,idx.length);
+    var ctx=chartEl.getContext('2d');
+    if(!ctx||n<2){return;}
+    var dpr=window.devicePixelRatio||1;
+    var w=Math.max(320,Math.floor(chartEl.clientWidth||640));
+    var h=210;
+    chartEl.width=Math.floor(w*dpr);
+    chartEl.height=Math.floor(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,w,h);
+
+    var topPad=18,rightPad=16,bottomPad=34,leftPad=16;
+    var cw=w-leftPad-rightPad,ch=h-topPad-bottomPad;
+    var tVals=[],rVals=[],labels=[];
+    for(var k=0;k<n;k++){
+      var i=idx[k];
+      tVals.push(Number(d.temperature_2m_max[i]||0));
+      rVals.push(Number(d.precipitation_sum[i]||0));
+      labels.push(dayHu(d.time[i]).toUpperCase().slice(0,2));
+    }
+    var tMin=Math.min.apply(null,tVals),tMax=Math.max.apply(null,tVals);
+    var rMax=Math.max(0.5,Math.max.apply(null,rVals));
+    if(tMax===tMin){tMax=tMin+1;}
+    var step=n>1?cw/(n-1):cw;
+
+    ctx.strokeStyle='rgba(255,255,255,.12)';
+    ctx.lineWidth=1;
+    for(var gy=0;gy<=4;gy++){
+      var y=topPad+(ch/4)*gy;
+      ctx.beginPath();ctx.moveTo(leftPad,y);ctx.lineTo(w-rightPad,y);ctx.stroke();
+    }
+
+    for(var b=0;b<n;b++){
+      var bx=leftPad+b*step;
+      var bh=(rVals[b]/rMax)*(ch*0.45);
+      var by=topPad+ch-bh;
+      var barW=Math.max(8,step*0.42);
+      var grad=ctx.createLinearGradient(0,by,0,topPad+ch);
+      grad.addColorStop(0,'rgba(69,211,255,.95)');
+      grad.addColorStop(1,'rgba(69,211,255,.2)');
+      ctx.fillStyle=grad;
+      ctx.fillRect(bx-barW/2,by,barW,bh);
+    }
+
+    ctx.beginPath();
+    for(var p=0;p<n;p++){
+      var px=leftPad+p*step;
+      var py=topPad+((tMax-tVals[p])/(tMax-tMin))*ch;
+      if(p===0){ctx.moveTo(px,py);}else{ctx.lineTo(px,py);}
+    }
+    ctx.strokeStyle='#ffffff';
+    ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(255,255,255,.65)';
+    ctx.shadowBlur=12;
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    for(var p2=0;p2<n;p2++){
+      var px2=leftPad+p2*step;
+      var py2=topPad+((tMax-tVals[p2])/(tMax-tMin))*ch;
+      ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.arc(px2,py2,3.2,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.92)';
+      ctx.font='700 11px Segoe UI';
+      ctx.textAlign='center';
+      ctx.fillText(Math.round(tVals[p2])+'°',px2,py2-10);
+      ctx.fillStyle='rgba(205,230,255,.8)';
+      ctx.font='700 10px Segoe UI';
+      ctx.fillText(labels[p2],px2,h-12);
+    }
+  }
   function render(data,label){
     if(!data||!data.current||!data.daily){
       nowEl.textContent='Nincs időjárás adat';
@@ -506,6 +599,7 @@ body.va-weather-modal-open{overflow:hidden;}
     for(var ii=0;ii<d.time.length;ii++){
       if(d.time[ii]!==todayIso)idx.push(ii);
     }
+    drawForecastChart(d,idx);
     for(var j=0;j<idx.length&&j<7;j++){
       var i=idx[j];
       var prefix=dayHu(d.time[i]);
