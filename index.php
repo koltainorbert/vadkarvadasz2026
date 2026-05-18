@@ -82,7 +82,7 @@ if ( $va_home_h1 === '' ) {
           <canvas id="vwChart" class="va-weather__modal-chart" height="210"></canvas>
           <div class="va-weather__modal-legend">
             <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--temp"></i>Max hőmérséklet</span>
-            <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm)</span>
+            <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--rain"></i>Csapadék (mm / %)</span>
             <span class="va-weather__legend-item"><i class="va-weather__legend-dot va-weather__legend-dot--wind"></i>Szél (km/h)</span>
           </div>
         </div>
@@ -545,16 +545,22 @@ body.va-weather-modal-open{overflow:hidden;}
 
     var topPad=18,rightPad=16,bottomPad=34,leftPad=16;
     var cw=w-leftPad-rightPad,ch=h-topPad-bottomPad;
-    var tVals=[],rVals=[],wVals=[],labels=[];
+    var tVals=[],rVals=[],rProbVals=[],wVals=[],labels=[];
     for(var k=0;k<n;k++){
       var i=idx[k];
       tVals.push(Number(d.temperature_2m_max[i]||0));
       rVals.push(Number(d.precipitation_sum[i]||0));
+      rProbVals.push(Number(d.precipitation_probability_max[i]||0));
       wVals.push(Number(d.wind_speed_10m_max[i]||0));
       labels.push(dayHu(d.time[i]).toUpperCase().slice(0,2));
     }
+    var hasRainAmount=false;
+    for(var rv=0;rv<rVals.length;rv++){
+      if(rVals[rv]>0.01){hasRainAmount=true;break;}
+    }
+    var rPlotVals=hasRainAmount?rVals:rProbVals;
     var tMin=Math.min.apply(null,tVals),tMax=Math.max.apply(null,tVals);
-    var rMax=Math.max(0.5,Math.max.apply(null,rVals));
+    var rMax=hasRainAmount?Math.max(0.5,Math.max.apply(null,rPlotVals)):Math.max(5,Math.max.apply(null,rPlotVals));
     var wMax=Math.max(1,Math.max.apply(null,wVals));
     if(tMax===tMin){tMax=tMin+1;}
     var step=n>1?cw/(n-1):cw;
@@ -568,7 +574,8 @@ body.va-weather-modal-open{overflow:hidden;}
 
     for(var b=0;b<n;b++){
       var bx=leftPad+b*step;
-      var bh=(rVals[b]/rMax)*(ch*0.45);
+      var bh=(rPlotVals[b]/rMax)*(ch*0.45);
+      if(!hasRainAmount&&rPlotVals[b]<=0){bh=2;}
       var by=topPad+ch-bh;
       var barW=Math.max(8,step*0.42);
       var grad=ctx.createLinearGradient(0,by,0,topPad+ch);
