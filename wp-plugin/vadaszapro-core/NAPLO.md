@@ -7746,3 +7746,20 @@ A főoldali mini vadásznaptár tooltipje nem vágódik le a bal oldali sticky o
 
 ---
 
+## 2026. 05. 18. – Session: Lövési idő napkelte-indítás fix
+
+### Mit csináltunk [x]
+- [x] A mini vadásznaptár visszaszámláló logikáját átállítottuk: a "lőhető még" számítás csak napkelte után indul
+- [x] Napkelte előtti állapotban új szöveg: "ma napkeltétől (HH:MM) lőhető"
+- [x] A napnyugta utáni tiltás logika megmaradt (jelenlegi szabály: napnyugta + 1 óra)
+- [x] Root + theme mirror `index.php` szinkron frissítve
+- [x] Deploy All lefuttatva, commit+push megtörtént (`2b26b85`)
+
+### Hol tartunk
+Nem számol többé éjféltől a rendszer: a napi lőhetőség kezdete ténylegesen a napkelte.
+
+### TODO
+- [ ] Visszaigazolás élőn: napkelte előtti idősávban nem "lőhető még" szöveg jelenik meg
+
+---
+
