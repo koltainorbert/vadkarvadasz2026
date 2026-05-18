@@ -124,6 +124,7 @@ if ( $va_home_h1 === '' ) {
   max-height:calc(min(88vh,920px) - 104px);
   overflow:auto;
   padding-right:2px;
+  margin-right:-3px;
   border-radius:14px;
 }
 .va-weather__modal-scroll::-webkit-scrollbar{width:10px;}
