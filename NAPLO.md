@@ -8629,3 +8629,20 @@ Az időjárás előrejelzés már nem lefelé nyílik, hanem a teljes oldal stí
 
 ---
 
+## 2026. 05. 18. – Session: Időjárás popup grafikon upgrade
+
+### Mit csináltunk [x]
+- [x] A popup főcím fehéren maradt, extra kontraszttal
+- [x] Beépítettünk egy látványos, színes előrejelzés grafikont (canvas)
+- [x] A grafikon két adatsort mutat: max hőmérséklet (fehér vonal) és csapadék (kék oszlopok)
+- [x] Hozzáadtunk jelmagyarázatot a grafikonhoz a popupban
+- [x] A grafikon reszponzív, mobilon és desktopon is újrarajzol
+
+### Hol tartunk
+Az időjárás popup már valódi grafikonos nézetet ad, a vizuál jelentősen színesebb és informatívabb.
+
+### TODO
+- [ ] Élő vizuális check: tooltip/szöveg olvashatóság kisebb kijelzőn is
+
+---
+
