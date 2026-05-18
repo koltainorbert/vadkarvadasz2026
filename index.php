@@ -963,11 +963,18 @@ function updateShootCountdown(bp){
 
   var now=new Date();
   var stToday=getSunTimesBp(bp.year,bp.month,bp.day);
+  var startToday=stToday.rise; // Lövési idő kezdete: napkelte
   var cutoffToday=new Date(stToday.set.getTime()+3600000); // napnyugta + 1 óra
 
-  if(now<=cutoffToday&&openSpecies.length>0){
+  if(now>=startToday&&now<=cutoffToday&&openSpecies.length>0){
     if(wrap)wrap.style.display='inline-flex';
     el.textContent=openSpecies.join(', ')+' — a mai napon lőhető még '+fmtHp(cutoffToday-now);
+    return;
+  }
+
+  if(now<startToday&&openSpecies.length>0){
+    if(wrap)wrap.style.display='inline-flex';
+    el.textContent=openSpecies.join(', ')+' — ma napkeltétől ('+fmtBpHm(startToday)+') lőhető';
     return;
   }
 
