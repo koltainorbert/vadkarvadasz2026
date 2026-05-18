@@ -7880,3 +7880,25 @@ A diagram olvashatóbb szűk nézetben is, és reszponzívan újrarenderel mére
 
 ---
 
+## 2026. 05. 18. – Session: 3 sávos meteo chart + agrár fenológiai blokk
+
+### Mit csináltunk [x]
+- [x] Időjárás diagram teljes átépítés 3 külön sávra:
+  - Hőmérséklet (külön felső sáv)
+  - Csapadék (középső sáv, mm/% fallback)
+  - Szél (alsó sáv, km/h)
+- [x] Átlapolódás csökkentése: sávon belüli címke-pozicionálás és kontúros feliratok
+- [x] Új "Agrár naptár vadászatra" blokk a modalban:
+  - Vetés / virágzás / érés időablakok
+  - "MOST / nem most" állapot jelölés az aktuális hónap alapján
+  - Fő növények: őszi búza, őszi árpa, kukorica, napraforgó, őszi repce, szója, cirok, lucerna
+- [x] Root + theme mirror `index.php` fájlok szinkronban frissítve
+
+### Hol tartunk
+A diagram most már külön sávokban olvasható, és az agrár időablakok vadászati döntéstámogatásra megjelennek a popupban.
+
+### TODO
+- [ ] Régiós finomítás opció (pl. Alföld / Dunántúl) az agrár időablakokhoz
+
+---
+
