@@ -7831,3 +7831,19 @@ A popup jobb oldali megjelenése lekerekített és rendezett, a csapadék mellé
 
 ---
 
+## 2026. 05. 18. – Session: Csapadék diagram üres állapot fix
+
+### Mit csináltunk [x]
+- [x] A csapadék diagram logikáját javítottuk: ha a napi csapadékösszeg (mm) minden nap 0, fallbackként a csapadék-esély (%) adatsor rajzolódik
+- [x] Így a diagram nem marad üres száraz időszakban sem
+- [x] A legendát pontosítottuk: "Csapadék (mm / %)"
+- [x] Mirror fájlban is ugyanígy frissítve
+
+### Hol tartunk
+A csapadék grafikon most már mindig ad vizuális visszajelzést, akkor is, ha a mért mm érték 0 minden nap.
+
+### TODO
+- [ ] Igény esetén külön kapcsoló a mm / % nézethez
+
+---
+
