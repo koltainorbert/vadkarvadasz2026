@@ -8663,3 +8663,20 @@ A 7 napos előrejelzés szöveg tartalma megbízhatóan megjelenik, a cím fehé
 
 ---
 
+## 2026. 05. 18. – Session: Jobb oldali lekerekítés + szélgrafikon
+
+### Mit csináltunk [x]
+- [x] A popup tartalmát külön scroll wrapperbe tettük (`va-weather__modal-scroll`), így a jobb oldal is lekerekített marad
+- [x] Egyedi scrollbar stílus és lekerekített track/thumb került a popup belső görgetésre
+- [x] A grafikon bővítve: csapadék + szél grafikon egyszerre jelenik meg
+- [x] Új jelmagyarázat elem: "Szél (km/h)"
+- [x] Szél adatsor narancs, szaggatott vonallal és glow-val kirajzolva
+
+### Hol tartunk
+A popup jobb oldali megjelenése lekerekített és rendezett, a csapadék mellé külön szélgrafikon is bekerült.
+
+### TODO
+- [ ] Vizuális finomhangolás kérés szerint (vonalvastagság, színerősség)
+
+---
+
