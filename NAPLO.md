@@ -8696,3 +8696,19 @@ A csapadék grafikon most már mindig ad vizuális visszajelzést, akkor is, ha 
 
 ---
 
+## 2026. 05. 18. – Session: Szél km/h validáció + grafikon feliratok
+
+### Mit csináltunk [x]
+- [x] A szélgrafikon pontjai most konkrét értékeket írnak ki: `NN km/h`
+- [x] Egység-normalizálás bevezetve: ha API m/s, mph vagy csomó egységet adna, automatikus konverzió km/h-ra
+- [x] Meta sor és napi kártyák szélértékei is ugyanebből a normalizált km/h értékből jönnek
+- [x] Grafikon kirajzolás ehhez igazítva frissítve mindkét index fájlban
+
+### Hol tartunk
+A szélérték a grafikonon is km/h-ban jelenik meg, és az egységkezelés konzisztens.
+
+### TODO
+- [ ] Vizuális sűrűség finomhangolás: ha túl sok a felirat mobilon, opcionális ritkítás
+
+---
+
