@@ -7995,3 +7995,23 @@ A szél értékek minden pötty mellett látszanak km/h-ban.
 
 ---
 
+## 2026. 05. 18. – Session: Agrár naptár a Holdnaptár elé + admin ki/be kapcsoló
+
+### Mit csináltunk [x]
+- [x] Új főoldali agrár widget került be a bal sidebarba, közvetlenül a Holdnaptár elé
+- [x] Új opció bevezetve: `va_show_agri_widget` (adminból kapcsolható)
+- [x] Admin oldalon új toggle mező: "Agrár naptár widget megjelenjen (Holdnaptár előtt)"
+- [x] Factory default frissítve az új opcióval
+- [x] Root + mirror fájlok szinkronban frissítve:
+  - `index.php` + `wp-theme/vadaszapro-theme/index.php`
+  - `admin/class-settings-page.php` + `wp-plugin/vadaszapro-core/admin/class-settings-page.php`
+  - `includes/factory-defaults.json` + `wp-plugin/vadaszapro-core/includes/factory-defaults.json`
+
+### Hol tartunk
+Az agrár naptár blokk most külön widgetként jelenik meg a Holdnaptár előtt, és adminból bármikor ki/be kapcsolható.
+
+### TODO
+- [ ] Igény esetén agrár widget régiós profil (Alföld / Dunántúl / Észak)
+
+---
+
