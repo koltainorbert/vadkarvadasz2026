@@ -7,6 +7,7 @@ get_header(); ?>
 <?php if ( is_front_page() ): ?>
 <?php
 $va_show_season_widget = get_option( 'va_show_hunting_season_widget', '1' ) === '1';
+$va_show_agri_widget   = get_option( 'va_show_agri_widget', '1' ) === '1';
 $va_show_moon_widget   = get_option( 'va_show_moon_widget', '1' ) === '1';
 $va_show_weather_widget = get_option( 'va_show_weather_widget', '1' ) === '1';
 $va_show_home_hunting_calendar = get_option( 'va_show_home_hunting_calendar', '1' ) === '1';
@@ -15,6 +16,22 @@ $va_home_h1 = trim( wp_strip_all_tags( (string) get_option( 'va_home_hero_title'
 if ( $va_home_h1 === '' ) {
   $va_home_h1 = trim( wp_strip_all_tags( get_bloginfo( 'name' ) ) );
 }
+$va_agri_month = (int) current_time( 'n' );
+$va_agri_month_labels = [ 'jan', 'febr', 'márc', 'ápr', 'máj', 'jún', 'júl', 'aug', 'szept', 'okt', 'nov', 'dec' ];
+$va_agri_is_in = static function( $m, $start, $end ) {
+  if ( $start <= $end ) {
+    return $m >= $start && $m <= $end;
+  }
+  return $m >= $start || $m <= $end;
+};
+$va_agri_crops_widget = [
+  [ 'name' => 'Őszi búza',   'sow' => [ 9, 10 ], 'bloom' => [ 5, 6 ], 'ripen' => [ 7, 8 ] ],
+  [ 'name' => 'Őszi árpa',   'sow' => [ 9, 10 ], 'bloom' => [ 4, 5 ], 'ripen' => [ 6, 7 ] ],
+  [ 'name' => 'Kukorica',    'sow' => [ 4, 5 ],  'bloom' => [ 7, 8 ], 'ripen' => [ 9, 10 ] ],
+  [ 'name' => 'Napraforgó',  'sow' => [ 4, 4 ],  'bloom' => [ 7, 7 ], 'ripen' => [ 9, 9 ] ],
+  [ 'name' => 'Őszi repce',  'sow' => [ 8, 9 ],  'bloom' => [ 4, 5 ], 'ripen' => [ 6, 7 ] ],
+  [ 'name' => 'Szója',       'sow' => [ 4, 5 ],  'bloom' => [ 6, 7 ], 'ripen' => [ 9, 10 ] ],
+];
 ?>
 <div class="va-home-layout">
 <h1 class="screen-reader-text"><?php echo esc_html( $va_home_h1 ); ?></h1>
@@ -34,6 +51,44 @@ if ( $va_home_h1 === '' ) {
   <div class="va-season__soon-lbl" id="sw-soon-lbl"></div>
   <div id="sw-soon"></div>
 </section>
+<?php endif; ?>
+
+<?php if ( $va_show_agri_widget ): ?>
+<section class="va-agri" id="agri-naptar-widget">
+  <div class="va-agri__hd">
+    <span class="va-agri__title">🌾 Agrár naptár</span>
+    <span class="va-agri__sub">Vetés • Virágzás • Érés</span>
+  </div>
+  <div class="va-agri__list">
+    <?php foreach ( $va_agri_crops_widget as $crop ) : ?>
+      <?php
+      $sow_txt   = $va_agri_month_labels[ $crop['sow'][0] - 1 ] . '–' . $va_agri_month_labels[ $crop['sow'][1] - 1 ];
+      $bloom_txt = $va_agri_month_labels[ $crop['bloom'][0] - 1 ] . '–' . $va_agri_month_labels[ $crop['bloom'][1] - 1 ];
+      $ripen_txt = $va_agri_month_labels[ $crop['ripen'][0] - 1 ] . '–' . $va_agri_month_labels[ $crop['ripen'][1] - 1 ];
+      ?>
+      <div class="va-agri__item">
+        <div class="va-agri__name"><?php echo esc_html( $crop['name'] ); ?></div>
+        <div class="va-agri__row">Vetés: <?php echo esc_html( $sow_txt ); ?> <b class="va-agri__tag <?php echo $va_agri_is_in( $va_agri_month, $crop['sow'][0], $crop['sow'][1] ) ? 'is-on' : 'is-off'; ?>"><?php echo $va_agri_is_in( $va_agri_month, $crop['sow'][0], $crop['sow'][1] ) ? 'MOST' : 'nem'; ?></b></div>
+        <div class="va-agri__row">Virágzás: <?php echo esc_html( $bloom_txt ); ?> <b class="va-agri__tag <?php echo $va_agri_is_in( $va_agri_month, $crop['bloom'][0], $crop['bloom'][1] ) ? 'is-on' : 'is-off'; ?>"><?php echo $va_agri_is_in( $va_agri_month, $crop['bloom'][0], $crop['bloom'][1] ) ? 'MOST' : 'nem'; ?></b></div>
+        <div class="va-agri__row">Érés: <?php echo esc_html( $ripen_txt ); ?> <b class="va-agri__tag <?php echo $va_agri_is_in( $va_agri_month, $crop['ripen'][0], $crop['ripen'][1] ) ? 'is-on' : 'is-off'; ?>"><?php echo $va_agri_is_in( $va_agri_month, $crop['ripen'][0], $crop['ripen'][1] ) ? 'MOST' : 'nem'; ?></b></div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<style>
+.va-agri{background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0) 0 0/8px 8px,rgb(6,6,6);border:1px solid rgba(255,0,0,.35);border-radius:14px;padding:10px;margin:0 0 12px;}
+.va-agri__hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.va-agri__title{font-weight:900;font-size:.9rem;color:#fff;}
+.va-agri__sub{font-size:.62rem;color:rgba(255,255,255,.75);}
+.va-agri__list{display:grid;grid-template-columns:1fr;gap:7px;}
+.va-agri__item{border:1px solid rgba(255,255,255,.14);border-radius:10px;background:linear-gradient(145deg,rgba(12,12,12,.88),rgba(24,10,10,.92));padding:7px;}
+.va-agri__name{font-size:.74rem;font-weight:800;color:#fff;margin-bottom:4px;}
+.va-agri__row{font-size:.62rem;color:rgba(255,255,255,.88);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 0;}
+.va-agri__tag{font-size:.54rem;font-weight:900;letter-spacing:.05em;border-radius:999px;padding:2px 6px;border:1px solid transparent;text-transform:uppercase;white-space:nowrap;}
+.va-agri__tag.is-on{color:#72ffb0;background:rgba(0,190,95,.2);border-color:rgba(0,240,120,.45);}
+.va-agri__tag.is-off{color:rgba(255,255,255,.78);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);}
+</style>
 <?php endif; ?>
 
 <!-- ═══ HOLDNAPTÁR ════════════════════════════════════════ -->
