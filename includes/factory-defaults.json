@@ -605,7 +605,6 @@
         "va_show_agri_widget": "0",
         "va_show_moon_widget": "0",
         "va_show_weather_widget": "0",
-        "va_show_damage_forecast_widget": "0",
         "va_single_accent": "#e27019",
         "va_single_border": "rgba(255,255,255,.12)",
         "va_single_btn_height": "48",
