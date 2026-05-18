@@ -141,7 +141,7 @@ if ( $va_home_h1 === '' ) {
 .va-weather__modal-title{margin:4px 0 0;font-size:1.35rem;letter-spacing:.03em;color:#fff!important;text-shadow:0 0 18px rgba(80,180,255,.35);}
 .va-weather__modal-title,.va-weather__modal-title *{color:#fff!important;}
 .va-weather__modal-graph{
-  position:relative;z-index:1;margin:0 0 14px;padding:10px 10px 6px;
+  position:relative;z-index:1;margin:0 0 14px;padding:12px 12px 8px;
   border:1px solid rgba(255,255,255,.12);border-radius:14px;
   background:linear-gradient(155deg,rgba(5,25,42,.72),rgba(44,10,33,.6));
   box-shadow:inset 0 0 22px rgba(0,180,255,.08),0 0 24px rgba(255,40,90,.07);
@@ -174,10 +174,18 @@ if ( $va_home_h1 === '' ) {
 .va-weather__modal .va-weather__d4{font-size:.72rem;color:rgba(228,238,255,.9);}
 .va-weather__modal .va-weather__note{position:relative;z-index:1;margin-top:12px;font-size:.68rem;opacity:.92;}
 body.va-weather-modal-open{overflow:hidden;}
+@media (max-width:980px){
+  .va-weather__modal-chart{height:224px;}
+  .va-weather__modal-legend{gap:8px 12px;font-size:.68rem;}
+}
 @media (max-width:760px){
   .va-weather__modal-card{margin:3vh auto;padding:16px 12px 12px;border-radius:16px;}
   .va-weather__modal .va-weather__days{grid-template-columns:1fr;gap:8px;}
   .va-weather__modal-title{font-size:1.05rem;}
+  .va-weather__modal-graph{padding:10px 8px 8px;}
+  .va-weather__modal-chart{height:236px;}
+  .va-weather__modal-legend{font-size:.64rem;gap:6px 10px;}
+  .va-weather__legend-dot{width:9px;height:9px;}
 }
 </style>
 <?php endif; ?>
@@ -460,6 +468,7 @@ body.va-weather-modal-open{overflow:hidden;}
   var modalCloseEl=document.getElementById('vwModalClose');
   var lastDailyData=null;
   var lastIdx=[];
+  var lastWindUnitRaw='km/h';
 
   function setForecastModal(open){
     if(!toggleEl||!modalEl)return;
@@ -467,7 +476,7 @@ body.va-weather-modal-open{overflow:hidden;}
     modalEl.hidden=!open;
     document.body.classList.toggle('va-weather-modal-open',open);
     if(open&&lastDailyData&&lastIdx.length){
-      try{drawForecastChart(lastDailyData,lastIdx);}catch(_e){}
+      try{drawForecastChart(lastDailyData,lastIdx,lastWindUnitRaw);}catch(_e){}
     }
   }
   if(toggleEl){
@@ -492,6 +501,11 @@ body.va-weather-modal-open{overflow:hidden;}
       }
     });
   }
+  window.addEventListener('resize',function(){
+    if(modalEl&&!modalEl.hidden&&lastDailyData&&lastIdx.length){
+      try{drawForecastChart(lastDailyData,lastIdx,lastWindUnitRaw);}catch(_e){}
+    }
+  });
 
   function wcText(code){
     var map={
@@ -548,14 +562,16 @@ body.va-weather-modal-open{overflow:hidden;}
     if(!ctx||n<2){return;}
     var dpr=window.devicePixelRatio||1;
     var w=Math.max(320,Math.floor(chartEl.clientWidth||640));
-    var h=210;
+    var compact=w<560;
+    var h=compact?236:210;
     chartEl.width=Math.floor(w*dpr);
     chartEl.height=Math.floor(h*dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
     ctx.clearRect(0,0,w,h);
 
-    var topPad=18,rightPad=16,bottomPad=34,leftPad=16;
+    var topPad=compact?24:18,rightPad=16,bottomPad=compact?42:34,leftPad=16;
     var cw=w-leftPad-rightPad,ch=h-topPad-bottomPad;
+    var labelEvery=compact?2:1;
     var tVals=[],rVals=[],rProbVals=[],wVals=[],labels=[];
     for(var k=0;k<n;k++){
       var i=idx[k];
@@ -629,10 +645,17 @@ body.va-weather-modal-open{overflow:hidden;}
       var wy2=topPad+ch-((wVals[wi2]/wMax)*ch*0.86);
       ctx.fillStyle='rgba(255,156,47,.98)';
       ctx.beginPath();ctx.arc(wx2,wy2,2.7,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,188,130,.96)';
-      ctx.font='700 9px Segoe UI';
-      ctx.textAlign='center';
-      ctx.fillText(Math.round(wVals[wi2])+' km/h',wx2,wy2+12);
+      if((wi2%labelEvery===0)||wi2===n-1){
+        var wLabelY=wy2+((wi2%2===0)?13:-10);
+        wLabelY=Math.max(topPad+8,Math.min(topPad+ch-6,wLabelY));
+        ctx.textAlign='center';
+        ctx.lineWidth=3;
+        ctx.strokeStyle='rgba(8,14,24,.9)';
+        ctx.font=compact?'700 8px Segoe UI':'700 9px Segoe UI';
+        ctx.strokeText(Math.round(wVals[wi2])+' km/h',wx2,wLabelY);
+        ctx.fillStyle='rgba(255,188,130,.98)';
+        ctx.fillText(Math.round(wVals[wi2])+' km/h',wx2,wLabelY);
+      }
     }
 
     for(var p2=0;p2<n;p2++){
@@ -640,12 +663,19 @@ body.va-weather-modal-open{overflow:hidden;}
       var py2=topPad+((tMax-tVals[p2])/(tMax-tMin))*ch;
       ctx.fillStyle='#fff';
       ctx.beginPath();ctx.arc(px2,py2,3.2,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,.92)';
-      ctx.font='700 11px Segoe UI';
       ctx.textAlign='center';
-      ctx.fillText(Math.round(tVals[p2])+'°',px2,py2-10);
+      if((p2%labelEvery===0)||p2===n-1){
+        var tLabelY=py2-10;
+        tLabelY=Math.max(topPad+9,tLabelY);
+        ctx.lineWidth=3;
+        ctx.strokeStyle='rgba(8,14,24,.9)';
+        ctx.font=compact?'700 10px Segoe UI':'700 11px Segoe UI';
+        ctx.strokeText(Math.round(tVals[p2])+'°',px2,tLabelY);
+        ctx.fillStyle='rgba(255,255,255,.96)';
+        ctx.fillText(Math.round(tVals[p2])+'°',px2,tLabelY);
+      }
       ctx.fillStyle='rgba(205,230,255,.8)';
-      ctx.font='700 10px Segoe UI';
+      ctx.font=compact?'700 9px Segoe UI':'700 10px Segoe UI';
       ctx.fillText(labels[p2],px2,h-12);
     }
   }
@@ -657,6 +687,7 @@ body.va-weather-modal-open{overflow:hidden;}
     var c=data.current;
     var d=data.daily;
     var windUnitRaw=(data.daily_units&&data.daily_units.wind_speed_10m_max)||(data.current_units&&data.current_units.wind_speed_10m)||'km/h';
+    lastWindUnitRaw=windUnitRaw;
     var currentWindKmh=toWindKmh(c.wind_speed_10m,windUnitRaw);
     var todayIso=todayIsoBp();
     locEl.textContent=fmtLoc(label);
