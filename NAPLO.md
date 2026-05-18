@@ -8712,3 +8712,20 @@ A szélérték a grafikonon is km/h-ban jelenik meg, és az egységkezelés konz
 
 ---
 
+## 2026. 05. 18. – Session: Időjárás diagram olvashatóság (mobil/tablet)
+
+### Mit csináltunk [x]
+- [x] Átlapolódó diagram-feliratok javítása: mobil szélességnél adaptív címke-ritkítás
+- [x] Szél és hőmérséklet feliratok kontrasztja javítva (kontúr + jobb láthatóság)
+- [x] Mobilon nagyobb chart magasság és finomított grafikon padding/legend méret
+- [x] Resize/orientáció váltáskor újrarajzolás (nyitott popupnál), így nem csúszik szét tablet/mobil nézetben
+- [x] Változások tükrözve root + theme mirror index fájlban
+
+### Hol tartunk
+A diagram olvashatóbb szűk nézetben is, és reszponzívan újrarenderel méretváltáskor.
+
+### TODO
+- [ ] Éles mobil ellenőrzés valós készüléken (kis iPhone/Android viewport)
+
+---
+
