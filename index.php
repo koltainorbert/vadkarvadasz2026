@@ -1,21 +1,3 @@
-  var modalCloseEl=document.getElementById('vhrModalClose');
-  var pickerEl=document.getElementById('vhrPicker');
-  var pickerBackdropEl=document.getElementById('vhrPickerBackdrop');
-  var noteEl=document.getElementById('vhrNote');
-  var pickerButtons={};
-  var activePickerSelect=null;
-  function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
-  function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
-  function setPickerModal(open){if(!pickerEl)return;pickerEl.hidden=!open;document.body.classList.toggle('va-home-radar-picker-open',open);if(!open){activePickerSelect=null;}}
-  if(pickerCloseEl){pickerCloseEl.addEventListener('click',function(){setPickerModal(false);});}
-  if(pickerBackdropEl){pickerBackdropEl.addEventListener('click',function(){setPickerModal(false);});}
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
-  setupPicker(cropEl,'Kultúra');
-  setupPicker(forestEl,'Erdőközel');
-  setupPicker(damageEl,'Kárelőzmény');
-  forestEl.addEventListener('change',function(){syncPickerButton(forestEl);rerender();});
-  damageEl.addEventListener('change',function(){syncPickerButton(damageEl);rerender();});
-  cropEl.addEventListener('change',function(){syncPickerButton(cropEl);setPhenologyOptions();rerender();});
 <?php
 /**
  * index.php – Főoldal / fallback template
@@ -1229,6 +1211,11 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var modalEl=document.getElementById('vhrModal');
   var modalBackdropEl=document.getElementById('vhrModalBackdrop');
   var modalCloseEl=document.getElementById('vhrModalClose');
+  var pickerEl=document.getElementById('vhrPicker');
+  var pickerBackdropEl=document.getElementById('vhrPickerBackdrop');
+  var pickerCloseEl=document.getElementById('vhrPickerClose');
+  var pickerTitleEl=document.getElementById('vhrPickerTitle');
+  var pickerOptionsEl=document.getElementById('vhrPickerOptions');
   var phenologyEl=document.getElementById('vhrPhenology');
   var huntingEl=document.getElementById('vhrHunting');
   var fenceEl=document.getElementById('vhrFence');
@@ -1240,6 +1227,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var factorsEl=document.getElementById('vhrFactors');
   var weekEl=document.getElementById('vhrWeek');
   var noteEl=document.getElementById('vhrNote');
+  var pickerButtons={};
+  var activePickerSelect=null;
   var phenologyMap={maize:[['sowing','Vetés'],['emergence','Kelés'],['milk_stage','Tejes érés'],['wax_stage','Viaszérés'],['pre_harvest','Betakarítás előtt']],rapeseed:[['autumn_green','Őszi zöld'],['spring_regrowth','Tavaszi újrahajtás'],['flowering','Virágzás'],['ripening','Érés']],sunflower:[['emergence','Kelés'],['head_stage','Tányérképzés'],['ripening','Érés'],['pre_harvest','Betakarítás előtt']],cereal:[['young','Fiatal állomány'],['heading','Kalászolás'],['ripening','Érés']],alfalfa:[['fresh_regrowth','Friss sarjadás'],['post_cut','Kaszálás utáni 3-10 nap'],['mature','Fejlett állomány']],orchard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']],vineyard:[['budburst','Rügyfakadás'],['young_shoot','Fiatal hajtás'],['fruiting','Termésképzés']]};
   var speciesMeta={wild_boar:{label:'Vaddisznó',short:'VD',window:'21:00-02:00'},red_deer:{label:'Gímszarvas',short:'GÍM',window:'20:00-23:30'},roe_deer:{label:'Őz',short:'ŐZ',window:'04:00-07:00'},fallow_deer:{label:'Dámvad',short:'DÁM',window:'20:30-23:00'},mouflon:{label:'Muflon',short:'MUF',window:'19:30-22:30'}};
   var cropLabels={maize:'kukorica',rapeseed:'repce',sunflower:'napraforgó',cereal:'kalászos',alfalfa:'lucerna',orchard:'gyümölcsös',vineyard:'szőlő'};
@@ -1250,8 +1239,12 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,mouflon:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,mouflon:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,mouflon:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,mouflon:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,mouflon:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,mouflon:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,mouflon:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
   var weatherData=null;
-  function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}}
+  function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
   function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
+  function setPickerModal(open){if(!pickerEl)return;pickerEl.hidden=!open;document.body.classList.toggle('va-home-radar-picker-open',open);if(!open){activePickerSelect=null;}}
+  function syncPickerButton(selectEl){var button=pickerButtons[selectEl.id];if(!button){return;}var option=selectEl.options[selectEl.selectedIndex];button.querySelector('span').textContent=option?option.textContent:'Válassz';}
+  function openPicker(selectEl,title){activePickerSelect=selectEl;pickerTitleEl.textContent=title;pickerOptionsEl.innerHTML='';for(var i=0;i<selectEl.options.length;i++){var option=selectEl.options[i],btn=document.createElement('button');btn.type='button';btn.className='va-home-radar__picker-option'+(option.value===selectEl.value?' is-active':'');btn.textContent=option.textContent;btn.dataset.value=option.value;btn.addEventListener('click',function(){if(!activePickerSelect){return;}activePickerSelect.value=this.dataset.value;syncPickerButton(activePickerSelect);activePickerSelect.dispatchEvent(new Event('change',{bubbles:true}));setPickerModal(false);});pickerOptionsEl.appendChild(btn);}setPickerModal(true);}
+  function setupPicker(selectEl,title){var button=document.createElement('button');button.type='button';button.className='va-home-radar__picker-btn';button.setAttribute('aria-haspopup','dialog');button.innerHTML='<span></span>';button.addEventListener('click',function(){openPicker(selectEl,title);});selectEl.insertAdjacentElement('afterend',button);pickerButtons[selectEl.id]=button;syncPickerButton(selectEl);}
   function clamp(num,min,max){return Math.max(min,Math.min(max,num));}
   function riskLevel(score){if(score>=85){return {label:'Kritikus',cls:'critical'};}if(score>=70){return {label:'Nagyon magas',cls:'very-high'};}if(score>=50){return {label:'Magas',cls:'high'};}if(score>=25){return {label:'Mérsékelt',cls:'moderate'};}return {label:'Alacsony',cls:'low'};}
   function confidenceLabel(score){if(score>=75){return 'Magas';}if(score>=50){return 'Közepes';}return 'Alacsony';}
@@ -1268,15 +1261,23 @@ body.va-home-radar-picker-open{overflow:hidden;}
   if(toggleEl){toggleEl.addEventListener('click',function(){setRadarModal(true);});setRadarModal(false);}
   if(modalCloseEl){modalCloseEl.addEventListener('click',function(){setRadarModal(false);});}
   if(modalBackdropEl){modalBackdropEl.addEventListener('click',function(){setRadarModal(false);});}
+  if(pickerCloseEl){pickerCloseEl.addEventListener('click',function(){setPickerModal(false);});}
+  if(pickerBackdropEl){pickerBackdropEl.addEventListener('click',function(){setPickerModal(false);});}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
   if(modalEl){modalEl.addEventListener('click',function(e){if(e.target===modalEl){setRadarModal(false);}});}
   setPhenologyOptions();
-  forestEl.addEventListener('change',rerender);
-  damageEl.addEventListener('change',rerender);
-  cropEl.addEventListener('change',function(){setPhenologyOptions();rerender();});
-  phenologyEl.addEventListener('change',rerender);
-  huntingEl.addEventListener('change',rerender);
-  fenceEl.addEventListener('change',rerender);
+  setupPicker(cropEl,'Kultúra');
+  setupPicker(forestEl,'Erdőközel');
+  setupPicker(damageEl,'Kárelőzmény');
+  setupPicker(phenologyEl,'Fenológia');
+  setupPicker(huntingEl,'Vadásznyomás');
+  setupPicker(fenceEl,'Villanypásztor');
+  forestEl.addEventListener('change',function(){syncPickerButton(forestEl);rerender();});
+  damageEl.addEventListener('change',function(){syncPickerButton(damageEl);rerender();});
+  cropEl.addEventListener('change',function(){syncPickerButton(cropEl);setPhenologyOptions();rerender();});
+  phenologyEl.addEventListener('change',function(){syncPickerButton(phenologyEl);rerender();});
+  huntingEl.addEventListener('change',function(){syncPickerButton(huntingEl);rerender();});
+  fenceEl.addEventListener('change',function(){syncPickerButton(fenceEl);rerender();});
   if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');},function(){fetchForecast(47.093,17.911,'Veszprém mintahely');},{enableHighAccuracy:true,timeout:7000,maximumAge:900000});}else{fetchForecast(47.093,17.911,'Veszprém mintahely');}
 })();
 </script>
