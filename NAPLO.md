@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 18. – Session #360f — Filmszerű faj-sziluett és parancsnoki heatmap a radar popupban
+
+### Kérés
+- A részletes radar popup legyen még filmszerűbb animált faj-sziluettel, pulzáló threat ringgel és komolyabb micro-interakciókkal.
+- A heti trend mellé kerüljön valódi parancsnoki heatmap mátrix is.
+
+### Javítás
+- A részletes modal kapott egy új cinematic stage blokkot:
+  - animált faj-sziluett
+  - pulzáló threat ring
+  - központi pulse core
+  - három taktikai signal kártya (`Primary Target`, `Threat Pulse`, `Pattern`)
+- A radar most nemcsak a napi top kockázatot számolja, hanem fajonkénti heti mátrixot is épít.
+- Ebből készült egy új `Parancsnoki heti heatmap`, ami 5 vadfaj × 7 nap rácsban mutatja a becsült kockázati intenzitást.
+- A modal vizuális hangsúlya így már nemcsak információs, hanem prezentációs szintű is lett.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 18. – Session #360e — Vadkár Radar brutális vizuális újrahúzás
 
 ### Kérés
