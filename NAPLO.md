@@ -8864,3 +8864,20 @@ Az agrár naptár blokk most külön widgetként jelenik meg a Holdnaptár előt
 
 ---
 
+## 2026. 05. 18. – Session: Agrár naptár bővítés + kompakt sidebar
+
+### Mit csináltunk [x]
+- [x] Az Agrár naptárban bekerült az `Aratás` sor is a sidebar widgetbe
+- [x] Az `Aratás` sor bekerült a lenyitható időjárás agrár blokkba is
+- [x] Sidebar agrár kártya kompaktabbra húzva (kisebb padding/sorok/betűméret)
+- [x] A sidebar agrár blokk piros borderje lecserélve semleges, a többi widgethez illeszkedő borderre
+- [x] Root + theme mirror `index.php` szinkronban frissítve
+
+### Hol tartunk
+Agrár adatok most teljesebbek (Vetés, Virágzás, Érés, Aratás) és a sidebar vizuál kompaktabb, egységesebb.
+
+### TODO
+- [ ] Igény esetén croponként külön, finomabb aratási intervallumok
+
+---
+
