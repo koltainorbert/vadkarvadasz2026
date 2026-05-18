@@ -1263,7 +1263,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   if(modalBackdropEl){modalBackdropEl.addEventListener('click',function(){setRadarModal(false);});}
   if(pickerCloseEl){pickerCloseEl.addEventListener('click',function(){setPickerModal(false);});}
   if(pickerBackdropEl){pickerBackdropEl.addEventListener('click',function(){setPickerModal(false);});}
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pickerEl&&!pickerEl.hidden){setPickerModal(false);return;}if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
   if(modalEl){modalEl.addEventListener('click',function(e){if(e.target===modalEl){setRadarModal(false);}});}
   setPhenologyOptions();
   setupPicker(cropEl,'Kultúra');

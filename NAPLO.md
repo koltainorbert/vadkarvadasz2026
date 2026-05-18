@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 18. – Session #360d — Vadkár Radar popup választók a fekete lenyílók helyett
+
+### Kérés
+- A radar mezőinél a natív lenyílók fekete alapon rosszul olvashatók voltak; helyettük fehér szöveges, popupos választó kellett.
+
+### Javítás
+- A főoldali Vadkár Radar összes választómezője popup pickerre váltott.
+- A natív `select` mezők rejtve maradtak állapotkezelésre, de a felhasználó most minden mezőt egy külön, sötét popup panelben választ ki.
+- A picker fehér tipográfiát kapott, így a teljes radar egységesen a fekete dizájnhoz igazodik.
+- A kultúraváltás továbbra is dinamikusan frissíti a fenológia opcióit, és a popup gomb felirata is automatikusan követi a kiválasztást.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 18. – Session #360c — Vadkár Radar popup részletes nézettel
 
 ### Kérés
