@@ -11,6 +11,9 @@
 ### Megvalósítás
 - Új beállítási kapcsoló: `va_show_damage_forecast_widget`.
 - Új főoldali widget a `index.php` fájlban és a theme másolatban is.
+- Hibajavítás: a widget nem a fő tartalom alá, hanem vissza az oldalsó `va-home-sidebar` blokkba került.
+- Hibajavítás: a duplán záródó `</aside>` eltávolítva, emiatt helyreállt a főoldali layout.
+- Sidebar alapértelmezett oldala jobbra állítva (`va_layout_home_sidebar_side` => `right`).
 - Popup tartalom:
   - 7 napos kockázati pontszám
   - napi bontás

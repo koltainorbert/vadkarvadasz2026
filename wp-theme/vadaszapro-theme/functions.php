@@ -1211,7 +1211,7 @@ add_action( 'wp_enqueue_scripts', function () {
     $layout_bp_sidebar_hide      = va_design_int_option( 'va_layout_bp_sidebar_hide', 1100, 480, 1800 );
 
     $allowed_justify             = [ 'start', 'center', 'end' ];
-    $layout_home_sidebar_side    = sanitize_key( get_option( 'va_layout_home_sidebar_side', 'left' ) );
+    $layout_home_sidebar_side    = sanitize_key( get_option( 'va_layout_home_sidebar_side', 'right' ) );
     $layout_grid_justify         = in_array( get_option( 'va_layout_grid_justify', 'start' ), $allowed_justify, true ) ? get_option( 'va_layout_grid_justify' ) : 'start';
     $layout_grid_justify_tablet  = in_array( get_option( 'va_layout_grid_justify_tablet', 'start' ), $allowed_justify, true ) ? get_option( 'va_layout_grid_justify_tablet' ) : 'start';
     $layout_grid_justify_mobile  = in_array( get_option( 'va_layout_grid_justify_mobile', 'start' ), $allowed_justify, true ) ? get_option( 'va_layout_grid_justify_mobile' ) : 'start';

@@ -625,7 +625,7 @@ class VA_Settings_Page {
             'va_layout_bp_desktop_tablet'     => '1200',
             'va_layout_bp_tablet_mobile'      => '560',
             'va_layout_bp_sidebar_hide'       => '1100',
-            'va_layout_home_sidebar_side'     => 'left',  // left|right|none
+            'va_layout_home_sidebar_side'     => 'right',  // left|right|none
             'va_layout_grid_justify'          => 'start', // start|center|end
             'va_layout_grid_justify_tablet'   => 'start',
             'va_layout_grid_justify_mobile'   => 'start',
@@ -948,7 +948,7 @@ class VA_Settings_Page {
         }
 
         $listing_layout_select = [
-            'va_layout_home_sidebar_side'   => 'left',
+            'va_layout_home_sidebar_side'   => 'right',
             'va_layout_grid_justify'        => 'start',
             'va_layout_grid_justify_tablet' => 'start',
             'va_layout_grid_justify_mobile' => 'start',
