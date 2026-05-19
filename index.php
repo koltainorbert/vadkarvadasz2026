@@ -298,17 +298,8 @@ body.va-weather-modal-open{overflow:hidden;}
 <section class="va-home-radar" id="va-home-radar" data-risk="low">
   <div class="va-home-radar__ambient"></div>
   <div class="va-home-radar__scan"></div>
-  <div class="va-home-radar__hd">
-    <div>
-      <div class="va-home-radar__eyebrow">Vadkár előrejelzés</div>
-      <div class="va-home-radar__title">Vadkár Radar</div>
-      <div class="va-home-radar__subtitle">Fajspecifikus éjszakai mozgás, meteorológia és zavarási nyomok egy képen.</div>
-    </div>
-    <div class="va-home-radar__status-stack">
-      <div class="va-home-radar__status"><span></span>Live field intelligence</div>
-      <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
-    </div>
-  </div>
+  <div class="va-home-radar__spider va-home-radar__spider--widget" id="vhrSpiderWidget"></div>
+  <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
   <div class="va-home-radar__controls">
     <label class="va-home-radar__field">
       <span>Kultúra</span>
@@ -342,7 +333,6 @@ body.va-weather-modal-open{overflow:hidden;}
       </select>
     </label>
   </div>
-  <div class="va-home-radar__spider va-home-radar__spider--widget" id="vhrSpiderWidget"></div>
   <div class="va-home-radar__hero">
     <div class="va-home-radar__scorebox">
       <div class="va-home-radar__scorelabel">Kockázati index</div>
@@ -371,18 +361,7 @@ body.va-weather-modal-open{overflow:hidden;}
         <h3 class="va-home-radar__modal-title" id="vhrModalTitle">Vadkár Radar részletes nézet</h3>
       </div>
       <div class="va-home-radar__modal-scroll" id="vhrModalScroll">
-        <div class="va-home-radar__cinema">
-          <div class="va-home-radar__stage">
-            <div class="va-home-radar__threat-ring"></div>
-            <div class="va-home-radar__stage-core"></div>
-            <div class="va-home-radar__silhouette" id="vhrSilhouette" aria-hidden="true"></div>
-          </div>
-          <div class="va-home-radar__cinema-meta">
-            <div class="va-home-radar__signal-card"><span>Fő célfaj</span><strong id="vhrCinemaSpecies">--</strong></div>
-            <div class="va-home-radar__signal-card"><span>Kockázati pulzus</span><strong id="vhrThreatPulse">--</strong></div>
-            <div class="va-home-radar__signal-card"><span>Mintázat</span><strong id="vhrPattern">--</strong></div>
-          </div>
-        </div>
+        <div class="va-home-radar__spider" id="vhrSpider"></div>
         <div class="va-home-radar__detail-grid">
           <label class="va-home-radar__field">
             <span>Fenológia</span>
@@ -484,10 +463,6 @@ body.va-weather-modal-open{overflow:hidden;}
             <div class="va-home-radar__meta-item"><span>Kritikus idő</span><strong id="vhrModalWindow">--</strong></div>
             <div class="va-home-radar__meta-item"><span>Konfidencia</span><strong id="vhrModalConfidence">--</strong></div>
           </div>
-        </div>
-        <div class="va-home-radar__detail-block">
-          <div class="va-home-radar__detail-title">Faj kockázati radar</div>
-          <div class="va-home-radar__spider" id="vhrSpider"></div>
         </div>
         <div class="va-home-radar__detail-block">
           <div class="va-home-radar__detail-title">Fő kockázati okok</div>
