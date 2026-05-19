@@ -583,10 +583,10 @@ body.va-weather-modal-open{overflow:hidden;}
 .va-home-radar__heatmap-cell.is-critical{background:linear-gradient(180deg,rgba(120,18,34,.3),rgba(56,8,20,.68));}
 .va-home-radar__note{margin-top:14px;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);font-size:.68rem;line-height:1.6;color:rgba(255,255,255,.72);}
 body.va-home-radar-modal-open{overflow:hidden;}
-.va-home-radar__picker{position:fixed;inset:0;z-index:120260;display:block;}
+.va-home-radar__picker{position:fixed;inset:0;z-index:120260;display:flex;align-items:center;justify-content:center;padding:9vh 14px 14px;}
 .va-home-radar__picker[hidden]{display:none !important;}
 .va-home-radar__picker-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 50% 10%,var(--radar-accent-soft),transparent 36%),rgba(4,6,10,.88);backdrop-filter:blur(8px);}
-.va-home-radar__picker-card{position:relative;width:min(520px,calc(100vw - 28px));max-height:min(80vh,760px);margin:9vh auto 0;border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(8,8,10,.99),rgba(22,12,12,.97));box-shadow:0 36px 90px rgba(0,0,0,.62),0 0 60px var(--radar-glow);padding:18px 16px 16px;overflow:auto;}
+.va-home-radar__picker-card{position:relative;width:min(520px,calc(100vw - 28px));max-height:min(80vh,760px);margin:0;border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(8,8,10,.99),rgba(22,12,12,.97));box-shadow:0 36px 90px rgba(0,0,0,.62),0 0 60px var(--radar-glow);padding:18px 16px 16px;overflow:auto;}
 .va-home-radar__picker-title{margin:8px 0 14px;font-size:1.08rem;color:#fff;}
 .va-home-radar__picker-options{display:grid;gap:10px;max-height:min(62vh,520px);overflow:auto;padding-right:2px;}
 .va-home-radar__picker-option{border-radius:14px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));color:#fff;padding:14px 14px;font-size:.82rem;font-weight:900;text-align:left;cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease;}
