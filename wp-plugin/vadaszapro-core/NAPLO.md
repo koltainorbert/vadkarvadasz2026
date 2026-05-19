@@ -2,6 +2,29 @@
 
 ---
 
+## 2026. 05. 19. – Session #360k — Radar részletes nézet teljes magyarosítás + fehér címsor
+
+### Kérés
+- A részletes radar nézetben minden felirat legyen magyar.
+- A fejléc/címsor fehér legyen.
+
+### Javítás
+- A modalban maradt angol statikus címkék magyarra lettek cserélve:
+  - `Decision Support` → `Döntéstámogatás`
+  - `Primary Target` → `Fő célfaj`
+  - `Threat Pulse` → `Kockázati pulzus`
+  - `Pattern` → `Mintázat`
+  - `Risk Index` → `Kockázati index`
+- A dinamikus pulzus-szintek (JS) is teljesen magyar szövegekre váltottak.
+- A `trigger` kifejezések magyarosítva lettek (`kiváltó ok`).
+- A modal alcím és cím explicit fehér színkényszert kapott (`!important`), így biztosan nem sötétedik el örökölt stílustól.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #360j — Radar modal scroll-vég + lábléc nyelvváltó réteg fix
 
 ### Kérés
