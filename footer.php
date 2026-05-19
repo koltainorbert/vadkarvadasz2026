@@ -192,32 +192,32 @@
                         red_deer:{label:'Gímszarvas',short:'GÍM',window:'20:00-23:30'},
                         roe_deer:{label:'Őz',short:'ŐZ',window:'04:00-07:00'},
                         fallow_deer:{label:'Dámvad',short:'DÁM',window:'20:30-23:00'},
-                        mouflon:{label:'Muflon',short:'MUF',window:'19:30-22:30'}
+                        wild_hare:{label:'Vadnyúl',short:'VNY',window:'19:30-23:30'}
                     };
                     var cropLabels={maize:'kukorica',rapeseed:'repce',sunflower:'napraforgó',cereal:'kalászos',alfalfa:'lucerna',orchard:'gyümölcsös',vineyard:'szőlő'};
-                    var speciesBase={wild_boar:9,red_deer:7,roe_deer:5,fallow_deer:6,mouflon:4};
+                    var speciesBase={wild_boar:9,red_deer:7,roe_deer:5,fallow_deer:6,wild_hare:4};
                     var cropScores={
-                        maize:{wild_boar:15,red_deer:10,roe_deer:4,fallow_deer:8,mouflon:3},
-                        sunflower:{wild_boar:11,red_deer:6,roe_deer:7,fallow_deer:5,mouflon:2},
-                        rapeseed:{wild_boar:5,red_deer:13,roe_deer:14,fallow_deer:12,mouflon:9},
-                        cereal:{wild_boar:6,red_deer:9,roe_deer:7,fallow_deer:8,mouflon:7},
-                        alfalfa:{wild_boar:9,red_deer:11,roe_deer:10,fallow_deer:10,mouflon:8},
-                        orchard:{wild_boar:4,red_deer:8,roe_deer:7,fallow_deer:8,mouflon:4},
-                        vineyard:{wild_boar:3,red_deer:9,roe_deer:8,fallow_deer:7,mouflon:4}
+                        maize:{wild_boar:15,red_deer:10,roe_deer:4,fallow_deer:8,wild_hare:3},
+                        sunflower:{wild_boar:11,red_deer:6,roe_deer:7,fallow_deer:5,wild_hare:2},
+                        rapeseed:{wild_boar:5,red_deer:13,roe_deer:14,fallow_deer:12,wild_hare:9},
+                        cereal:{wild_boar:6,red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:7},
+                        alfalfa:{wild_boar:9,red_deer:11,roe_deer:10,fallow_deer:10,wild_hare:8},
+                        orchard:{wild_boar:4,red_deer:8,roe_deer:7,fallow_deer:8,wild_hare:4},
+                        vineyard:{wild_boar:3,red_deer:9,roe_deer:8,fallow_deer:7,wild_hare:4}
                     };
                     var forestScores={under_100:10,'100_300':8,'300_700':5,'700_1500':2,over_1500:0};
                     var damageScores={7:12,30:8,90:5,none:0};
                     var huntingScores={
-                        low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,mouflon:2},
-                        medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,mouflon:0},
-                        high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,mouflon:-2}
+                        low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},
+                        medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},
+                        high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}
                     };
                     var phenologyScores={
                         maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},
-                        rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,mouflon:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,mouflon:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},
+                        rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},
                         sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},
-                        cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,mouflon:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},
-                        alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,mouflon:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},
+                        cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},
+                        alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},
                         orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},
                         vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}
                     };
@@ -351,7 +351,7 @@
 
                         if(species === 'wild_boar' && ctx.precip48 > 5 && ctx.soil > 0.18){ speciesFactor(bag,5,'Eső utáni puha talaj és túrási hajlam'); }
                         if(species === 'wild_boar' && ctx.tempNight > 12 && ctx.humidity > 75){ speciesFactor(bag,4,'Meleg, párás éjszaka kedvez a vaddisznónak'); }
-                        if((species === 'red_deer' || species === 'roe_deer' || species === 'fallow_deer' || species === 'mouflon') && ctx.tempMin <= 2 && (controls.crop === 'rapeseed' || controls.crop === 'cereal' || controls.crop === 'alfalfa')){
+                        if((species === 'red_deer' || species === 'roe_deer' || species === 'fallow_deer' || species === 'wild_hare') && ctx.tempMin <= 2 && (controls.crop === 'rapeseed' || controls.crop === 'cereal' || controls.crop === 'alfalfa')){
                             speciesFactor(bag,4,'Hidegben a zöld kultúra felértékelődik');
                         }
                         if(ctx.wind > 30){ speciesFactor(bag,-5,'Erős szél csökkenti a biztonságos kijárást'); }
