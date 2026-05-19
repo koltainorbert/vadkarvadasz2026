@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 19. – Session #360i — Radar modal alsó kilógás javítás
+
+### Kérés
+- A radar részletes modal alja még kilógott viewportból.
+
+### Javítás
+- A modal top/bottom offset custom változókra lett bontva (`--vhr-modal-top`, `--vhr-modal-bottom`).
+- A modal kártya `max-height` most a teljes viewportból levonja a top és bottom offsetet, ezért alul sem tud kifutni.
+- A mobil breakpoint külön bottom offsetet kapott, hogy kis kijelzőn is bent maradjon a teljes panel.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Deploy
+- Deploy commit: `67601ae`
+
+---
+
 ## 2026. 05. 19. – Session #360h — Radar modal felső takarás + lábléc nyelvváltó háttér javítás
 
 ### Kérés
