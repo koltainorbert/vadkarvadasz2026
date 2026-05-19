@@ -2,6 +2,31 @@
 
 ---
 
+## 2026. 05. 19. – Session #spiderchart — Vadkár Radar spider chart (faj kockázati pentagon)
+
+### Kérés
+- A Vadkár Radar modálba kerüljön egy SVG spider/pentagon chart, ami az 5 faj kockázati pontszámát mutatja vizuálisan.
+- Csordaméret input helyett 7 vadászias mező (szél iránya, vadcsapás/nyom, szomszéd tábla, etetőhely, csendes időszak, vadföld, kijárási irány).
+- Picker modal középre igazítva, fehér szöveg.
+
+### Megvalósítás
+- HTML: `<div class="va-home-radar__spider" id="vhrSpider">` container a modálba illesztve (Fő kockázati okok blokk elé).
+- CSS: `.va-home-radar__spider` + SVG stílusok.
+- JS: `var spiderEl` elemref, `renderSpider(ctx,ctl)` függvény (tiszta SVG, grid pentagonok, filled polygon, dot+label per faj), `render()` hívásban `if(spiderEl){renderSpider(top.ctx,controls());}`.
+- Picker fix: `position:fixed;display:flex;align-items:center;justify-content:center` → backdrop-filter miatti containing block probléma megoldva.
+- Picker title: `color:#fff !important`.
+- 7 új input: `vhrWind, vhrTrack, vhrNeighbor, vhrFeeder, vhrQuiet, vhrGameStrip, vhrExit` (setupPicker + listener + score logika).
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Holnap mivel kell kezdeni
+- Élő teszten ellenőrizni: spider chart megjelenik-e a modálban, helyes-e a fajokhoz tartozó pontszám-ábrázolásnál
+- Ha kell: label pozíció finomhangolás (szélső fajok feliratai ne lógjon ki)
+
+---
+
 ## 2026. 05. 19. – Session #360q — Muflon cseréje Vadnyúlra
 
 ### Kérés

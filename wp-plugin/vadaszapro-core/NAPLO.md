@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 19. – Spider chart + 7 új input + picker fix
+- Vadkár Radar modálba SVG spider/pentagon chart kerül (5 faj kockázat vizuálisan)
+- Csordaméret helyett 7 vadászias mező (szél, nyom, szomszéd, etető, csendes, vadföld, kijárás)
+- Picker modal centered + white text fix
+- Érintett: `index.php` + `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #360q — Muflon cseréje Vadnyúlra
 
 ### Kérés
