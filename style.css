@@ -913,6 +913,10 @@ textarea { min-height: 110px; resize: vertical; }
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
+body.va-home-radar-modal-open .va-lang-sw--footer {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
 .va-lang-sw__dropdown--up { bottom: calc(100% + 6px); top: auto !important; }
 .va-lang-sw { position: relative; display: inline-block; }
 .va-lang-sw__dropdown[hidden] { display: none !important; }

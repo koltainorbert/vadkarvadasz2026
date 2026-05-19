@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 19. – Session #360j — Radar modal scroll-vég + lábléc nyelvváltó réteg fix
+
+### Kérés
+- A részletes radar modal alján úgy tűnt, marad még tartalom, de nem lehetett odagörgetni.
+- A lábléc nyelvváltó (HU) modal nyitáskor a tartalom fölé jött.
+
+### Javítás
+- A modal kártya fix magasságkezelése flex-oszlopos elrendezést kapott (`display:flex; flex-direction:column;`).
+- A belső scroll konténer explicit rugalmas blokk lett (`flex:1; min-height:0; max-height:none; overflow-y:auto`), plusz alsó paddinggel, hogy a legalsó tartalom is biztosan elérhető legyen.
+- Modal nyitott állapotban a footer nyelvváltó elrejtésre kerül (`body.va-home-radar-modal-open .va-lang-sw--footer`), így nem tud a modal fölé rétegződni.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+- `style.css`
+- `wp-theme/vadaszapro-theme/style.css`
+
+---
+
 ## 2026. 05. 19. – Session #360i — Radar modal alsó kilógás javítás
 
 ### Kérés
