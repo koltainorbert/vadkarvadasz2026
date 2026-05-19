@@ -2,6 +2,27 @@
 
 ---
 
+## 2026. 05. 19. – Session #360h — Radar modal felső takarás + lábléc nyelvváltó háttér javítás
+
+### Kérés
+- A radar részletes nézet felső része takarásban volt.
+- A lábléc nyelvválasztó vizuálisan háttér nélkül jelent meg.
+
+### Javítás
+- A radar modal fix header-kompenzált felső paddinget kapott (`--nav` alapú), így nem csúszik a felső sáv alá.
+- Admin bar esetére külön top offset került be (desktop + mobil WP admin bar magasság).
+- A modal kártya és belső scroll blokk `100dvh` alapú max-height számítást kapott stabil mobil viselkedéshez.
+- A footer nyelvváltó külön, erősített gradient háttér + border + shadow stílust kapott.
+- A mobilos nyelvváltó szűkítő szabályok (`max-width`, rejtés) header scope alá kerültek, így már nem torzítják a lábléc kapcsolót.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+- `style.css`
+- `wp-theme/vadaszapro-theme/style.css`
+
+---
+
 ## 2026. 05. 19. – Session #360g — Vadkár Radar reszponzív stabilizálás (mobil + szűk hasáb)
 
 ### Kérés
