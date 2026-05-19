@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 19. – Session #360q — Muflon cseréje Vadnyúlra
+
+### Kérés
+- A Muflon kerüljön ki, és helyette Vadnyúl jelenjen meg.
+
+### Javítás
+- A radar fajmodellben a `mouflon` kulcs `wild_hare` lett.
+- Megjelenésben: `Vadnyúl` (`VNY`) került be a Muflon helyére.
+- Pontozási táblák (alap, kultúra, vadászati nyomás, fenológia) és a hideg-idő feltétel is Vadnyúlra lett átállítva.
+- Az indexben lévő kiegészítő faj/adatsorokban is Muflon -> Vadnyúl csere történt.
+- A footer radar logika root + theme mirror fájlban is szinkronban frissítve.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+- `footer.php`
+- `wp-theme/vadaszapro-theme/footer.php`
+
+---
+
 ## 2026. 05. 19. – Session #360p — Dupla fajnév megjelenítés javítás
 
 ### Kérés

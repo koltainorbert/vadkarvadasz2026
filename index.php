@@ -1800,7 +1800,7 @@ var TROPHY_SPECIES=[
   {name:'Gímszarvas – bika',label:'Gímbika'},
   {name:'Dámszarvas – bak',label:'Dámbika'},
   {name:'Őzbak',label:'Őzbak'},
-  {name:'Muflon – kos',label:'Muflon kos'}
+  {name:'Vadnyúl',label:'Vadnyúl'}
 ];
 function doy(m,d){var i=0;for(var x=1;x<m;x++)i+=MD[x-1];return i+d-1;}
 function nowBPsimple(){var d=new Date(),parts={};new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Budapest',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(d).forEach(function(p){if(p.type!=='literal')parts[p.type]=+p.value;});return parts;}
@@ -1965,10 +1965,8 @@ var groups=[
     {name:"\u0150zsuta",sub:"Capreolus capreolus \u2640",seasons:[[10,1,1,31]]},
     {name:"\u0150zgida",sub:"Capreolus capreolus juv.",seasons:[[8,1,1,31]]},
   ]},
-  {label:"MUFLON",color:"#cc44cc",animals:[
-    {name:"Muflon \u2013 kos",sub:"Ovis musimon \u2642",seasons:[[8,1,1,31]]},
-    {name:"Muflon \u2013 juh",sub:"Ovis musimon \u2640",seasons:[[10,1,1,31]]},
-    {name:"Muflon \u2013 b\u00e1r\u00e1ny",sub:"Ovis musimon juv.",seasons:[[8,1,1,31]]},
+  {label:"VADNYÚL",color:"#cc44cc",animals:[
+    {name:"Vadnyúl",sub:"Lepus europaeus",seasons:[[10,1,12,31]]},
   ]},
   {label:"VADDISZN\u00d3",color:"#f55050",animals:[
     {name:"Vaddiszn\u00f3 \u2013 kan",sub:"Sus scrofa \u2642",seasons:[[1,1,12,31]]},
