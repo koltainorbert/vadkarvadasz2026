@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 19. – Session #360n — Radar UI érthetőségi overhaul (dátumok, skála, rövidítések)
+
+### Kérés
+- A radar naptár/heatmap értelmezhetetlen volt: rövidítések (`VD`), nem egyértelmű számjelentés, konkrét dátumok hiánya.
+
+### Javítás
+- A napi és heti kártyákon a számok most explicit `.../100` pontként jelennek meg.
+- A rövid fajkódok helyett teljes fajnevek kerültek a kártyákra.
+- A napjelölések mellé konkrét naptári dátum került (`HH.NN.`) a 7 napos trendben és a heatmap oszlopfejlécekben.
+- A heatmap blokk kapott magyarázó sort, hogy a számok kockázati pontok, nem százalékok.
+- A nem interaktív kártyák/cellák kurzora defaultra lett állítva, hogy ne tűnjenek hibás gombnak.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #360m — Nyelvváltó végleges tiltás modal alatt (`display:none`)
 
 ### Kérés
