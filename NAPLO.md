@@ -2,28 +2,6 @@
 
 ---
 
-## 2026. 05. 19. – Session #360k — Radar részletes nézet: fehér címke + teljes magyarítás
-
-### Kérés
-- A "Decision Support" sor legyen fehér.
-- A részletes nézetben ne maradjon angol felirat.
-
-### Javítás
-- A részletes nézet felső szemöldöksora magyarra lett cserélve: `Döntéstámogatás`.
-- A hozzá tartozó szín fixen fehérre lett állítva: `.va-home-radar__modal-eyebrow { color:#fff; }`.
-- A részletes panel angol címkéi magyarra cserélve:
-  - `Primary Target` → `Fő célfaj`
-  - `Threat Pulse` → `Kockázati pulzus`
-  - `Pattern` → `Mintázat`
-  - `Parancsnoki heti heatmap` → `Parancsnoki heti hőtérkép`
-  - `Fő trigger` → `Fő kiváltó ok`
-
-### Érintett fájlok
-- `index.php`
-- `wp-theme/vadaszapro-theme/index.php`
-
----
-
 ## 2026. 05. 19. – Session #360j — Radar modal scroll-vég + lábléc nyelvváltó réteg fix
 
 ### Kérés
