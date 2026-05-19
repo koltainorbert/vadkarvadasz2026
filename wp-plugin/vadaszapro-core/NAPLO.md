@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 19. – Session #360l — Nyelvváltó rejtése radar modal közben (globális guard)
+
+### Kérés
+- A lábléc nyelvválasztó modal nyitáskor a radar tartalom fölött jelent meg, pedig nem kellene látszódnia.
+
+### Javítás
+- A korábbi, csak footer-specifikus tiltás mellé bekerült egy erősített modal guard.
+- `body.va-home-radar-modal-open` állapotban most már az összes nyelvváltó variáns elrejtésre kerül:
+  - `.va-lang-sw`
+  - `.va-lang-sw__dropdown`
+  - `#va-lang-toggle`, `#va-lang-dropdown`
+  - `#va-lang-toggle-footer`, `#va-lang-dropdown-footer`
+- Így sem header, sem footer nyelvváltó nem tud felúszni a radar részletes nézet fölé.
+
+### Érintett fájlok
+- `style.css`
+- `wp-theme/vadaszapro-theme/style.css`
+
+---
+
 ## 2026. 05. 19. – Session #360k — Radar részletes nézet teljes magyarosítás + fehér címsor
 
 ### Kérés

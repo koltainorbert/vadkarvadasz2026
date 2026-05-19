@@ -989,6 +989,16 @@ body.va-home-radar-modal-open .va-lang-sw--footer {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+body.va-home-radar-modal-open .va-lang-sw,
+body.va-home-radar-modal-open .va-lang-sw__dropdown,
+body.va-home-radar-modal-open #va-lang-toggle,
+body.va-home-radar-modal-open #va-lang-dropdown,
+body.va-home-radar-modal-open #va-lang-toggle-footer,
+body.va-home-radar-modal-open #va-lang-dropdown-footer {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 .va-lang-sw__dropdown--up { bottom: calc(100% + 6px); top: auto !important; }
 .va-lang-sw { position: relative; display: inline-block; }
 .va-lang-sw__dropdown[hidden] { display: none !important; }
