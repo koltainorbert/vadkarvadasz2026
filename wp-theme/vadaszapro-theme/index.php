@@ -298,10 +298,7 @@ body.va-weather-modal-open{overflow:hidden;}
 <section class="va-home-radar" id="va-home-radar" data-risk="low">
   <div class="va-home-radar__ambient"></div>
   <div class="va-home-radar__scan"></div>
-  <div class="va-home-radar__split">
-    <div class="va-home-radar__spider" id="vhrSpiderWidget"></div>
-    <div class="va-home-radar__stats" id="vhrSpiderStats"></div>
-  </div>
+  <div class="va-home-radar__spider" id="vhrSpiderWidget"></div>
   <div class="va-home-radar__loc" id="vhrLoc">Betöltés...</div>
   <div class="va-home-radar__controls">
     <label class="va-home-radar__field">
@@ -364,7 +361,10 @@ body.va-weather-modal-open{overflow:hidden;}
         <h3 class="va-home-radar__modal-title" id="vhrModalTitle">Vadkár Radar részletes nézet</h3>
       </div>
       <div class="va-home-radar__modal-scroll" id="vhrModalScroll">
-        <div class="va-home-radar__spider" id="vhrSpider"></div>
+        <div class="va-home-radar__split">
+          <div class="va-home-radar__spider" id="vhrSpider"></div>
+          <div class="va-home-radar__stats" id="vhrSpiderStats"></div>
+        </div>
         <div class="va-home-radar__detail-grid">
           <label class="va-home-radar__field">
             <span>Fenológia</span>
