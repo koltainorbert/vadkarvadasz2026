@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 19. – Session #360o — Radar picker nyitási hiba + túlcsordulás + 7 napos látható trend
+
+### Kérés
+- A választók nem nyíltak meg, adatok kilógtak a dobozokból, és kevés látható adatpont jelent meg.
+
+### Javítás
+- A picker overlay `z-index` értéke a modal fölé került, így a `+` mezők ismét megnyitják a választóablakot.
+- A picker opciólista max magasság + belső scroll kezelést kapott sok opcióhoz.
+- Hosszú szövegekhez tördelés (`overflow-wrap/word-break`) került a kritikus radar mezőkben.
+- A látható napi trend 3 helyett 7 napot mutat (`forecast.slice(0,7)`).
+- A magyarázó szöveg explicit jelzi, hogy a számítás sok száz órás adatpontból készül.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #360n — Radar UI érthetőségi overhaul (dátumok, skála, rövidítések)
 
 ### Kérés
