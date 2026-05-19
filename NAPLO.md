@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 05. 19. – Session #360p — Dupla fajnév megjelenítés javítás
+
+### Kérés
+- A radar fajlistában ugyanaz a név 2x jelent meg.
+
+### Javítás
+- A hőtérkép fajcímkéjéből kikerült a duplikált második felirat (`<small>`), így fajonként csak egy név látszik.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #360o — Radar picker nyitási hiba + túlcsordulás + 7 napos látható trend
 
 ### Kérés
