@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 19. – Session #360m — Nyelvváltó végleges tiltás modal alatt (`display:none`)
+
+### Kérés
+- A nyelvváltó még mindig látszott a radar részletes nézetben; z-index miatt feljött a tartalomra.
+
+### Javítás
+- A korábbi `visibility` alapú tiltás helyett kemény, végleges elrejtés került be modal állapotban.
+- `body.va-home-radar-modal-open` alatt a nyelvváltó elemek most `display:none !important`-ot kapnak.
+- Extra footer scope tiltás is bekerült, hogy a lábléc nyelvblokk semmilyen variációja ne tudjon megjelenni modal közben.
+
+### Érintett fájlok
+- `style.css`
+- `wp-theme/vadaszapro-theme/style.css`
+
+---
+
 ## 2026. 05. 19. – Session #360l — Nyelvváltó rejtése radar modal közben (globális guard)
 
 ### Kérés
