@@ -418,11 +418,58 @@ body.va-weather-modal-open{overflow:hidden;}
             </select>
           </label>
           <label class="va-home-radar__field">
-            <span>Csordaméret</span>
-            <select id="vhrHerd">
-              <option value="small">Kis (1–3 egyed)</option>
-              <option value="medium">Közepes (4–10)</option>
-              <option value="large">Nagy (10+)</option>
+            <span>Szél iránya</span>
+            <select id="vhrWind">
+              <option value="unknown">Nem tudom</option>
+              <option value="headwind">Szembeszél</option>
+              <option value="crosswind">Oldalszél</option>
+              <option value="tailwind">Hátszél</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Vadcsapás / nyom</span>
+            <select id="vhrTrack">
+              <option value="none">Nincs</option>
+              <option value="old">Régi (&gt;3 nap)</option>
+              <option value="fresh">Friss (&lt;24h)</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Szomszéd tábla</span>
+            <select id="vhrNeighbor">
+              <option value="0">Nem takarítottak be</option>
+              <option value="1">Igen, most takarítottak be</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Etetőhely / dögkút</span>
+            <select id="vhrFeeder">
+              <option value="0">Nincs 500 m-en belül</option>
+              <option value="1">Van</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Csendes időszak</span>
+            <select id="vhrQuiet">
+              <option value="unknown">Nem tudom</option>
+              <option value="quiet">Igen (3+ nap)</option>
+              <option value="disturbed">Volt zavarás</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Vadföld / vadászdomb</span>
+            <select id="vhrGameStrip">
+              <option value="0">Nincs</option>
+              <option value="1">Van a táblánál</option>
+            </select>
+          </label>
+          <label class="va-home-radar__field">
+            <span>Kijárási irány</span>
+            <select id="vhrExit">
+              <option value="unknown">Ismeretlen</option>
+              <option value="forest_edge">Erdőszél</option>
+              <option value="reed">Nádas / bozót</option>
+              <option value="ditch">Vizes árok</option>
             </select>
           </label>
         </div>
@@ -1340,7 +1387,13 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var fenceEl=document.getElementById('vhrFence');
   var forestFoodEl=document.getElementById('vhrForestFood');
   var waterEl=document.getElementById('vhrWater');
-  var herdEl=document.getElementById('vhrHerd');
+  var windEl=document.getElementById('vhrWind');
+  var trackEl=document.getElementById('vhrTrack');
+  var neighborEl=document.getElementById('vhrNeighbor');
+  var feederEl=document.getElementById('vhrFeeder');
+  var quietEl=document.getElementById('vhrQuiet');
+  var gameStripEl=document.getElementById('vhrGameStrip');
+  var exitEl=document.getElementById('vhrExit');
   var modalScoreEl=document.getElementById('vhrModalScore');
   var modalLevelEl=document.getElementById('vhrModalLevel');
   var modalSpeciesEl=document.getElementById('vhrModalSpecies');
@@ -1364,7 +1417,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var cropLabels={maize:'kukorica',rapeseed:'repce',sunflower:'napraforgó',cereal:'kalászos',alfalfa:'lucerna',orchard:'gyümölcsös',vineyard:'szőlő'};
   var speciesBase={wild_boar:9,red_deer:7,roe_deer:5,fallow_deer:6,wild_hare:4};
   var forestFoodScores={abundant:{wild_boar:-5,red_deer:-4,roe_deer:-3,fallow_deer:-3,wild_hare:-2},normal:{wild_boar:0,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},scarce:{wild_boar:6,red_deer:5,roe_deer:4,fallow_deer:4,wild_hare:3}};
-  var herdScores={small:0,medium:4,large:9};
   var cropScores={maize:{wild_boar:15,red_deer:10,roe_deer:4,fallow_deer:8,wild_hare:3},sunflower:{wild_boar:11,red_deer:6,roe_deer:7,fallow_deer:5,wild_hare:2},rapeseed:{wild_boar:5,red_deer:13,roe_deer:14,fallow_deer:12,wild_hare:9},cereal:{wild_boar:6,red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:7},alfalfa:{wild_boar:9,red_deer:11,roe_deer:10,fallow_deer:10,wild_hare:8},orchard:{wild_boar:4,red_deer:8,roe_deer:7,fallow_deer:8,wild_hare:4},vineyard:{wild_boar:3,red_deer:9,roe_deer:8,fallow_deer:7,wild_hare:4}};
   var forestScores={under_100:10,'100_300':8,'300_700':5,'700_1500':2,over_1500:0};
   var damageScores={7:12,30:8,90:5,none:0};
@@ -1385,10 +1437,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function dayName(index){return ['V','H','K','Sze','Cs','P','Szo'][index]||'';}
   function formatDateShort(date){return String(date.getMonth()+1).padStart(2,'0')+'.'+String(date.getDate()).padStart(2,'0')+'.';}
   function moonIllumination(date){var synodic=29.53058867,knownNewMoon=Date.UTC(2024,0,11,11,57,0),days=(date.getTime()-knownNewMoon)/86400000,phase=((days%synodic)+synodic)%synodic/synodic;return (1-Math.cos(2*Math.PI*phase))/2;}
-  function controls(){return {crop:cropEl.value,forest:forestEl.value,damage:damageEl.value,phenology:phenologyEl.value,hunting:huntingEl.value,fence:fenceEl.value==='1',forestFood:forestFoodEl.value,water:waterEl.value==='1',herd:herdEl.value};}
+  function controls(){return {crop:cropEl.value,forest:forestEl.value,damage:damageEl.value,phenology:phenologyEl.value,hunting:huntingEl.value,fence:fenceEl.value==='1',forestFood:forestFoodEl.value,water:waterEl.value==='1',wind:windEl.value,track:trackEl.value,neighbor:neighborEl.value==='1',feeder:feederEl.value==='1',quiet:quietEl.value,gameStrip:gameStripEl.value==='1',exit:exitEl.value};}
   function hourlyRows(data){if(!data||!data.hourly||!data.hourly.time){return [];}var out=[];for(var i=0;i<data.hourly.time.length;i++){out.push({time:data.hourly.time[i],temp:Number(data.hourly.temperature_2m[i]||0),humidity:Number(data.hourly.relative_humidity_2m[i]||0),precip:Number(data.hourly.precipitation[i]||0),wind:Number(data.hourly.wind_speed_10m[i]||0),pressure:Number(data.hourly.pressure_msl[i]||0),cloud:Number(data.hourly.cloud_cover[i]||0),soil:Number(data.hourly.soil_moisture_0_to_1cm&&data.hourly.soil_moisture_0_to_1cm[i]||0)});}return out;}
   function dayContext(data,dayIndex){var rows=hourlyRows(data),dayStr=data.daily.time[dayIndex],target=dayStr+'T22:00',night=null;for(var i=0;i<rows.length;i++){if(rows[i].time===target||rows[i].time.indexOf(dayStr+'T21:00')===0||rows[i].time.indexOf(dayStr+'T23:00')===0){night=rows[i];if(rows[i].time===target){break;}}}var recent=[];if(night){for(var j=0;j<rows.length;j++){if(rows[j].time===night.time){recent=rows.slice(Math.max(0,j-47),j+1);break;}}}var precip48=recent.reduce(function(sum,row){return sum+row.precip;},0);var prior24=recent.length>=24?recent[recent.length-24]:null;return {day:dayStr,tempNight:night?night.temp:0,humidity:night?night.humidity:0,wind:night?night.wind:0,pressureDrop:night&&prior24?(night.pressure-prior24.pressure):0,cloud:night?night.cloud:0,soil:night?night.soil:0,precip48:precip48,tempMin:Number(data.daily.temperature_2m_min[dayIndex]||0),rainSum:Number(data.daily.precipitation_sum[dayIndex]||0),moon:moonIllumination(new Date(dayStr+'T22:00:00'))};}
-  function scoreSpecies(species,ctx,ctl){var score=(speciesBase[species]||4)+((cropScores[ctl.crop]&&cropScores[ctl.crop][species])||0)+(forestScores[ctl.forest]||0)+(damageScores[ctl.damage]||0)+((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])||0)+((huntingScores[ctl.hunting]&&huntingScores[ctl.hunting][species])||0),reasons=[];if((forestScores[ctl.forest]||0)>0){reasons.push('erdőközeli kijárás');}if((damageScores[ctl.damage]||0)>0){reasons.push('friss kárelőzmény');}reasons.push((cropLabels[ctl.crop]||ctl.crop)+' vonzó táplálék');if((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])>0){reasons.push('aktuális fenológia erős kiváltó ok');}if(ctl.fence){score-=15;}if(forestFoodScores[ctl.forestFood]){var ffs=forestFoodScores[ctl.forestFood][species]||0;score+=ffs;if(ctl.forestFood==='scarce'&&ffs>0){reasons.push('szegényes erdei táplálék, mező felé kényszerül');}else if(ctl.forestFood==='abundant'&&ffs<0){reasons.push('bő erdei makk/gyümölcs, erdőben marad');}}if(ctl.water&&species==='wild_boar'){score+=6;reasons.push('vizes élőhely közel (+6)');}if(ctl.water&&(species==='red_deer'||species==='fallow_deer')){score+=3;reasons.push('vizes élőhely közel (+3)');}score+=herdScores[ctl.herd]||0;if(ctl.herd==='large'){reasons.push('nagy csorda fokozott mezei nyomást fejt ki');}else if(ctl.herd==='medium'){reasons.push('közepes csorda');}if(species==='wild_boar'&&ctx.precip48>5&&ctx.soil>0.18){score+=5;reasons.push('eső utáni puha talaj');}if(species==='wild_boar'&&ctx.tempNight>12&&ctx.humidity>75){score+=4;reasons.push('meleg, párás éjszaka');}if((species==='red_deer'||species==='roe_deer'||species==='fallow_deer'||species==='wild_hare')&&ctx.tempMin<=2&&(ctl.crop==='rapeseed'||ctl.crop==='cereal'||ctl.crop==='alfalfa')){score+=4;reasons.push('hidegben felértékelődő zöld kultúra');}if(ctx.wind>30){score-=5;}else if(ctx.wind<8){score+=2;reasons.push('szélcsend');}if(ctx.pressureDrop<=-5){score+=3;reasons.push('front előtti nyomásesés');}if(ctx.rainSum>6){score+=2;reasons.push('csapadék utáni mozgás');}var effMoon=ctx.moon*(1-(ctx.cloud/100));if(species==='wild_boar'){if(effMoon>0.6&&ctl.hunting!=='low'){score-=1;}if(effMoon>0.9&&ctl.hunting==='high'){score-=1;}}else if(effMoon>0.9){score+=2;reasons.push('erős holdfény');}if(ctl.fence){reasons.push('villanypásztor fékezi a kijárást');}return {score:clamp(Math.round(score),0,100),reasons:reasons};}
+  function scoreSpecies(species,ctx,ctl){var score=(speciesBase[species]||4)+((cropScores[ctl.crop]&&cropScores[ctl.crop][species])||0)+(forestScores[ctl.forest]||0)+(damageScores[ctl.damage]||0)+((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])||0)+((huntingScores[ctl.hunting]&&huntingScores[ctl.hunting][species])||0),reasons=[];if((forestScores[ctl.forest]||0)>0){reasons.push('erdőközeli kijárás');}if((damageScores[ctl.damage]||0)>0){reasons.push('friss kárelőzmény');}reasons.push((cropLabels[ctl.crop]||ctl.crop)+' vonzó táplálék');if((((phenologyScores[ctl.crop]||{})[ctl.phenology]||{})[species])>0){reasons.push('aktuális fenológia erős kiváltó ok');}if(ctl.fence){score-=15;}if(forestFoodScores[ctl.forestFood]){var ffs=forestFoodScores[ctl.forestFood][species]||0;score+=ffs;if(ctl.forestFood==='scarce'&&ffs>0){reasons.push('szegényes erdei táplálék, mező felé kényszerül');}else if(ctl.forestFood==='abundant'&&ffs<0){reasons.push('bő erdei makk/gyümölcs, erdőben marad');}}if(ctl.water&&species==='wild_boar'){score+=6;reasons.push('vizes élőhely közel (+6)');}if(ctl.water&&(species==='red_deer'||species==='fallow_deer')){score+=3;reasons.push('vizes élőhely közel (+3)');}var windBonus={headwind:-4,crosswind:0,tailwind:4};score+=windBonus[ctl.wind]||0;if(ctl.wind==='tailwind'){reasons.push('hátszél – állat nem szagolja a jelenlétet');}else if(ctl.wind==='headwind'){reasons.push('szembeszél – állat hamar szagol');}if(ctl.track==='fresh'){score+=9;reasons.push('friss vadcsapás/nyom (<24h)');}else if(ctl.track==='old'){score+=3;reasons.push('régi nyom – sporadikus kijárás');}if(ctl.neighbor){var nba=species==='roe_deer'?6:(species==='wild_boar'?5:4);score+=nba;reasons.push('szomszéd tábla betakarítva – állatok átnyomulnak');}if(ctl.feeder){var fda={wild_boar:5,red_deer:4,roe_deer:2,fallow_deer:4,wild_hare:1};score+=(fda[species]||2);reasons.push('etetőhely/dögkút vonzza az állatokat');}if(ctl.quiet==='quiet'){score+=5;reasons.push('csendes időszak – bátran jár ki');}else if(ctl.quiet==='disturbed'){score-=4;reasons.push('közeli zavarás – kerülő úton jár');}if(ctl.gameStrip){score+=3;reasons.push('vadföld megszokott táplálkozási zóna');}var exitAdd={unknown:0,forest_edge:2,reed:(species==='wild_boar'?5:2),ditch:(species==='wild_boar'?3:(species==='wild_hare'?1:2))};score+=(exitAdd[ctl.exit]||0);if(ctl.exit==='reed'){reasons.push('nádas kijárási irány – jó fedezék');}else if(ctl.exit==='forest_edge'){reasons.push('erdőszélről érkezik');}else if(ctl.exit==='ditch'){reasons.push('vizesárok mentén vonul');}if(species==='wild_boar'&&ctx.precip48>5&&ctx.soil>0.18){score+=5;reasons.push('eső utáni puha talaj');}if(species==='wild_boar'&&ctx.tempNight>12&&ctx.humidity>75){score+=4;reasons.push('meleg, párás éjszaka');}if((species==='red_deer'||species==='roe_deer'||species==='fallow_deer'||species==='wild_hare')&&ctx.tempMin<=2&&(ctl.crop==='rapeseed'||ctl.crop==='cereal'||ctl.crop==='alfalfa')){score+=4;reasons.push('hidegben felértékelődő zöld kultúra');}if(ctx.wind>30){score-=5;}else if(ctx.wind<8){score+=2;reasons.push('szélcsend');}if(ctx.pressureDrop<=-5){score+=3;reasons.push('front előtti nyomásesés');}if(ctx.rainSum>6){score+=2;reasons.push('csapadék utáni mozgás');}var effMoon=ctx.moon*(1-(ctx.cloud/100));if(species==='wild_boar'){if(effMoon>0.6&&ctl.hunting!=='low'){score-=1;}if(effMoon>0.9&&ctl.hunting==='high'){score-=1;}}else if(effMoon>0.9){score+=2;reasons.push('erős holdfény');}if(ctl.fence){reasons.push('villanypásztor fékezi a kijárást');}return {score:clamp(Math.round(score),0,100),reasons:reasons};}
   function computeForecast(data){var ctl=controls(),keys=Object.keys(speciesMeta),days=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),best=null;for(var i=0;i<keys.length;i++){var key=keys[i],res=scoreSpecies(key,ctx,ctl);if(!best||res.score>best.result.score){best={species:key,result:res,ctx:ctx};}}days.push({day:ctx.day,species:best.species,score:best.result.score,result:best.result,ctx:ctx});}return days;}
   function computeMatrix(data){var ctl=controls(),keys=Object.keys(speciesMeta),matrix=[];for(var i=0;i<keys.length;i++){var key=keys[i],row=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),res=scoreSpecies(key,ctx,ctl),lvl=riskLevel(res.score);row.push({day:ctx.day,score:res.score,level:lvl});}matrix.push({species:key,row:row});}return matrix;}
   function renderHeatmap(matrix){if(!heatmapEl){return;}var html='<div class="va-home-radar__heatmap-head"><div class="va-home-radar__heatmap-corner">Faj</div>';if(matrix[0]){html+=matrix[0].row.map(function(cell){var d=new Date(cell.day+'T12:00:00');return '<div class="va-home-radar__heatmap-day"><span class="va-home-radar__heatmap-dow">'+dayName(d.getDay())+'</span><span class="va-home-radar__heatmap-date">'+formatDateShort(d)+'</span></div>';}).join('');}html+='</div>';html+=matrix.map(function(entry){return '<div class="va-home-radar__heatmap-row"><div class="va-home-radar__heatmap-label"><strong>'+speciesMeta[entry.species].label+'</strong></div>'+entry.row.map(function(cell){return '<div class="va-home-radar__heatmap-cell is-'+cell.level.cls+'" style="--heat:'+heatColor(cell.level)+'"><strong>'+cell.score+'</strong><span>'+cell.level.label+'</span></div>';}).join('')+'</div>';}).join('');heatmapEl.innerHTML=html;}
@@ -1411,7 +1463,13 @@ body.va-home-radar-picker-open{overflow:hidden;}
   setupPicker(fenceEl,'Villanypásztor');
   setupPicker(forestFoodEl,'Erdei táplálék');
   setupPicker(waterEl,'Vizes élőhely');
-  setupPicker(herdEl,'Csordaméret');
+  setupPicker(windEl,'Szél iránya');
+  setupPicker(trackEl,'Vadcsapás/nyom');
+  setupPicker(neighborEl,'Szomszéd tábla');
+  setupPicker(feederEl,'Etetőhely');
+  setupPicker(quietEl,'Csendes időszak');
+  setupPicker(gameStripEl,'Vadföld');
+  setupPicker(exitEl,'Kijárási irány');
   forestEl.addEventListener('change',function(){syncPickerButton(forestEl);rerender();});
   damageEl.addEventListener('change',function(){syncPickerButton(damageEl);rerender();});
   cropEl.addEventListener('change',function(){syncPickerButton(cropEl);setPhenologyOptions();rerender();});
@@ -1420,7 +1478,13 @@ body.va-home-radar-picker-open{overflow:hidden;}
   fenceEl.addEventListener('change',function(){syncPickerButton(fenceEl);rerender();});
   forestFoodEl.addEventListener('change',function(){syncPickerButton(forestFoodEl);rerender();});
   waterEl.addEventListener('change',function(){syncPickerButton(waterEl);rerender();});
-  herdEl.addEventListener('change',function(){syncPickerButton(herdEl);rerender();});
+  windEl.addEventListener('change',function(){syncPickerButton(windEl);rerender();});
+  trackEl.addEventListener('change',function(){syncPickerButton(trackEl);rerender();});
+  neighborEl.addEventListener('change',function(){syncPickerButton(neighborEl);rerender();});
+  feederEl.addEventListener('change',function(){syncPickerButton(feederEl);rerender();});
+  quietEl.addEventListener('change',function(){syncPickerButton(quietEl);rerender();});
+  gameStripEl.addEventListener('change',function(){syncPickerButton(gameStripEl);rerender();});
+  exitEl.addEventListener('change',function(){syncPickerButton(exitEl);rerender();});
   if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');},function(){fetchForecast(47.093,17.911,'Veszprém mintahely');},{enableHighAccuracy:true,timeout:7000,maximumAge:900000});}else{fetchForecast(47.093,17.911,'Veszprém mintahely');}
 })();
 </script>
