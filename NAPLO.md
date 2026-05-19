@@ -2,6 +2,25 @@
 
 ---
 
+## 2026. 05. 19. – Session #spidersplit — Split layout + interaktív radar + 3 statisztika panel
+
+### Kérés
+- Bal: interaktív radar (hover/click), jobb: 3 grafikon (faj kockázati sávok, 7 napos trend, csúcsindex szintmérő).
+- ViewBox teteje ne vágja le a labeleket.
+- Teljes fajnév (label), nem rövidítés.
+
+### Megvalósítás
+- HTML: `<div class="va-home-radar__split">` → bal `#vhrSpiderWidget`, jobb `#vhrSpiderStats`.
+- CSS: `.va-home-radar__split` grid 1fr/1fr, `.va-srs` panel blokkok, is-low/moderate/high/very-high/critical sávszínek, `.va-srs__gsv` gauge SVG.
+- JS: `spiderStatsEl` elemref, `renderSpider` cx=170,cy=175,mR=75, viewBox="0 0 380 350", data-sp pontok hover/click interaktivitással.
+- `renderSpiderStats(forecast,top)`: b1=faj sávok, b2=7 napos trend spark, b3=félkör gauge (pathLength=100, stroke-dasharray=score 100).
+- Mindkét fájlban (root + wp-theme mirror) szinkronban.
+
+### Érintett fájlok
+- `index.php`, `wp-theme/vadaszapro-theme/index.php`
+
+---
+
 ## 2026. 05. 19. – Session #spiderchart — Vadkár Radar spider chart (faj kockázati pentagon)
 
 ### Kérés

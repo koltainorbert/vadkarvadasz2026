@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 19. – Split layout + interaktív radar + 3 statisztika panel
+- HTML: `va-home-radar__split` grid (bal=radar, jobb=stats), `#vhrSpiderStats`
+- renderSpider: cx=170,cy=175,mR=75, viewBox 380×350, hover/click interaktivitás
+- renderSpiderStats: faj sávok, 7 napos trend spark, félkör gauge csúcsindex
+- Mindkét fájlban szinkronban
+
 ## 2026. 05. 19. – Spider chart + 7 új input + picker fix
 - Vadkár Radar modálba SVG spider/pentagon chart kerül (5 faj kockázat vizuálisan)
 - Csordaméret helyett 7 vadászias mező (szél, nyom, szomszéd, etető, csendes, vadföld, kijárás)
