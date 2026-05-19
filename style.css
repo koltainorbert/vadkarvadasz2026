@@ -903,9 +903,10 @@ textarea { min-height: 110px; resize: vertical; }
 }
 .va-footer__mobile-nav { display: none; margin-top: 12px; }
 @media (max-width: 1024px) { .va-footer__mobile-nav { display: block; } }
-.va-lang-sw--footer { position: relative; display: inline-block; margin-top: 4px; }
-.va-lang-sw--footer .va-lang-sw__toggle { color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 6px 12px; }
-.va-lang-sw--footer .va-lang-sw__toggle:hover { background: rgba(255,255,255,.14); }
+.va-lang-sw--footer { position: relative; display: inline-block; margin-top: 4px; z-index: 3; }
+.va-lang-sw--footer .va-lang-sw__toggle { color: #fff; background: linear-gradient(135deg, rgba(255,136,0,.92), rgba(226,112,25,.92)) !important; border: 1px solid rgba(255,170,70,.65) !important; border-radius: 999px; padding: 6px 12px; box-shadow: 0 8px 18px rgba(0,0,0,.34); }
+.va-lang-sw--footer .va-lang-sw__toggle:hover { background: linear-gradient(135deg, rgba(255,151,24,.96), rgba(239,122,35,.96)) !important; }
+.va-lang-sw--footer .va-lang-sw__dropdown { background: rgba(10,10,10,.96) !important; border: 1px solid rgba(255,136,0,.6) !important; box-shadow: 0 12px 28px rgba(0,0,0,.5) !important; z-index: 15; }
 .va-lang-sw__dropdown--up { bottom: calc(100% + 6px); top: auto !important; }
 .va-lang-sw { position: relative; display: inline-block; }
 .va-lang-sw__dropdown[hidden] { display: none !important; }
@@ -1030,22 +1031,22 @@ textarea { min-height: 110px; resize: vertical; }
     gap: 8px;
     overflow: visible;
   }
-  .va-lang-sw {
+  .va-header .va-lang-sw {
     min-width: 0;
   }
-  .va-lang-sw__toggle {
+  .va-header .va-lang-sw__toggle {
     max-width: 92px;
     height: 34px;
     padding: 0 10px !important;
     gap: 5px;
     overflow: hidden;
   }
-  .va-lang-code {
+  .va-header .va-lang-code {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .va-lang-sw__arrow {
+  .va-header .va-lang-sw__arrow {
     flex: 0 0 auto;
     opacity: 1;
   }
@@ -1058,11 +1059,11 @@ textarea { min-height: 110px; resize: vertical; }
   }
 }
 @media (max-width: 380px) {
-  .va-lang-sw__toggle {
+  .va-header .va-lang-sw__toggle {
     max-width: 64px;
     padding: 0 8px !important;
   }
-  .va-lang-code { display: none; }
+  .va-header .va-lang-code { display: none; }
 }
 
 /* ──────────────────────────────────────────────────────────
