@@ -366,7 +366,7 @@ body.va-weather-modal-open{overflow:hidden;}
     <div class="va-home-radar__modal-card" role="dialog" aria-modal="true" aria-labelledby="vhrModalTitle">
       <button type="button" class="va-home-radar__modal-close" id="vhrModalClose" aria-label="Bezárás">✕</button>
       <div class="va-home-radar__modal-head">
-        <div class="va-home-radar__modal-eyebrow">Decision Support</div>
+        <div class="va-home-radar__modal-eyebrow">Döntéstámogatás</div>
         <h3 class="va-home-radar__modal-title" id="vhrModalTitle">Vadkár Radar részletes nézet</h3>
       </div>
       <div class="va-home-radar__modal-scroll" id="vhrModalScroll">
@@ -377,9 +377,9 @@ body.va-weather-modal-open{overflow:hidden;}
             <div class="va-home-radar__silhouette" id="vhrSilhouette" aria-hidden="true"></div>
           </div>
           <div class="va-home-radar__cinema-meta">
-            <div class="va-home-radar__signal-card"><span>Primary Target</span><strong id="vhrCinemaSpecies">--</strong></div>
-            <div class="va-home-radar__signal-card"><span>Threat Pulse</span><strong id="vhrThreatPulse">--</strong></div>
-            <div class="va-home-radar__signal-card"><span>Pattern</span><strong id="vhrPattern">--</strong></div>
+            <div class="va-home-radar__signal-card"><span>Fő célfaj</span><strong id="vhrCinemaSpecies">--</strong></div>
+            <div class="va-home-radar__signal-card"><span>Kockázati pulzus</span><strong id="vhrThreatPulse">--</strong></div>
+            <div class="va-home-radar__signal-card"><span>Mintázat</span><strong id="vhrPattern">--</strong></div>
           </div>
         </div>
         <div class="va-home-radar__detail-grid">
@@ -423,7 +423,7 @@ body.va-weather-modal-open{overflow:hidden;}
           <div class="va-home-radar__week" id="vhrWeek"></div>
         </div>
         <div class="va-home-radar__detail-block">
-          <div class="va-home-radar__detail-title">Parancsnoki heti heatmap</div>
+          <div class="va-home-radar__detail-title">Parancsnoki heti hőtérkép</div>
           <div class="va-home-radar__heatmap" id="vhrHeatmap"></div>
         </div>
         <div class="va-home-radar__note" id="vhrNote">A modell meteorológiai, holdfény- és viselkedési triggerekből számol. Teljes validációhoz valós káresemény és táblaadat szükséges.</div>
@@ -503,6 +503,7 @@ body.va-weather-modal-open{overflow:hidden;}
 .va-home-radar__modal-close:hover,.va-home-radar__picker-close:hover{background:rgba(255,85,85,.18);border-color:rgba(255,125,125,.42);}
 .va-home-radar__modal-head{position:relative;z-index:1;margin-bottom:14px;padding-right:48px;}
 .va-home-radar__modal-eyebrow,.va-home-radar__picker-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,226,226,.82);font-weight:900;}
+.va-home-radar__modal-eyebrow{color:#fff;}
 .va-home-radar__modal-title{margin:6px 0 0;font-size:1.5rem;letter-spacing:.02em;color:#fff;}
 .va-home-radar__modal-scroll{position:relative;z-index:1;max-height:calc(100dvh - var(--nav,66px) - 136px);overflow:auto;padding-right:4px;margin-right:-4px;border-radius:18px;}
 .va-home-radar__cinema{display:grid;grid-template-columns:240px 1fr;gap:14px;margin-bottom:14px;align-items:stretch;}
