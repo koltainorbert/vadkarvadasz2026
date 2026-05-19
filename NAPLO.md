@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 05. 19. – Session #360g — Vadkár Radar reszponzív stabilizálás (mobil + szűk hasáb)
+
+### Kérés
+- A Vadkár Radar mobilon/szűk nézetben szétesett, vizuálisan és tördelésben összeomlott.
+
+### Javítás
+- A radar layout viewport-függő törés helyett konténerbarátabb rácslogikát kapott több kulcsblokkban.
+- A vezérlők, meta kártyák, napkártyák, heti trend és modal blokkok `auto-fit + minmax` rácsokra váltottak, így keskeny oszlopban is rendezettek maradnak.
+- A státusz és lokáció badge-ek, valamint picker gomb feliratok most már törhetnek, nem csúsznak szét és nem vágnak le kritikusan szöveget.
+- A fejléc és jelölők mobil tipográfiája finomhangolva lett, hogy kis szélességen is olvasható maradjon.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Deploy
+- `Deploy All` futtatva, workflow trigger megtörtént.
+
+---
+
 ## 2026. 05. 18. – Session #360f — Filmszerű faj-sziluett és parancsnoki heatmap a radar popupban
 
 ### Kérés
