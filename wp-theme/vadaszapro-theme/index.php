@@ -909,9 +909,14 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
 <?php if ( $va_show_weather_widget ): ?>
 <script>
-(function(){
+(function initWeather(){
   var root=document.getElementById('va-weather');
-  if(!root)return;
+  if(!root){
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',initWeather,{once:true});
+    }
+    return;
+  }
   var locEl=document.getElementById('vwLoc');
   var nowEl=document.getElementById('vwNow');
   var metaEl=document.getElementById('vwMeta');
@@ -1350,9 +1355,14 @@ body.va-home-radar-picker-open{overflow:hidden;}
 <?php endif; ?>
 
 <script>
-(function(){
+(function initRadar(){
   var root=document.getElementById('va-home-radar');
-  if(!root)return;
+  if(!root){
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',initRadar,{once:true});
+    }
+    return;
+  }
   var locEl=document.getElementById('vhrLoc');
   var cropEl=document.getElementById('vhrCrop');
   var forestEl=document.getElementById('vhrForest');
