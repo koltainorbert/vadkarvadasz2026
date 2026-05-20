@@ -894,10 +894,15 @@ body.va-home-radar-picker-open{overflow:hidden;}
             +'<span class="va-moon__nrd">'+until(nextPhase(now,n.f),now)+'</span></div>';
     }).join('');
   }
-  document.addEventListener('DOMContentLoaded',function(){
+  function startMoonWidget(){
     update();
     setInterval(update,60000);
-  });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',startMoonWidget,{once:true});
+  }else{
+    startMoonWidget();
+  }
 })();
 </script>
 <?php endif; ?>
