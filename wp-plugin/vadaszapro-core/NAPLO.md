@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-trend-context-fix
+- A 7 napos trend panel referenciaalapokkal bővítve: mai csúcsindex + 7 nap átlag.
+- Napi oszlopok: delta a mai naphoz, napi score, napi fő faj rövidítés.
+- Színezés score-alapú (HSL), jobb elkülönülés érdekében.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `deb9982`.
+
 ## 2026. 05. 26. – Session #radar-detail-cleanup
 - A részletes radar nézetből eltávolítva a `Napi csúcsindex` panel.
 - `renderSpiderStats()` csak 2 blokkot hagy meg: fajkockázat + 7 napos trend.
