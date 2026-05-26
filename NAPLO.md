@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #vadkar-radar-brand-name-fix
+- Kérés: a radar widget és a látható logónév egységesen `Vadkár Radar` legyen.
+- Megállapítás: a widget cím már jó volt, a fejléc logó szövege még régi fallback brandnévre (`weingartnerauto.hu`) tudott visszaesni.
+- Javítás: a header brandnév fallback mind a root, mind a futó theme mirror fájlban `Vadkár Radar` lett.
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.
