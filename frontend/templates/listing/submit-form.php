@@ -4810,6 +4810,10 @@ document.addEventListener('DOMContentLoaded', function() {
         rebuildClothingSizeOptions();
     });
 
+    $(document).on('change', '#va-other-weapon-kind', function(){
+        applyCategorySpecificFieldVisibility();
+    });
+
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
     rebuildClothingSizeOptions();
@@ -4945,6 +4949,7 @@ document.addEventListener('DOMContentLoaded', function() {
             brand: 'Márka / gyártó',
             model: 'Modell / típus',
             caliber: 'Kaliber',
+            other_weapon_kind: 'Egyéb fegyverek kategória',
             optic_type: 'Távcső típusa',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
@@ -5040,6 +5045,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isKnifeCategory = /bicska-tor-kard|vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska|dobotor|machete-bozotvago|multiszerszam|tok-keslanc|keselezo/.test(slug)
             || /(kés|kes|bicska|tőr|tor|machete|bozótvágó|bozotvago|multiszerszám|multiszerszam)/.test(selectedCatText);
+        var isOtherWeaponCategory = /egyeb-fegyverek/.test(slug)
+            || /(egyéb fegyverek|egyeb fegyverek)/.test(selectedCatText);
         var isAccommodationCategory = /szallas|ingatlan-szallas/.test(slug)
             || /(szállás|szallas|booking|apartman|vendégház|vendeghaz|vadászház|vadaszhaz)/.test(selectedCatText);
         var isHuntOptionCategory = /vadaszati-lehetoseg|vadkarelharitas|vadaszterulet-berlet|vadasz-lehetoseg/.test(slug)
@@ -5063,6 +5070,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
 
+        // Handle other weapons fields grid
+        $('.va-other-weapon-fields-grid').toggle(isOtherWeaponCategory);
+
         // Handle trophy mount fields grid
         $('.va-trophy-fields-grid').toggle(isTrophyPlateCategory);
 
@@ -5074,6 +5084,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle telescope fields grid
         $('.va-telescope-fields-grid').toggle(isTelescopeCategory);
+
+        if (isOtherWeaponCategory) {
+            var otherWeaponKind = ($('#va-other-weapon-kind').val() || '').trim();
+            $('.va-other-weapon-subgroup').each(function(){
+                var kinds = (($(this).data('otherWeaponKinds') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+                $(this).toggle(kinds.indexOf(otherWeaponKind) !== -1);
+            });
+        } else {
+            $('.va-other-weapon-subgroup').hide();
+        }
         
         // Hide spektiv option for non-scope telescope categories (hőkamera, éjjellátó)
         var $opticType = $('#va-optic-type');
