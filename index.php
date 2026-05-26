@@ -1827,6 +1827,52 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function computeForecast(data){var ctl=controls(),keys=Object.keys(speciesMeta),days=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),best=null;for(var i=0;i<keys.length;i++){var key=keys[i],res=scoreSpecies(key,ctx,ctl);if(!best||res.score>best.result.score){best={species:key,result:res,ctx:ctx};}}days.push({day:ctx.day,species:best.species,score:best.result.score,result:best.result,ctx:ctx});}return days;}
   function computeMatrix(data){var ctl=controls(),keys=Object.keys(speciesMeta),matrix=[];for(var i=0;i<keys.length;i++){var key=keys[i],row=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),res=scoreSpecies(key,ctx,ctl),lvl=riskLevel(res.score);row.push({day:ctx.day,score:res.score,level:lvl});}matrix.push({species:key,row:row});}return matrix;}
   function renderSpider(ctx,ctl,target){var el=target||spiderEl;if(!el)return;var isWidget=el===spiderWidgetEl;var sps=Object.keys(speciesMeta),n=sps.length,cx=170,cy=isWidget?182:175,mR=isWidget?126:75,labelOffset=isWidget?30:36,viewBox=isWidget?'0 0 360 360':'0 0 380 350';function ang(i){return(2*Math.PI*i/n)-Math.PI/2;}function pt(i,v){var a=ang(i),r=mR*(v/100);return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}var g='';[20,40,60,80,100].forEach(function(lv,gi){var pts=sps.map(function(_,i){var p=pt(i,lv);return p.x+','+p.y;}).join(' ');g+='<polygon class="'+(isWidget?'vhr-grid':'')+'" points="'+pts+'" fill="none" stroke="rgba(255,255,255,'+(gi===4?'.2':'.07')+')" stroke-width="1"/>';});var ax=sps.map(function(_,i){var p=pt(i,100);return '<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x+'" y2="'+p.y+'" stroke="rgba(255,255,255,.13)" stroke-width="1"/>';}).join('');var scores=sps.map(function(sp){return scoreSpecies(sp,ctx,ctl).score;});var dp=scores.map(function(s,i){var p=pt(i,s);return p.x+','+p.y;}).join(' ');var poly='<polygon class="'+(isWidget?'vhr-poly':'')+'" points="'+dp+'" fill="rgba(58,150,255,.24)" stroke="rgba(95,180,255,.96)" stroke-width="'+(isWidget?'2.4':'2')+'" stroke-linejoin="round"/>';var dots=scores.map(function(s,i){var p=pt(i,s),r=isWidget?6:5;return '<circle class="'+(isWidget?'vhr-dot':'')+'" cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="#63a9ff" data-sp="'+sps[i]+'" data-score="'+s+'" stroke="rgba(0,0,0,.4)" stroke-width="1.5" style="cursor:pointer"/>';}).join('');var labs=sps.map(function(sp,i){var a=ang(i),lp=pt(i,100),ox=Math.cos(a)*labelOffset,oy=Math.sin(a)*labelOffset,lx=lp.x+ox,ly=lp.y+oy,anc=lx<cx-8?'end':(lx>cx+8?'start':'middle'),s=scores[i],nameSize=isWidget?12.5:8.5,scoreSize=isWidget?20:14;return '<text x="'+lx+'" y="'+(ly-4)+'" text-anchor="'+anc+'" font-size="'+nameSize+'" font-weight="700" font-family="sans-serif" fill="rgba(255,255,255,.8)">'+speciesMeta[sp].label+'</text><text x="'+lx+'" y="'+(ly+14)+'" text-anchor="'+anc+'" font-size="'+scoreSize+'" font-weight="900" font-family="sans-serif" fill="#63a9ff">'+s+'</text>';}).join('');el.innerHTML='<svg viewBox="'+viewBox+'" xmlns="http://www.w3.org/2000/svg">'+g+ax+poly+dots+labs+'</svg>';el.querySelectorAll('circle[data-sp]').forEach(function(c){c.addEventListener('mouseenter',function(){c.setAttribute('r',isWidget?'9':'8');c.style.filter='drop-shadow(0 0 7px #63a9ff)';});c.addEventListener('mouseleave',function(){c.setAttribute('r',isWidget?'6':'5');c.style.filter='';});c.addEventListener('click',function(){var all=el.querySelectorAll('circle[data-sp]');all.forEach(function(cc){cc.setAttribute('opacity','0.3');});c.setAttribute('opacity','1');setTimeout(function(){all.forEach(function(cc){cc.setAttribute('opacity','1');});},700);});});}
+  function renderWidgetGaugeCard(score,speciesLabel){
+    if(!spiderWidgetEl){return;}
+    var safeScore=clamp(parseInt(score,10)||0,0,100);
+    var safeSpecies=speciesLabel||'--';
+    var ang=-132+(safeScore*264/100);
+    spiderWidgetEl.style.setProperty('--vhr-needle-angle',ang+'deg');
+    spiderWidgetEl.innerHTML=''
+      +'<div class="vhr-gauge">'
+      +'<div class="vhr-gauge__head"><span>Veszelymero muszer</span><strong>'+String(safeScore).padStart(3,'0')+'</strong></div>'
+      +'<div class="vhr-gauge__dial">'
+      +'<div class="vhr-gauge__ring"></div>'
+      +'<div class="vhr-gauge__sweep"></div>'
+      +'<div class="vhr-gauge__ticks"></div>'
+      +'<div class="vhr-gauge__scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div>'
+      +'<div class="vhr-gauge__needle"></div>'
+      +'<div class="vhr-gauge__hub"></div>'
+      +'</div>'
+      +'<div class="vhr-gauge__species">Legnagyobb kart okozo vadfaj: '+safeSpecies+'</div>'
+      +'<div class="vhr-gauge__footer"><span>Aktualis veszely index</span><strong>'+safeScore+'</strong></div>'
+      +'</div>';
+  }
+  var vhrGaugeSyncLock=false;
+  function refreshWidgetGaugeFromState(){
+    if(!spiderWidgetEl||vhrGaugeSyncLock){return;}
+    var scoreNow=parseInt((scoreEl&&scoreEl.textContent?scoreEl.textContent:'0'),10);
+    var speciesNow=(speciesEl&&speciesEl.textContent?speciesEl.textContent.trim():'--')||'--';
+    vhrGaugeSyncLock=true;
+    renderWidgetGaugeCard(scoreNow,speciesNow);
+    vhrGaugeSyncLock=false;
+  }
+  function setupWidgetGaugeSync(){
+    if(!spiderWidgetEl||!window.MutationObserver){return;}
+    var spiderObserver=new MutationObserver(function(){
+      if(vhrGaugeSyncLock){return;}
+      if(!spiderWidgetEl.querySelector('.vhr-gauge')){refreshWidgetGaugeFromState();}
+    });
+    spiderObserver.observe(spiderWidgetEl,{childList:true});
+    if(scoreEl){
+      var scoreObserver=new MutationObserver(function(){refreshWidgetGaugeFromState();});
+      scoreObserver.observe(scoreEl,{childList:true,subtree:true,characterData:true});
+    }
+    if(speciesEl){
+      var speciesObserver=new MutationObserver(function(){refreshWidgetGaugeFromState();});
+      speciesObserver.observe(speciesEl,{childList:true,subtree:true,characterData:true});
+    }
+  }
   function renderSpiderStats(forecast,top){if(!spiderStatsEl)return;var sps=Object.keys(speciesMeta),ctl=controls(),scores=sps.map(function(sp){return scoreSpecies(sp,top.ctx,ctl).score;});var b1='<div class="va-srs"><div class="va-srs__h">Fajok kockázata</div>'+sps.map(function(sp,i){var s=scores[i],lv=riskLevel(s);return '<div class="va-srs__row"><span class="va-srs__n">'+speciesMeta[sp].short+'</span><div class="va-srs__tr"><div class="va-srs__fi is-'+lv.cls+'" style="width:'+s+'%"></div></div><span class="va-srs__v">'+s+'</span></div>';}).join('')+'</div>';var days=forecast.slice(0,7),b2='<div class="va-srs"><div class="va-srs__h">7 napos trend</div><div class="va-srs__spark">'+days.map(function(day){var d=new Date(day.day+'T12:00:00'),lv=riskLevel(day.score),h=Math.max(4,Math.round(day.score*0.62));return '<div class="va-srs__col"><div class="va-srs__spb is-'+lv.cls+'" style="height:'+h+'px"></div><span class="va-srs__sd">'+dayName(d.getDay()).slice(0,1)+'</span></div>';}).join('')+'</div></div>';var s=top.score,lv=riskLevel(s),gcol=s>=85?'#ff0000':s>=70?'#ff3b2f':s>=50?'#ff6b00':s>=25?'#ff9800':'#4caf50';var b3='<div class="va-srs"><div class="va-srs__h">Napi csúcsindex</div><svg viewBox="0 0 120 72" class="va-srs__gsv"><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="9" stroke-linecap="round"/><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="'+gcol+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+s+' 100" pathLength="100"/><text x="60" y="55" text-anchor="middle" font-size="20" font-weight="900" font-family="sans-serif" fill="#fff">'+s+'</text><text x="60" y="67" text-anchor="middle" font-size="8" font-weight="700" font-family="sans-serif" fill="rgba(255,255,255,.55)">'+lv.label+'</text></svg></div>';spiderStatsEl.innerHTML=b1+b2+b3;}
   function renderHeatmap(matrix){if(!heatmapEl){return;}var html='<div class="va-home-radar__heatmap-head"><div class="va-home-radar__heatmap-corner">Faj</div>';if(matrix[0]){html+=matrix[0].row.map(function(cell){var d=new Date(cell.day+'T12:00:00');return '<div class="va-home-radar__heatmap-day"><span class="va-home-radar__heatmap-dow">'+dayName(d.getDay())+'</span><span class="va-home-radar__heatmap-date">'+formatDateShort(d)+'</span></div>';}).join('');}html+='</div>';html+=matrix.map(function(entry){return '<div class="va-home-radar__heatmap-row"><div class="va-home-radar__heatmap-label"><strong>'+speciesMeta[entry.species].label+'</strong></div>'+entry.row.map(function(cell){return '<div class="va-home-radar__heatmap-cell is-'+cell.level.cls+'" style="--heat:'+heatColor(cell.level)+'"><strong>'+cell.score+'</strong><span>'+cell.level.label+'</span></div>';}).join('')+'</div>';}).join('');heatmapEl.innerHTML=html;}
   function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var top=forecast[0],level=riskLevel(top.score),confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88);root.setAttribute('data-risk',level.cls);if(modalEl){modalEl.setAttribute('data-risk',level.cls);}locEl.textContent=label;scoreEl.textContent=String(top.score);levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[top.species].label;windowEl.textContent=speciesMeta[top.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';if(intelEl){intelEl.textContent=speciesMeta[top.species].label+' fókusz, '+speciesMeta[top.species].window+' kritikus kijárási sáv, '+confidenceLabel(confidence).toLowerCase()+' megbízhatósággal.';}reasonEl.textContent='Fő trigger: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,7).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');modalScoreEl.textContent=String(top.score);modalLevelEl.textContent=level.label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__dayscore">'+day.score+'</div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].short+'</div></div>';}).join('');noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • Ez a nézet már faj-, meteorológia-, holdfény- és zavarásalapú becslést ad.';}
@@ -1841,6 +1887,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pickerEl&&!pickerEl.hidden){setPickerModal(false);return;}if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
   if(modalEl){modalEl.addEventListener('click',function(e){if(e.target===modalEl){setRadarModal(false);}});}
   setPhenologyOptions();
+  setupWidgetGaugeSync();
+  refreshWidgetGaugeFromState();
   setupPicker(cropEl,'Kultúra');
   setupPicker(forestEl,'Erdőközel');
   setupPicker(damageEl,'Kárelőzmény');

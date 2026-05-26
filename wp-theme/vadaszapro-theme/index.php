@@ -754,16 +754,24 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__ambient,
 .va-home-radar__scan{display:none !important;}
 .va-home-radar{padding:12px !important;border-radius:22px !important;border-color:rgba(120,190,255,.32) !important;background:linear-gradient(155deg,rgba(6,16,30,.985),rgba(7,22,39,.975) 58%,rgba(18,16,33,.95) 100%) !important;box-shadow:0 24px 52px rgba(0,0,0,.46),inset 0 0 0 1px rgba(120,190,255,.08),inset 0 0 38px rgba(40,130,255,.07) !important;}
-.va-home-radar__spider#vhrSpiderWidget{position:relative;margin:0 0 10px !important;max-width:none !important;min-height:356px;overflow:hidden;border-color:rgba(120,190,255,.26);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:inset 0 0 0 1px rgba(120,190,255,.14),inset 0 0 18px rgba(80,180,255,.06),0 18px 28px rgba(0,0,0,.28);}
+.va-home-radar__spider#vhrSpiderWidget{--vhr-needle-angle:-132deg;position:relative;margin:0 0 10px !important;max-width:none !important;min-height:356px;overflow:hidden;border-color:rgba(255,255,255,.2);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 0 24px rgba(255,60,30,.08),0 18px 28px rgba(0,0,0,.28);padding:8px !important;}
 .va-home-radar__spider#vhrSpiderWidget::before,
 .va-home-radar__spider#vhrSpiderWidget::after{content:none !important;display:none !important;animation:none !important;}
-.va-home-radar__spider#vhrSpiderWidget svg{position:relative;z-index:1;width:100% !important;max-height:352px;height:352px;display:block;}
-.va-home-radar__spider#vhrSpiderWidget .vhr-grid{animation:va-radar-widget-grid 8s ease-in-out infinite;}
-.va-home-radar__spider#vhrSpiderWidget .vhr-poly{animation:va-radar-widget-poly 6.5s ease-in-out infinite;}
-.va-home-radar__spider#vhrSpiderWidget .vhr-dot{animation:va-radar-widget-dot 4.8s ease-in-out infinite;transform-origin:center center;}
-@keyframes va-radar-widget-grid{0%,100%{opacity:.62;}50%{opacity:.86;}}
-@keyframes va-radar-widget-poly{0%,100%{filter:drop-shadow(0 0 4px rgba(100,185,255,.3));}50%{filter:drop-shadow(0 0 10px rgba(100,185,255,.48));}}
-@keyframes va-radar-widget-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+.vhr-gauge{width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.1),transparent 32%),linear-gradient(180deg,#171717,#050505);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.85);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
+.vhr-gauge__head{display:flex;justify-content:space-between;align-items:center;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);font-weight:800;}
+.vhr-gauge__head strong{font-size:1.65rem;line-height:1;color:#fff;text-shadow:0 0 14px rgba(255,50,20,.45);letter-spacing:.03em;}
+.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:radial-gradient(circle at 50% 82%,rgba(255,70,30,.22),rgba(10,10,10,.9) 58%),linear-gradient(180deg,#171717,#090909);overflow:hidden;min-height:214px;}
+.vhr-gauge__ring{position:absolute;left:16px;right:16px;top:18px;height:138px;border-radius:170px 170px 0 0;border:2px solid rgba(255,235,205,.84);border-bottom:none;opacity:.8;}
+.vhr-gauge__sweep{position:absolute;left:24px;right:24px;top:28px;height:124px;border-radius:160px 160px 0 0;background:conic-gradient(from 180deg at 50% 100%,rgba(255,78,40,.98) 0deg 94deg,rgba(255,160,75,.9) 94deg 156deg,rgba(185,185,185,.32) 156deg 180deg);mask:radial-gradient(circle at 50% 100%,transparent 76px,#000 76px);}
+.vhr-gauge__ticks{position:absolute;left:20px;right:20px;top:22px;height:132px;border-radius:165px 165px 0 0;background:repeating-conic-gradient(from 186deg at 50% 100%,rgba(255,247,232,.9) 0deg .9deg,transparent .9deg 6deg);mask:radial-gradient(circle at 50% 100%,transparent 72px,#000 72px);opacity:.78;}
+.vhr-gauge__scale{position:absolute;left:12px;right:12px;bottom:38px;display:flex;justify-content:space-between;color:rgba(255,245,224,.95);font-size:.66rem;font-weight:900;letter-spacing:.06em;z-index:3;}
+.vhr-gauge__needle{position:absolute;left:50%;bottom:24px;width:8px;height:126px;margin-left:-4px;border-radius:8px;background:linear-gradient(180deg,#fff8e8,#ff3a22);box-shadow:0 0 14px rgba(255,170,110,.72),0 0 24px rgba(255,70,30,.5);transform-origin:50% 100%;transform:rotate(var(--vhr-needle-angle));z-index:4;transition:transform .9s cubic-bezier(.18,.88,.2,1);}
+.vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-10px;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:20px solid #fff4dd;filter:drop-shadow(0 0 8px rgba(255,120,70,.72));}
+.vhr-gauge__hub{position:absolute;left:50%;bottom:14px;width:26px;height:26px;margin-left:-13px;border-radius:50%;border:2px solid rgba(255,235,198,.92);background:radial-gradient(circle,#2f140a 0%,#130905 62%,#000 100%);box-shadow:0 0 12px rgba(255,122,68,.72),inset 0 0 8px rgba(0,0,0,.86);z-index:5;}
+.vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
+.vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
+.vhr-gauge__footer span{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);}
+.vhr-gauge__footer strong{font-size:2.1rem;line-height:.9;color:#fff;letter-spacing:.02em;text-shadow:0 0 16px rgba(255,0,0,.34);}
 .va-home-radar__hero{display:block !important;margin:0 !important;}
 .va-home-radar__scorebox{padding:12px 10px !important;border-radius:16px !important;border-color:rgba(120,190,255,.26);background:linear-gradient(180deg,rgba(110,180,255,.12),rgba(255,255,255,.03));}
 .va-home-radar__scorelabel{font-size:.6rem !important;letter-spacing:.13em !important;}
@@ -772,7 +780,15 @@ body.va-home-radar-picker-open{overflow:hidden;}
 @media (max-width:640px){
   .va-home-radar__score{font-size:2.35rem !important;}
   .va-home-radar__spider#vhrSpiderWidget{margin:0 0 8px !important;min-height:304px;}
-  .va-home-radar__spider#vhrSpiderWidget svg{max-height:300px;height:300px;}
+  .vhr-gauge{padding:8px;gap:7px;}
+  .vhr-gauge__head strong{font-size:1.45rem;}
+  .vhr-gauge__dial{min-height:188px;}
+  .vhr-gauge__ring{left:12px;right:12px;top:14px;height:122px;}
+  .vhr-gauge__sweep{left:18px;right:18px;top:21px;height:112px;}
+  .vhr-gauge__ticks{left:16px;right:16px;top:18px;height:118px;}
+  .vhr-gauge__needle{height:112px;bottom:22px;}
+  .vhr-gauge__scale{font-size:.58rem;bottom:34px;}
+  .vhr-gauge__footer strong{font-size:1.85rem;}
 }
 
 /* Unified home widget palette (same color family for all widgets). */
