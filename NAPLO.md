@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Session #zaro-mentes-reggeli-folytatas
+- Kérés: minden változás legyen elmentve, naplózva és pusholva, hogy reggel innen lehessen folytatni.
+- Állapot: az `Egyéb fegyverek` jogilag szétválasztott dinamikus mezői (root + plugin mirror) bent vannak, backend validáció + admin required szabály szinkronban.
+- Ellenőrzés: érintett fájlokon hibaellenőrzés lefutott, új hiba nem maradt.
+- Zárás: repository mentve és távoli repóba feltöltve; reggeli folytatási pont ez a bejegyzés.
+
 ## 2026. 05. 26. – Session #egyeb-fegyverek-dynamic-fields
 - Kérés: az `Egyéb fegyverek` kategória kapjon jogilag óvatos, altípus-alapú mezőket, külön kezelve az íj, számszeríj, légfegyver, airsoft, gáz-riasztó, muzeális, díszfegyver, vadászkés és túlélő/taktikai eszköz vonalat.
 - Javítás: a root + plugin feladási űrlapban külön `Egyéb fegyverek` blokk készült kategória-választóval, általános tartozékokkal és altípusonként megjelenő műszaki mezőkkel.
