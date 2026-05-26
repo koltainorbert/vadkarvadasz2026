@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-logo-pointer
+- Kérés: a skálán mozgó mutató logója a `radar.svg`-ből jöjjön (ne fallback ikon), és valós értékre pozícionálódjon.
+- CSS/JS: külön `is-logo` mutató mód + `--vhr-logo` háttérképes renderelés.
+- PHP/JS híd: `radar.svg` fájlból regexszel kinyert `data:image/png;base64` logó elsődleges forrás, fallback marad (`va_brand_icon_url`/site icon).
+- Útvonal-robosztus keresés: több mappa-szintet végigpróbál a `radar.svg` megtalálásához.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`, lokális mirror: `index.php`.
+- Deploy: push ütközés után pull+merge, majd sikeres feltöltés (`5b70ee3`).
+- Holnap: élő vizuális ellenőrzés (desktop/mobil), hogy a mutatóban mindenhol a radar.svg logó látszik.
+
 ## 2026. 05. 26. – Session #radar-widget-legibility
 - Kérés: a Vadkár radar legyen nagyobb/olvashatóbb, és a fölötte lévő túl nagy gap tűnjön el.
 - CSS: `#vhrSpiderWidget` negatív margók helyett `margin:2px 0 10px`; SVG méret növelés `268px` (mobil `232px`).

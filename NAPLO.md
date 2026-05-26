@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-logo-pointer — radar.svg logó a mozgó mutatóban
+
+### Kérés
+- A skálán mozgó mutató ne fallback ikont használjon, hanem a `radar.svg` fájlból vett logót, és mindig a valós kockázati pozícióra álljon.
+
+### Megvalósítás
+- A HUD skála mutató kapott külön logó-mód stílust (`.vhr-gauge__knob.is-logo`), hogy a logó tisztábban jelenjen meg.
+- A JS pointer-logo forrás most elsődlegesen a `radar.svg` beágyazott `data:image/png;base64,...` képéből jön (regex kivonatolással).
+- Több útvonalas SVG-keresés került be, hogy különböző könyvtárstruktúrában is megtalálja a fájlt.
+- Ha a radar.svg logó nem érhető el, a régi fallback (brand icon / site icon) megmarad.
+
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `index.php` (lokális mirror frissítve)
+
+### Deploy
+- Első push elutasítva (remote előrébb volt), pull+merge után sikeres push.
+- Commitok: `bd0b2cb` + merge `5b70ee3`.
+
+### Holnap mivel kell kezdeni
+- Élő oldalon vizuális ellenőrzés: a mutatóban biztosan a radar.svg logó látszik-e minden breakpointon.
+
 ## 2026. 05. 26. – Session #radar-widget-legibility — Vadkár radar olvashatóság + gap fix
 
 ### Kérés
