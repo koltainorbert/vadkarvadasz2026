@@ -638,6 +638,48 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__modal-scroll{flex:1 1 auto;min-height:0;max-height:none !important;overflow-y:auto !important;padding-bottom:22px;}
 @media (max-width:760px){.va-home-radar{padding:12px;}.va-home-radar__hd,.va-home-radar__modal-summary,.va-home-radar__hero,.va-home-radar__cinema{grid-template-columns:1fr;display:grid;}.va-home-radar__status-stack{justify-items:start;}.va-home-radar__modal{--vhr-modal-top:calc(var(--nav,66px) + 8px);--vhr-modal-bottom:10px;}.va-home-radar__modal-card{margin:0 auto;padding:18px 14px 14px;border-radius:20px;}.va-home-radar__modal-title{font-size:1.14rem;}.va-home-radar__heatmap-head,.va-home-radar__heatmap-row{grid-template-columns:86px repeat(7,minmax(0,1fr));}}
 @media (max-width:640px){.va-home-radar{padding:11px;border-radius:20px;}.va-home-radar__subtitle{max-width:none;}.va-home-radar__loc{max-width:100%;}.va-home-radar__picker{padding:6vh 10px 10px;}.va-home-radar__heatmap-head,.va-home-radar__heatmap-row{grid-template-columns:1fr;}.va-home-radar__heatmap-corner{display:none;}.va-home-radar__heatmap-day{text-align:left;padding-left:10px;}.va-home-radar__heatmap-label{margin-top:8px;}.va-home-radar__picker-btn{padding:11px 30px 11px 11px;font-size:.72rem;}.va-home-radar__field span{font-size:.54rem;letter-spacing:.07em;}.va-home-radar__status,.va-home-radar__loc{font-size:.55rem;}}
+
+/* Visual refresh: cleaner card hierarchy + no overflow on mobile. */
+.va-home-radar{padding:16px 14px 14px;border-radius:26px;border-color:rgba(255,70,70,.34);background:radial-gradient(130% 130% at 82% 8%,rgba(255,38,38,.18),transparent 44%),radial-gradient(120% 120% at 12% 100%,rgba(255,120,40,.12),transparent 48%),linear-gradient(155deg,rgba(6,6,6,.985),rgba(12,9,9,.98) 52%,rgba(22,12,10,.97) 100%);box-shadow:0 28px 62px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.03),inset 0 0 46px rgba(255,20,20,.05);}
+.va-home-radar__hero,.va-home-radar__meta,.va-home-radar__meta-item,.va-home-radar__controls,.va-home-radar__day,.va-home-radar__intel,.va-home-radar__reason{min-width:0;}
+.va-home-radar__spider#vhrSpiderWidget{max-width:none;margin:0 0 12px;padding:12px 10px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:radial-gradient(circle at 50% 50%,rgba(255,70,70,.16),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 12px 26px rgba(0,0,0,.26);}
+.va-home-radar__spider#vhrSpiderWidget svg{max-height:190px;}
+.va-home-radar__loc{display:flex;align-items:center;justify-content:center;min-height:38px;width:100%;max-width:none;margin:0 0 12px;padding:8px 12px;border-radius:14px;letter-spacing:.06em;font-size:.6rem;line-height:1.35;white-space:normal;overflow:visible;text-overflow:clip;background:linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.16);}
+.va-home-radar__controls{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 9px;margin-bottom:13px;}
+.va-home-radar__picker-btn{min-height:54px;border-radius:15px;padding:12px 34px 12px 12px;font-size:.76rem;}
+.va-home-radar__hero{grid-template-columns:minmax(132px,156px) 1fr;gap:10px;}
+.va-home-radar__scorebox{border-radius:20px;padding:15px 11px 13px;}
+.va-home-radar__score{font-size:clamp(2rem,7.2vw,3.05rem);line-height:.95;}
+.va-home-radar__level{font-size:.56rem;letter-spacing:.11em;line-height:1.3;}
+.va-home-radar__meta{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.va-home-radar__meta-item{padding:10px 9px 9px;border-radius:14px;}
+.va-home-radar__meta-item strong{font-size:.82rem;line-height:1.3;}
+.va-home-radar__intel{margin-bottom:9px;border-radius:15px;}
+.va-home-radar__intel-line{font-size:.72rem;line-height:1.5;}
+.va-home-radar__reason{font-size:.68rem;line-height:1.5;padding:10px 11px;border-radius:14px;}
+.va-home-radar__days{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:11px;}
+.va-home-radar__day{border-radius:14px;padding:9px 7px 8px;}
+.va-home-radar__dayname{font-size:.52rem;}
+.va-home-radar__dayscore{font-size:.95rem;}
+.va-home-radar__dayspecies{font-size:.53rem;}
+.va-home-radar__toggle{margin-top:13px;border-radius:14px;padding:12px 13px;font-size:.72rem;letter-spacing:.1em;}
+@media (max-width:880px){
+  .va-home-radar__controls{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .va-home-radar__meta{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .va-home-radar__days{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:640px){
+  .va-home-radar{padding:12px 11px;border-radius:22px;}
+  .va-home-radar__spider#vhrSpiderWidget{padding:10px 8px;margin-bottom:10px;}
+  .va-home-radar__spider#vhrSpiderWidget svg{max-height:158px;}
+  .va-home-radar__loc{min-height:36px;margin-bottom:10px;font-size:.57rem;}
+  .va-home-radar__controls{grid-template-columns:1fr;gap:9px;}
+  .va-home-radar__hero{grid-template-columns:1fr;gap:9px;}
+  .va-home-radar__scorebox{min-height:126px;}
+  .va-home-radar__score{font-size:2.35rem;}
+  .va-home-radar__meta{grid-template-columns:1fr;}
+  .va-home-radar__days{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 </style>
 
 </aside>
