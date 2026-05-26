@@ -758,21 +758,21 @@ body.va-home-radar-picker-open{overflow:hidden;}
   box-shadow:0 12px 24px rgba(0,0,0,.34),inset 0 0 18px rgba(90,170,255,.12),inset 0 0 20px rgba(255,70,70,.06) !important;
 }
 .sw-dot{
-  width:6px !important;
-  height:6px !important;
-  margin-top:4px !important;
+  width:4px !important;
+  height:4px !important;
+  margin-top:5px !important;
   opacity:1 !important;
   display:inline-block !important;
   transform-origin:center center !important;
 }
 .sw-dot--on{
   background:#00ff66 !important;
-  box-shadow:0 0 8px rgba(0,255,102,.95) !important;
-  animation:va-sw-dot-widget-blink .78s ease-in-out infinite !important;
+  box-shadow:0 0 5px rgba(0,255,102,.78) !important;
+  animation:va-sw-dot-widget-blink .95s ease-in-out infinite !important;
 }
 @keyframes va-sw-dot-widget-blink{
-  0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 8px rgba(0,255,102,.95);}
-  50%{opacity:.08;transform:scale(1.55);box-shadow:0 0 16px rgba(0,255,102,1);}
+  0%,100%{opacity:.92;transform:scale(1);box-shadow:0 0 5px rgba(0,255,102,.78);}
+  50%{opacity:.34;transform:scale(1.2);box-shadow:0 0 9px rgba(0,255,102,.92);}
 }
 
 /* Status semantics: current/active = green, forbidden/inactive = red. */
