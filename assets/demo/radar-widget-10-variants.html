@@ -187,11 +187,10 @@
       z-index:3;
     }
     .hg-species{
-      position:absolute;
-      left:50%;
-      bottom:52px;
-      transform:translateX(-50%);
-      padding:3px 9px;
+      margin-top:8px;
+      width:100%;
+      text-align:center;
+      padding:6px 9px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.18);
       background:rgba(255,0,0,.13);
@@ -200,8 +199,7 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       font-weight:800;
-      z-index:6;
-      white-space:nowrap;
+      white-space:normal;
     }
     .hg-footer{
       margin-top:8px;
@@ -318,22 +316,22 @@
     </section>
 
     <section class="card c6">
-      <h3>6. Hyper Analog Needle 2026</h3>
+      <h3>6. Eles Analog Muszer 2026</h3>
       <div class="viz">
         <div class="gauge-wrap">
           <div class="hyper-gauge" data-score="0">
-            <div class="hg-head"><span>Danger Drive Meter</span><b class="hg-big">000</b></div>
+            <div class="hg-head"><span>Veszelymero muszer</span><b class="hg-big">000</b></div>
             <div class="hg-dial">
               <div class="hg-sweep" aria-hidden="true"></div>
               <div class="hg-ticks" aria-hidden="true"></div>
               <div class="hg-scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div>
-              <div class="hg-species">Legveszelyesebb: -</div>
               <div class="hg-needle" aria-hidden="true"></div>
               <div class="hg-hub" aria-hidden="true"></div>
             </div>
+            <div class="hg-species">Legnagyobb kart okozo vadfaj: -</div>
             <div class="hg-footer"><span>Aktualis veszely index</span><b class="hg-value">0</b></div>
           </div>
-          <div class="danger-type">Legveszelyesebb vadkar faj: -</div>
+          <div class="danger-type">Legnagyobb kart okozo vadfaj: -</div>
         </div>
       </div>
       <div class="meta"><span class="tag">aktualis veszely index</span><span class="value gauge-value">0</span></div>
@@ -390,10 +388,10 @@
       var target = top.score;
 
       if (dangerType) {
-        dangerType.textContent = 'Legveszelyesebb vadkar faj: ' + top.name;
+        dangerType.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
       }
       if (speciesLabel) {
-        speciesLabel.textContent = 'Legveszelyesebb: ' + top.name;
+        speciesLabel.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
       }
 
       function angleForValue(value){
