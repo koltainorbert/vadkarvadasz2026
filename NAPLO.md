@@ -6,6 +6,7 @@
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.
 - Javítás: mindkét AJAX handlerben (root + plugin mirror) mindkét validációs ágba bekerült a hiányzó mezőtérkép (`job_location`, `job_type`), és konzisztenciából az `other_weapon_kind` átadása is.
+- Javítás 2: `job_location` ellenőrzés kapott fallbacket a sima `location` mezőre (`job_location !== '' ? job_location : location`), így nem akad el a feladás, ha a település a fő helyszín mezőben van megadva.
 - Ellenőrzés: szerkesztett fájlokon hibaellenőrzés lefutott, új hiba nincs.
 - Érintett: `NAPLO.md`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
 
