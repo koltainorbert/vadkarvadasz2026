@@ -781,6 +781,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__spider#vhrSpiderWidget::after{content:none !important;display:none !important;animation:none !important;}
 .vhr-bandcard{width:100%;height:100%;border-radius:10px;border:none;background:transparent;box-shadow:none;padding:6px;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;}
 .vhr-bandcard__head{display:grid;grid-template-columns:1fr;gap:6px;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;}
+.vhr-bandcard__titlewrap{display:flex;align-items:center;gap:7px;}
+.vhr-bandcard__logo{width:17px;height:17px;object-fit:contain;border-radius:4px;filter:drop-shadow(0 0 8px rgba(255,90,60,.35));}
 .vhr-bandcard__title{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:900;}
 .vhr-bandcard__top{font-size:.96rem;line-height:1.2;color:#fff;font-weight:900;}
 .vhr-bandcard__top small{display:block;margin-top:4px;font-size:.62rem;letter-spacing:.08em;color:rgba(255,228,210,.86);font-weight:700;}
@@ -1848,6 +1850,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
   var weatherData=null;
+  var vhrWidgetLogo=<?php echo wp_json_encode( (string) ( get_option( 'va_brand_icon_url', '' ) ?: get_site_icon_url( 64 ) ) ); ?>;
   if(modalEl&&modalEl.parentNode!==document.body){document.body.appendChild(modalEl);}
   if(pickerEl&&pickerEl.parentNode!==document.body){document.body.appendChild(pickerEl);}
   function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
@@ -1878,10 +1881,11 @@ body.va-home-radar-picker-open{overflow:hidden;}
     }).sort(function(a,b){return b.score-a.score;});
     if(!rows.length){return;}
     var top=rows[0];
+    var titleLogo=vhrWidgetLogo?'<img class="vhr-bandcard__logo" src="'+vhrWidgetLogo+'" alt="Vadkár Radar logó" loading="lazy" decoding="async"/>':'';
     var html='';
     html+='<div class="vhr-bandcard">';
     html+='<div class="vhr-bandcard__head">';
-    html+='<div class="vhr-bandcard__title">Valós napi fajkockázat</div>';
+    html+='<div class="vhr-bandcard__titlewrap">'+titleLogo+'<div class="vhr-bandcard__title">Vadkár Radar</div></div>';
     html+='<div class="vhr-bandcard__top">'+speciesMeta[top.species].label+'<small>Aznapi legnagyobb probléma • '+top.score+'/100</small></div>';
     html+='</div>';
     html+='<div class="vhr-bandcard__legend"><span>Fajok</span><span>Sáv</span><span>Pont</span></div>';
