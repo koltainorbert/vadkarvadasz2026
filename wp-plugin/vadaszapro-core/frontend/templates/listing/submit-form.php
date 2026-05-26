@@ -774,6 +774,21 @@ body.va-page-modal-open{
     line-height: 1.1 !important;
     margin: 0 0 10px !important;
 }
+#va-step2-category-label {
+    display: inline-block;
+}
+#va-step2-category-label:not(:empty) {
+    margin-left: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,138,0,.55);
+    background: rgba(255,138,0,.14);
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+}
 #va-wizard-overlay.va-wizard-shell .va-wizard-footer {
     display: flex !important;
     justify-content: flex-end !important;
@@ -3727,7 +3742,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateStep2CategoryLabel() {
         var label = getSelectedCategoryLabel();
-        $('#va-step2-category-label').text(label ? ' (' + label + ')' : '');
+        $('#va-step2-category-label').text(label ? '(' + label + ')' : '');
     }
 
     function isVehicleCategorySelected() {

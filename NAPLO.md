@@ -2,6 +2,11 @@
 
 ---
 
+## 2026. 05. 26. – Session #step2-category-badge-parentheses
+- Kérés: a kiválasztott kategória a `Termék adatai` cím után látszódjon zárójelben.
+- Javítás: a 2. lépés címe melletti kategóriafelirat most badge-szerűen kiemelt és zárójeles formában jelenik meg (`(Csere)` stb.).
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
 ## 2026. 05. 26. – Session #csere-field-visible-and-step2-category-title
 - Hiba: a `Csere` kategóriánál a `Mire szeretném cserélni` mező nem jelent meg stabilan.
 - Javítás: a kategória gombok (`.va-cat-item`) kaptak inline fallback click kezelést, így biztosan frissül a `#va-category` hidden mező és a `change` esemény.
