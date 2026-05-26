@@ -1343,8 +1343,23 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
     window.__vaGeoPending=true;
     window.__vaGeoWaiters=[done];
+    var settled=false;
+    var retryTimer=null;
+    var hardTimer=null;
+    var permissionRef=null;
+
+    function cleanup(){
+      if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+      if(hardTimer){clearTimeout(hardTimer);hardTimer=null;}
+      if(permissionRef&&typeof permissionRef.onchange!=='undefined'){
+        permissionRef.onchange=null;
+      }
+    }
 
     function publish(loc){
+      if(settled){return;}
+      settled=true;
+      cleanup();
       window.__vaGeoPending=false;
       var waiters=window.__vaGeoWaiters||[];
       window.__vaGeoWaiters=[];
@@ -1372,12 +1387,54 @@ body.va-home-radar-picker-open{overflow:hidden;}
       });
     }
 
-    if(navigator.geolocation){
+    function requestGeo(highAccuracy){
+      if(!navigator.geolocation){
+        ipFallback();
+        return;
+      }
       navigator.geolocation.getCurrentPosition(function(pos){
         saveAndPublish(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
-      },function(){
+      },function(err){
+        if(err&&err.code===1){
+          ipFallback();
+          return;
+        }
         ipFallback();
-      },{enableHighAccuracy:false,timeout:10000,maximumAge:0});
+      },{enableHighAccuracy:!!highAccuracy,timeout:12000,maximumAge:0});
+    }
+
+    hardTimer=setTimeout(function(){
+      ipFallback();
+    },16000);
+
+    retryTimer=setTimeout(function(){
+      if(!settled){
+        requestGeo(false);
+      }
+    },4500);
+
+    if(navigator.geolocation){
+      if(navigator.permissions&&navigator.permissions.query){
+        navigator.permissions.query({name:'geolocation'}).then(function(permission){
+          permissionRef=permission;
+          if(permission.state==='granted'){
+            requestGeo(false);
+            return;
+          }
+          if(typeof permission.onchange!=='undefined'){
+            permission.onchange=function(){
+              if(!settled&&permission.state==='granted'){
+                requestGeo(false);
+              }
+            };
+          }
+          requestGeo(true);
+        }).catch(function(){
+          requestGeo(true);
+        });
+      }else{
+        requestGeo(true);
+      }
     }else{
       ipFallback();
     }
