@@ -768,7 +768,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-gauge__progress{position:absolute;left:2px;top:2px;bottom:2px;width:1%;border-radius:999px;background:linear-gradient(90deg,#58ff8e,#ffe46a,#ff6b3d,#ff2740);box-shadow:0 0 10px color-mix(in srgb,var(--vhr-alert) 55%,transparent),inset 0 0 0 1px rgba(255,255,255,.3);transition:width .9s cubic-bezier(.2,.9,.2,1);z-index:2;}
 .vhr-gauge__marker{position:absolute;top:10px;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.5);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;z-index:4;}
 .vhr-gauge__knob{position:absolute;top:51px;left:1%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.58);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.5),rgba(110,110,110,.94));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 12px rgba(0,0,0,.48),0 0 0 2px rgba(0,0,0,.38);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:5;}
-.vhr-gauge__knob.is-logo{background-color:#111;background-image:var(--vhr-logo);background-size:82% 82%;background-repeat:no-repeat;background-position:center;}
+.vhr-gauge__knob.is-logo{width:78px;height:30px;border-radius:9px;background-color:#111;background-image:var(--vhr-logo);background-size:contain;background-repeat:no-repeat;background-position:center;}
 .vhr-gauge__cursor{position:absolute;top:26px;left:1%;width:2px;height:34px;transform:translateX(-50%);background:rgba(255,255,255,.95);border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.45);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:4;}
 .vhr-gauge__ticks{position:absolute;left:0;right:0;top:70px;display:flex;justify-content:space-between;align-items:flex-start;padding:0 2px;}
 .vhr-gauge__ticks span{position:relative;font-size:.56rem;font-weight:800;color:rgba(255,255,255,.84);min-width:20px;text-align:center;}
@@ -1814,7 +1814,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
   var vhrPointerLogo=<?php
-    $va_radar_logo_data = '';
+    $va_radar_svg_data = '';
     $va_radar_svg_paths = [
       __DIR__ . '/radar.svg',
       dirname( __DIR__ ) . '/radar.svg',
@@ -1826,13 +1826,13 @@ body.va-home-radar-picker-open{overflow:hidden;}
         continue;
       }
       $va_radar_svg = (string) file_get_contents( $va_radar_svg_path );
-      if ( preg_match( '/xlink:href="(data:image\/png;base64,[^"]+)"/i', $va_radar_svg, $va_logo_match ) ) {
-        $va_radar_logo_data = $va_logo_match[1];
+      if ( trim( $va_radar_svg ) !== '' ) {
+        $va_radar_svg_data = 'data:image/svg+xml;utf8,' . rawurlencode( $va_radar_svg );
         break;
       }
     }
-    $va_pointer_logo = $va_radar_logo_data !== ''
-      ? $va_radar_logo_data
+    $va_pointer_logo = $va_radar_svg_data !== ''
+      ? $va_radar_svg_data
       : esc_url( (string) ( get_option( 'va_brand_icon_url', '' ) ?: get_site_icon_url( 64 ) ) );
     echo wp_json_encode( $va_pointer_logo );
   ?>;
