@@ -86,7 +86,7 @@ class VA_Listing_Edit {
             'vegyescsovu-puska'  => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
             'maroklofegyver'     => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
             'hatastalanitott'    => [ 'required' => [ 'va_brand', 'va_model' ] ],
-            'egyeb-fegyverek'    => [ 'required' => [ 'va_brand' ] ],
+            'egyeb-fegyverek'    => [ 'required' => [ 'va_brand', 'va_other_weapon_kind' ] ],
             'loszer-tolteny'     => [ 'required' => [ 'va_brand', 'va_caliber' ] ],
             'tavcsovek'          => [ 'required' => [ 'va_brand', 'va_model', 'va_optic_zoom', 'va_optic_objective' ] ],
             'ejjellato-tavcso'   => [ 'required' => [ 'va_brand', 'va_model', 'va_optic_zoom' ] ],
