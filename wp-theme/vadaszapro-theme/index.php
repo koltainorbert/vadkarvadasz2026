@@ -76,6 +76,16 @@ $va_agri_crops_widget = [
       </div>
     <?php endforeach; ?>
   </div>
+  <div class="va-agri__actions"><button type="button" class="va-agri__morebtn" id="agri-more-btn" hidden>További növények</button></div>
+
+  <div class="va-agri__modal" id="agri-modal" aria-hidden="true">
+    <div class="va-agri__modal-backdrop" data-agri-close="1"></div>
+    <div class="va-agri__modal-card" role="dialog" aria-modal="true" aria-label="Agrár naptár további elemek">
+      <button type="button" class="va-agri__modal-close" id="agri-modal-close" aria-label="Bezárás">×</button>
+      <div class="va-agri__modal-title">További agrár elemek</div>
+      <div class="va-agri__modal-list" id="agri-modal-list"></div>
+    </div>
+  </div>
 </section>
 
 <style>
@@ -91,7 +101,57 @@ $va_agri_crops_widget = [
 .va-agri__tag{display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:.5rem;font-weight:900;letter-spacing:.04em;line-height:1.1;text-align:center;border-radius:999px;padding:2px 8px;border:1px solid transparent;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
 .va-agri__tag.is-on{color:#7dffb2;background:rgba(0,255,102,.16);border-color:rgba(0,255,120,.46);}
 .va-agri__tag.is-off{color:#ff8a8a;background:rgba(255,0,0,.1);border-color:rgba(255,0,0,.4);}
+.va-agri__actions{display:flex;justify-content:center;margin-top:8px;}
+.va-agri__morebtn{border:1px solid rgba(255,255,255,.24);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));color:#fff;border-radius:999px;padding:6px 12px;font-size:.66rem;font-weight:800;letter-spacing:.03em;cursor:pointer;}
+.va-agri__morebtn:hover{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));}
+.va-agri__modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:14px;}
+.va-agri__modal.is-open{display:flex;}
+.va-agri__modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);}
+.va-agri__modal-card{position:relative;z-index:1;width:min(560px,94vw);max-height:min(84vh,720px);overflow:auto;border-radius:14px;border:1px solid rgba(130,200,255,.3);background:linear-gradient(180deg,rgba(12,20,34,.98),rgba(9,14,24,.98));box-shadow:0 26px 54px rgba(0,0,0,.55);padding:12px;}
+.va-agri__modal-title{font-size:.82rem;font-weight:900;color:#fff;letter-spacing:.05em;text-transform:uppercase;margin:0 30px 10px 0;}
+.va-agri__modal-close{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;line-height:1;cursor:pointer;}
+.va-agri__modal-list .va-agri__item{margin-bottom:6px;}
+body.va-agri-modal-open{overflow:hidden;}
 </style>
+
+<script>
+(function(){
+  var root=document.getElementById('agri-naptar-widget');
+  if(!root){return;}
+  var list=root.querySelector('.va-agri__list');
+  var btn=document.getElementById('agri-more-btn');
+  var modal=document.getElementById('agri-modal');
+  var modalClose=document.getElementById('agri-modal-close');
+  var modalList=document.getElementById('agri-modal-list');
+  if(!list||!btn||!modal||!modalList){return;}
+
+  var items=Array.prototype.slice.call(list.querySelectorAll('.va-agri__item'));
+  if(items.length<=1){
+    btn.hidden=true;
+    return;
+  }
+
+  for(var i=1;i<items.length;i++){
+    modalList.appendChild(items[i]);
+  }
+  btn.hidden=false;
+  btn.textContent='További '+(items.length-1)+' növény';
+
+  function setAgriModal(open){
+    modal.classList.toggle('is-open',!!open);
+    modal.setAttribute('aria-hidden',open?'false':'true');
+    if(document.body){document.body.classList.toggle('va-agri-modal-open',!!open);}
+  }
+
+  btn.addEventListener('click',function(){setAgriModal(true);});
+  modalClose.addEventListener('click',function(){setAgriModal(false);});
+  modal.addEventListener('click',function(e){
+    var t=e.target;
+    if(t&&t.getAttribute&&t.getAttribute('data-agri-close')){setAgriModal(false);}
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){setAgriModal(false);}});
+})();
+</script>
 <?php endif; ?>
 
 <!-- ═══ HOLDNAPTÁR ════════════════════════════════════════ -->
