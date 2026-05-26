@@ -50,20 +50,6 @@ $va_agri_crops_widget = [
   <div id="sw-open"></div>
   <div class="va-season__soon-lbl" id="sw-soon-lbl"></div>
   <div id="sw-soon"></div>
-  <div class="va-season__actions"><button type="button" class="va-season__morebtn" id="sw-more-btn" hidden>További elemek</button></div>
-
-  <div class="va-season__modal" id="sw-modal" aria-hidden="true">
-    <div class="va-season__modal-backdrop" data-sw-close="1"></div>
-    <div class="va-season__modal-card" role="dialog" aria-modal="true" aria-label="További vadászati idények">
-      <button type="button" class="va-season__modal-close" id="sw-modal-close" aria-label="Bezárás">×</button>
-      <div class="va-season__modal-title">További idények</div>
-      <div class="va-season__modal-body">
-        <div id="sw-modal-open"></div>
-        <div class="va-season__soon-lbl" id="sw-modal-soon-lbl"></div>
-        <div id="sw-modal-soon"></div>
-      </div>
-    </div>
-  </div>
 </section>
 <?php endif; ?>
 
@@ -1964,61 +1950,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
   /* Countdown elemeinek nyilvántartása */
   var _cdList=[];
-  var swMoreBtn=document.getElementById('sw-more-btn');
-  var swModal=document.getElementById('sw-modal');
-  var swModalClose=document.getElementById('sw-modal-close');
-  var swModalOpen=document.getElementById('sw-modal-open');
-  var swModalSoon=document.getElementById('sw-modal-soon');
-  var swModalSoonLbl=document.getElementById('sw-modal-soon-lbl');
-
-  function setSeasonModal(open){
-    if(!swModal){return;}
-    swModal.classList.toggle('is-open',!!open);
-    swModal.setAttribute('aria-hidden',open?'false':'true');
-    if(document.body){document.body.classList.toggle('va-season-modal-open',!!open);}
-  }
-
-  function appendOpenRow(target,a,key){
-    if(!target){return;}
-    var urgency=a.neverCloses?'ok':(a.daysLeft===0?'urgent':a.daysLeft<=7?'urgent':a.daysLeft<=14?'warn':'ok');
-    var row=document.createElement('div');
-    row.className='sw-row'+(a.isNew?' sw-row--new':'')+(a.daysLeft<=7&&!a.isNew&&!a.neverCloses?' sw-row--closing':'');
-    row.style.borderLeftColor=a.color;
-    var cdId='sw-cd-'+key;
-    row.innerHTML='<div class="sw-dot sw-dot--on"></div>'
-      +'<div class="sw-body">'
-      +'<div class="sw-name">'+a.name+(a.daysLeft<=7&&!a.isNew&&!a.neverCloses?' <span class="sw-closing-lbl">&#9888;&#9888; Z&Aacute;RUL</span>':'')+'</div>'
-      +'<div class="sw-sub">'+a.sub+'</div>'
-      +'<div class="sw-cd sw-cd--'+urgency+'" id="'+cdId+'">'+(a.neverCloses?'Egész évben':'<span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> van hátra</span>')+'</div>'
-      +'</div>';
-    target.appendChild(row);
-    if(!a.neverCloses){_cdList.push({el:document.getElementById(cdId),m:a.closeM,d:a.closeD,open:true});}
-  }
-
-  function appendSoonRow(target,a2,key){
-    if(!target){return;}
-    var row2=document.createElement('div');
-    row2.className='sw-row sw-row--soon';
-    row2.style.borderLeftColor=a2.color;
-    var cdId2='sw-cd-soon-'+key;
-    row2.innerHTML='<div class="sw-dot sw-dot--off"></div>'
-      +'<div class="sw-body">'
-      +'<div class="sw-name">'+a2.name+'</div>'
-      +'<div class="sw-cd sw-cd--soon" id="'+cdId2+'"><span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> múlva nyílik</span></div>'
-      +'</div>';
-    target.appendChild(row2);
-    _cdList.push({el:document.getElementById(cdId2),m:a2.openM,d:a2.openD,open:false});
-  }
-
-  if(swMoreBtn){swMoreBtn.addEventListener('click',function(){setSeasonModal(true);});}
-  if(swModalClose){swModalClose.addEventListener('click',function(){setSeasonModal(false);});}
-  if(swModal){
-    swModal.addEventListener('click',function(e){
-      var t=e.target;
-      if(t&&t.getAttribute&&t.getAttribute('data-sw-close')){setSeasonModal(false);}
-    });
-  }
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){setSeasonModal(false);}});
 
   function updateCDs(){
     for(var i=0;i<_cdList.length;i++){
@@ -2089,41 +2020,54 @@ body.va-home-radar-picker-open{overflow:hidden;}
     /* Open list */
     var openEl=document.getElementById('sw-open');
     if(!openEl)return;
-    var soonLbl=document.getElementById('sw-soon-lbl');
-    var soonEl=document.getElementById('sw-soon');
-    if(!soonEl)return;
     openEl.innerHTML='';
-    soonEl.innerHTML='';
-    if(soonLbl){soonLbl.textContent='';}
     _cdList=[];
 
-    if(swModalOpen){swModalOpen.innerHTML='';}
-    if(swModalSoon){swModalSoon.innerHTML='';}
-    if(swModalSoonLbl){swModalSoonLbl.textContent='';}
+    for(var oi=0;oi<open.length;oi++){
+      var a=open[oi];
+      var urgency=a.neverCloses?'ok':(a.daysLeft===0?'urgent':a.daysLeft<=7?'urgent':a.daysLeft<=14?'warn':'ok');
+      var row=document.createElement('div');
+      row.className='sw-row'+(a.isNew?' sw-row--new':'')+(a.daysLeft<=7&&!a.isNew&&!a.neverCloses?' sw-row--closing':'');
+      row.style.borderLeftColor=a.color;
+      var cdId='sw-cd-'+oi;
+      row.innerHTML='<div class="sw-dot sw-dot--on"></div>'
+        +'<div class="sw-body">'
+        +'<div class="sw-name">'+a.name+(a.daysLeft<=7&&!a.isNew&&!a.neverCloses?' <span class="sw-closing-lbl">&#9888;&#9888; Z&Aacute;RUL</span>':'')+'</div>'
+        +'<div class="sw-sub">'+a.sub+'</div>'
+        +'<div class="sw-cd sw-cd--'+urgency+'" id="'+cdId+'">'+(a.neverCloses?'Egész évben':'<span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> van hátra</span>')+'</div>'
+        +'</div>';
+      openEl.appendChild(row);
+      if(!a.neverCloses)_cdList.push({el:document.getElementById(cdId),m:a.closeM,d:a.closeD,open:true});
+    }
 
-    if(open.length){
-      appendOpenRow(openEl,open[0],'main-open-0');
-      for(var oi=1;oi<open.length;oi++){appendOpenRow(swModalOpen,open[oi],'modal-open-'+oi);}
-      for(var sj=0;sj<soon.length;sj++){appendSoonRow(swModalSoon,soon[sj],'modal-soon-'+sj);}
-      if(swModalSoonLbl&&soon.length){swModalSoonLbl.textContent='Hamarosan nyílik';}
-    } else if(soon.length){
-      if(soonLbl)soonLbl.textContent='Hamarosan nyílik';
-      appendSoonRow(soonEl,soon[0],'main-soon-0');
-      for(var sj2=1;sj2<soon.length;sj2++){appendSoonRow(swModalSoon,soon[sj2],'modal-soon-'+sj2);}
-      if(swModalSoonLbl&&soon.length>1){swModalSoonLbl.textContent='Hamarosan nyílik';}
-    } else {
+    if(!open.length){
       openEl.innerHTML='<div class="sw-empty">Ma nincs nyitott idény.</div>';
     }
 
-    var hiddenCount=Math.max(0,open.length-1)+(open.length?soon.length:Math.max(0,soon.length-1));
-    if(swMoreBtn){
-      if(hiddenCount>0){
-        swMoreBtn.hidden=false;
-        swMoreBtn.textContent='További '+hiddenCount+' elem';
-      }else{
-        swMoreBtn.hidden=true;
-        setSeasonModal(false);
+    /* Soon section */
+    var soonLbl=document.getElementById('sw-soon-lbl');
+    var soonEl=document.getElementById('sw-soon');
+    if(!soonEl)return;
+    soonEl.innerHTML='';
+
+    if(soon.length){
+      if(soonLbl)soonLbl.textContent='Hamarosan nyílik';
+      for(var si2=0;si2<soon.length;si2++){
+        var a2=soon[si2];
+        var row2=document.createElement('div');
+        row2.className='sw-row sw-row--soon';
+        row2.style.borderLeftColor=a2.color;
+        var cdId2='sw-cd-soon-'+si2;
+        row2.innerHTML='<div class="sw-dot sw-dot--off"></div>'
+          +'<div class="sw-body">'
+          +'<div class="sw-name">'+a2.name+'</div>'
+          +'<div class="sw-cd sw-cd--soon" id="'+cdId2+'"><span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> múlva nyílik</span></div>'
+          +'</div>';
+        soonEl.appendChild(row2);
+        _cdList.push({el:document.getElementById(cdId2),m:a2.openM,d:a2.openD,open:false});
       }
+    } else {
+      if(soonLbl)soonLbl.textContent='';
     }
 
     updateCDs();
@@ -2237,17 +2181,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .sw-row--closing{background:rgba(255,0,0,.1)!important;box-shadow:0 0 10px rgba(255,0,0,.2),inset 0 0 16px rgba(255,0,0,.08);animation:sw-cl-pulse 1.5s ease-in-out infinite;}
 @keyframes sw-cl-pulse{0%,100%{box-shadow:0 0 8px rgba(255,0,0,.12);}50%{box-shadow:0 0 20px rgba(255,0,0,.38),inset 0 0 14px rgba(255,0,0,.1);}}
 .sw-closing-lbl{font-size:.56rem;font-weight:900;color:#ff5a5a;letter-spacing:.05em;margin-left:4px;vertical-align:middle;}
-.va-season__actions{display:flex;justify-content:center;margin-top:8px;}
-.va-season__morebtn{border:1px solid rgba(255,255,255,.24);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));color:#fff;border-radius:999px;padding:6px 12px;font-size:.66rem;font-weight:800;letter-spacing:.03em;cursor:pointer;}
-.va-season__morebtn:hover{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));}
-.va-season__modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:14px;}
-.va-season__modal.is-open{display:flex;}
-.va-season__modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);}
-.va-season__modal-card{position:relative;z-index:1;width:min(560px,94vw);max-height:min(84vh,720px);overflow:auto;border-radius:14px;border:1px solid rgba(130,200,255,.3);background:linear-gradient(180deg,rgba(12,20,34,.98),rgba(9,14,24,.98));box-shadow:0 26px 54px rgba(0,0,0,.55);padding:12px;}
-.va-season__modal-title{font-size:.82rem;font-weight:900;color:#fff;letter-spacing:.05em;text-transform:uppercase;margin:0 30px 10px 0;}
-.va-season__modal-close{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;line-height:1;cursor:pointer;}
-.va-season__modal-body .sw-row{margin-bottom:6px;}
-body.va-season-modal-open{overflow:hidden;}
 
 @media (max-width: 1024px){
   .va-hnaptar{--va-hn-name-w:136px;}
