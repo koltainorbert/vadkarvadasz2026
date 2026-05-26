@@ -104,14 +104,26 @@ $va_agri_crops_widget = [
 .va-agri__actions{display:flex;justify-content:center;margin-top:8px;}
 .va-agri__morebtn{border:1px solid rgba(255,255,255,.24);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));color:#fff;border-radius:999px;padding:6px 12px;font-size:.66rem;font-weight:800;letter-spacing:.03em;cursor:pointer;}
 .va-agri__morebtn:hover{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));}
-.va-agri__modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:14px;}
+.va-agri__modal{position:fixed;inset:0;z-index:2147483645;display:none;align-items:flex-start;justify-content:center;padding:calc(var(--nav,66px) + 10px) 12px 14px;overflow:auto;}
 .va-agri__modal.is-open{display:flex;}
-.va-agri__modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(2px);}
-.va-agri__modal-card{position:relative;z-index:1;width:min(560px,94vw);max-height:min(84vh,720px);overflow:auto;border-radius:14px;border:1px solid rgba(130,200,255,.3);background:linear-gradient(180deg,rgba(12,20,34,.98),rgba(9,14,24,.98));box-shadow:0 26px 54px rgba(0,0,0,.55);padding:12px;}
-.va-agri__modal-title{font-size:.82rem;font-weight:900;color:#fff;letter-spacing:.05em;text-transform:uppercase;margin:0 30px 10px 0;}
-.va-agri__modal-close{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font-size:20px;line-height:1;cursor:pointer;}
-.va-agri__modal-list .va-agri__item{margin-bottom:6px;}
+.va-agri__modal-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 20% 16%,rgba(255,59,47,.22),transparent 34%),radial-gradient(circle at 80% 84%,rgba(255,205,110,.12),transparent 38%),rgba(4,6,10,.88);backdrop-filter:blur(10px);}
+.va-agri__modal-card{position:relative;z-index:1;width:min(980px,calc(100vw - 28px));max-height:calc(100dvh - var(--nav,66px) - 28px);margin:0 auto;overflow:auto;border-radius:28px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(5,6,8,.985) 0%,rgba(15,11,12,.98) 45%,rgba(30,12,10,.97) 100%);box-shadow:0 50px 110px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.03) inset,0 0 70px rgba(255,78,52,.28);padding:22px 20px 18px;}
+.va-agri__modal-card::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.05),transparent 18%,transparent 78%,rgba(255,80,80,.08));}
+.va-agri__modal-title{position:relative;z-index:1;font-size:1.12rem;font-weight:900;color:#fff;letter-spacing:.04em;text-transform:uppercase;margin:0 56px 12px 0;}
+.va-agri__modal-close{position:absolute;top:12px;right:12px;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font-size:22px;line-height:1;cursor:pointer;box-shadow:0 10px 18px rgba(0,0,0,.22);}
+.va-agri__modal-close:hover{background:rgba(255,85,85,.18);border-color:rgba(255,125,125,.42);}
+.va-agri__modal-list{position:relative;z-index:1;}
+.va-agri__modal-list .va-agri__item{margin-bottom:8px;}
+.va-agri__modal-card::-webkit-scrollbar{width:10px;}
+.va-agri__modal-card::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:999px;}
+.va-agri__modal-card::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff7a00,#ff3d00);border-radius:999px;border:2px solid rgba(7,10,18,.8);}
+.va-agri__modal-card{scrollbar-width:thin;scrollbar-color:#ff5a00 rgba(255,255,255,.08);}
 body.va-agri-modal-open{overflow:hidden;}
+@media (max-width:760px){
+  .va-agri__modal{padding:calc(var(--nav,66px) + 8px) 10px 10px;}
+  .va-agri__modal-card{padding:18px 14px 14px;border-radius:20px;}
+  .va-agri__modal-title{font-size:1rem;margin-right:44px;}
+}
 </style>
 
 <script>
