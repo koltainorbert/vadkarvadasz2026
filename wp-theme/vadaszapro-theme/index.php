@@ -690,8 +690,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__days,
 .va-home-radar__level{display:none !important;}
 .va-home-radar{padding:12px !important;border-radius:22px !important;}
-.va-home-radar__spider#vhrSpiderWidget{margin:0 0 10px !important;max-width:none !important;}
-.va-home-radar__spider#vhrSpiderWidget svg{max-height:170px;}
+.va-home-radar__spider#vhrSpiderWidget{margin:-16px 0 -8px !important;max-width:none !important;overflow:hidden;}
+.va-home-radar__spider#vhrSpiderWidget svg{width:100% !important;max-height:240px;height:240px;display:block;}
 .va-home-radar__hero{display:block !important;margin:0 !important;}
 .va-home-radar__scorebox{padding:12px 10px !important;border-radius:16px !important;}
 .va-home-radar__scorelabel{font-size:.6rem !important;letter-spacing:.13em !important;}
@@ -699,7 +699,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__toggle{margin-top:10px !important;}
 @media (max-width:640px){
   .va-home-radar__score{font-size:2.35rem !important;}
-  .va-home-radar__spider#vhrSpiderWidget svg{max-height:150px;}
+  .va-home-radar__spider#vhrSpiderWidget{margin:-12px 0 -6px !important;}
+  .va-home-radar__spider#vhrSpiderWidget svg{max-height:210px;height:210px;}
 }
 </style>
 
