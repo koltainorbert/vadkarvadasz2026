@@ -275,59 +275,111 @@
 
   <script>
     (function(){
-      var species = [
-        { name: "Vaddiszno", score: 84 },
-        { name: "Gimszarvas", score: 67 },
-        { name: "Oz", score: 52 },
-        { name: "Damszarvas", score: 44 }
+      var card = document.querySelector('.c6 .radar-widget');
+      var svg = document.querySelector('.c6 .rw-spider');
+      if (!card || !svg) return;
+
+      var gGrid = svg.querySelector('.rw-grid');
+      var gAxis = svg.querySelector('.rw-axis');
+      var area = svg.querySelector('.rw-area');
+      var gDots = svg.querySelector('.rw-dots');
+      var gLabels = svg.querySelector('.rw-labels');
+      var scoreEl = document.querySelector('.c6 .rw-score');
+      var metaValue = document.querySelector('.c6 .c6-value');
+
+      var points = [
+        { name: 'Vaddiszno', score: 64 },
+        { name: 'Gimszarvas', score: 45 },
+        { name: 'Oz', score: 36 },
+        { name: 'Damszarvas', score: 41 },
+        { name: 'Vadnyul', score: 33 }
       ];
+      var targetScore = Number(card.getAttribute('data-score') || 67);
+      var cx = 140;
+      var cy = 96;
+      var maxR = 62;
+      var n = points.length;
 
-      var top = species[0];
-      for (var i = 1; i < species.length; i++) {
-        if (species[i].score > top.score) top = species[i];
+      function angle(i){
+        return (Math.PI * 2 * i / n) - Math.PI / 2;
       }
 
-      var gauge = document.querySelector('.c6 .hyper-gauge');
-      var needle = document.querySelector('.c6 .hg-needle');
-      if (!gauge || !needle) return;
-
-      var big = document.querySelector('.c6 .hg-big');
-      var gValue = document.querySelector('.c6 .hg-value');
-      var speciesLabel = document.querySelector('.c6 .hg-species');
-      var out = document.querySelector('.c6 .gauge-value');
-      var dangerType = document.querySelector('.c6 .danger-type');
-      var target = top.score;
-
-      if (dangerType) {
-        dangerType.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
-      }
-      if (speciesLabel) {
-        speciesLabel.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
+      function pt(i, val){
+        var r = maxR * (val / 100);
+        var a = angle(i);
+        return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
       }
 
-      function angleForValue(value){
-        var clamped = Math.max(0, Math.min(100, value));
-        return -132 + (clamped * 264 / 100);
-      }
-
-      var t0 = null;
-      var duration = 1700;
-
-      function tick(ts){
-        if (!t0) t0 = ts;
-        var p = Math.min((ts - t0) / duration, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        var val = Math.round(target * eased);
-        var deg = angleForValue(val);
-        gauge.style.setProperty('--needle-ang', deg + 'deg');
-        if (big) big.textContent = String(val).padStart(3, '0');
-        if (gValue) gValue.textContent = String(val);
-        if (out) out.textContent = String(val);
-        if (p < 1) {
-          window.requestAnimationFrame(tick);
+      for (var lvl = 20; lvl <= 100; lvl += 20) {
+        var poly = [];
+        for (var i = 0; i < n; i++) {
+          var p = pt(i, lvl);
+          poly.push(p.x + ',' + p.y);
         }
+        var gridPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        gridPoly.setAttribute('points', poly.join(' '));
+        gGrid.appendChild(gridPoly);
       }
 
+      for (var j = 0; j < n; j++) {
+        var pe = pt(j, 100);
+        var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', cx);
+        line.setAttribute('y1', cy);
+        line.setAttribute('x2', pe.x);
+        line.setAttribute('y2', pe.y);
+        gAxis.appendChild(line);
+      }
+
+      function render(progress){
+        var polyPoints = [];
+        gDots.innerHTML = '';
+        gLabels.innerHTML = '';
+
+        for (var k = 0; k < n; k++) {
+          var val = points[k].score * progress;
+          var p2 = pt(k, val);
+          polyPoints.push(p2.x + ',' + p2.y);
+
+          var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', p2.x);
+          dot.setAttribute('cy', p2.y);
+          dot.setAttribute('r', 4.2);
+          gDots.appendChild(dot);
+
+          var ep = pt(k, 112);
+          var name = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          name.textContent = points[k].name;
+          name.setAttribute('x', ep.x);
+          name.setAttribute('y', ep.y - 4);
+          name.setAttribute('text-anchor', ep.x < cx - 8 ? 'end' : (ep.x > cx + 8 ? 'start' : 'middle'));
+          gLabels.appendChild(name);
+
+          var score = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          score.textContent = String(Math.round(points[k].score * progress));
+          score.setAttribute('x', ep.x);
+          score.setAttribute('y', ep.y + 15);
+          score.setAttribute('text-anchor', name.getAttribute('text-anchor'));
+          score.setAttribute('class', 'score');
+          gLabels.appendChild(score);
+        }
+
+        area.setAttribute('points', polyPoints.join(' '));
+        var now = Math.round(targetScore * progress);
+        if (scoreEl) scoreEl.textContent = now + '/100';
+        if (metaValue) metaValue.textContent = String(now);
+      }
+
+      var start = null;
+      var duration = 1400;
+      function tick(ts){
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        render(eased);
+        if (p < 1) window.requestAnimationFrame(tick);
+      }
+      render(0);
       window.requestAnimationFrame(tick);
     })();
   </script>
