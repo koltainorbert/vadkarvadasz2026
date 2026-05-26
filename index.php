@@ -2280,20 +2280,30 @@ function isLeap(y){return(y%4===0&&y%100!==0)||y%400===0;}
 function daysInMonth(y,m){if(m===2)return isLeap(y)?29:28;return [31,0,31,30,31,30,31,31,30,31,30,31][m-1]||31;}
 function nextBpDay(y,m,d){d++;if(d>daysInMonth(y,m)){d=1;m++;if(m>12){m=1;y++;}}return{y:y,m:m,d:d};}
 var _sunKey='';
+var _shootState='';
+var _shootSpecies='';
+var _shootTail='';
 function updateSunInfo(bp){
   var sunEl=document.getElementById('va-hn-sun');
   if(!sunEl)return;
   var key=bp.year+'-'+bp.month+'-'+bp.day;
   if(key===_sunKey)return;
   _sunKey=key;
+  _shootState='';
+  _shootSpecies='';
+  _shootTail='';
   var st=getSunTimesBp(bp.year,bp.month,bp.day);
   sunEl.innerHTML='<span class="va-hnaptar__sun-item">'+sunriseIcon()+'Napkelte '+fmtBpHm(st.rise)+'</span>'
     +'<span class="va-hnaptar__sun-item">'+sunsetIcon()+'Napnyugta '+fmtBpHm(st.set)+'</span>'
-    +'<span class="va-hnaptar__sun-item va-hnaptar__sun-item--trophy">'+shootIcon()+'<span id="va-hn-shoot-cd">&ndash;</span></span>';
+    +'<span class="va-hnaptar__sun-item va-hnaptar__sun-item--trophy">'+shootIcon()+'<span id="va-hn-shoot-cd"><span id="va-hn-shoot-species"></span><span id="va-hn-shoot-tail"></span><span id="va-hn-shoot-time" class="notranslate">&ndash;</span></span></span>';
 }
 function updateShootCountdown(bp){
   var el=document.getElementById('va-hn-shoot-cd');
   if(!el)return;
+  var speciesEl=document.getElementById('va-hn-shoot-species');
+  var tailEl=document.getElementById('va-hn-shoot-tail');
+  var timeEl=document.getElementById('va-hn-shoot-time');
+  if(!speciesEl||!tailEl||!timeEl)return;
   var wrap=el.closest('.va-hnaptar__sun-item');
   var openSpecies=getOpenTrophySpecies(bp);
 
@@ -2304,13 +2314,30 @@ function updateShootCountdown(bp){
 
   if(now>=startToday&&now<=cutoffToday&&openSpecies.length>0){
     if(wrap)wrap.style.display='inline-flex';
-    el.textContent=openSpecies.join(', ')+' — a mai napon lőhető még '+fmtHp(cutoffToday-now);
+    var species=openSpecies.join(', ');
+    if(_shootState!=='open'||_shootSpecies!==species||_shootTail!==' — a mai napon lőhető még '){
+      speciesEl.textContent=species;
+      tailEl.textContent=' — a mai napon lőhető még ';
+      _shootState='open';
+      _shootSpecies=species;
+      _shootTail=' — a mai napon lőhető még ';
+    }
+    timeEl.textContent=fmtHp(cutoffToday-now);
     return;
   }
 
   if(now<startToday&&openSpecies.length>0){
     if(wrap)wrap.style.display='inline-flex';
-    el.textContent=openSpecies.join(', ')+' — ma napkeltétől ('+fmtBpHm(startToday)+') lőhető';
+    var species2=openSpecies.join(', ');
+    var tail=' — ma napkeltétől ('+fmtBpHm(startToday)+') lőhető';
+    if(_shootState!=='pre'||_shootSpecies!==species2||_shootTail!==tail){
+      speciesEl.textContent=species2;
+      tailEl.textContent=tail;
+      _shootState='pre';
+      _shootSpecies=species2;
+      _shootTail=tail;
+    }
+    timeEl.textContent='';
     return;
   }
 
