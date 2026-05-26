@@ -1815,11 +1815,20 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
   var vhrPointerLogo=<?php
     $va_radar_logo_data = '';
-    $va_radar_svg_path  = __DIR__ . '/radar.svg';
-    if ( file_exists( $va_radar_svg_path ) ) {
+    $va_radar_svg_paths = [
+      __DIR__ . '/radar.svg',
+      dirname( __DIR__ ) . '/radar.svg',
+      dirname( __DIR__, 2 ) . '/radar.svg',
+      dirname( __DIR__, 3 ) . '/radar.svg',
+    ];
+    foreach ( $va_radar_svg_paths as $va_radar_svg_path ) {
+      if ( ! file_exists( $va_radar_svg_path ) ) {
+        continue;
+      }
       $va_radar_svg = (string) file_get_contents( $va_radar_svg_path );
       if ( preg_match( '/xlink:href="(data:image\/png;base64,[^"]+)"/i', $va_radar_svg, $va_logo_match ) ) {
         $va_radar_logo_data = $va_logo_match[1];
+        break;
       }
     }
     $va_pointer_logo = $va_radar_logo_data !== ''
