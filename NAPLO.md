@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 26. – Session #takarmany-category-detailed-fields
+- Kérés: a `Takarmány` hirdetéseknél részletes, célzott adatmezők legyenek (típus, ajánlott vad, összetétel, kiszerelés, tárolás, ár/átvétel/szállítás/rakodás).
+- Javítás: a feladási űrlap 2. lépésében új `takarmany` kategória-specifikus mezőblokk készült.
+- Új mezők: takarmány típusa, ajánlott vad (checkbox + egyéb + részletezés), összetevők, nedvességtartalom, adalékanyag, kiszerelés, zsáksúly, teljes mennyiség, raklapos mennyiség, friss/tavalyi termés, tárolási/állapot opciók, ár/kg vagy ár/zsák, minimum rendelés, szállítás, rakodás.
+- Javítás: edit módban minden új takarmány mező visszatöltődik.
+- Javítás: backend mentés bekerült új feladás és szerkesztés ágakba is (`va_feed_*` meta kulcsok), root + plugin mirror szinkronban.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 26. – Session #ij-category-fields-and-badge-text-cleanup
 - Kérés: a 2. lépésben a kategória badge szövegéből kerüljön ki a zárójel.
 - Javítás: a `Termék adatai` melletti kategóriafelirat most zárójelek nélkül jelenik meg.
