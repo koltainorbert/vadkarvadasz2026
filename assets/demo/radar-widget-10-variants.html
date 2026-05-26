@@ -55,91 +55,184 @@
     .thermo{width:72px;height:170px;border-radius:36px;border:2px solid rgba(255,255,255,.22);padding:8px;display:flex;align-items:flex-end;background:rgba(255,255,255,.03)}
     .thermo b{width:100%;height:67%;border-radius:24px;background:linear-gradient(180deg,#ff5a5a,#ff0000)}
 
-    .c6 .viz{padding:0;border:none;background:transparent;display:block}
-    .radar-widget{
-      position:relative;
-      min-height:286px;
-      border:1px solid rgba(255,255,255,.2);
-      border-radius:18px;
-      padding:12px;
-      overflow:hidden;
+    .gauge-wrap{width:100%;display:grid;justify-items:center;gap:8px}
+    .hyper-gauge{
+      --needle-ang:-132deg;
+      width:100%;
+      max-width:330px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(130% 110% at 55% -10%, rgba(255,36,24,.22), transparent 52%),
-        radial-gradient(120% 100% at 10% 120%, rgba(36,94,255,.2), transparent 58%),
-        linear-gradient(180deg,#0f1420 0%,#0a0d14 56%,#0a0a10 100%);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 20px 36px rgba(0,0,0,.52);
-      display:grid;
-      grid-template-rows:1fr auto auto;
-      gap:10px;
+        radial-gradient(circle at 18% 12%, rgba(255,255,255,.08), transparent 35%),
+        linear-gradient(180deg,#141414,#050505);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(0,0,0,.85), 0 14px 30px rgba(0,0,0,.52);
+      padding:10px;
+      position:relative;
+      overflow:hidden;
     }
-    .radar-widget::before{
+    .hg-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.82);
+    }
+    .hg-head b{
+      font-size:20px;
+      line-height:1;
+      letter-spacing:.02em;
+      color:#fff;
+      text-shadow:0 0 16px rgba(255,0,0,.45);
+    }
+    .hg-dial{
+      height:186px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 50% 82%, rgba(255,68,20,.22), rgba(12,12,12,.9) 58%),
+        linear-gradient(180deg,#1a1a1a,#090909);
+      position:relative;
+      overflow:hidden;
+    }
+    .hg-dial::before{
       content:"";
       position:absolute;
-      inset:0;
-      background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.08) 1px,transparent 1px);
-      background-size:18px 18px;
-      opacity:.11;
-      pointer-events:none;
+      left:18px;
+      right:18px;
+      top:14px;
+      bottom:20px;
+      border-radius:220px 220px 16px 16px;
+      border:2px solid rgba(255,236,205,.82);
+      opacity:.74;
     }
-    .radar-widget::after{
-      content:"";
+    .hg-sweep{
       position:absolute;
-      inset:-30% -12% auto;
-      height:56%;
-      background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0));
-      transform:translateY(-80%);
-      animation:rwSweep 4.6s linear infinite;
-      pointer-events:none;
-    }
-    .rw-ambient{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:radial-gradient(circle at 50% 18%, rgba(255,46,22,.28), transparent 40%);
-      filter:blur(4px);
+      left:26px;
+      right:26px;
+      top:24px;
+      height:128px;
+      border-radius:160px 160px 0 0;
+      background:
+        conic-gradient(from 180deg at 50% 100%, rgba(255,72,38,.95) 0deg 90deg, rgba(255,170,85,.88) 90deg 156deg, rgba(190,190,190,.36) 156deg 180deg);
+      filter:saturate(1.06);
+      mask:radial-gradient(circle at 50% 100%, transparent 76px, #000 76px);
       opacity:.9;
     }
-    .rw-spider-card{
-      position:relative;
-      border:1px solid rgba(119,180,255,.25);
-      border-radius:14px;
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 14px 26px rgba(0,0,0,.36);
-      padding:8px;
-      display:grid;
-      place-items:center;
-      min-height:170px;
+    .hg-ticks{
+      position:absolute;
+      left:20px;
+      right:20px;
+      top:18px;
+      height:132px;
+      border-radius:165px 165px 0 0;
+      background:repeating-conic-gradient(from 186deg at 50% 100%, rgba(255,247,232,.88) 0deg 0.9deg, transparent 0.9deg 6deg);
+      mask:radial-gradient(circle at 50% 100%, transparent 72px, #000 72px);
+      opacity:.78;
     }
-    .rw-spider{width:100%;max-width:260px;height:160px;display:block}
-    .rw-grid polygon{fill:none;stroke:rgba(255,255,255,.1);stroke-width:1}
-    .rw-axis line{stroke:rgba(255,255,255,.12);stroke-width:1}
-    .rw-area{fill:rgba(82,170,255,.22);stroke:rgba(117,188,255,.95);stroke-width:2;stroke-linejoin:round}
-    .rw-dots circle{fill:#7fc1ff;stroke:rgba(0,0,0,.4);stroke-width:1.5;filter:drop-shadow(0 0 4px rgba(120,190,255,.6))}
-    .rw-labels text{font-size:10px;fill:rgba(227,240,255,.9);font-weight:700}
-    .rw-labels text.score{font-size:19px;fill:#8dc9ff;font-weight:900}
-    .rw-scorebox{
-      border:1px solid rgba(255,152,89,.3);
-      border-radius:14px;
-      padding:8px 10px;
-      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
-      text-align:center;
+    .hg-needle{
+      position:absolute;
+      left:50%;
+      bottom:26px;
+      width:8px;
+      height:126px;
+      margin-left:-4px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#fff8e8,#ff3a22);
+      box-shadow:0 0 14px rgba(255,170,110,.72),0 0 24px rgba(255,70,30,.5);
+      transform-origin:50% 100%;
+      transform:rotate(var(--needle-ang));
+      z-index:4;
+      transition:transform 1.4s cubic-bezier(.17,.88,.18,1);
     }
-    .rw-scorebox span{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,236,226,.86);font-weight:800}
-    .rw-score{display:block;margin-top:2px;font-size:52px;line-height:.94;font-weight:900;color:#fff;text-shadow:0 0 20px rgba(255,70,46,.46)}
-    .rw-cta{
-      width:100%;
-      border-radius:13px;
-      border:1px solid rgba(120,190,255,.45);
-      color:#fff;
-      background:linear-gradient(120deg,rgba(14,60,120,.95),rgba(56,14,56,.95) 70%,rgba(127,20,35,.95));
-      padding:10px 12px;
-      font-size:12px;
+    .hg-needle::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-10px;
+      margin-left:-10px;
+      width:0;
+      height:0;
+      border-left:10px solid transparent;
+      border-right:10px solid transparent;
+      border-bottom:20px solid #fff4dd;
+      filter:drop-shadow(0 0 8px rgba(255,120,70,.72));
+    }
+    .hg-hub{
+      position:absolute;
+      left:50%;
+      bottom:16px;
+      width:26px;
+      height:26px;
+      margin-left:-13px;
+      border-radius:50%;
+      border:2px solid rgba(255,235,198,.92);
+      background:radial-gradient(circle,#2f140a 0%,#130905 62%,#000 100%);
+      box-shadow:0 0 12px rgba(255,122,68,.72), inset 0 0 8px rgba(0,0,0,.86);
+      z-index:5;
+    }
+    .hg-scale{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:40px;
+      display:flex;
+      justify-content:space-between;
+      color:rgba(255,245,224,.94);
+      font-size:11px;
+      letter-spacing:.08em;
       font-weight:900;
+      z-index:3;
+    }
+    .hg-species{
+      margin-top:8px;
+      width:100%;
+      text-align:center;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,0,0,.13);
+      color:rgba(255,255,255,.92);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+      white-space:normal;
+    }
+    .hg-footer{
+      margin-top:8px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      border-top:1px solid rgba(255,255,255,.14);
+      padding-top:7px;
+    }
+    .hg-footer span{
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.74);
+    }
+    .hg-footer b{
+      font-size:34px;
+      line-height:1;
+      letter-spacing:.02em;
+      color:#fff;
+      text-shadow:0 0 18px rgba(255,0,0,.36);
+    }
+    .danger-type{
+      width:100%;
+      text-align:center;
+      font-size:11px;
       letter-spacing:.08em;
       text-transform:uppercase;
-      text-align:center;
-      box-shadow:0 10px 22px rgba(0,0,0,.34),inset 0 0 18px rgba(255,255,255,.08);
-      animation:rwGlow 2.6s ease-in-out infinite;
+      color:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,0,0,.14);
+      border-radius:8px;
+      padding:6px 8px;
     }
 
     .stack{width:100%;display:grid;gap:8px}
@@ -180,8 +273,6 @@
     .c10 .viz{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,0,0,.05))}
 
     @keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.32)}}
-    @keyframes rwSweep{0%{transform:translateY(-80%)}100%{transform:translateY(170%)}}
-    @keyframes rwGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
   </style>
 </head>
 <body>
@@ -225,27 +316,25 @@
     </section>
 
     <section class="card c6">
-      <h3>6. Vadkar Radar Widget - Teljes Visszaallitas</h3>
+      <h3>6. Eles Analog Muszer 2026</h3>
       <div class="viz">
-        <div class="radar-widget" data-score="67">
-          <div class="rw-ambient" aria-hidden="true"></div>
-          <div class="rw-spider-card">
-            <svg class="rw-spider" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g class="rw-grid"></g>
-              <g class="rw-axis"></g>
-              <polygon class="rw-area" points=""></polygon>
-              <g class="rw-dots"></g>
-              <g class="rw-labels"></g>
-            </svg>
+        <div class="gauge-wrap">
+          <div class="hyper-gauge" data-score="0">
+            <div class="hg-head"><span>Veszelymero muszer</span><b class="hg-big">000</b></div>
+            <div class="hg-dial">
+              <div class="hg-sweep" aria-hidden="true"></div>
+              <div class="hg-ticks" aria-hidden="true"></div>
+              <div class="hg-scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div>
+              <div class="hg-needle" aria-hidden="true"></div>
+              <div class="hg-hub" aria-hidden="true"></div>
+            </div>
+            <div class="hg-species">Legnagyobb kart okozo vadfaj: -</div>
+            <div class="hg-footer"><span>Aktualis veszely index</span><b class="hg-value">0</b></div>
           </div>
-          <div class="rw-scorebox">
-            <span>Orszagos max napi kar</span>
-            <strong class="rw-score">67/100</strong>
-          </div>
-          <div class="rw-cta">Reszletek es beallitasok ✦</div>
+          <div class="danger-type">Legnagyobb kart okozo vadfaj: -</div>
         </div>
       </div>
-      <div class="meta"><span class="tag">aktualis veszely index</span><span class="value c6-value">67</span></div>
+      <div class="meta"><span class="tag">aktualis veszely index</span><span class="value gauge-value">0</span></div>
     </section>
 
     <section class="card c7">
@@ -275,111 +364,59 @@
 
   <script>
     (function(){
-      var card = document.querySelector('.c6 .radar-widget');
-      var svg = document.querySelector('.c6 .rw-spider');
-      if (!card || !svg) return;
-
-      var gGrid = svg.querySelector('.rw-grid');
-      var gAxis = svg.querySelector('.rw-axis');
-      var area = svg.querySelector('.rw-area');
-      var gDots = svg.querySelector('.rw-dots');
-      var gLabels = svg.querySelector('.rw-labels');
-      var scoreEl = document.querySelector('.c6 .rw-score');
-      var metaValue = document.querySelector('.c6 .c6-value');
-
-      var points = [
-        { name: 'Vaddiszno', score: 64 },
-        { name: 'Gimszarvas', score: 45 },
-        { name: 'Oz', score: 36 },
-        { name: 'Damszarvas', score: 41 },
-        { name: 'Vadnyul', score: 33 }
+      var species = [
+        { name: "Vaddiszno", score: 84 },
+        { name: "Gimszarvas", score: 67 },
+        { name: "Oz", score: 52 },
+        { name: "Damszarvas", score: 44 }
       ];
-      var targetScore = Number(card.getAttribute('data-score') || 67);
-      var cx = 140;
-      var cy = 96;
-      var maxR = 62;
-      var n = points.length;
 
-      function angle(i){
-        return (Math.PI * 2 * i / n) - Math.PI / 2;
+      var top = species[0];
+      for (var i = 1; i < species.length; i++) {
+        if (species[i].score > top.score) top = species[i];
       }
 
-      function pt(i, val){
-        var r = maxR * (val / 100);
-        var a = angle(i);
-        return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+      var gauge = document.querySelector('.c6 .hyper-gauge');
+      var needle = document.querySelector('.c6 .hg-needle');
+      if (!gauge || !needle) return;
+
+      var big = document.querySelector('.c6 .hg-big');
+      var gValue = document.querySelector('.c6 .hg-value');
+      var speciesLabel = document.querySelector('.c6 .hg-species');
+      var out = document.querySelector('.c6 .gauge-value');
+      var dangerType = document.querySelector('.c6 .danger-type');
+      var target = top.score;
+
+      if (dangerType) {
+        dangerType.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
+      }
+      if (speciesLabel) {
+        speciesLabel.textContent = 'Legnagyobb kart okozo vadfaj: ' + top.name;
       }
 
-      for (var lvl = 20; lvl <= 100; lvl += 20) {
-        var poly = [];
-        for (var i = 0; i < n; i++) {
-          var p = pt(i, lvl);
-          poly.push(p.x + ',' + p.y);
-        }
-        var gridPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        gridPoly.setAttribute('points', poly.join(' '));
-        gGrid.appendChild(gridPoly);
+      function angleForValue(value){
+        var clamped = Math.max(0, Math.min(100, value));
+        return -132 + (clamped * 264 / 100);
       }
 
-      for (var j = 0; j < n; j++) {
-        var pe = pt(j, 100);
-        var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', cx);
-        line.setAttribute('y1', cy);
-        line.setAttribute('x2', pe.x);
-        line.setAttribute('y2', pe.y);
-        gAxis.appendChild(line);
-      }
+      var t0 = null;
+      var duration = 1700;
 
-      function render(progress){
-        var polyPoints = [];
-        gDots.innerHTML = '';
-        gLabels.innerHTML = '';
-
-        for (var k = 0; k < n; k++) {
-          var val = points[k].score * progress;
-          var p2 = pt(k, val);
-          polyPoints.push(p2.x + ',' + p2.y);
-
-          var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          dot.setAttribute('cx', p2.x);
-          dot.setAttribute('cy', p2.y);
-          dot.setAttribute('r', 4.2);
-          gDots.appendChild(dot);
-
-          var ep = pt(k, 112);
-          var name = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          name.textContent = points[k].name;
-          name.setAttribute('x', ep.x);
-          name.setAttribute('y', ep.y - 4);
-          name.setAttribute('text-anchor', ep.x < cx - 8 ? 'end' : (ep.x > cx + 8 ? 'start' : 'middle'));
-          gLabels.appendChild(name);
-
-          var score = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          score.textContent = String(Math.round(points[k].score * progress));
-          score.setAttribute('x', ep.x);
-          score.setAttribute('y', ep.y + 15);
-          score.setAttribute('text-anchor', name.getAttribute('text-anchor'));
-          score.setAttribute('class', 'score');
-          gLabels.appendChild(score);
-        }
-
-        area.setAttribute('points', polyPoints.join(' '));
-        var now = Math.round(targetScore * progress);
-        if (scoreEl) scoreEl.textContent = now + '/100';
-        if (metaValue) metaValue.textContent = String(now);
-      }
-
-      var start = null;
-      var duration = 1400;
       function tick(ts){
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / duration, 1);
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / duration, 1);
         var eased = 1 - Math.pow(1 - p, 3);
-        render(eased);
-        if (p < 1) window.requestAnimationFrame(tick);
+        var val = Math.round(target * eased);
+        var deg = angleForValue(val);
+        gauge.style.setProperty('--needle-ang', deg + 'deg');
+        if (big) big.textContent = String(val).padStart(3, '0');
+        if (gValue) gValue.textContent = String(val);
+        if (out) out.textContent = String(val);
+        if (p < 1) {
+          window.requestAnimationFrame(tick);
+        }
       }
-      render(0);
+
       window.requestAnimationFrame(tick);
     })();
   </script>
