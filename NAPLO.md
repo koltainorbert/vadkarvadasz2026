@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-svg-source-fix — "az SVG azt akarom" javítás
+
+### Kérés
+- A mutató ikonja ne SVG-ből kivett PNG legyen, hanem maga a `radar.svg`.
+
+### Megvalósítás
+- A mutató logóforrása most a teljes `radar.svg` tartalom `data:image/svg+xml` URI-vá alakítva.
+- A korábbi base64 PNG-kivonatolás kikerült.
+- A logós mutató mérete/pill formája módosult (`78x30`), hogy az SVG jobban olvasható legyen.
+
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `index.php`
+
+### Deploy
+- Commit: `174c2f0` (sikeres push, workflow indult).
+
 ## 2026. 05. 26. – Session #radar-logo-pointer — radar.svg logó a mozgó mutatóban
 
 ### Kérés

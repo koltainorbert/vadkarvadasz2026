@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-svg-source-fix
+- Kérés: a mozgó mutatóhoz konkrétan a `radar.svg` kell, nem abból kinyert PNG.
+- Javítás: pointer forrás átállítva teljes SVG adat URI-ra (`data:image/svg+xml`).
+- A PNG-kivonatolás eltávolítva.
+- A logós mutató méret/stílus módosítva (`78x30`, jobban olvasható SVG badge).
+- Érintett: `wp-theme/vadaszapro-theme/index.php`, `index.php`.
+- Deploy commit: `174c2f0`.
+
 ## 2026. 05. 26. – Session #radar-logo-pointer
 - Kérés: a skálán mozgó mutató logója a `radar.svg`-ből jöjjön (ne fallback ikon), és valós értékre pozícionálódjon.
 - CSS/JS: külön `is-logo` mutató mód + `--vhr-logo` háttérképes renderelés.
