@@ -762,13 +762,13 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-bandcard__title{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:900;}
 .vhr-bandcard__top{font-size:.96rem;line-height:1.2;color:#fff;font-weight:900;}
 .vhr-bandcard__top small{display:block;margin-top:4px;font-size:.62rem;letter-spacing:.08em;color:rgba(255,228,210,.86);font-weight:700;}
-.vhr-bandcard__legend{display:grid;grid-template-columns:78px 1fr 52px;font-size:.52rem;letter-spacing:.06em;color:rgba(255,255,255,.65);text-transform:uppercase;gap:8px;}
+.vhr-bandcard__legend{display:grid;grid-template-columns:78px minmax(0,1fr) 56px;font-size:.52rem;letter-spacing:.05em;color:rgba(255,255,255,.65);text-transform:uppercase;gap:8px;width:100%;box-sizing:border-box;}
 .vhr-bandcard__rows{display:grid;gap:6px;}
-.vhr-bandcard__row{display:grid;grid-template-columns:78px 1fr 52px;align-items:center;gap:8px;}
+.vhr-bandcard__row{display:grid;grid-template-columns:78px minmax(0,1fr) 56px;align-items:center;gap:8px;width:100%;box-sizing:border-box;}
 .vhr-bandcard__name{font-size:.6rem;color:#e8f3ff;font-weight:800;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .vhr-bandcard__bar{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);overflow:hidden;}
 .vhr-bandcard__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2fd96c,#f3d33d 58%,#ff3a2f);box-shadow:0 0 14px rgba(255,80,40,.3);}
-.vhr-bandcard__value{font-size:.68rem;color:#fff;font-weight:900;text-align:right;letter-spacing:.02em;}
+.vhr-bandcard__value{font-size:.64rem;color:#fff;font-weight:900;text-align:right;letter-spacing:0;white-space:nowrap;padding-right:1px;font-variant-numeric:tabular-nums;}
 .vhr-bandcard__footer{border-top:1px solid rgba(255,255,255,.13);padding-top:7px;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.72);}
 .va-home-radar__hero{display:block !important;margin:0 !important;}
 .va-home-radar__scorebox{padding:12px 10px !important;border-radius:16px !important;border-color:rgba(120,190,255,.26);background:linear-gradient(180deg,rgba(110,180,255,.12),rgba(255,255,255,.03));}
@@ -780,9 +780,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .va-home-radar__spider#vhrSpiderWidget{margin:0 0 8px !important;min-height:250px;}
   .vhr-bandcard{padding:4px;gap:7px;}
   .vhr-bandcard__top{font-size:.92rem;}
-  .vhr-bandcard__legend{grid-template-columns:72px 1fr 44px;gap:6px;}
-  .vhr-bandcard__row{grid-template-columns:72px 1fr 44px;gap:6px;}
+  .vhr-bandcard__legend{grid-template-columns:70px minmax(0,1fr) 48px;gap:5px;}
+  .vhr-bandcard__row{grid-template-columns:70px minmax(0,1fr) 48px;gap:5px;}
   .vhr-bandcard__name{font-size:.56rem;}
+  .vhr-bandcard__value{font-size:.6rem;}
 }
 
 /* Unified home widget palette (same color family for all widgets). */
@@ -1859,7 +1860,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
     html+='<div class="vhr-bandcard__title">Valós napi fajkockázat</div>';
     html+='<div class="vhr-bandcard__top">'+speciesMeta[top.species].label+'<small>Aznapi legnagyobb probléma • '+top.score+'/100</small></div>';
     html+='</div>';
-    html+='<div class="vhr-bandcard__legend"><span>Fajok</span><span>Kárkockázati sáv</span><span>Pont</span></div>';
+    html+='<div class="vhr-bandcard__legend"><span>Fajok</span><span>Sáv</span><span>Pont</span></div>';
     html+='<div class="vhr-bandcard__rows">'+rows.map(function(row){
       return '<div class="vhr-bandcard__row">'
         +'<div class="vhr-bandcard__name">'+speciesMeta[row.species].label+'</div>'
