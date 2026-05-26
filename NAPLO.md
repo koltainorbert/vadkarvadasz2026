@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-picker-top-border-fix
+- Hiba: a legfelső, alapértelmezett picker opció felső borderje hiányzónak látszott.
+- Ok: az első aktív elem a scrollozható opciókonténerben `-1px` transform miatt felül levágódott.
+- Javítás: a picker opciókonténer kapott felső belső paddinget, így az első elem felső borderje nem klippelődik.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-special-settings-double
 - Kérés: a speciális beállítások menü alatt kb. 2x ennyi beállítás legyen.
 - Megvalósítás: a korábbi 12 mező mellé még 12 új speciális tényező került ugyanabba a picker-rendszerbe.
