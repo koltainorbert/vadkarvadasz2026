@@ -3,308 +3,125 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Radar Widget - 10 Varians</title>
+  <title>Radar Widget - 10 Innovativ Koncepcio</title>
   <style>
-    :root {
-      --bg: #060606;
-      --panel: #0b1020;
-      --line: rgba(255,255,255,.14);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,.74);
-      --accent: #5db3ff;
-      --danger: #ff2b2b;
+    :root{
+      --bg:#060606;
+      --panel:#0a1322;
+      --line:rgba(255,255,255,.16);
+      --txt:#fff;
+      --muted:rgba(255,255,255,.72);
+      --a:#77c6ff;
+      --r:#ff2b2b;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Segoe UI, Tahoma, Arial, sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Segoe UI,Tahoma,Arial,sans-serif;
+      color:var(--txt);
       background:
-        radial-gradient(circle at 10px 10px, rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 22px 22px,
-        linear-gradient(180deg, #060606 0%, #0a0f18 100%);
-      padding: 22px;
+        radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 1px) 0 0/20px 20px,
+        linear-gradient(180deg,#060606 0%,#0b1020 100%);
+      padding:20px;
     }
-    h1 { margin: 0 0 6px; font-size: 22px; }
-    .sub { margin: 0 0 16px; color: var(--muted); }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-    .variant {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 10px;
-      background: rgba(8,12,22,.75);
-      min-height: 420px;
-      position: relative;
-      overflow: hidden;
-    }
-    .variant h3 {
-      margin: 0 0 8px;
-      font-size: 13px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.9);
-    }
-    .widget {
-      border-radius: 18px;
-      border: 1px solid rgba(130,190,255,.25);
-      background: linear-gradient(180deg, rgba(10,20,38,.95), rgba(8,12,18,.95));
-      padding: 12px;
-      height: 100%;
-      display: grid;
-      grid-template-rows: 1fr auto auto;
-      gap: 10px;
-    }
-    .radar {
-      border-radius: 16px;
-      border: 1px solid rgba(130,190,255,.2);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
-      min-height: 260px;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .radar svg { width: 92%; max-width: 280px; height: auto; }
-    .score {
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      padding: 10px;
-      text-align: center;
-      background: rgba(255,255,255,.03);
-    }
-    .score .t { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-    .score .n { font-size: 48px; line-height: 1; font-weight: 900; }
-    .btn {
-      width: 100%;
-      border: 1px solid rgba(130,190,255,.35);
-      background: linear-gradient(135deg, #0f315f 0%, #1a2a50 55%, #5a1831 100%);
-      color: #fff;
-      border-radius: 12px;
-      padding: 11px;
-      font-weight: 900;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      text-align: center;
-      font-size: 12px;
-    }
+    h1{margin:0 0 6px;font-size:22px}
+    .sub{margin:0 0 14px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+    .v{border:1px solid var(--line);border-radius:16px;background:rgba(8,12,22,.72);padding:10px;min-height:430px;position:relative;overflow:hidden}
+    .v h3{margin:0 0 8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.9)}
+    .w{height:100%;border-radius:16px;border:1px solid rgba(120,190,255,.28);background:linear-gradient(180deg,rgba(8,16,30,.96),rgba(9,11,16,.96));padding:12px;display:grid;grid-template-rows:1fr auto auto;gap:10px;position:relative}
+    .rad{min-height:260px;border:1px solid rgba(120,190,255,.26);border-radius:14px;display:grid;place-items:center;position:relative;overflow:hidden}
+    .rad svg{width:95%;max-width:300px;height:auto;position:relative;z-index:1}
+    .score{border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:8px 10px;text-align:center;background:rgba(255,255,255,.03)}
+    .score .t{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .score .n{font-size:44px;line-height:1;font-weight:900}
+    .btn{border:1px solid rgba(120,190,255,.34);border-radius:12px;background:linear-gradient(135deg,#0e2d58 0%,#182952 56%,#53172f 100%);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:10px;text-align:center}
 
-    .v1 .radar::after {
-      content: "";
-      position: absolute;
-      inset: -20% -20%;
-      background: conic-gradient(from 0deg, rgba(93,179,255,.25), transparent 40%, rgba(93,179,255,.25));
-      animation: spin 14s linear infinite;
-      filter: blur(6px);
-    }
-    .v1 .radar svg { position: relative; z-index: 1; }
+    .k1 .rad::before{content:"";position:absolute;inset:-30% -20%;background:conic-gradient(from 0deg,rgba(119,198,255,.22),transparent 45%,rgba(119,198,255,.22));animation:kspin 12s linear infinite;filter:blur(7px)}
 
-    .v2 .widget {
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.03));
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,.28);
-    }
+    .k2 .w{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));backdrop-filter:blur(7px);border-color:rgba(255,255,255,.35)}
+    .k2 .rad{background:rgba(255,255,255,.03)}
 
-    .v3 .radar {
-      background-image:
-        linear-gradient(rgba(93,179,255,.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(93,179,255,.12) 1px, transparent 1px);
-      background-size: 16px 16px;
-    }
+    .k3 .w{grid-template-columns:92px 1fr;grid-template-rows:1fr auto;gap:10px}
+    .k3 .score{grid-row:1/3;display:grid;align-content:center}
+    .k3 .rad{min-height:220px}
+    .k3 .btn{grid-column:2}
 
-    .v4 .widget {
-      border-color: rgba(255,60,60,.45);
-      background: linear-gradient(180deg, rgba(42,8,8,.95), rgba(16,6,6,.95));
-    }
-    .v4 .btn { border-color: rgba(255,90,90,.5); background: linear-gradient(135deg, #481414, #651717); }
+    .k4 .rad{border-radius:999px;max-width:258px;min-height:258px;margin:0 auto;background:radial-gradient(circle,rgba(119,198,255,.13),rgba(119,198,255,.02) 58%,transparent)}
+    .k4 .rad::after{content:"";position:absolute;inset:8px;border:1px dashed rgba(119,198,255,.35);border-radius:50%}
 
-    .v5 .radar::before {
-      content: "";
-      position: absolute;
-      top: -30%;
-      left: 0;
-      right: 0;
-      height: 70%;
-      background: linear-gradient(180deg, rgba(80,200,255,0), rgba(80,200,255,.28), rgba(80,200,255,0));
-      animation: sweep 4.8s ease-in-out infinite;
-    }
+    .k5 .w{background:linear-gradient(180deg,rgba(31,7,7,.96),rgba(10,6,8,.96));border-color:rgba(255,70,70,.42)}
+    .k5 .rad{border-color:rgba(255,90,90,.35)}
+    .k5 .btn{border-color:rgba(255,90,90,.45);background:linear-gradient(135deg,#4e1414,#6e1b1b)}
 
-    .v6 .widget {
-      grid-template-rows: auto auto 1fr;
-    }
-    .v6 .score { order: 1; }
-    .v6 .btn { order: 2; }
-    .v6 .radar { order: 3; min-height: 220px; }
+    .k6 .rad{background-image:linear-gradient(rgba(119,198,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(119,198,255,.12) 1px,transparent 1px);background-size:18px 18px}
+    .k6 .rad::before{content:"";position:absolute;top:-35%;left:0;right:0;height:65%;background:linear-gradient(180deg,rgba(122,214,255,0),rgba(122,214,255,.28),rgba(122,214,255,0));animation:ksweep 5s ease-in-out infinite}
 
-    .v7 .radar {
-      border-radius: 999px;
-      min-height: 260px;
-      max-width: 260px;
-      margin: 0 auto;
-      box-shadow: 0 0 0 6px rgba(93,179,255,.12) inset;
-    }
+    .k7 .w{display:flex;flex-direction:column;gap:10px}
+    .k7 .rad{min-height:300px}
+    .k7 .score{display:flex;justify-content:space-between;align-items:center;text-align:left}
+    .k7 .score .n{font-size:36px}
 
-    .v8 .widget {
-      background: linear-gradient(180deg, rgba(26,28,32,.96), rgba(12,12,12,.96));
-    }
-    .v8 .radar {
-      background-image:
-        repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0, rgba(255,255,255,.03) 2px, transparent 2px, transparent 7px);
-    }
+    .k8 .w{background:linear-gradient(180deg,rgba(18,20,25,.98),rgba(9,9,10,.98));border-color:rgba(255,255,255,.2)}
+    .k8 .rad{background:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 2px,transparent 2px,transparent 8px)}
 
-    .v9 .widget {
-      border-color: rgba(140,190,255,.45);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 0 30px rgba(120,170,255,.16);
-    }
+    .k9 .w{background:transparent;border-style:dashed}
+    .k9 .rad,.k9 .score,.k9 .btn{background:transparent;border-style:dashed}
 
-    .v10 .radar {
-      border-style: dashed;
-      border-color: rgba(120,180,255,.35);
-      background: transparent;
-    }
-    .v10 .score, .v10 .btn {
-      background: transparent;
-      border-style: dashed;
-    }
+    .k10 .w{background:linear-gradient(180deg,rgba(8,16,30,.9),rgba(8,16,30,.9));box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 0 34px rgba(119,198,255,.15)}
+    .k10 .rad{min-height:250px}
+    .k10 .rad::before,.k10 .rad::after{content:"";position:absolute;left:10px;right:10px;height:1px;background:rgba(119,198,255,.45)}
+    .k10 .rad::before{top:18px}
+    .k10 .rad::after{bottom:18px}
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes sweep {
-      0% { transform: translateY(-40%); }
-      50% { transform: translateY(90%); }
-      100% { transform: translateY(-40%); }
-    }
+    @keyframes kspin{to{transform:rotate(360deg)}}
+    @keyframes ksweep{0%{transform:translateY(-42%)}50%{transform:translateY(96%)}100%{transform:translateY(-42%)}}
   </style>
 </head>
 <body>
-  <h1>Radar widget - 10 minta</h1>
-  <p class="sub">Valassz egy szamot, es azt epitem be a valodi widgetbe.</p>
+  <h1>Radar widget - 10 innovativ minta</h1>
+  <p class="sub">Most tenyleg 10 kulonbozo koncepcio: layoutban, karakterben es mozgaskepben is mas.</p>
 
   <div class="grid">
-    <section class="variant v1">
-      <h3>1. Neon Ring Motion</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v2">
-      <h3>2. Glass HUD</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v3">
-      <h3>3. Grid Tactical</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v4">
-      <h3>4. Red Alert</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v5">
-      <h3>5. Blue Sweep</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v6">
-      <h3>6. Split Priority</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v7">
-      <h3>7. Circular Scope</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v8">
-      <h3>8. Carbon Tech</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v9">
-      <h3>9. Aurora Frame</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
-
-    <section class="variant v10">
-      <h3>10. Wireframe Pro</h3>
-      <div class="widget">
-        <div class="radar">__RADAR_SVG__</div>
-        <div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div>
-        <div class="btn">Reszletek es beallitasok</div>
-      </div>
-    </section>
+    <section class="v k1"><h3>1. Hologram Spin Core</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k2"><h3>2. Glass Cockpit</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k3"><h3>3. Side Telemetry</h3><div class="w"><div class="score"><div class="t">Peak</div><div class="n">67</div></div><div class="rad"></div><div class="btn">Beallitasok</div></div></section>
+    <section class="v k4"><h3>4. Orbital Scope</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k5"><h3>5. Crimson Threat</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Veszelynezeti mod</div></div></section>
+    <section class="v k6"><h3>6. Tactical Sweep Grid</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k7"><h3>7. Data First Layout</h3><div class="w"><div class="rad"></div><div class="score"><div><div class="t">Orszagos max napi kar</div></div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k8"><h3>8. Carbon Armor</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k9"><h3>9. Wireframe Laboratory</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
+    <section class="v k10"><h3>10. Command Blueprint</h3><div class="w"><div class="rad"></div><div class="score"><div class="t">Orszagos max napi kar</div><div class="n">67/100</div></div><div class="btn">Reszletek</div></div></section>
   </div>
 
   <script>
-    var radarSvg = '' +
-      '<svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '  <g opacity=".45" fill="none" stroke="rgba(143,197,255,.32)" stroke-width="1">' +
-      '    <polygon points="180,72 276,138 240,256 120,256 84,138" />' +
-      '    <polygon points="180,96 252,146 225,234 135,234 108,146" />' +
-      '    <polygon points="180,122 230,154 212,215 148,215 130,154" />' +
-      '  </g>' +
-      '  <g stroke="rgba(143,197,255,.35)" stroke-width="1">' +
-      '    <line x1="180" y1="180" x2="180" y2="72" />' +
-      '    <line x1="180" y1="180" x2="276" y2="138" />' +
-      '    <line x1="180" y1="180" x2="240" y2="256" />' +
-      '    <line x1="180" y1="180" x2="120" y2="256" />' +
-      '    <line x1="180" y1="180" x2="84" y2="138" />' +
-      '  </g>' +
-      '  <polygon points="180,130 230,156 215,208 145,214 126,160" fill="rgba(93,179,255,.25)" stroke="#7fc3ff" stroke-width="2.4" />' +
-      '  <g fill="#7fc3ff" stroke="rgba(8,8,8,.45)" stroke-width="1.5">' +
-      '    <circle cx="180" cy="130" r="6" />' +
-      '    <circle cx="230" cy="156" r="6" />' +
-      '    <circle cx="215" cy="208" r="6" />' +
-      '    <circle cx="145" cy="214" r="6" />' +
-      '    <circle cx="126" cy="160" r="6" />' +
-      '  </g>' +
-      '  <g font-family="Segoe UI,Arial,sans-serif" text-anchor="middle">' +
-      '    <text x="180" y="58" font-size="11" fill="rgba(255,255,255,.8)">Vaddiszno</text>' +
-      '    <text x="180" y="74" font-size="28" font-weight="900" fill="#7fc3ff">64</text>' +
-      '  </g>' +
+    var svg = ''+
+      '<svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+      '<g opacity=".42" fill="none" stroke="rgba(143,197,255,.34)" stroke-width="1">'+
+      '<polygon points="180,66 286,138 244,276 116,276 74,138"/>'+
+      '<polygon points="180,96 258,147 227,247 133,247 102,147"/>'+
+      '<polygon points="180,124 236,156 213,221 147,221 124,156"/>'+
+      '</g>'+
+      '<g stroke="rgba(143,197,255,.34)" stroke-width="1">'+
+      '<line x1="180" y1="180" x2="180" y2="66"/>'+
+      '<line x1="180" y1="180" x2="286" y2="138"/>'+
+      '<line x1="180" y1="180" x2="244" y2="276"/>'+
+      '<line x1="180" y1="180" x2="116" y2="276"/>'+
+      '<line x1="180" y1="180" x2="74" y2="138"/>'+
+      '</g>'+
+      '<polygon points="180,122 236,160 216,221 145,225 122,163" fill="rgba(119,198,255,.26)" stroke="#7cc8ff" stroke-width="2.5"/>'+
+      '<g fill="#7cc8ff" stroke="rgba(10,10,10,.45)" stroke-width="1.4">'+
+      '<circle cx="180" cy="122" r="6"/><circle cx="236" cy="160" r="6"/><circle cx="216" cy="221" r="6"/><circle cx="145" cy="225" r="6"/><circle cx="122" cy="163" r="6"/>'+
+      '</g>'+
+      '<g font-family="Segoe UI,Arial,sans-serif" text-anchor="middle">'+
+      '<text x="180" y="52" font-size="11" fill="rgba(255,255,255,.8)">Vaddiszno</text>'+
+      '<text x="180" y="70" font-size="29" font-weight="900" fill="#7cc8ff">64</text>'+
+      '<text x="306" y="152" font-size="11" fill="rgba(255,255,255,.8)">Gimszarvas</text><text x="306" y="170" font-size="29" font-weight="900" fill="#7cc8ff">45</text>'+
+      '<text x="62" y="152" font-size="11" fill="rgba(255,255,255,.8)">Vadnyul</text><text x="62" y="170" font-size="29" font-weight="900" fill="#7cc8ff">33</text>'+
+      '</g>'+
       '</svg>';
-
-    document.querySelectorAll('.radar').forEach(function(el){
-      el.innerHTML = radarSvg;
-    });
+    document.querySelectorAll('.rad').forEach(function(r){ r.innerHTML = svg; });
   </script>
 </body>
 </html>
