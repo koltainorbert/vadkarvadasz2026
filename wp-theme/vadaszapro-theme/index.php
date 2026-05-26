@@ -757,14 +757,14 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__spider#vhrSpiderWidget{position:relative;margin:0 0 10px !important;max-width:none !important;min-height:276px;overflow:hidden;border-color:rgba(255,255,255,.2);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 0 24px rgba(255,60,30,.08),0 18px 28px rgba(0,0,0,.28);padding:8px !important;}
 .va-home-radar__spider#vhrSpiderWidget::before,
 .va-home-radar__spider#vhrSpiderWidget::after{content:none !important;display:none !important;animation:none !important;}
-.vhr-bandcard{width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.1),transparent 32%),linear-gradient(180deg,#171717,#050505);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.85);padding:10px;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;}
-.vhr-bandcard__head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;}
+.vhr-bandcard{width:100%;height:100%;border-radius:10px;border:none;background:transparent;box-shadow:none;padding:6px;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px;}
+.vhr-bandcard__head{display:grid;grid-template-columns:1fr;gap:6px;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;}
 .vhr-bandcard__title{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:900;}
-.vhr-bandcard__top{font-size:1.02rem;line-height:1.2;color:#fff;font-weight:900;}
+.vhr-bandcard__top{font-size:.96rem;line-height:1.2;color:#fff;font-weight:900;}
 .vhr-bandcard__top small{display:block;margin-top:4px;font-size:.62rem;letter-spacing:.08em;color:rgba(255,228,210,.86);font-weight:700;}
-.vhr-bandcard__legend{display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:.08em;color:rgba(255,255,255,.65);text-transform:uppercase;}
+.vhr-bandcard__legend{display:grid;grid-template-columns:78px 1fr 52px;font-size:.52rem;letter-spacing:.06em;color:rgba(255,255,255,.65);text-transform:uppercase;gap:8px;}
 .vhr-bandcard__rows{display:grid;gap:6px;}
-.vhr-bandcard__row{display:grid;grid-template-columns:86px 1fr 48px;align-items:center;gap:8px;}
+.vhr-bandcard__row{display:grid;grid-template-columns:78px 1fr 52px;align-items:center;gap:8px;}
 .vhr-bandcard__name{font-size:.6rem;color:#e8f3ff;font-weight:800;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .vhr-bandcard__bar{position:relative;height:10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);overflow:hidden;}
 .vhr-bandcard__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2fd96c,#f3d33d 58%,#ff3a2f);box-shadow:0 0 14px rgba(255,80,40,.3);}
@@ -778,9 +778,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
 @media (max-width:640px){
   .va-home-radar__score{font-size:2.35rem !important;}
   .va-home-radar__spider#vhrSpiderWidget{margin:0 0 8px !important;min-height:250px;}
-  .vhr-bandcard{padding:8px;gap:7px;}
+  .vhr-bandcard{padding:4px;gap:7px;}
   .vhr-bandcard__top{font-size:.92rem;}
-  .vhr-bandcard__row{grid-template-columns:76px 1fr 44px;gap:6px;}
+  .vhr-bandcard__legend{grid-template-columns:72px 1fr 44px;gap:6px;}
+  .vhr-bandcard__row{grid-template-columns:72px 1fr 44px;gap:6px;}
   .vhr-bandcard__name{font-size:.56rem;}
 }
 
