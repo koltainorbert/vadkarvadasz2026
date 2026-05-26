@@ -611,7 +611,7 @@ body.va-weather-modal-open{overflow:hidden;}
 .va-home-radar__dayspecies{font-size:.55rem;color:rgba(255,255,255,.76);margin-top:4px;letter-spacing:.08em;}
 .va-home-radar__toggle{width:100%;margin-top:12px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(135deg,var(--radar-accent-soft),rgba(64,14,14,.92) 38%,rgba(255,60,40,.35) 100%);color:#fff;padding:12px 14px;font-size:.76rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;box-shadow:0 18px 36px rgba(0,0,0,.26),0 0 40px var(--radar-glow) inset;transition:transform .16s ease,filter .16s ease,border-color .16s ease;}
 .va-home-radar__toggle:hover{filter:brightness(1.08);transform:translateY(-1px);border-color:rgba(255,255,255,.2);}
-.va-home-radar__modal{position:fixed;inset:0;z-index:120200;display:block;padding:calc(var(--nav,66px) + 10px) 0 14px;overflow:auto;}
+.va-home-radar__modal{position:fixed;inset:0;z-index:2147483646 !important;display:block;padding:calc(var(--nav,66px) + 10px) 0 14px;overflow:auto;}
 .admin-bar .va-home-radar__modal{padding-top:calc(var(--nav,66px) + 42px);}
 @media screen and (max-width:782px){.admin-bar .va-home-radar__modal{padding-top:calc(var(--nav,66px) + 56px);}}
 .va-home-radar__modal[hidden]{display:none !important;}
@@ -688,7 +688,7 @@ body.va-weather-modal-open{overflow:hidden;}
 .va-home-radar__heatmap-cell.is-critical{background:linear-gradient(180deg,rgba(120,18,34,.3),rgba(56,8,20,.68));}
 .va-home-radar__note{margin-top:14px;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);font-size:.68rem;line-height:1.6;color:rgba(255,255,255,.72);}
 body.va-home-radar-modal-open{overflow:hidden;}
-.va-home-radar__picker{position:fixed;inset:0;z-index:120260;display:flex;align-items:center;justify-content:center;padding:9vh 14px 14px;}
+.va-home-radar__picker{position:fixed;inset:0;z-index:2147483647 !important;display:flex;align-items:center;justify-content:center;padding:9vh 14px 14px;}
 .va-home-radar__picker[hidden]{display:none !important;}
 .va-home-radar__picker-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 50% 10%,var(--radar-accent-soft),transparent 36%),rgba(4,6,10,.88);backdrop-filter:blur(8px);}
 .va-home-radar__picker-card{position:relative;width:min(520px,calc(100vw - 28px));max-height:min(80vh,760px);margin:0;border-radius:26px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg,rgba(8,8,10,.99),rgba(22,12,12,.97));box-shadow:0 36px 90px rgba(0,0,0,.62),0 0 60px var(--radar-glow);padding:18px 16px 16px;overflow:auto;color:#fff;}
@@ -1836,6 +1836,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
   var weatherData=null;
+  if(modalEl&&modalEl.parentNode!==document.body){document.body.appendChild(modalEl);}
+  if(pickerEl&&pickerEl.parentNode!==document.body){document.body.appendChild(pickerEl);}
   function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
   function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
   function setPickerModal(open){if(!pickerEl)return;pickerEl.hidden=!open;document.body.classList.toggle('va-home-radar-picker-open',open);if(!open){activePickerSelect=null;}}
