@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #vadkar-radar-header-revert-widget-align
+- Kérés: a headerben az előző 2x nagyítás azonnal legyen visszaállítva.
+- Kérés: a widgetben a logó kerüljön balra, a `Vadkár Radar` felirat jobbra, azonos magasságban és nagyobban, hogy jobban olvasható legyen.
+- Javítás: a header logómagassága és szövegmérete visszaállt a normál értékre.
+- Javítás: a compact radar widget fejlécsora új grid elrendezést kapott, `52x52` bal oldali logóval és nagyobb, vízszintesen igazított címmel.
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #vadkar-radar-brand-scale-up
 - Kérés: a frissen átírt `Vadkár Radar` branding legyen 2x nagyobb.
 - Javítás: a fejléc logóképe 2x header magassággal renderel, a logószöveg inline 2x méretet kapott.
