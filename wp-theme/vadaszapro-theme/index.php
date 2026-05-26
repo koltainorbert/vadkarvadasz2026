@@ -751,6 +751,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__reason,
 .va-home-radar__days,
 .va-home-radar__level{display:none !important;}
+.va-home-radar__ambient,
+.va-home-radar__scan{display:none !important;}
 .va-home-radar{padding:12px !important;border-radius:22px !important;border-color:rgba(120,190,255,.32) !important;background:linear-gradient(155deg,rgba(6,16,30,.985),rgba(7,22,39,.975) 58%,rgba(18,16,33,.95) 100%) !important;box-shadow:0 24px 52px rgba(0,0,0,.46),inset 0 0 0 1px rgba(120,190,255,.08),inset 0 0 38px rgba(40,130,255,.07) !important;}
 .va-home-radar__spider#vhrSpiderWidget{margin:2px 0 10px !important;max-width:none !important;overflow:hidden;border-color:rgba(120,190,255,.22);background:radial-gradient(circle at 50% 50%,rgba(65,155,255,.17),transparent 64%),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));}
 .va-home-radar__spider#vhrSpiderWidget svg{width:100% !important;max-height:268px;height:268px;display:block;}
