@@ -657,6 +657,7 @@ class VA_Ajax {
         $hunt_has_offroad = sanitize_key( wp_unslash( $_POST['hunt_has_offroad'] ?? '' ) );
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
+        $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -784,6 +785,7 @@ class VA_Ajax {
             'va_hunt_has_offroad' => $hunt_has_offroad,
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
+            'va_exchange_target' => $exchange_target,
         ];
 
         // Típus-specifikus extra mezők mentése
@@ -966,6 +968,7 @@ class VA_Ajax {
         $hunt_has_offroad = sanitize_key( wp_unslash( $_POST['hunt_has_offroad'] ?? '' ) );
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
+        $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -1120,6 +1123,7 @@ class VA_Ajax {
             'va_hunt_has_offroad' => $hunt_has_offroad,
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
+            'va_exchange_target' => $exchange_target,
             'va_views'       => 0,
         ];
 

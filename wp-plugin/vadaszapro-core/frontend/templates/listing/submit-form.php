@@ -346,6 +346,7 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hunt_has_offroad' => get_post_meta( $maybe_id, 'va_hunt_has_offroad', true ),
             'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
             'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
+            'exchange_target' => get_post_meta( $maybe_id, 'va_exchange_target', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -1419,6 +1420,10 @@ body.va-modal-open {
                     <label>Modell / típus</label>
                     <?php self_render_listing_field( 'model', 'pl. R8, Z6...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
                 </div>
+            </div>
+            <div class="va-form-group va-cat-rule-field" data-categories="csere">
+                <label>Mire szeretném cserélni</label>
+                <input type="text" name="exchange_target" class="va-input" placeholder="pl. távcső, bakancs, jármű" value="<?php echo esc_attr((string)($edit_meta['exchange_target'] ?? '')); ?>">
             </div>
             <?php if ( $site_type !== 'jarmu' ): ?>
             <div class="va-form-row">

@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #csere-category-exchange-target-field
+- Kérés: a hirdetés feladásában a `Csere` kategóriánál legyen egy `Mire szeretném cserélni` mező, de ne legyen kötelező.
+- Javítás: az űrlap 2. lépésébe bekerült a `Mire szeretném cserélni` szövegmező, amely csak `csere` kategória esetén látszik.
+- Javítás: edit módban a mező értéke visszatöltődik.
+- Javítás: backend mentés mind új feladásnál, mind szerkesztésnél bekerült (`va_exchange_target` meta).
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 26. – Session #archive-header-and-catbar-fix
 - Megállapítás: a korábbi módosítás nem a ténylegesen futó `/hirdetes/?s=...` archive felületre ment, ezért a live oldalon nem látszott változás.
 - Javítás: az archive/tax oldalak tetején megjelenő header kategória gyorsmenü teljesen kikerült a header sablonból.
