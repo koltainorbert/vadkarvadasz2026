@@ -813,25 +813,25 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
 /* Improve legibility on narrow cards: keep visible gap between MOST/NEM pills. */
 .va-agri__list{
-  gap:8px !important;
+  gap:6px !important;
 }
 .va-agri__item{
-  padding:8px !important;
+  padding:6px !important;
 }
 .va-agri__row,
 .va-weather__agri-row{
-  padding:4px 0 !important;
+  padding:2px 0 !important;
   align-items:center !important;
 }
 .va-agri__row + .va-agri__row,
 .va-weather__agri-row + .va-weather__agri-row{
-  margin-top:4px !important;
+  margin-top:2px !important;
 }
 .va-agri__tag,
 .va-weather__agri-tag{
-  margin-left:10px !important;
-  min-height:20px !important;
-  padding:3px 10px !important;
+  margin-left:6px !important;
+  min-height:18px !important;
+  padding:2px 8px !important;
 }
 </style>
 
