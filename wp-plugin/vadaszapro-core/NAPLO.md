@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-svg-widget-replace
+- Kérés: a radar helyén a feltöltött `radar.svg` jelenjen meg, és az alsó logó mutassa a valós score pozíciót.
+- Megvalósítás: a compact widget pókdiagram helyett SVG renderre állt, a logó x-pozíciója score alapú dinamikus számításból jön.
+- Fallback: ha az SVG hiányzik, a widget nem áll le.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`, `wp-theme/vadaszapro-theme/radar.svg`.
+- Deploy commit: `3b78681`.
+
 ## 2026. 05. 26. – Session: Időjárás + Radar betöltési hiba (CORS) gyorsjavítás
 
 ### Mit csináltunk [x]

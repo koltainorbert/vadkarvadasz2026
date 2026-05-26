@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-svg-widget-replace
+
+### Kérés
+- A radar helyén a feltöltött `radar.svg` jelenjen meg, és az alul lévő logó mutassa a valós kockázati pozíciót.
+
+### Megvalósítás
+- A compact widget render a pókdiagram helyett most a theme-ben lévő `radar.svg` tartalmát rajzolja ki.
+- Az alsó logó vízszintes pozíciója dinamikusan a `0..100` score alapján számolódik, így ténylegesen „hol tartunk” jelzőként működik.
+- Fallback ág bekerült: ha az SVG nem elérhető, a widget nem törik el.
+
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `wp-theme/vadaszapro-theme/radar.svg`
+
+### Deploy
+- Commit: `3b78681` (push megtörtént, workflow indult).
+
 ## 2026. 05. 26. – Session: Időjárás + Radar betöltési hiba (CORS) gyorsjavítás
 
 ### Mit csináltunk [x]
