@@ -783,7 +783,8 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-bandcard__head{display:grid;grid-template-columns:1fr;gap:6px;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:8px;}
 .vhr-bandcard__titlewrap{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:12px;min-height:52px;}
 .vhr-bandcard__logo{width:52px;height:52px;object-fit:contain;border-radius:8px;filter:drop-shadow(0 0 10px rgba(255,90,60,.38));justify-self:start;align-self:center;}
-.vhr-bandcard__title{display:flex;align-items:center;min-height:52px;font-size:1.45rem;line-height:1;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);font-weight:900;white-space:nowrap;}
+.vhr-bandcard__title{display:flex;flex-direction:column;justify-content:center;min-height:52px;font-size:1.24rem;line-height:.92;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);font-weight:900;white-space:normal;}
+.vhr-bandcard__title span{display:block;}
 .vhr-bandcard__top{font-size:.96rem;line-height:1.2;color:#fff;font-weight:900;}
 .vhr-bandcard__top small{display:block;margin-top:4px;font-size:.62rem;letter-spacing:.08em;color:rgba(255,228,210,.86);font-weight:700;}
 .vhr-bandcard__legend{display:grid;grid-template-columns:78px minmax(0,1fr) 56px;font-size:.52rem;letter-spacing:.05em;color:rgba(255,255,255,.65);text-transform:uppercase;gap:8px;width:100%;box-sizing:border-box;}
@@ -1885,7 +1886,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
     var html='';
     html+='<div class="vhr-bandcard">';
     html+='<div class="vhr-bandcard__head">';
-    html+='<div class="vhr-bandcard__titlewrap">'+titleLogo+'<div class="vhr-bandcard__title">Vadkár Radar</div></div>';
+    html+='<div class="vhr-bandcard__titlewrap">'+titleLogo+'<div class="vhr-bandcard__title"><span>Vadkár</span><span>Radar</span></div></div>';
     html+='<div class="vhr-bandcard__top">'+speciesMeta[top.species].label+'<small>Aznapi legnagyobb probléma • '+top.score+'/100</small></div>';
     html+='</div>';
     html+='<div class="vhr-bandcard__legend"><span>Fajok</span><span>Sáv</span><span>Pont</span></div>';
