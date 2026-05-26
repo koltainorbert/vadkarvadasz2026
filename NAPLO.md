@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-widget-legibility — Vadkár radar olvashatóság + gap fix
+
+### Kérés
+- A Vadkár radar widget legyen nagyobb, jobban kivehető, és a fölötte lévő túl nagy üres tér szűnjön meg.
+
+### Megvalósítás
+- CSS: a `#vhrSpiderWidget` negatív margóit megszüntettem (`margin:2px 0 10px`), így eltűnt a túl nagy felső gap.
+- CSS: a widget radar SVG méretét növeltem (`268px`, mobilon `232px`) az olvashatóság javítására.
+- JS (`renderSpider`): widget geometriát tágítottam (`cy:136`, `mR:94`, nagyobb widget viewBox), és a widget feliratméreteit növeltem.
+- A módosítás root + theme mirror fájlban szinkronban ment.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Megjegyzés
+- Deploy task lefutott, de új commit nem készült (working tree tiszta, `Everything up-to-date`).
+
 ## 2026. 05. 19. – Session #spidersplit — Split layout + interaktív radar + 3 statisztika panel
 
 ### Kérés
