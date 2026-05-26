@@ -81,9 +81,13 @@
     }
     $hide_home_logo = is_front_page();
     $search_page = get_page_by_path( 'va-hirdetes-kereses' );
-    $search_page_url = $search_page ? get_permalink( $search_page ) : get_post_type_archive_link( 'va_listing' );
+    $search_page_url = $search_page ? get_permalink( $search_page ) : '';
+    $listing_archive_url = get_post_type_archive_link( 'va_listing' );
+    if ( ! is_string( $listing_archive_url ) || $listing_archive_url === '' ) {
+        $listing_archive_url = home_url( '/hirdetes/' );
+    }
     if ( ! is_string( $search_page_url ) || $search_page_url === '' ) {
-        $search_page_url = home_url( '/hirdetes/' );
+        $search_page_url = $listing_archive_url;
     }
     ?>
 
@@ -132,7 +136,7 @@
                     <a href="<?php echo esc_url($item['url']); ?>" class="<?php echo esc_attr($cls); ?>"><?php echo esc_html($item['label']); ?></a>
                 <?php endforeach; ?>
                 <!-- Mobil kereső a nav alján -->
-                <form class="va-nav__search" role="search" action="<?php echo esc_url( $search_page_url ); ?>" method="get" autocomplete="off">
+                <form class="va-nav__search" role="search" action="<?php echo esc_url( $listing_archive_url ); ?>" method="get" autocomplete="off">
                     <input class="va-nav__search-input" id="va-nav-search-input" type="text" name="s" placeholder="<?php echo esc_attr( $header_search_placeholder ); ?>" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
                     <button class="va-nav__search-btn" type="submit" aria-label="Keresés"></button>
                     <div class="va-search-dropdown va-nav-search-dropdown" id="va-nav-search-dropdown" hidden></div>
@@ -140,7 +144,7 @@
             </nav>
 
             <!-- Kereső -->
-            <form class="va-header__search" id="va-live-search-form" role="search" action="<?php echo esc_url( $search_page_url ); ?>" method="get" autocomplete="off">
+            <form class="va-header__search" id="va-live-search-form" role="search" action="<?php echo esc_url( $listing_archive_url ); ?>" method="get" autocomplete="off">
                 <input class="va-header__search-input" id="va-live-search-input" type="text" name="s" placeholder="<?php echo esc_attr( $header_search_placeholder ); ?>" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
                 <button class="va-header__search-btn" type="submit" aria-label="Keresés"></button>
                 <div class="va-search-dropdown" id="va-search-dropdown" hidden></div>
@@ -163,13 +167,13 @@
                             + '</span>'
                             + '<span class="va-sd__badge va-sd__badge--'+r.type+'">'+(r.type==='va_auction'?'Aukció':r.type==='category'?'Kategória':r.type==='user'?'Felhasználó':'Hirdetés')+'</span>'
                             + '</a>';
-                    }).join('') + '<a class="va-sd__all" href="<?php echo esc_url( $search_page_url ); ?>" id="va-sd-all-link">Összes találat →</a>';
+                    }).join('') + '<a class="va-sd__all" href="<?php echo esc_url( $listing_archive_url ); ?>" id="va-sd-all-link">Összes találat →</a>';
                     // "Összes találat" link prioritás: kategória → aukció → user → kulcsszó
                     var catItem     = items.find(function(r){ return r.type === 'category'; });
                     var auctionItem = items.find(function(r){ return r.type === 'va_auction'; });
                     var userItem    = items.find(function(r){ return r.type === 'user'; });
                     var allLink     = dropdown.querySelector('#va-sd-all-link');
-                    var baseUrl     = '<?php echo esc_url( $search_page_url ); ?>';
+                    var baseUrl     = '<?php echo esc_url( $listing_archive_url ); ?>';
                     if (catItem) {
                         allLink.href = catItem.url; // ?cat=ID → kategória összes hirdetése
                     } else if (auctionsEnabled && auctionItem) {
@@ -229,7 +233,7 @@
                                 .then(function(r){ return r.json(); })
                                 .then(function(d){
                                     if (!d.success || !d.data.length) { mDropdown.hidden = true; syncMobileNavSpace(); return; }
-                                    var baseUrl = '<?php echo esc_url( $search_page_url ); ?>';
+                                    var baseUrl = '<?php echo esc_url( $listing_archive_url ); ?>';
                                     mDropdown.innerHTML = d.data.map(function(r){
                                         return '<a class="va-sd__item" href="'+r.url+'">'
                                             + (r.thumb ? '<img class="va-sd__thumb" src="'+r.thumb+'" alt="" loading="lazy">' : '<span class="va-sd__no-img"></span>')

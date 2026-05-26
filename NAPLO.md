@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #header-search-archive-route-fix
+- Hiba: az `Összes találat` link továbbra is a `va-hirdetes-kereses/?s=...` URL-re ment, ami live környezetben 404-et adott.
+- Ok: a header keresőformjai és a dropdown all-results linkje a külön keresőoldal permalinkjét használta alap-URL-nek, nem a stabil hirdetés archive útvonalat.
+- Javítás: a header desktop és mobil keresője, valamint az `Összes találat` link most a `va_listing` archive URL-re épül, végső fallbackként a `/hirdetes/` útvonalra.
+- Eredmény: a header keresés többé nem függ a `va-hirdetes-kereses` oldal létezésétől vagy helyes rewrite-jától.
+- Érintett: `NAPLO.md`, `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
 ## 2026. 05. 26. – Session #radar-detail-size-boost
 - Kérés: a részletes `Vadkár Radar` nézetben maga a radar legyen sokkal nagyobb, mert túl sok üres hely maradt körülötte.
 - Javítás: a részletes radar SVG konténerének maximális szélessége jelentősen megnőtt, és a kétoszlopos modal layout több helyet ad a radarnak.
