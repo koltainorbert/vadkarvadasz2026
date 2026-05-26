@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 26. – Session #ij-category-fields-and-badge-text-cleanup
+- Kérés: a 2. lépésben a kategória badge szövegéből kerüljön ki a zárójel.
+- Javítás: a `Termék adatai` melletti kategóriafelirat most zárójelek nélkül jelenik meg.
+- Kérés: az `Íj`/`Számszeríj` kategóriáknál részletes mezők legyenek feladáskor (típus, kezesség, húzóerő, húzáshossz, tengelytáv/hossz, állapot részletek, húrcsere, használat, tartozékok, FPS, sorozatszám, anyag stb.).
+- Javítás: a 2. lépésbe bekerült egy teljes íj-specifikus mezőblokk kategória-szűrve (csak íj/számszeríj slugeknél látható), checkboxos tartozéklistával és szöveges részletezőkkel.
+- Javítás: edit módban minden új íj-specifikus mező visszatöltődik.
+- Javítás: backend mentés bekerült új feladás és szerkesztés ágba is (`va_bow_*` meta kulcsok), root + plugin mirror fájlokban szinkronban.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 26. – Session #step2-category-badge-parentheses
 - Kérés: a kiválasztott kategória a `Termék adatai` cím után látszódjon zárójelben.
 - Javítás: a 2. lépés címe melletti kategóriafelirat most badge-szerűen kiemelt és zárójeles formában jelenik meg (`(Csere)` stb.).
