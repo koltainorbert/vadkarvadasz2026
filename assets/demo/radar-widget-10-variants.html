@@ -55,9 +55,94 @@
     .thermo{width:72px;height:170px;border-radius:36px;border:2px solid rgba(255,255,255,.22);padding:8px;display:flex;align-items:flex-end;background:rgba(255,255,255,.03)}
     .thermo b{width:100%;height:67%;border-radius:24px;background:linear-gradient(180deg,#ff5a5a,#ff0000)}
 
-    .gauge{width:190px;height:104px;border:10px solid rgba(255,255,255,.12);border-bottom:none;border-radius:190px 190px 0 0;position:relative}
-    .gauge:before{content:"";position:absolute;left:50%;bottom:0;width:2px;height:88px;background:#fff;transform-origin:bottom;transform:rotate(35deg);box-shadow:0 0 16px rgba(255,0,0,.8)}
-    .gauge:after{content:"67";position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);font-size:28px;font-weight:900}
+    .gauge-wrap{width:100%;display:grid;justify-items:center;gap:8px}
+    .gauge{
+      --ang:-120deg;
+      width:240px;
+      height:132px;
+      border:10px solid rgba(255,255,255,.18);
+      border-bottom:none;
+      border-radius:240px 240px 0 0;
+      position:relative;
+      background:
+        conic-gradient(from 180deg at 50% 100%, rgba(255,0,0,.75) 0 70deg, rgba(255,150,0,.65) 70deg 120deg, rgba(255,255,255,.12) 120deg 180deg);
+      box-shadow:inset 0 0 30px rgba(255,0,0,.25),0 8px 22px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .gauge::after{
+      content:"";
+      position:absolute;
+      left:14px;
+      right:14px;
+      top:14px;
+      bottom:0;
+      border-radius:240px 240px 0 0;
+      background:linear-gradient(180deg,rgba(8,8,8,.08),rgba(8,8,8,.9));
+    }
+    .gauge .needle{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:4px;
+      height:104px;
+      border-radius:4px;
+      background:#fff;
+      box-shadow:0 0 16px rgba(255,255,255,.7),0 0 22px rgba(255,0,0,.7);
+      transform-origin:50% 100%;
+      transform:translateX(-50%) rotate(var(--ang));
+      z-index:2;
+      transition:transform 1.6s cubic-bezier(.22,.9,.22,1);
+    }
+    .gauge .hub{
+      position:absolute;
+      left:50%;
+      bottom:-10px;
+      width:24px;
+      height:24px;
+      margin-left:-12px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,.8);
+      background:#160000;
+      box-shadow:0 0 14px rgba(255,0,0,.8);
+      z-index:3;
+    }
+    .gauge .num{
+      position:absolute;
+      bottom:-38px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:.02em;
+      text-shadow:0 0 16px rgba(255,0,0,.6);
+      z-index:4;
+    }
+    .gauge .ticks{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:6px;
+      display:flex;
+      justify-content:space-between;
+      padding:0 16px;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      color:rgba(255,255,255,.82);
+      z-index:2;
+    }
+    .danger-type{
+      width:100%;
+      text-align:center;
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,0,0,.14);
+      border-radius:8px;
+      padding:6px 8px;
+    }
 
     .stack{width:100%;display:grid;gap:8px}
     .stack b{height:16px;border-radius:4px;background:linear-gradient(90deg,#330000,#ff0000)}
@@ -140,9 +225,19 @@
     </section>
 
     <section class="card c6">
-      <h3>6. Speed Gauge Arc</h3>
-      <div class="viz"><div class="gauge"></div></div>
-      <div class="meta"><span class="tag">aktualis index</span><span class="value">67</span></div>
+      <h3>6. Analog Km-Ora Mutatos</h3>
+      <div class="viz">
+        <div class="gauge-wrap">
+          <div class="gauge" data-score="0">
+            <div class="needle" aria-hidden="true"></div>
+            <div class="hub" aria-hidden="true"></div>
+            <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+            <div class="num">0</div>
+          </div>
+          <div class="danger-type">Legveszelyesebb vadkar faj: -</div>
+        </div>
+      </div>
+      <div class="meta"><span class="tag">aktualis veszely index</span><span class="value gauge-value">0</span></div>
     </section>
 
     <section class="card c7">
@@ -169,5 +264,57 @@
       <div class="meta"><span class="tag">szenzor allapotok</span><span class="value">36</span></div>
     </section>
   </div>
+
+  <script>
+    (function(){
+      var species = [
+        { name: "Vaddiszno", score: 84 },
+        { name: "Gimszarvas", score: 67 },
+        { name: "Oz", score: 52 },
+        { name: "Damszarvas", score: 44 }
+      ];
+
+      var top = species[0];
+      for (var i = 1; i < species.length; i++) {
+        if (species[i].score > top.score) top = species[i];
+      }
+
+      var gauge = document.querySelector('.c6 .gauge');
+      if (!gauge) return;
+
+      var needle = gauge.querySelector('.needle');
+      var num = gauge.querySelector('.num');
+      var out = document.querySelector('.c6 .gauge-value');
+      var dangerType = document.querySelector('.c6 .danger-type');
+      var target = top.score;
+
+      if (dangerType) {
+        dangerType.textContent = 'Legveszelyesebb vadkar faj: ' + top.name;
+      }
+
+      function angleFor(value){
+        return -120 + (value * 240 / 100);
+      }
+
+      var t0 = null;
+      var duration = 1700;
+
+      function tick(ts){
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        var val = Math.round(target * eased);
+        var deg = angleFor(val);
+        gauge.style.setProperty('--ang', deg + 'deg');
+        if (num) num.textContent = String(val);
+        if (out) out.textContent = String(val);
+        if (p < 1) {
+          window.requestAnimationFrame(tick);
+        }
+      }
+
+      window.requestAnimationFrame(tick);
+    })();
+  </script>
 </body>
 </html>
