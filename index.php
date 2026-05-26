@@ -760,16 +760,19 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-gauge{--vhr-alert:#1ccf64;width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#121212,#070707);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.8);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
 .vhr-gauge__head{display:flex;justify-content:space-between;align-items:baseline;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:800;}
 .vhr-gauge__head strong{font-size:1.8rem;line-height:1;color:#fff;letter-spacing:.03em;}
-.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#181818,#0a0a0a);overflow:hidden;min-height:186px;display:grid;place-items:center;padding:10px 12px;}
-.vhr-gauge__bar-wrap{position:relative;width:min(330px,100%);padding-top:30px;padding-bottom:52px;}
-.vhr-gauge__track{height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(90deg,#2f8f3a 0%,#3b9f36 16%,#79a321 30%,#b8a700 42%,#f0b100 54%,#f39d00 66%,#ef7300 80%,#e44600 92%,#c90f1f 100%);box-shadow:inset 0 1px 2px rgba(255,255,255,.1),inset 0 -2px 4px rgba(0,0,0,.35);}
-.vhr-gauge__marker{position:absolute;top:0;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.45);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;}
-.vhr-gauge__knob{position:absolute;top:30px;left:1%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.45),rgba(110,110,110,.92));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 10px rgba(0,0,0,.4),0 0 0 2px rgba(0,0,0,.35);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:3;}
-.vhr-gauge__cursor{position:absolute;top:18px;left:1%;width:2px;height:40px;transform:translateX(-50%);background:rgba(255,255,255,.95);border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.45);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:2;}
-.vhr-gauge__ticks{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 3px;}
-.vhr-gauge__ticks span{position:relative;font-size:.58rem;font-weight:800;color:rgba(255,255,255,.88);min-width:20px;text-align:center;}
-.vhr-gauge__ticks span::before{content:'';position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:2px;height:12px;background:rgba(255,255,255,.62);border-radius:2px;}
-.vhr-gauge__value{position:absolute;right:12px;top:8px;font-size:.95rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.05em;z-index:4;text-shadow:0 0 10px rgba(0,0,0,.5);}
+.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:radial-gradient(140% 110% at 50% -20%,rgba(255,255,255,.08),transparent 42%),linear-gradient(180deg,#191919,#0a0a0a);overflow:hidden;min-height:186px;display:grid;place-items:center;padding:10px 12px;}
+.vhr-gauge__bar-wrap{position:relative;width:min(338px,100%);height:108px;}
+.vhr-gauge__track{position:absolute;left:0;right:0;top:44px;height:14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(6,6,6,.92);overflow:hidden;box-shadow:inset 0 1px 2px rgba(255,255,255,.08),inset 0 -2px 4px rgba(0,0,0,.44);}
+.vhr-gauge__track::before{content:'';position:absolute;inset:2px;border-radius:999px;background:linear-gradient(90deg,#2b9a44 0%,#4fa933 18%,#8cae16 34%,#d0af00 50%,#f6b100 62%,#f08800 76%,#e85b00 88%,#cf1022 100%);opacity:.82;}
+.vhr-gauge__track::after{content:'';position:absolute;inset:2px;border-radius:999px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 1px,transparent 1px 8%);mix-blend-mode:soft-light;opacity:.45;}
+.vhr-gauge__progress{position:absolute;left:2px;top:2px;bottom:2px;width:1%;border-radius:999px;background:linear-gradient(90deg,#58ff8e,#ffe46a,#ff6b3d,#ff2740);box-shadow:0 0 10px color-mix(in srgb,var(--vhr-alert) 55%,transparent),inset 0 0 0 1px rgba(255,255,255,.3);transition:width .9s cubic-bezier(.2,.9,.2,1);z-index:2;}
+.vhr-gauge__marker{position:absolute;top:10px;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.5);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;z-index:4;}
+.vhr-gauge__knob{position:absolute;top:51px;left:1%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.58);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.5),rgba(110,110,110,.94));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 12px rgba(0,0,0,.48),0 0 0 2px rgba(0,0,0,.38);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:5;}
+.vhr-gauge__cursor{position:absolute;top:26px;left:1%;width:2px;height:34px;transform:translateX(-50%);background:rgba(255,255,255,.95);border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.45);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:4;}
+.vhr-gauge__ticks{position:absolute;left:0;right:0;top:70px;display:flex;justify-content:space-between;align-items:flex-start;padding:0 2px;}
+.vhr-gauge__ticks span{position:relative;font-size:.56rem;font-weight:800;color:rgba(255,255,255,.84);min-width:20px;text-align:center;}
+.vhr-gauge__ticks span::before{content:'';position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:1.5px;height:8px;background:rgba(255,255,255,.56);border-radius:2px;}
+.vhr-gauge__value{position:absolute;right:4px;top:4px;font-size:.92rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.04em;z-index:6;text-shadow:0 0 10px rgba(0,0,0,.56);}
 .vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
 .vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
 .vhr-gauge__footer span{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);}
@@ -785,10 +788,11 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .vhr-gauge{padding:8px;gap:7px;}
   .vhr-gauge__head strong{font-size:1.55rem;}
   .vhr-gauge__dial{min-height:170px;padding:9px 8px;}
-  .vhr-gauge__bar-wrap{padding-top:26px;padding-bottom:48px;}
-  .vhr-gauge__track{height:20px;}
-  .vhr-gauge__knob{width:30px;height:30px;top:26px;}
-  .vhr-gauge__cursor{top:16px;height:34px;}
+  .vhr-gauge__bar-wrap{height:96px;}
+  .vhr-gauge__track{top:40px;height:12px;}
+  .vhr-gauge__knob{width:30px;height:30px;top:46px;}
+  .vhr-gauge__cursor{top:22px;height:30px;}
+  .vhr-gauge__ticks{top:62px;}
   .vhr-gauge__ticks span{font-size:.52rem;}
   .vhr-gauge__value{font-size:.9rem;}
   .vhr-gauge__footer strong{font-size:1.05rem;}
@@ -1846,10 +1850,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
       +'<div class="vhr-gauge__dial">'
       +'<div class="vhr-gauge__bar-wrap">'
       +'<div class="vhr-gauge__marker">'+safeScore+'</div>'
-      +'<div class="vhr-gauge__track"></div>'
+      +'<div class="vhr-gauge__track"><div class="vhr-gauge__progress"></div></div>'
       +'<div class="vhr-gauge__knob" style="'+logoStyle+'"></div>'
       +'<div class="vhr-gauge__cursor"></div>'
-      +'<div class="vhr-gauge__ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span></div>'
+      +'<div class="vhr-gauge__ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>'
       +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
       +'</div>'
       +'</div>'
@@ -1859,14 +1863,17 @@ body.va-home-radar-picker-open{overflow:hidden;}
     var knobEl=spiderWidgetEl.querySelector('.vhr-gauge__knob');
     var markerEl=spiderWidgetEl.querySelector('.vhr-gauge__marker');
     var cursorEl=spiderWidgetEl.querySelector('.vhr-gauge__cursor');
-    if(knobEl&&markerEl&&cursorEl){
+    var progressEl=spiderWidgetEl.querySelector('.vhr-gauge__progress');
+    if(knobEl&&markerEl&&cursorEl&&progressEl){
       knobEl.style.left='1%';
       markerEl.style.left='1%';
       cursorEl.style.left='1%';
+      progressEl.style.width='1%';
       window.requestAnimationFrame(function(){
         knobEl.style.left=pos+'%';
         markerEl.style.left=pos+'%';
         cursorEl.style.left=pos+'%';
+        progressEl.style.width=pos+'%';
       });
     }
   }
