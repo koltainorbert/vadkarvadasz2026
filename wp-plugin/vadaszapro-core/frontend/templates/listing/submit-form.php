@@ -1385,7 +1385,7 @@ body.va-modal-open {
             <h3 class="va-wstep-title">Hirdetés feladás, válassz kategóriát</h3>
             <ul class="va-cat-list" id="va-cat-list">
                 <?php foreach ( $categories as $cat ): $cat_label = str_ireplace( [ 'Puska', 'puska' ], [ 'Lőfegyver', 'lőfegyver' ], (string) $cat->name ); if ( (string)($cat->slug ?? '') === 'hatastalanitott' ) { $cat_label = 'Hatástalanított lőfegyver'; } ?>
-                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat_label); ?></button></li>
+                <li><button type="button" class="va-cat-item" data-term-id="<?php echo esc_attr($cat->term_id); ?>" data-slug="<?php echo esc_attr((string)$cat->slug); ?>" onclick="(function(btn){var items=document.querySelectorAll('.va-cat-item');for(var i=0;i<items.length;i++){items[i].removeAttribute('data-selected');}btn.setAttribute('data-selected','1');var hidden=document.getElementById('va-category');if(hidden){hidden.value=btn.getAttribute('data-term-id')||'';if(window.jQuery){window.jQuery(hidden).trigger('change');}else{hidden.dispatchEvent(new Event('change',{bubbles:true}));}}var slug=(btn.getAttribute('data-slug')||'').toLowerCase();if(slug!=='egyeb'){var other=document.getElementById('va-other-category');if(other){other.value='';}}})(this);"<?php echo ((int)($edit_meta['category']??0) === $cat->term_id) ? ' data-selected="1"' : ''; ?>><?php echo esc_html($cat_label); ?></button></li>
                 <?php endforeach; ?>
             </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
@@ -1405,7 +1405,7 @@ body.va-modal-open {
 
         <!-- ═══ STEP 2: Termék adatai ═══ -->
         <div class="va-wstep" data-step="2">
-            <h3 class="va-wstep-title">Termék adatai</h3>
+            <h3 class="va-wstep-title">Termék adatai <span id="va-step2-category-label"></span></h3>
             <div class="va-form-group va-title-group">
                 <label>Hirdetés címe <span class="required">*</span></label>
                 <input type="text" name="title" id="va-title" class="va-input" list="va-title-list" autocomplete="off" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
@@ -3703,9 +3703,29 @@ document.addEventListener('DOMContentLoaded', function() {
         var opt = $cat.find('option:selected');
         var slug = (opt.data('slug') || '').toString();
         if (slug) return slug;
+        var selectedCardSlug = (($('.va-cat-item[data-selected="1"]').data('slug') || '') + '').trim();
+        if (selectedCardSlug) return selectedCardSlug;
         var id = parseInt($cat.val() || 0, 10);
         if (!id || typeof VA_Data === 'undefined' || !VA_Data.category_slugs) return '';
         return (VA_Data.category_slugs[String(id)] || VA_Data.category_slugs[id] || '').toString();
+    }
+
+    function getSelectedCategoryLabel() {
+        var cardLabel = (($('.va-cat-item[data-selected="1"]').text() || '') + '').trim();
+        if (cardLabel) return cardLabel;
+
+        var id = parseInt($('#va-category').val() || 0, 10);
+        if (!id) return '';
+        var $card = $('.va-cat-item[data-term-id="' + id + '"]');
+        if ($card.length) {
+            return (($card.first().text() || '') + '').trim();
+        }
+        return '';
+    }
+
+    function updateStep2CategoryLabel() {
+        var label = getSelectedCategoryLabel();
+        $('#va-step2-category-label').text(label ? ' (' + label + ')' : '');
     }
 
     function isVehicleCategorySelected() {
