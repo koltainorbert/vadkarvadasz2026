@@ -2,6 +2,24 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-band-system
+
+### Kérés
+- SVG helyett valós, hiteles sávos rendszer kell a vadkáros fajok listájával, mellette grafikonos (bar) megjelenítéssel.
+- Külön legyen kiemelve, melyik faj az aznapi legnagyobb probléma.
+
+### Megvalósítás
+- A compact radar widgetből az SVG render teljesen kikerült.
+- Új fajonkénti sávos panel készült: minden fajhoz score-alapú bar (`0-100`) és pontérték jelenik meg.
+- A panel fejlécében explicit kiemelés: „Aznapi legnagyobb probléma” + fajnév + pontszám.
+- A pontok a meglévő élő scoring motorból jönnek (óra/meteo + beállítások), nem statikus értékek.
+
+### Érintett fájl
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Deploy
+- Commit: `1ef30d7`.
+
 ## 2026. 05. 26. – Session #radar-svg-widget-replace
 
 ### Kérés

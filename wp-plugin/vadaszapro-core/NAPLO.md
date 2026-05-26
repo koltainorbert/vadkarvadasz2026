@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-band-system
+- SVG radar panel eltávolítva a compact widgetből.
+- Új, valós score-alapú sávos fajlista került be (fajnév + bar + pontszám).
+- Külön kiemelés: „Aznapi legnagyobb probléma” (legmagasabb napi score-ú faj).
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `1ef30d7`.
+
 ## 2026. 05. 26. – Session #radar-svg-widget-replace
 - Kérés: a radar helyén a feltöltött `radar.svg` jelenjen meg, és az alsó logó mutassa a valós score pozíciót.
 - Megvalósítás: a compact widget pókdiagram helyett SVG renderre állt, a logó x-pozíciója score alapú dinamikus számításból jön.
