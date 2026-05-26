@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
+- Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
+- Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.
+- Javítás: mindkét AJAX handlerben (root + plugin mirror) mindkét validációs ágba bekerült a hiányzó mezőtérkép (`job_location`, `job_type`), és konzisztenciából az `other_weapon_kind` átadása is.
+- Ellenőrzés: szerkesztett fájlokon hibaellenőrzés lefutott, új hiba nincs.
+- Érintett: `NAPLO.md`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 27. – Session #zaro-mentes-reggeli-folytatas
 - Kérés: minden változás legyen elmentve, naplózva és pusholva, hogy reggel innen lehessen folytatni.
 - Állapot: az `Egyéb fegyverek` jogilag szétválasztott dinamikus mezői (root + plugin mirror) bent vannak, backend validáció + admin required szabály szinkronban.
