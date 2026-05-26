@@ -1854,6 +1854,20 @@ body.va-home-radar-picker-open{overflow:hidden;}
     return mn+'p '+sc+'s';
   }
 
+  function isRuntimeTranslated(){
+    var html=document.documentElement;
+    if(!html){return false;}
+    var lang=(html.getAttribute('lang')||'').toLowerCase();
+    if(lang && lang.indexOf('hu')!==0){return true;}
+    var htmlClass=html.className||'';
+    var bodyClass=(document.body&&document.body.className)?document.body.className:'';
+    if(/translated|goog-te/.test(htmlClass)||/translated|goog-te/.test(bodyClass)){return true;}
+    if(document.querySelector('.goog-te-banner-frame, .goog-te-combo, iframe[src*="translate"]')){return true;}
+    return false;
+  }
+
+  var SW_TRANSLATION_MODE=isRuntimeTranslated();
+
   /* Vadászati adatok */
   var groups=[
     {label:'GÍM',color:'#1ec854',animals:[
@@ -2033,7 +2047,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
   /* Azonnali hívás — elemek már a DOM-ban vannak */
   build();
-  setInterval(updateCDs,1000);
+  setInterval(updateCDs,SW_TRANSLATION_MODE?60000:1000);
   /* Napi újraépítés éjfélkor */
   var bp=nowBP();
   var msToMidnight=((23-bp.hour)*3600+(59-bp.minute)*60+(60-bp.second)+1)*1000;
@@ -2497,6 +2511,7 @@ if(_grpData.length>0&&grpDaysSinceOpen(groups[0])<9999){
 
 function updateCDs(){
   var bp=nowBPsimple();
+  var translatedMode=isRuntimeTranslated();
   updateSunInfo(bp);
   updateShootCountdown(bp);
   /* Élő óra a Gantt fejlécben */
@@ -2507,7 +2522,7 @@ function updateCDs(){
     var jsDate=new Date();
     var dow=new Intl.DateTimeFormat('hu-HU',{timeZone:'Europe/Budapest',weekday:'short'}).format(jsDate);
     clk.textContent=bp.year+'. '+MFN[bp.month-1]+' '+bp.day+'. '+dow+' — '
-      +String(bp.hour).padStart(2,'0')+':'+String(bp.minute).padStart(2,'0')+':'+String(bp.second).padStart(2,'0');
+      +String(bp.hour).padStart(2,'0')+':'+String(bp.minute).padStart(2,'0')+(translatedMode?'':':'+String(bp.second).padStart(2,'0'));
   }
   _acdList.forEach(function(c){
     var on=isInSeason(c.seasons,bp.month,bp.day);
@@ -2529,7 +2544,7 @@ function updateCDs(){
   });
 }
 updateCDs();
-setInterval(updateCDs,1000);
+setInterval(updateCDs,isRuntimeTranslated()?60000:1000);
 updateHnOverflowState();
 })();
 </script>
