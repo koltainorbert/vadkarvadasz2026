@@ -1752,6 +1752,259 @@ body.va-modal-open {
                     </div>
                 </div>
             </div>
+            <?php
+                $other_weapon_kind_val = (string)($edit_meta['other_weapon_kind'] ?? '');
+                $other_weapon_accessories_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['other_weapon_accessories'] ?? ''))));
+            ?>
+            <div class="va-form-group va-other-weapon-fields-grid" data-categories="egyeb-fegyverek" style="display:none">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <h3 class="va-specs-heading">Egyéb fegyverek részletei</h3>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kategória</label>
+                        <select name="other_weapon_kind" id="va-other-weapon-kind" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="legalis-hobbi-sport-eszkoz"<?php echo selected( $other_weapon_kind_val, 'legalis-hobbi-sport-eszkoz', false ); ?>>Legális hobbi / sport / eszköz</option>
+                            <option value="gyujtoi"<?php echo selected( $other_weapon_kind_val, 'gyujtoi', false ); ?>>Gyűjtői</option>
+                            <option value="dekor"<?php echo selected( $other_weapon_kind_val, 'dekor', false ); ?>>Dekor</option>
+                            <option value="airsoft"<?php echo selected( $other_weapon_kind_val, 'airsoft', false ); ?>>Airsoft</option>
+                            <option value="ij"<?php echo selected( $other_weapon_kind_val, 'ij', false ); ?>>Íj</option>
+                            <option value="szamszerij"<?php echo selected( $other_weapon_kind_val, 'szamszerij', false ); ?>>Számszeríj</option>
+                            <option value="legfegyver"<?php echo selected( $other_weapon_kind_val, 'legfegyver', false ); ?>>Légfegyver</option>
+                            <option value="gaz-riaszto"<?php echo selected( $other_weapon_kind_val, 'gaz-riaszto', false ); ?>>Gáz-riasztó</option>
+                            <option value="muzealis"<?php echo selected( $other_weapon_kind_val, 'muzealis', false ); ?>>Muzeális</option>
+                            <option value="diszfegyver"<?php echo selected( $other_weapon_kind_val, 'diszfegyver', false ); ?>>Díszfegyver</option>
+                            <option value="vadaszkes"<?php echo selected( $other_weapon_kind_val, 'vadaszkes', false ); ?>>Vadászkés</option>
+                            <option value="tulelo-eszkoz"<?php echo selected( $other_weapon_kind_val, 'tulelo-eszkoz', false ); ?>>Túlélő eszköz</option>
+                            <option value="taktikai-eszkoz"<?php echo selected( $other_weapon_kind_val, 'taktikai-eszkoz', false ); ?>>Taktikai eszköz</option>
+                            <option value="egyeb"<?php echo selected( $other_weapon_kind_val, 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Megjegyzés</label>
+                        <textarea name="other_weapon_general_notes" class="va-input" rows="2" placeholder="Rövid leírás a rendeltetésről, eredetről vagy különleges megkötésről."><?php echo esc_textarea((string)($edit_meta['other_weapon_general_notes'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tartozékok</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="eredeti-doboz"<?php echo in_array('eredeti-doboz', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Eredeti doboz</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tok"<?php echo in_array('tok', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Tok</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="optika"<?php echo in_array('optika', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Optika</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="heveder"<?php echo in_array('heveder', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Heveder</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="vesszo"<?php echo in_array('vesszo', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Vesszők</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tar"<?php echo in_array('tar', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Tárak</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="gaspatron"<?php echo in_array('gaspatron', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Gázpatron</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="akkumulator"<?php echo in_array('akkumulator', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Akkumulátor</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tolto"<?php echo in_array('tolto', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Töltő</label>
+                        <input type="text" name="other_weapon_accessories_other" class="va-input" placeholder="Egyéb tartozékok" value="<?php echo esc_attr((string)($edit_meta['other_weapon_accessories_other'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>18+ termék?</label>
+                        <select name="other_weapon_18plus" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_18plus'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_18plus'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Engedélyköteles?</label>
+                        <select name="other_weapon_permit_required" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_permit_required'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_permit_required'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Csak személyes átvétel?</label>
+                        <select name="other_weapon_personal_pickup" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_personal_pickup'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_personal_pickup'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Származási papír van?</label>
+                        <select name="other_weapon_origin_papers" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_origin_papers'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_origin_papers'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Sorozatszám</label>
+                        <input type="text" name="other_weapon_serial_number" class="va-input" placeholder="Opcionális" value="<?php echo esc_attr((string)($edit_meta['other_weapon_serial_number'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legalis-hobbi-sport-eszkoz,gyujtoi,dekor,muzealis,diszfegyver,tulelo-eszkoz,taktikai-eszkoz,egyeb" style="display:none;grid-column:1 / -1;">
+                        <label>Megjegyzés / rendeltetés</label>
+                        <textarea name="other_weapon_general_notes" class="va-input" rows="2" placeholder="Használat, gyűjtemény, dekoráció, muzeális cél, stb."><?php echo esc_textarea((string)($edit_meta['other_weapon_general_notes'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;grid-column:1 / -1;">
+                        <strong>Íj</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Húzóerő (lbs)</label>
+                        <input type="text" name="other_weapon_bow_draw_weight_lbs" class="va-input" placeholder="pl. 45" value="<?php echo esc_attr((string)($edit_meta['other_weapon_bow_draw_weight_lbs'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Tengelytáv</label>
+                        <input type="text" name="other_weapon_bow_axle_to_axle" class="va-input" placeholder="pl. 30 inch" value="<?php echo esc_attr((string)($edit_meta['other_weapon_bow_axle_to_axle'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Jobb / balkezes</label>
+                        <select name="other_weapon_bow_handness" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="jobbkezes"<?php echo selected( (string)($edit_meta['other_weapon_bow_handness'] ?? ''), 'jobbkezes', false ); ?>>Jobbkezes</option>
+                            <option value="balkezes"<?php echo selected( (string)($edit_meta['other_weapon_bow_handness'] ?? ''), 'balkezes', false ); ?>>Balkezes</option>
+                            <option value="univerzalis"<?php echo selected( (string)($edit_meta['other_weapon_bow_handness'] ?? ''), 'univerzalis', false ); ?>>Univerzális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Csigás / tradicionális</label>
+                        <select name="other_weapon_bow_style" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="compound"<?php echo selected( (string)($edit_meta['other_weapon_bow_style'] ?? ''), 'compound', false ); ?>>Csigás</option>
+                            <option value="tradicionalis"<?php echo selected( (string)($edit_meta['other_weapon_bow_style'] ?? ''), 'tradicionalis', false ); ?>>Tradicionális</option>
+                            <option value="recurve"<?php echo selected( (string)($edit_meta['other_weapon_bow_style'] ?? ''), 'recurve', false ); ?>>Recurve</option>
+                            <option value="longbow"<?php echo selected( (string)($edit_meta['other_weapon_bow_style'] ?? ''), 'longbow', false ); ?>>Longbow</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Vesszőtartó van?</label>
+                        <select name="other_weapon_bow_arrow_rest" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_bow_arrow_rest'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_bow_arrow_rest'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;">
+                        <label>Irányzék van?</label>
+                        <select name="other_weapon_bow_sight" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_bow_sight'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_bow_sight'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="szamszerij" style="display:none;grid-column:1 / -1;">
+                        <strong>Számszeríj</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="szamszerij" style="display:none;">
+                        <label>Húzóerő (lbs)</label>
+                        <input type="text" name="other_weapon_crossbow_draw_weight_lbs" class="va-input" placeholder="pl. 175" value="<?php echo esc_attr((string)($edit_meta['other_weapon_crossbow_draw_weight_lbs'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="szamszerij" style="display:none;">
+                        <label>Sebesség (FPS)</label>
+                        <input type="text" name="other_weapon_crossbow_fps" class="va-input" placeholder="pl. 390" value="<?php echo esc_attr((string)($edit_meta['other_weapon_crossbow_fps'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="szamszerij" style="display:none;grid-column:1 / -1;">
+                        <label>Tartozékok</label>
+                        <textarea name="other_weapon_crossbow_accessories" class="va-input" rows="2" placeholder="Puskamarkolat, húr, kormányzó, célzó, stb."><?php echo esc_textarea((string)($edit_meta['other_weapon_crossbow_accessories'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="airsoft" style="display:none;grid-column:1 / -1;">
+                        <strong>Airsoft</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="airsoft" style="display:none;">
+                        <label>Működés</label>
+                        <select name="other_weapon_airsoft_operation" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="spring"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_operation'] ?? ''), 'spring', false ); ?>>Spring</option>
+                            <option value="aeg"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_operation'] ?? ''), 'aeg', false ); ?>>AEG</option>
+                            <option value="gbb"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_operation'] ?? ''), 'gbb', false ); ?>>GBB</option>
+                            <option value="hpa"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_operation'] ?? ''), 'hpa', false ); ?>>HPA</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_operation'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="airsoft" style="display:none;">
+                        <label>Energia (Joule)</label>
+                        <input type="text" name="other_weapon_airsoft_energy_joule" class="va-input" placeholder="pl. 0.8" value="<?php echo esc_attr((string)($edit_meta['other_weapon_airsoft_energy_joule'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="airsoft" style="display:none;">
+                        <label>FPS</label>
+                        <input type="text" name="other_weapon_airsoft_fps" class="va-input" placeholder="pl. 320" value="<?php echo esc_attr((string)($edit_meta['other_weapon_airsoft_fps'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="airsoft" style="display:none;">
+                        <label>Tár típusa</label>
+                        <select name="other_weapon_airsoft_magazine_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="mid-cap"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_magazine_type'] ?? ''), 'mid-cap', false ); ?>>Mid-cap</option>
+                            <option value="hi-cap"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_magazine_type'] ?? ''), 'hi-cap', false ); ?>>Hi-cap</option>
+                            <option value="low-cap"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_magazine_type'] ?? ''), 'low-cap', false ); ?>>Low-cap</option>
+                            <option value="drum"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_magazine_type'] ?? ''), 'drum', false ); ?>>Drum</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['other_weapon_airsoft_magazine_type'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legfegyver" style="display:none;grid-column:1 / -1;">
+                        <strong>Légfegyver</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legfegyver" style="display:none;">
+                        <label>Kaliber</label>
+                        <input type="text" name="other_weapon_airgun_caliber" class="va-input" placeholder="pl. 4.5 mm" value="<?php echo esc_attr((string)($edit_meta['other_weapon_airgun_caliber'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legfegyver" style="display:none;">
+                        <label>Torkolati energia</label>
+                        <input type="text" name="other_weapon_airgun_muzzle_energy" class="va-input" placeholder="pl. 7.5 J" value="<?php echo esc_attr((string)($edit_meta['other_weapon_airgun_muzzle_energy'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legfegyver" style="display:none;">
+                        <label>Működés</label>
+                        <select name="other_weapon_airgun_power_source" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="pcp"<?php echo selected( (string)($edit_meta['other_weapon_airgun_power_source'] ?? ''), 'pcp', false ); ?>>PCP</option>
+                            <option value="rugo"<?php echo selected( (string)($edit_meta['other_weapon_airgun_power_source'] ?? ''), 'rugo', false ); ?>>Rugós</option>
+                            <option value="co2"<?php echo selected( (string)($edit_meta['other_weapon_airgun_power_source'] ?? ''), 'co2', false ); ?>>CO2</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['other_weapon_airgun_power_source'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="gaz-riaszto" style="display:none;grid-column:1 / -1;">
+                        <strong>Gáz-riasztó</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="gaz-riaszto" style="display:none;">
+                        <label>Kaliber</label>
+                        <input type="text" name="other_weapon_gas_alarm_caliber" class="va-input" placeholder="pl. 9 mm P.A.K." value="<?php echo esc_attr((string)($edit_meta['other_weapon_gas_alarm_caliber'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="gaz-riaszto" style="display:none;">
+                        <label>Önvédelmi engedély szükséges?</label>
+                        <select name="other_weapon_gas_alarm_self_defense_license" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_gas_alarm_self_defense_license'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_gas_alarm_self_defense_license'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="gaz-riaszto" style="display:none;">
+                        <label>Viselési engedély van?</label>
+                        <select name="other_weapon_gas_alarm_carry_license" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_gas_alarm_carry_license'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_gas_alarm_carry_license'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;grid-column:1 / -1;">
+                        <strong>Vadászkés / túlélő eszköz</strong>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;">
+                        <label>Pengehossz</label>
+                        <input type="text" name="other_weapon_knife_blade_length" class="va-input" placeholder="pl. 11 cm" value="<?php echo esc_attr((string)($edit_meta['other_weapon_knife_blade_length'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;">
+                        <label>Acél típusa</label>
+                        <input type="text" name="other_weapon_knife_steel_type" class="va-input" placeholder="pl. D2, 440C" value="<?php echo esc_attr((string)($edit_meta['other_weapon_knife_steel_type'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;">
+                        <label>Markolat anyaga</label>
+                        <input type="text" name="other_weapon_knife_handle_material" class="va-input" placeholder="pl. G10, fa, micarta" value="<?php echo esc_attr((string)($edit_meta['other_weapon_knife_handle_material'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;">
+                        <label>Tok van?</label>
+                        <select name="other_weapon_knife_sheath" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_knife_sheath'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_knife_sheath'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;grid-column:1 / -1;">
+                        <label>Tartozékok</label>
+                        <textarea name="other_weapon_knife_accessories" class="va-input" rows="2" placeholder="pl. eredeti doboz, élező, övcsipesz"><?php echo esc_textarea((string)($edit_meta['other_weapon_knife_accessories'] ?? '')); ?></textarea>
+                    </div>
+                </div>
+            </div>
             <?php if ( $site_type !== 'jarmu' ): ?>
             <div class="va-form-row">
                 <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek">
