@@ -550,29 +550,6 @@
     </div>
     <?php endif; ?>
 
-    <!-- Kategória gyorsmenü (csak főoldalon + archívumban) -->
-    <?php
-    $archive_types = [ 'va_listing' ];
-    if ( $auctions_enabled ) {
-        $archive_types[] = 'va_auction';
-    }
-    ?>
-    <?php if ( is_post_type_archive($archive_types) || is_tax(['va_category','va_county']) ): ?>
-    <div class="va-cat-bar">
-        <div class="va-cat-bar__inner">
-            <?php $top_cats = get_terms(['taxonomy' => 'va_category', 'parent' => 0, 'hide_empty' => false, 'number' => 10]);
-            foreach ($top_cats as $cat):
-                $icon = va_category_icon($cat->term_id);
-            ?>
-            <a href="<?php echo esc_url( get_term_link($cat) ); ?>" class="va-cat-item">
-                <span class="va-cat-item__icon"><?php echo $icon; ?></span>
-                <span><?php echo esc_html($cat->name); ?></span>
-            </a>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <?php endif; ?>
-
     <!-- Tartalom wrapper -->
     <?php if ( ! is_page( 'va-fiok' ) ) : ?>
     <main class="va-container">
