@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-widget-above-agrar-and-equal-spacing
+- Kérés: a radar widget kerüljön az agrár naptár widget fölé, minden sidebar widget azonos távolságra legyen egymástól, és a részletes popup címében a szöveg `Teljes Vadkár Radar detektálás` legyen.
+- Javítás: a sidebar widgetek explicit flex sorrendet kaptak, így a `Vadkár Radar` közvetlenül az agrár naptár elé került.
+- Javítás: a sidebaron belül a widgetek egyedi külső margói nullázva lettek, így az egységes `gap` adja a távolságot minden elem között.
+- Javítás: a részletes radar popup blokkcíme `Teljes Vadkár Radar detektálás` lett.
+- Érintett: `NAPLO.md`, `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-widget-below-calendar-and-cta-text
 - Kérés: a radar widget kerüljön a naptár widget alá, és a látható szöveg legyen `Teljes Vadkár Radar detektálás`.
 - Javítás: a sidebar flex sorrendje úgy lett beállítva, hogy a radar widget közvetlenül a `Holdnaptár` után jelenjen meg, az időjárás elé kerülve.

@@ -179,9 +179,17 @@ body.va-agri-modal-open{overflow:hidden;}
   <?php endif; ?>
 
   <style>
-  #holdnaptar{order:2;}
-  #va-home-radar{order:3;}
-  #va-weather{order:4;}
+  .va-home-sidebar{gap:12px;}
+  .va-home-sidebar > .va-season,
+  .va-home-sidebar > #agri-naptar-widget,
+  .va-home-sidebar > #holdnaptar,
+  .va-home-sidebar > #va-home-radar,
+  .va-home-sidebar > #va-weather{margin:0!important;}
+  .va-home-sidebar > .va-season{order:1;}
+  #va-home-radar{order:2;}
+  #agri-naptar-widget{order:3;}
+  #holdnaptar{order:4;}
+  #va-weather{order:5;}
   </style>
 
 <?php if ( $va_show_weather_widget ): ?>
@@ -639,7 +647,7 @@ body.va-weather-modal-open{overflow:hidden;}
           <div class="va-home-radar__week" id="vhrWeek"></div>
         </div>
         <div class="va-home-radar__detail-block">
-          <div class="va-home-radar__detail-title">Parancsnoki heti heatmap</div>
+          <div class="va-home-radar__detail-title">Teljes Vadkár Radar detektálás</div>
           <div class="va-home-radar__minihelp">A számok kockázati pontok (0-100), nem százalékok. Minden oszlop konkrét naptári napot jelöl.</div>
           <div class="va-home-radar__heatmap" id="vhrHeatmap"></div>
         </div>
