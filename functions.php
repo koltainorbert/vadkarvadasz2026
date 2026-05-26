@@ -1301,8 +1301,18 @@ add_action( 'wp_enqueue_scripts', function () {
         'background-blend-mode:overlay;' .
         'backdrop-filter:blur(' . $hf_header_blur . 'px) saturate(1.4);' .
         '-webkit-backdrop-filter:blur(' . $hf_header_blur . 'px) saturate(1.4);' .
-        'border-bottom:1px solid ' . $hf_header_border_color . ';' .
+        'border-bottom:none;' .
         'box-shadow:0 1px 30px ' . $hf_header_glow_color . ';' .
+    '}' .
+    '.va-header::after{' .
+        'content:"";' .
+        'position:absolute;' .
+        'left:0;' .
+        'right:0;' .
+        'bottom:0;' .
+        'height:1px;' .
+        'background:' . $hf_header_border_color . ';' .
+        'pointer-events:none;' .
     '}' .
     '.va-header.scrolled{' .
         'background-color:' . $header_bg . ';' .

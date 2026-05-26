@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #header-bottom-border-anchor-fix
+- Hiba: a header alsó narancs borderje elszabadult, nem a header alján jelent meg, hanem oldal alji, scrollal mozgó vonalként látszott.
+- Javítás: a dinamikus `border-bottom` helyett a header aljára rögzített `::after` pseudo-elem rajzolja a vonalat.
+- Eredmény: a narancs vonal a fixed headerhez kötve marad, nem csúszik le más layout rétegre.
+- Érintett: `NAPLO.md`, `functions.php`, `wp-theme/vadaszapro-theme/functions.php`.
+
 ## 2026. 05. 26. – Session #header-brand-and-moon-background-cleanup
 - Kérés: a fejlécben a logó melletti felirat ne `Vadkár Radar`, hanem `Vadkár Vadász` legyen.
 - Kérés: a holdnaptár widgetben a hold mögül tűnjön el a négyzetes háttér.
