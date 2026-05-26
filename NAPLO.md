@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-detail-size-boost
+- Kérés: a részletes `Vadkár Radar` nézetben maga a radar legyen sokkal nagyobb, mert túl sok üres hely maradt körülötte.
+- Javítás: a részletes radar SVG konténerének maximális szélessége jelentősen megnőtt, és a kétoszlopos modal layout több helyet ad a radarnak.
+- Javítás: a nem-widget `renderSpider()` ág nagyobb sugárral, nagyobb viewBoxszal és erősebb feliratméretekkel rajzolja újra a pókdiagramot.
+- Eredmény: a részletes popup bal oldali radarja most érdemben kitölti a rendelkezésre álló teret, jobban olvasható számokkal és címkékkel.
+- Érintett: `NAPLO.md`, `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #search-all-results-404-fix
 - Hiba: a header live search `Összes találat` linkje 404 oldalra vitt.
 - Ok: a header több helyen fixen a `/va-hirdetes-kereses` slugra mutatott, ami live környezetben hiányozhat vagy eltérő permalinket kaphat.
