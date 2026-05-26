@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #allas-category-fields
+- Kérés: az `Állás` kategória kapjon teljes, részletes mezőkészletet a feladási űrlapon.
+- Javítás: a root + plugin mirror űrlapba bekerült a strukturált job blokk: munkakör, foglalkoztatás típusa, település, megye, ország, végzettség, engedélyek, jogosítványok, tapasztalat, nyelv, feladatok, munkaidő, szállás, étkezés, jármű, fegyver, fizetés.
+- Javítás: edit módban minden új job mező visszatöltődik, és a backend mindkét copy-ban menti a `va_job_*` meta kulcsokat.
+- Javítás: a kötelezőmező-hibák szövege most `Munkavégzés települése` és `Foglalkoztatás típusa` néven jelenik meg.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 26. – Session #takarmany-field-gap-fix
 - Hiba: a `Takarmány` kategória blokkban az `Egyéb vadfaj megnevezése` input és a `Részletezés (opcionális)` textarea összeért.
 - Javítás: a `feed_recommended_game` mező kapott felső margót (`margin-top:8px`) root + plugin mirror sablonban.
