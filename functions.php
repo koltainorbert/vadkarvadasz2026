@@ -1289,6 +1289,10 @@ add_action( 'wp_enqueue_scripts', function () {
         'background:' . $global_bg . ';' .
         'color:' . $global_text . ';' .
     '}' .
+    'html,body{scrollbar-color:rgba(92,92,92,.62) rgba(255,255,255,.08);}' .
+    '::-webkit-scrollbar-track{background:rgba(255,255,255,.08);}' .
+    '::-webkit-scrollbar-thumb{background:rgba(92,92,92,.62);border-radius:999px;border:2px solid rgba(6,6,6,.94);}' .
+    '::-webkit-scrollbar-thumb:hover{background:rgba(122,122,122,.75);}' .
     'h1,h2,h3,h4,h5,h6{font-family:' . $font_headings . ';}' .
     '.va-header,.va-header *{' .
         'font-family:' . $font_header . ';' .

@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #header-border-visual-confusion-fix
+- Jelenség: a képen látható mozgó narancs vonal header border hibának tűnt, de a vizuális zavart a jobb oldali narancs scrollbar és a legfelső vadászati naptárblokk narancs elválasztója erősítette.
+- Javítás: a globális scrollbar thumb semleges szürke tónust kapott, így nem néz ki többé leszakadt header accentnek.
+- Javítás: a vadászati idények blokk fejlécének alsó narancs elválasztója vissza lett véve neutrális fehér/szürke borderre.
+- Eredmény: a viewportban már nem jelenik meg lent mozgó narancs vonal olyan formában, ami header bordernek látszik.
+- Érintett: `NAPLO.md`, `functions.php`, `index.php`, `wp-theme/vadaszapro-theme/functions.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #header-bottom-border-anchor-fix
 - Hiba: a header alsó narancs borderje elszabadult, nem a header alján jelent meg, hanem oldal alji, scrollal mozgó vonalként látszott.
 - Javítás: a dinamikus `border-bottom` helyett a header aljára rögzített `::after` pseudo-elem rajzolja a vonalat.

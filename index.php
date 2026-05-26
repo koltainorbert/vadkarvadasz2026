@@ -2476,7 +2476,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
 
 <style>
 .va-hnaptar{--va-hn-name-w:160px;margin-bottom:24px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:visible;}
-.va-hnaptar__hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:12px 20px 10px;border-bottom:1px solid rgba(255,0,0,.12);}
+.va-hnaptar__hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:12px 20px 10px;border-bottom:1px solid rgba(255,255,255,.08);}
 .va-hnaptar__title{font-size:.88rem;font-weight:800;letter-spacing:.06em;color:#fff;}
 .va-hnaptar__clock{font-size:.72rem;font-weight:700;color:rgba(255,180,0,.85);letter-spacing:.06em;font-variant-numeric:tabular-nums;white-space:nowrap;}
 .va-hnaptar__sub{font-size:.68rem;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
