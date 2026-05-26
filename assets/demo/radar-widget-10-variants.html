@@ -56,136 +56,146 @@
     .thermo b{width:100%;height:67%;border-radius:24px;background:linear-gradient(180deg,#ff5a5a,#ff0000)}
 
     .gauge-wrap{width:100%;display:grid;justify-items:center;gap:8px}
-    .dial-top{
+    .landmeter{
       width:100%;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.1em;
-      color:rgba(255,245,220,.82);
-    }
-    .dial-top b{
-      font-size:11px;
-      color:#fff3cf;
-      letter-spacing:.12em;
-      border:1px solid rgba(255,243,207,.4);
-      padding:2px 6px;
-      border-radius:999px;
-      background:rgba(255,190,120,.12);
-    }
-    .gauge{
-      --ang:-120deg;
-      width:240px;
-      height:132px;
-      border:11px solid rgba(228,214,184,.72);
-      border-bottom:none;
-      border-radius:240px 240px 0 0;
+      max-width:320px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.3);
+      background:linear-gradient(180deg,#1b1b1b,#070707);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(0,0,0,.8), 0 12px 24px rgba(0,0,0,.48);
+      padding:8px 8px 6px;
       position:relative;
+    }
+    .lm-title{
+      text-align:center;
+      color:rgba(255,243,215,.88);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:10px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .lm-dials{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .lm-dial{
+      --ang:-40deg;
+      position:relative;
+      height:118px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.18);
       background:
-        conic-gradient(from 180deg at 50% 100%, #973316 0 78deg, #c26f1f 78deg 136deg, #4b4b45 136deg 180deg);
-      box-shadow:inset 0 0 26px rgba(0,0,0,.46),0 8px 22px rgba(0,0,0,.45),0 0 0 2px rgba(66,55,40,.9);
+        radial-gradient(circle at 50% 82%, rgba(255,170,100,.18), rgba(8,8,8,.88) 60%),
+        linear-gradient(180deg,#1c1c1c,#090909);
       overflow:hidden;
     }
-    .gauge::before{
+    .lm-dial::before{
       content:"";
       position:absolute;
-      left:16px;
-      right:16px;
-      top:16px;
-      bottom:0;
-      border-radius:220px 220px 0 0;
-      background:
-        repeating-conic-gradient(from 180deg at 50% 100%, rgba(255,245,220,.68) 0deg 0.9deg, transparent 0.9deg 7deg),
-        radial-gradient(circle at 50% 95%, rgba(255,140,65,.2), rgba(5,5,5,.9) 60%);
-      opacity:.92;
+      left:8px;
+      right:8px;
+      top:18px;
+      height:92px;
+      border-radius:92px 92px 0 0;
+      border:2px solid rgba(255,235,198,.72);
+      border-bottom:none;
+      opacity:.7;
     }
-    .gauge::after{
-      content:"";
+    .lm-ticks{
       position:absolute;
-      left:15px;
-      right:15px;
-      top:15px;
-      bottom:0;
-      border-radius:240px 240px 0 0;
-      background:linear-gradient(180deg,rgba(22,14,8,.02),rgba(8,8,8,.88));
+      left:10px;
+      right:10px;
+      top:22px;
+      height:86px;
+      background:repeating-conic-gradient(from 190deg at 50% 100%, rgba(255,242,220,.7) 0deg 1.1deg, transparent 1.1deg 10deg);
+      border-radius:82px 82px 0 0;
+      mask:radial-gradient(circle at 50% 100%, transparent 58px, #000 58px);
+      opacity:.68;
     }
-    .gauge .needle{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:6px;
-      height:108px;
-      border-radius:6px;
-      background:linear-gradient(180deg,#fff9dc,#ff3a22);
-      box-shadow:0 0 14px rgba(255,188,120,.66),0 0 24px rgba(255,64,38,.42);
-      transform-origin:50% 100%;
-      transform:translateX(-50%) rotate(var(--ang));
-      z-index:2;
-      transition:transform 1.6s cubic-bezier(.22,.9,.22,1);
-    }
-    .gauge .needle::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:-8px;
-      width:0;
-      height:0;
-      margin-left:-8px;
-      border-left:8px solid transparent;
-      border-right:8px solid transparent;
-      border-bottom:16px solid #ffe7bf;
-      filter:drop-shadow(0 0 6px rgba(255,120,60,.7));
-    }
-    .gauge .hub{
-      position:absolute;
-      left:50%;
-      bottom:-12px;
-      width:28px;
-      height:28px;
-      margin-left:-14px;
-      border-radius:50%;
-      border:2px solid rgba(255,230,180,.9);
-      background:radial-gradient(circle,#2b1308 0%,#120a07 58%,#000 100%);
-      box-shadow:0 0 14px rgba(255,140,70,.8), inset 0 0 8px rgba(0,0,0,.8);
-      z-index:3;
-    }
-    .gauge .num{
-      position:absolute;
-      bottom:-42px;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:36px;
-      font-weight:900;
-      letter-spacing:.02em;
-      color:#fff1cc;
-      text-shadow:0 0 10px rgba(255,150,80,.35);
-      z-index:4;
-    }
-    .gauge .units{
-      position:absolute;
-      left:50%;
-      bottom:24px;
-      transform:translateX(-50%);
-      font-size:10px;
-      letter-spacing:.2em;
-      color:rgba(255,238,201,.78);
-      z-index:4;
-    }
-    .gauge .ticks{
+    .lm-nums{
       position:absolute;
       left:0;
       right:0;
-      bottom:6px;
+      bottom:26px;
       display:flex;
       justify-content:space-between;
-      padding:0 16px;
-      font-size:10px;
-      font-weight:900;
+      padding:0 8px;
+      color:rgba(255,239,212,.86);
+      font-size:9px;
+      font-weight:800;
       letter-spacing:.08em;
-      color:rgba(255,241,214,.92);
       z-index:2;
+    }
+    .lm-needle{
+      position:absolute;
+      left:50%;
+      bottom:14px;
+      width:5px;
+      height:68px;
+      margin-left:-2.5px;
+      border-radius:4px;
+      background:linear-gradient(180deg,#ffedcc,#ff3e2e);
+      box-shadow:0 0 8px rgba(255,120,70,.8);
+      transform-origin:50% 100%;
+      transform:rotate(var(--ang));
+      z-index:3;
+      transition:transform 1.2s cubic-bezier(.23,.92,.26,1);
+    }
+    .lm-needle::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-7px;
+      margin-left:-7px;
+      width:0;
+      height:0;
+      border-left:7px solid transparent;
+      border-right:7px solid transparent;
+      border-bottom:14px solid #ffefe2;
+    }
+    .lm-hub{
+      position:absolute;
+      left:50%;
+      bottom:7px;
+      width:16px;
+      height:16px;
+      margin-left:-8px;
+      border-radius:50%;
+      border:2px solid rgba(255,229,183,.88);
+      background:#240d08;
+      box-shadow:0 0 8px rgba(255,120,70,.55);
+      z-index:4;
+    }
+    .lm-icon{
+      position:absolute;
+      left:50%;
+      bottom:34px;
+      transform:translateX(-50%);
+      color:rgba(255,255,255,.82);
+      font-size:20px;
+      line-height:1;
+      z-index:2;
+      filter:drop-shadow(0 0 4px rgba(255,255,255,.18));
+    }
+    .lm-value{
+      position:absolute;
+      left:50%;
+      bottom:4px;
+      transform:translateX(-50%);
+      color:#fff0c8;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.04em;
+      z-index:5;
+    }
+    .lm-labels{
+      margin-top:5px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      text-align:center;
+      color:rgba(255,244,220,.84);
+      font-size:10px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      font-weight:800;
     }
     .danger-type{
       width:100%;
@@ -281,16 +291,30 @@
     </section>
 
     <section class="card c6">
-      <h3>6. Classic 4x4 Analog Ora</h3>
+      <h3>6. Terepjaro Analog Muszerblokk</h3>
       <div class="viz">
         <div class="gauge-wrap">
-          <div class="dial-top"><span>Off-Road Meter</span><b>4x4 Classic</b></div>
-          <div class="gauge" data-score="0">
-            <div class="needle" aria-hidden="true"></div>
-            <div class="hub" aria-hidden="true"></div>
-            <div class="units">KM/H</div>
-            <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
-            <div class="num">0</div>
+          <div class="landmeter">
+            <div class="lm-title">Land Meter</div>
+            <div class="lm-dials">
+              <div class="lm-dial">
+                <div class="lm-ticks"></div>
+                <div class="lm-icon">&#128664;</div>
+                <div class="lm-needle lm-needle-left" aria-hidden="true"></div>
+                <div class="lm-hub" aria-hidden="true"></div>
+                <div class="lm-nums"><span>-40</span><span>0</span><span>40</span></div>
+                <div class="lm-value lm-left-val">0</div>
+              </div>
+              <div class="lm-dial">
+                <div class="lm-ticks"></div>
+                <div class="lm-icon">&#128663;</div>
+                <div class="lm-needle lm-needle-right" aria-hidden="true"></div>
+                <div class="lm-hub" aria-hidden="true"></div>
+                <div class="lm-nums"><span>-40</span><span>0</span><span>40</span></div>
+                <div class="lm-value lm-right-val">0</div>
+              </div>
+            </div>
+            <div class="lm-labels"><span>Pitching</span><span>Rolling</span></div>
           </div>
           <div class="danger-type">Legveszelyesebb vadkar faj: -</div>
         </div>
@@ -337,21 +361,25 @@
         if (species[i].score > top.score) top = species[i];
       }
 
-      var gauge = document.querySelector('.c6 .gauge');
-      if (!gauge) return;
+      var leftNeedle = document.querySelector('.c6 .lm-needle-left');
+      var rightNeedle = document.querySelector('.c6 .lm-needle-right');
+      if (!leftNeedle || !rightNeedle) return;
 
-      var needle = gauge.querySelector('.needle');
-      var num = gauge.querySelector('.num');
+      var leftVal = document.querySelector('.c6 .lm-left-val');
+      var rightVal = document.querySelector('.c6 .lm-right-val');
       var out = document.querySelector('.c6 .gauge-value');
       var dangerType = document.querySelector('.c6 .danger-type');
       var target = top.score;
+      var pitchTarget = Math.round((target - 50) * 0.9);
+      var rollTarget = Math.round((target - 42) * 0.7);
 
       if (dangerType) {
         dangerType.textContent = 'Legveszelyesebb vadkar faj: ' + top.name;
       }
 
-      function angleFor(value){
-        return -120 + (value * 240 / 100);
+      function angleForDegree(value){
+        var clamped = Math.max(-40, Math.min(40, value));
+        return clamped;
       }
 
       var t0 = null;
@@ -362,9 +390,12 @@
         var p = Math.min((ts - t0) / duration, 1);
         var eased = 1 - Math.pow(1 - p, 3);
         var val = Math.round(target * eased);
-        var deg = angleFor(val);
-        gauge.style.setProperty('--ang', deg + 'deg');
-        if (num) num.textContent = String(val);
+        var pDeg = angleForDegree(Math.round(pitchTarget * eased));
+        var rDeg = angleForDegree(Math.round(rollTarget * eased));
+        leftNeedle.style.setProperty('--ang', pDeg + 'deg');
+        rightNeedle.style.setProperty('--ang', rDeg + 'deg');
+        if (leftVal) leftVal.textContent = String(Math.abs(pDeg));
+        if (rightVal) rightVal.textContent = String(Math.abs(rDeg));
         if (out) out.textContent = String(val);
         if (p < 1) {
           window.requestAnimationFrame(tick);
