@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-band-overflow-fix
+- Mobil/szűk nézetben a `Pont` oszlop levágása javítva.
+- Grid és tipográfia finomhangolás: `minmax(0,1fr)`, szélesebb score oszlop, `nowrap`, rövidebb legendafelirat.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `d5294b5`.
+
 ## 2026. 05. 26. – Session #radar-band-system
 - SVG radar panel eltávolítva a compact widgetből.
 - Új, valós score-alapú sávos fajlista került be (fajnév + bar + pontszám).

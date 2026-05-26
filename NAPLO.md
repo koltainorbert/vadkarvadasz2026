@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-band-overflow-fix
+- Hiba: a sávos widget jobb oldali `Pont` oszlopa mobil/szűk nézetben levágódott (`66/1...`).
+- Javítás: grid oszlopok `minmax(0,1fr)` középoszloppal, szélesebb pont oszlop, `nowrap` + tabuláris számok, rövidebb fejléc (`Kárkockázati sáv` → `Sáv`).
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `d5294b5`.
+
 ## 2026. 05. 26. – Session #radar-band-system
 
 ### Kérés
