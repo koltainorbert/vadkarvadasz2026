@@ -754,30 +754,24 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__ambient,
 .va-home-radar__scan{display:none !important;}
 .va-home-radar{padding:12px !important;border-radius:22px !important;border-color:rgba(120,190,255,.32) !important;background:linear-gradient(155deg,rgba(6,16,30,.985),rgba(7,22,39,.975) 58%,rgba(18,16,33,.95) 100%) !important;box-shadow:0 24px 52px rgba(0,0,0,.46),inset 0 0 0 1px rgba(120,190,255,.08),inset 0 0 38px rgba(40,130,255,.07) !important;}
-.va-home-radar__spider#vhrSpiderWidget{position:relative;margin:0 0 10px !important;max-width:none !important;min-height:356px;overflow:hidden;border-color:rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 16px 26px rgba(0,0,0,.26);padding:8px !important;}
+.va-home-radar__spider#vhrSpiderWidget{--vhr-needle-angle:-132deg;position:relative;margin:0 0 10px !important;max-width:none !important;min-height:356px;overflow:hidden;border-color:rgba(255,255,255,.2);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 0 24px rgba(255,60,30,.08),0 18px 28px rgba(0,0,0,.28);padding:8px !important;}
 .va-home-radar__spider#vhrSpiderWidget::before,
 .va-home-radar__spider#vhrSpiderWidget::after{content:none !important;display:none !important;animation:none !important;}
-.vhr-gauge{--vhr-alert:#1ccf64;width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#121212,#070707);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.8);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
-.vhr-gauge__head{display:flex;justify-content:space-between;align-items:baseline;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:800;}
-.vhr-gauge__head strong{font-size:1.8rem;line-height:1;color:#fff;letter-spacing:.03em;}
-.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:radial-gradient(140% 110% at 50% -20%,rgba(255,255,255,.08),transparent 42%),linear-gradient(180deg,#191919,#0a0a0a);overflow:hidden;min-height:186px;display:grid;place-items:center;padding:10px 12px;}
-.vhr-gauge__bar-wrap{position:relative;width:min(338px,100%);height:108px;}
-.vhr-gauge__track{position:absolute;left:0;right:0;top:44px;height:14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(6,6,6,.92);overflow:hidden;box-shadow:inset 0 1px 2px rgba(255,255,255,.08),inset 0 -2px 4px rgba(0,0,0,.44);}
-.vhr-gauge__track::before{content:'';position:absolute;inset:2px;border-radius:999px;background:linear-gradient(90deg,#2b9a44 0%,#4fa933 18%,#8cae16 34%,#d0af00 50%,#f6b100 62%,#f08800 76%,#e85b00 88%,#cf1022 100%);opacity:.82;}
-.vhr-gauge__track::after{content:'';position:absolute;inset:2px;border-radius:999px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 1px,transparent 1px 8%);mix-blend-mode:soft-light;opacity:.45;}
-.vhr-gauge__progress{position:absolute;left:2px;top:2px;bottom:2px;width:1%;border-radius:999px;background:linear-gradient(90deg,#58ff8e,#ffe46a,#ff6b3d,#ff2740);box-shadow:0 0 10px color-mix(in srgb,var(--vhr-alert) 55%,transparent),inset 0 0 0 1px rgba(255,255,255,.3);transition:width .9s cubic-bezier(.2,.9,.2,1);z-index:2;}
-.vhr-gauge__marker{position:absolute;top:10px;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.5);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;z-index:4;}
-.vhr-gauge__knob{position:absolute;top:51px;left:1%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.58);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.5),rgba(110,110,110,.94));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 12px rgba(0,0,0,.48),0 0 0 2px rgba(0,0,0,.38);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:5;}
-.vhr-gauge__knob.is-logo{width:78px;height:30px;border-radius:9px;background-color:#111;background-image:var(--vhr-logo);background-size:contain;background-repeat:no-repeat;background-position:center;}
-.vhr-gauge__cursor{position:absolute;top:26px;left:1%;width:2px;height:34px;transform:translateX(-50%);background:rgba(255,255,255,.95);border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.45);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:4;}
-.vhr-gauge__ticks{position:absolute;left:0;right:0;top:70px;display:flex;justify-content:space-between;align-items:flex-start;padding:0 2px;}
-.vhr-gauge__ticks span{position:relative;font-size:.56rem;font-weight:800;color:rgba(255,255,255,.84);min-width:20px;text-align:center;}
-.vhr-gauge__ticks span::before{content:'';position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:1.5px;height:8px;background:rgba(255,255,255,.56);border-radius:2px;}
-.vhr-gauge__value{position:absolute;right:4px;top:4px;font-size:.92rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.04em;z-index:6;text-shadow:0 0 10px rgba(0,0,0,.56);}
+.vhr-gauge{width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.1),transparent 32%),linear-gradient(180deg,#171717,#050505);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.85);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
+.vhr-gauge__head{display:flex;justify-content:space-between;align-items:center;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8);font-weight:800;}
+.vhr-gauge__head strong{font-size:1.65rem;line-height:1;color:#fff;text-shadow:0 0 14px rgba(255,50,20,.45);letter-spacing:.03em;}
+.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:radial-gradient(circle at 50% 82%,rgba(255,70,30,.22),rgba(10,10,10,.9) 58%),linear-gradient(180deg,#171717,#090909);overflow:hidden;min-height:214px;}
+.vhr-gauge__ring{position:absolute;left:16px;right:16px;top:18px;height:138px;border-radius:170px 170px 0 0;border:2px solid rgba(255,235,205,.84);border-bottom:none;opacity:.8;}
+.vhr-gauge__sweep{position:absolute;left:24px;right:24px;top:28px;height:124px;border-radius:160px 160px 0 0;background:conic-gradient(from 180deg at 50% 100%,rgba(255,78,40,.98) 0deg 94deg,rgba(255,160,75,.9) 94deg 156deg,rgba(185,185,185,.32) 156deg 180deg);mask:radial-gradient(circle at 50% 100%,transparent 76px,#000 76px);}
+.vhr-gauge__ticks{position:absolute;left:20px;right:20px;top:22px;height:132px;border-radius:165px 165px 0 0;background:repeating-conic-gradient(from 186deg at 50% 100%,rgba(255,247,232,.9) 0deg .9deg,transparent .9deg 6deg);mask:radial-gradient(circle at 50% 100%,transparent 72px,#000 72px);opacity:.78;}
+.vhr-gauge__scale{position:absolute;left:12px;right:12px;bottom:38px;display:flex;justify-content:space-between;color:rgba(255,245,224,.95);font-size:.66rem;font-weight:900;letter-spacing:.06em;z-index:3;}
+.vhr-gauge__needle{position:absolute;left:50%;bottom:24px;width:8px;height:126px;margin-left:-4px;border-radius:8px;background:linear-gradient(180deg,#fff8e8,#ff3a22);box-shadow:0 0 14px rgba(255,170,110,.72),0 0 24px rgba(255,70,30,.5);transform-origin:50% 100%;transform:rotate(var(--vhr-needle-angle));z-index:4;transition:transform .9s cubic-bezier(.18,.88,.2,1);}
+.vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-10px;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:20px solid #fff4dd;filter:drop-shadow(0 0 8px rgba(255,120,70,.72));}
+.vhr-gauge__hub{position:absolute;left:50%;bottom:14px;width:26px;height:26px;margin-left:-13px;border-radius:50%;border:2px solid rgba(255,235,198,.92);background:radial-gradient(circle,#2f140a 0%,#130905 62%,#000 100%);box-shadow:0 0 12px rgba(255,122,68,.72),inset 0 0 8px rgba(0,0,0,.86);z-index:5;}
 .vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
 .vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
 .vhr-gauge__footer span{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);}
-.vhr-gauge__footer strong{font-size:1.2rem;line-height:1;color:#fff;letter-spacing:.04em;}
+.vhr-gauge__footer strong{font-size:2.1rem;line-height:.9;color:#fff;letter-spacing:.02em;text-shadow:0 0 16px rgba(255,0,0,.34);}
 .va-home-radar__hero{display:block !important;margin:0 !important;}
 .va-home-radar__scorebox{padding:12px 10px !important;border-radius:16px !important;border-color:rgba(120,190,255,.26);background:linear-gradient(180deg,rgba(110,180,255,.12),rgba(255,255,255,.03));}
 .va-home-radar__scorelabel{font-size:.6rem !important;letter-spacing:.13em !important;}
@@ -787,16 +781,14 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .va-home-radar__score{font-size:2.35rem !important;}
   .va-home-radar__spider#vhrSpiderWidget{margin:0 0 8px !important;min-height:304px;}
   .vhr-gauge{padding:8px;gap:7px;}
-  .vhr-gauge__head strong{font-size:1.55rem;}
-  .vhr-gauge__dial{min-height:170px;padding:9px 8px;}
-  .vhr-gauge__bar-wrap{height:96px;}
-  .vhr-gauge__track{top:40px;height:12px;}
-  .vhr-gauge__knob{width:30px;height:30px;top:46px;}
-  .vhr-gauge__cursor{top:22px;height:30px;}
-  .vhr-gauge__ticks{top:62px;}
-  .vhr-gauge__ticks span{font-size:.52rem;}
-  .vhr-gauge__value{font-size:.9rem;}
-  .vhr-gauge__footer strong{font-size:1.05rem;}
+  .vhr-gauge__head strong{font-size:1.45rem;}
+  .vhr-gauge__dial{min-height:188px;}
+  .vhr-gauge__ring{left:12px;right:12px;top:14px;height:122px;}
+  .vhr-gauge__sweep{left:18px;right:18px;top:21px;height:112px;}
+  .vhr-gauge__ticks{left:16px;right:16px;top:18px;height:118px;}
+  .vhr-gauge__needle{height:112px;bottom:22px;}
+  .vhr-gauge__scale{font-size:.58rem;bottom:34px;}
+  .vhr-gauge__footer strong{font-size:1.85rem;}
 }
 
 /* Unified home widget palette (same color family for all widgets). */
@@ -1813,29 +1805,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var damageScores={7:12,30:8,90:5,none:0};
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
-  var vhrPointerLogo=<?php
-    $va_radar_svg_data = '';
-    $va_radar_svg_paths = [
-      __DIR__ . '/radar.svg',
-      dirname( __DIR__ ) . '/radar.svg',
-      dirname( __DIR__, 2 ) . '/radar.svg',
-      dirname( __DIR__, 3 ) . '/radar.svg',
-    ];
-    foreach ( $va_radar_svg_paths as $va_radar_svg_path ) {
-      if ( ! file_exists( $va_radar_svg_path ) ) {
-        continue;
-      }
-      $va_radar_svg = (string) file_get_contents( $va_radar_svg_path );
-      if ( trim( $va_radar_svg ) !== '' ) {
-        $va_radar_svg_data = 'data:image/svg+xml;utf8,' . rawurlencode( $va_radar_svg );
-        break;
-      }
-    }
-    $va_pointer_logo = $va_radar_svg_data !== ''
-      ? $va_radar_svg_data
-      : esc_url( (string) ( get_option( 'va_brand_icon_url', '' ) ?: get_site_icon_url( 64 ) ) );
-    echo wp_json_encode( $va_pointer_logo );
-  ?>;
   var weatherData=null;
   function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
   function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
@@ -1858,77 +1827,9 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function computeForecast(data){var ctl=controls(),keys=Object.keys(speciesMeta),days=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),best=null;for(var i=0;i<keys.length;i++){var key=keys[i],res=scoreSpecies(key,ctx,ctl);if(!best||res.score>best.result.score){best={species:key,result:res,ctx:ctx};}}days.push({day:ctx.day,species:best.species,score:best.result.score,result:best.result,ctx:ctx});}return days;}
   function computeMatrix(data){var ctl=controls(),keys=Object.keys(speciesMeta),matrix=[];for(var i=0;i<keys.length;i++){var key=keys[i],row=[];for(var dayIndex=0;dayIndex<data.daily.time.length&&dayIndex<7;dayIndex++){var ctx=dayContext(data,dayIndex),res=scoreSpecies(key,ctx,ctl),lvl=riskLevel(res.score);row.push({day:ctx.day,score:res.score,level:lvl});}matrix.push({species:key,row:row});}return matrix;}
   function renderSpider(ctx,ctl,target){var el=target||spiderEl;if(!el)return;var isWidget=el===spiderWidgetEl;var sps=Object.keys(speciesMeta),n=sps.length,cx=170,cy=isWidget?182:175,mR=isWidget?126:75,labelOffset=isWidget?30:36,viewBox=isWidget?'0 0 360 360':'0 0 380 350';function ang(i){return(2*Math.PI*i/n)-Math.PI/2;}function pt(i,v){var a=ang(i),r=mR*(v/100);return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}var g='';[20,40,60,80,100].forEach(function(lv,gi){var pts=sps.map(function(_,i){var p=pt(i,lv);return p.x+','+p.y;}).join(' ');g+='<polygon class="'+(isWidget?'vhr-grid':'')+'" points="'+pts+'" fill="none" stroke="rgba(255,255,255,'+(gi===4?'.2':'.07')+')" stroke-width="1"/>';});var ax=sps.map(function(_,i){var p=pt(i,100);return '<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x+'" y2="'+p.y+'" stroke="rgba(255,255,255,.13)" stroke-width="1"/>';}).join('');var scores=sps.map(function(sp){return scoreSpecies(sp,ctx,ctl).score;});var dp=scores.map(function(s,i){var p=pt(i,s);return p.x+','+p.y;}).join(' ');var poly='<polygon class="'+(isWidget?'vhr-poly':'')+'" points="'+dp+'" fill="rgba(58,150,255,.24)" stroke="rgba(95,180,255,.96)" stroke-width="'+(isWidget?'2.4':'2')+'" stroke-linejoin="round"/>';var dots=scores.map(function(s,i){var p=pt(i,s),r=isWidget?6:5;return '<circle class="'+(isWidget?'vhr-dot':'')+'" cx="'+p.x+'" cy="'+p.y+'" r="'+r+'" fill="#63a9ff" data-sp="'+sps[i]+'" data-score="'+s+'" stroke="rgba(0,0,0,.4)" stroke-width="1.5" style="cursor:pointer"/>';}).join('');var labs=sps.map(function(sp,i){var a=ang(i),lp=pt(i,100),ox=Math.cos(a)*labelOffset,oy=Math.sin(a)*labelOffset,lx=lp.x+ox,ly=lp.y+oy,anc=lx<cx-8?'end':(lx>cx+8?'start':'middle'),s=scores[i],nameSize=isWidget?12.5:8.5,scoreSize=isWidget?20:14;return '<text x="'+lx+'" y="'+(ly-4)+'" text-anchor="'+anc+'" font-size="'+nameSize+'" font-weight="700" font-family="sans-serif" fill="rgba(255,255,255,.8)">'+speciesMeta[sp].label+'</text><text x="'+lx+'" y="'+(ly+14)+'" text-anchor="'+anc+'" font-size="'+scoreSize+'" font-weight="900" font-family="sans-serif" fill="#63a9ff">'+s+'</text>';}).join('');el.innerHTML='<svg viewBox="'+viewBox+'" xmlns="http://www.w3.org/2000/svg">'+g+ax+poly+dots+labs+'</svg>';el.querySelectorAll('circle[data-sp]').forEach(function(c){c.addEventListener('mouseenter',function(){c.setAttribute('r',isWidget?'9':'8');c.style.filter='drop-shadow(0 0 7px #63a9ff)';});c.addEventListener('mouseleave',function(){c.setAttribute('r',isWidget?'6':'5');c.style.filter='';});c.addEventListener('click',function(){var all=el.querySelectorAll('circle[data-sp]');all.forEach(function(cc){cc.setAttribute('opacity','0.3');});c.setAttribute('opacity','1');setTimeout(function(){all.forEach(function(cc){cc.setAttribute('opacity','1');});},700);});});}
-  function renderWidgetGaugeCard(score,speciesLabel){
-    if(!spiderWidgetEl){return;}
-    var safeScore=clamp(parseInt(score,10)||0,0,100);
-    var safeSpecies=speciesLabel||'--';
-    var pos=clamp(safeScore,1,100);
-    var hue=Math.round(120-(safeScore*1.2));
-    var alertColor='hsl('+hue+',88%,48%)';
-    var levelTxt=riskLevel(safeScore).label;
-    var knobClass='vhr-gauge__knob'+(vhrPointerLogo?' is-logo':'');
-    var logoStyle=vhrPointerLogo?'--vhr-logo:url('+vhrPointerLogo+');':'';
-    spiderWidgetEl.innerHTML=''
-      +'<div class="vhr-gauge" style="--vhr-alert:'+alertColor+'">'
-      +'<div class="vhr-gauge__head"><span>Vadászkár veszélymérő</span><strong>'+String(safeScore).padStart(3,'0')+'</strong></div>'
-      +'<div class="vhr-gauge__dial">'
-      +'<div class="vhr-gauge__bar-wrap">'
-      +'<div class="vhr-gauge__marker">'+safeScore+'</div>'
-      +'<div class="vhr-gauge__track"><div class="vhr-gauge__progress"></div></div>'
-      +'<div class="'+knobClass+'" style="'+logoStyle+'"></div>'
-      +'<div class="vhr-gauge__cursor"></div>'
-      +'<div class="vhr-gauge__ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>'
-      +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
-      +'</div>'
-      +'</div>'
-      +'<div class="vhr-gauge__species">Legnagyobb kárt okozó vadfaj: '+safeSpecies+'</div>'
-      +'<div class="vhr-gauge__footer"><span>Valós, számolt kockázati index</span><strong>'+levelTxt+'</strong></div>'
-      +'</div>';
-    var knobEl=spiderWidgetEl.querySelector('.vhr-gauge__knob');
-    var markerEl=spiderWidgetEl.querySelector('.vhr-gauge__marker');
-    var cursorEl=spiderWidgetEl.querySelector('.vhr-gauge__cursor');
-    var progressEl=spiderWidgetEl.querySelector('.vhr-gauge__progress');
-    if(knobEl&&markerEl&&cursorEl&&progressEl){
-      knobEl.style.left='1%';
-      markerEl.style.left='1%';
-      cursorEl.style.left='1%';
-      progressEl.style.width='1%';
-      window.requestAnimationFrame(function(){
-        knobEl.style.left=pos+'%';
-        markerEl.style.left=pos+'%';
-        cursorEl.style.left=pos+'%';
-        progressEl.style.width=pos+'%';
-      });
-    }
-  }
-  var vhrGaugeSyncLock=false;
-  function refreshWidgetGaugeFromState(){
-    if(!spiderWidgetEl||vhrGaugeSyncLock){return;}
-    var scoreNow=parseInt((scoreEl&&scoreEl.textContent?scoreEl.textContent:'0'),10);
-    var speciesNow=(speciesEl&&speciesEl.textContent?speciesEl.textContent.trim():'--')||'--';
-    vhrGaugeSyncLock=true;
-    renderWidgetGaugeCard(scoreNow,speciesNow);
-    vhrGaugeSyncLock=false;
-  }
-  function setupWidgetGaugeSync(){
-    if(!spiderWidgetEl||!window.MutationObserver){return;}
-    var spiderObserver=new MutationObserver(function(){
-      if(vhrGaugeSyncLock){return;}
-      if(!spiderWidgetEl.querySelector('.vhr-gauge')){refreshWidgetGaugeFromState();}
-    });
-    spiderObserver.observe(spiderWidgetEl,{childList:true});
-    if(scoreEl){
-      var scoreObserver=new MutationObserver(function(){refreshWidgetGaugeFromState();});
-      scoreObserver.observe(scoreEl,{childList:true,subtree:true,characterData:true});
-    }
-    if(speciesEl){
-      var speciesObserver=new MutationObserver(function(){refreshWidgetGaugeFromState();});
-      speciesObserver.observe(speciesEl,{childList:true,subtree:true,characterData:true});
-    }
-  }
   function renderSpiderStats(forecast,top){if(!spiderStatsEl)return;var sps=Object.keys(speciesMeta),ctl=controls(),scores=sps.map(function(sp){return scoreSpecies(sp,top.ctx,ctl).score;});var b1='<div class="va-srs"><div class="va-srs__h">Fajok kockázata</div>'+sps.map(function(sp,i){var s=scores[i],lv=riskLevel(s);return '<div class="va-srs__row"><span class="va-srs__n">'+speciesMeta[sp].short+'</span><div class="va-srs__tr"><div class="va-srs__fi is-'+lv.cls+'" style="width:'+s+'%"></div></div><span class="va-srs__v">'+s+'</span></div>';}).join('')+'</div>';var days=forecast.slice(0,7),b2='<div class="va-srs"><div class="va-srs__h">7 napos trend</div><div class="va-srs__spark">'+days.map(function(day){var d=new Date(day.day+'T12:00:00'),lv=riskLevel(day.score),h=Math.max(4,Math.round(day.score*0.62));return '<div class="va-srs__col"><div class="va-srs__spb is-'+lv.cls+'" style="height:'+h+'px"></div><span class="va-srs__sd">'+dayName(d.getDay()).slice(0,1)+'</span></div>';}).join('')+'</div></div>';var s=top.score,lv=riskLevel(s),gcol=s>=85?'#ff0000':s>=70?'#ff3b2f':s>=50?'#ff6b00':s>=25?'#ff9800':'#4caf50';var b3='<div class="va-srs"><div class="va-srs__h">Napi csúcsindex</div><svg viewBox="0 0 120 72" class="va-srs__gsv"><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="9" stroke-linecap="round"/><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="'+gcol+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+s+' 100" pathLength="100"/><text x="60" y="55" text-anchor="middle" font-size="20" font-weight="900" font-family="sans-serif" fill="#fff">'+s+'</text><text x="60" y="67" text-anchor="middle" font-size="8" font-weight="700" font-family="sans-serif" fill="rgba(255,255,255,.55)">'+lv.label+'</text></svg></div>';spiderStatsEl.innerHTML=b1+b2+b3;}
   function renderHeatmap(matrix){if(!heatmapEl){return;}var html='<div class="va-home-radar__heatmap-head"><div class="va-home-radar__heatmap-corner">Faj</div>';if(matrix[0]){html+=matrix[0].row.map(function(cell){var d=new Date(cell.day+'T12:00:00');return '<div class="va-home-radar__heatmap-day"><span class="va-home-radar__heatmap-dow">'+dayName(d.getDay())+'</span><span class="va-home-radar__heatmap-date">'+formatDateShort(d)+'</span></div>';}).join('');}html+='</div>';html+=matrix.map(function(entry){return '<div class="va-home-radar__heatmap-row"><div class="va-home-radar__heatmap-label"><strong>'+speciesMeta[entry.species].label+'</strong></div>'+entry.row.map(function(cell){return '<div class="va-home-radar__heatmap-cell is-'+cell.level.cls+'" style="--heat:'+heatColor(cell.level)+'"><strong>'+cell.score+'</strong><span>'+cell.level.label+'</span></div>';}).join('')+'</div>';}).join('');heatmapEl.innerHTML=html;}
-  function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var matrix=computeMatrix(data),top=forecast[0],peak=forecast[0],confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88),pi=0;for(pi=1;pi<forecast.length;pi++){if(forecast[pi].score>peak.score){peak=forecast[pi];}}var level=riskLevel(peak.score);root.setAttribute('data-risk',level.cls);if(modalEl){modalEl.setAttribute('data-risk',level.cls);}locEl.textContent=label;scoreEl.innerHTML=String(peak.score)+'<small>/100</small>';levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[peak.species].label;windowEl.textContent=speciesMeta[peak.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';if(intelEl){intelEl.textContent=speciesMeta[top.species].label+' fókusz, '+speciesMeta[top.species].window+' kritikus kijárási sáv, '+confidenceLabel(confidence).toLowerCase()+' megbízhatósággal.';}if(silhouetteEl){silhouetteEl.innerHTML=speciesArt[top.species]||'';}if(cinemaSpeciesEl){cinemaSpeciesEl.textContent=speciesMeta[top.species].label;}if(threatPulseEl){threatPulseEl.textContent=pulseLabel(top.score);}if(patternEl){patternEl.textContent=top.result.reasons.slice(0,2).join(' • ');}reasonEl.textContent='Fő kiváltó ok: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,7).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');modalScoreEl.innerHTML=String(top.score)+'<small>/100</small>';modalLevelEl.textContent=riskLevel(top.score).label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');renderHeatmap(matrix);if(spiderEl){renderSpider(top.ctx,controls());}if(spiderWidgetEl){renderWidgetGaugeCard(peak.score,speciesMeta[peak.species].label);}if(spiderStatsEl){renderSpiderStats(forecast,top);}noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • A számítás 2 múlt nap + 7 nap órás adataiból készül (sok száz mérési pont), a pontszám 0-100 skálájú kockázati index.';}
+  function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var matrix=computeMatrix(data),top=forecast[0],peak=forecast[0],confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88),pi=0;for(pi=1;pi<forecast.length;pi++){if(forecast[pi].score>peak.score){peak=forecast[pi];}}var level=riskLevel(peak.score);root.setAttribute('data-risk',level.cls);if(modalEl){modalEl.setAttribute('data-risk',level.cls);}locEl.textContent=label;scoreEl.innerHTML=String(peak.score)+'<small>/100</small>';levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[peak.species].label;windowEl.textContent=speciesMeta[peak.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';if(intelEl){intelEl.textContent=speciesMeta[top.species].label+' fókusz, '+speciesMeta[top.species].window+' kritikus kijárási sáv, '+confidenceLabel(confidence).toLowerCase()+' megbízhatósággal.';}if(silhouetteEl){silhouetteEl.innerHTML=speciesArt[top.species]||'';}if(cinemaSpeciesEl){cinemaSpeciesEl.textContent=speciesMeta[top.species].label;}if(threatPulseEl){threatPulseEl.textContent=pulseLabel(top.score);}if(patternEl){patternEl.textContent=top.result.reasons.slice(0,2).join(' • ');}reasonEl.textContent='Fő kiváltó ok: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,7).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');modalScoreEl.innerHTML=String(top.score)+'<small>/100</small>';modalLevelEl.textContent=riskLevel(top.score).label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');renderHeatmap(matrix);if(spiderEl){renderSpider(top.ctx,controls());}if(spiderWidgetEl){renderSpider(top.ctx,controls(),spiderWidgetEl);}if(spiderStatsEl){renderSpiderStats(forecast,top);}noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • A számítás 2 múlt nap + 7 nap órás adataiból készül (sok száz mérési pont), a pontszám 0-100 skálájú kockázati index.';}
   function fetchForecast(lat,lon,label){var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&past_days=2&forecast_days=7&timezone=auto&wind_speed_unit=kmh';fetch(url).then(function(r){return r.json();}).then(function(json){render(json,label);}).catch(function(){locEl.textContent='Nincs kapcsolat';reasonEl.textContent='Az élő meteorológia most nem elérhető, ezért nincs friss vadkár-index.';});}
   function rerender(){if(weatherData){render(weatherData,locEl.textContent||'Aktuális hely');}}
   if(toggleEl){toggleEl.addEventListener('click',function(){setRadarModal(true);});setRadarModal(false);}
@@ -1939,8 +1840,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pickerEl&&!pickerEl.hidden){setPickerModal(false);return;}if(e.key==='Escape'&&modalEl&&!modalEl.hidden){setRadarModal(false);}});
   if(modalEl){modalEl.addEventListener('click',function(e){if(e.target===modalEl){setRadarModal(false);}});}
   setPhenologyOptions();
-  setupWidgetGaugeSync();
-  refreshWidgetGaugeFromState();
   setupPicker(cropEl,'Kultúra');
   setupPicker(forestEl,'Erdőközel');
   setupPicker(damageEl,'Kárelőzmény');
