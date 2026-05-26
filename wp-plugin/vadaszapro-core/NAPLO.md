@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-detail-cleanup
+- A részletes radar nézetből eltávolítva a `Napi csúcsindex` panel.
+- `renderSpiderStats()` csak 2 blokkot hagy meg: fajkockázat + 7 napos trend.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `4b520ee`.
+
 ## 2026. 05. 26. – Session #radar-band-overflow-fix
 - Mobil/szűk nézetben a `Pont` oszlop levágása javítva.
 - Grid és tipográfia finomhangolás: `minmax(0,1fr)`, szélesebb score oszlop, `nowrap`, rövidebb legendafelirat.

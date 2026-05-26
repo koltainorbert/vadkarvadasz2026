@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-detail-cleanup
+- Kérés: a részletes radar nézetben ne jelenjen meg a `Napi csúcsindex` panel.
+- Javítás: `renderSpiderStats()` már csak a `Fajok kockázata` és `7 napos trend` blokkokat rendereli.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `4b520ee`.
+
 ## 2026. 05. 26. – Session #radar-band-overflow-fix
 - Hiba: a sávos widget jobb oldali `Pont` oszlopa mobil/szűk nézetben levágódott (`66/1...`).
 - Javítás: grid oszlopok `minmax(0,1fr)` középoszloppal, szélesebb pont oszlop, `nowrap` + tabuláris számok, rövidebb fejléc (`Kárkockázati sáv` → `Sáv`).
