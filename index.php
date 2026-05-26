@@ -757,25 +757,19 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-home-radar__spider#vhrSpiderWidget{position:relative;margin:0 0 10px !important;max-width:none !important;min-height:356px;overflow:hidden;border-color:rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 16px 26px rgba(0,0,0,.26);padding:8px !important;}
 .va-home-radar__spider#vhrSpiderWidget::before,
 .va-home-radar__spider#vhrSpiderWidget::after{content:none !important;display:none !important;animation:none !important;}
-.vhr-gauge{width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#131313,#070707);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.8);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
+.vhr-gauge{--vhr-alert:#1ccf64;width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#121212,#070707);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.8);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
 .vhr-gauge__head{display:flex;justify-content:space-between;align-items:baseline;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:800;}
 .vhr-gauge__head strong{font-size:1.8rem;line-height:1;color:#fff;letter-spacing:.03em;}
-.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#1a1a1a,#0b0b0b);overflow:hidden;min-height:214px;display:grid;place-items:center;padding:8px;}
-.vhr-gauge__arc-wrap{position:relative;width:min(290px,98%);aspect-ratio:2/1;overflow:hidden;}
-.vhr-gauge__arc-disc{position:absolute;left:0;top:0;width:100%;height:200%;border-radius:50%;background:conic-gradient(from 180deg,#2e7d32 0deg 36deg,#7cb342 36deg 72deg,#f9a825 72deg 108deg,#ef6c00 108deg 144deg,#c62828 144deg 180deg,transparent 180deg 360deg);border:2px solid rgba(255,255,255,.22);}
-.vhr-gauge__arc-disc::after{content:'';position:absolute;inset:17% 17% auto 17%;height:66%;border-radius:50%;background:radial-gradient(circle at 50% 55%,rgba(24,24,24,.98) 0%,rgba(8,8,8,.98) 70%);border:1px solid rgba(255,255,255,.14);}
-.vhr-gauge__ticks{position:absolute;left:0;top:0;width:100%;height:200%;border-radius:50%;background:repeating-conic-gradient(from 180deg,rgba(255,255,255,.7) 0deg .8deg,transparent .8deg 4deg);opacity:.5;mask:radial-gradient(circle,transparent 58%,#000 58%);}
-.vhr-gauge__needle{position:absolute;left:50%;bottom:0;width:6px;height:88%;background:linear-gradient(180deg,#fff1cb,#ff3c24);border-radius:6px;transform-origin:50% 100%;transform:translateX(-50%) rotate(-90deg);z-index:5;transition:transform .9s cubic-bezier(.2,.9,.2,1);}
-.vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-9px;transform:translateX(-50%);width:16px;height:16px;clip-path:polygon(50% 0,100% 100%,0 100%);background:#ffe7b9;}
-.vhr-gauge__hub{position:absolute;left:50%;bottom:0;width:24px;height:24px;transform:translate(-50%,50%);border-radius:50%;border:2px solid rgba(255,235,198,.92);background:#1a1a1a;z-index:6;box-shadow:0 0 0 4px rgba(0,0,0,.35);}
-.vhr-gauge__band{position:absolute;font-size:.56rem;font-weight:800;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.45);letter-spacing:.02em;}
-.vhr-gauge__band--1{left:8%;top:55%;}
-.vhr-gauge__band--2{left:22%;top:27%;}
-.vhr-gauge__band--3{left:42%;top:12%;}
-.vhr-gauge__band--4{right:21%;top:27%;}
-.vhr-gauge__band--5{right:8%;top:55%;}
-.vhr-gauge__scale{position:absolute;left:8px;right:8px;bottom:8px;display:flex;justify-content:space-between;color:rgba(255,255,255,.92);font-size:.58rem;font-weight:900;letter-spacing:.05em;z-index:4;}
-.vhr-gauge__value{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);font-size:.88rem;font-weight:900;color:#fff;letter-spacing:.05em;z-index:7;text-shadow:0 0 10px rgba(0,0,0,.5);}
+.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#181818,#0a0a0a);overflow:hidden;min-height:214px;display:grid;place-items:center;padding:8px;}
+.vhr-gauge__circle{position:relative;width:min(248px,92%);aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:radial-gradient(circle at 50% 50%,rgba(25,25,25,1) 0%,rgba(9,9,9,1) 74%);}
+.vhr-gauge__ring{position:absolute;inset:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18);}
+.vhr-gauge__sweep{position:absolute;inset:14px;border-radius:50%;background:conic-gradient(from -135deg,#16c85f 0deg,#9fcd2f 85deg,#ffa31a 170deg,#ff5a1e 240deg,#da1818 300deg,#16c85f 360deg);opacity:.78;mask:radial-gradient(circle,transparent 58%,#000 58%);}
+.vhr-gauge__ticks{position:absolute;inset:12px;border-radius:50%;background:repeating-conic-gradient(from -135deg,rgba(255,255,255,.72) 0deg .9deg,transparent .9deg 5deg);mask:radial-gradient(circle,transparent 66%,#000 66%);opacity:.45;}
+.vhr-gauge__needle{position:absolute;left:50%;top:50%;width:6px;height:42%;margin-left:-3px;background:var(--vhr-alert);border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(-135deg);z-index:4;transition:transform .9s cubic-bezier(.2,.9,.2,1),background .25s ease;box-shadow:0 0 12px color-mix(in srgb,var(--vhr-alert) 75%,transparent);}
+.vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-10px;margin-left:-8px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid #ffe9c9;}
+.vhr-gauge__hub{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid rgba(255,235,198,.92);background:#171717;z-index:5;}
+.vhr-gauge__scale{position:absolute;left:12px;right:12px;bottom:16px;display:flex;justify-content:space-between;color:rgba(255,255,255,.92);font-size:.6rem;font-weight:900;letter-spacing:.06em;z-index:4;}
+.vhr-gauge__value{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);font-size:1rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.05em;z-index:6;text-shadow:0 0 10px rgba(0,0,0,.5);}
 .vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
 .vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
 .vhr-gauge__footer span{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);}
@@ -791,10 +785,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .vhr-gauge{padding:8px;gap:7px;}
   .vhr-gauge__head strong{font-size:1.55rem;}
   .vhr-gauge__dial{min-height:188px;}
-  .vhr-gauge__arc-wrap{width:min(240px,100%);}
-  .vhr-gauge__needle{height:86%;}
-  .vhr-gauge__band{font-size:.5rem;}
-  .vhr-gauge__scale{font-size:.52rem;}
+  .vhr-gauge__circle{width:min(220px,94%);}
+  .vhr-gauge__needle{height:41%;}
+  .vhr-gauge__scale{font-size:.54rem;left:8px;right:8px;bottom:13px;}
+  .vhr-gauge__value{font-size:.9rem;}
   .vhr-gauge__footer strong{font-size:1.05rem;}
 }
 
@@ -1838,21 +1832,19 @@ body.va-home-radar-picker-open{overflow:hidden;}
     if(!spiderWidgetEl){return;}
     var safeScore=clamp(parseInt(score,10)||0,0,100);
     var safeSpecies=speciesLabel||'--';
-    var ang=-90+(safeScore*180/100);
+    var ang=-135+(safeScore*270/100);
+    var hue=Math.round(120-(safeScore*1.2));
+    var alertColor='hsl('+hue+',88%,48%)';
     var levelTxt=riskLevel(safeScore).label;
     spiderWidgetEl.innerHTML=''
-      +'<div class="vhr-gauge">'
+      +'<div class="vhr-gauge" style="--vhr-alert:'+alertColor+'">'
       +'<div class="vhr-gauge__head"><span>Vadászkár veszélymérő</span><strong>'+String(safeScore).padStart(3,'0')+'</strong></div>'
       +'<div class="vhr-gauge__dial">'
-      +'<div class="vhr-gauge__arc-wrap">'
-      +'<div class="vhr-gauge__arc-disc"></div>'
+      +'<div class="vhr-gauge__circle">'
+      +'<div class="vhr-gauge__ring"></div>'
+      +'<div class="vhr-gauge__sweep"></div>'
       +'<div class="vhr-gauge__ticks"></div>'
-      +'<span class="vhr-gauge__band vhr-gauge__band--1">Alacsony</span>'
-      +'<span class="vhr-gauge__band vhr-gauge__band--2">Mérsékelt</span>'
-      +'<span class="vhr-gauge__band vhr-gauge__band--3">Magas</span>'
-      +'<span class="vhr-gauge__band vhr-gauge__band--4">Súlyos</span>'
-      +'<span class="vhr-gauge__band vhr-gauge__band--5">Kritikus</span>'
-      +'<div class="vhr-gauge__scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div>'
+      +'<div class="vhr-gauge__scale"><span>0</span><span>50</span><span>100</span></div>'
       +'<div class="vhr-gauge__needle"></div>'
       +'<div class="vhr-gauge__hub"></div>'
       +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
@@ -1863,9 +1855,9 @@ body.va-home-radar-picker-open{overflow:hidden;}
       +'</div>';
     var needleEl=spiderWidgetEl.querySelector('.vhr-gauge__needle');
     if(needleEl){
-      needleEl.style.transform='translateX(-50%) rotate(-90deg)';
+      needleEl.style.transform='translate(-50%,-100%) rotate(-135deg)';
       window.requestAnimationFrame(function(){
-        needleEl.style.transform='translateX(-50%) rotate('+ang+'deg)';
+        needleEl.style.transform='translate(-50%,-100%) rotate('+ang+'deg)';
       });
     }
   }
