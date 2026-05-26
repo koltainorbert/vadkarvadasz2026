@@ -762,9 +762,10 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-gauge__head strong{font-size:1.8rem;line-height:1;color:#fff;letter-spacing:.03em;}
 .vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#181818,#0a0a0a);overflow:hidden;min-height:186px;display:grid;place-items:center;padding:10px 12px;}
 .vhr-gauge__bar-wrap{position:relative;width:min(330px,100%);padding-top:30px;padding-bottom:52px;}
-.vhr-gauge__track{height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(90deg,#2f8f3a 0%,#3b9f36 16%,#79a321 30%,#b8a700 42%,#f0b100 54%,#f39d00 66%,#ef7300 80%,#e44600 92%,#c90f1f 100%);box-shadow:inset 0 2px 4px rgba(255,255,255,.1),inset 0 -3px 6px rgba(0,0,0,.35);}
+.vhr-gauge__track{height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(90deg,#2f8f3a 0%,#3b9f36 16%,#79a321 30%,#b8a700 42%,#f0b100 54%,#f39d00 66%,#ef7300 80%,#e44600 92%,#c90f1f 100%);box-shadow:inset 0 1px 2px rgba(255,255,255,.1),inset 0 -2px 4px rgba(0,0,0,.35);}
 .vhr-gauge__marker{position:absolute;top:0;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.45);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;}
-.vhr-gauge__knob{position:absolute;top:30px;left:1%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.45),rgba(110,110,110,.92));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 10px rgba(0,0,0,.4),0 0 0 2px rgba(0,0,0,.35);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:3;}
+.vhr-gauge__knob{position:absolute;top:30px;left:1%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.45),rgba(110,110,110,.92));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 10px rgba(0,0,0,.4),0 0 0 2px rgba(0,0,0,.35);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:3;}
+.vhr-gauge__cursor{position:absolute;top:18px;left:1%;width:2px;height:40px;transform:translateX(-50%);background:rgba(255,255,255,.95);border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.45);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:2;}
 .vhr-gauge__ticks{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 3px;}
 .vhr-gauge__ticks span{position:relative;font-size:.58rem;font-weight:800;color:rgba(255,255,255,.88);min-width:20px;text-align:center;}
 .vhr-gauge__ticks span::before{content:'';position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:2px;height:12px;background:rgba(255,255,255,.62);border-radius:2px;}
@@ -785,8 +786,9 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .vhr-gauge__head strong{font-size:1.55rem;}
   .vhr-gauge__dial{min-height:170px;padding:9px 8px;}
   .vhr-gauge__bar-wrap{padding-top:26px;padding-bottom:48px;}
-  .vhr-gauge__track{height:36px;}
-  .vhr-gauge__knob{width:40px;height:40px;top:26px;}
+  .vhr-gauge__track{height:20px;}
+  .vhr-gauge__knob{width:30px;height:30px;top:26px;}
+  .vhr-gauge__cursor{top:16px;height:34px;}
   .vhr-gauge__ticks span{font-size:.52rem;}
   .vhr-gauge__value{font-size:.9rem;}
   .vhr-gauge__footer strong{font-size:1.05rem;}
@@ -1846,6 +1848,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
       +'<div class="vhr-gauge__marker">'+safeScore+'</div>'
       +'<div class="vhr-gauge__track"></div>'
       +'<div class="vhr-gauge__knob" style="'+logoStyle+'"></div>'
+      +'<div class="vhr-gauge__cursor"></div>'
       +'<div class="vhr-gauge__ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span></div>'
       +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
       +'</div>'
@@ -1855,12 +1858,15 @@ body.va-home-radar-picker-open{overflow:hidden;}
       +'</div>';
     var knobEl=spiderWidgetEl.querySelector('.vhr-gauge__knob');
     var markerEl=spiderWidgetEl.querySelector('.vhr-gauge__marker');
-    if(knobEl&&markerEl){
+    var cursorEl=spiderWidgetEl.querySelector('.vhr-gauge__cursor');
+    if(knobEl&&markerEl&&cursorEl){
       knobEl.style.left='1%';
       markerEl.style.left='1%';
+      cursorEl.style.left='1%';
       window.requestAnimationFrame(function(){
         knobEl.style.left=pos+'%';
         markerEl.style.left=pos+'%';
+        cursorEl.style.left=pos+'%';
       });
     }
   }
