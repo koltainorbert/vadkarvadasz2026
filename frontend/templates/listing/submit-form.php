@@ -1834,10 +1834,6 @@ body.va-modal-open {
                         <label>Sorozatszám</label>
                         <input type="text" name="other_weapon_serial_number" class="va-input" placeholder="Opcionális" value="<?php echo esc_attr((string)($edit_meta['other_weapon_serial_number'] ?? '')); ?>">
                     </div>
-                    <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="legalis-hobbi-sport-eszkoz,gyujtoi,dekor,muzealis,diszfegyver,tulelo-eszkoz,taktikai-eszkoz,egyeb" style="display:none;grid-column:1 / -1;">
-                        <label>Megjegyzés / rendeltetés</label>
-                        <textarea name="other_weapon_general_notes" class="va-input" rows="2" placeholder="Használat, gyűjtemény, dekoráció, muzeális cél, stb."><?php echo esc_textarea((string)($edit_meta['other_weapon_general_notes'] ?? '')); ?></textarea>
-                    </div>
                     <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="ij" style="display:none;grid-column:1 / -1;">
                         <strong>Íj</strong>
                     </div>
