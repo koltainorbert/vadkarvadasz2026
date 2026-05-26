@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 05. 26. – Session: Időjárás + Radar betöltési hiba (CORS) gyorsjavítás
+
+### Mit csináltunk [x]
+- [x] Hibadiagnózis élő oldalon: az Open-Meteo direkt böngészős hívásokat CORS blokkolta, ezért az időjárás és radar egyszerre állt meg
+- [x] Új AJAX végpont: `va_weather_proxy` (`weather` + `radar` mód) hozzáadva a plugin AJAX osztályába
+- [x] Frontend hívások átállítva `admin-ajax.php?action=va_weather_proxy...` útvonalra
+- [x] A ténylegesen futó radar scriptben (`wp-theme/vadaszapro-theme/footer.php`) proxy-hiba esetére payload normalizálás + lokális becsült fallback adatok
+- [x] Élő ellenőrzés megtörtént: időjárás sor kitölt, radar pontszám és indoklás megjelenik
+
+### Hol tartunk
+Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer proxy + kliens fallback réteggel védett, így külső API hiba esetén sem marad üres.
+
+### TODO
+- [ ] Ha kell, külön jelölés a UI-ban, ha fallback (becsült) adatból számol a radar
+
+---
+
 ## 2026. 05. 26. – Session #radar-svg-source-fix — "az SVG azt akarom" javítás
 
 ### Kérés
