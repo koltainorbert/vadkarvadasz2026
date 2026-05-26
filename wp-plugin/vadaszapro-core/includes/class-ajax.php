@@ -383,6 +383,10 @@ class VA_Ajax {
         add_action( 'wp_ajax_va_refresh_listing', [ __CLASS__, 'refresh_listing' ] );
         add_action( 'wp_ajax_va_bulk_listings',   [ __CLASS__, 'bulk_listings' ] );
         add_action( 'wp_ajax_va_set_sale_price',  [ __CLASS__, 'set_sale_price' ] );
+
+        // Időjárás proxy (CORS-biztos Open-Meteo hívás)
+        add_action( 'wp_ajax_va_weather_proxy',        [ __CLASS__, 'weather_proxy' ] );
+        add_action( 'wp_ajax_nopriv_va_weather_proxy', [ __CLASS__, 'weather_proxy' ] );
     }
 
     /* ── Rate limiting helper ──────────────────────────── */
@@ -408,6 +412,75 @@ class VA_Ajax {
             set_transient( $key, $count + 1, $window );
         }
         return false;
+    }
+
+    public static function weather_proxy(): void {
+        if ( self::is_rate_limited( 'weather_proxy', 120, 60 ) ) {
+            status_header( 429 );
+            wp_send_json_error( [ 'message' => 'Túl sok kérés, próbáld újra később.' ], 429 );
+        }
+
+        $lat  = isset( $_GET['lat'] ) ? (float) wp_unslash( $_GET['lat'] ) : 0.0;
+        $lon  = isset( $_GET['lon'] ) ? (float) wp_unslash( $_GET['lon'] ) : 0.0;
+        $mode = isset( $_GET['mode'] ) ? sanitize_key( wp_unslash( $_GET['mode'] ) ) : 'weather';
+
+        if ( $lat < -90 || $lat > 90 || $lon < -180 || $lon > 180 ) {
+            wp_send_json_error( [ 'message' => 'Érvénytelen koordináták.' ], 400 );
+        }
+
+        if ( ! in_array( $mode, [ 'weather', 'radar' ], true ) ) {
+            wp_send_json_error( [ 'message' => 'Érvénytelen lekérdezési mód.' ], 400 );
+        }
+
+        $base = 'https://api.open-meteo.com/v1/forecast';
+        if ( $mode === 'radar' ) {
+            $query = [
+                'latitude'        => $lat,
+                'longitude'       => $lon,
+                'current'         => 'temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover',
+                'hourly'          => 'temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm',
+                'daily'           => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max',
+                'past_days'       => 2,
+                'forecast_days'   => 7,
+                'timezone'        => 'auto',
+                'wind_speed_unit' => 'kmh',
+            ];
+        } else {
+            $query = [
+                'latitude'        => $lat,
+                'longitude'       => $lon,
+                'current'         => 'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m',
+                'daily'           => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max',
+                'forecast_days'   => 8,
+                'timezone'        => 'auto',
+                'wind_speed_unit' => 'kmh',
+            ];
+        }
+
+        $url  = add_query_arg( $query, $base );
+        $resp = wp_remote_get( $url, [
+            'timeout'    => 15,
+            'redirection'=> 2,
+            'sslverify'  => true,
+            'user-agent' => 'VA-Weather-Proxy/1.0',
+        ] );
+
+        if ( is_wp_error( $resp ) ) {
+            wp_send_json_error( [ 'message' => 'Időjárás szolgáltatás átmenetileg nem elérhető.' ], 502 );
+        }
+
+        $code = (int) wp_remote_retrieve_response_code( $resp );
+        $body = (string) wp_remote_retrieve_body( $resp );
+        if ( $code < 200 || $code >= 300 || $body === '' ) {
+            wp_send_json_error( [ 'message' => 'Hibás válasz az időjárás szolgáltatótól.' ], 502 );
+        }
+
+        $json = json_decode( $body, true );
+        if ( ! is_array( $json ) ) {
+            wp_send_json_error( [ 'message' => 'Érvénytelen időjárás válasz.' ], 502 );
+        }
+
+        wp_send_json( $json );
     }
 
     /* ── Hirdetés szerkesztés (frontend) ──────────────── */
