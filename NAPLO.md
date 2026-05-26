@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-special-settings-double
+- Kérés: a speciális beállítások menü alatt kb. 2x ennyi beállítás legyen.
+- Megvalósítás: a korábbi 12 mező mellé még 12 új speciális tényező került ugyanabba a picker-rendszerbe.
+- Új mezők: tábla perem takarása, dagonya/sárfolt, sózó, vadkamera aktivitás, emberi forgalom, kutya/ragadozónyom, éjszakai fényterhelés, nappali fekvőhely, friss ürülék, rejtett vonulási sáv, vadriasztás, táblaszéli kárjelek.
+- Logika: az új mezők nem csak UI-elemek, hanem fajonként módosítják a kockázati score-t és a fő indoklásokat is.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #vadkar-radar-two-line-title
 - Kérés: a widgetben a `Vadkár Radar` ne egy sorban legyen, mert kilóg, a logó viszont maradjon.
 - Javítás: a widget címe két soros lett (`Vadkár` / `Radar`), a logó bal oldalon maradt.
