@@ -1197,15 +1197,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
     var tone=moonTone(now,frac);
     ctx.clearRect(0,0,W,H);
 
-    if(frac>.55){
-      var gw=ctx.createRadialGradient(cx,cy,R*.62,cx,cy,R*2.18);
-      var ga=(frac-.55)/.45*.2;
-      gw.addColorStop(0,tone.glowCore.replace('ALPHA',ga));
-      gw.addColorStop(.6,'rgba(170,180,160,'+(ga*.36)+')');
-      gw.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=gw;ctx.fillRect(0,0,W,H);
-    }
-
     ctx.beginPath();ctx.arc(cx,cy,R,0,2*PI);
     var dark=ctx.createRadialGradient(cx-R*.12,cy-R*.18,R*.04,cx,cy,R*1.08);
     dark.addColorStop(0,'#1c1d27');dark.addColorStop(1,'#07070d');

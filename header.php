@@ -46,7 +46,7 @@
 <div class="va-site-wrap<?php echo ! is_front_page() ? ' va-site-wrap--inner' : ''; ?>">
     <?php $auctions_enabled = function_exists( 'va_auctions_enabled' ) ? va_auctions_enabled() : true; ?>
     <?php
-    $brand_name = 'Vadkár Radar';
+    $brand_name = 'Vadkár Vadász';
     $brand_icon  = get_option( 'va_brand_icon_url', '' );
     $header_logo = get_option( 'va_header_logo_url', '' );
     $hero_logo   = get_option( 'va_hero_logo_url', '' );

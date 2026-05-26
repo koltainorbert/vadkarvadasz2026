@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #header-brand-and-moon-background-cleanup
+- Kérés: a fejlécben a logó melletti felirat ne `Vadkár Radar`, hanem `Vadkár Vadász` legyen.
+- Kérés: a holdnaptár widgetben a hold mögül tűnjön el a négyzetes háttér.
+- Javítás: a header látható brand neve mind a root, mind a theme header sablonban `Vadkár Vadász` lett.
+- Javítás: a hold widget rajzolásából kikerült a teljes canvasra húzott glow-réteg, így a hold mögötti kockás háttér eltűnik.
+- Érintett: `NAPLO.md`, `header.php`, `index.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-widget-above-agrar-and-equal-spacing
 - Kérés: a radar widget kerüljön az agrár naptár widget fölé, minden sidebar widget azonos távolságra legyen egymástól, és a részletes popup címében a szöveg `Teljes Vadkár Radar detektálás` legyen.
 - Javítás: a sidebar widgetek explicit flex sorrendet kaptak, így a `Vadkár Radar` közvetlenül az agrár naptár elé került.
