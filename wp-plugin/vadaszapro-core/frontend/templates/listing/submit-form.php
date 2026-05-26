@@ -347,6 +347,28 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
             'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
             'exchange_target' => get_post_meta( $maybe_id, 'va_exchange_target', true ),
+            'job_role' => get_post_meta( $maybe_id, 'va_job_role', true ),
+            'job_role_other' => get_post_meta( $maybe_id, 'va_job_role_other', true ),
+            'job_county' => get_post_meta( $maybe_id, 'va_job_county', true ),
+            'job_country' => get_post_meta( $maybe_id, 'va_job_country', true ),
+            'job_education' => get_post_meta( $maybe_id, 'va_job_education', true ),
+            'job_hunting_license' => get_post_meta( $maybe_id, 'va_job_hunting_license', true ),
+            'job_firearm_license' => get_post_meta( $maybe_id, 'va_job_firearm_license', true ),
+            'job_drivers_license' => get_post_meta( $maybe_id, 'va_job_drivers_license', true ),
+            'job_experience' => get_post_meta( $maybe_id, 'va_job_experience', true ),
+            'job_language' => get_post_meta( $maybe_id, 'va_job_language', true ),
+            'job_dog_experience' => get_post_meta( $maybe_id, 'va_job_dog_experience', true ),
+            'job_trophy_experience' => get_post_meta( $maybe_id, 'va_job_trophy_experience', true ),
+            'job_tasks' => get_post_meta( $maybe_id, 'va_job_tasks', true ),
+            'job_work_time' => get_post_meta( $maybe_id, 'va_job_work_time', true ),
+            'job_accommodation' => get_post_meta( $maybe_id, 'va_job_accommodation', true ),
+            'job_meals' => get_post_meta( $maybe_id, 'va_job_meals', true ),
+            'job_company_vehicle' => get_post_meta( $maybe_id, 'va_job_company_vehicle', true ),
+            'job_company_weapon' => get_post_meta( $maybe_id, 'va_job_company_weapon', true ),
+            'job_salary_type' => get_post_meta( $maybe_id, 'va_job_salary_type', true ),
+            'job_salary_min' => get_post_meta( $maybe_id, 'va_job_salary_min', true ),
+            'job_salary_max' => get_post_meta( $maybe_id, 'va_job_salary_max', true ),
+            'job_salary_currency' => get_post_meta( $maybe_id, 'va_job_salary_currency', true ),
             'bow_type' => get_post_meta( $maybe_id, 'va_bow_type', true ),
             'bow_handedness' => get_post_meta( $maybe_id, 'va_bow_handedness', true ),
             'bow_draw_weight' => get_post_meta( $maybe_id, 'va_bow_draw_weight', true ),
@@ -2362,26 +2384,205 @@ body.va-modal-open {
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div>
-            <?php $job_location_val = (string)($edit_meta['job_location'] ?? ''); ?>
-            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
-                <label>Szolgáltatás helyszíne</label>
-                <select name="job_location" class="va-select">
-                    <option value="">– Válasszon –</option>
-                    <?php if ($job_location_val !== ''): ?>
-                        <option value="<?php echo esc_attr($job_location_val); ?>" selected><?php echo esc_html($job_location_val); ?></option>
-                    <?php endif; ?>
-                </select>
-            </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
-                <label>Szolgáltatás típusa</label>
-                <select name="job_type" class="va-select">
-                    <option value="">– Válasszon –</option>
-                    <option value="teljes"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'teljes' ); ?>>Teljes munkaidő</option>
-                    <option value="reszmunkaido"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'reszmunkaido' ); ?>>Részmunkaidő</option>
-                    <option value="projekt"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'projekt' ); ?>>Projekt / alkalmi</option>
-                    <option value="tavmunka"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'tavmunka' ); ?>>Távmunkás</option>
-                    <option value="egyeb"<?php selected( (string)($edit_meta['job_type'] ?? ''), 'egyeb' ); ?>>Egyéb</option>
-                </select>
+            <?php
+                $job_location_val = (string)($edit_meta['job_location'] ?? '');
+                $job_country_val = (string)($edit_meta['job_country'] ?? '');
+                $job_role_val = (string)($edit_meta['job_role'] ?? '');
+                $job_county_val = (int)($edit_meta['job_county'] ?? 0);
+                $job_drivers_license_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['job_drivers_license'] ?? ''))));
+            ?>
+            <div class="va-cat-rule-field" data-categories="allas,allas-hirdetes,munka,munkak,munkalehetoseg,munkalehetosegek,szolgaltatas">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Munkakör</label>
+                        <select name="job_role" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="hivatasos-vadasz"<?php echo selected( $job_role_val, 'hivatasos-vadasz', false ); ?>>Hivatásos vadász</option>
+                            <option value="vador"<?php echo selected( $job_role_val, 'vador', false ); ?>>Vadőr</option>
+                            <option value="vadgazdalkodasi-technikus"<?php echo selected( $job_role_val, 'vadgazdalkodasi-technikus', false ); ?>>Vadászgazdálkodási technikus</option>
+                            <option value="trofeabiralo"<?php echo selected( $job_role_val, 'trofeabiralo', false ); ?>>Trófeabíráló</option>
+                            <option value="vadaszhaz-gondnok"<?php echo selected( $job_role_val, 'vadaszhaz-gondnok', false ); ?>>Vadászház gondnok</option>
+                            <option value="fegyvermester"<?php echo selected( $job_role_val, 'fegyvermester', false ); ?>>Fegyvermester</option>
+                            <option value="sofor"<?php echo selected( $job_role_val, 'sofor', false ); ?>>Sofőr</option>
+                            <option value="kutyavezeto"<?php echo selected( $job_role_val, 'kutyavezeto', false ); ?>>Kutyavezető</option>
+                            <option value="ideny-munkas"<?php echo selected( $job_role_val, 'ideny-munkas', false ); ?>>Idénymunkás</option>
+                            <option value="egyeb"<?php echo selected( $job_role_val, 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Foglalkoztatás típusa</label>
+                        <select name="job_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="teljes-munkaido"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'teljes-munkaido', false ); ?>>Teljes munkaidő</option>
+                            <option value="reszmunkaido"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'reszmunkaido', false ); ?>>Részmunkaidő</option>
+                            <option value="szezonalis"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'szezonalis', false ); ?>>Szezonális</option>
+                            <option value="alkalmi"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'alkalmi', false ); ?>>Alkalmi</option>
+                            <option value="vallalkozoi"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'vallalkozoi', false ); ?>>Vállalkozói</option>
+                            <option value="gyakornoki"<?php echo selected( (string)($edit_meta['job_type'] ?? ''), 'gyakornoki', false ); ?>>Gyakornoki</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Település</label>
+                        <input type="text" name="job_location" class="va-input" placeholder="pl. Kaposvár" value="<?php echo esc_attr($job_location_val); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Megye</label>
+                        <select name="job_county" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <?php foreach ( $counties as $county ): ?>
+                                <option value="<?php echo esc_attr( $county->term_id ); ?>"<?php echo selected( $job_county_val, (int) $county->term_id, false ); ?>><?php echo esc_html( $county->name ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ország</label>
+                        <input type="text" name="job_country" class="va-input" placeholder="pl. Magyarország, Ausztria" value="<?php echo esc_attr($job_country_val); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Munkakör pontosítása (opcionális)</label>
+                        <input type="text" name="job_role_other" class="va-input" placeholder="pl. vendégvadásztatás, erdészeti asszisztens" value="<?php echo esc_attr((string)($edit_meta['job_role_other'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Szakmai adatok</strong></div>
+                    <div class="va-form-group">
+                        <label>Szükséges végzettség</label>
+                        <select name="job_education" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="nincs"<?php echo selected( (string)($edit_meta['job_education'] ?? ''), 'nincs', false ); ?>>Nincs</option>
+                            <option value="vadgazda"<?php echo selected( (string)($edit_meta['job_education'] ?? ''), 'vadgazda', false ); ?>>Vadgazda</option>
+                            <option value="erdesz"<?php echo selected( (string)($edit_meta['job_education'] ?? ''), 'erdesz', false ); ?>>Erdész</option>
+                            <option value="technikus"<?php echo selected( (string)($edit_meta['job_education'] ?? ''), 'technikus', false ); ?>>Technikus</option>
+                            <option value="felsofoku"<?php echo selected( (string)($edit_meta['job_education'] ?? ''), 'felsofoku', false ); ?>>Felsőfokú</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Vadászjegy szükséges?</label>
+                        <select name="job_hunting_license" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_hunting_license'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_hunting_license'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fegyvertartási engedély szükséges?</label>
+                        <select name="job_firearm_license" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_firearm_license'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_firearm_license'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Jogosítvány</label>
+                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="b"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> B</label>
+                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="be"<?php echo in_array('be', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> BE</label>
+                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="c"<?php echo in_array('c', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> C</label>
+                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="t"<?php echo in_array('t', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> T</label>
+                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="egyeb"<?php echo in_array('egyeb', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> Egyéb</label>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Tapasztalat</label>
+                        <select name="job_experience" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="palyakezdo"<?php echo selected( (string)($edit_meta['job_experience'] ?? ''), 'palyakezdo', false ); ?>>Pályakezdő</option>
+                            <option value="1-3ev"<?php echo selected( (string)($edit_meta['job_experience'] ?? ''), '1-3ev', false ); ?>>1–3 év</option>
+                            <option value="3-5ev"<?php echo selected( (string)($edit_meta['job_experience'] ?? ''), '3-5ev', false ); ?>>3–5 év</option>
+                            <option value="5plusz"<?php echo selected( (string)($edit_meta['job_experience'] ?? ''), '5plusz', false ); ?>>5+ év</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Nyelvtudás</label>
+                        <input type="text" name="job_language" class="va-input" placeholder="pl. angol, német" value="<?php echo esc_attr((string)($edit_meta['job_language'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kutyás tapasztalat</label>
+                        <select name="job_dog_experience" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_dog_experience'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_dog_experience'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Trófeabírálati tapasztalat</label>
+                        <select name="job_trophy_experience" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_trophy_experience'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_trophy_experience'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Munkaköri feladatok</label>
+                        <textarea name="job_tasks" class="va-input" rows="4" placeholder="Részletes feladatleírás..."><?php echo esc_textarea((string)($edit_meta['job_tasks'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Munka részletei</strong></div>
+                    <div class="va-form-group">
+                        <label>Munkaidő</label>
+                        <select name="job_work_time" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="nappal"<?php echo selected( (string)($edit_meta['job_work_time'] ?? ''), 'nappal', false ); ?>>Nappal</option>
+                            <option value="ejszaka"<?php echo selected( (string)($edit_meta['job_work_time'] ?? ''), 'ejszaka', false ); ?>>Éjszaka</option>
+                            <option value="valtott"<?php echo selected( (string)($edit_meta['job_work_time'] ?? ''), 'valtott', false ); ?>>Váltott</option>
+                            <option value="rugalmas"<?php echo selected( (string)($edit_meta['job_work_time'] ?? ''), 'rugalmas', false ); ?>>Rugalmas</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szállás biztosított?</label>
+                        <select name="job_accommodation" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_accommodation'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_accommodation'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Étkezés biztosított?</label>
+                        <select name="job_meals" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_meals'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_meals'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szolgálati jármű</label>
+                        <select name="job_company_vehicle" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_company_vehicle'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_company_vehicle'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szolgálati fegyver</label>
+                        <select name="job_company_weapon" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['job_company_weapon'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['job_company_weapon'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Fizetés</strong></div>
+                    <div class="va-form-group">
+                        <label>Fizetés típusa</label>
+                        <select name="job_salary_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="fix"<?php echo selected( (string)($edit_meta['job_salary_type'] ?? ''), 'fix', false ); ?>>Fix</option>
+                            <option value="oraber"<?php echo selected( (string)($edit_meta['job_salary_type'] ?? ''), 'oraber', false ); ?>>Órabér</option>
+                            <option value="jutalekos"<?php echo selected( (string)($edit_meta['job_salary_type'] ?? ''), 'jutalekos', false ); ?>>Jutalékos</option>
+                            <option value="megegyezes-szerint"<?php echo selected( (string)($edit_meta['job_salary_type'] ?? ''), 'megegyezes-szerint', false ); ?>>Megállapodás szerint</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fizetési sáv minimum</label>
+                        <input type="text" name="job_salary_min" class="va-input" placeholder="pl. 350000" value="<?php echo esc_attr((string)($edit_meta['job_salary_min'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fizetési sáv maximum</label>
+                        <input type="text" name="job_salary_max" class="va-input" placeholder="pl. 600000" value="<?php echo esc_attr((string)($edit_meta['job_salary_max'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Pénznem</label>
+                        <select name="job_salary_currency" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="HUF"<?php echo selected( (string)($edit_meta['job_salary_currency'] ?? ''), 'HUF', false ); ?>>HUF</option>
+                            <option value="EUR"<?php echo selected( (string)($edit_meta['job_salary_currency'] ?? ''), 'EUR', false ); ?>>EUR</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <?php endif; ?>
 
