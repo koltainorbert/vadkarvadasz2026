@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #takarmany-field-gap-fix
+- Hiba: a `Takarmány` kategória blokkban az `Egyéb vadfaj megnevezése` input és a `Részletezés (opcionális)` textarea összeért.
+- Javítás: a `feed_recommended_game` mező kapott felső margót (`margin-top:8px`) root + plugin mirror sablonban.
+- Eredmény: a két mező között látható, egységes térköz van.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
 ## 2026. 05. 26. – Session #ijak-slug-visibility-fix
 - Hiba: az `Íjak` kategóriában nem jelent meg az új íj-specifikus mezőblokk, csak az engedély checkbox látszott.
 - Ok: a kategória slug `ijak`, de a bow mezőblokk `data-categories` listájából ez kimaradt.

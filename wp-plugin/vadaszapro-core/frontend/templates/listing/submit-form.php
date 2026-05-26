@@ -1509,7 +1509,7 @@ body.va-modal-open {
                         <label class="va-check-label"><input type="checkbox" name="feed_game_pheasant" value="1"<?php echo (($edit_meta['feed_game_pheasant'] ?? '') === '1') ? ' checked' : ''; ?>> Fácán</label>
                         <label class="va-check-label"><input type="checkbox" name="feed_game_other" value="1"<?php echo (($edit_meta['feed_game_other'] ?? '') === '1') ? ' checked' : ''; ?>> Egyéb</label>
                         <input type="text" name="feed_game_other_text" class="va-input" placeholder="Egyéb vadfaj megnevezése" value="<?php echo esc_attr((string)($edit_meta['feed_game_other_text'] ?? '')); ?>" style="margin-top:8px;">
-                        <textarea name="feed_recommended_game" class="va-input" rows="2" placeholder="Részletezés (opcionális)"><?php echo esc_textarea((string)($edit_meta['feed_recommended_game'] ?? '')); ?></textarea>
+                        <textarea name="feed_recommended_game" class="va-input" rows="2" placeholder="Részletezés (opcionális)" style="margin-top:8px;"><?php echo esc_textarea((string)($edit_meta['feed_recommended_game'] ?? '')); ?></textarea>
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Összetevők</label>
