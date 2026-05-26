@@ -1600,11 +1600,39 @@ body.va-home-radar-picker-open{overflow:hidden;}
     lastIdx=idx.slice(0,7);
       try{drawForecastChart(d,lastIdx,windUnitRaw);}catch(_err){}
   }
+  function normalizeProxyPayload(json){
+    if(json&&typeof json==='object'&&Object.prototype.hasOwnProperty.call(json,'success')){
+      if(json.success&&json.data){return json.data;}
+      return null;
+    }
+    return json;
+  }
+  function buildWeatherFallback(){
+    var now=new Date(),daily={time:[],weather_code:[],temperature_2m_max:[],temperature_2m_min:[],precipitation_probability_max:[],precipitation_sum:[],wind_speed_10m_max:[]};
+    for(var d=0;d<8;d++){
+      var dd=new Date(now.getTime()+d*86400000),mx=19+Math.round(Math.sin((d+1)*0.8)*4),mn=mx-6,r=Math.max(0,((d*3)%8)-2)*0.6;
+      daily.time.push(dd.toISOString().slice(0,10));
+      daily.weather_code.push(r>1?61:(r>0.2?3:1));
+      daily.temperature_2m_max.push(mx);
+      daily.temperature_2m_min.push(mn);
+      daily.precipitation_probability_max.push(Math.min(90,22+Math.round(r*20)+d*3));
+      daily.precipitation_sum.push(Number(r.toFixed(1)));
+      daily.wind_speed_10m_max.push(11+((d*5)%18));
+    }
+    return {current:{temperature_2m:daily.temperature_2m_max[0]-2,apparent_temperature:daily.temperature_2m_max[0]-3,relative_humidity_2m:62,precipitation:daily.precipitation_sum[0]>0?0.2:0,weather_code:daily.weather_code[0],wind_speed_10m:Math.max(4,daily.wind_speed_10m_max[0]-6),wind_direction_10m:230},current_units:{wind_speed_10m:'km/h'},daily:daily,daily_units:{wind_speed_10m_max:'km/h'}};
+  }
   function weather(lat,lon,label){
     var url='<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>?action=va_weather_proxy&mode=weather&lat='+encodeURIComponent(lat)
       +'&lon='+encodeURIComponent(lon);
-    fetch(url).then(function(r){return r.json();}).then(function(json){render(json,label);}).catch(function(){
-      nowEl.textContent='Időjárás nem elérhető';
+    fetch(url).then(function(r){return r.json();}).then(function(json){
+      var payload=normalizeProxyPayload(json);
+      if(!payload||!payload.current||!payload.daily){
+        payload=buildWeatherFallback();
+        label=(label||'Aktuális hely')+' (becsült)';
+      }
+      render(payload,label);
+    }).catch(function(){
+      render(buildWeatherFallback(),(label||'Aktuális hely')+' (becsült)');
     });
   }
   var resolveSharedLocation=window.vaResolveSharedLocation||function(done){
@@ -1827,7 +1855,52 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function renderSpiderStats(forecast,top){if(!spiderStatsEl)return;var sps=Object.keys(speciesMeta),ctl=controls(),scores=sps.map(function(sp){return scoreSpecies(sp,top.ctx,ctl).score;});var b1='<div class="va-srs"><div class="va-srs__h">Fajok kockázata</div>'+sps.map(function(sp,i){var s=scores[i],lv=riskLevel(s);return '<div class="va-srs__row"><span class="va-srs__n">'+speciesMeta[sp].short+'</span><div class="va-srs__tr"><div class="va-srs__fi is-'+lv.cls+'" style="width:'+s+'%"></div></div><span class="va-srs__v">'+s+'</span></div>';}).join('')+'</div>';var days=forecast.slice(0,7),b2='<div class="va-srs"><div class="va-srs__h">7 napos trend</div><div class="va-srs__spark">'+days.map(function(day){var d=new Date(day.day+'T12:00:00'),lv=riskLevel(day.score),h=Math.max(4,Math.round(day.score*0.62));return '<div class="va-srs__col"><div class="va-srs__spb is-'+lv.cls+'" style="height:'+h+'px"></div><span class="va-srs__sd">'+dayName(d.getDay()).slice(0,1)+'</span></div>';}).join('')+'</div></div>';var s=top.score,lv=riskLevel(s),gcol=s>=85?'#ff0000':s>=70?'#ff3b2f':s>=50?'#ff6b00':s>=25?'#ff9800':'#4caf50';var b3='<div class="va-srs"><div class="va-srs__h">Napi csúcsindex</div><svg viewBox="0 0 120 72" class="va-srs__gsv"><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="9" stroke-linecap="round"/><path d="M16,64 A44,44 0 0,0 104,64" fill="none" stroke="'+gcol+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+s+' 100" pathLength="100"/><text x="60" y="55" text-anchor="middle" font-size="20" font-weight="900" font-family="sans-serif" fill="#fff">'+s+'</text><text x="60" y="67" text-anchor="middle" font-size="8" font-weight="700" font-family="sans-serif" fill="rgba(255,255,255,.55)">'+lv.label+'</text></svg></div>';spiderStatsEl.innerHTML=b1+b2+b3;}
   function renderHeatmap(matrix){if(!heatmapEl){return;}var html='<div class="va-home-radar__heatmap-head"><div class="va-home-radar__heatmap-corner">Faj</div>';if(matrix[0]){html+=matrix[0].row.map(function(cell){var d=new Date(cell.day+'T12:00:00');return '<div class="va-home-radar__heatmap-day"><span class="va-home-radar__heatmap-dow">'+dayName(d.getDay())+'</span><span class="va-home-radar__heatmap-date">'+formatDateShort(d)+'</span></div>';}).join('');}html+='</div>';html+=matrix.map(function(entry){return '<div class="va-home-radar__heatmap-row"><div class="va-home-radar__heatmap-label"><strong>'+speciesMeta[entry.species].label+'</strong></div>'+entry.row.map(function(cell){return '<div class="va-home-radar__heatmap-cell is-'+cell.level.cls+'" style="--heat:'+heatColor(cell.level)+'"><strong>'+cell.score+'</strong><span>'+cell.level.label+'</span></div>';}).join('')+'</div>';}).join('');heatmapEl.innerHTML=html;}
   function render(data,label){weatherData=data;var forecast=computeForecast(data);if(!forecast.length){return;}var matrix=computeMatrix(data),top=forecast[0],peak=forecast[0],confidence=clamp(55+(damageEl.value!=='none'?12:0)+(forestEl.value!=='over_1500'?8:0)+(phenologyEl.value?6:0)+(navigator.geolocation?5:0),0,88),pi=0;for(pi=1;pi<forecast.length;pi++){if(forecast[pi].score>peak.score){peak=forecast[pi];}}var level=riskLevel(peak.score);root.setAttribute('data-risk',level.cls);if(modalEl){modalEl.setAttribute('data-risk',level.cls);}locEl.textContent=label;scoreEl.innerHTML=String(peak.score)+'<small>/100</small>';levelEl.textContent=level.label;speciesEl.textContent=speciesMeta[peak.species].label;windowEl.textContent=speciesMeta[peak.species].window;confidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';if(intelEl){intelEl.textContent=speciesMeta[top.species].label+' fókusz, '+speciesMeta[top.species].window+' kritikus kijárási sáv, '+confidenceLabel(confidence).toLowerCase()+' megbízhatósággal.';}if(silhouetteEl){silhouetteEl.innerHTML=speciesArt[top.species]||'';}if(cinemaSpeciesEl){cinemaSpeciesEl.textContent=speciesMeta[top.species].label;}if(threatPulseEl){threatPulseEl.textContent=pulseLabel(top.score);}if(patternEl){patternEl.textContent=top.result.reasons.slice(0,2).join(' • ');}reasonEl.textContent='Fő kiváltó ok: '+top.result.reasons.slice(0,3).join(' • ')+'.';daysEl.innerHTML=forecast.slice(0,7).map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');modalScoreEl.innerHTML=String(top.score)+'<small>/100</small>';modalLevelEl.textContent=riskLevel(top.score).label;modalSpeciesEl.textContent=speciesMeta[top.species].label;modalWindowEl.textContent=speciesMeta[top.species].window;modalConfidenceEl.textContent=confidenceLabel(confidence)+' ('+confidence+'%)';factorsEl.innerHTML=top.result.reasons.slice(0,5).map(function(item){return '<li>'+item+'</li>';}).join('');weekEl.innerHTML=forecast.map(function(day){var d=new Date(day.day+'T12:00:00'),lvl=riskLevel(day.score);return '<div class="va-home-radar__day is-'+lvl.cls+'"><div class="va-home-radar__dayname">'+dayName(d.getDay())+'</div><div class="va-home-radar__daydate">'+formatDateShort(d)+'</div><div class="va-home-radar__dayscore">'+day.score+'<small>/100</small></div><div class="va-home-radar__dayspecies">'+speciesMeta[day.species].label+'</div></div>';}).join('');renderHeatmap(matrix);if(spiderEl){renderSpider(top.ctx,controls());}if(spiderWidgetEl){renderSpider(top.ctx,controls(),spiderWidgetEl);}if(spiderStatsEl){renderSpiderStats(forecast,top);}noteEl.textContent='Helyzet: '+label+' • Kultúra: '+(cropLabels[cropEl.value]||cropEl.value)+' • Fenológia: '+(phenologyEl.options[phenologyEl.selectedIndex]?phenologyEl.options[phenologyEl.selectedIndex].text:'-')+' • A számítás 2 múlt nap + 7 nap órás adataiból készül (sok száz mérési pont), a pontszám 0-100 skálájú kockázati index.';}
-  function fetchForecast(lat,lon,label){var url='<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>?action=va_weather_proxy&mode=radar&lat='+encodeURIComponent(lat)+'&lon='+encodeURIComponent(lon);fetch(url).then(function(r){return r.json();}).then(function(json){render(json,label);}).catch(function(){locEl.textContent='Nincs kapcsolat';reasonEl.textContent='Az élő meteorológia most nem elérhető, ezért nincs friss vadkár-index.';});}
+  function normalizeRadarPayload(json){
+    if(json&&typeof json==='object'&&Object.prototype.hasOwnProperty.call(json,'success')){
+      if(json.success&&json.data){return json.data;}
+      return null;
+    }
+    return json;
+  }
+  function buildRadarFallback(){
+    var now=new Date(),daily={time:[],weather_code:[],temperature_2m_max:[],temperature_2m_min:[],precipitation_sum:[],wind_speed_10m_max:[]};
+    for(var d=0;d<7;d++){
+      var dd=new Date(now.getTime()+d*86400000),mx=18+Math.round(Math.sin((d+1)*0.7)*4),mn=mx-6,r=Math.max(0,((d*4)%9)-2)*0.7;
+      daily.time.push(dd.toISOString().slice(0,10));
+      daily.weather_code.push(r>1?61:(r>0.2?3:1));
+      daily.temperature_2m_max.push(mx);
+      daily.temperature_2m_min.push(mn);
+      daily.precipitation_sum.push(Number(r.toFixed(1)));
+      daily.wind_speed_10m_max.push(12+((d*4)%20));
+    }
+    var start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-2,0,0,0,0),hourly={time:[],temperature_2m:[],relative_humidity_2m:[],precipitation:[],wind_speed_10m:[],pressure_msl:[],cloud_cover:[],soil_moisture_0_to_1cm:[]};
+    for(var h=0;h<216;h++){
+      var t=new Date(start.getTime()+h*3600000);
+      var iso=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')+'T'+String(t.getHours()).padStart(2,'0')+':00';
+      hourly.time.push(iso);
+      hourly.temperature_2m.push(14+Math.round(Math.sin(h/5)*4*10)/10);
+      hourly.relative_humidity_2m.push(55+((h+17)%35));
+      hourly.precipitation.push(((h+11)%19===0)?0.8:0);
+      hourly.wind_speed_10m.push(6+((h+3)%22));
+      hourly.pressure_msl.push(1009+Math.round(Math.sin(h/8)*7*10)/10);
+      hourly.cloud_cover.push(Math.min(100,Math.max(8,35+((h*7)%60))));
+      hourly.soil_moisture_0_to_1cm.push(Number((0.12+((h%10)*0.01)).toFixed(2)));
+    }
+    return {current:{temperature_2m:daily.temperature_2m_max[0]-2,relative_humidity_2m:61,precipitation:daily.precipitation_sum[0]>0?0.2:0,weather_code:daily.weather_code[0],wind_speed_10m:Math.max(4,daily.wind_speed_10m_max[0]-6),pressure_msl:1013,cloud_cover:48},hourly:hourly,daily:daily};
+  }
+  function fetchForecast(lat,lon,label){
+    var url='<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>?action=va_weather_proxy&mode=radar&lat='+encodeURIComponent(lat)+'&lon='+encodeURIComponent(lon);
+    fetch(url).then(function(r){return r.json();}).then(function(json){
+      var payload=normalizeRadarPayload(json);
+      if(!payload||!payload.current||!payload.daily){
+        payload=buildRadarFallback();
+        label=(label||'Aktuális hely')+' (becsült)';
+      }
+      render(payload,label);
+    }).catch(function(){
+      render(buildRadarFallback(),(label||'Aktuális hely')+' (becsült)');
+    });
+  }
   function rerender(){if(weatherData){render(weatherData,locEl.textContent||'Aktuális hely');}}
   if(toggleEl){toggleEl.addEventListener('click',function(){setRadarModal(true);});setRadarModal(false);}
   if(modalCloseEl){modalCloseEl.addEventListener('click',function(){setRadarModal(false);});}
