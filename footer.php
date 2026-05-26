@@ -423,12 +423,8 @@
                     function fetchForecast(lat,lon,label){
                         locationLabel=label;
                         statusEl.textContent='Meteorológia...';
-                        var url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)
-                            +'&longitude='+encodeURIComponent(lon)
-                            +'&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,pressure_msl,cloud_cover'
-                            +'&hourly=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,pressure_msl,cloud_cover,soil_moisture_0_to_1cm'
-                            +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max'
-                            +'&past_days=2&forecast_days=7&timezone=auto&wind_speed_unit=kmh';
+                        var url='<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>?action=va_weather_proxy&mode=radar&lat='+encodeURIComponent(lat)
+                            +'&lon='+encodeURIComponent(lon);
                         fetch(url).then(function(r){ return r.json(); }).then(function(json){
                             weatherData=json;
                             renderForecast(json);
