@@ -756,8 +756,28 @@ body.va-home-radar-picker-open{overflow:hidden;}
   box-shadow:0 12px 24px rgba(0,0,0,.34),inset 0 0 18px rgba(90,170,255,.12),inset 0 0 20px rgba(255,70,70,.06) !important;
 }
 .sw-dot--on{
-  background:#45d3ff !important;
-  box-shadow:0 0 8px rgba(69,211,255,.95) !important;
+  background:#00ff66 !important;
+  box-shadow:0 0 8px rgba(0,255,102,.95) !important;
+}
+
+/* Status semantics: current/active = green, forbidden/inactive = red. */
+.va-agri__tag.is-on,
+.va-weather__agri-tag.is-now,
+.sw-dot--on{
+  color:#caffdf !important;
+  background:rgba(0,190,95,.24) !important;
+  border-color:rgba(0,255,120,.55) !important;
+}
+.va-agri__tag.is-off,
+.va-weather__agri-tag.is-off,
+.sw-dot--off{
+  color:#ffd2d2 !important;
+  background:rgba(220,40,40,.24) !important;
+  border-color:rgba(255,90,90,.58) !important;
+}
+.sw-row--soon,
+.sw-row--closing{
+  background:rgba(140,20,20,.18) !important;
 }
 </style>
 
