@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #search-topbar-breadcrumb-cleanup
+- Kérés: a keresési oldal tetejéről tűnjenek el a kategória/chip elemek, a főcím legyen fehér, a kis ikon kerüljön ki, és helyette jelenjen meg egy `Főoldal / aktuális szűrés` sáv.
+- Javítás: a keresési landing blokk a felső chip-listák helyett breadcrumb sort és nagy fehér H1 címet renderel.
+- Javítás: a breadcrumb második eleme dinamikusan az aktuális szűrésből épül (`bmw`, márka + modell, kategória vagy alap cím).
+- Javítás: a szűrősáv címe megtisztítva jelenik meg, így a korábbi emoji/ikon nem látszik.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/search.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`.
+
 ## 2026. 05. 26. – Session #header-search-archive-route-fix
 - Hiba: az `Összes találat` link továbbra is a `va-hirdetes-kereses/?s=...` URL-re ment, ami live környezetben 404-et adott.
 - Ok: a header keresőformjai és a dropdown all-results linkje a külön keresőoldal permalinkjét használta alap-URL-nek, nem a stabil hirdetés archive útvonalat.

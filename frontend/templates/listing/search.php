@@ -77,6 +77,32 @@ $top_model_links     = [];
 if ( $url_brand !== '' && ! empty( $vehicle_brand_models[ $url_brand ] ) && is_array( $vehicle_brand_models[ $url_brand ] ) ) {
     $top_model_links = array_slice( $vehicle_brand_models[ $url_brand ], 0, 24 );
 }
+$active_category_name = '';
+if ( $url_cat > 0 ) {
+    $active_category = get_term( $url_cat, 'va_category' );
+    if ( $active_category instanceof WP_Term && ! is_wp_error( $active_category ) ) {
+        $active_category_name = (string) $active_category->name;
+    }
+}
+$heading_parts = [];
+if ( $url_brand !== '' ) {
+    $heading_parts[] = $url_brand;
+}
+if ( $url_model !== '' ) {
+    $heading_parts[] = $url_model;
+}
+if ( $url_s !== '' ) {
+    $heading_parts[] = $url_s;
+}
+if ( empty( $heading_parts ) && $active_category_name !== '' ) {
+    $heading_parts[] = $active_category_name;
+}
+$page_heading = ! empty( $heading_parts ) ? implode( ' ', $heading_parts ) : $landing_title;
+$breadcrumb_label = $page_heading !== '' ? $page_heading : 'Hirdetések';
+$plain_filter_title = trim( preg_replace( '/^[^\p{L}\p{N}]+/u', '', (string) $lp_filter_title ) );
+if ( $plain_filter_title === '' ) {
+    $plain_filter_title = 'Hirdetések keresése';
+}
 
 // ── Felhasználó-kereső mód ────────────────────────────────────
 if ( $url_user_search ) {
@@ -146,44 +172,19 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
 <div class="va-wrap">
     <?php va_display_flash(); ?>
 
-    <section class="va-search-landing" style="display:none !important;margin-bottom:22px;padding:18px 20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));" aria-hidden="true">
-        <h1 style="margin:0 0 8px;font-size:clamp(24px,4vw,38px);line-height:1.1;color:#fff;"><?php echo esc_html( $landing_title ); ?></h1>
-        <p style="margin:0 0 16px;color:rgba(255,255,255,.72);max-width:860px;"><?php echo esc_html( $landing_intro ); ?></p>
-
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <?php foreach ( $top_brand_links as $brand_link ): ?>
-                <a href="<?php echo esc_url( add_query_arg( 'brand', (string) $brand_link, $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:#fff;text-decoration:none;background:rgba(255,255,255,.03);">
-                    <?php echo esc_html( (string) $brand_link ); ?>
-                </a>
-            <?php endforeach; ?>
+    <section class="va-search-landing" style="display:block !important;margin-bottom:22px;padding:14px 18px 16px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="color:rgba(255,255,255,.7);text-decoration:none;">Főoldal</a>
+            <span style="color:rgba(255,255,255,.38);">/</span>
+            <span style="color:#fff;"><?php echo esc_html( $breadcrumb_label ); ?></span>
         </div>
-
-        <?php if ( ! empty( $top_model_links ) ) : ?>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <?php foreach ( $top_model_links as $model_link ): ?>
-                <a href="<?php echo esc_url( add_query_arg( [ 'brand' => $url_brand, 'model' => (string) $model_link ], $search_url ) ); ?>" style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,0,0,.28);color:#fff;text-decoration:none;background:rgba(255,0,0,.08);">
-                    <?php echo esc_html( (string) $model_link ); ?>
-                </a>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-
-        <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);max-width:920px;">
-            <h2 style="margin:0 0 10px;font-size:clamp(18px,2.6vw,26px);line-height:1.2;color:#fff;"><?php echo esc_html( $landing_seo_heading ); ?></h2>
-            <p style="margin:0;color:rgba(255,255,255,.72);line-height:1.7;"><?php echo esc_html( $landing_seo_text ); ?></p>
-            <?php if ( ! empty( $landing_seo_points ) ) : ?>
-                <ul style="margin:14px 0 0;padding-left:18px;color:rgba(255,255,255,.82);line-height:1.7;">
-                    <?php foreach ( $landing_seo_points as $landing_point ) : ?>
-                        <li><?php echo esc_html( (string) $landing_point ); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </div>
+        <h1 style="margin:0 0 6px;font-size:clamp(28px,4vw,40px);line-height:1.1;color:#fff;font-weight:900;"><?php echo esc_html( $page_heading ); ?></h1>
+        <p style="margin:0;color:rgba(255,255,255,.72);max-width:860px;"><?php echo esc_html( $landing_intro ); ?></p>
     </section>
 
     <!-- Szűrő sáv -->
     <div class="va-filter-bar">
-        <div class="va-filter-bar__title"><?php echo esc_html( $lp_filter_title ); ?></div>
+        <div class="va-filter-bar__title"><?php echo esc_html( $plain_filter_title ); ?></div>
         <form id="va-filter-form" data-post-type="<?php echo esc_attr( $url_post_type ); ?>">
             <div class="va-filter-bar__grid">
                 <select id="va-cat" class="va-select">
