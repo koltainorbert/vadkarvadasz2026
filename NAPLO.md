@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #ijak-slug-visibility-fix
+- Hiba: az `Íjak` kategóriában nem jelent meg az új íj-specifikus mezőblokk, csak az engedély checkbox látszott.
+- Ok: a kategória slug `ijak`, de a bow mezőblokk `data-categories` listájából ez kimaradt.
+- Javítás: az `ijak` slug hozzáadva az íj mezőblokk és az engedély mező kategória-listájához (root + plugin mirror).
+- Eredmény: `Íjak` kiválasztásakor az íj-specifikus mezők most már megjelennek.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
 ## 2026. 05. 26. – Session #takarmany-category-detailed-fields
 - Kérés: a `Takarmány` hirdetéseknél részletes, célzott adatmezők legyenek (típus, ajánlott vad, összetétel, kiszerelés, tárolás, ár/átvétel/szállítás/rakodás).
 - Javítás: a feladási űrlap 2. lépésében új `takarmany` kategória-specifikus mezőblokk készült.
