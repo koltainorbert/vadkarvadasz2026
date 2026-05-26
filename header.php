@@ -46,10 +46,7 @@
 <div class="va-site-wrap<?php echo ! is_front_page() ? ' va-site-wrap--inner' : ''; ?>">
     <?php $auctions_enabled = function_exists( 'va_auctions_enabled' ) ? va_auctions_enabled() : true; ?>
     <?php
-    $brand_name = trim( (string) get_option( 'va_site_name', 'Vadkár Radar' ) );
-    if ( in_array( $brand_name, [ '', 'VadászApró', 'Vadaszapro', 'Weingartner Auto', 'WEINGARTNER AUTÓ', 'WEINGARTNER AUTO', 'weingartnerauto.hu' ], true ) ) {
-        $brand_name = 'Vadkár Radar';
-    }
+    $brand_name = 'Vadkár Radar';
     $brand_icon  = get_option( 'va_brand_icon_url', '' );
     $header_logo = get_option( 'va_header_logo_url', '' );
     $hero_logo   = get_option( 'va_hero_logo_url', '' );
