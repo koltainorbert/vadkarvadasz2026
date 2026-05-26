@@ -50,7 +50,7 @@
     $brand_icon  = get_option( 'va_brand_icon_url', '' );
     $header_logo = get_option( 'va_header_logo_url', '' );
     $hero_logo   = get_option( 'va_hero_logo_url', '' );
-    $header_logo_h = max( 40, min( 240, absint( get_option( 'va_header_logo_height', 36 ) ) * 2 ) );
+    $header_logo_h = max( 20, min( 120, absint( get_option( 'va_header_logo_height', 36 ) ) ) );
     $hero_logo_h   = max( 30, min( 260, absint( get_option( 'va_hero_logo_height', 72 ) ) ) );
     $hero_logo_pos = sanitize_key( (string) get_option( 'va_hero_logo_position', 'left' ) );
     if ( ! in_array( $hero_logo_pos, [ 'left', 'center', 'right' ], true ) ) {
@@ -93,7 +93,7 @@
                 <?php else: ?>
                     <span class="va-logo__icon">🦌</span>
                 <?php endif; ?>
-                <span class="va-logo__text" style="font-size:2em;line-height:1;"><?php echo esc_html( $brand_name ); ?></span>
+                <span class="va-logo__text"><?php echo esc_html( $brand_name ); ?></span>
             </a>
 
             <!-- Navigáció -->
