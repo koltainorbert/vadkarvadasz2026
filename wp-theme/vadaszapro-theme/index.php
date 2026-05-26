@@ -577,7 +577,7 @@ body.va-weather-modal-open{overflow:hidden;}
             </select>
           </label>
           <label class="va-home-radar__field">
-            <span>Éjszakai fényterhelés</span>
+            <span>Fényszennyezés</span>
             <select id="vhrNightLight">
               <option value="none">Nincs</option>
               <option value="moderate">Mérsékelt</option>
@@ -2151,7 +2151,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   setupPicker(quietEl,'Csendes időszak');
   setupPicker(gameStripEl,'Vadföld');
   setupPicker(exitEl,'Kijárási irány');
-  [[edgeCoverEl,'Tábla perem takarása'],[wallowEl,'Dagonya / sárfolt'],[saltEl,'Sózó / ásványi nyaló'],[cameraEl,'Vadkamera aktivitás'],[humanTrafficEl,'Emberi forgalom'],[predatorEl,'Kutya / ragadozónyom'],[nightLightEl,'Éjszakai fényterhelés'],[dayBedEl,'Nappali fekvőhely'],[droppingsEl,'Friss ürülék'],[coverLaneEl,'Rejtett vonulási sáv'],[repellentEl,'Vadriasztás'],[edgeDamageEl,'Táblaszéli kárjelek']].forEach(function(entry){setupPicker(entry[0],entry[1]);});
+  [[edgeCoverEl,'Tábla perem takarása'],[wallowEl,'Dagonya / sárfolt'],[saltEl,'Sózó / ásványi nyaló'],[cameraEl,'Vadkamera aktivitás'],[humanTrafficEl,'Emberi forgalom'],[predatorEl,'Kutya / ragadozónyom'],[nightLightEl,'Fényszennyezés'],[dayBedEl,'Nappali fekvőhely'],[droppingsEl,'Friss ürülék'],[coverLaneEl,'Rejtett vonulási sáv'],[repellentEl,'Vadriasztás'],[edgeDamageEl,'Táblaszéli kárjelek']].forEach(function(entry){setupPicker(entry[0],entry[1]);});
   forestEl.addEventListener('change',function(){syncPickerButton(forestEl);rerender();});
   damageEl.addEventListener('change',function(){syncPickerButton(damageEl);rerender();});
   cropEl.addEventListener('change',function(){syncPickerButton(cropEl);setPhenologyOptions();rerender();});

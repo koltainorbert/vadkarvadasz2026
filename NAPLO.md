@@ -2,6 +2,11 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-light-pollution-label-short
+- Kérés: az `Éjszakai fényterhelés` mező elég legyen csak `Fényszennyezés`.
+- Javítás: a mező látható címkéje és a picker címe lerövidítve `Fényszennyezés`-re.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-picker-top-border-fix
 - Hiba: a legfelső, alapértelmezett picker opció felső borderje hiányzónak látszott.
 - Ok: az első aktív elem a scrollozható opciókonténerben `-1px` transform miatt felül levágódott.
