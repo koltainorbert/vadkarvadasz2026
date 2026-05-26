@@ -764,16 +764,30 @@ body.va-home-radar-picker-open{overflow:hidden;}
   opacity:1 !important;
   display:inline-block !important;
   transform-origin:center center !important;
+  border-radius:50% !important;
+  position:relative !important;
+  overflow:visible !important;
 }
 .sw-dot--on{
   background:#00ff66 !important;
-  box-shadow:0 0 5px rgba(0,255,102,.78) !important;
-  animation:va-sw-dot-widget-blink .95s ease-in-out infinite !important;
+  box-shadow:0 0 4px rgba(0,255,102,.7) !important;
+  animation:va-sw-dot-widget-core .95s ease-in-out infinite !important;
 }
-@keyframes va-sw-dot-widget-blink{
-  0%,100%{opacity:.92;transform:scale(1);box-shadow:0 0 5px rgba(0,255,102,.78);}
-  50%{opacity:.34;transform:scale(1.2);box-shadow:0 0 9px rgba(0,255,102,.92);}
+.sw-dot--on::after{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(0,255,102,.46) 0%,rgba(0,255,102,.18) 45%,rgba(0,255,102,0) 72%);
+  pointer-events:none;
+  animation:va-sw-dot-widget-halo .95s ease-in-out infinite;
 }
+@keyframes va-sw-dot-widget-core{0%,100%{opacity:.95}50%{opacity:.42}}
+@keyframes va-sw-dot-widget-halo{0%,100%{opacity:.78}50%{opacity:.18}}
 
 /* Status semantics: current/active = green, forbidden/inactive = red. */
 .va-agri__tag.is-on,
