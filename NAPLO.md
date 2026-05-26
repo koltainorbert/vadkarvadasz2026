@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-widget-branding
+- Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
+- Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.
+- UI: új `vhr-bandcard__titlewrap` és `vhr-bandcard__logo` stílus a tiszta, túlcsordulásmentes igazításhoz.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-modal-top-layer-fix
 - Hiba: a részletes radar popup scroll közben egyes elemek mögé került (stacking context probléma).
 - Javítás: radar modal/picker max z-indexre állítva, és futáskor közvetlenül a `body` alá mozgatva.
