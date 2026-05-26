@@ -2089,7 +2089,12 @@ body.va-home-radar-picker-open{overflow:hidden;}
     /* Open list */
     var openEl=document.getElementById('sw-open');
     if(!openEl)return;
+    var soonLbl=document.getElementById('sw-soon-lbl');
+    var soonEl=document.getElementById('sw-soon');
+    if(!soonEl)return;
     openEl.innerHTML='';
+    soonEl.innerHTML='';
+    if(soonLbl){soonLbl.textContent='';}
     _cdList=[];
 
     if(swModalOpen){swModalOpen.innerHTML='';}
@@ -2109,13 +2114,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
     } else {
       openEl.innerHTML='<div class="sw-empty">Ma nincs nyitott idény.</div>';
     }
-
-    /* Soon section */
-    var soonLbl=document.getElementById('sw-soon-lbl');
-    var soonEl=document.getElementById('sw-soon');
-    if(!soonEl)return;
-    soonEl.innerHTML='';
-    if(soonLbl){soonLbl.textContent='';}
 
     var hiddenCount=Math.max(0,open.length-1)+(open.length?soon.length:Math.max(0,soon.length-1));
     if(swMoreBtn){
