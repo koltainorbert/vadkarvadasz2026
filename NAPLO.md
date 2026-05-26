@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #csere-field-visible-and-step2-category-title
+- Hiba: a `Csere` kategóriánál a `Mire szeretném cserélni` mező nem jelent meg stabilan.
+- Javítás: a kategória gombok (`.va-cat-item`) kaptak inline fallback click kezelést, így biztosan frissül a `#va-category` hidden mező és a `change` esemény.
+- Javítás: a kategória slug felismerés fallbacket kapott a kijelölt kártyára, így a csere-specifikus mezők láthatósága megbízhatóbb.
+- Fejlesztés: a 2. lépés címe most mutatja a kiválasztott kategóriát: `Termék adatai (kategória)`.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
 ## 2026. 05. 26. – Session #csere-category-exchange-target-field
 - Kérés: a hirdetés feladásában a `Csere` kategóriánál legyen egy `Mire szeretném cserélni` mező, de ne legyen kötelező.
 - Javítás: az űrlap 2. lépésébe bekerült a `Mire szeretném cserélni` szövegmező, amely csak `csere` kategória esetén látszik.

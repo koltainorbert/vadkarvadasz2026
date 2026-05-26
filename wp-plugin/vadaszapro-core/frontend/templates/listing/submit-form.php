@@ -3080,6 +3080,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (step === _wTotal) { $('#va-wizard-next').hide(); $('#va-submit-btn').show(); }
         else { $('#va-wizard-next').show(); $('#va-submit-btn').hide(); }
         _wStep = step;
+        updateStep2CategoryLabel();
         var $body = $('.va-wizard-body');
         if ($body.length) $body.scrollTop(0);
     }
@@ -3216,6 +3217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.va-cat-item').removeAttr('data-selected');
         $(this).attr('data-selected', '1');
         $('#va-category').val($(this).data('term-id')).trigger('change');
+        updateStep2CategoryLabel();
 
         var slug = (($(this).data('slug') || '') + '').toLowerCase();
         if (slug === 'egyeb') {
@@ -4062,6 +4064,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
     applyCategorySpecificFieldVisibility();
+    updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
     switchBrandModelFieldMode();
 
