@@ -709,21 +709,21 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-moon,
 .va-weather,
 .va-home-radar{
-  background:linear-gradient(160deg,rgba(6,16,12,.97),rgba(7,23,16,.98) 56%,rgba(8,18,14,.97) 100%) !important;
-  border:1px solid rgba(70,190,130,.26) !important;
-  box-shadow:0 18px 34px rgba(0,0,0,.42),inset 0 0 0 1px rgba(120,255,190,.04),inset 0 0 26px rgba(70,220,150,.05) !important;
+  background:linear-gradient(160deg,rgba(6,6,8,.985),rgba(10,12,18,.98) 56%,rgba(16,10,16,.97) 100%) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:0 18px 34px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,255,255,.03),inset 0 0 24px rgba(80,170,255,.07),inset 0 0 28px rgba(255,70,70,.04) !important;
 }
 .va-season::before,
 .va-moon::before,
 .va-home-radar::before{
-  opacity:.1 !important;
+  opacity:.12 !important;
 }
 .va-season__title,
 .va-agri__title,
 .va-moon__title,
 .va-weather__title,
 .va-home-radar__scorelabel{
-  color:#ddffe8 !important;
+  color:#f7fbff !important;
 }
 .va-season__date,
 .va-agri__sub,
@@ -731,7 +731,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-weather__loc,
 .va-weather__note,
 .va-home-radar__scorelabel{
-  color:rgba(210,255,230,.78) !important;
+  color:rgba(220,232,255,.76) !important;
 }
 .sw-row,
 .va-agri__item,
@@ -739,25 +739,25 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .va-weather__weekcell,
 .va-home-radar__scorebox,
 .va-home-radar__spider#vhrSpiderWidget{
-  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018)) !important;
-  border-color:rgba(90,210,150,.22) !important;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02)) !important;
+  border-color:rgba(120,190,255,.24) !important;
 }
-.sw-row--new{background:rgba(70,220,145,.12) !important;}
+.sw-row--new{background:rgba(255,85,85,.1) !important;}
 .va-agri__tag.is-on,
 .va-weather__agri-tag.is-now{
-  color:#caffdf !important;
-  background:rgba(50,180,110,.24) !important;
-  border-color:rgba(120,255,190,.5) !important;
+  color:#ffe8b5 !important;
+  background:rgba(255,165,0,.2) !important;
+  border-color:rgba(255,208,110,.5) !important;
 }
 .va-weather__toggle,
 .va-home-radar__toggle{
-  background:linear-gradient(135deg,rgba(34,120,78,.72),rgba(24,88,60,.82)) !important;
-  border-color:rgba(110,245,180,.38) !important;
-  box-shadow:0 12px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(110,245,180,.08) !important;
+  background:linear-gradient(135deg,#0b1f39 0%,#0a2749 42%,#5a122a 100%) !important;
+  border-color:rgba(130,200,255,.36) !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.34),inset 0 0 18px rgba(90,170,255,.12),inset 0 0 20px rgba(255,70,70,.06) !important;
 }
 .sw-dot--on{
-  background:#62f3a9 !important;
-  box-shadow:0 0 8px rgba(98,243,169,.9) !important;
+  background:#45d3ff !important;
+  box-shadow:0 0 8px rgba(69,211,255,.95) !important;
 }
 </style>
 
