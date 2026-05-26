@@ -768,7 +768,14 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-gauge__needle{position:absolute;left:50%;top:50%;width:6px;height:42%;margin-left:-3px;background:var(--vhr-alert);border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(-135deg);z-index:4;transition:transform .9s cubic-bezier(.2,.9,.2,1),background .25s ease;box-shadow:0 0 12px color-mix(in srgb,var(--vhr-alert) 75%,transparent);}
 .vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-10px;margin-left:-8px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid #ffe9c9;}
 .vhr-gauge__hub{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid rgba(255,235,198,.92);background:#171717;z-index:5;}
-.vhr-gauge__scale{position:absolute;left:12px;right:12px;bottom:16px;display:flex;justify-content:space-between;color:rgba(255,255,255,.92);font-size:.6rem;font-weight:900;letter-spacing:.06em;z-index:4;}
+.vhr-gauge__speedo{position:absolute;inset:18px;border-radius:50%;pointer-events:none;z-index:4;}
+.vhr-gauge__speedo span{position:absolute;color:rgba(255,255,255,.9);font-size:.62rem;font-weight:900;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.vhr-gauge__speedo .n0{left:11%;top:73%;}
+.vhr-gauge__speedo .n20{left:9%;top:53%;}
+.vhr-gauge__speedo .n40{left:22%;top:30%;}
+.vhr-gauge__speedo .n60{right:22%;top:30%;}
+.vhr-gauge__speedo .n80{right:9%;top:53%;}
+.vhr-gauge__speedo .n100{right:11%;top:73%;}
 .vhr-gauge__value{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);font-size:1rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.05em;z-index:6;text-shadow:0 0 10px rgba(0,0,0,.5);}
 .vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
 .vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
@@ -787,7 +794,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .vhr-gauge__dial{min-height:188px;}
   .vhr-gauge__circle{width:min(220px,94%);}
   .vhr-gauge__needle{height:41%;}
-  .vhr-gauge__scale{font-size:.54rem;left:8px;right:8px;bottom:13px;}
+  .vhr-gauge__speedo span{font-size:.56rem;}
   .vhr-gauge__value{font-size:.9rem;}
   .vhr-gauge__footer strong{font-size:1.05rem;}
 }
@@ -1844,7 +1851,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
       +'<div class="vhr-gauge__ring"></div>'
       +'<div class="vhr-gauge__sweep"></div>'
       +'<div class="vhr-gauge__ticks"></div>'
-      +'<div class="vhr-gauge__scale"><span>0</span><span>50</span><span>100</span></div>'
+      +'<div class="vhr-gauge__speedo"><span class="n0">0</span><span class="n20">20</span><span class="n40">40</span><span class="n60">60</span><span class="n80">80</span><span class="n100">100</span></div>'
       +'<div class="vhr-gauge__needle"></div>'
       +'<div class="vhr-gauge__hub"></div>'
       +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
