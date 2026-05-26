@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #vadkar-radar-brand-scale-up
+- Kérés: a frissen átírt `Vadkár Radar` branding legyen 2x nagyobb.
+- Javítás: a fejléc logóképe 2x header magassággal renderel, a logószöveg inline 2x méretet kapott.
+- Javítás: a compact radar widget cím/logó sora is 2x-re nőtt (`17px` -> `34px`, `0.6rem` -> `1.2rem`).
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #vadkar-radar-brand-name-fix
 - Kérés: a radar widget és a látható logónév egységesen `Vadkár Radar` legyen.
 - Megállapítás: a widget cím már jó volt, a fejléc logó szövege még régi/eltérő brandnévre tudott épülni.
