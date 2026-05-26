@@ -369,6 +369,29 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'bow_acc_case' => get_post_meta( $maybe_id, 'va_bow_acc_case', true ),
             'bow_acc_quiver' => get_post_meta( $maybe_id, 'va_bow_acc_quiver', true ),
             'bow_acc_target' => get_post_meta( $maybe_id, 'va_bow_acc_target', true ),
+            'feed_type' => get_post_meta( $maybe_id, 'va_feed_type', true ),
+            'feed_recommended_game' => get_post_meta( $maybe_id, 'va_feed_recommended_game', true ),
+            'feed_game_boar' => get_post_meta( $maybe_id, 'va_feed_game_boar', true ),
+            'feed_game_roe' => get_post_meta( $maybe_id, 'va_feed_game_roe', true ),
+            'feed_game_red_deer' => get_post_meta( $maybe_id, 'va_feed_game_red_deer', true ),
+            'feed_game_pheasant' => get_post_meta( $maybe_id, 'va_feed_game_pheasant', true ),
+            'feed_game_other' => get_post_meta( $maybe_id, 'va_feed_game_other', true ),
+            'feed_game_other_text' => get_post_meta( $maybe_id, 'va_feed_game_other_text', true ),
+            'feed_ingredients' => get_post_meta( $maybe_id, 'va_feed_ingredients', true ),
+            'feed_moisture' => get_post_meta( $maybe_id, 'va_feed_moisture', true ),
+            'feed_has_additives' => get_post_meta( $maybe_id, 'va_feed_has_additives', true ),
+            'feed_packaging_type' => get_post_meta( $maybe_id, 'va_feed_packaging_type', true ),
+            'feed_bag_weight' => get_post_meta( $maybe_id, 'va_feed_bag_weight', true ),
+            'feed_total_quantity' => get_post_meta( $maybe_id, 'va_feed_total_quantity', true ),
+            'feed_pallet_quantity' => get_post_meta( $maybe_id, 'va_feed_pallet_quantity', true ),
+            'feed_harvest_freshness' => get_post_meta( $maybe_id, 'va_feed_harvest_freshness', true ),
+            'feed_stored_dry' => get_post_meta( $maybe_id, 'va_feed_stored_dry', true ),
+            'feed_mold_free' => get_post_meta( $maybe_id, 'va_feed_mold_free', true ),
+            'feed_bags_undamaged' => get_post_meta( $maybe_id, 'va_feed_bags_undamaged', true ),
+            'feed_price_per_unit' => get_post_meta( $maybe_id, 'va_feed_price_per_unit', true ),
+            'feed_min_order' => get_post_meta( $maybe_id, 'va_feed_min_order', true ),
+            'feed_delivery_available' => get_post_meta( $maybe_id, 'va_feed_delivery_available', true ),
+            'feed_loading_available' => get_post_meta( $maybe_id, 'va_feed_loading_available', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -1461,6 +1484,126 @@ body.va-modal-open {
             <div class="va-form-group va-cat-rule-field" data-categories="csere">
                 <label>Mire szeretném cserélni</label>
                 <input type="text" name="exchange_target" class="va-input" placeholder="pl. távcső, bakancs, jármű" value="<?php echo esc_attr((string)($edit_meta['exchange_target'] ?? '')); ?>">
+            </div>
+            <div class="va-cat-rule-field" data-categories="takarmany">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Takarmány típusa</label>
+                        <select name="feed_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="szoro"<?php echo (($edit_meta['feed_type'] ?? '') === 'szoro') ? ' selected' : ''; ?>>Szóró takarmány</option>
+                            <option value="abrak"<?php echo (($edit_meta['feed_type'] ?? '') === 'abrak') ? ' selected' : ''; ?>>Abrak</option>
+                            <option value="kukorica"<?php echo (($edit_meta['feed_type'] ?? '') === 'kukorica') ? ' selected' : ''; ?>>Kukorica</option>
+                            <option value="gabonakeverek"<?php echo (($edit_meta['feed_type'] ?? '') === 'gabonakeverek') ? ' selected' : ''; ?>>Gabonakeverék</option>
+                            <option value="pellet"<?php echo (($edit_meta['feed_type'] ?? '') === 'pellet') ? ' selected' : ''; ?>>Pellet</option>
+                            <option value="feherje-kiegeszito"<?php echo (($edit_meta['feed_type'] ?? '') === 'feherje-kiegeszito') ? ' selected' : ''; ?>>Fehérje / kiegészítő takarmány</option>
+                            <option value="sozo"<?php echo (($edit_meta['feed_type'] ?? '') === 'sozo') ? ' selected' : ''; ?>>Sózó</option>
+                            <option value="egyeb"<?php echo (($edit_meta['feed_type'] ?? '') === 'egyeb') ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Milyen vadnak ajánlott</label>
+                        <label class="va-check-label"><input type="checkbox" name="feed_game_boar" value="1"<?php echo (($edit_meta['feed_game_boar'] ?? '') === '1') ? ' checked' : ''; ?>> Vaddisznó</label>
+                        <label class="va-check-label"><input type="checkbox" name="feed_game_roe" value="1"<?php echo (($edit_meta['feed_game_roe'] ?? '') === '1') ? ' checked' : ''; ?>> Őz</label>
+                        <label class="va-check-label"><input type="checkbox" name="feed_game_red_deer" value="1"<?php echo (($edit_meta['feed_game_red_deer'] ?? '') === '1') ? ' checked' : ''; ?>> Szarvas</label>
+                        <label class="va-check-label"><input type="checkbox" name="feed_game_pheasant" value="1"<?php echo (($edit_meta['feed_game_pheasant'] ?? '') === '1') ? ' checked' : ''; ?>> Fácán</label>
+                        <label class="va-check-label"><input type="checkbox" name="feed_game_other" value="1"<?php echo (($edit_meta['feed_game_other'] ?? '') === '1') ? ' checked' : ''; ?>> Egyéb</label>
+                        <input type="text" name="feed_game_other_text" class="va-input" placeholder="Egyéb vadfaj megnevezése" value="<?php echo esc_attr((string)($edit_meta['feed_game_other_text'] ?? '')); ?>" style="margin-top:8px;">
+                        <textarea name="feed_recommended_game" class="va-input" rows="2" placeholder="Részletezés (opcionális)"><?php echo esc_textarea((string)($edit_meta['feed_recommended_game'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Összetevők</label>
+                        <textarea name="feed_ingredients" class="va-input" rows="3" placeholder="pl. kukorica, búza, árpa, napraforgó, pellet"><?php echo esc_textarea((string)($edit_meta['feed_ingredients'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Nedvességtartalom</label>
+                        <input type="text" name="feed_moisture" class="va-input" placeholder="pl. 12%" value="<?php echo esc_attr((string)($edit_meta['feed_moisture'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Adalékanyagok vannak benne?</label>
+                        <select name="feed_has_additives" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_has_additives'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_has_additives'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kiszerelés</label>
+                        <select name="feed_packaging_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="zsakos"<?php echo (($edit_meta['feed_packaging_type'] ?? '') === 'zsakos') ? ' selected' : ''; ?>>Zsákos</option>
+                            <option value="omlesztett"<?php echo (($edit_meta['feed_packaging_type'] ?? '') === 'omlesztett') ? ' selected' : ''; ?>>Ömlesztett</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Egy zsák súlya</label>
+                        <input type="text" name="feed_bag_weight" class="va-input" placeholder="pl. 25 kg" value="<?php echo esc_attr((string)($edit_meta['feed_bag_weight'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Elérhető mennyiség összesen</label>
+                        <input type="text" name="feed_total_quantity" class="va-input" placeholder="pl. 1200 kg" value="<?php echo esc_attr((string)($edit_meta['feed_total_quantity'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Raklapos mennyiség</label>
+                        <input type="text" name="feed_pallet_quantity" class="va-input" placeholder="pl. 1 raklap = 40 zsák" value="<?php echo esc_attr((string)($edit_meta['feed_pallet_quantity'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Friss vagy tavalyi termés</label>
+                        <select name="feed_harvest_freshness" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="friss"<?php echo (($edit_meta['feed_harvest_freshness'] ?? '') === 'friss') ? ' selected' : ''; ?>>Friss termés</option>
+                            <option value="tavalyi"<?php echo (($edit_meta['feed_harvest_freshness'] ?? '') === 'tavalyi') ? ' selected' : ''; ?>>Tavalyi termés</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Száraz helyen tárolták?</label>
+                        <select name="feed_stored_dry" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_stored_dry'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_stored_dry'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Penészmentes?</label>
+                        <select name="feed_mold_free" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_mold_free'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_mold_free'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Sérülésmentes zsákok</label>
+                        <select name="feed_bags_undamaged" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_bags_undamaged'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_bags_undamaged'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ár/kg vagy ár/zsák</label>
+                        <input type="text" name="feed_price_per_unit" class="va-input" placeholder="pl. 180 Ft/kg vagy 4500 Ft/zsák" value="<?php echo esc_attr((string)($edit_meta['feed_price_per_unit'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Minimum rendelés</label>
+                        <input type="text" name="feed_min_order" class="va-input" placeholder="pl. 10 zsák" value="<?php echo esc_attr((string)($edit_meta['feed_min_order'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szállítás megoldható?</label>
+                        <select name="feed_delivery_available" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_delivery_available'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_delivery_available'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Rakodás van?</label>
+                        <select name="feed_loading_available" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['feed_loading_available'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['feed_loading_available'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="va-cat-rule-field" data-categories="ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij,szamszerij">
                 <div class="va-step2-4col-inner">
