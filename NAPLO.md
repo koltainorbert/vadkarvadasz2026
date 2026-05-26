@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #search-all-results-404-fix
+- Hiba: a header live search `Összes találat` linkje 404 oldalra vitt.
+- Ok: a header több helyen fixen a `/va-hirdetes-kereses` slugra mutatott, ami live környezetben hiányozhat vagy eltérő permalinket kaphat.
+- Javítás: a header kereső- és navigációs linkjei most a keresőoldal feloldott permalinkjét használják, fallbackként a `va_listing` archive URL-lel, végső esetben `/hirdetes/` útvonallal.
+- Érintett: `NAPLO.md`, `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
 ## 2026. 05. 26. – Session #header-border-visual-confusion-fix
 - Jelenség: a képen látható mozgó narancs vonal header border hibának tűnt, de a vizuális zavart a jobb oldali narancs scrollbar és a legfelső vadászati naptárblokk narancs elválasztója erősítette.
 - Javítás: a globális scrollbar thumb semleges szürke tónust kapott, így nem néz ki többé leszakadt header accentnek.
