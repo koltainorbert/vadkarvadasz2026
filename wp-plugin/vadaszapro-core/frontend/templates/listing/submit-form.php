@@ -347,6 +347,28 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
             'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
             'exchange_target' => get_post_meta( $maybe_id, 'va_exchange_target', true ),
+            'bow_type' => get_post_meta( $maybe_id, 'va_bow_type', true ),
+            'bow_handedness' => get_post_meta( $maybe_id, 'va_bow_handedness', true ),
+            'bow_draw_weight' => get_post_meta( $maybe_id, 'va_bow_draw_weight', true ),
+            'bow_draw_length' => get_post_meta( $maybe_id, 'va_bow_draw_length', true ),
+            'bow_axle_length' => get_post_meta( $maybe_id, 'va_bow_axle_length', true ),
+            'bow_item_condition' => get_post_meta( $maybe_id, 'va_bow_item_condition', true ),
+            'bow_condition_notes' => get_post_meta( $maybe_id, 'va_bow_condition_notes', true ),
+            'bow_string_replaced' => get_post_meta( $maybe_id, 'va_bow_string_replaced', true ),
+            'bow_owned_since' => get_post_meta( $maybe_id, 'va_bow_owned_since', true ),
+            'bow_usage' => get_post_meta( $maybe_id, 'va_bow_usage', true ),
+            'bow_accessories' => get_post_meta( $maybe_id, 'va_bow_accessories', true ),
+            'bow_cams_cables' => get_post_meta( $maybe_id, 'va_bow_cams_cables', true ),
+            'bow_speed_fps' => get_post_meta( $maybe_id, 'va_bow_speed_fps', true ),
+            'bow_serial' => get_post_meta( $maybe_id, 'va_bow_serial', true ),
+            'bow_material' => get_post_meta( $maybe_id, 'va_bow_material', true ),
+            'bow_acc_sight' => get_post_meta( $maybe_id, 'va_bow_acc_sight', true ),
+            'bow_acc_release' => get_post_meta( $maybe_id, 'va_bow_acc_release', true ),
+            'bow_acc_stabilizer' => get_post_meta( $maybe_id, 'va_bow_acc_stabilizer', true ),
+            'bow_acc_arrows' => get_post_meta( $maybe_id, 'va_bow_acc_arrows', true ),
+            'bow_acc_case' => get_post_meta( $maybe_id, 'va_bow_acc_case', true ),
+            'bow_acc_quiver' => get_post_meta( $maybe_id, 'va_bow_acc_quiver', true ),
+            'bow_acc_target' => get_post_meta( $maybe_id, 'va_bow_acc_target', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
@@ -1439,6 +1461,98 @@ body.va-modal-open {
             <div class="va-form-group va-cat-rule-field" data-categories="csere">
                 <label>Mire szeretném cserélni</label>
                 <input type="text" name="exchange_target" class="va-input" placeholder="pl. távcső, bakancs, jármű" value="<?php echo esc_attr((string)($edit_meta['exchange_target'] ?? '')); ?>">
+            </div>
+            <div class="va-cat-rule-field" data-categories="ij-szamszerij-fuvocso,ij,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij,szamszerij">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Íj típusa</label>
+                        <select name="bow_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="tradicionalis"<?php echo (($edit_meta['bow_type'] ?? '') === 'tradicionalis') ? ' selected' : ''; ?>>Tradicionális</option>
+                            <option value="reflex"<?php echo (($edit_meta['bow_type'] ?? '') === 'reflex') ? ' selected' : ''; ?>>Reflex</option>
+                            <option value="longbow"<?php echo (($edit_meta['bow_type'] ?? '') === 'longbow') ? ' selected' : ''; ?>>Longbow</option>
+                            <option value="compound"<?php echo (($edit_meta['bow_type'] ?? '') === 'compound') ? ' selected' : ''; ?>>Compound</option>
+                            <option value="szamszerij"<?php echo (($edit_meta['bow_type'] ?? '') === 'szamszerij') ? ' selected' : ''; ?>>Számszeríj</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kezesség</label>
+                        <select name="bow_handedness" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="jobbkezes"<?php echo (($edit_meta['bow_handedness'] ?? '') === 'jobbkezes') ? ' selected' : ''; ?>>Jobbkezes</option>
+                            <option value="balkezes"<?php echo (($edit_meta['bow_handedness'] ?? '') === 'balkezes') ? ' selected' : ''; ?>>Balkezes</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Húzóerő (lbs)</label>
+                        <input type="text" name="bow_draw_weight" class="va-input" placeholder="pl. 55" value="<?php echo esc_attr((string)($edit_meta['bow_draw_weight'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Húzáshossz (inch)</label>
+                        <input type="text" name="bow_draw_length" class="va-input" placeholder="pl. 29" value="<?php echo esc_attr((string)($edit_meta['bow_draw_length'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Tengelytáv / teljes hossz</label>
+                        <input type="text" name="bow_axle_length" class="va-input" placeholder="pl. 34 inch" value="<?php echo esc_attr((string)($edit_meta['bow_axle_length'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot (új / használt)</label>
+                        <select name="bow_item_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php echo (($edit_meta['bow_item_condition'] ?? '') === 'uj') ? ' selected' : ''; ?>>Új</option>
+                            <option value="hasznalt"<?php echo (($edit_meta['bow_item_condition'] ?? '') === 'hasznalt') ? ' selected' : ''; ?>>Használt</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Állapot részletei (karc, sérülés, repedés, húrcsere)</label>
+                        <textarea name="bow_condition_notes" class="va-input" rows="2" placeholder="pl. kisebb karcok, húrcsere 2025-ben"><?php echo esc_textarea((string)($edit_meta['bow_condition_notes'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Húrcsere történt?</label>
+                        <select name="bow_string_replaced" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo (($edit_meta['bow_string_replaced'] ?? '') === 'igen') ? ' selected' : ''; ?>>Igen</option>
+                            <option value="nem"<?php echo (($edit_meta['bow_string_replaced'] ?? '') === 'nem') ? ' selected' : ''; ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Mióta van nálad</label>
+                        <input type="text" name="bow_owned_since" class="va-input" placeholder="pl. 2022 óta" value="<?php echo esc_attr((string)($edit_meta['bow_owned_since'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Mennyit volt használva</label>
+                        <textarea name="bow_usage" class="va-input" rows="2" placeholder="pl. heti 1 edzés, versenyen nem volt"><?php echo esc_textarea((string)($edit_meta['bow_usage'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tartozékok (leírás)</label>
+                        <textarea name="bow_accessories" class="va-input" rows="3" placeholder="Írd le pontosan, mi jár hozzá."><?php echo esc_textarea((string)($edit_meta['bow_accessories'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_sight" value="1"<?php echo (($edit_meta['bow_acc_sight'] ?? '') === '1') ? ' checked' : ''; ?>> Irányzék</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_release" value="1"<?php echo (($edit_meta['bow_acc_release'] ?? '') === '1') ? ' checked' : ''; ?>> Kioldó</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_stabilizer" value="1"<?php echo (($edit_meta['bow_acc_stabilizer'] ?? '') === '1') ? ' checked' : ''; ?>> Stabilizátor</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_arrows" value="1"<?php echo (($edit_meta['bow_acc_arrows'] ?? '') === '1') ? ' checked' : ''; ?>> Vesszők</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_case" value="1"<?php echo (($edit_meta['bow_acc_case'] ?? '') === '1') ? ' checked' : ''; ?>> Tok</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_quiver" value="1"<?php echo (($edit_meta['bow_acc_quiver'] ?? '') === '1') ? ' checked' : ''; ?>> Tegez</label>
+                        <label class="va-check-label"><input type="checkbox" name="bow_acc_target" value="1"<?php echo (($edit_meta['bow_acc_target'] ?? '') === '1') ? ' checked' : ''; ?>> Céltábla</label>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Csigák / kábelek állapota</label>
+                        <textarea name="bow_cams_cables" class="va-input" rows="2" placeholder="pl. megkímélt, időben cserélve"><?php echo esc_textarea((string)($edit_meta['bow_cams_cables'] ?? '')); ?></textarea>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Sebesség (FPS)</label>
+                        <input type="text" name="bow_speed_fps" class="va-input" placeholder="pl. 340" value="<?php echo esc_attr((string)($edit_meta['bow_speed_fps'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Sorozatszám (opcionális)</label>
+                        <input type="text" name="bow_serial" class="va-input" placeholder="Nem kötelező nyilvánosan" value="<?php echo esc_attr((string)($edit_meta['bow_serial'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Anyag</label>
+                        <input type="text" name="bow_material" class="va-input" placeholder="pl. karbon, alumínium" value="<?php echo esc_attr((string)($edit_meta['bow_material'] ?? '')); ?>">
+                    </div>
+                </div>
             </div>
             <?php if ( $site_type !== 'jarmu' ): ?>
             <div class="va-form-row">
@@ -3742,7 +3856,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateStep2CategoryLabel() {
         var label = getSelectedCategoryLabel();
-        $('#va-step2-category-label').text(label ? '(' + label + ')' : '');
+        $('#va-step2-category-label').text(label ? label : '');
     }
 
     function isVehicleCategorySelected() {
