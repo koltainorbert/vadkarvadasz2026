@@ -1329,37 +1329,68 @@ body.va-home-radar-picker-open{overflow:hidden;}
       nowEl.textContent='Időjárás nem elérhető';
     });
   }
-  function ipFallback(){
-    fetch('https://ipapi.co/json/').then(function(r){return r.json();}).then(function(json){
-      if(json&&json.latitude&&json.longitude){
-        var lbl=(json.city?json.city+', ':'')+(json.region||json.country_name||'IP helyzet');
-        try{localStorage.setItem('va_geo_1h',JSON.stringify({lat:json.latitude,lon:json.longitude,label:lbl+' (IP)',ts:Date.now()}));}catch(_){}
-        weather(json.latitude,json.longitude,lbl+' (IP)');
-      }else{
-        nowEl.textContent='Helyadat nem elérhető';
-      }
-    }).catch(function(){
-      nowEl.textContent='Helyadat nem elérhető';
-    });
-  }
-  (function(){
-    var _gc=null;try{_gc=JSON.parse(localStorage.getItem('va_geo_1h')||'null');}catch(_){}
-    if(_gc&&_gc.lat&&_gc.lon&&_gc.ts&&(Date.now()-_gc.ts)<3600000){
-      weather(_gc.lat,_gc.lon,_gc.label||'Aktuális hely');
-      if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(p){try{localStorage.setItem('va_geo_1h',JSON.stringify({lat:p.coords.latitude,lon:p.coords.longitude,label:'Aktuális hely',ts:Date.now()}));}catch(_){}},function(){},{enableHighAccuracy:false,timeout:5000,maximumAge:3600000});}
+  var resolveSharedLocation=window.vaResolveSharedLocation||function(done){
+    var now=Date.now();
+    var cached=null;
+    try{cached=JSON.parse(localStorage.getItem('va_geo_1h')||'null');}catch(_){}
+    if(cached&&cached.lat&&cached.lon&&cached.ts&&(now-cached.ts)<3600000){done(cached);return;}
+
+    if(window.__vaGeoPending){
+      window.__vaGeoWaiters=window.__vaGeoWaiters||[];
+      window.__vaGeoWaiters.push(done);
       return;
     }
+
+    window.__vaGeoPending=true;
+    window.__vaGeoWaiters=[done];
+
+    function publish(loc){
+      window.__vaGeoPending=false;
+      var waiters=window.__vaGeoWaiters||[];
+      window.__vaGeoWaiters=[];
+      for(var i=0;i<waiters.length;i++){
+        try{waiters[i](loc||null);}catch(_e){}
+      }
+    }
+
+    function saveAndPublish(lat,lon,label){
+      var loc={lat:lat,lon:lon,label:label||'Aktuális hely',ts:Date.now()};
+      try{localStorage.setItem('va_geo_1h',JSON.stringify(loc));}catch(_){}
+      publish(loc);
+    }
+
+    function ipFallback(){
+      fetch('https://ipapi.co/json/').then(function(r){return r.json();}).then(function(json){
+        if(json&&json.latitude&&json.longitude){
+          var lbl=(json.city?json.city+', ':'')+(json.region||json.country_name||'IP helyzet');
+          saveAndPublish(json.latitude,json.longitude,lbl+' (IP)');
+        }else{
+          publish(null);
+        }
+      }).catch(function(){
+        publish(null);
+      });
+    }
+
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(function(pos){
-        try{localStorage.setItem('va_geo_1h',JSON.stringify({lat:pos.coords.latitude,lon:pos.coords.longitude,label:'Aktuális hely',ts:Date.now()}));}catch(_){}
-        weather(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
+        saveAndPublish(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
       },function(){
         ipFallback();
-      },{enableHighAccuracy:true,timeout:7000,maximumAge:900000});
+      },{enableHighAccuracy:false,timeout:10000,maximumAge:0});
     }else{
       ipFallback();
     }
-  })();
+  };
+  window.vaResolveSharedLocation=resolveSharedLocation;
+
+  resolveSharedLocation(function(loc){
+    if(loc&&loc.lat&&loc.lon){
+      weather(loc.lat,loc.lon,loc.label||'Aktuális hely');
+    }else{
+      nowEl.textContent='Helyadat nem elérhető';
+    }
+  });
 })();
 </script>
 <?php endif; ?>
@@ -1501,7 +1532,24 @@ body.va-home-radar-picker-open{overflow:hidden;}
   quietEl.addEventListener('change',function(){syncPickerButton(quietEl);rerender();});
   gameStripEl.addEventListener('change',function(){syncPickerButton(gameStripEl);rerender();});
   exitEl.addEventListener('change',function(){syncPickerButton(exitEl);rerender();});
-  (function(){var _gc=null;try{_gc=JSON.parse(localStorage.getItem('va_geo_1h')||'null');}catch(_){}if(_gc&&_gc.lat&&_gc.lon&&_gc.ts&&(Date.now()-_gc.ts)<3600000){fetchForecast(_gc.lat,_gc.lon,_gc.label||'Aktuális hely');return;}if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(pos){try{localStorage.setItem('va_geo_1h',JSON.stringify({lat:pos.coords.latitude,lon:pos.coords.longitude,label:'Aktuális hely',ts:Date.now()}));}catch(_){}fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');},function(){fetchForecast(47.093,17.911,'Veszprém mintahely');},{enableHighAccuracy:true,timeout:7000,maximumAge:900000});}else{fetchForecast(47.093,17.911,'Veszprém mintahely');}})();
+  var resolveSharedLocation=window.vaResolveSharedLocation||null;
+  if(resolveSharedLocation){
+    resolveSharedLocation(function(loc){
+      if(loc&&loc.lat&&loc.lon){
+        fetchForecast(loc.lat,loc.lon,loc.label||'Aktuális hely');
+      }else{
+        fetchForecast(47.093,17.911,'Veszprém mintahely');
+      }
+    });
+  }else if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(pos){
+      fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
+    },function(){
+      fetchForecast(47.093,17.911,'Veszprém mintahely');
+    },{enableHighAccuracy:false,timeout:10000,maximumAge:0});
+  }else{
+    fetchForecast(47.093,17.911,'Veszprém mintahely');
+  }
 })();
 </script>
 
