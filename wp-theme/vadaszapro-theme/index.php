@@ -760,23 +760,15 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .vhr-gauge{--vhr-alert:#1ccf64;width:100%;height:100%;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,#121212,#070707);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.8);padding:10px;display:grid;grid-template-rows:auto 1fr auto auto;gap:8px;}
 .vhr-gauge__head{display:flex;justify-content:space-between;align-items:baseline;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:800;}
 .vhr-gauge__head strong{font-size:1.8rem;line-height:1;color:#fff;letter-spacing:.03em;}
-.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#181818,#0a0a0a);overflow:hidden;min-height:214px;display:grid;place-items:center;padding:8px;}
-.vhr-gauge__circle{position:relative;width:min(248px,92%);aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:radial-gradient(circle at 50% 50%,rgba(25,25,25,1) 0%,rgba(9,9,9,1) 74%);}
-.vhr-gauge__ring{position:absolute;inset:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18);}
-.vhr-gauge__sweep{position:absolute;inset:14px;border-radius:50%;background:conic-gradient(from -135deg,#16c85f 0deg,#9fcd2f 85deg,#ffa31a 170deg,#ff5a1e 240deg,#da1818 300deg,#16c85f 360deg);opacity:.78;mask:radial-gradient(circle,transparent 58%,#000 58%);}
-.vhr-gauge__ticks{position:absolute;inset:12px;border-radius:50%;background:repeating-conic-gradient(from -135deg,rgba(255,255,255,.72) 0deg .9deg,transparent .9deg 5deg);mask:radial-gradient(circle,transparent 66%,#000 66%);opacity:.45;}
-.vhr-gauge__needle{position:absolute;left:50%;top:50%;width:6px;height:42%;margin-left:-3px;background:var(--vhr-alert);border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(-135deg);z-index:4;transition:transform .9s cubic-bezier(.2,.9,.2,1),background .25s ease;box-shadow:0 0 12px color-mix(in srgb,var(--vhr-alert) 75%,transparent);}
-.vhr-gauge__needle::before{content:'';position:absolute;left:50%;top:-10px;margin-left:-8px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid #ffe9c9;}
-.vhr-gauge__hub{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid rgba(255,235,198,.92);background:#171717;z-index:5;}
-.vhr-gauge__speedo{position:absolute;inset:18px;border-radius:50%;pointer-events:none;z-index:4;}
-.vhr-gauge__speedo span{position:absolute;color:rgba(255,255,255,.9);font-size:.62rem;font-weight:900;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.5);}
-.vhr-gauge__speedo .n0{left:11%;top:73%;}
-.vhr-gauge__speedo .n20{left:9%;top:53%;}
-.vhr-gauge__speedo .n40{left:22%;top:30%;}
-.vhr-gauge__speedo .n60{right:22%;top:30%;}
-.vhr-gauge__speedo .n80{right:9%;top:53%;}
-.vhr-gauge__speedo .n100{right:11%;top:73%;}
-.vhr-gauge__value{position:absolute;left:50%;top:50%;transform:translate(-50%,-30%);font-size:1rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.05em;z-index:6;text-shadow:0 0 10px rgba(0,0,0,.5);}
+.vhr-gauge__dial{position:relative;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:linear-gradient(180deg,#181818,#0a0a0a);overflow:hidden;min-height:186px;display:grid;place-items:center;padding:10px 12px;}
+.vhr-gauge__bar-wrap{position:relative;width:min(330px,100%);padding-top:30px;padding-bottom:52px;}
+.vhr-gauge__track{height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(90deg,#2f8f3a 0%,#3b9f36 16%,#79a321 30%,#b8a700 42%,#f0b100 54%,#f39d00 66%,#ef7300 80%,#e44600 92%,#c90f1f 100%);box-shadow:inset 0 2px 4px rgba(255,255,255,.1),inset 0 -3px 6px rgba(0,0,0,.35);}
+.vhr-gauge__marker{position:absolute;top:0;left:1%;transform:translateX(-50%);font-size:.76rem;font-weight:900;color:var(--vhr-alert);text-shadow:0 0 10px rgba(0,0,0,.45);transition:left .9s cubic-bezier(.2,.9,.2,1),color .25s ease;}
+.vhr-gauge__knob{position:absolute;top:30px;left:1%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.45),rgba(110,110,110,.92));background-size:70% 70%;background-repeat:no-repeat;background-position:center;box-shadow:0 4px 10px rgba(0,0,0,.4),0 0 0 2px rgba(0,0,0,.35);transition:left .9s cubic-bezier(.2,.9,.2,1);z-index:3;}
+.vhr-gauge__ticks{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 3px;}
+.vhr-gauge__ticks span{position:relative;font-size:.58rem;font-weight:800;color:rgba(255,255,255,.88);min-width:20px;text-align:center;}
+.vhr-gauge__ticks span::before{content:'';position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:2px;height:12px;background:rgba(255,255,255,.62);border-radius:2px;}
+.vhr-gauge__value{position:absolute;right:12px;top:8px;font-size:.95rem;font-weight:900;color:var(--vhr-alert);letter-spacing:.05em;z-index:4;text-shadow:0 0 10px rgba(0,0,0,.5);}
 .vhr-gauge__species{border:1px solid rgba(255,255,255,.18);background:rgba(255,0,0,.12);border-radius:999px;padding:7px 10px;text-align:center;font-size:.58rem;letter-spacing:.09em;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.94);}
 .vhr-gauge__footer{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(255,255,255,.13);padding-top:7px;}
 .vhr-gauge__footer span{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72);}
@@ -791,10 +783,11 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .va-home-radar__spider#vhrSpiderWidget{margin:0 0 8px !important;min-height:304px;}
   .vhr-gauge{padding:8px;gap:7px;}
   .vhr-gauge__head strong{font-size:1.55rem;}
-  .vhr-gauge__dial{min-height:188px;}
-  .vhr-gauge__circle{width:min(220px,94%);}
-  .vhr-gauge__needle{height:41%;}
-  .vhr-gauge__speedo span{font-size:.56rem;}
+  .vhr-gauge__dial{min-height:170px;padding:9px 8px;}
+  .vhr-gauge__bar-wrap{padding-top:26px;padding-bottom:48px;}
+  .vhr-gauge__track{height:36px;}
+  .vhr-gauge__knob{width:40px;height:40px;top:26px;}
+  .vhr-gauge__ticks span{font-size:.52rem;}
   .vhr-gauge__value{font-size:.9rem;}
   .vhr-gauge__footer strong{font-size:1.05rem;}
 }
@@ -1813,6 +1806,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
   var damageScores={7:12,30:8,90:5,none:0};
   var huntingScores={low:{wild_boar:4,red_deer:4,roe_deer:3,fallow_deer:3,wild_hare:2},medium:{wild_boar:1,red_deer:0,roe_deer:0,fallow_deer:0,wild_hare:0},high:{wild_boar:-4,red_deer:-3,roe_deer:-2,fallow_deer:-2,wild_hare:-2}};
   var phenologyScores={maize:{sowing:{wild_boar:12},emergence:{wild_boar:8},milk_stage:{wild_boar:15,red_deer:8,fallow_deer:7},wax_stage:{wild_boar:12,red_deer:7},pre_harvest:{wild_boar:10,red_deer:6}},rapeseed:{autumn_green:{red_deer:12,roe_deer:12,fallow_deer:10,wild_hare:8},spring_regrowth:{red_deer:10,roe_deer:10,fallow_deer:8,wild_hare:6},flowering:{red_deer:5,roe_deer:4},ripening:{red_deer:3,roe_deer:2}},sunflower:{emergence:{wild_boar:4,roe_deer:7},head_stage:{wild_boar:8,roe_deer:5},ripening:{wild_boar:10,roe_deer:6},pre_harvest:{wild_boar:8}},cereal:{young:{red_deer:9,roe_deer:7,fallow_deer:8,wild_hare:6},heading:{red_deer:6,roe_deer:4,fallow_deer:5},ripening:{red_deer:3,roe_deer:2,fallow_deer:2}},alfalfa:{fresh_regrowth:{wild_boar:8,red_deer:10,roe_deer:9,fallow_deer:9,wild_hare:6},post_cut:{wild_boar:5,red_deer:6,roe_deer:4,fallow_deer:5},mature:{red_deer:4,roe_deer:4}},orchard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:10,red_deer:7,fallow_deer:5},fruiting:{wild_boar:5,red_deer:5}},vineyard:{budburst:{roe_deer:8,red_deer:5},young_shoot:{roe_deer:9,red_deer:6,fallow_deer:4},fruiting:{red_deer:6,roe_deer:5}}};
+  var vhrPointerLogo=<?php echo wp_json_encode( esc_url( (string) ( get_option( 'va_brand_icon_url', '' ) ?: get_site_icon_url( 64 ) ) ) ); ?>;
   var weatherData=null;
   function setPhenologyOptions(){var crop=cropEl.value,list=phenologyMap[crop]||[],current=phenologyEl.value;phenologyEl.innerHTML='';for(var i=0;i<list.length;i++){var opt=document.createElement('option');opt.value=list[i][0];opt.textContent=list[i][1];phenologyEl.appendChild(opt);}if(list.some(function(item){return item[0]===current;})){phenologyEl.value=current;}if(pickerButtons.vhrPhenology){syncPickerButton(phenologyEl);}}
   function setRadarModal(open){if(!toggleEl||!modalEl)return;toggleEl.setAttribute('aria-expanded',open?'true':'false');modalEl.hidden=!open;document.body.classList.toggle('va-home-radar-modal-open',open);}
@@ -1839,32 +1833,34 @@ body.va-home-radar-picker-open{overflow:hidden;}
     if(!spiderWidgetEl){return;}
     var safeScore=clamp(parseInt(score,10)||0,0,100);
     var safeSpecies=speciesLabel||'--';
-    var ang=-135+(safeScore*270/100);
+    var pos=clamp(safeScore,1,100);
     var hue=Math.round(120-(safeScore*1.2));
     var alertColor='hsl('+hue+',88%,48%)';
     var levelTxt=riskLevel(safeScore).label;
+    var logoStyle=vhrPointerLogo?'background-image:url('+vhrPointerLogo+');':'';
     spiderWidgetEl.innerHTML=''
       +'<div class="vhr-gauge" style="--vhr-alert:'+alertColor+'">'
       +'<div class="vhr-gauge__head"><span>Vadászkár veszélymérő</span><strong>'+String(safeScore).padStart(3,'0')+'</strong></div>'
       +'<div class="vhr-gauge__dial">'
-      +'<div class="vhr-gauge__circle">'
-      +'<div class="vhr-gauge__ring"></div>'
-      +'<div class="vhr-gauge__sweep"></div>'
-      +'<div class="vhr-gauge__ticks"></div>'
-      +'<div class="vhr-gauge__speedo"><span class="n0">0</span><span class="n20">20</span><span class="n40">40</span><span class="n60">60</span><span class="n80">80</span><span class="n100">100</span></div>'
-      +'<div class="vhr-gauge__needle"></div>'
-      +'<div class="vhr-gauge__hub"></div>'
+      +'<div class="vhr-gauge__bar-wrap">'
+      +'<div class="vhr-gauge__marker">'+safeScore+'</div>'
+      +'<div class="vhr-gauge__track"></div>'
+      +'<div class="vhr-gauge__knob" style="'+logoStyle+'"></div>'
+      +'<div class="vhr-gauge__ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span></div>'
       +'<div class="vhr-gauge__value">'+safeScore+'/100</div>'
       +'</div>'
       +'</div>'
       +'<div class="vhr-gauge__species">Legnagyobb kárt okozó vadfaj: '+safeSpecies+'</div>'
       +'<div class="vhr-gauge__footer"><span>Valós, számolt kockázati index</span><strong>'+levelTxt+'</strong></div>'
       +'</div>';
-    var needleEl=spiderWidgetEl.querySelector('.vhr-gauge__needle');
-    if(needleEl){
-      needleEl.style.transform='translate(-50%,-100%) rotate(-135deg)';
+    var knobEl=spiderWidgetEl.querySelector('.vhr-gauge__knob');
+    var markerEl=spiderWidgetEl.querySelector('.vhr-gauge__marker');
+    if(knobEl&&markerEl){
+      knobEl.style.left='1%';
+      markerEl.style.left='1%';
       window.requestAnimationFrame(function(){
-        needleEl.style.transform='translate(-50%,-100%) rotate('+ang+'deg)';
+        knobEl.style.left=pos+'%';
+        markerEl.style.left=pos+'%';
       });
     }
   }
