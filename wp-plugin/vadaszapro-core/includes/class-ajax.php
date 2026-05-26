@@ -170,7 +170,7 @@ class VA_Ajax {
             'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
-            'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
+            'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
             'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
@@ -226,6 +226,7 @@ class VA_Ajax {
             'brand'   => 'Márka / gyártó',
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
+            'other_weapon_kind' => 'Egyéb fegyverek kategória',
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
@@ -673,6 +674,39 @@ class VA_Ajax {
         $bow_speed_fps = sanitize_text_field( wp_unslash( $_POST['bow_speed_fps'] ?? '' ) );
         $bow_serial = sanitize_text_field( wp_unslash( $_POST['bow_serial'] ?? '' ) );
         $bow_material = sanitize_text_field( wp_unslash( $_POST['bow_material'] ?? '' ) );
+        $other_weapon_kind = sanitize_key( wp_unslash( $_POST['other_weapon_kind'] ?? '' ) );
+        $other_weapon_general_notes = sanitize_textarea_field( wp_unslash( $_POST['other_weapon_general_notes'] ?? '' ) );
+        $other_weapon_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['other_weapon_accessories'] ?? [] ) ) ) );
+        $other_weapon_accessories_other = sanitize_text_field( wp_unslash( $_POST['other_weapon_accessories_other'] ?? '' ) );
+        $other_weapon_18plus = sanitize_key( wp_unslash( $_POST['other_weapon_18plus'] ?? '' ) );
+        $other_weapon_permit_required = sanitize_key( wp_unslash( $_POST['other_weapon_permit_required'] ?? '' ) );
+        $other_weapon_personal_pickup = sanitize_key( wp_unslash( $_POST['other_weapon_personal_pickup'] ?? '' ) );
+        $other_weapon_origin_papers = sanitize_key( wp_unslash( $_POST['other_weapon_origin_papers'] ?? '' ) );
+        $other_weapon_serial_number = sanitize_text_field( wp_unslash( $_POST['other_weapon_serial_number'] ?? '' ) );
+        $other_weapon_bow_draw_weight_lbs = sanitize_text_field( wp_unslash( $_POST['other_weapon_bow_draw_weight_lbs'] ?? '' ) );
+        $other_weapon_bow_axle_to_axle = sanitize_text_field( wp_unslash( $_POST['other_weapon_bow_axle_to_axle'] ?? '' ) );
+        $other_weapon_bow_handness = sanitize_key( wp_unslash( $_POST['other_weapon_bow_handness'] ?? '' ) );
+        $other_weapon_bow_style = sanitize_key( wp_unslash( $_POST['other_weapon_bow_style'] ?? '' ) );
+        $other_weapon_bow_arrow_rest = sanitize_key( wp_unslash( $_POST['other_weapon_bow_arrow_rest'] ?? '' ) );
+        $other_weapon_bow_sight = sanitize_key( wp_unslash( $_POST['other_weapon_bow_sight'] ?? '' ) );
+        $other_weapon_crossbow_draw_weight_lbs = sanitize_text_field( wp_unslash( $_POST['other_weapon_crossbow_draw_weight_lbs'] ?? '' ) );
+        $other_weapon_crossbow_fps = sanitize_text_field( wp_unslash( $_POST['other_weapon_crossbow_fps'] ?? '' ) );
+        $other_weapon_crossbow_accessories = sanitize_textarea_field( wp_unslash( $_POST['other_weapon_crossbow_accessories'] ?? '' ) );
+        $other_weapon_airsoft_operation = sanitize_key( wp_unslash( $_POST['other_weapon_airsoft_operation'] ?? '' ) );
+        $other_weapon_airsoft_energy_joule = sanitize_text_field( wp_unslash( $_POST['other_weapon_airsoft_energy_joule'] ?? '' ) );
+        $other_weapon_airsoft_fps = sanitize_text_field( wp_unslash( $_POST['other_weapon_airsoft_fps'] ?? '' ) );
+        $other_weapon_airsoft_magazine_type = sanitize_key( wp_unslash( $_POST['other_weapon_airsoft_magazine_type'] ?? '' ) );
+        $other_weapon_airgun_caliber = sanitize_text_field( wp_unslash( $_POST['other_weapon_airgun_caliber'] ?? '' ) );
+        $other_weapon_airgun_muzzle_energy = sanitize_text_field( wp_unslash( $_POST['other_weapon_airgun_muzzle_energy'] ?? '' ) );
+        $other_weapon_airgun_power_source = sanitize_key( wp_unslash( $_POST['other_weapon_airgun_power_source'] ?? '' ) );
+        $other_weapon_gas_alarm_caliber = sanitize_text_field( wp_unslash( $_POST['other_weapon_gas_alarm_caliber'] ?? '' ) );
+        $other_weapon_gas_alarm_self_defense_license = sanitize_key( wp_unslash( $_POST['other_weapon_gas_alarm_self_defense_license'] ?? '' ) );
+        $other_weapon_gas_alarm_carry_license = sanitize_key( wp_unslash( $_POST['other_weapon_gas_alarm_carry_license'] ?? '' ) );
+        $other_weapon_knife_blade_length = sanitize_text_field( wp_unslash( $_POST['other_weapon_knife_blade_length'] ?? '' ) );
+        $other_weapon_knife_steel_type = sanitize_text_field( wp_unslash( $_POST['other_weapon_knife_steel_type'] ?? '' ) );
+        $other_weapon_knife_handle_material = sanitize_text_field( wp_unslash( $_POST['other_weapon_knife_handle_material'] ?? '' ) );
+        $other_weapon_knife_sheath = sanitize_key( wp_unslash( $_POST['other_weapon_knife_sheath'] ?? '' ) );
+        $other_weapon_knife_accessories = sanitize_textarea_field( wp_unslash( $_POST['other_weapon_knife_accessories'] ?? '' ) );
         $bow_acc_sight = ! empty( $_POST['bow_acc_sight'] ) ? '1' : '0';
         $bow_acc_release = ! empty( $_POST['bow_acc_release'] ) ? '1' : '0';
         $bow_acc_stabilizer = ! empty( $_POST['bow_acc_stabilizer'] ) ? '1' : '0';
@@ -846,6 +880,39 @@ class VA_Ajax {
             'va_bow_speed_fps' => $bow_speed_fps,
             'va_bow_serial' => $bow_serial,
             'va_bow_material' => $bow_material,
+            'va_other_weapon_kind' => $other_weapon_kind,
+            'va_other_weapon_general_notes' => $other_weapon_general_notes,
+            'va_other_weapon_accessories' => $other_weapon_accessories,
+            'va_other_weapon_accessories_other' => $other_weapon_accessories_other,
+            'va_other_weapon_18plus' => $other_weapon_18plus,
+            'va_other_weapon_permit_required' => $other_weapon_permit_required,
+            'va_other_weapon_personal_pickup' => $other_weapon_personal_pickup,
+            'va_other_weapon_origin_papers' => $other_weapon_origin_papers,
+            'va_other_weapon_serial_number' => $other_weapon_serial_number,
+            'va_other_weapon_bow_draw_weight_lbs' => $other_weapon_bow_draw_weight_lbs,
+            'va_other_weapon_bow_axle_to_axle' => $other_weapon_bow_axle_to_axle,
+            'va_other_weapon_bow_handness' => $other_weapon_bow_handness,
+            'va_other_weapon_bow_style' => $other_weapon_bow_style,
+            'va_other_weapon_bow_arrow_rest' => $other_weapon_bow_arrow_rest,
+            'va_other_weapon_bow_sight' => $other_weapon_bow_sight,
+            'va_other_weapon_crossbow_draw_weight_lbs' => $other_weapon_crossbow_draw_weight_lbs,
+            'va_other_weapon_crossbow_fps' => $other_weapon_crossbow_fps,
+            'va_other_weapon_crossbow_accessories' => $other_weapon_crossbow_accessories,
+            'va_other_weapon_airsoft_operation' => $other_weapon_airsoft_operation,
+            'va_other_weapon_airsoft_energy_joule' => $other_weapon_airsoft_energy_joule,
+            'va_other_weapon_airsoft_fps' => $other_weapon_airsoft_fps,
+            'va_other_weapon_airsoft_magazine_type' => $other_weapon_airsoft_magazine_type,
+            'va_other_weapon_airgun_caliber' => $other_weapon_airgun_caliber,
+            'va_other_weapon_airgun_muzzle_energy' => $other_weapon_airgun_muzzle_energy,
+            'va_other_weapon_airgun_power_source' => $other_weapon_airgun_power_source,
+            'va_other_weapon_gas_alarm_caliber' => $other_weapon_gas_alarm_caliber,
+            'va_other_weapon_gas_alarm_self_defense_license' => $other_weapon_gas_alarm_self_defense_license,
+            'va_other_weapon_gas_alarm_carry_license' => $other_weapon_gas_alarm_carry_license,
+            'va_other_weapon_knife_blade_length' => $other_weapon_knife_blade_length,
+            'va_other_weapon_knife_steel_type' => $other_weapon_knife_steel_type,
+            'va_other_weapon_knife_handle_material' => $other_weapon_knife_handle_material,
+            'va_other_weapon_knife_sheath' => $other_weapon_knife_sheath,
+            'va_other_weapon_knife_accessories' => $other_weapon_knife_accessories,
             'va_bow_acc_sight' => $bow_acc_sight,
             'va_bow_acc_release' => $bow_acc_release,
             'va_bow_acc_stabilizer' => $bow_acc_stabilizer,
@@ -1274,6 +1341,39 @@ class VA_Ajax {
             'va_bow_speed_fps' => $bow_speed_fps,
             'va_bow_serial' => $bow_serial,
             'va_bow_material' => $bow_material,
+            'va_other_weapon_kind' => $other_weapon_kind,
+            'va_other_weapon_general_notes' => $other_weapon_general_notes,
+            'va_other_weapon_accessories' => $other_weapon_accessories,
+            'va_other_weapon_accessories_other' => $other_weapon_accessories_other,
+            'va_other_weapon_18plus' => $other_weapon_18plus,
+            'va_other_weapon_permit_required' => $other_weapon_permit_required,
+            'va_other_weapon_personal_pickup' => $other_weapon_personal_pickup,
+            'va_other_weapon_origin_papers' => $other_weapon_origin_papers,
+            'va_other_weapon_serial_number' => $other_weapon_serial_number,
+            'va_other_weapon_bow_draw_weight_lbs' => $other_weapon_bow_draw_weight_lbs,
+            'va_other_weapon_bow_axle_to_axle' => $other_weapon_bow_axle_to_axle,
+            'va_other_weapon_bow_handness' => $other_weapon_bow_handness,
+            'va_other_weapon_bow_style' => $other_weapon_bow_style,
+            'va_other_weapon_bow_arrow_rest' => $other_weapon_bow_arrow_rest,
+            'va_other_weapon_bow_sight' => $other_weapon_bow_sight,
+            'va_other_weapon_crossbow_draw_weight_lbs' => $other_weapon_crossbow_draw_weight_lbs,
+            'va_other_weapon_crossbow_fps' => $other_weapon_crossbow_fps,
+            'va_other_weapon_crossbow_accessories' => $other_weapon_crossbow_accessories,
+            'va_other_weapon_airsoft_operation' => $other_weapon_airsoft_operation,
+            'va_other_weapon_airsoft_energy_joule' => $other_weapon_airsoft_energy_joule,
+            'va_other_weapon_airsoft_fps' => $other_weapon_airsoft_fps,
+            'va_other_weapon_airsoft_magazine_type' => $other_weapon_airsoft_magazine_type,
+            'va_other_weapon_airgun_caliber' => $other_weapon_airgun_caliber,
+            'va_other_weapon_airgun_muzzle_energy' => $other_weapon_airgun_muzzle_energy,
+            'va_other_weapon_airgun_power_source' => $other_weapon_airgun_power_source,
+            'va_other_weapon_gas_alarm_caliber' => $other_weapon_gas_alarm_caliber,
+            'va_other_weapon_gas_alarm_self_defense_license' => $other_weapon_gas_alarm_self_defense_license,
+            'va_other_weapon_gas_alarm_carry_license' => $other_weapon_gas_alarm_carry_license,
+            'va_other_weapon_knife_blade_length' => $other_weapon_knife_blade_length,
+            'va_other_weapon_knife_steel_type' => $other_weapon_knife_steel_type,
+            'va_other_weapon_knife_handle_material' => $other_weapon_knife_handle_material,
+            'va_other_weapon_knife_sheath' => $other_weapon_knife_sheath,
+            'va_other_weapon_knife_accessories' => $other_weapon_knife_accessories,
             'va_bow_acc_sight' => $bow_acc_sight,
             'va_bow_acc_release' => $bow_acc_release,
             'va_bow_acc_stabilizer' => $bow_acc_stabilizer,

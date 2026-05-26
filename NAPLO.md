@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #egyeb-fegyverek-dynamic-fields
+- Kérés: az `Egyéb fegyverek` kategória kapjon jogilag óvatos, altípus-alapú mezőket, külön kezelve az íj, számszeríj, légfegyver, airsoft, gáz-riasztó, muzeális, díszfegyver, vadászkés és túlélő/taktikai eszköz vonalat.
+- Javítás: a root + plugin feladási űrlapban külön `Egyéb fegyverek` blokk készült kategória-választóval, általános tartozékokkal és altípusonként megjelenő műszaki mezőkkel.
+- Javítás: a lőfegyveres maradék blokkot kivettük ebből a kategóriából, így a kaliber/engedély jellegű mezők nem keverednek ide.
+- Javítás: a backend mindkét copy-ban menti az új `va_other_weapon_*` meta kulcsokat, és a required rule most az altípus-választót is kéri.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 26. – Session #allas-category-fields
 - Kérés: az `Állás` kategória kapjon teljes, részletes mezőkészletet a feladási űrlapon.
 - Javítás: a root + plugin mirror űrlapba bekerült a strukturált job blokk: munkakör, foglalkoztatás típusa, település, megye, ország, végzettség, engedélyek, jogosítványok, tapasztalat, nyelv, feladatok, munkaidő, szállás, étkezés, jármű, fegyver, fizetés.
