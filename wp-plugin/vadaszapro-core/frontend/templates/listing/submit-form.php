@@ -250,7 +250,7 @@ $category_required_rules = [
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model' ] ],
-    'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand' ] ],
+    'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
     'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
@@ -2007,7 +2007,7 @@ body.va-modal-open {
             </div>
             <?php if ( $site_type !== 'jarmu' ): ?>
             <div class="va-form-row">
-                <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek">
+                <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny">
                     <label>Kaliber</label>
                     <select name="caliber" class="va-select">
                         <option value="">– Válasszon –</option>
@@ -2091,7 +2091,7 @@ body.va-modal-open {
                     </div>
                 </div>
             </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,egyeb-fegyverek,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
+            <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
                 <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>
             <!-- Távcső kompakt grid layout -->
