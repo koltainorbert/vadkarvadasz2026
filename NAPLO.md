@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-widget-below-calendar-and-cta-text
+- Kérés: a radar widget kerüljön a naptár widget alá, és a látható szöveg legyen `Teljes Vadkár Radar detektálás`.
+- Javítás: a sidebar flex sorrendje úgy lett beállítva, hogy a radar widget közvetlenül a `Holdnaptár` után jelenjen meg, az időjárás elé kerülve.
+- Javítás: a radar widget CTA gombszövege `Teljes Vadkár Radar detektálás` lett.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
 ## 2026. 05. 26. – Session #radar-light-pollution-label-short
 - Kérés: az `Éjszakai fényterhelés` mező elég legyen csak `Fényszennyezés`.
 - Javítás: a mező látható címkéje és a picker címe lerövidítve `Fényszennyezés`-re.

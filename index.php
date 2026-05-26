@@ -178,6 +178,12 @@ body.va-agri-modal-open{overflow:hidden;}
 </section>
   <?php endif; ?>
 
+  <style>
+  #holdnaptar{order:2;}
+  #va-home-radar{order:3;}
+  #va-weather{order:4;}
+  </style>
+
 <?php if ( $va_show_weather_widget ): ?>
 <section class="va-weather" id="va-weather">
   <div class="va-weather__hd">
@@ -413,7 +419,7 @@ body.va-weather-modal-open{overflow:hidden;}
   </div>
   <div class="va-home-radar__reason" id="vhrReason">Meteorológia és lokáció betöltése...</div>
   <div class="va-home-radar__days" id="vhrDays"></div>
-  <button type="button" class="va-home-radar__toggle" id="vhrToggle" aria-expanded="false" aria-controls="vhrModal">Részletek és beállítások ✦</button>
+  <button type="button" class="va-home-radar__toggle" id="vhrToggle" aria-expanded="false" aria-controls="vhrModal">Teljes Vadkár Radar detektálás</button>
   <div class="va-home-radar__modal" id="vhrModal" hidden>
     <div class="va-home-radar__modal-backdrop" id="vhrModalBackdrop"></div>
     <div class="va-home-radar__modal-card" role="dialog" aria-modal="true" aria-labelledby="vhrModalTitle">
