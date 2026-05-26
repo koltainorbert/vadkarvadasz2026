@@ -87,7 +87,8 @@ $va_agri_crops_widget = [
 .va-agri__item{border:1px solid rgba(255,255,255,.12);border-radius:8px;background:rgba(7,12,22,.56);padding:5px 6px;}
 .va-agri__name{font-size:.67rem;font-weight:800;color:#fff;margin-bottom:3px;}
 .va-agri__row{font-size:.57rem;color:rgba(231,241,255,.9);display:flex;align-items:center;justify-content:space-between;gap:6px;padding:1px 0;}
-.va-agri__tag{font-size:.5rem;font-weight:900;letter-spacing:.04em;border-radius:999px;padding:1px 5px;border:1px solid transparent;text-transform:uppercase;white-space:nowrap;}
+.va-agri__row > span{flex:1;min-width:0;padding-right:8px;}
+.va-agri__tag{display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:.5rem;font-weight:900;letter-spacing:.04em;line-height:1.1;text-align:center;border-radius:999px;padding:2px 8px;border:1px solid transparent;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
 .va-agri__tag.is-on{color:#7dffb2;background:rgba(0,255,102,.16);border-color:rgba(0,255,120,.46);}
 .va-agri__tag.is-off{color:#ff8a8a;background:rgba(255,0,0,.1);border-color:rgba(255,0,0,.4);}
 </style>
@@ -263,7 +264,8 @@ $va_agri_crops_widget = [
 .va-weather__agri-card{border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(7,12,18,.54);padding:8px;}
 .va-weather__agri-crop{font-size:.78rem;font-weight:800;color:#fff;margin:0 0 6px;}
 .va-weather__agri-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.67rem;color:rgba(236,244,255,.92);padding:2px 0;}
-.va-weather__agri-tag{font-size:.58rem;font-weight:800;letter-spacing:.05em;border-radius:999px;padding:2px 7px;white-space:nowrap;}
+.va-weather__agri-row > span{flex:1;min-width:0;padding-right:8px;}
+.va-weather__agri-tag{display:inline-flex;align-items:center;justify-content:center;min-width:60px;font-size:.58rem;font-weight:800;letter-spacing:.05em;line-height:1.1;text-align:center;border-radius:999px;padding:2px 8px;white-space:nowrap;flex-shrink:0;}
 .va-weather__agri-tag.is-now{background:rgba(0,255,102,.16);border:1px solid rgba(0,255,120,.46);color:#7dffb2;}
 .va-weather__agri-tag.is-off{background:rgba(255,0,0,.1);border:1px solid rgba(255,0,0,.4);color:#ff8a8a;}
 .va-weather__section{scroll-margin-top:86px;}
@@ -764,7 +766,9 @@ body.va-home-radar-picker-open{overflow:hidden;}
 .sw-dot--on{
   background:#00ff66 !important;
   box-shadow:0 0 7px rgba(0,255,102,.95) !important;
+  animation:va-sw-dot-blink .85s ease-in-out infinite !important;
 }
+@keyframes va-sw-dot-blink{0%,100%{opacity:1;}50%{opacity:.28;}}
 
 /* Status semantics: current/active = green, forbidden/inactive = red. */
 .va-agri__tag.is-on,
