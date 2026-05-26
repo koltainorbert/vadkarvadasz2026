@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #archive-header-and-catbar-fix
+- Megállapítás: a korábbi módosítás nem a ténylegesen futó `/hirdetes/?s=...` archive felületre ment, ezért a live oldalon nem látszott változás.
+- Javítás: az archive/tax oldalak tetején megjelenő header kategória gyorsmenü teljesen kikerült a header sablonból.
+- Javítás: az archive fejléc ikonmentes, breadcrumbos blokk lett, fehér főcímmel és dinamikus `Főoldal / aktuális szűrés` felirattal.
+- Eredmény: a felső kategóriasor eltűnik, a főcím fehér marad, és a keresett kifejezés például `bm` címsorként jelenik meg.
+- Érintett: `NAPLO.md`, `archive.php`, `header.php`, `wp-theme/vadaszapro-theme/archive.php`, `wp-theme/vadaszapro-theme/header.php`.
+
 ## 2026. 05. 26. – Session #search-topbar-breadcrumb-cleanup
 - Kérés: a keresési oldal tetejéről tűnjenek el a kategória/chip elemek, a főcím legyen fehér, a kis ikon kerüljön ki, és helyette jelenjen meg egy `Főoldal / aktuális szűrés` sáv.
 - Javítás: a keresési landing blokk a felső chip-listák helyett breadcrumb sort és nagy fehér H1 címet renderel.
