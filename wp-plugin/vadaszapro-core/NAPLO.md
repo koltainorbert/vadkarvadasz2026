@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-modal-top-layer-fix
+- A részletes radar popup max z-indexre emelve.
+- Modal/picker runtime áthelyezve a `body` alá a stacking context hiba kivédésére.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `e701af1`.
+
 ## 2026. 05. 26. – Session #radar-trend-context-fix
 - A 7 napos trend panel referenciaalapokkal bővítve: mai csúcsindex + 7 nap átlag.
 - Napi oszlopok: delta a mai naphoz, napi score, napi fő faj rövidítés.

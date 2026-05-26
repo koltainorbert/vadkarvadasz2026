@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 26. – Session #radar-modal-top-layer-fix
+- Hiba: a részletes radar popup scroll közben egyes elemek mögé került (stacking context probléma).
+- Javítás: radar modal/picker max z-indexre állítva, és futáskor közvetlenül a `body` alá mozgatva.
+- Eredmény: a popup teljesen előtérben marad, nem csúszik más rétegek mögé.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+- Deploy commit: `e701af1`.
+
 ## 2026. 05. 26. – Session #radar-trend-context-fix
 - Kérés: a 7 napos trend önmagában nem informatív, legyen viszonyítás és napi kontextus.
 - Javítás: trend panel kapott két referencia sort (`Alap: mai csúcsindex`, `7 nap átlag`), napi delta jelölést (mai naphoz képest), napi score értéket és napi fő faj rövidítést.
