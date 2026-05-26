@@ -702,6 +702,63 @@ body.va-home-radar-picker-open{overflow:hidden;}
   .va-home-radar__spider#vhrSpiderWidget{margin:-18px 0 -8px !important;}
   .va-home-radar__spider#vhrSpiderWidget svg{max-height:210px;height:210px;}
 }
+
+/* Unified home widget palette (same color family for all widgets). */
+.va-season,
+.va-agri,
+.va-moon,
+.va-weather,
+.va-home-radar{
+  background:linear-gradient(160deg,rgba(6,16,12,.97),rgba(7,23,16,.98) 56%,rgba(8,18,14,.97) 100%) !important;
+  border:1px solid rgba(70,190,130,.26) !important;
+  box-shadow:0 18px 34px rgba(0,0,0,.42),inset 0 0 0 1px rgba(120,255,190,.04),inset 0 0 26px rgba(70,220,150,.05) !important;
+}
+.va-season::before,
+.va-moon::before,
+.va-home-radar::before{
+  opacity:.1 !important;
+}
+.va-season__title,
+.va-agri__title,
+.va-moon__title,
+.va-weather__title,
+.va-home-radar__scorelabel{
+  color:#ddffe8 !important;
+}
+.va-season__date,
+.va-agri__sub,
+.va-moon__time,
+.va-weather__loc,
+.va-weather__note,
+.va-home-radar__scorelabel{
+  color:rgba(210,255,230,.78) !important;
+}
+.sw-row,
+.va-agri__item,
+.va-weather__day,
+.va-weather__weekcell,
+.va-home-radar__scorebox,
+.va-home-radar__spider#vhrSpiderWidget{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.018)) !important;
+  border-color:rgba(90,210,150,.22) !important;
+}
+.sw-row--new{background:rgba(70,220,145,.12) !important;}
+.va-agri__tag.is-on,
+.va-weather__agri-tag.is-now{
+  color:#caffdf !important;
+  background:rgba(50,180,110,.24) !important;
+  border-color:rgba(120,255,190,.5) !important;
+}
+.va-weather__toggle,
+.va-home-radar__toggle{
+  background:linear-gradient(135deg,rgba(34,120,78,.72),rgba(24,88,60,.82)) !important;
+  border-color:rgba(110,245,180,.38) !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.3),inset 0 0 18px rgba(110,245,180,.08) !important;
+}
+.sw-dot--on{
+  background:#62f3a9 !important;
+  box-shadow:0 0 8px rgba(98,243,169,.9) !important;
+}
 </style>
 
 </aside>
