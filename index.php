@@ -1931,7 +1931,12 @@ body.va-home-radar-picker-open{overflow:hidden;}
   function updateCDs(){
     for(var i=0;i<_cdList.length;i++){
       var c=_cdList[i], ms=msTillDate(c.m,c.d);
-      c.el.textContent=fmtMs(ms)+(c.open?' van hátra':' múlva nyílik');
+      var valEl=c.el.querySelector('.sw-cd__val');
+      if(valEl){
+        valEl.textContent=fmtMs(ms);
+      }else{
+        c.el.textContent=fmtMs(ms)+(c.open?' van hátra':' múlva nyílik');
+      }
     }
   }
 
@@ -2006,7 +2011,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
         +'<div class="sw-body">'
         +'<div class="sw-name">'+a.name+(a.daysLeft<=7&&!a.isNew&&!a.neverCloses?' <span class="sw-closing-lbl">&#9888;&#9888; Z&Aacute;RUL</span>':'')+'</div>'
         +'<div class="sw-sub">'+a.sub+'</div>'
-        +'<div class="sw-cd sw-cd--'+urgency+'" id="'+cdId+'">'+(a.neverCloses?'Egész évben':'…')+'</div>'
+        +'<div class="sw-cd sw-cd--'+urgency+'" id="'+cdId+'">'+(a.neverCloses?'Egész évben':'<span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> van hátra</span>')+'</div>'
         +'</div>';
       openEl.appendChild(row);
       if(!a.neverCloses)_cdList.push({el:document.getElementById(cdId),m:a.closeM,d:a.closeD,open:true});
@@ -2033,7 +2038,7 @@ body.va-home-radar-picker-open{overflow:hidden;}
         row2.innerHTML='<div class="sw-dot sw-dot--off"></div>'
           +'<div class="sw-body">'
           +'<div class="sw-name">'+a2.name+'</div>'
-          +'<div class="sw-cd sw-cd--soon" id="'+cdId2+'">…</div>'
+          +'<div class="sw-cd sw-cd--soon" id="'+cdId2+'"><span class="sw-cd__val notranslate">…</span><span class="sw-cd__tail"> múlva nyílik</span></div>'
           +'</div>';
         soonEl.appendChild(row2);
         _cdList.push({el:document.getElementById(cdId2),m:a2.openM,d:a2.openD,open:false});
@@ -2511,7 +2516,18 @@ if(_grpData.length>0&&grpDaysSinceOpen(groups[0])<9999){
 
 function updateCDs(){
   var bp=nowBPsimple();
-  var translatedMode=isRuntimeTranslated();
+  function isRuntimeTranslatedLocal(){
+    var html=document.documentElement;
+    if(!html){return false;}
+    var lang=(html.getAttribute('lang')||'').toLowerCase();
+    if(lang && lang.indexOf('hu')!==0){return true;}
+    var htmlClass=html.className||'';
+    var bodyClass=(document.body&&document.body.className)?document.body.className:'';
+    if(/translated|goog-te/.test(htmlClass)||/translated|goog-te/.test(bodyClass)){return true;}
+    if(document.querySelector('.goog-te-banner-frame, .goog-te-combo, iframe[src*="translate"]')){return true;}
+    return false;
+  }
+  var translatedMode=isRuntimeTranslatedLocal();
   updateSunInfo(bp);
   updateShootCountdown(bp);
   /* Élő óra a Gantt fejlécben */
@@ -2544,7 +2560,15 @@ function updateCDs(){
   });
 }
 updateCDs();
-setInterval(updateCDs,isRuntimeTranslated()?60000:1000);
+setInterval(updateCDs,(function(){
+  var html=document.documentElement;
+  if(!html){return 1000;}
+  var lang=(html.getAttribute('lang')||'').toLowerCase();
+  var htmlClass=html.className||'';
+  var bodyClass=(document.body&&document.body.className)?document.body.className:'';
+  var translated=(lang&&lang.indexOf('hu')!==0)||/translated|goog-te/.test(htmlClass)||/translated|goog-te/.test(bodyClass)||!!document.querySelector('.goog-te-banner-frame, .goog-te-combo, iframe[src*="translate"]');
+  return translated?60000:1000;
+})());
 updateHnOverflowState();
 })();
 </script>
