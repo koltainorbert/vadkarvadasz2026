@@ -646,6 +646,23 @@ class VA_Ajax {
         return array_values( array_unique( $hits ) );
     }
 
+    private static function map_response_time_to_hours( string $response_time ): int {
+        switch ( $response_time ) {
+            case 'azonnal-0-2':
+                return 2;
+            case '24-oran-belul':
+                return 24;
+            case '48-oran-belul':
+                return 48;
+            case 'szezonalis-jelenlet':
+                return 168;
+            case 'folyamatos-jelenlet':
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
     private static function detect_marok_moderation_hits( string $title, string $description, string $notes = '' ): array {
         $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
         if ( $haystack === '' ) {
@@ -2315,6 +2332,32 @@ class VA_Ajax {
             'va_hunt_shot_limit' => $hunt_shot_limit,
             'va_hunt_real_time_slots' => $hunt_real_time_slots,
             'va_hunt_bookable_dates' => $hunt_bookable_dates,
+            'va_hunt_damage_main_type' => $hunt_damage_main_type,
+            'va_hunt_settlement' => $hunt_settlement,
+            'va_hunt_land_type' => $hunt_land_type,
+            'va_hunt_response_time' => $hunt_response_time,
+            'va_hunt_availability_mode' => $hunt_availability_mode,
+            'va_hunt_executor_type' => $hunt_executor_type,
+            'va_hunt_executor_capacity' => $hunt_executor_capacity,
+            'va_hunt_tools' => $hunt_tools,
+            'va_hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'va_hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'va_hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'va_hunt_liability_insurance' => $hunt_liability_insurance,
+            'va_hunt_damage_nature' => $hunt_damage_nature,
+            'va_hunt_pricing_model' => $hunt_pricing_model,
+            'va_hunt_travel_fee' => $hunt_travel_fee,
+            'va_hunt_contract_type' => $hunt_contract_type,
+            'va_hunt_site_conditions' => $hunt_site_conditions,
+            'va_hunt_reference_media' => $hunt_reference_media,
+            'va_hunt_agri_hectare_size' => $hunt_agri_hectare_size,
+            'va_hunt_agri_culture_type' => $hunt_agri_culture_type,
+            'va_hunt_urgent_immediate_start' => $hunt_urgent_immediate_start,
+            'va_hunt_urgent_duty_phone' => $hunt_urgent_duty_phone,
+            'va_hunt_long_term_yearly_discount' => $hunt_long_term_yearly_discount,
+            'va_hunt_package_auto_seasonal' => $hunt_package_auto_seasonal,
+            'va_hunt_package_monthly_model' => $hunt_package_monthly_model,
+            'va_hunt_package_monitoring_intervention' => $hunt_package_monitoring_intervention,
             'va_hunt_needs_review' => ! empty( $hunt_moderation_hits ) ? '1' : '0',
             'va_hunt_review_hits' => implode( ',', $hunt_moderation_hits ),
             'va_hunt_filter_game_species' => $hunt_game_species,
@@ -2323,6 +2366,12 @@ class VA_Ajax {
             'va_hunt_filter_price_min' => $hunt_price_min,
             'va_hunt_filter_price_max' => $hunt_price_max,
             'va_hunt_filter_methods' => $hunt_methods,
+            'va_hunt_filter_method_types' => $hunt_method_types,
+            'va_hunt_filter_land_type' => $hunt_land_type,
+            'va_hunt_filter_response_time_hours' => (string) $hunt_response_time_hours,
+            'va_hunt_filter_contract_type' => $hunt_contract_type,
+            'va_hunt_filter_pricing_model' => $hunt_pricing_model,
+            'va_hunt_filter_availability_24_7' => $hunt_availability_24_7,
             'va_hunt_filter_has_accommodation' => $hunt_has_accommodation === 'igen' ? '1' : '0',
             'va_hunt_filter_has_guide' => $hunt_guide_type === 'nincs' ? '0' : '1',
             'va_hunt_filter_difficulty_level' => $hunt_difficulty_level,
@@ -3964,6 +4013,32 @@ class VA_Ajax {
             'va_hunt_shot_limit' => $hunt_shot_limit,
             'va_hunt_real_time_slots' => $hunt_real_time_slots,
             'va_hunt_bookable_dates' => $hunt_bookable_dates,
+            'va_hunt_damage_main_type' => $hunt_damage_main_type,
+            'va_hunt_settlement' => $hunt_settlement,
+            'va_hunt_land_type' => $hunt_land_type,
+            'va_hunt_response_time' => $hunt_response_time,
+            'va_hunt_availability_mode' => $hunt_availability_mode,
+            'va_hunt_executor_type' => $hunt_executor_type,
+            'va_hunt_executor_capacity' => $hunt_executor_capacity,
+            'va_hunt_tools' => $hunt_tools,
+            'va_hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'va_hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'va_hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'va_hunt_liability_insurance' => $hunt_liability_insurance,
+            'va_hunt_damage_nature' => $hunt_damage_nature,
+            'va_hunt_pricing_model' => $hunt_pricing_model,
+            'va_hunt_travel_fee' => $hunt_travel_fee,
+            'va_hunt_contract_type' => $hunt_contract_type,
+            'va_hunt_site_conditions' => $hunt_site_conditions,
+            'va_hunt_reference_media' => $hunt_reference_media,
+            'va_hunt_agri_hectare_size' => $hunt_agri_hectare_size,
+            'va_hunt_agri_culture_type' => $hunt_agri_culture_type,
+            'va_hunt_urgent_immediate_start' => $hunt_urgent_immediate_start,
+            'va_hunt_urgent_duty_phone' => $hunt_urgent_duty_phone,
+            'va_hunt_long_term_yearly_discount' => $hunt_long_term_yearly_discount,
+            'va_hunt_package_auto_seasonal' => $hunt_package_auto_seasonal,
+            'va_hunt_package_monthly_model' => $hunt_package_monthly_model,
+            'va_hunt_package_monitoring_intervention' => $hunt_package_monitoring_intervention,
             'va_hunt_needs_review' => ! empty( $hunt_moderation_hits ) ? '1' : '0',
             'va_hunt_review_hits' => implode( ',', $hunt_moderation_hits ),
             'va_hunt_filter_game_species' => $hunt_game_species,
@@ -3972,6 +4047,12 @@ class VA_Ajax {
             'va_hunt_filter_price_min' => $hunt_price_min,
             'va_hunt_filter_price_max' => $hunt_price_max,
             'va_hunt_filter_methods' => $hunt_methods,
+            'va_hunt_filter_method_types' => $hunt_method_types,
+            'va_hunt_filter_land_type' => $hunt_land_type,
+            'va_hunt_filter_response_time_hours' => (string) $hunt_response_time_hours,
+            'va_hunt_filter_contract_type' => $hunt_contract_type,
+            'va_hunt_filter_pricing_model' => $hunt_pricing_model,
+            'va_hunt_filter_availability_24_7' => $hunt_availability_24_7,
             'va_hunt_filter_has_accommodation' => $hunt_has_accommodation === 'igen' ? '1' : '0',
             'va_hunt_filter_has_guide' => $hunt_guide_type === 'nincs' ? '0' : '1',
             'va_hunt_filter_difficulty_level' => $hunt_difficulty_level,
