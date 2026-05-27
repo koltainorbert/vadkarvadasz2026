@@ -1363,6 +1363,96 @@ class VA_Ajax {
         $hunt_has_offroad = sanitize_key( wp_unslash( $_POST['hunt_has_offroad'] ?? '' ) );
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
+        $hunt_type = sanitize_key( wp_unslash( $_POST['hunt_type'] ?? '' ) );
+        $hunt_game_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_game_species'] ?? [] ) ) ) );
+        $hunt_country = sanitize_text_field( wp_unslash( $_POST['hunt_country'] ?? '' ) );
+        $hunt_county = sanitize_text_field( wp_unslash( $_POST['hunt_county'] ?? '' ) );
+        $hunt_area_name = sanitize_text_field( wp_unslash( $_POST['hunt_area_name'] ?? '' ) );
+        $hunt_exact_area = sanitize_text_field( wp_unslash( $_POST['hunt_exact_area'] ?? '' ) );
+        $hunt_gps_lat = sanitize_text_field( wp_unslash( $_POST['hunt_gps_lat'] ?? '' ) );
+        $hunt_gps_lng = sanitize_text_field( wp_unslash( $_POST['hunt_gps_lng'] ?? '' ) );
+        $hunt_terrain_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_terrain_types'] ?? [] ) ) ) );
+        $hunt_season_start = sanitize_text_field( wp_unslash( $_POST['hunt_season_start'] ?? '' ) );
+        $hunt_season_end = sanitize_text_field( wp_unslash( $_POST['hunt_season_end'] ?? '' ) );
+        $hunt_time_type = sanitize_key( wp_unslash( $_POST['hunt_time_type'] ?? '' ) );
+        $hunt_price_type = sanitize_key( wp_unslash( $_POST['hunt_price_type'] ?? '' ) );
+        $hunt_price_min = sanitize_text_field( wp_unslash( $_POST['hunt_price_min'] ?? '' ) );
+        $hunt_price_max = sanitize_text_field( wp_unslash( $_POST['hunt_price_max'] ?? '' ) );
+        $hunt_price_includes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_price_includes'] ?? [] ) ) ) );
+        $hunt_guide_type = sanitize_key( wp_unslash( $_POST['hunt_guide_type'] ?? '' ) );
+        $hunt_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_methods'] ?? [] ) ) ) );
+        $hunt_onsite_services = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_onsite_services'] ?? [] ) ) ) );
+        $hunt_hunting_license_required = sanitize_key( wp_unslash( $_POST['hunt_hunting_license_required'] ?? '' ) );
+        $hunt_permit_required = sanitize_key( wp_unslash( $_POST['hunt_permit_required'] ?? '' ) );
+        $hunt_foreigners_allowed = sanitize_key( wp_unslash( $_POST['hunt_foreigners_allowed'] ?? '' ) );
+        $hunt_min_age = sanitize_text_field( wp_unslash( $_POST['hunt_min_age'] ?? '' ) );
+        $hunt_safety_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_safety_features'] ?? [] ) ) ) );
+        $hunt_conditions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_conditions'] ?? [] ) ) ) );
+        $hunt_difficulty_level = sanitize_key( wp_unslash( $_POST['hunt_difficulty_level'] ?? '' ) );
+        $hunt_expected_trophy_quality = sanitize_key( wp_unslash( $_POST['hunt_expected_trophy_quality'] ?? '' ) );
+        $hunt_trophy_weight_age = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_weight_age'] ?? '' ) );
+        $hunt_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_required_media'] ?? [] ) ) ) );
+        $hunt_video_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_video_types'] ?? [] ) ) ) );
+        $hunt_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_moderation_flags'] ?? [] ) ) ) );
+        $hunt_trophy_category = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_category'] ?? '' ) );
+        $hunt_trophy_weight_limit = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_weight_limit'] ?? '' ) );
+        $hunt_travel_assist = sanitize_key( wp_unslash( $_POST['hunt_travel_assist'] ?? '' ) );
+        $hunt_interpreter = sanitize_key( wp_unslash( $_POST['hunt_interpreter'] ?? '' ) );
+        $hunt_group_size = sanitize_text_field( wp_unslash( $_POST['hunt_group_size'] ?? '' ) );
+        $hunt_shot_limit = sanitize_text_field( wp_unslash( $_POST['hunt_shot_limit'] ?? '' ) );
+        $hunt_real_time_slots = sanitize_text_field( wp_unslash( $_POST['hunt_real_time_slots'] ?? '' ) );
+        $hunt_bookable_dates = sanitize_text_field( wp_unslash( $_POST['hunt_bookable_dates'] ?? '' ) );
+        if ( $hunt_species_list === '' && $hunt_game_species !== '' ) {
+            $hunt_species_list = $hunt_game_species;
+        }
+        if ( $hunt_has_guide === '' && $hunt_guide_type !== '' ) {
+            $hunt_has_guide = $hunt_guide_type === 'nincs' ? 'nem' : 'igen';
+        }
+        $hunt_type = sanitize_key( wp_unslash( $_POST['hunt_type'] ?? '' ) );
+        $hunt_game_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_game_species'] ?? [] ) ) ) );
+        $hunt_country = sanitize_text_field( wp_unslash( $_POST['hunt_country'] ?? '' ) );
+        $hunt_county = sanitize_text_field( wp_unslash( $_POST['hunt_county'] ?? '' ) );
+        $hunt_area_name = sanitize_text_field( wp_unslash( $_POST['hunt_area_name'] ?? '' ) );
+        $hunt_exact_area = sanitize_text_field( wp_unslash( $_POST['hunt_exact_area'] ?? '' ) );
+        $hunt_gps_lat = sanitize_text_field( wp_unslash( $_POST['hunt_gps_lat'] ?? '' ) );
+        $hunt_gps_lng = sanitize_text_field( wp_unslash( $_POST['hunt_gps_lng'] ?? '' ) );
+        $hunt_terrain_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_terrain_types'] ?? [] ) ) ) );
+        $hunt_season_start = sanitize_text_field( wp_unslash( $_POST['hunt_season_start'] ?? '' ) );
+        $hunt_season_end = sanitize_text_field( wp_unslash( $_POST['hunt_season_end'] ?? '' ) );
+        $hunt_time_type = sanitize_key( wp_unslash( $_POST['hunt_time_type'] ?? '' ) );
+        $hunt_price_type = sanitize_key( wp_unslash( $_POST['hunt_price_type'] ?? '' ) );
+        $hunt_price_min = sanitize_text_field( wp_unslash( $_POST['hunt_price_min'] ?? '' ) );
+        $hunt_price_max = sanitize_text_field( wp_unslash( $_POST['hunt_price_max'] ?? '' ) );
+        $hunt_price_includes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_price_includes'] ?? [] ) ) ) );
+        $hunt_guide_type = sanitize_key( wp_unslash( $_POST['hunt_guide_type'] ?? '' ) );
+        $hunt_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_methods'] ?? [] ) ) ) );
+        $hunt_onsite_services = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_onsite_services'] ?? [] ) ) ) );
+        $hunt_hunting_license_required = sanitize_key( wp_unslash( $_POST['hunt_hunting_license_required'] ?? '' ) );
+        $hunt_permit_required = sanitize_key( wp_unslash( $_POST['hunt_permit_required'] ?? '' ) );
+        $hunt_foreigners_allowed = sanitize_key( wp_unslash( $_POST['hunt_foreigners_allowed'] ?? '' ) );
+        $hunt_min_age = sanitize_text_field( wp_unslash( $_POST['hunt_min_age'] ?? '' ) );
+        $hunt_safety_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_safety_features'] ?? [] ) ) ) );
+        $hunt_conditions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_conditions'] ?? [] ) ) ) );
+        $hunt_difficulty_level = sanitize_key( wp_unslash( $_POST['hunt_difficulty_level'] ?? '' ) );
+        $hunt_expected_trophy_quality = sanitize_key( wp_unslash( $_POST['hunt_expected_trophy_quality'] ?? '' ) );
+        $hunt_trophy_weight_age = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_weight_age'] ?? '' ) );
+        $hunt_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_required_media'] ?? [] ) ) ) );
+        $hunt_video_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_video_types'] ?? [] ) ) ) );
+        $hunt_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_moderation_flags'] ?? [] ) ) ) );
+        $hunt_trophy_category = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_category'] ?? '' ) );
+        $hunt_trophy_weight_limit = sanitize_text_field( wp_unslash( $_POST['hunt_trophy_weight_limit'] ?? '' ) );
+        $hunt_travel_assist = sanitize_key( wp_unslash( $_POST['hunt_travel_assist'] ?? '' ) );
+        $hunt_interpreter = sanitize_key( wp_unslash( $_POST['hunt_interpreter'] ?? '' ) );
+        $hunt_group_size = sanitize_text_field( wp_unslash( $_POST['hunt_group_size'] ?? '' ) );
+        $hunt_shot_limit = sanitize_text_field( wp_unslash( $_POST['hunt_shot_limit'] ?? '' ) );
+        $hunt_real_time_slots = sanitize_text_field( wp_unslash( $_POST['hunt_real_time_slots'] ?? '' ) );
+        $hunt_bookable_dates = sanitize_text_field( wp_unslash( $_POST['hunt_bookable_dates'] ?? '' ) );
+        if ( $hunt_species_list === '' && $hunt_game_species !== '' ) {
+            $hunt_species_list = $hunt_game_species;
+        }
+        if ( $hunt_has_guide === '' && $hunt_guide_type !== '' ) {
+            $hunt_has_guide = $hunt_guide_type === 'nincs' ? 'nem' : 'igen';
+        }
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
@@ -1745,6 +1835,18 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'hunt_type' => $hunt_type,
+            'hunt_game_species' => $hunt_game_species,
+            'hunt_country' => $hunt_country,
+            'hunt_county' => $hunt_county,
+            'hunt_price_type' => $hunt_price_type,
+            'hunt_price_min' => $hunt_price_min,
+            'hunt_methods' => $hunt_methods,
+            'hunt_has_accommodation' => $hunt_has_accommodation,
+            'hunt_guide_type' => $hunt_guide_type,
+            'hunt_difficulty_level' => $hunt_difficulty_level,
+            'hunt_season_start' => $hunt_season_start,
+            'hunt_season_end' => $hunt_season_end,
             'vadcamera_camera_type' => $vadcamera_camera_type,
             'vadcamera_connectivity' => $vadcamera_connectivity,
             'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
@@ -1794,6 +1896,8 @@ class VA_Ajax {
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
         $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
+        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-lehetoseg';
+        $hunt_moderation_hits = $is_hunt_category ? self::detect_hunt_moderation_hits( $title, $description, $hunt_moderation_flags . "\n" . $hunt_area_name . "\n" . $hunt_game_species ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -2151,6 +2255,58 @@ class VA_Ajax {
             'va_hunt_has_offroad' => $hunt_has_offroad,
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
+            'va_hunt_type' => $hunt_type,
+            'va_hunt_game_species' => $hunt_game_species,
+            'va_hunt_country' => $hunt_country,
+            'va_hunt_county' => $hunt_county,
+            'va_hunt_area_name' => $hunt_area_name,
+            'va_hunt_exact_area' => $hunt_exact_area,
+            'va_hunt_gps_lat' => $hunt_gps_lat,
+            'va_hunt_gps_lng' => $hunt_gps_lng,
+            'va_hunt_terrain_types' => $hunt_terrain_types,
+            'va_hunt_season_start' => $hunt_season_start,
+            'va_hunt_season_end' => $hunt_season_end,
+            'va_hunt_time_type' => $hunt_time_type,
+            'va_hunt_price_type' => $hunt_price_type,
+            'va_hunt_price_min' => $hunt_price_min,
+            'va_hunt_price_max' => $hunt_price_max,
+            'va_hunt_price_includes' => $hunt_price_includes,
+            'va_hunt_guide_type' => $hunt_guide_type,
+            'va_hunt_methods' => $hunt_methods,
+            'va_hunt_onsite_services' => $hunt_onsite_services,
+            'va_hunt_hunting_license_required' => $hunt_hunting_license_required,
+            'va_hunt_permit_required' => $hunt_permit_required,
+            'va_hunt_foreigners_allowed' => $hunt_foreigners_allowed,
+            'va_hunt_min_age' => $hunt_min_age,
+            'va_hunt_safety_features' => $hunt_safety_features,
+            'va_hunt_conditions' => $hunt_conditions,
+            'va_hunt_difficulty_level' => $hunt_difficulty_level,
+            'va_hunt_expected_trophy_quality' => $hunt_expected_trophy_quality,
+            'va_hunt_trophy_weight_age' => $hunt_trophy_weight_age,
+            'va_hunt_required_media' => $hunt_required_media,
+            'va_hunt_video_types' => $hunt_video_types,
+            'va_hunt_moderation_flags' => $hunt_moderation_flags,
+            'va_hunt_trophy_category' => $hunt_trophy_category,
+            'va_hunt_trophy_weight_limit' => $hunt_trophy_weight_limit,
+            'va_hunt_travel_assist' => $hunt_travel_assist,
+            'va_hunt_interpreter' => $hunt_interpreter,
+            'va_hunt_group_size' => $hunt_group_size,
+            'va_hunt_shot_limit' => $hunt_shot_limit,
+            'va_hunt_real_time_slots' => $hunt_real_time_slots,
+            'va_hunt_bookable_dates' => $hunt_bookable_dates,
+            'va_hunt_needs_review' => ! empty( $hunt_moderation_hits ) ? '1' : '0',
+            'va_hunt_review_hits' => implode( ',', $hunt_moderation_hits ),
+            'va_hunt_filter_game_species' => $hunt_game_species,
+            'va_hunt_filter_country' => $hunt_country,
+            'va_hunt_filter_county' => $hunt_county,
+            'va_hunt_filter_price_min' => $hunt_price_min,
+            'va_hunt_filter_price_max' => $hunt_price_max,
+            'va_hunt_filter_methods' => $hunt_methods,
+            'va_hunt_filter_has_accommodation' => $hunt_has_accommodation === 'igen' ? '1' : '0',
+            'va_hunt_filter_has_guide' => $hunt_guide_type === 'nincs' ? '0' : '1',
+            'va_hunt_filter_difficulty_level' => $hunt_difficulty_level,
+            'va_hunt_filter_season_start' => $hunt_season_start,
+            'va_hunt_filter_season_end' => $hunt_season_end,
             'va_exchange_target' => $exchange_target,
             'va_shoe_size' => $shoe_size,
             'va_shoe_main_type' => $shoe_main_type,
@@ -3233,6 +3389,18 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'hunt_type' => $hunt_type,
+            'hunt_game_species' => $hunt_game_species,
+            'hunt_country' => $hunt_country,
+            'hunt_county' => $hunt_county,
+            'hunt_price_type' => $hunt_price_type,
+            'hunt_price_min' => $hunt_price_min,
+            'hunt_methods' => $hunt_methods,
+            'hunt_has_accommodation' => $hunt_has_accommodation,
+            'hunt_guide_type' => $hunt_guide_type,
+            'hunt_difficulty_level' => $hunt_difficulty_level,
+            'hunt_season_start' => $hunt_season_start,
+            'hunt_season_end' => $hunt_season_end,
             'vadcamera_camera_type' => $vadcamera_camera_type,
             'vadcamera_connectivity' => $vadcamera_connectivity,
             'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
