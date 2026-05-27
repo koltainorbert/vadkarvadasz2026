@@ -65,6 +65,11 @@
 - Javítás: az utólagos szövegmező felső margót kapott, így vizuálisan elkülönül a popup selecttől.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-license-under-year
+- Kérés: a `Fegyverengedély szükséges a vásárláshoz` checkbox kerüljön a gyártási év alá.
+- Javítás: a checkbox átmozgatva a gyártási év blokk közvetlen alá, a korábbi helyéről kikerült.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.

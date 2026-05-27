@@ -65,6 +65,11 @@
 - Javítás: az utólagos szövegmező felső margót kapott, így vizuálisan elkülönül a popup selecttől.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-license-under-year
+- Kérés: a `Fegyverengedély szükséges a vásárláshoz` checkbox kerüljön a gyártási év alá.
+- Javítás: a checkbox átmozgatva a gyártási év blokk közvetlen alá, a korábbi helyéről kikerült.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.
