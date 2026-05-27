@@ -194,7 +194,7 @@ class VA_Ajax {
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
-            'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
+            'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
         ];
     }
 
@@ -287,12 +287,39 @@ class VA_Ajax {
             'clothing_condition' => 'Állapot',
             'clothing_gender' => 'Nem',
             'clothing_size' => 'Ruhaméret',
+            'trophy_type' => 'Trófeaalátét típusa',
+            'trophy_maker' => 'Készítő / márka',
+            'trophy_custom_made' => 'Kézzel készített',
+            'trophy_condition' => 'Állapot',
+            'trophy_manufacture_year' => 'Gyártási év',
+            'trophy_height_cm' => 'Magasság (cm)',
+            'trophy_width_cm' => 'Szélesség (cm)',
+            'trophy_thickness_cm' => 'Vastagság (cm)',
+            'trophy_compatible_species' => 'Trófea kompatibilitás',
             'trophy_species' => 'Vadfaj',
             'trophy_mount_type' => 'Trófeaalátét típus',
+            'trophy_mounting_type' => 'Rögzítés típusa',
+            'trophy_attachment_type' => 'Trófea rögzítés',
             'trophy_style' => 'Forma / stílus',
             'trophy_fang_mount' => 'Agyarfoglalat kivitel',
+            'trophy_material_type' => 'Alapanyag',
             'trophy_material' => 'Anyag',
+            'trophy_surface_finish' => 'Felületkezelés',
             'trophy_finish' => 'Felületkezelés',
+            'trophy_decoration_flags' => 'Díszítés',
+            'trophy_weight_kg' => 'Súly (kg)',
+            'trophy_usage_context' => 'Felhasználás',
+            'trophy_accessories' => 'Tartozékok',
+            'trophy_price_negotiable' => 'Ár: alku',
+            'trophy_custom_order' => 'Egyedi rendelés',
+            'trophy_shipping_methods' => 'Szállítás',
+            'trophy_fragile_handling' => 'Törékeny kezelés',
+            'trophy_required_media' => 'Kötelező képek',
+            'trophy_lead_time' => 'Elkészítési idő',
+            'trophy_orderable_sizes' => 'Rendelhető méret',
+            'trophy_custom_engraving' => 'Egyedi gravírozás',
+            'trophy_house_style' => 'Vadászház stílus illesztés',
+            'trophy_moderation_flags' => 'Moderációs jelölők',
             'accommodation_type' => 'Szállás típusa',
             'accommodation_capacity' => 'Férőhely (fő)',
             'accommodation_hunting_nearby' => 'Vadászterület közelében?',
@@ -499,6 +526,31 @@ class VA_Ajax {
             'engedély nélküli szolgáltatás',
             'tiltott vadaszati tevekenyseg',
             'tiltott vadászati tevékenység',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_trophy_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'vedett fafaj illegalis kereskedelem',
+            'védett fafaj illegális kereskedelem',
+            'hamis kezmuves eredet',
+            'hamis kézműves eredet',
+            'trofea manipulacio',
+            'trófea manipuláció',
         ];
 
         $hits = [];
@@ -1155,11 +1207,51 @@ class VA_Ajax {
         $marok_filter_threaded_barrel = ( $marok_threaded_barrel === 'igen' ) ? '1' : '0';
         $marok_filter_magazine_capacity = $marok_magazine_capacity !== '' ? $marok_magazine_capacity : $marok_cylinder_capacity;
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
+        $trophy_type = sanitize_key( wp_unslash( $_POST['trophy_type'] ?? '' ) );
+        $trophy_maker = sanitize_text_field( wp_unslash( $_POST['trophy_maker'] ?? '' ) );
+        $trophy_custom_made = sanitize_key( wp_unslash( $_POST['trophy_custom_made'] ?? '' ) );
+        $trophy_condition = sanitize_key( wp_unslash( $_POST['trophy_condition'] ?? '' ) );
+        $trophy_manufacture_year = sanitize_text_field( wp_unslash( $_POST['trophy_manufacture_year'] ?? '' ) );
+        $trophy_height_cm = sanitize_text_field( wp_unslash( $_POST['trophy_height_cm'] ?? '' ) );
+        $trophy_width_cm = sanitize_text_field( wp_unslash( $_POST['trophy_width_cm'] ?? '' ) );
+        $trophy_thickness_cm = sanitize_text_field( wp_unslash( $_POST['trophy_thickness_cm'] ?? '' ) );
+        $trophy_compatible_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_compatible_species'] ?? [] ) ) ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
+        if ( $trophy_type !== '' ) {
+            $trophy_mount_type = $trophy_type;
+        }
+        $trophy_mounting_type = sanitize_key( wp_unslash( $_POST['trophy_mounting_type'] ?? '' ) );
+        $trophy_attachment_type = sanitize_key( wp_unslash( $_POST['trophy_attachment_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
         $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
+        $trophy_material_type = sanitize_key( wp_unslash( $_POST['trophy_material_type'] ?? '' ) );
         $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
+        if ( $trophy_material_type !== '' ) {
+            $trophy_material = $trophy_material_type;
+        }
+        $trophy_surface_finish = sanitize_key( wp_unslash( $_POST['trophy_surface_finish'] ?? '' ) );
         $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
+        if ( $trophy_surface_finish !== '' ) {
+            $trophy_finish = $trophy_surface_finish;
+        }
+        $trophy_decoration_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_decoration_flags'] ?? [] ) ) ) );
+        $trophy_weight_kg = sanitize_text_field( wp_unslash( $_POST['trophy_weight_kg'] ?? '' ) );
+        $trophy_usage_context = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_usage_context'] ?? [] ) ) ) );
+        $trophy_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_accessories'] ?? [] ) ) ) );
+        $trophy_price_negotiable = sanitize_key( wp_unslash( $_POST['trophy_price_negotiable'] ?? '' ) );
+        $trophy_custom_order = sanitize_key( wp_unslash( $_POST['trophy_custom_order'] ?? '' ) );
+        $trophy_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_shipping_methods'] ?? [] ) ) ) );
+        $trophy_fragile_handling = sanitize_key( wp_unslash( $_POST['trophy_fragile_handling'] ?? '' ) );
+        $trophy_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_required_media'] ?? [] ) ) ) );
+        $trophy_lead_time = sanitize_text_field( wp_unslash( $_POST['trophy_lead_time'] ?? '' ) );
+        $trophy_orderable_sizes = sanitize_text_field( wp_unslash( $_POST['trophy_orderable_sizes'] ?? '' ) );
+        $trophy_custom_engraving = sanitize_key( wp_unslash( $_POST['trophy_custom_engraving'] ?? '' ) );
+        $trophy_house_style = sanitize_key( wp_unslash( $_POST['trophy_house_style'] ?? '' ) );
+        $trophy_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_moderation_flags'] ?? [] ) ) ) );
+        if ( $trophy_species === '' && $trophy_compatible_species !== '' ) {
+            $trophy_species_list = array_filter( array_map( 'trim', explode( ',', $trophy_compatible_species ) ) );
+            $trophy_species = $trophy_species_list[0] ?? '';
+        }
         $accommodation_type = sanitize_key( wp_unslash( $_POST['accommodation_type'] ?? '' ) );
         $accommodation_capacity = sanitize_text_field( wp_unslash( $_POST['accommodation_capacity'] ?? '' ) );
         $accommodation_slot_mode = sanitize_key( wp_unslash( $_POST['accommodation_slot_mode'] ?? '' ) );
@@ -1555,11 +1647,29 @@ class VA_Ajax {
             'marok_cip_marking' => sanitize_key( wp_unslash( $_POST['marok_cip_marking'] ?? '' ) ),
             'marok_transfer_license_only' => sanitize_key( wp_unslash( $_POST['marok_transfer_license_only'] ?? '' ) ),
             'trophy_species' => $trophy_species,
+            'trophy_type' => $trophy_type,
+            'trophy_maker' => $trophy_maker,
+            'trophy_custom_made' => $trophy_custom_made,
+            'trophy_condition' => $trophy_condition,
+            'trophy_manufacture_year' => $trophy_manufacture_year,
+            'trophy_height_cm' => $trophy_height_cm,
+            'trophy_width_cm' => $trophy_width_cm,
+            'trophy_thickness_cm' => $trophy_thickness_cm,
+            'trophy_compatible_species' => $trophy_compatible_species,
             'trophy_mount_type' => $trophy_mount_type,
+            'trophy_mounting_type' => $trophy_mounting_type,
+            'trophy_attachment_type' => $trophy_attachment_type,
             'trophy_style' => $trophy_style,
             'trophy_fang_mount' => $trophy_fang_mount,
+            'trophy_material_type' => $trophy_material_type,
             'trophy_material' => $trophy_material,
+            'trophy_surface_finish' => $trophy_surface_finish,
             'trophy_finish' => $trophy_finish,
+            'trophy_weight_kg' => $trophy_weight_kg,
+            'trophy_price_negotiable' => $trophy_price_negotiable,
+            'trophy_custom_order' => $trophy_custom_order,
+            'trophy_fragile_handling' => $trophy_fragile_handling,
+            'trophy_house_style' => $trophy_house_style,
             'accommodation_type' => $accommodation_type,
             'accommodation_capacity' => $accommodation_capacity,
             'accommodation_hunting_nearby' => $accommodation_hunting_nearby,
@@ -1616,6 +1726,8 @@ class VA_Ajax {
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
+        $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
+        $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1886,11 +1998,48 @@ class VA_Ajax {
             'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
+            'va_trophy_type' => $trophy_type,
+            'va_trophy_maker' => $trophy_maker,
+            'va_trophy_custom_made' => $trophy_custom_made,
+            'va_trophy_condition' => $trophy_condition,
+            'va_trophy_manufacture_year' => $trophy_manufacture_year,
+            'va_trophy_height_cm' => $trophy_height_cm,
+            'va_trophy_width_cm' => $trophy_width_cm,
+            'va_trophy_thickness_cm' => $trophy_thickness_cm,
+            'va_trophy_compatible_species' => $trophy_compatible_species,
             'va_trophy_mount_type' => $trophy_mount_type,
+            'va_trophy_mounting_type' => $trophy_mounting_type,
+            'va_trophy_attachment_type' => $trophy_attachment_type,
             'va_trophy_style' => $trophy_style,
             'va_trophy_fang_mount' => $trophy_fang_mount,
+            'va_trophy_material_type' => $trophy_material_type,
             'va_trophy_material' => $trophy_material,
+            'va_trophy_surface_finish' => $trophy_surface_finish,
             'va_trophy_finish' => $trophy_finish,
+            'va_trophy_decoration_flags' => $trophy_decoration_flags,
+            'va_trophy_weight_kg' => $trophy_weight_kg,
+            'va_trophy_usage_context' => $trophy_usage_context,
+            'va_trophy_accessories' => $trophy_accessories,
+            'va_trophy_price_negotiable' => $trophy_price_negotiable,
+            'va_trophy_custom_order' => $trophy_custom_order,
+            'va_trophy_shipping_methods' => $trophy_shipping_methods,
+            'va_trophy_fragile_handling' => $trophy_fragile_handling,
+            'va_trophy_required_media' => $trophy_required_media,
+            'va_trophy_lead_time' => $trophy_lead_time,
+            'va_trophy_orderable_sizes' => $trophy_orderable_sizes,
+            'va_trophy_custom_engraving' => $trophy_custom_engraving,
+            'va_trophy_house_style' => $trophy_house_style,
+            'va_trophy_moderation_flags' => $trophy_moderation_flags,
+            'va_trophy_needs_review' => ! empty( $trophy_moderation_hits ) ? '1' : '0',
+            'va_trophy_review_hits' => implode( ',', $trophy_moderation_hits ),
+            'va_trophy_filter_species' => $trophy_compatible_species,
+            'va_trophy_filter_material_type' => $trophy_material_type,
+            'va_trophy_filter_height_cm' => $trophy_height_cm,
+            'va_trophy_filter_width_cm' => $trophy_width_cm,
+            'va_trophy_filter_thickness_cm' => $trophy_thickness_cm,
+            'va_trophy_filter_style' => $trophy_style,
+            'va_trophy_filter_wall_mount' => ( $trophy_mounting_type === 'falra-szerelheto' || $trophy_attachment_type === 'falra-szerelheto' ) ? '1' : '0',
+            'va_trophy_filter_handmade' => $trophy_custom_made === 'igen' ? '1' : '0',
             'va_accommodation_type' => $accommodation_type,
             'va_accommodation_capacity' => $accommodation_capacity,
             'va_accommodation_slot_mode' => $accommodation_slot_mode,
@@ -2578,11 +2727,51 @@ class VA_Ajax {
         $marok_filter_threaded_barrel = ( $marok_threaded_barrel === 'igen' ) ? '1' : '0';
         $marok_filter_magazine_capacity = $marok_magazine_capacity !== '' ? $marok_magazine_capacity : $marok_cylinder_capacity;
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
+        $trophy_type = sanitize_key( wp_unslash( $_POST['trophy_type'] ?? '' ) );
+        $trophy_maker = sanitize_text_field( wp_unslash( $_POST['trophy_maker'] ?? '' ) );
+        $trophy_custom_made = sanitize_key( wp_unslash( $_POST['trophy_custom_made'] ?? '' ) );
+        $trophy_condition = sanitize_key( wp_unslash( $_POST['trophy_condition'] ?? '' ) );
+        $trophy_manufacture_year = sanitize_text_field( wp_unslash( $_POST['trophy_manufacture_year'] ?? '' ) );
+        $trophy_height_cm = sanitize_text_field( wp_unslash( $_POST['trophy_height_cm'] ?? '' ) );
+        $trophy_width_cm = sanitize_text_field( wp_unslash( $_POST['trophy_width_cm'] ?? '' ) );
+        $trophy_thickness_cm = sanitize_text_field( wp_unslash( $_POST['trophy_thickness_cm'] ?? '' ) );
+        $trophy_compatible_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_compatible_species'] ?? [] ) ) ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
+        if ( $trophy_type !== '' ) {
+            $trophy_mount_type = $trophy_type;
+        }
+        $trophy_mounting_type = sanitize_key( wp_unslash( $_POST['trophy_mounting_type'] ?? '' ) );
+        $trophy_attachment_type = sanitize_key( wp_unslash( $_POST['trophy_attachment_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
         $trophy_fang_mount = sanitize_key( wp_unslash( $_POST['trophy_fang_mount'] ?? '' ) );
+        $trophy_material_type = sanitize_key( wp_unslash( $_POST['trophy_material_type'] ?? '' ) );
         $trophy_material = sanitize_key( wp_unslash( $_POST['trophy_material'] ?? '' ) );
+        if ( $trophy_material_type !== '' ) {
+            $trophy_material = $trophy_material_type;
+        }
+        $trophy_surface_finish = sanitize_key( wp_unslash( $_POST['trophy_surface_finish'] ?? '' ) );
         $trophy_finish = sanitize_key( wp_unslash( $_POST['trophy_finish'] ?? '' ) );
+        if ( $trophy_surface_finish !== '' ) {
+            $trophy_finish = $trophy_surface_finish;
+        }
+        $trophy_decoration_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_decoration_flags'] ?? [] ) ) ) );
+        $trophy_weight_kg = sanitize_text_field( wp_unslash( $_POST['trophy_weight_kg'] ?? '' ) );
+        $trophy_usage_context = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_usage_context'] ?? [] ) ) ) );
+        $trophy_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_accessories'] ?? [] ) ) ) );
+        $trophy_price_negotiable = sanitize_key( wp_unslash( $_POST['trophy_price_negotiable'] ?? '' ) );
+        $trophy_custom_order = sanitize_key( wp_unslash( $_POST['trophy_custom_order'] ?? '' ) );
+        $trophy_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_shipping_methods'] ?? [] ) ) ) );
+        $trophy_fragile_handling = sanitize_key( wp_unslash( $_POST['trophy_fragile_handling'] ?? '' ) );
+        $trophy_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_required_media'] ?? [] ) ) ) );
+        $trophy_lead_time = sanitize_text_field( wp_unslash( $_POST['trophy_lead_time'] ?? '' ) );
+        $trophy_orderable_sizes = sanitize_text_field( wp_unslash( $_POST['trophy_orderable_sizes'] ?? '' ) );
+        $trophy_custom_engraving = sanitize_key( wp_unslash( $_POST['trophy_custom_engraving'] ?? '' ) );
+        $trophy_house_style = sanitize_key( wp_unslash( $_POST['trophy_house_style'] ?? '' ) );
+        $trophy_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['trophy_moderation_flags'] ?? [] ) ) ) );
+        if ( $trophy_species === '' && $trophy_compatible_species !== '' ) {
+            $trophy_species_list = array_filter( array_map( 'trim', explode( ',', $trophy_compatible_species ) ) );
+            $trophy_species = $trophy_species_list[0] ?? '';
+        }
         $accommodation_type = sanitize_key( wp_unslash( $_POST['accommodation_type'] ?? '' ) );
         $accommodation_capacity = sanitize_text_field( wp_unslash( $_POST['accommodation_capacity'] ?? '' ) );
         $accommodation_slot_mode = sanitize_key( wp_unslash( $_POST['accommodation_slot_mode'] ?? '' ) );
@@ -2946,11 +3135,29 @@ class VA_Ajax {
             'marok_cip_marking' => sanitize_key( wp_unslash( $_POST['marok_cip_marking'] ?? '' ) ),
             'marok_transfer_license_only' => sanitize_key( wp_unslash( $_POST['marok_transfer_license_only'] ?? '' ) ),
             'trophy_species' => $trophy_species,
+            'trophy_type' => $trophy_type,
+            'trophy_maker' => $trophy_maker,
+            'trophy_custom_made' => $trophy_custom_made,
+            'trophy_condition' => $trophy_condition,
+            'trophy_manufacture_year' => $trophy_manufacture_year,
+            'trophy_height_cm' => $trophy_height_cm,
+            'trophy_width_cm' => $trophy_width_cm,
+            'trophy_thickness_cm' => $trophy_thickness_cm,
+            'trophy_compatible_species' => $trophy_compatible_species,
             'trophy_mount_type' => $trophy_mount_type,
+            'trophy_mounting_type' => $trophy_mounting_type,
+            'trophy_attachment_type' => $trophy_attachment_type,
             'trophy_style' => $trophy_style,
             'trophy_fang_mount' => $trophy_fang_mount,
+            'trophy_material_type' => $trophy_material_type,
             'trophy_material' => $trophy_material,
+            'trophy_surface_finish' => $trophy_surface_finish,
             'trophy_finish' => $trophy_finish,
+            'trophy_weight_kg' => $trophy_weight_kg,
+            'trophy_price_negotiable' => $trophy_price_negotiable,
+            'trophy_custom_order' => $trophy_custom_order,
+            'trophy_fragile_handling' => $trophy_fragile_handling,
+            'trophy_house_style' => $trophy_house_style,
             'accommodation_type' => $accommodation_type,
             'accommodation_capacity' => $accommodation_capacity,
             'accommodation_hunting_nearby' => $accommodation_hunting_nearby,
@@ -3007,6 +3214,8 @@ class VA_Ajax {
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
+        $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
+        $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
@@ -3278,11 +3487,48 @@ class VA_Ajax {
             'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
+            'va_trophy_type' => $trophy_type,
+            'va_trophy_maker' => $trophy_maker,
+            'va_trophy_custom_made' => $trophy_custom_made,
+            'va_trophy_condition' => $trophy_condition,
+            'va_trophy_manufacture_year' => $trophy_manufacture_year,
+            'va_trophy_height_cm' => $trophy_height_cm,
+            'va_trophy_width_cm' => $trophy_width_cm,
+            'va_trophy_thickness_cm' => $trophy_thickness_cm,
+            'va_trophy_compatible_species' => $trophy_compatible_species,
             'va_trophy_mount_type' => $trophy_mount_type,
+            'va_trophy_mounting_type' => $trophy_mounting_type,
+            'va_trophy_attachment_type' => $trophy_attachment_type,
             'va_trophy_style' => $trophy_style,
             'va_trophy_fang_mount' => $trophy_fang_mount,
+            'va_trophy_material_type' => $trophy_material_type,
             'va_trophy_material' => $trophy_material,
+            'va_trophy_surface_finish' => $trophy_surface_finish,
             'va_trophy_finish' => $trophy_finish,
+            'va_trophy_decoration_flags' => $trophy_decoration_flags,
+            'va_trophy_weight_kg' => $trophy_weight_kg,
+            'va_trophy_usage_context' => $trophy_usage_context,
+            'va_trophy_accessories' => $trophy_accessories,
+            'va_trophy_price_negotiable' => $trophy_price_negotiable,
+            'va_trophy_custom_order' => $trophy_custom_order,
+            'va_trophy_shipping_methods' => $trophy_shipping_methods,
+            'va_trophy_fragile_handling' => $trophy_fragile_handling,
+            'va_trophy_required_media' => $trophy_required_media,
+            'va_trophy_lead_time' => $trophy_lead_time,
+            'va_trophy_orderable_sizes' => $trophy_orderable_sizes,
+            'va_trophy_custom_engraving' => $trophy_custom_engraving,
+            'va_trophy_house_style' => $trophy_house_style,
+            'va_trophy_moderation_flags' => $trophy_moderation_flags,
+            'va_trophy_needs_review' => ! empty( $trophy_moderation_hits ) ? '1' : '0',
+            'va_trophy_review_hits' => implode( ',', $trophy_moderation_hits ),
+            'va_trophy_filter_species' => $trophy_compatible_species,
+            'va_trophy_filter_material_type' => $trophy_material_type,
+            'va_trophy_filter_height_cm' => $trophy_height_cm,
+            'va_trophy_filter_width_cm' => $trophy_width_cm,
+            'va_trophy_filter_thickness_cm' => $trophy_thickness_cm,
+            'va_trophy_filter_style' => $trophy_style,
+            'va_trophy_filter_wall_mount' => ( $trophy_mounting_type === 'falra-szerelheto' || $trophy_attachment_type === 'falra-szerelheto' ) ? '1' : '0',
+            'va_trophy_filter_handmade' => $trophy_custom_made === 'igen' ? '1' : '0',
             'va_accommodation_type' => $accommodation_type,
             'va_accommodation_capacity' => $accommodation_capacity,
             'va_accommodation_slot_mode' => $accommodation_slot_mode,

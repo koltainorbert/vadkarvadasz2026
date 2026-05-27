@@ -268,7 +268,7 @@ $category_required_rules = [
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
-    'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
+    'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
     'kesek'              => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
     'vadaszkes-vadasztor' => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
     'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -475,11 +475,38 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'knife_axe_handle_material' => get_post_meta( $maybe_id, 'va_knife_axe_handle_material', true ),
             'knife_multitool_function_count' => get_post_meta( $maybe_id, 'va_knife_multitool_function_count', true ),
             'trophy_species' => get_post_meta( $maybe_id, 'va_trophy_species', true ),
+            'trophy_type' => get_post_meta( $maybe_id, 'va_trophy_type', true ),
+            'trophy_maker' => get_post_meta( $maybe_id, 'va_trophy_maker', true ),
+            'trophy_custom_made' => get_post_meta( $maybe_id, 'va_trophy_custom_made', true ),
+            'trophy_condition' => get_post_meta( $maybe_id, 'va_trophy_condition', true ),
+            'trophy_manufacture_year' => get_post_meta( $maybe_id, 'va_trophy_manufacture_year', true ),
+            'trophy_height_cm' => get_post_meta( $maybe_id, 'va_trophy_height_cm', true ),
+            'trophy_width_cm' => get_post_meta( $maybe_id, 'va_trophy_width_cm', true ),
+            'trophy_thickness_cm' => get_post_meta( $maybe_id, 'va_trophy_thickness_cm', true ),
+            'trophy_compatible_species' => get_post_meta( $maybe_id, 'va_trophy_compatible_species', true ),
             'trophy_mount_type' => get_post_meta( $maybe_id, 'va_trophy_mount_type', true ),
+            'trophy_mounting_type' => get_post_meta( $maybe_id, 'va_trophy_mounting_type', true ),
+            'trophy_attachment_type' => get_post_meta( $maybe_id, 'va_trophy_attachment_type', true ),
             'trophy_style' => get_post_meta( $maybe_id, 'va_trophy_style', true ),
             'trophy_fang_mount' => get_post_meta( $maybe_id, 'va_trophy_fang_mount', true ),
             'trophy_material' => get_post_meta( $maybe_id, 'va_trophy_material', true ),
+            'trophy_material_type' => get_post_meta( $maybe_id, 'va_trophy_material_type', true ),
             'trophy_finish' => get_post_meta( $maybe_id, 'va_trophy_finish', true ),
+            'trophy_surface_finish' => get_post_meta( $maybe_id, 'va_trophy_surface_finish', true ),
+            'trophy_decoration_flags' => get_post_meta( $maybe_id, 'va_trophy_decoration_flags', true ),
+            'trophy_weight_kg' => get_post_meta( $maybe_id, 'va_trophy_weight_kg', true ),
+            'trophy_usage_context' => get_post_meta( $maybe_id, 'va_trophy_usage_context', true ),
+            'trophy_accessories' => get_post_meta( $maybe_id, 'va_trophy_accessories', true ),
+            'trophy_price_negotiable' => get_post_meta( $maybe_id, 'va_trophy_price_negotiable', true ),
+            'trophy_custom_order' => get_post_meta( $maybe_id, 'va_trophy_custom_order', true ),
+            'trophy_shipping_methods' => get_post_meta( $maybe_id, 'va_trophy_shipping_methods', true ),
+            'trophy_fragile_handling' => get_post_meta( $maybe_id, 'va_trophy_fragile_handling', true ),
+            'trophy_required_media' => get_post_meta( $maybe_id, 'va_trophy_required_media', true ),
+            'trophy_lead_time' => get_post_meta( $maybe_id, 'va_trophy_lead_time', true ),
+            'trophy_orderable_sizes' => get_post_meta( $maybe_id, 'va_trophy_orderable_sizes', true ),
+            'trophy_custom_engraving' => get_post_meta( $maybe_id, 'va_trophy_custom_engraving', true ),
+            'trophy_house_style' => get_post_meta( $maybe_id, 'va_trophy_house_style', true ),
+            'trophy_moderation_flags' => get_post_meta( $maybe_id, 'va_trophy_moderation_flags', true ),
             'accommodation_type' => get_post_meta( $maybe_id, 'va_accommodation_type', true ),
             'accommodation_capacity' => get_post_meta( $maybe_id, 'va_accommodation_capacity', true ),
             'accommodation_slot_mode' => get_post_meta( $maybe_id, 'va_accommodation_slot_mode', true ),
@@ -3534,92 +3561,64 @@ body.va-modal-open {
             </div>
 
             <!-- Trófeaalátét mezők grid -->
+            <?php
+            $trophy_multi = static function( string $key ) use ( $edit_meta ) {
+                return array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta[ $key ] ?? '' ) ) ) );
+            };
+            $trophy_species_saved = $trophy_multi( 'trophy_compatible_species' );
+            $trophy_decoration_saved = $trophy_multi( 'trophy_decoration_flags' );
+            $trophy_usage_saved = $trophy_multi( 'trophy_usage_context' );
+            $trophy_accessories_saved = $trophy_multi( 'trophy_accessories' );
+            $trophy_shipping_saved = $trophy_multi( 'trophy_shipping_methods' );
+            $trophy_media_saved = $trophy_multi( 'trophy_required_media' );
+            $trophy_moderation_saved = $trophy_multi( 'trophy_moderation_flags' );
+            ?>
             <div class="va-form-group va-trophy-fields-grid" data-categories="trofea-aletet" style="display:none">
                 <div class="va-step2-4col-inner">
                 <div class="va-form-group">
-                    <label>Vadfaj</label>
-                    <?php $trophy_species_val = (string)($edit_meta['trophy_species'] ?? ''); ?>
-                    <select name="trophy_species" class="va-select">
+                    <label>Típusa</label>
+                    <?php $v = (string)($edit_meta['trophy_type'] ?? $edit_meta['trophy_mount_type'] ?? ''); ?>
+                    <select id="va-trophy-type" name="trophy_type" class="va-select">
                         <option value="">– Válasszon –</option>
-                        <option value="gimszarvas"<?php selected($trophy_species_val, 'gimszarvas'); ?>>Gímszarvas</option>
-                        <option value="damszarvas"<?php selected($trophy_species_val, 'damszarvas'); ?>>Dámszarvas</option>
-                        <option value="oz"<?php selected($trophy_species_val, 'oz'); ?>>Őz</option>
-                        <option value="muflon"<?php selected($trophy_species_val, 'muflon'); ?>>Muflon</option>
-                        <option value="vaddiszno"<?php selected($trophy_species_val, 'vaddiszno'); ?>>Vaddisznó</option>
-                        <option value="egyeb"<?php selected($trophy_species_val, 'egyeb'); ?>>Egyéb</option>
+                        <option value="agancs-alatet"<?php selected($v, 'agancs-alatet'); ?>>Agancs alátét</option>
+                        <option value="koponya-alatet"<?php selected($v, 'koponya-alatet'); ?>>Koponya alátét</option>
+                        <option value="pajzs-shield"<?php selected($v, 'pajzs-shield'); ?>>Pajzs (shield)</option>
+                        <option value="faragott-fa-alatet"<?php selected($v, 'faragott-fa-alatet'); ?>>Faragott fa alátét</option>
+                        <option value="modern-design-alatet"<?php selected($v, 'modern-design-alatet'); ?>>Modern design alátét</option>
+                        <option value="rusztikus-alatet"<?php selected($v, 'rusztikus-alatet'); ?>>Rusztikus alátét</option>
+                        <option value="falra-szerelheto-panel"<?php selected($v, 'falra-szerelheto-panel'); ?>>Falra szerelhető panel</option>
+                        <option value="allo-trofea-tarto"<?php selected($v, 'allo-trofea-tarto'); ?>>Álló trófea tartó</option>
+                        <option value="kombinalt-koponya-agancs"<?php selected($v, 'kombinalt-koponya-agancs'); ?>>Kombinált (koponya + agancs)</option>
+                        <option value="egyedi-keszitesu"<?php selected($v, 'egyedi-keszitesu'); ?>>Egyedi készítésű</option>
                     </select>
                 </div>
-                <div class="va-form-group">
-                    <label>Trófeaalátét típus</label>
-                    <?php $trophy_mount_type_val = (string)($edit_meta['trophy_mount_type'] ?? ''); ?>
-                    <select name="trophy_mount_type" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <option value="agancs-alatet"<?php selected($trophy_mount_type_val, 'agancs-alatet'); ?>>Agancs alátét</option>
-                        <option value="szarv-alatet"<?php selected($trophy_mount_type_val, 'szarv-alatet'); ?>>Szarv alátét</option>
-                        <option value="agyar-alatet"<?php selected($trophy_mount_type_val, 'agyar-alatet'); ?>>Agyaralátét</option>
-                        <option value="koponya-alatet"<?php selected($trophy_mount_type_val, 'koponya-alatet'); ?>>Koponyaalátét</option>
-                        <option value="fejpreparatum-alatet"<?php selected($trophy_mount_type_val, 'fejpreparatum-alatet'); ?>>Fejpreparátum alátét</option>
-                        <option value="tabla-tipusu"<?php selected($trophy_mount_type_val, 'tabla-tipusu'); ?>>Tábla típusú</option>
-                        <option value="agyarfoglalat"<?php selected($trophy_mount_type_val, 'agyarfoglalat'); ?>>Agyarfoglalat</option>
-                        <option value="egyeb"<?php selected($trophy_mount_type_val, 'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
-                <div class="va-form-group">
-                    <label>Forma / stílus</label>
-                    <?php $trophy_style_val = (string)($edit_meta['trophy_style'] ?? ''); ?>
-                    <select name="trophy_style" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <option value="faragott-fa"<?php selected($trophy_style_val, 'faragott-fa'); ?>>Faragott fa</option>
-                        <option value="pajzs-alaku"<?php selected($trophy_style_val, 'pajzs-alaku'); ?>>Pajzs alakú</option>
-                        <option value="rusztikus"<?php selected($trophy_style_val, 'rusztikus'); ?>>Rusztikus / naturális</option>
-                        <option value="fejpreparatum"<?php selected($trophy_style_val, 'fejpreparatum'); ?>>Fejpreparátum alátét</option>
-                        <option value="koponya"<?php selected($trophy_style_val, 'koponya'); ?>>Koponya alátét</option>
-                        <option value="agyarfoglalat"<?php selected($trophy_style_val, 'agyarfoglalat'); ?>>Agyarfoglalat</option>
-                        <option value="tabla"<?php selected($trophy_style_val, 'tabla'); ?>>Tábla típusú</option>
-                        <option value="egyeb"<?php selected($trophy_style_val, 'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
-                <div class="va-form-group">
-                    <label>Agyarfoglalat kivitel</label>
-                    <?php $trophy_fang_mount_val = (string)($edit_meta['trophy_fang_mount'] ?? ''); ?>
-                    <select name="trophy_fang_mount" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <option value="3-leveles"<?php selected($trophy_fang_mount_val, '3-leveles'); ?>>3 leveles</option>
-                        <option value="6-leveles-elterulo"<?php selected($trophy_fang_mount_val, '6-leveles-elterulo'); ?>>6 leveles elterülő</option>
-                        <option value="tolgyleveles"<?php selected($trophy_fang_mount_val, 'tolgyleveles'); ?>>Tölgyleveles</option>
-                        <option value="aluminiumleveles"<?php selected($trophy_fang_mount_val, 'aluminiumleveles'); ?>>Alumíniumleveles</option>
-                        <option value="vaddisznofej-kicsi"<?php selected($trophy_fang_mount_val, 'vaddisznofej-kicsi'); ?>>Vaddisznófej alakú (kicsi)</option>
-                        <option value="vaddisznofej-nagy"<?php selected($trophy_fang_mount_val, 'vaddisznofej-nagy'); ?>>Vaddisznófej alakú (nagy)</option>
-                        <option value="egyeb"<?php selected($trophy_fang_mount_val, 'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
-                <div class="va-form-group">
-                    <label>Anyag</label>
-                    <?php $trophy_material_val = (string)($edit_meta['trophy_material'] ?? ''); ?>
-                    <select name="trophy_material" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <option value="tolgyfa"<?php selected($trophy_material_val, 'tolgyfa'); ?>>Tölgyfa</option>
-                        <option value="harsfa"<?php selected($trophy_material_val, 'harsfa'); ?>>Hársfa</option>
-                        <option value="dio"<?php selected($trophy_material_val, 'dio'); ?>>Dió</option>
-                        <option value="mahagoni"<?php selected($trophy_material_val, 'mahagoni'); ?>>Mahagóni (pácolt)</option>
-                        <option value="muanyag"<?php selected($trophy_material_val, 'muanyag'); ?>>Műanyag (műkoponya)</option>
-                        <option value="aluminium"<?php selected($trophy_material_val, 'aluminium'); ?>>Alumínium</option>
-                        <option value="egyeb"<?php selected($trophy_material_val, 'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
-                <div class="va-form-group">
-                    <label>Felületkezelés</label>
-                    <?php $trophy_finish_val = (string)($edit_meta['trophy_finish'] ?? ''); ?>
-                    <select name="trophy_finish" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <option value="nyers"<?php selected($trophy_finish_val, 'nyers'); ?>>Nyers</option>
-                        <option value="pacolt-dio"<?php selected($trophy_finish_val, 'pacolt-dio'); ?>>Pácolt (dió)</option>
-                        <option value="pacolt-mahagoni"<?php selected($trophy_finish_val, 'pacolt-mahagoni'); ?>>Pácolt (mahagóni)</option>
-                        <option value="lakkozott"<?php selected($trophy_finish_val, 'lakkozott'); ?>>Lakkozott</option>
-                        <option value="antikolt"<?php selected($trophy_finish_val, 'antikolt'); ?>>Antikolt</option>
-                        <option value="egyeb"<?php selected($trophy_finish_val, 'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
+                <div class="va-form-group"><label>Készítő / márka</label><input type="text" name="trophy_maker" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_maker'] ?? '')); ?>" placeholder="pl. Vadfa Műhely"></div>
+                <div class="va-form-group"><label>Kézzel készített?</label><?php $v = (string)($edit_meta['trophy_custom_made'] ?? ''); ?><select id="va-trophy-custom-made" name="trophy_custom_made" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group"><label>Állapot</label><?php $v = (string)($edit_meta['trophy_condition'] ?? ''); ?><select name="trophy_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected($v, 'uj'); ?>>Új</option><option value="ujszeru"<?php selected($v, 'ujszeru'); ?>>Újszerű</option><option value="hasznalt"<?php selected($v, 'hasznalt'); ?>>Használt</option><option value="restauralt"<?php selected($v, 'restauralt'); ?>>Restaurált</option></select></div>
+                <div class="va-form-group"><label>Gyártási év (opcionális)</label><input type="text" name="trophy_manufacture_year" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_manufacture_year'] ?? '')); ?>" placeholder="pl. 2024"></div>
+                <div class="va-form-group"><label>Magasság (cm)</label><input type="text" name="trophy_height_cm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_height_cm'] ?? '')); ?>" placeholder="pl. 35"></div>
+                <div class="va-form-group"><label>Szélesség (cm)</label><input type="text" name="trophy_width_cm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_width_cm'] ?? '')); ?>" placeholder="pl. 22"></div>
+                <div class="va-form-group"><label>Vastagság (cm)</label><input type="text" name="trophy_thickness_cm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_thickness_cm'] ?? '')); ?>" placeholder="pl. 2.8"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Trófea kompatibilitás</label><select name="trophy_compatible_species[]" class="va-select" multiple data-placeholder="Válassz vadfajt"><option value="oz"<?php echo in_array( 'oz', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Őz</option><option value="gimszarvas"<?php echo in_array( 'gimszarvas', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Gímszarvas</option><option value="dam"<?php echo in_array( 'dam', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Dám</option><option value="muflon"<?php echo in_array( 'muflon', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Muflon</option><option value="vaddiszno-koponya"<?php echo in_array( 'vaddiszno-koponya', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Vaddisznó koponya</option><option value="egyeb"<?php echo in_array( 'egyeb', $trophy_species_saved, true ) ? ' selected' : ''; ?>>Egyéb</option></select></div>
+                <div class="va-form-group"><label>Alapanyag</label><?php $v = (string)($edit_meta['trophy_material_type'] ?? $edit_meta['trophy_material'] ?? ''); ?><select name="trophy_material_type" class="va-select"><option value="">– Válasszon –</option><option value="tolgy"<?php selected($v, 'tolgy'); ?>>Tölgy</option><option value="bukk"<?php selected($v, 'bukk'); ?>>Bükk</option><option value="dio"<?php selected($v, 'dio'); ?>>Dió</option><option value="akac"<?php selected($v, 'akac'); ?>>Akác</option><option value="fenyo"<?php selected($v, 'fenyo'); ?>>Fenyő</option><option value="koris"<?php selected($v, 'koris'); ?>>Kőris</option><option value="mahagoni"<?php selected($v, 'mahagoni'); ?>>Mahagóni</option><option value="mdf"<?php selected($v, 'mdf'); ?>>MDF</option><option value="retegelt-lemez"<?php selected($v, 'retegelt-lemez'); ?>>Rétegelt lemez</option><option value="fem"<?php selected($v, 'fem'); ?>>Fém</option><option value="kombinalt"<?php selected($v, 'kombinalt'); ?>>Kombinált</option></select></div>
+                <div class="va-form-group"><label>Felületkezelés</label><?php $v = (string)($edit_meta['trophy_surface_finish'] ?? $edit_meta['trophy_finish'] ?? ''); ?><select name="trophy_surface_finish" class="va-select"><option value="">– Válasszon –</option><option value="natur"<?php selected($v, 'natur'); ?>>Natúr</option><option value="lakkozott"<?php selected($v, 'lakkozott'); ?>>Lakkozott</option><option value="pacolt"<?php selected($v, 'pacolt'); ?>>Pácolt</option><option value="olajozott"<?php selected($v, 'olajozott'); ?>>Olajozott</option><option value="egetett"<?php selected($v, 'egetett'); ?>>Égetett (shou sugi ban)</option><option value="festett"<?php selected($v, 'festett'); ?>>Festett</option></select></div>
+                <div class="va-form-group"><label>Stílus</label><?php $v = (string)($edit_meta['trophy_style'] ?? ''); ?><select name="trophy_style" class="va-select"><option value="">– Válasszon –</option><option value="klasszikus"<?php selected($v, 'klasszikus'); ?>>Klasszikus</option><option value="rusztikus"<?php selected($v, 'rusztikus'); ?>>Rusztikus</option><option value="modern"<?php selected($v, 'modern'); ?>>Modern</option><option value="minimalista"<?php selected($v, 'minimalista'); ?>>Minimalista</option><option value="vadasz-lodge"<?php selected($v, 'vadasz-lodge'); ?>>Vadász lodge</option><option value="barokk"<?php selected($v, 'barokk'); ?>>Barokk</option><option value="kezmuves"<?php selected($v, 'kezmuves'); ?>>Kézműves</option><option value="luxus"<?php selected($v, 'luxus'); ?>>Luxus</option></select></div>
+                <div class="va-form-group"><label>Rögzítés típusa</label><?php $v = (string)($edit_meta['trophy_mounting_type'] ?? ''); ?><select name="trophy_mounting_type" class="va-select"><option value="">– Válasszon –</option><option value="falra-szerelheto"<?php selected($v, 'falra-szerelheto'); ?>>Falra szerelhető</option><option value="csavaros"<?php selected($v, 'csavaros'); ?>>Csavaros</option><option value="kampos"<?php selected($v, 'kampos'); ?>>Kampós</option><option value="rejtett-rogzites"<?php selected($v, 'rejtett-rogzites'); ?>>Rejtett rögzítés</option><option value="allo"<?php selected($v, 'allo'); ?>>Álló</option></select></div>
+                <div class="va-form-group"><label>Trófea rögzítés</label><?php $v = (string)($edit_meta['trophy_attachment_type'] ?? ''); ?><select name="trophy_attachment_type" class="va-select"><option value="">– Válasszon –</option><option value="koponya-rogzito"<?php selected($v, 'koponya-rogzito'); ?>>Koponya rögzítő</option><option value="agancs-bilincs"<?php selected($v, 'agancs-bilincs'); ?>>Agancs bilincs</option><option value="univerzalis"<?php selected($v, 'univerzalis'); ?>>Univerzális</option><option value="egyedi-furas"<?php selected($v, 'egyedi-furas'); ?>>Egyedi fúrás</option><option value="allithato"<?php selected($v, 'allithato'); ?>>Állítható</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Díszítés</label><select name="trophy_decoration_flags[]" class="va-select" multiple data-placeholder="Válassz díszítést"><option value="faragas"<?php echo in_array( 'faragas', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Faragás</option><option value="gravirozas"<?php echo in_array( 'gravirozas', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Gravírozás</option><option value="nevmezo"<?php echo in_array( 'nevmezo', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Névmező</option><option value="evszam"<?php echo in_array( 'evszam', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Évszám</option><option value="vadfaj-szimbolum"<?php echo in_array( 'vadfaj-szimbolum', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Vadfaj szimbólum</option><option value="pajzs-forma"<?php echo in_array( 'pajzs-forma', $trophy_decoration_saved, true ) ? ' selected' : ''; ?>>Pajzs forma</option></select></div>
+                <div class="va-form-group"><label>Súly (kg)</label><input type="text" name="trophy_weight_kg" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_weight_kg'] ?? '')); ?>" placeholder="pl. 1.8"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="trophy_usage_context[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="nappali-dekor"<?php echo in_array( 'nappali-dekor', $trophy_usage_saved, true ) ? ' selected' : ''; ?>>Nappali dekor</option><option value="vadaszhaz"<?php echo in_array( 'vadaszhaz', $trophy_usage_saved, true ) ? ' selected' : ''; ?>>Vadászház</option><option value="kiallitas"<?php echo in_array( 'kiallitas', $trophy_usage_saved, true ) ? ' selected' : ''; ?>>Kiállítás</option><option value="ajandek"<?php echo in_array( 'ajandek', $trophy_usage_saved, true ) ? ' selected' : ''; ?>>Ajándék</option><option value="trofea-bemutato"<?php echo in_array( 'trofea-bemutato', $trophy_usage_saved, true ) ? ' selected' : ''; ?>>Trófea bemutató</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="trophy_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="rogzito-csavar"<?php echo in_array( 'rogzito-csavar', $trophy_accessories_saved, true ) ? ' selected' : ''; ?>>Rögzítő csavar</option><option value="sablon"<?php echo in_array( 'sablon', $trophy_accessories_saved, true ) ? ' selected' : ''; ?>>Sablon</option><option value="tipli"<?php echo in_array( 'tipli', $trophy_accessories_saved, true ) ? ' selected' : ''; ?>>Tipli</option><option value="szerelesi-utmutato"<?php echo in_array( 'szerelesi-utmutato', $trophy_accessories_saved, true ) ? ' selected' : ''; ?>>Szerelési útmutató</option></select></div>
+                <div class="va-form-group"><label>Ár: alku</label><?php $v = (string)($edit_meta['trophy_price_negotiable'] ?? ''); ?><select name="trophy_price_negotiable" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group"><label>Egyedi rendelés</label><?php $v = (string)($edit_meta['trophy_custom_order'] ?? ''); ?><select name="trophy_custom_order" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Szállítás</label><select name="trophy_shipping_methods[]" class="va-select" multiple data-placeholder="Válassz szállítást"><option value="posta"<?php echo in_array( 'posta', $trophy_shipping_saved, true ) ? ' selected' : ''; ?>>Posta</option><option value="futar"<?php echo in_array( 'futar', $trophy_shipping_saved, true ) ? ' selected' : ''; ?>>Futár</option><option value="szemelyes"<?php echo in_array( 'szemelyes', $trophy_shipping_saved, true ) ? ' selected' : ''; ?>>Személyes</option><option value="torekeny-kezeles"<?php echo in_array( 'torekeny-kezeles', $trophy_shipping_saved, true ) ? ' selected' : ''; ?>>Törékeny kezelés</option></select></div>
+                <div class="va-form-group"><label>Törékeny kezelés</label><?php $v = (string)($edit_meta['trophy_fragile_handling'] ?? ''); ?><select name="trophy_fragile_handling" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Kötelező képek</label><select name="trophy_required_media[]" class="va-select" multiple data-placeholder="Válassz képlistát"><option value="elonezet"<?php echo in_array( 'elonezet', $trophy_media_saved, true ) ? ' selected' : ''; ?>>Elölnézet</option><option value="oldalnezet"<?php echo in_array( 'oldalnezet', $trophy_media_saved, true ) ? ' selected' : ''; ?>>Oldalnézet</option><option value="falon"<?php echo in_array( 'falon', $trophy_media_saved, true ) ? ' selected' : ''; ?>>Falon</option><option value="trofeaval-egyutt"<?php echo in_array( 'trofeaval-egyutt', $trophy_media_saved, true ) ? ' selected' : ''; ?>>Trófeával együtt</option><option value="meret-osszehasonlitas"<?php echo in_array( 'meret-osszehasonlitas', $trophy_media_saved, true ) ? ' selected' : ''; ?>>Méret összehasonlítás</option></select></div>
+                <div class="va-form-group"><label>Vadászház stílus illesztés</label><?php $v = (string)($edit_meta['trophy_house_style'] ?? ''); ?><select name="trophy_house_style" class="va-select"><option value="">– Válasszon –</option><option value="modern"<?php selected($v, 'modern'); ?>>Modern</option><option value="klasszikus"<?php selected($v, 'klasszikus'); ?>>Klasszikus</option><option value="rusztikus"<?php selected($v, 'rusztikus'); ?>>Rusztikus</option></select></div>
+                <div class="va-form-group va-trophy-dynamic-group" data-trophy-custom="igen" style="display:none;"><label>Elkészítési idő</label><input type="text" name="trophy_lead_time" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_lead_time'] ?? '')); ?>" placeholder="pl. 10-14 nap"></div>
+                <div class="va-form-group va-trophy-dynamic-group" data-trophy-custom="igen" style="display:none;"><label>Rendelhető méret</label><input type="text" name="trophy_orderable_sizes" class="va-input" value="<?php echo esc_attr((string)($edit_meta['trophy_orderable_sizes'] ?? '')); ?>" placeholder="pl. S / M / L / egyedi"></div>
+                <div class="va-form-group va-trophy-dynamic-group" data-trophy-custom="igen" style="display:none;"><label>Egyedi gravírozás</label><?php $v = (string)($edit_meta['trophy_custom_engraving'] ?? ''); ?><select name="trophy_custom_engraving" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="trophy_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="vedett-fafaj-illegalis-kereskedelem"<?php echo in_array( 'vedett-fafaj-illegalis-kereskedelem', $trophy_moderation_saved, true ) ? ' selected' : ''; ?>>Védett fafaj illegális kereskedelem</option><option value="hamis-kezmuves-eredet"<?php echo in_array( 'hamis-kezmuves-eredet', $trophy_moderation_saved, true ) ? ' selected' : ''; ?>>Hamis kézműves eredet</option><option value="trofea-manipulacio"<?php echo in_array( 'trofea-manipulacio', $trophy_moderation_saved, true ) ? ' selected' : ''; ?>>Trófea manipuláció</option></select></div>
                 </div><!-- /va-step2-4col-inner -->
             </div><!-- /.va-trophy-fields-grid -->
 
@@ -6703,6 +6702,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function applyTrophyDynamicFields() {
+        var custom = (($('#va-trophy-custom-made').val() || '') + '').trim();
+        $('.va-trophy-dynamic-group').each(function(){
+            var expected = (($(this).data('trophyCustom') || '') + '').trim();
+            $(this).toggle(expected !== '' && custom === expected);
+        });
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -6802,6 +6809,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-marok-type, #va-marok-optic-ready', function(){
         applyHandgunDynamicFields();
     });
+    $(document).on('change', '#va-trophy-custom-made', function(){
+        applyTrophyDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6819,6 +6829,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyVadcameraDynamicFields();
     applyShoeDynamicFields();
     applyHandgunDynamicFields();
+    applyTrophyDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -6978,12 +6989,39 @@ document.addEventListener('DOMContentLoaded', function() {
             clothing_size: 'Ruhaméret',
             knife_type: 'Kés típusa',
             knife_blade_length: 'Penge hossza (cm)',
+            trophy_type: 'Trófeaalátét típusa',
+            trophy_maker: 'Készítő / márka',
+            trophy_custom_made: 'Kézzel készített',
+            trophy_condition: 'Állapot',
+            trophy_manufacture_year: 'Gyártási év',
+            trophy_height_cm: 'Magasság (cm)',
+            trophy_width_cm: 'Szélesség (cm)',
+            trophy_thickness_cm: 'Vastagság (cm)',
+            trophy_compatible_species: 'Trófea kompatibilitás',
             trophy_species: 'Vadfaj',
             trophy_mount_type: 'Trófeaalátét típus',
+            trophy_mounting_type: 'Rögzítés típusa',
+            trophy_attachment_type: 'Trófea rögzítés',
             trophy_style: 'Forma / stílus',
             trophy_fang_mount: 'Agyarfoglalat kivitel',
+            trophy_material_type: 'Alapanyag',
             trophy_material: 'Anyag',
+            trophy_surface_finish: 'Felületkezelés',
             trophy_finish: 'Felületkezelés',
+            trophy_decoration_flags: 'Díszítés',
+            trophy_weight_kg: 'Súly (kg)',
+            trophy_usage_context: 'Felhasználás',
+            trophy_accessories: 'Tartozékok',
+            trophy_price_negotiable: 'Ár: alku',
+            trophy_custom_order: 'Egyedi rendelés',
+            trophy_shipping_methods: 'Szállítás',
+            trophy_fragile_handling: 'Törékeny kezelés',
+            trophy_required_media: 'Kötelező képek',
+            trophy_lead_time: 'Elkészítési idő',
+            trophy_orderable_sizes: 'Rendelhető méret',
+            trophy_custom_engraving: 'Egyedi gravírozás',
+            trophy_house_style: 'Vadászház stílus illesztés',
+            trophy_moderation_flags: 'Moderációs jelölők',
             accommodation_type: 'Szállás típusa',
             accommodation_capacity: 'Férőhely (fő)',
             accommodation_hunting_nearby: 'Vadászterület közelében?',
@@ -7021,7 +7059,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var missing = [];
 
         rule.required.forEach(function(field){
-            var v = (($( '[name="' + field + '"]' ).val() || '') + '').trim();
+            var $el = $( '[name="' + field + '"]' );
+            if (!$el.length) {
+                $el = $( '[name="' + field + '[]"]' );
+            }
+            var v = (($el.val() || '') + '').trim();
             if (!v) {
                 missing.push(labels[field] || field);
             }
@@ -7136,6 +7178,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle trophy mount fields grid
         $('.va-trophy-fields-grid').toggle(isTrophyPlateCategory);
+        if (isTrophyPlateCategory) {
+            applyTrophyDynamicFields();
+        } else {
+            $('.va-trophy-dynamic-group').hide();
+        }
 
         // Handle accommodation fields grid
         $('.va-accommodation-fields-grid').toggle(isAccommodationCategory);
@@ -7199,7 +7246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply required attributes to trophy fields
         if (isTrophyPlateCategory) {
             $('.va-trophy-fields-grid input, .va-trophy-fields-grid select, .va-trophy-fields-grid textarea').each(function(){
-                var fieldName = ($(this).attr('name') || '').trim();
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
             });

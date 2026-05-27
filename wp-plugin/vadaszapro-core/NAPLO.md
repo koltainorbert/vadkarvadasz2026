@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 27. – Session #trofea-alatet-kategoria-komplex-mezorendszer
+- Kérés: a `Trófea alátét` kategória teljes, eladásfókuszú mezőrendszerét és backend mentését kellett beépíteni.
+- Frontend: a trófea blokk bővítve lett típus, készítő, kézműves jelölés, állapot, méretek (magasság/szélesség/vastagság), kompatibilis vadfajok, anyag, felületkezelés, stílus, rögzítés, díszítés, súly, felhasználás, tartozékok, szállítás, kötelező média, moderációs flag mezőkkel.
+- Dinamikus mezők: `egyedi készítés` esetén megjelenik az elkészítési idő, rendelhető méret és egyedi gravírozás szekció.
+- Backend: mindkét AJAX ágban bekerült a teljes `trophy_*` sanitize, validációs mezőtérkép, mentés, szűrőmeták (`va_trophy_filter_*`) és moderációs találatok (`va_trophy_needs_review`, `va_trophy_review_hits`).
+- Kritikus szűrők: kompatibilitás, anyag, méret, stílus, falra szerelhetőség, kézműves jelölés külön filter meta kulcsokba mentve.
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 27. – Hotfix #service-gps-field-gap
 - Javítás: a `Szolgáltatás` kategória GPS (`lat/lng`) inputjai összeértek mobil nézetben.
 - Megoldás: a GPS mezőpár wrapper (`va-two-up`) kapott explicit grid + `gap:10px` stílust.
