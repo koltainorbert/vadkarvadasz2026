@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #tavcso-bovites-es-nagyitasmodell
+- Kérés: a távcső kategória teljes bővítése, a meglévő mezők megtartásával és a hiányzó optikai adatok pótlásával.
+- UI: a `tavcsovek` blokk bővült új mezőkkel a root + plugin mirror `submit-form.php` fájlokban, beleértve a min/max/fix nagyítási mezőket, reticle/állítás/bevonat/vízállóság/kiegészítők és kompatibilitási opciókat.
+- JS: a távcső nagyítási opciók típusfüggő listát kaptak, és a típushoz kötött mezők megjelenítése is bővült.
+- Backend: a root + plugin mirror `class-ajax.php` frissült az új `optic_*` mezők sanitize + meta mentésével, valamint a távcsöves kötelező mezők igazításával.
+- Ellenőrzés és deploy: minden érintett fájlra lefutott a hibakeresés (`No errors found`), majd a `Deploy All` task commitolta és pusholta a változást.
+
 ## 2026. 05. 27. – Session #szallas-munka-keveredes-vegleges-fix
 - Hiba oka: a frontend kategóriafelismerésben az `allas` regex beleillett a `szallas` slugba, ezért szállásnál is megjelent a teljes munka blokk.
 - Javítás: a munka kategória detektálás slug-lista alapú lett (pontos egyezés), és a szöveges fallback explicit kizárja a `szállás/szallas` találatot.
