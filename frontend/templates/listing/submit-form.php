@@ -249,7 +249,7 @@ $category_required_rules = [
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model' ] ],
+    'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
     'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
@@ -417,6 +417,20 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'other_weapon_knife_handle_material' => get_post_meta( $maybe_id, 'va_other_weapon_knife_handle_material', true ),
             'other_weapon_knife_sheath' => get_post_meta( $maybe_id, 'va_other_weapon_knife_sheath', true ),
             'other_weapon_knife_accessories' => get_post_meta( $maybe_id, 'va_other_weapon_knife_accessories', true ),
+            'hatastalanitott_weapon_type' => get_post_meta( $maybe_id, 'va_hatastalanitott_weapon_type', true ),
+            'hatastalanitott_origin_country' => get_post_meta( $maybe_id, 'va_hatastalanitott_origin_country', true ),
+            'hatastalanitott_is_deactivated' => get_post_meta( $maybe_id, 'va_hatastalanitott_is_deactivated', true ),
+            'hatastalanitott_deactivation_type' => get_post_meta( $maybe_id, 'va_hatastalanitott_deactivation_type', true ),
+            'hatastalanitott_certificate' => get_post_meta( $maybe_id, 'va_hatastalanitott_certificate', true ),
+            'hatastalanitott_mkh_cip' => get_post_meta( $maybe_id, 'va_hatastalanitott_mkh_cip', true ),
+            'hatastalanitott_deactivation_year' => get_post_meta( $maybe_id, 'va_hatastalanitott_deactivation_year', true ),
+            'hatastalanitott_deactivation_org' => get_post_meta( $maybe_id, 'va_hatastalanitott_deactivation_org', true ),
+            'hatastalanitott_condition' => get_post_meta( $maybe_id, 'va_hatastalanitott_condition', true ),
+            'hatastalanitott_serial_admin' => get_post_meta( $maybe_id, 'va_hatastalanitott_serial_admin', true ),
+            'hatastalanitott_working_parts' => get_post_meta( $maybe_id, 'va_hatastalanitott_working_parts', true ),
+            'hatastalanitott_original_finish' => get_post_meta( $maybe_id, 'va_hatastalanitott_original_finish', true ),
+            'hatastalanitott_original_parts_ratio' => get_post_meta( $maybe_id, 'va_hatastalanitott_original_parts_ratio', true ),
+            'hatastalanitott_accessories' => get_post_meta( $maybe_id, 'va_hatastalanitott_accessories', true ),
             'bow_acc_sight' => get_post_meta( $maybe_id, 'va_bow_acc_sight', true ),
             'bow_acc_release' => get_post_meta( $maybe_id, 'va_bow_acc_release', true ),
             'bow_acc_stabilizer' => get_post_meta( $maybe_id, 'va_bow_acc_stabilizer', true ),
@@ -1997,6 +2011,126 @@ body.va-modal-open {
                     <div class="va-form-group va-other-weapon-subgroup" data-other-weapon-kinds="vadaszkes,taktikai-eszkoz,tulelo-eszkoz" style="display:none;grid-column:1 / -1;">
                         <label>Tartozékok</label>
                         <textarea name="other_weapon_knife_accessories" class="va-input" rows="2" placeholder="pl. eredeti doboz, élező, övcsipesz"><?php echo esc_textarea((string)($edit_meta['other_weapon_knife_accessories'] ?? '')); ?></textarea>
+                    </div>
+                </div>
+            </div>
+            <?php
+                $hatastalanitott_working_parts_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['hatastalanitott_working_parts'] ?? ''))));
+                $hatastalanitott_accessories_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['hatastalanitott_accessories'] ?? ''))));
+            ?>
+            <div class="va-cat-rule-field" data-categories="hatastalanitott" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <h3 class="va-specs-heading">Hatástalanított fegyverek adatai</h3>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fegyver típusa</label>
+                        <select name="hatastalanitott_weapon_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="pisztoly"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'pisztoly', false ); ?>>Pisztoly</option>
+                            <option value="revolver"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'revolver', false ); ?>>Revolver</option>
+                            <option value="soretes"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'soretes', false ); ?>>Sörétes</option>
+                            <option value="golyos-puska"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'golyos-puska', false ); ?>>Golyós puska</option>
+                            <option value="gepkarabely"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'gepkarabely', false ); ?>>Gépkarabély</option>
+                            <option value="geppisztoly"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'geppisztoly', false ); ?>>Géppisztoly</option>
+                            <option value="tortenelmi"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'tortenelmi', false ); ?>>Történelmi</option>
+                            <option value="replika"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'replika', false ); ?>>Replika</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['hatastalanitott_weapon_type'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Származási ország</label>
+                        <input type="text" name="hatastalanitott_origin_country" class="va-input" placeholder="pl. Magyarország" value="<?php echo esc_attr((string)($edit_meta['hatastalanitott_origin_country'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hatástalanított?</label>
+                        <select name="hatastalanitott_is_deactivated" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['hatastalanitott_is_deactivated'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['hatastalanitott_is_deactivated'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hatástalanítás típusa</label>
+                        <select name="hatastalanitott_deactivation_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="eu-szabvany"<?php echo selected( (string)($edit_meta['hatastalanitott_deactivation_type'] ?? ''), 'eu-szabvany', false ); ?>>EU szabvány</option>
+                            <option value="regi-magyar"<?php echo selected( (string)($edit_meta['hatastalanitott_deactivation_type'] ?? ''), 'regi-magyar', false ); ?>>Régi magyar</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['hatastalanitott_deactivation_type'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Tanúsítvány van?</label>
+                        <select name="hatastalanitott_certificate" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['hatastalanitott_certificate'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['hatastalanitott_certificate'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>MKH / CIP jelölés?</label>
+                        <select name="hatastalanitott_mkh_cip" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['hatastalanitott_mkh_cip'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['hatastalanitott_mkh_cip'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hatástalanítás éve</label>
+                        <input type="text" name="hatastalanitott_deactivation_year" class="va-input" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="pl. 2018" value="<?php echo esc_attr((string)($edit_meta['hatastalanitott_deactivation_year'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hatástalanító szervezet (opcionális)</label>
+                        <input type="text" name="hatastalanitott_deactivation_org" class="va-input" placeholder="pl. BM tanúsító" value="<?php echo esc_attr((string)($edit_meta['hatastalanitott_deactivation_org'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <select name="hatastalanitott_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php echo selected( (string)($edit_meta['hatastalanitott_condition'] ?? ''), 'uj', false ); ?>>Új</option>
+                            <option value="gyujtoi"<?php echo selected( (string)($edit_meta['hatastalanitott_condition'] ?? ''), 'gyujtoi', false ); ?>>Gyűjtői</option>
+                            <option value="jo"<?php echo selected( (string)($edit_meta['hatastalanitott_condition'] ?? ''), 'jo', false ); ?>>Jó</option>
+                            <option value="hasznalt"<?php echo selected( (string)($edit_meta['hatastalanitott_condition'] ?? ''), 'hasznalt', false ); ?>>Használt</option>
+                            <option value="restauralt"<?php echo selected( (string)($edit_meta['hatastalanitott_condition'] ?? ''), 'restauralt', false ); ?>>Restaurált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Sorozatszám (csak admin lássa)</label>
+                        <input type="text" name="hatastalanitott_serial_admin" class="va-input" placeholder="pl. AB123456" value="<?php echo esc_attr((string)($edit_meta['hatastalanitott_serial_admin'] ?? '')); ?>">
+                        <small style="display:block;margin-top:6px;opacity:.8;">Publikus felületen maszkolva jelenjen meg: pl. AB123***</small>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Működő alkatrészek</label>
+                        <select name="hatastalanitott_working_parts[]" class="va-select" multiple data-placeholder="Válassz működő alkatrészt">
+                            <option value="zar-mozog"<?php echo in_array('zar-mozog', $hatastalanitott_working_parts_saved, true) ? ' selected' : ''; ?>>Zár mozog</option>
+                            <option value="elsuto-mukodik"<?php echo in_array('elsuto-mukodik', $hatastalanitott_working_parts_saved, true) ? ' selected' : ''; ?>>Elsütő működik</option>
+                            <option value="szetszedheto"<?php echo in_array('szetszedheto', $hatastalanitott_working_parts_saved, true) ? ' selected' : ''; ?>>Szétszedhető</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Eredeti felület</label>
+                        <select name="hatastalanitott_original_finish" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="barnitott"<?php echo selected( (string)($edit_meta['hatastalanitott_original_finish'] ?? ''), 'barnitott', false ); ?>>Barnított</option>
+                            <option value="kromozott"<?php echo selected( (string)($edit_meta['hatastalanitott_original_finish'] ?? ''), 'kromozott', false ); ?>>Krómozott</option>
+                            <option value="festett"<?php echo selected( (string)($edit_meta['hatastalanitott_original_finish'] ?? ''), 'festett', false ); ?>>Festett</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Eredeti alkatrészek aránya (%)</label>
+                        <input type="text" name="hatastalanitott_original_parts_ratio" class="va-input" inputmode="numeric" pattern="[0-9]{1,3}" maxlength="3" placeholder="pl. 85" value="<?php echo esc_attr((string)($edit_meta['hatastalanitott_original_parts_ratio'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tartozékok</label>
+                        <select name="hatastalanitott_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot">
+                            <option value="eredeti-tok"<?php echo in_array('eredeti-tok', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Eredeti tok</option>
+                            <option value="tar"<?php echo in_array('tar', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Tár</option>
+                            <option value="heveder"<?php echo in_array('heveder', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Heveder</option>
+                            <option value="szurony"<?php echo in_array('szurony', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Szurony</option>
+                            <option value="dokumentacio"<?php echo in_array('dokumentacio', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Dokumentáció</option>
+                            <option value="tanusitvany"<?php echo in_array('tanusitvany', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Tanúsítvány</option>
+                            <option value="gyari-doboz"<?php echo in_array('gyari-doboz', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Gyári doboz</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -5027,6 +5161,12 @@ document.addEventListener('DOMContentLoaded', function() {
             model: 'Modell / típus',
             caliber: 'Kaliber',
             other_weapon_kind: 'Egyéb fegyverek kategória',
+            hatastalanitott_weapon_type: 'Fegyver típusa',
+            hatastalanitott_is_deactivated: 'Hatástalanított?',
+            hatastalanitott_deactivation_type: 'Hatástalanítás típusa',
+            hatastalanitott_certificate: 'Tanúsítvány van?',
+            hatastalanitott_mkh_cip: 'MKH / CIP jelölés?',
+            hatastalanitott_condition: 'Állapot',
             optic_type: 'Távcső típusa',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
