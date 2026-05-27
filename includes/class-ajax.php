@@ -186,6 +186,7 @@ class VA_Ajax {
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
@@ -291,6 +292,7 @@ class VA_Ajax {
             'hunt_capacity' => 'Létszám / fő',
             'hunt_species_list' => 'Vadászható fajok listája',
             'hunt_lease_type' => 'Lesbérleti / hozzáférési forma',
+            'estate_main_type' => 'Hagyaték fő típusa',
         ];
 
         $missing = [];
@@ -310,6 +312,35 @@ class VA_Ajax {
             $cat_label,
             implode( ', ', $missing )
         );
+    }
+
+    private static function detect_estate_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'elo fegyver',
+            'élő fegyver',
+            'lofegyver engedely nelkul',
+            'lőfegyver engedély nélkül',
+            'mukodo automata',
+            'működő automata',
+            'sorozatlovo',
+            'sorozatlövő',
+            'katonai keszlet',
+            'katonai készlet',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
     }
 
     private static function is_vehicle_category( int $category_id ): bool {
