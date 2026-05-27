@@ -185,7 +185,7 @@ class VA_Ajax {
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
-            'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
@@ -329,6 +329,45 @@ class VA_Ajax {
             'hunt_capacity' => 'Létszám / fő',
             'hunt_species_list' => 'Vadászható fajok listája',
             'hunt_lease_type' => 'Lesbérleti / hozzáférési forma',
+            'hunt_type' => 'Vadászat típusa',
+            'hunt_game_species' => 'Vadfaj',
+            'hunt_country' => 'Ország',
+            'hunt_county' => 'Megye',
+            'hunt_area_name' => 'Vadászterület neve',
+            'hunt_exact_area' => 'Pontos terület',
+            'hunt_gps_lat' => 'GPS lat',
+            'hunt_gps_lng' => 'GPS lng',
+            'hunt_terrain_types' => 'Terület jellemzők',
+            'hunt_season_start' => 'Kezdő dátum',
+            'hunt_season_end' => 'Záró dátum',
+            'hunt_time_type' => 'Időpont típus',
+            'hunt_price_type' => 'Ár típusa',
+            'hunt_price_min' => 'Ár minimum',
+            'hunt_price_max' => 'Ár maximum',
+            'hunt_price_includes' => 'Ár tartalmazza',
+            'hunt_guide_type' => 'Kíséret típusa',
+            'hunt_methods' => 'Vadászati módszer',
+            'hunt_onsite_services' => 'Helyszíni szolgáltatások',
+            'hunt_hunting_license_required' => 'Vadászjegy szükséges',
+            'hunt_permit_required' => 'Engedély szükséges',
+            'hunt_foreigners_allowed' => 'Külföldiek vadászhatnak',
+            'hunt_min_age' => 'Minimum életkor',
+            'hunt_safety_features' => 'Biztonság',
+            'hunt_conditions' => 'Körülmények',
+            'hunt_difficulty_level' => 'Nehézségi szint',
+            'hunt_expected_trophy_quality' => 'Várható trófea minőség',
+            'hunt_trophy_weight_age' => 'Súly / korosztály',
+            'hunt_required_media' => 'Kötelező képek',
+            'hunt_video_types' => 'Videó',
+            'hunt_moderation_flags' => 'Moderációs jelölők',
+            'hunt_trophy_category' => 'Várható trófea kategória',
+            'hunt_trophy_weight_limit' => 'Súlyhatár',
+            'hunt_travel_assist' => 'Utazás segítés',
+            'hunt_interpreter' => 'Tolmács',
+            'hunt_group_size' => 'Csoport méret',
+            'hunt_shot_limit' => 'Lövésszám limit',
+            'hunt_real_time_slots' => 'Szabad helyek száma',
+            'hunt_bookable_dates' => 'Foglalható időpontok',
             'vadcamera_camera_type' => 'Kamera típusa',
             'vadcamera_connectivity' => 'Adatkapcsolat',
             'vadcamera_trigger_speed' => 'Trigger idő',
@@ -551,6 +590,33 @@ class VA_Ajax {
             'hamis kézműves eredet',
             'trofea manipulacio',
             'trófea manipuláció',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_hunt_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'engedely nelkuli vadaszat',
+            'engedély nélküli vadászat',
+            'vedett faj',
+            'védett faj',
+            'illegalis terulet',
+            'illegális terület',
+            'hamis allomany',
+            'hamis állomány',
         ];
 
         $hits = [];
