@@ -18,6 +18,12 @@
 - Kérésre visszaállítás 2: minimál (extra háttér/blokk nélkül) Facebook iframe beágyazás került vissza, hogy a csoport a saját aloldalon nyíljon.
 - Végső stabilizálás: a Facebook iframe beágyazás ennél a csoportnál továbbra is hibás (`Not Found`), ezért a sablon fallback információs blokkra váltott és csak közvetlen csoport megnyitást kínál.
 - Végső működő megoldás: a Facebook csoport oldal most saját, középre tett landing oldalként jelenik meg, nagy megnyitás gombbal és hibamentes fallback nélkül.
+
+## 2026. 05. 27. – Session #mobil-helyhozzaferes-prompt-tiltas
+- Kérés: mobilon ne kérdezze minden frissítésnél a pontos hely hozzáférést.
+- Javítás: a root + theme mirror oldalscriptekből kikerült az automatikus geolokációs prompt, helyette csak IP/fallback helyzet maradt.
+- Javítás: a megtekintés-számláló sem kér már GPS-t, csak sima view pinget küld.
+- Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `footer.php`, `wp-theme/vadaszapro-theme/footer.php`, `index.php`, `wp-theme/vadaszapro-theme/index.php`, `frontend/js/frontend.js`, `wp-plugin/vadaszapro-core/frontend/js/frontend.js`.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 

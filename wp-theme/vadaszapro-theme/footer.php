@@ -457,15 +457,7 @@
                     huntingEl.addEventListener('change',rerender);
                     fenceEl.addEventListener('change',rerender);
 
-                    if(navigator.geolocation){
-                        navigator.geolocation.getCurrentPosition(function(pos){
-                            fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
-                        }, function(){
-                            fallbackLocation();
-                        }, {enableHighAccuracy:true,timeout:7000,maximumAge:900000});
-                    } else {
-                        fallbackLocation();
-                    }
+                    fallbackLocation();
                 })();
                 </script>
             </aside>
