@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Hotfix #trofea-kotelezo-kepek-kiveve
+- Kérés: a trófea alátét űrlapon a kötelező képek mező kerüljön ki.
+- Frontend: a `trophy_required_media[]` mező teljesen eltávolítva a trófea blokkból.
+- Tisztítás: a kapcsolódó `$trophy_media_saved` előkészítés is törölve.
+- Szinkron: root + plugin mirror `submit-form.php` azonosan frissítve.
+
 ## 2026. 05. 27. – Session #trofea-alatet-kategoria-komplex-mezorendszer
 - Kérés: a `Trófea alátét` kategória teljes, eladásfókuszú mezőrendszerét és backend mentését kellett beépíteni.
 - Frontend: a trófea blokk bővítve lett típus, készítő, kézműves jelölés, állapot, méretek (magasság/szélesség/vastagság), kompatibilis vadfajok, anyag, felületkezelés, stílus, rögzítés, díszítés, súly, felhasználás, tartozékok, szállítás, kötelező média, moderációs flag mezőkkel.
