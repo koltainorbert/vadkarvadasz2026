@@ -2752,7 +2752,7 @@ body.va-modal-open {
                         <option value="doboz"<?php echo in_array('doboz', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Doboz</option>
                         <option value="kupak"<?php echo in_array('kupak', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Lencsevédő kupak</option>
                         <option value="napellenzo"<?php echo in_array('napellenzo', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Napellenző</option>
-                        <option value="szerelék"<?php echo in_array('szerelék', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Szerelék</option>
+                        <option value="szelelek"<?php echo in_array('szelelek', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Szerelék</option>
                         <option value="garancia"<?php echo in_array('garancia', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Garancia</option>
                     </select>
                 </div>
