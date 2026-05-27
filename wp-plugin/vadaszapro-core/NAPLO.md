@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #live-fatal-hotfix-rollback
+- Jelenség: a live oldalon (`https://vadkarvadasz.hu/`) WordPress fatál hiba oldal jelent meg (`Súlyos hiba történt a webhelyünkön`).
+- Intézkedés: az új szállás-fejlesztéshez tartozó friss auto commitok visszavonása `git revert` hotfix ágon (nem history-törlés).
+- Visszavont commitok: `e93e20eb`, `6396a629`, `1288ffaf`, `bd9d2d66`, `0e4f4441`, `11c6d652`.
+- Eredmény: a főoldal újra betölt, a live deploy workflow újraindítva rollback állapottal.
+- Következő lépés: a szállás bővítés újraépítése kisebb lépésekben, külön szintaxis/runtime ellenőrzéssel deploy előtt.
+
 ## 2026. 05. 27. – Session #szallas-reszletes-mezok-es-vadasz-opciok
 - Kérés: a `Szállás` kategória kapjon részletes, vadászathoz igazított mezőket (típus, helyadatok, férőhely bontás, vadászati kapcsolódó igen/nem opciók, felszereltség, közeli vadfajok, programok, foglalási részletek).
 - UI: a submit űrlapban bővült a `szallas` blokk új mezőkkel; az új többes választások popup-kompatibilis `select[multiple]` mezőként készültek (nem lista-szerű checkbox).
