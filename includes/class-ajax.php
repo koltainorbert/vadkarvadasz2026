@@ -1175,8 +1175,6 @@ class VA_Ajax {
         $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
         $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
-        $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
-        $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -2042,6 +2040,8 @@ class VA_Ajax {
         $estate_term = $category > 0 ? get_term( $category, 'va_category' ) : null;
         $is_estate_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-hagyatek';
         $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
+        $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
+        $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
