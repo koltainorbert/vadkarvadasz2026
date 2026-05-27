@@ -252,7 +252,7 @@ $category_required_rules = [
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
-    'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
+            'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
@@ -5224,48 +5224,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     var opticZoomData = {
-        celtavcso: [
-            // Fix nagyítású modellek
-            '1x','2x','4x32','6x42','8x56','10x','15-55x52',
-            // Variábel (zoom) nagyítású modellek
-            '1-4x24','1-6x24','1-8x24','1-10x24',
-            '1.5-6x44',
-            '2-10x50','2-12x50',
-            '3-9x40','3-12x56','3-15x50','3-18x50',
-            '4-16x44','4-20x50','4-24x50',
-            '5-25x56',
-            '6-24x50',
-            '7x50',
-            '8-32x','10-40x'
-        ],
-        kereso: [
-            // Kompakt / túra
-            '6x','7x','8x',
-            // Standard vadász
-            '10x',
-            // Nagy fényerejű
-            '8x56','10x56',
-            // Erős (stabil tartás kell)
-            '12x','15x',
-            // Nehéz/állványos
-            '20x','25x'
-        ],
-        spektiv: [
-            // Fix (kompakt, zsebes)
-            '8x','10x','12x','30x','32x','40x','60x',
-            // Zoom – belépő
-            '15-45x','16-48x',
-            // Zoom – standard
-            '20-60x',
-            // Zoom – közepes
-            '22-66x',
-            // Zoom – prémium
-            '25-75x',
-            // Zoom – nagy objektív
-            '30-90x'
-        ],
+        celtavcso: ['1-4x24','1-6x24','1-8x24','1-10x24','1.5-6x44','2-10x50','2-12x50','3-9x40','3-12x56','3-15x50','3-18x50','4-16x44','4-20x50','4-24x50','5-25x56','6-24x50','8-32x','10-40x'],
+        binokular: ['7x','8x','8x42','8x56','10x','10x42','10x50','12x','12x50'],
+        monokular: ['4x','6x','8x','10x'],
+        kereso: ['6x','7x','8x','10x','8x56','10x56','12x','15x','20x','25x'],
+        spektiv: ['8x','10x','12x','15-45x','16-48x','20-60x','22-66x','25-75x','30-90x'],
+        'red-dot': ['1x'],
+        holografikus: ['1x'],
+        prizmas: ['1x','2x','3x','4x','5x'],
+        reflex: ['1x'],
+        pisztolyoptika: ['1x','2x','3x','4x'],
+        'tavmeros-binokular': ['7x','8x','10x'],
+        airsoft: ['1x','1.5x','2x','3x','4x'],
         egyeb: []
     };
+
+    function updateOpticFieldVisibility(type) {
+        var currentType = (type || '').toString();
+        $('.va-telescope-fields-grid [data-optic-types]').each(function(){
+            var types = (($(this).data('opticTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            if (!types.length) {
+                $(this).show();
+                return;
+            }
+            $(this).toggle(types.indexOf(currentType) !== -1);
+        });
+    }
 
     function rebuildOpticZoomOptions(type) {
         var $zoom = $('#va-optic-zoom');
@@ -5285,6 +5269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $zoom.html(html);
         if (currentVal) $zoom.val(currentVal);
         syncPopupSelectButton($zoom);
+        updateOpticFieldVisibility(type);
     }
 
     $(document).on('change', '#va-optic-type', function(){

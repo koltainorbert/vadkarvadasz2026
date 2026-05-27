@@ -172,7 +172,7 @@ class VA_Ajax {
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
-            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
+            'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
@@ -235,8 +235,40 @@ class VA_Ajax {
             'hatastalanitott_condition' => 'Állapot',
             'loszer_category' => 'Kategória',
             'loszer_condition' => 'Állapot',
+            'optic_type' => 'Távcső típusa',
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
+            'optic_magnification_min' => 'Nagyítás minimum',
+            'optic_magnification_max' => 'Nagyítás maximum',
+            'optic_magnification_fixed' => 'Fix nagyítás',
+            'optic_tube_diameter' => 'Csőátmérő',
+            'optic_exit_pupil' => 'Kilépő pupilla',
+            'optic_field_of_view' => 'Látómező',
+            'optic_eye_relief' => 'Eye relief',
+            'optic_reticle_type' => 'Reticle típus',
+            'optic_reticle_plane' => 'Reticle sík',
+            'optic_illumination' => 'Megvilágítás',
+            'optic_illumination_color' => 'Megvilágítás színe',
+            'optic_click_value' => 'Klikk érték',
+            'optic_parallax_adjustment' => 'Parallax állítás',
+            'optic_turret_type' => 'Torony típus',
+            'optic_body_material' => 'Test anyag',
+            'optic_coating_type' => 'Bevonat típusa',
+            'optic_waterproof_flags' => 'Vízállóság',
+            'optic_prism_system' => 'Prizma rendszer',
+            'optic_glass_type' => 'Üvegtípus',
+            'optic_dot_size' => 'Pontméret',
+            'optic_rail_compatibility' => 'Sín kompatibilitás',
+            'optic_rangefinder_max_m' => 'Távmérő max',
+            'optic_ballistic_calc' => 'Ballisztikai kalkulátor',
+            'optic_spektiv_zoom_range' => 'Spektív zoom tartomány',
+            'optic_eyepiece_type' => 'Okulár típus',
+            'optic_weapon_compatibility' => 'Fegyver kompatibilitás',
+            'scope_accessories_flags' => 'Tartozék jelölők',
+            'optic_mount_type' => 'Szerelék típusa',
+            'optic_shipping_methods' => 'Szállítás módja',
+            'optic_recommended_use' => 'Ajánlott felhasználás',
+            'optic_moderation_flags' => 'Moderációs jelzők',
             'dog_age_months' => 'Kutya életkor (hónap)',
             'dog_breed' => 'Kutya fajtája',
             'dog_gender' => 'Neme',
@@ -626,6 +658,37 @@ class VA_Ajax {
         $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
+        $optic_magnification_min = sanitize_text_field( wp_unslash( $_POST['optic_magnification_min'] ?? '' ) );
+        $optic_magnification_max = sanitize_text_field( wp_unslash( $_POST['optic_magnification_max'] ?? '' ) );
+        $optic_magnification_fixed = sanitize_text_field( wp_unslash( $_POST['optic_magnification_fixed'] ?? '' ) );
+        $optic_tube_diameter = sanitize_text_field( wp_unslash( $_POST['optic_tube_diameter'] ?? '' ) );
+        $optic_exit_pupil = sanitize_text_field( wp_unslash( $_POST['optic_exit_pupil'] ?? '' ) );
+        $optic_field_of_view = sanitize_text_field( wp_unslash( $_POST['optic_field_of_view'] ?? '' ) );
+        $optic_eye_relief = sanitize_text_field( wp_unslash( $_POST['optic_eye_relief'] ?? '' ) );
+        $optic_reticle_type = sanitize_key( wp_unslash( $_POST['optic_reticle_type'] ?? '' ) );
+        $optic_reticle_plane = sanitize_key( wp_unslash( $_POST['optic_reticle_plane'] ?? '' ) );
+        $optic_illumination = sanitize_key( wp_unslash( $_POST['optic_illumination'] ?? '' ) );
+        $optic_illumination_color = sanitize_text_field( wp_unslash( $_POST['optic_illumination_color'] ?? '' ) );
+        $optic_click_value = sanitize_key( wp_unslash( $_POST['optic_click_value'] ?? '' ) );
+        $optic_parallax_adjustment = sanitize_key( wp_unslash( $_POST['optic_parallax_adjustment'] ?? '' ) );
+        $optic_turret_type = sanitize_key( wp_unslash( $_POST['optic_turret_type'] ?? '' ) );
+        $optic_body_material = sanitize_key( wp_unslash( $_POST['optic_body_material'] ?? '' ) );
+        $optic_coating_type = sanitize_key( wp_unslash( $_POST['optic_coating_type'] ?? '' ) );
+        $optic_waterproof_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_waterproof_flags'] ?? [] ) ) ) );
+        $optic_prism_system = sanitize_key( wp_unslash( $_POST['optic_prism_system'] ?? '' ) );
+        $optic_glass_type = sanitize_key( wp_unslash( $_POST['optic_glass_type'] ?? '' ) );
+        $optic_dot_size = sanitize_text_field( wp_unslash( $_POST['optic_dot_size'] ?? '' ) );
+        $optic_rail_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_rail_compatibility'] ?? [] ) ) ) );
+        $optic_rangefinder_max_m = sanitize_text_field( wp_unslash( $_POST['optic_rangefinder_max_m'] ?? '' ) );
+        $optic_ballistic_calc = sanitize_key( wp_unslash( $_POST['optic_ballistic_calc'] ?? '' ) );
+        $optic_spektiv_zoom_range = sanitize_key( wp_unslash( $_POST['optic_spektiv_zoom_range'] ?? '' ) );
+        $optic_eyepiece_type = sanitize_key( wp_unslash( $_POST['optic_eyepiece_type'] ?? '' ) );
+        $optic_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_weapon_compatibility'] ?? [] ) ) ) );
+        $scope_accessories_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['scope_accessories_flags'] ?? [] ) ) ) );
+        $optic_mount_type = sanitize_key( wp_unslash( $_POST['optic_mount_type'] ?? '' ) );
+        $optic_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_shipping_methods'] ?? [] ) ) ) );
+        $optic_recommended_use = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_recommended_use'] ?? [] ) ) ) );
+        $optic_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_moderation_flags'] ?? [] ) ) ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
         $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
@@ -901,6 +964,37 @@ class VA_Ajax {
             'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
+            'va_optic_magnification_min' => $optic_magnification_min,
+            'va_optic_magnification_max' => $optic_magnification_max,
+            'va_optic_magnification_fixed' => $optic_magnification_fixed,
+            'va_optic_tube_diameter' => $optic_tube_diameter,
+            'va_optic_exit_pupil' => $optic_exit_pupil,
+            'va_optic_field_of_view' => $optic_field_of_view,
+            'va_optic_eye_relief' => $optic_eye_relief,
+            'va_optic_reticle_type' => $optic_reticle_type,
+            'va_optic_reticle_plane' => $optic_reticle_plane,
+            'va_optic_illumination' => $optic_illumination,
+            'va_optic_illumination_color' => $optic_illumination_color,
+            'va_optic_click_value' => $optic_click_value,
+            'va_optic_parallax_adjustment' => $optic_parallax_adjustment,
+            'va_optic_turret_type' => $optic_turret_type,
+            'va_optic_body_material' => $optic_body_material,
+            'va_optic_coating_type' => $optic_coating_type,
+            'va_optic_waterproof_flags' => $optic_waterproof_flags,
+            'va_optic_prism_system' => $optic_prism_system,
+            'va_optic_glass_type' => $optic_glass_type,
+            'va_optic_dot_size' => $optic_dot_size,
+            'va_optic_rail_compatibility' => $optic_rail_compatibility,
+            'va_optic_rangefinder_max_m' => $optic_rangefinder_max_m,
+            'va_optic_ballistic_calc' => $optic_ballistic_calc,
+            'va_optic_spektiv_zoom_range' => $optic_spektiv_zoom_range,
+            'va_optic_eyepiece_type' => $optic_eyepiece_type,
+            'va_optic_weapon_compatibility' => $optic_weapon_compatibility,
+            'va_scope_accessories_flags' => $scope_accessories_flags,
+            'va_optic_mount_type' => $optic_mount_type,
+            'va_optic_shipping_methods' => $optic_shipping_methods,
+            'va_optic_recommended_use' => $optic_recommended_use,
+            'va_optic_moderation_flags' => $optic_moderation_flags,
             'va_dog_age_months' => $dog_age_months,
             'va_dog_breed'   => $dog_breed,
             'va_dog_gender'  => $dog_gender,
