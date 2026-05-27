@@ -2517,7 +2517,6 @@ body.va-modal-open {
                                 'balaclava' => 'Balaclava',
                                 'sal' => 'Sál',
                                 'nyakmelegito' => 'Nyakmelegítő',
-                                'sapka' => 'Sapka',
                                 'kesztyu' => 'Kesztyű',
                                 'zokni' => 'Zokni',
                                 'ov' => 'Öv',
@@ -6229,6 +6228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
             rebuildClothingSizeOptions();
+            applyOtherClothingDynamicFields();
         }
         applyVehicleCategoryVisibility();
         switchBrandModelFieldMode();
