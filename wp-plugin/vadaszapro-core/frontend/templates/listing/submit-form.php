@@ -248,7 +248,7 @@ $category_required_rules = [
     'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
@@ -661,6 +661,45 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
+            'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
+            'marok_condition' => get_post_meta( $maybe_id, 'va_marok_condition', true ),
+            'marok_manufacture_year' => get_post_meta( $maybe_id, 'va_marok_manufacture_year', true ),
+            'marok_origin_country' => get_post_meta( $maybe_id, 'va_marok_origin_country', true ),
+            'marok_action_type' => get_post_meta( $maybe_id, 'va_marok_action_type', true ),
+            'marok_magazine_capacity' => get_post_meta( $maybe_id, 'va_marok_magazine_capacity', true ),
+            'marok_cylinder_capacity' => get_post_meta( $maybe_id, 'va_marok_cylinder_capacity', true ),
+            'marok_revolver_action' => get_post_meta( $maybe_id, 'va_marok_revolver_action', true ),
+            'marok_barrel_length_mm' => get_post_meta( $maybe_id, 'va_marok_barrel_length_mm', true ),
+            'marok_total_length_mm' => get_post_meta( $maybe_id, 'va_marok_total_length_mm', true ),
+            'marok_weight_g' => get_post_meta( $maybe_id, 'va_marok_weight_g', true ),
+            'marok_frame_material' => get_post_meta( $maybe_id, 'va_marok_frame_material', true ),
+            'marok_slide_material' => get_post_meta( $maybe_id, 'va_marok_slide_material', true ),
+            'marok_sight_type' => get_post_meta( $maybe_id, 'va_marok_sight_type', true ),
+            'marok_optic_ready' => get_post_meta( $maybe_id, 'va_marok_optic_ready', true ),
+            'marok_optic_mount' => get_post_meta( $maybe_id, 'va_marok_optic_mount', true ),
+            'marok_red_dot_compatibility' => get_post_meta( $maybe_id, 'va_marok_red_dot_compatibility', true ),
+            'marok_threaded_barrel' => get_post_meta( $maybe_id, 'va_marok_threaded_barrel', true ),
+            'marok_rail_type' => get_post_meta( $maybe_id, 'va_marok_rail_type', true ),
+            'marok_accessories' => get_post_meta( $maybe_id, 'va_marok_accessories', true ),
+            'marok_license_required' => get_post_meta( $maybe_id, 'va_marok_license_required', true ),
+            'marok_legal_category' => get_post_meta( $maybe_id, 'va_marok_legal_category', true ),
+            'marok_technical_exam_valid' => get_post_meta( $maybe_id, 'va_marok_technical_exam_valid', true ),
+            'marok_cip_marking' => get_post_meta( $maybe_id, 'va_marok_cip_marking', true ),
+            'marok_transfer_license_only' => get_post_meta( $maybe_id, 'va_marok_transfer_license_only', true ),
+            'marok_personal_pickup' => get_post_meta( $maybe_id, 'va_marok_personal_pickup', true ),
+            'marok_serial_masked' => get_post_meta( $maybe_id, 'va_marok_serial_masked', true ),
+            'marok_usage' => get_post_meta( $maybe_id, 'va_marok_usage', true ),
+            'marok_price_deal' => get_post_meta( $maybe_id, 'va_marok_price_deal', true ),
+            'marok_price_exchange' => get_post_meta( $maybe_id, 'va_marok_price_exchange', true ),
+            'marok_transfer_methods' => get_post_meta( $maybe_id, 'va_marok_transfer_methods', true ),
+            'marok_required_media' => get_post_meta( $maybe_id, 'va_marok_required_media', true ),
+            'marok_recommended_media' => get_post_meta( $maybe_id, 'va_marok_recommended_media', true ),
+            'marok_round_count' => get_post_meta( $maybe_id, 'va_marok_round_count', true ),
+            'marok_trigger_tuning' => get_post_meta( $maybe_id, 'va_marok_trigger_tuning', true ),
+            'marok_sport_categories' => get_post_meta( $maybe_id, 'va_marok_sport_categories', true ),
+            'marok_ipsc_ready' => get_post_meta( $maybe_id, 'va_marok_ipsc_ready', true ),
+            'marok_race_trigger' => get_post_meta( $maybe_id, 'va_marok_race_trigger', true ),
+            'marok_moderation_flags' => get_post_meta( $maybe_id, 'va_marok_moderation_flags', true ),
             // Jármű extra mezők
             'mileage'          => get_post_meta( $maybe_id, 'va_mileage',          true ),
             'fuel_type'        => get_post_meta( $maybe_id, 'va_fuel_type',        true ),
@@ -2512,6 +2551,60 @@ body.va-modal-open {
                 </div>
                 <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij" style="grid-column:1 / -1; margin-top:10px;">
                     <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
+                </div>
+            </div>
+            <?php
+            $marok_saved = static function( string $key ) use ( $edit_meta ) {
+                return is_scalar( $edit_meta[ $key ] ?? '' ) ? (string) ( $edit_meta[ $key ] ?? '' ) : '';
+            };
+            $marok_accessories_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_accessories' ) ) ) );
+            $marok_usage_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_usage' ) ) ) );
+            $marok_transfer_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_transfer_methods' ) ) ) );
+            $marok_required_media_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_required_media' ) ) ) );
+            $marok_recommended_media_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_recommended_media' ) ) ) );
+            $marok_sport_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_sport_categories' ) ) ) );
+            $marok_moderation_saved = array_filter( array_map( 'trim', explode( ',', $marok_saved( 'marok_moderation_flags' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-handgun-fields-grid" data-categories="maroklofegyver" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Típus</label><?php $v = $marok_saved( 'marok_type' ); ?><select name="marok_type" id="va-marok-type" class="va-select"><option value="">- Válasszon -</option><option value="pisztoly"<?php selected( $v, 'pisztoly' ); ?>>Pisztoly</option><option value="revolver"<?php selected( $v, 'revolver' ); ?>>Revolver</option><option value="sportpisztoly"<?php selected( $v, 'sportpisztoly' ); ?>>Sportpisztoly</option><option value="onvedelmi"<?php selected( $v, 'onvedelmi' ); ?>>Önvédelmi</option><option value="szolgalati"<?php selected( $v, 'szolgalati' ); ?>>Szolgálati</option><option value="verseny"<?php selected( $v, 'verseny' ); ?>>Verseny</option><option value="tortenelmi"<?php selected( $v, 'tortenelmi' ); ?>>Történelmi</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="muzealis"<?php selected( $v, 'muzealis' ); ?>>Muzeális</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $marok_saved( 'marok_condition' ); ?><select name="marok_condition" class="va-select"><option value="">- Válasszon -</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="restauralt"<?php selected( $v, 'restauralt' ); ?>>Restaurált</option></select></div>
+                    <div class="va-form-group"><label>Gyártási év</label><input type="text" name="marok_manufacture_year" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_manufacture_year' ) ); ?>" placeholder="pl. 2018"></div>
+                    <div class="va-form-group"><label>Származási ország</label><input type="text" name="marok_origin_country" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_origin_country' ) ); ?>" placeholder="pl. Ausztria"></div>
+                    <div class="va-form-group"><label>Működési rendszer</label><?php $v = $marok_saved( 'marok_action_type' ); ?><select name="marok_action_type" class="va-select"><option value="">- Válasszon -</option><option value="dao"<?php selected( $v, 'dao' ); ?>>DAO</option><option value="sa"<?php selected( $v, 'sa' ); ?>>SA</option><option value="da-sa"<?php selected( $v, 'da-sa' ); ?>>DA/SA</option><option value="striker-fired"<?php selected( $v, 'striker-fired' ); ?>>Striker fired</option><option value="single-action"<?php selected( $v, 'single-action' ); ?>>Single action</option><option value="double-action"<?php selected( $v, 'double-action' ); ?>>Double action</option></select></div>
+                    <div class="va-form-group"><label>Tárkapacitás (db)</label><input type="text" name="marok_magazine_capacity" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_magazine_capacity' ) ); ?>" placeholder="pl. 17"></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-revolver-only" style="display:none;"><label>Dob kapacitás (db)</label><input type="text" name="marok_cylinder_capacity" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_cylinder_capacity' ) ); ?>" placeholder="pl. 6"></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-revolver-only" style="display:none;"><label>Revolver működés</label><?php $v = $marok_saved( 'marok_revolver_action' ); ?><select name="marok_revolver_action" class="va-select"><option value="">- Válasszon -</option><option value="single-action"<?php selected( $v, 'single-action' ); ?>>Single action</option><option value="double-action"<?php selected( $v, 'double-action' ); ?>>Double action</option></select></div>
+                    <div class="va-form-group"><label>Csőhossz (mm)</label><input type="text" name="marok_barrel_length_mm" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_barrel_length_mm' ) ); ?>" placeholder="pl. 114"></div>
+                    <div class="va-form-group"><label>Teljes hossz (mm)</label><input type="text" name="marok_total_length_mm" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_total_length_mm' ) ); ?>" placeholder="pl. 204"></div>
+                    <div class="va-form-group"><label>Súly (g)</label><input type="text" name="marok_weight_g" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_weight_g' ) ); ?>" placeholder="pl. 690"></div>
+                    <div class="va-form-group"><label>Keret anyaga</label><?php $v = $marok_saved( 'marok_frame_material' ); ?><select name="marok_frame_material" class="va-select"><option value="">- Válasszon -</option><option value="acel"<?php selected( $v, 'acel' ); ?>>Acél</option><option value="aluminium"<?php selected( $v, 'aluminium' ); ?>>Alumínium</option><option value="polimer"<?php selected( $v, 'polimer' ); ?>>Polimer</option><option value="rozsdamentes"<?php selected( $v, 'rozsdamentes' ); ?>>Rozsdamentes</option></select></div>
+                    <div class="va-form-group"><label>Szán anyaga</label><?php $v = $marok_saved( 'marok_slide_material' ); ?><select name="marok_slide_material" class="va-select"><option value="">- Válasszon -</option><option value="acel"<?php selected( $v, 'acel' ); ?>>Acél</option><option value="inox"<?php selected( $v, 'inox' ); ?>>Inox</option><option value="aluminium"<?php selected( $v, 'aluminium' ); ?>>Alumínium</option></select></div>
+                    <div class="va-form-group"><label>Irányzék típusa</label><?php $v = $marok_saved( 'marok_sight_type' ); ?><select name="marok_sight_type" class="va-select"><option value="">- Válasszon -</option><option value="fix"<?php selected( $v, 'fix' ); ?>>Fix</option><option value="allithato"<?php selected( $v, 'allithato' ); ?>>Állítható</option><option value="fiber-optic"<?php selected( $v, 'fiber-optic' ); ?>>Fiber optic</option><option value="night-sight"<?php selected( $v, 'night-sight' ); ?>>Night sight</option><option value="red-dot-ready"<?php selected( $v, 'red-dot-ready' ); ?>>Red dot ready</option></select></div>
+                    <div class="va-form-group"><label>Optika előkészítés</label><?php $v = $marok_saved( 'marok_optic_ready' ); ?><select name="marok_optic_ready" id="va-marok-optic-ready" class="va-select"><option value="">- Válasszon -</option><option value="nincs"<?php selected( $v, 'nincs' ); ?>>Nincs</option><option value="mos"<?php selected( $v, 'mos' ); ?>>MOS</option><option value="rmr"<?php selected( $v, 'rmr' ); ?>>RMR</option><option value="docter"<?php selected( $v, 'docter' ); ?>>Docter</option><option value="picatinny"<?php selected( $v, 'picatinny' ); ?>>Picatinny</option></select></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-optic-only" style="display:none;"><label>Red dot kompatibilitás</label><input type="text" name="marok_red_dot_compatibility" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_red_dot_compatibility' ) ); ?>" placeholder="pl. Trijicon RMR, Holosun 507C"></div>
+                    <div class="va-form-group"><label>Menetes cső</label><?php $v = $marok_saved( 'marok_threaded_barrel' ); ?><select name="marok_threaded_barrel" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Sín</label><?php $v = $marok_saved( 'marok_rail_type' ); ?><select name="marok_rail_type" class="va-select"><option value="">- Válasszon -</option><option value="picatinny"<?php selected( $v, 'picatinny' ); ?>>Picatinny</option><option value="weaver"<?php selected( $v, 'weaver' ); ?>>Weaver</option><option value="nincs"<?php selected( $v, 'nincs' ); ?>>Nincs</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="marok_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="gyari-doboz"<?php echo in_array( 'gyari-doboz', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Gyári doboz</option><option value="tartalek-tar"<?php echo in_array( 'tartalek-tar', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Tartalék tár</option><option value="tok"<?php echo in_array( 'tok', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="tisztitokeszlet"<?php echo in_array( 'tisztitokeszlet', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Tisztítókészlet</option><option value="optika"<?php echo in_array( 'optika', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Optika</option><option value="szerulek"<?php echo in_array( 'szerulek', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Szerelék</option><option value="eredeti-papirok"<?php echo in_array( 'eredeti-papirok', $marok_accessories_saved, true ) ? ' selected' : ''; ?>>Eredeti papírok</option></select></div>
+                    <div class="va-form-group"><label>Engedélyköteles</label><?php $v = $marok_saved( 'marok_license_required' ); ?><select name="marok_license_required" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option></select></div>
+                    <div class="va-form-group"><label>Kategória</label><?php $v = $marok_saved( 'marok_legal_category' ); ?><select name="marok_legal_category" class="va-select"><option value="">- Válasszon -</option><option value="sport"<?php selected( $v, 'sport' ); ?>>Sport</option><option value="vadasz"<?php selected( $v, 'vadasz' ); ?>>Vadász</option><option value="onvedelmi"<?php selected( $v, 'onvedelmi' ); ?>>Önvédelmi</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option></select></div>
+                    <div class="va-form-group"><label>Érvényes műszaki vizsga?</label><?php $v = $marok_saved( 'marok_technical_exam_valid' ); ?><select name="marok_technical_exam_valid" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>MKH / CIP jelölés</label><?php $v = $marok_saved( 'marok_cip_marking' ); ?><select name="marok_cip_marking" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Csak engedéllyel átvehető?</label><?php $v = $marok_saved( 'marok_transfer_license_only' ); ?><select name="marok_transfer_license_only" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option></select></div>
+                    <div class="va-form-group"><label>Személyes átvétel kötelező?</label><?php $v = $marok_saved( 'marok_personal_pickup' ); ?><select name="marok_personal_pickup" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Sorozatszám (maszkolt)</label><input type="text" name="marok_serial_masked" class="va-input" value="<?php echo esc_attr( $marok_saved( 'marok_serial_masked' ) ); ?>" placeholder="pl. ABC12***"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="marok_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="sportloveszet"<?php echo in_array( 'sportloveszet', $marok_usage_saved, true ) ? ' selected' : ''; ?>>Sportlövészet</option><option value="ipsc"<?php echo in_array( 'ipsc', $marok_usage_saved, true ) ? ' selected' : ''; ?>>IPSC</option><option value="vadaszat"<?php echo in_array( 'vadaszat', $marok_usage_saved, true ) ? ' selected' : ''; ?>>Vadászat</option><option value="onvedelem"<?php echo in_array( 'onvedelem', $marok_usage_saved, true ) ? ' selected' : ''; ?>>Önvédelem</option><option value="gyujtoi"<?php echo in_array( 'gyujtoi', $marok_usage_saved, true ) ? ' selected' : ''; ?>>Gyűjtői</option></select></div>
+                    <div class="va-form-group"><label>Ár: alku</label><?php $v = $marok_saved( 'marok_price_deal' ); ?><select name="marok_price_deal" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Ár: csere</label><?php $v = $marok_saved( 'marok_price_exchange' ); ?><select name="marok_price_exchange" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Átvétel</label><select name="marok_transfer_methods[]" class="va-select" multiple data-placeholder="Válassz átvételi módot"><option value="szemelyes"<?php echo in_array( 'szemelyes', $marok_transfer_saved, true ) ? ' selected' : ''; ?>>Személyes</option><option value="fegyverbolt-kozvetites"<?php echo in_array( 'fegyverbolt-kozvetites', $marok_transfer_saved, true ) ? ' selected' : ''; ?>>Fegyverbolt közvetítés</option><option value="hivatalos-atiras"<?php echo in_array( 'hivatalos-atiras', $marok_transfer_saved, true ) ? ' selected' : ''; ?>>Hivatalos átírás</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Kötelező képek</label><select name="marok_required_media[]" class="va-select" multiple data-placeholder="Válassz kötelező képeket"><option value="bal-oldal"<?php echo in_array( 'bal-oldal', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Bal oldal</option><option value="jobb-oldal"<?php echo in_array( 'jobb-oldal', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Jobb oldal</option><option value="cso"<?php echo in_array( 'cso', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Cső</option><option value="szan"<?php echo in_array( 'szan', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Szán</option><option value="markolat"<?php echo in_array( 'markolat', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Markolat</option><option value="tartozekok"<?php echo in_array( 'tartozekok', $marok_required_media_saved, true ) ? ' selected' : ''; ?>>Tartozékok</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Erősen ajánlott képek</label><select name="marok_recommended_media[]" class="va-select" multiple data-placeholder="Válassz ajánlott képeket"><option value="tok"<?php echo in_array( 'tok', $marok_recommended_media_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="iranyzek"<?php echo in_array( 'iranyzek', $marok_recommended_media_saved, true ) ? ' selected' : ''; ?>>Irányzék</option><option value="doboz"<?php echo in_array( 'doboz', $marok_recommended_media_saved, true ) ? ' selected' : ''; ?>>Doboz</option><option value="papirok"<?php echo in_array( 'papirok', $marok_recommended_media_saved, true ) ? ' selected' : ''; ?>>Papírok</option></select></div>
+                    <div class="va-form-group"><label>Lőtt darabszám</label><?php $v = $marok_saved( 'marok_round_count' ); ?><select name="marok_round_count" class="va-select"><option value="">- Válasszon -</option><option value="lt500"<?php selected( $v, 'lt500' ); ?>>&lt;500</option><option value="lt2000"<?php selected( $v, 'lt2000' ); ?>>&lt;2000</option><option value="5000plus"<?php selected( $v, '5000plus' ); ?>>5000+</option><option value="ismeretlen"<?php selected( $v, 'ismeretlen' ); ?>>Ismeretlen</option></select></div>
+                    <div class="va-form-group"><label>Trigger tuning</label><?php $v = $marok_saved( 'marok_trigger_tuning' ); ?><select name="marok_trigger_tuning" class="va-select"><option value="">- Válasszon -</option><option value="gyari"<?php selected( $v, 'gyari' ); ?>>Gyári</option><option value="tuningolt"<?php selected( $v, 'tuningolt' ); ?>>Tuningolt</option><option value="match"<?php selected( $v, 'match' ); ?>>Match</option></select></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-sport-only" style="grid-column:1 / -1;display:none;"><label>Sport kategóriák</label><select name="marok_sport_categories[]" class="va-select" multiple data-placeholder="Válassz sportágat"><option value="ipsc"<?php echo in_array( 'ipsc', $marok_sport_saved, true ) ? ' selected' : ''; ?>>IPSC</option><option value="idpa"<?php echo in_array( 'idpa', $marok_sport_saved, true ) ? ' selected' : ''; ?>>IDPA</option><option value="ppc"<?php echo in_array( 'ppc', $marok_sport_saved, true ) ? ' selected' : ''; ?>>PPC</option><option value="bullseye"<?php echo in_array( 'bullseye', $marok_sport_saved, true ) ? ' selected' : ''; ?>>Bullseye</option></select></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-sport-only" style="display:none;"><label>IPSC ready</label><?php $v = $marok_saved( 'marok_ipsc_ready' ); ?><select name="marok_ipsc_ready" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-marok-dynamic-group va-marok-sport-only" style="display:none;"><label>Race trigger</label><?php $v = $marok_saved( 'marok_race_trigger' ); ?><select name="marok_race_trigger" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="marok_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="automata"<?php echo in_array( 'automata', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Automata</option><option value="sorozatlovo"<?php echo in_array( 'sorozatlovo', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Sorozatlövő</option><option value="konverzio"<?php echo in_array( 'konverzio', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Konverzió</option><option value="hangtompito"<?php echo in_array( 'hangtompito', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Hangtompító</option><option value="illegalis-atalakitas"<?php echo in_array( 'illegalis-atalakitas', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális átalakítás</option><option value="engedely-nelkul"<?php echo in_array( 'engedely-nelkul', $marok_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélkül</option></select></div>
                 </div>
             </div>
             <datalist id="va-caliber-list"></datalist>
@@ -6462,6 +6555,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyHandgunDynamicFields() {
+        var type = (($('#va-marok-type').val() || '') + '').trim();
+        var opticReady = (($('#va-marok-optic-ready').val() || '') + '').trim();
+        $('.va-marok-dynamic-group').hide();
+        if (type === 'revolver') {
+            $('.va-marok-revolver-only').show();
+        }
+        if (type === 'sportpisztoly' || type === 'verseny') {
+            $('.va-marok-sport-only').show();
+        }
+        if (opticReady && opticReady !== 'nincs') {
+            $('.va-marok-optic-only').show();
+        }
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -6558,6 +6666,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-shoe-main-type', function(){
         applyShoeDynamicFields();
     });
+    $(document).on('change', '#va-marok-type, #va-marok-optic-ready', function(){
+        applyHandgunDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6574,6 +6685,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyCategorySpecificFieldVisibility();
     applyVadcameraDynamicFields();
     applyShoeDynamicFields();
+    applyHandgunDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -6764,6 +6876,14 @@ document.addEventListener('DOMContentLoaded', function() {
             knife_condition: 'Állapot',
             knife_blade_length_mm: 'Pengehossz (mm)',
             knife_steel_type: 'Acél',
+            marok_type: 'Maroklőfegyver típusa',
+            marok_condition: 'Állapot',
+            marok_action_type: 'Működési rendszer',
+            marok_magazine_capacity: 'Tárkapacitás',
+            marok_license_required: 'Engedélyköteles',
+            marok_legal_category: 'Jogi kategória',
+            marok_cip_marking: 'MKH / CIP jelölés',
+            marok_transfer_license_only: 'Csak engedéllyel átvehető',
         };
         var missing = [];
 
@@ -6837,6 +6957,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var isClothingCategory = /ruhazat/.test(slug)
             || /(ruházat|ruhazat|nadrág|nadrag|póló|polo|kabát|kabat)/.test(selectedCatText);
+        var isHandgunCategory = /maroklofegyver/.test(slug)
+            || /(maroklőfegyver|maroklofegyver|pisztoly|revolver)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -6846,6 +6968,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
+
+        $('.va-handgun-fields-grid').toggle(isHandgunCategory);
+        if (isHandgunCategory) {
+            applyHandgunDynamicFields();
+        }
 
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
@@ -6937,6 +7064,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isKnifeCategory) {
             $('.va-knife-fields-grid input, .va-knife-fields-grid select, .va-knife-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isHandgunCategory) {
+            $('.va-handgun-fields-grid input, .va-handgun-fields-grid select, .va-handgun-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);

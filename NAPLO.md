@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #maroklofegyver-kategoria-komplex-mezorendszer
+- Kérés: teljes `Maroklőfegyver` kategória mezőrendszer és backend mentési/logikai támogatás a kért jogi és technikai mezőkkel.
+- Frontend: bekerült dedikált `va-handgun-fields-grid` blokk (típus, állapot, műszaki paraméterek, irányzék/optika, menetes cső, sín, tartozékok, jogi adatok, átvétel, média, sport/specifikus mezők).
+- Dinamikus mezők: típusfüggő megjelenítés készült (`revolver` -> dobkapacitás + revolver működés, `sportpisztoly/verseny` -> IPSC/race trigger/sportág, optika előkészítés esetén red dot kompatibilitás).
+- Kötelező mezők: frontend+backend required szabályok bővítve `maroklofegyver` slugra (`marok_type`, `marok_condition`, `marok_action_type`, `marok_magazine_capacity`, jogi kötelezők).
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `marok_*` sanitize, mentés és dedikált szűrőmeták (`va_marok_filter_*`: caliber, barrel_length_mm, magazine_capacity, action_type, optic_ready, threaded_barrel, frame_material).
+- Moderáció: új marok kulcsszavas ellenőrző (`automata`, `sorozatlövő`, `konverzió`, `hangtompító`, `illegális átalakítás`, `engedély nélkül`) -> `va_marok_needs_review`, `va_marok_review_hits`.
+- Szinkron + ellenőrzés: root + plugin mirror fájlok egységesítve (`submit-form.php`, `class-ajax.php`), hibakeresés futtatva (`No errors found`).
+
 ## 2026. 05. 27. – Session #kesek-kategoria-komplex-mezorendszer
 - Kérés: részletes, szűrőközpontú `Kések` mezőrendszer felvétele teljes kés-specifikus adatszerkezettel.
 - Frontend: a kés blokk teljesen bővítve lett (`Kés típusa`, állapot, méretek mm/cm/g, acél, pengeforma/él/felület, konstrukció, markolat, jogi rész, tartozékok, szállítás, média, élezési állapot, gyűjtői extra, moderációs flag-ek).
