@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 05. 27. – Session #egyeb-ruhazat-komplex-szurok-es-dinamikus-mezok
+- Kérés: az `Egyéb ruházat` kategória önálló, táska/vadászruha kategóriától külön kezelt, szűrő-első mezőrendszere készüljön el.
+- Frontend: a ruhatípus lista átalakítva a kért elemekre (`sapka`, `kalap`, `maszk`, `balaclava`, `sál`, `nyakmelegítő`, `kesztyű`, `zokni`, `öv`, `aláöltözet`, `thermo ruházat`, `esőponcsó`, `ghillie ruha`, `láthatósági mellény`, `karmelegítő`, `könyökvédő`, `térdvédő`, `egyéb`).
+- Alapadatok: új mezők bekerültek az `egyeb-ruhazat` blokkba (`clothing_condition`, `clothing_gender`, `clothing_accessory_size`) és az edit prefill térkép is bővült.
+- Dinamikus mezők: típusfüggő almezők készültek (`kesztyű` méret/specifikus, `fejfedő` méret/specifikus, `öv` hossz cm, `esőponcsó` vízoszlop/ultrakönnyű/hátizsák kompatibilis, `ghillie` típus+minta).
+- Többválasztós (popup-only) szekciók: szín/minta, anyag, védelem, szezon, felhasználás, speciális tulajdonságok, plusz kesztyű/fejfedő/ghillie specifikus listák.
+- Backend: mindkét AJAX ágban bekerült a teljes `clothing_*` sanitize és `va_clothing_*` meta mentés.
+- Szűrő meták: mentésre kerülnek a kritikus kulcsok (`va_clothing_filter_type`, `va_clothing_filter_size`, `va_clothing_filter_thermo`, `va_clothing_filter_waterproof`, `va_clothing_filter_camo`, `va_clothing_filter_silent`, `va_clothing_filter_season`, `va_clothing_filter_brand`).
+- Kötelező mezők: backend+frontend required szabály frissítve `egyeb-ruhazat` kategóriára (`brand`, `clothing_type`, `clothing_condition`, `clothing_gender`, `clothing_size`).
+- Szinkron + ellenőrzés: plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés `No errors found`.
+
 ## 2026. 05. 27. – Session #cipo-bakancs-komplex-szurok-es-dinamikus-mezok
 - Kérés: a `Cipő / Bakancs` kategória komplett, szűrőközpontú mezőrendszere kerüljön be (méret, vízállóság, membrán, szezon, szármagasság, terep, felhasználás).
 - Frontend: bekerült egy teljes `va-shoe-fields-grid` blokk popup-only többválasztós mezőkkel (`shoe_protections[]`, `shoe_season[]`, `shoe_terrain[]`, `shoe_use_cases[]`, `shoe_accessories[]`, `shoe_shipping_methods[]`, `shoe_required_media[]`).
