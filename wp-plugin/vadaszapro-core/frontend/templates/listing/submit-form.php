@@ -267,6 +267,7 @@ $category_required_rules = [
     'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+    'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
 ];
@@ -306,6 +307,37 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'scope_coatings' => get_post_meta( $maybe_id, 'va_scope_coatings', true ),
             'twilight_value' => get_post_meta( $maybe_id, 'va_twilight_value', true ),
             'scope_accessories' => get_post_meta( $maybe_id, 'va_scope_accessories', true ),
+            'optic_magnification_min' => get_post_meta( $maybe_id, 'va_optic_magnification_min', true ),
+            'optic_magnification_max' => get_post_meta( $maybe_id, 'va_optic_magnification_max', true ),
+            'optic_magnification_fixed' => get_post_meta( $maybe_id, 'va_optic_magnification_fixed', true ),
+            'optic_tube_diameter' => get_post_meta( $maybe_id, 'va_optic_tube_diameter', true ),
+            'optic_exit_pupil' => get_post_meta( $maybe_id, 'va_optic_exit_pupil', true ),
+            'optic_field_of_view' => get_post_meta( $maybe_id, 'va_optic_field_of_view', true ),
+            'optic_eye_relief' => get_post_meta( $maybe_id, 'va_optic_eye_relief', true ),
+            'optic_reticle_type' => get_post_meta( $maybe_id, 'va_optic_reticle_type', true ),
+            'optic_reticle_plane' => get_post_meta( $maybe_id, 'va_optic_reticle_plane', true ),
+            'optic_illumination' => get_post_meta( $maybe_id, 'va_optic_illumination', true ),
+            'optic_illumination_color' => get_post_meta( $maybe_id, 'va_optic_illumination_color', true ),
+            'optic_click_value' => get_post_meta( $maybe_id, 'va_optic_click_value', true ),
+            'optic_parallax_adjustment' => get_post_meta( $maybe_id, 'va_optic_parallax_adjustment', true ),
+            'optic_turret_type' => get_post_meta( $maybe_id, 'va_optic_turret_type', true ),
+            'optic_body_material' => get_post_meta( $maybe_id, 'va_optic_body_material', true ),
+            'optic_coating_type' => get_post_meta( $maybe_id, 'va_optic_coating_type', true ),
+            'optic_waterproof_flags' => get_post_meta( $maybe_id, 'va_optic_waterproof_flags', true ),
+            'optic_prism_system' => get_post_meta( $maybe_id, 'va_optic_prism_system', true ),
+            'optic_glass_type' => get_post_meta( $maybe_id, 'va_optic_glass_type', true ),
+            'optic_dot_size' => get_post_meta( $maybe_id, 'va_optic_dot_size', true ),
+            'optic_rail_compatibility' => get_post_meta( $maybe_id, 'va_optic_rail_compatibility', true ),
+            'optic_rangefinder_max_m' => get_post_meta( $maybe_id, 'va_optic_rangefinder_max_m', true ),
+            'optic_ballistic_calc' => get_post_meta( $maybe_id, 'va_optic_ballistic_calc', true ),
+            'optic_spektiv_zoom_range' => get_post_meta( $maybe_id, 'va_optic_spektiv_zoom_range', true ),
+            'optic_eyepiece_type' => get_post_meta( $maybe_id, 'va_optic_eyepiece_type', true ),
+            'optic_weapon_compatibility' => get_post_meta( $maybe_id, 'va_optic_weapon_compatibility', true ),
+            'scope_accessories_flags' => get_post_meta( $maybe_id, 'va_scope_accessories_flags', true ),
+            'optic_mount_type' => get_post_meta( $maybe_id, 'va_optic_mount_type', true ),
+            'optic_shipping_methods' => get_post_meta( $maybe_id, 'va_optic_shipping_methods', true ),
+            'optic_recommended_use' => get_post_meta( $maybe_id, 'va_optic_recommended_use', true ),
+            'optic_moderation_flags' => get_post_meta( $maybe_id, 'va_optic_moderation_flags', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
             'dog_breed' => get_post_meta( $maybe_id, 'va_dog_breed', true ),
             'dog_gender' => get_post_meta( $maybe_id, 'va_dog_gender', true ),
@@ -3244,6 +3276,208 @@ body.va-modal-open {
             </div><!-- /.va-hunt-option-fields-grid -->
 
             <?php
+            $estate_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $estate_transfer_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_transfer_methods' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-estate-fields-grid" data-categories="vadaszati-hagyatek" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Fő típus</label>
+                        <?php $v = $estate_meta( 'estate_main_type' ); ?>
+                        <select name="estate_main_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="komplett-hagyatek"<?php selected( $v, 'komplett-hagyatek' ); ?>>Komplett hagyaték</option>
+                            <option value="fegyver-hagyatek"<?php selected( $v, 'fegyver-hagyatek' ); ?>>Fegyver hagyaték</option>
+                            <option value="optikai-hagyatek"<?php selected( $v, 'optikai-hagyatek' ); ?>>Optikai hagyaték</option>
+                            <option value="ruhazat-felszereles"<?php selected( $v, 'ruhazat-felszereles' ); ?>>Ruházat / felszerelés</option>
+                            <option value="trofea-preparatum"<?php selected( $v, 'trofea-preparatum' ); ?>>Trófea / preparátum</option>
+                            <option value="konyv-dokumentum"<?php selected( $v, 'konyv-dokumentum' ); ?>>Könyv / dokumentum</option>
+                            <option value="vegyes-hagyatek"<?php selected( $v, 'vegyes-hagyatek' ); ?>>Vegyes hagyaték</option>
+                            <option value="gyujtoi-kollekcio"<?php selected( $v, 'gyujtoi-kollekcio' ); ?>>Gyűjtői kollekció</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Eladás típusa</label>
+                        <?php $v = $estate_meta( 'estate_sale_mode' ); ?>
+                        <select name="estate_sale_mode" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="egyben"<?php selected( $v, 'egyben' ); ?>>Egyben</option>
+                            <option value="darabonkent"<?php selected( $v, 'darabonkent' ); ?>>Darabonként</option>
+                            <option value="reszletekben"<?php selected( $v, 'reszletekben' ); ?>>Részletekben</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Teljes ár</label>
+                        <input type="text" name="estate_price_total" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_price_total' ) ); ?>" placeholder="pl. 2 500 000 Ft">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Irányár</label>
+                        <input type="text" name="estate_price_guide" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_price_guide' ) ); ?>" placeholder="pl. 2 200 000 Ft">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Darabár (ha bontva)</label>
+                        <input type="text" name="estate_price_per_item" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_price_per_item' ) ); ?>" placeholder="pl. 20 000 Ft-tól">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Becsült érték (opcionális)</label>
+                        <input type="text" name="estate_estimated_value" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_estimated_value' ) ); ?>" placeholder="pl. 3 100 000 Ft">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Alku</label>
+                        <?php $v = $estate_meta( 'estate_negotiable' ); ?>
+                        <select name="estate_negotiable" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Tartalom összetétele</strong></div>
+                    <div class="va-form-group">
+                        <label>Fegyverek darabszám</label>
+                        <input type="text" name="estate_firearms_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_firearms_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fegyver típus</label>
+                        <?php $v = $estate_meta( 'estate_firearms_type' ); ?>
+                        <select name="estate_firearms_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="pisztoly"<?php selected( $v, 'pisztoly' ); ?>>Pisztoly</option>
+                            <option value="puska"<?php selected( $v, 'puska' ); ?>>Puska</option>
+                            <option value="vegyes"<?php selected( $v, 'vegyes' ); ?>>Vegyes</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hatástalanított?</label>
+                        <?php $v = $estate_meta( 'estate_firearms_deactivated' ); ?>
+                        <select name="estate_firearms_deactivated" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Engedélyköteles?</label>
+                        <?php $v = $estate_meta( 'estate_firearms_licensed' ); ?>
+                        <select name="estate_firearms_licensed" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Optika darabszám</label>
+                        <input type="text" name="estate_optics_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_optics_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column: span 3;">
+                        <label><input type="checkbox" name="estate_optic_celtavcso" value="1" <?php checked( $estate_meta( 'estate_optic_celtavcso' ), '1' ); ?>> Céltávcső</label>
+                        <label><input type="checkbox" name="estate_optic_binokular" value="1" <?php checked( $estate_meta( 'estate_optic_binokular' ), '1' ); ?>> Binokulár</label>
+                        <label><input type="checkbox" name="estate_optic_spektiv" value="1" <?php checked( $estate_meta( 'estate_optic_spektiv' ), '1' ); ?>> Spektív</label>
+                        <label><input type="checkbox" name="estate_optic_reddot" value="1" <?php checked( $estate_meta( 'estate_optic_reddot' ), '1' ); ?>> Red dot</label>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Ruházat darabszám</label>
+                        <input type="text" name="estate_clothing_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_clothing_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column: span 3;">
+                        <label><input type="checkbox" name="estate_clothing_kabat" value="1" <?php checked( $estate_meta( 'estate_clothing_kabat' ), '1' ); ?>> Kabát</label>
+                        <label><input type="checkbox" name="estate_clothing_nadrag" value="1" <?php checked( $estate_meta( 'estate_clothing_nadrag' ), '1' ); ?>> Nadrág</label>
+                        <label><input type="checkbox" name="estate_clothing_csizma" value="1" <?php checked( $estate_meta( 'estate_clothing_csizma' ), '1' ); ?>> Csizma</label>
+                        <label><input type="checkbox" name="estate_clothing_esoruha" value="1" <?php checked( $estate_meta( 'estate_clothing_esoruha' ), '1' ); ?>> Esőruha</label>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Trófea darabszám</label>
+                        <input type="text" name="estate_trophy_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_trophy_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column: span 3;">
+                        <label><input type="checkbox" name="estate_trophy_agancs" value="1" <?php checked( $estate_meta( 'estate_trophy_agancs' ), '1' ); ?>> Agancs</label>
+                        <label><input type="checkbox" name="estate_trophy_koponya" value="1" <?php checked( $estate_meta( 'estate_trophy_koponya' ), '1' ); ?>> Koponya</label>
+                        <label><input type="checkbox" name="estate_trophy_preparatum" value="1" <?php checked( $estate_meta( 'estate_trophy_preparatum' ), '1' ); ?>> Preparátum</label>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Dokumentumok darabszám</label>
+                        <input type="text" name="estate_docs_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_docs_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column: span 3;">
+                        <label><input type="checkbox" name="estate_docs_engedelyek" value="1" <?php checked( $estate_meta( 'estate_docs_engedelyek' ), '1' ); ?>> Engedélyek</label>
+                        <label><input type="checkbox" name="estate_docs_vadasznaplo" value="1" <?php checked( $estate_meta( 'estate_docs_vadasznaplo' ), '1' ); ?>> Vadásznapló</label>
+                        <label><input type="checkbox" name="estate_docs_konyvek" value="1" <?php checked( $estate_meta( 'estate_docs_konyvek' ), '1' ); ?>> Könyvek</label>
+                        <label><input type="checkbox" name="estate_docs_tanusitvanyok" value="1" <?php checked( $estate_meta( 'estate_docs_tanusitvanyok' ), '1' ); ?>> Tanúsítványok</label>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Egyéb felszerelés darabszám</label>
+                        <input type="text" name="estate_equipment_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_equipment_count' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column: span 3;">
+                        <label><input type="checkbox" name="estate_equipment_kes" value="1" <?php checked( $estate_meta( 'estate_equipment_kes' ), '1' ); ?>> Kés</label>
+                        <label><input type="checkbox" name="estate_equipment_hatizsak" value="1" <?php checked( $estate_meta( 'estate_equipment_hatizsak' ), '1' ); ?>> Hátizsák</label>
+                        <label><input type="checkbox" name="estate_equipment_lampa" value="1" <?php checked( $estate_meta( 'estate_equipment_lampa' ), '1' ); ?>> Lámpa</label>
+                        <label><input type="checkbox" name="estate_equipment_tavcso_tartozek" value="1" <?php checked( $estate_meta( 'estate_equipment_tavcso_tartozek' ), '1' ); ?>> Távcső tartozék</label>
+                        <label><input type="checkbox" name="estate_equipment_fegyverszef" value="1" <?php checked( $estate_meta( 'estate_equipment_fegyverszef' ), '1' ); ?>> Fegyverszéf</label>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = $estate_meta( 'estate_condition' ); ?>
+                        <select name="estate_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="teljes"<?php selected( $v, 'teljes' ); ?>>Teljes hagyaték</option>
+                            <option value="reszben-rendezett"<?php selected( $v, 'reszben-rendezett' ); ?>>Részben rendezett</option>
+                            <option value="rendezetlen"<?php selected( $v, 'rendezetlen' ); ?>>Rendezetlen</option>
+                            <option value="katalogizalt"<?php selected( $v, 'katalogizalt' ); ?>>Katalogizált</option>
+                            <option value="muzealis"<?php selected( $v, 'muzealis' ); ?>>Múzeális jellegű</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hagyaték jellege</label>
+                        <?php $v = $estate_meta( 'estate_origin' ); ?>
+                        <select name="estate_origin" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="maganszemely"<?php selected( $v, 'maganszemely' ); ?>>Magánszemély hagyaték</option>
+                            <option value="vadasztarsasag"<?php selected( $v, 'vadasztarsasag' ); ?>>Vadásztársaság felszámolás</option>
+                            <option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői hagyaték</option>
+                            <option value="orokseg"<?php selected( $v, 'orokseg' ); ?>>Örökség</option>
+                            <option value="bontas"<?php selected( $v, 'bontas' ); ?>>Bontásból származó</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Jogi státusz</strong></div>
+                    <div class="va-form-group"><label>Engedélyköteles tárgyak?</label><?php $v = $estate_meta( 'estate_legal_has_licensed_items' ); ?><select name="estate_legal_has_licensed_items" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Fegyverek hatástalanítottak?</label><?php $v = $estate_meta( 'estate_legal_deactivated' ); ?><select name="estate_legal_deactivated" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Papírok rendelkezésre állnak?</label><?php $v = $estate_meta( 'estate_legal_has_papers' ); ?><select name="estate_legal_has_papers" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Csak egyben átvehető?</label><?php $v = $estate_meta( 'estate_legal_bundle_only' ); ?><select name="estate_legal_bundle_only" class="va-select"><option value="">–</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group">
+                        <label>Átadás</label>
+                        <select name="estate_transfer_methods[]" class="va-select" multiple>
+                            <option value="szemelyes"<?php echo in_array( 'szemelyes', $estate_transfer_saved, true ) ? ' selected' : ''; ?>>Személyes átvétel</option>
+                            <option value="helyszini"<?php echo in_array( 'helyszini', $estate_transfer_saved, true ) ? ' selected' : ''; ?>>Helyszíni átadás</option>
+                            <option value="szallitas"<?php echo in_array( 'szallitas', $estate_transfer_saved, true ) ? ' selected' : ''; ?>>Szállítás megoldható</option>
+                            <option value="rakodassal"<?php echo in_array( 'rakodassal', $estate_transfer_saved, true ) ? ' selected' : ''; ?>>Csak rakodással együtt</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Média ellenőrző lista</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label><input type="checkbox" name="estate_media_full" value="1" <?php checked( $estate_meta( 'estate_media_full' ), '1' ); ?>> Teljes gyűjtemény fotó feltöltve</label>
+                        <label><input type="checkbox" name="estate_media_details" value="1" <?php checked( $estate_meta( 'estate_media_details' ), '1' ); ?>> Részletfotók feltöltve</label>
+                        <label><input type="checkbox" name="estate_media_documents" value="1" <?php checked( $estate_meta( 'estate_media_documents' ), '1' ); ?>> Dokumentumok fotózva</label>
+                        <label><input type="checkbox" name="estate_media_firearms" value="1" <?php checked( $estate_meta( 'estate_media_firearms' ), '1' ); ?>> Fegyverek külön fotózva</label>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Hagyaték megjegyzés / részletezés</label>
+                        <textarea name="estate_notes" class="va-input" rows="4" placeholder="Részletek a kollekcióról, átvételről, csomagolásról, előéletről..."><?php echo esc_textarea( $estate_meta( 'estate_notes' ) ); ?></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <?php
                 $dog_breed_options = [];
                 $dog_catalog = [];
                 if ( isset( $hunting_brand_models['vadaszkutya'] ) && is_array( $hunting_brand_models['vadaszkutya'] ) ) {
@@ -5751,6 +5985,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hunt_capacity: 'Létszám / fő',
             hunt_species_list: 'Vadászható fajok listája',
             hunt_lease_type: 'Lesbérleti / hozzáférési forma'
+            estate_main_type: 'Hagyaték fő típusa',
         };
         var missing = [];
 

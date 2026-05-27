@@ -186,6 +186,7 @@ class VA_Ajax {
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
@@ -291,6 +292,7 @@ class VA_Ajax {
             'hunt_capacity' => 'Létszám / fő',
             'hunt_species_list' => 'Vadászható fajok listája',
             'hunt_lease_type' => 'Lesbérleti / hozzáférési forma',
+            'estate_main_type' => 'Hagyaték fő típusa',
         ];
 
         $missing = [];
@@ -310,6 +312,35 @@ class VA_Ajax {
             $cat_label,
             implode( ', ', $missing )
         );
+    }
+
+    private static function detect_estate_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'elo fegyver',
+            'élő fegyver',
+            'lofegyver engedely nelkul',
+            'lőfegyver engedély nélkül',
+            'mukodo automata',
+            'működő automata',
+            'sorozatlovo',
+            'sorozatlövő',
+            'katonai keszlet',
+            'katonai készlet',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
     }
 
     private static function is_vehicle_category( int $category_id ): bool {
@@ -751,6 +782,57 @@ class VA_Ajax {
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $estate_main_type = sanitize_key( wp_unslash( $_POST['estate_main_type'] ?? '' ) );
+        $estate_sale_mode = sanitize_key( wp_unslash( $_POST['estate_sale_mode'] ?? '' ) );
+        $estate_price_total = sanitize_text_field( wp_unslash( $_POST['estate_price_total'] ?? '' ) );
+        $estate_price_guide = sanitize_text_field( wp_unslash( $_POST['estate_price_guide'] ?? '' ) );
+        $estate_price_per_item = sanitize_text_field( wp_unslash( $_POST['estate_price_per_item'] ?? '' ) );
+        $estate_estimated_value = sanitize_text_field( wp_unslash( $_POST['estate_estimated_value'] ?? '' ) );
+        $estate_negotiable = sanitize_key( wp_unslash( $_POST['estate_negotiable'] ?? '' ) );
+        $estate_firearms_count = sanitize_text_field( wp_unslash( $_POST['estate_firearms_count'] ?? '' ) );
+        $estate_firearms_type = sanitize_key( wp_unslash( $_POST['estate_firearms_type'] ?? '' ) );
+        $estate_firearms_deactivated = sanitize_key( wp_unslash( $_POST['estate_firearms_deactivated'] ?? '' ) );
+        $estate_firearms_licensed = sanitize_key( wp_unslash( $_POST['estate_firearms_licensed'] ?? '' ) );
+        $estate_optics_count = sanitize_text_field( wp_unslash( $_POST['estate_optics_count'] ?? '' ) );
+        $estate_clothing_count = sanitize_text_field( wp_unslash( $_POST['estate_clothing_count'] ?? '' ) );
+        $estate_trophy_count = sanitize_text_field( wp_unslash( $_POST['estate_trophy_count'] ?? '' ) );
+        $estate_docs_count = sanitize_text_field( wp_unslash( $_POST['estate_docs_count'] ?? '' ) );
+        $estate_equipment_count = sanitize_text_field( wp_unslash( $_POST['estate_equipment_count'] ?? '' ) );
+        $estate_condition = sanitize_key( wp_unslash( $_POST['estate_condition'] ?? '' ) );
+        $estate_origin = sanitize_key( wp_unslash( $_POST['estate_origin'] ?? '' ) );
+        $estate_legal_has_licensed_items = sanitize_key( wp_unslash( $_POST['estate_legal_has_licensed_items'] ?? '' ) );
+        $estate_legal_deactivated = sanitize_key( wp_unslash( $_POST['estate_legal_deactivated'] ?? '' ) );
+        $estate_legal_has_papers = sanitize_key( wp_unslash( $_POST['estate_legal_has_papers'] ?? '' ) );
+        $estate_legal_bundle_only = sanitize_key( wp_unslash( $_POST['estate_legal_bundle_only'] ?? '' ) );
+        $estate_transfer_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_transfer_methods'] ?? [] ) ) ) );
+        $estate_media_full = ! empty( $_POST['estate_media_full'] ) ? '1' : '0';
+        $estate_media_details = ! empty( $_POST['estate_media_details'] ) ? '1' : '0';
+        $estate_media_documents = ! empty( $_POST['estate_media_documents'] ) ? '1' : '0';
+        $estate_media_firearms = ! empty( $_POST['estate_media_firearms'] ) ? '1' : '0';
+        $estate_optic_celtavcso = ! empty( $_POST['estate_optic_celtavcso'] ) ? '1' : '0';
+        $estate_optic_binokular = ! empty( $_POST['estate_optic_binokular'] ) ? '1' : '0';
+        $estate_optic_spektiv = ! empty( $_POST['estate_optic_spektiv'] ) ? '1' : '0';
+        $estate_optic_reddot = ! empty( $_POST['estate_optic_reddot'] ) ? '1' : '0';
+        $estate_clothing_kabat = ! empty( $_POST['estate_clothing_kabat'] ) ? '1' : '0';
+        $estate_clothing_nadrag = ! empty( $_POST['estate_clothing_nadrag'] ) ? '1' : '0';
+        $estate_clothing_csizma = ! empty( $_POST['estate_clothing_csizma'] ) ? '1' : '0';
+        $estate_clothing_esoruha = ! empty( $_POST['estate_clothing_esoruha'] ) ? '1' : '0';
+        $estate_trophy_agancs = ! empty( $_POST['estate_trophy_agancs'] ) ? '1' : '0';
+        $estate_trophy_koponya = ! empty( $_POST['estate_trophy_koponya'] ) ? '1' : '0';
+        $estate_trophy_preparatum = ! empty( $_POST['estate_trophy_preparatum'] ) ? '1' : '0';
+        $estate_docs_engedelyek = ! empty( $_POST['estate_docs_engedelyek'] ) ? '1' : '0';
+        $estate_docs_vadasznaplo = ! empty( $_POST['estate_docs_vadasznaplo'] ) ? '1' : '0';
+        $estate_docs_konyvek = ! empty( $_POST['estate_docs_konyvek'] ) ? '1' : '0';
+        $estate_docs_tanusitvanyok = ! empty( $_POST['estate_docs_tanusitvanyok'] ) ? '1' : '0';
+        $estate_equipment_kes = ! empty( $_POST['estate_equipment_kes'] ) ? '1' : '0';
+        $estate_equipment_hatizsak = ! empty( $_POST['estate_equipment_hatizsak'] ) ? '1' : '0';
+        $estate_equipment_lampa = ! empty( $_POST['estate_equipment_lampa'] ) ? '1' : '0';
+        $estate_equipment_tavcso_tartozek = ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ? '1' : '0';
+        $estate_equipment_fegyverszef = ! empty( $_POST['estate_equipment_fegyverszef'] ) ? '1' : '0';
+        $estate_notes = sanitize_textarea_field( wp_unslash( $_POST['estate_notes'] ?? '' ) );
+        $estate_filter_has_firearms = ( $estate_firearms_count !== '' || $estate_firearms_type !== '' || $estate_firearms_licensed === 'igen' ) ? '1' : '0';
+        $estate_filter_has_optics = ( $estate_optics_count !== '' || $estate_optic_celtavcso === '1' || $estate_optic_binokular === '1' || $estate_optic_spektiv === '1' || $estate_optic_reddot === '1' ) ? '1' : '0';
+        $estate_filter_scope = in_array( $estate_sale_mode, [ 'egyben', 'darabonkent', 'reszletekben' ], true ) ? $estate_sale_mode : '';
         $bow_type = sanitize_key( wp_unslash( $_POST['bow_type'] ?? '' ) );
         $bow_handedness = sanitize_key( wp_unslash( $_POST['bow_handedness'] ?? '' ) );
         $bow_draw_weight = sanitize_text_field( wp_unslash( $_POST['bow_draw_weight'] ?? '' ) );
@@ -920,6 +1002,7 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -940,6 +1023,10 @@ class VA_Ajax {
         if ( $vehicle_error !== '' ) {
             wp_send_json_error( [ 'message' => $vehicle_error ] );
         }
+
+        $estate_term = $category > 0 ? get_term( $category, 'va_category' ) : null;
+        $is_estate_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-hagyatek';
+        $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1057,6 +1144,59 @@ class VA_Ajax {
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_exchange_target' => $exchange_target,
+            'va_estate_main_type' => $estate_main_type,
+            'va_estate_sale_mode' => $estate_sale_mode,
+            'va_estate_price_total' => $estate_price_total,
+            'va_estate_price_guide' => $estate_price_guide,
+            'va_estate_price_per_item' => $estate_price_per_item,
+            'va_estate_estimated_value' => $estate_estimated_value,
+            'va_estate_negotiable' => $estate_negotiable,
+            'va_estate_firearms_count' => $estate_firearms_count,
+            'va_estate_firearms_type' => $estate_firearms_type,
+            'va_estate_firearms_deactivated' => $estate_firearms_deactivated,
+            'va_estate_firearms_licensed' => $estate_firearms_licensed,
+            'va_estate_optics_count' => $estate_optics_count,
+            'va_estate_clothing_count' => $estate_clothing_count,
+            'va_estate_trophy_count' => $estate_trophy_count,
+            'va_estate_docs_count' => $estate_docs_count,
+            'va_estate_equipment_count' => $estate_equipment_count,
+            'va_estate_condition' => $estate_condition,
+            'va_estate_origin' => $estate_origin,
+            'va_estate_legal_has_licensed_items' => $estate_legal_has_licensed_items,
+            'va_estate_legal_deactivated' => $estate_legal_deactivated,
+            'va_estate_legal_has_papers' => $estate_legal_has_papers,
+            'va_estate_legal_bundle_only' => $estate_legal_bundle_only,
+            'va_estate_transfer_methods' => $estate_transfer_methods,
+            'va_estate_media_full' => $estate_media_full,
+            'va_estate_media_details' => $estate_media_details,
+            'va_estate_media_documents' => $estate_media_documents,
+            'va_estate_media_firearms' => $estate_media_firearms,
+            'va_estate_optic_celtavcso' => $estate_optic_celtavcso,
+            'va_estate_optic_binokular' => $estate_optic_binokular,
+            'va_estate_optic_spektiv' => $estate_optic_spektiv,
+            'va_estate_optic_reddot' => $estate_optic_reddot,
+            'va_estate_clothing_kabat' => $estate_clothing_kabat,
+            'va_estate_clothing_nadrag' => $estate_clothing_nadrag,
+            'va_estate_clothing_csizma' => $estate_clothing_csizma,
+            'va_estate_clothing_esoruha' => $estate_clothing_esoruha,
+            'va_estate_trophy_agancs' => $estate_trophy_agancs,
+            'va_estate_trophy_koponya' => $estate_trophy_koponya,
+            'va_estate_trophy_preparatum' => $estate_trophy_preparatum,
+            'va_estate_docs_engedelyek' => $estate_docs_engedelyek,
+            'va_estate_docs_vadasznaplo' => $estate_docs_vadasznaplo,
+            'va_estate_docs_konyvek' => $estate_docs_konyvek,
+            'va_estate_docs_tanusitvanyok' => $estate_docs_tanusitvanyok,
+            'va_estate_equipment_kes' => $estate_equipment_kes,
+            'va_estate_equipment_hatizsak' => $estate_equipment_hatizsak,
+            'va_estate_equipment_lampa' => $estate_equipment_lampa,
+            'va_estate_equipment_tavcso_tartozek' => $estate_equipment_tavcso_tartozek,
+            'va_estate_equipment_fegyverszef' => $estate_equipment_fegyverszef,
+            'va_estate_notes' => $estate_notes,
+            'va_estate_filter_has_firearms' => $estate_filter_has_firearms,
+            'va_estate_filter_has_optics' => $estate_filter_has_optics,
+            'va_estate_filter_scope' => $estate_filter_scope,
+            'va_estate_needs_review' => ! empty( $estate_moderation_hits ) ? '1' : '0',
+            'va_estate_review_hits' => implode( ',', $estate_moderation_hits ),
             'va_loszer_category' => $loszer_category,
             'va_loszer_caliber_preset' => $loszer_caliber_preset,
             'va_loszer_caliber_custom' => $loszer_caliber_custom,
@@ -1371,6 +1511,57 @@ class VA_Ajax {
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $estate_main_type = sanitize_key( wp_unslash( $_POST['estate_main_type'] ?? '' ) );
+        $estate_sale_mode = sanitize_key( wp_unslash( $_POST['estate_sale_mode'] ?? '' ) );
+        $estate_price_total = sanitize_text_field( wp_unslash( $_POST['estate_price_total'] ?? '' ) );
+        $estate_price_guide = sanitize_text_field( wp_unslash( $_POST['estate_price_guide'] ?? '' ) );
+        $estate_price_per_item = sanitize_text_field( wp_unslash( $_POST['estate_price_per_item'] ?? '' ) );
+        $estate_estimated_value = sanitize_text_field( wp_unslash( $_POST['estate_estimated_value'] ?? '' ) );
+        $estate_negotiable = sanitize_key( wp_unslash( $_POST['estate_negotiable'] ?? '' ) );
+        $estate_firearms_count = sanitize_text_field( wp_unslash( $_POST['estate_firearms_count'] ?? '' ) );
+        $estate_firearms_type = sanitize_key( wp_unslash( $_POST['estate_firearms_type'] ?? '' ) );
+        $estate_firearms_deactivated = sanitize_key( wp_unslash( $_POST['estate_firearms_deactivated'] ?? '' ) );
+        $estate_firearms_licensed = sanitize_key( wp_unslash( $_POST['estate_firearms_licensed'] ?? '' ) );
+        $estate_optics_count = sanitize_text_field( wp_unslash( $_POST['estate_optics_count'] ?? '' ) );
+        $estate_clothing_count = sanitize_text_field( wp_unslash( $_POST['estate_clothing_count'] ?? '' ) );
+        $estate_trophy_count = sanitize_text_field( wp_unslash( $_POST['estate_trophy_count'] ?? '' ) );
+        $estate_docs_count = sanitize_text_field( wp_unslash( $_POST['estate_docs_count'] ?? '' ) );
+        $estate_equipment_count = sanitize_text_field( wp_unslash( $_POST['estate_equipment_count'] ?? '' ) );
+        $estate_condition = sanitize_key( wp_unslash( $_POST['estate_condition'] ?? '' ) );
+        $estate_origin = sanitize_key( wp_unslash( $_POST['estate_origin'] ?? '' ) );
+        $estate_legal_has_licensed_items = sanitize_key( wp_unslash( $_POST['estate_legal_has_licensed_items'] ?? '' ) );
+        $estate_legal_deactivated = sanitize_key( wp_unslash( $_POST['estate_legal_deactivated'] ?? '' ) );
+        $estate_legal_has_papers = sanitize_key( wp_unslash( $_POST['estate_legal_has_papers'] ?? '' ) );
+        $estate_legal_bundle_only = sanitize_key( wp_unslash( $_POST['estate_legal_bundle_only'] ?? '' ) );
+        $estate_transfer_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_transfer_methods'] ?? [] ) ) ) );
+        $estate_media_full = ! empty( $_POST['estate_media_full'] ) ? '1' : '0';
+        $estate_media_details = ! empty( $_POST['estate_media_details'] ) ? '1' : '0';
+        $estate_media_documents = ! empty( $_POST['estate_media_documents'] ) ? '1' : '0';
+        $estate_media_firearms = ! empty( $_POST['estate_media_firearms'] ) ? '1' : '0';
+        $estate_optic_celtavcso = ! empty( $_POST['estate_optic_celtavcso'] ) ? '1' : '0';
+        $estate_optic_binokular = ! empty( $_POST['estate_optic_binokular'] ) ? '1' : '0';
+        $estate_optic_spektiv = ! empty( $_POST['estate_optic_spektiv'] ) ? '1' : '0';
+        $estate_optic_reddot = ! empty( $_POST['estate_optic_reddot'] ) ? '1' : '0';
+        $estate_clothing_kabat = ! empty( $_POST['estate_clothing_kabat'] ) ? '1' : '0';
+        $estate_clothing_nadrag = ! empty( $_POST['estate_clothing_nadrag'] ) ? '1' : '0';
+        $estate_clothing_csizma = ! empty( $_POST['estate_clothing_csizma'] ) ? '1' : '0';
+        $estate_clothing_esoruha = ! empty( $_POST['estate_clothing_esoruha'] ) ? '1' : '0';
+        $estate_trophy_agancs = ! empty( $_POST['estate_trophy_agancs'] ) ? '1' : '0';
+        $estate_trophy_koponya = ! empty( $_POST['estate_trophy_koponya'] ) ? '1' : '0';
+        $estate_trophy_preparatum = ! empty( $_POST['estate_trophy_preparatum'] ) ? '1' : '0';
+        $estate_docs_engedelyek = ! empty( $_POST['estate_docs_engedelyek'] ) ? '1' : '0';
+        $estate_docs_vadasznaplo = ! empty( $_POST['estate_docs_vadasznaplo'] ) ? '1' : '0';
+        $estate_docs_konyvek = ! empty( $_POST['estate_docs_konyvek'] ) ? '1' : '0';
+        $estate_docs_tanusitvanyok = ! empty( $_POST['estate_docs_tanusitvanyok'] ) ? '1' : '0';
+        $estate_equipment_kes = ! empty( $_POST['estate_equipment_kes'] ) ? '1' : '0';
+        $estate_equipment_hatizsak = ! empty( $_POST['estate_equipment_hatizsak'] ) ? '1' : '0';
+        $estate_equipment_lampa = ! empty( $_POST['estate_equipment_lampa'] ) ? '1' : '0';
+        $estate_equipment_tavcso_tartozek = ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ? '1' : '0';
+        $estate_equipment_fegyverszef = ! empty( $_POST['estate_equipment_fegyverszef'] ) ? '1' : '0';
+        $estate_notes = sanitize_textarea_field( wp_unslash( $_POST['estate_notes'] ?? '' ) );
+        $estate_filter_has_firearms = ( $estate_firearms_count !== '' || $estate_firearms_type !== '' || $estate_firearms_licensed === 'igen' ) ? '1' : '0';
+        $estate_filter_has_optics = ( $estate_optics_count !== '' || $estate_optic_celtavcso === '1' || $estate_optic_binokular === '1' || $estate_optic_spektiv === '1' || $estate_optic_reddot === '1' ) ? '1' : '0';
+        $estate_filter_scope = in_array( $estate_sale_mode, [ 'egyben', 'darabonkent', 'reszletekben' ], true ) ? $estate_sale_mode : '';
         $bow_type = sanitize_key( wp_unslash( $_POST['bow_type'] ?? '' ) );
         $bow_handedness = sanitize_key( wp_unslash( $_POST['bow_handedness'] ?? '' ) );
         $bow_draw_weight = sanitize_text_field( wp_unslash( $_POST['bow_draw_weight'] ?? '' ) );
@@ -1510,6 +1701,7 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
             wp_send_json_error( [ 'message' => $rule_error ] );
@@ -1530,6 +1722,10 @@ class VA_Ajax {
         if ( $vehicle_error !== '' ) {
             wp_send_json_error( [ 'message' => $vehicle_error ] );
         }
+
+        $estate_term = $category > 0 ? get_term( $category, 'va_category' ) : null;
+        $is_estate_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-hagyatek';
+        $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
@@ -1645,6 +1841,59 @@ class VA_Ajax {
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_exchange_target' => $exchange_target,
+            'va_estate_main_type' => $estate_main_type,
+            'va_estate_sale_mode' => $estate_sale_mode,
+            'va_estate_price_total' => $estate_price_total,
+            'va_estate_price_guide' => $estate_price_guide,
+            'va_estate_price_per_item' => $estate_price_per_item,
+            'va_estate_estimated_value' => $estate_estimated_value,
+            'va_estate_negotiable' => $estate_negotiable,
+            'va_estate_firearms_count' => $estate_firearms_count,
+            'va_estate_firearms_type' => $estate_firearms_type,
+            'va_estate_firearms_deactivated' => $estate_firearms_deactivated,
+            'va_estate_firearms_licensed' => $estate_firearms_licensed,
+            'va_estate_optics_count' => $estate_optics_count,
+            'va_estate_clothing_count' => $estate_clothing_count,
+            'va_estate_trophy_count' => $estate_trophy_count,
+            'va_estate_docs_count' => $estate_docs_count,
+            'va_estate_equipment_count' => $estate_equipment_count,
+            'va_estate_condition' => $estate_condition,
+            'va_estate_origin' => $estate_origin,
+            'va_estate_legal_has_licensed_items' => $estate_legal_has_licensed_items,
+            'va_estate_legal_deactivated' => $estate_legal_deactivated,
+            'va_estate_legal_has_papers' => $estate_legal_has_papers,
+            'va_estate_legal_bundle_only' => $estate_legal_bundle_only,
+            'va_estate_transfer_methods' => $estate_transfer_methods,
+            'va_estate_media_full' => $estate_media_full,
+            'va_estate_media_details' => $estate_media_details,
+            'va_estate_media_documents' => $estate_media_documents,
+            'va_estate_media_firearms' => $estate_media_firearms,
+            'va_estate_optic_celtavcso' => $estate_optic_celtavcso,
+            'va_estate_optic_binokular' => $estate_optic_binokular,
+            'va_estate_optic_spektiv' => $estate_optic_spektiv,
+            'va_estate_optic_reddot' => $estate_optic_reddot,
+            'va_estate_clothing_kabat' => $estate_clothing_kabat,
+            'va_estate_clothing_nadrag' => $estate_clothing_nadrag,
+            'va_estate_clothing_csizma' => $estate_clothing_csizma,
+            'va_estate_clothing_esoruha' => $estate_clothing_esoruha,
+            'va_estate_trophy_agancs' => $estate_trophy_agancs,
+            'va_estate_trophy_koponya' => $estate_trophy_koponya,
+            'va_estate_trophy_preparatum' => $estate_trophy_preparatum,
+            'va_estate_docs_engedelyek' => $estate_docs_engedelyek,
+            'va_estate_docs_vadasznaplo' => $estate_docs_vadasznaplo,
+            'va_estate_docs_konyvek' => $estate_docs_konyvek,
+            'va_estate_docs_tanusitvanyok' => $estate_docs_tanusitvanyok,
+            'va_estate_equipment_kes' => $estate_equipment_kes,
+            'va_estate_equipment_hatizsak' => $estate_equipment_hatizsak,
+            'va_estate_equipment_lampa' => $estate_equipment_lampa,
+            'va_estate_equipment_tavcso_tartozek' => $estate_equipment_tavcso_tartozek,
+            'va_estate_equipment_fegyverszef' => $estate_equipment_fegyverszef,
+            'va_estate_notes' => $estate_notes,
+            'va_estate_filter_has_firearms' => $estate_filter_has_firearms,
+            'va_estate_filter_has_optics' => $estate_filter_has_optics,
+            'va_estate_filter_scope' => $estate_filter_scope,
+            'va_estate_needs_review' => ! empty( $estate_moderation_hits ) ? '1' : '0',
+            'va_estate_review_hits' => implode( ',', $estate_moderation_hits ),
             'va_loszer_category' => $loszer_category,
             'va_loszer_caliber_preset' => $loszer_caliber_preset,
             'va_loszer_caliber_custom' => $loszer_caliber_custom,
