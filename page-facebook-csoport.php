@@ -27,19 +27,6 @@ if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
 }
 
 $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebookon' );
-$iframe_src = add_query_arg(
-    [
-        'href'                   => $group_url,
-        'tabs'                   => 'timeline',
-        'width'                  => '1200',
-        'height'                 => '980',
-        'small_header'           => 'false',
-        'adapt_container_width'  => 'true',
-        'hide_cover'             => 'false',
-        'show_facepile'          => 'true',
-    ],
-    'https://www.facebook.com/plugins/page.php'
-);
 ?>
 
 <section class="va-fb-group-page" aria-label="Facebook csoport oldal">
@@ -52,15 +39,16 @@ $iframe_src = add_query_arg(
         </header>
 
         <div class="va-fb-group-page__embed-wrap">
-            <iframe
-                class="va-fb-group-page__frame"
-                src="<?php echo esc_url( $iframe_src ); ?>"
-                allowfullscreen="true"
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                loading="lazy"
-                referrerpolicy="strict-origin-when-cross-origin"
-                title="Facebook csoport beagyazas">
-            </iframe>
+            <div class="va-fb-group-page__fallback">
+                <h2>A csoport itt nem beagyazhato</h2>
+                <p>
+                    A Facebook ennel a csoportnal nem ad nyilvanos iframe beagyazast,
+                    ezert az oldalon beluli feed nem jelenik meg megbizhatoan.
+                </p>
+                <a class="va-fb-group-page__open" href="<?php echo esc_url( $group_url ); ?>" target="_blank" rel="noopener noreferrer">
+                    <?php echo esc_html( $open_label ); ?>
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -113,18 +101,23 @@ $iframe_src = add_query_arg(
         background: transparent;
     }
 
-    .va-fb-group-page__frame {
-        width: 100%;
-        min-height: 960px;
-        border: 0;
-        display: block;
-        background: transparent;
+    .va-fb-group-page__fallback {
+        border: 1px solid rgba(255, 255, 255, .2);
+        border-radius: 12px;
+        padding: 18px;
+        background: rgba(255, 255, 255, .03);
+        max-width: 760px;
     }
 
-    @media (max-width: 800px) {
-        .va-fb-group-page__frame {
-            min-height: 780px;
-        }
+    .va-fb-group-page__fallback h2 {
+        margin: 0 0 8px;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+
+    .va-fb-group-page__fallback p {
+        margin: 0 0 14px;
+        color: rgba(255, 255, 255, .86);
     }
 </style>
 
