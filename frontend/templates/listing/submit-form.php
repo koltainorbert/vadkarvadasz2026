@@ -7059,7 +7059,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var missing = [];
 
         rule.required.forEach(function(field){
-            var v = (($( '[name="' + field + '"]' ).val() || '') + '').trim();
+            var $el = $( '[name="' + field + '"]' );
+            if (!$el.length) {
+                $el = $( '[name="' + field + '[]"]' );
+            }
+            var v = (($el.val() || '') + '').trim();
             if (!v) {
                 missing.push(labels[field] || field);
             }
