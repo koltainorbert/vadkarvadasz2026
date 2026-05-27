@@ -248,7 +248,7 @@ $category_required_rules = [
     'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
@@ -661,6 +661,45 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
+            'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
+            'marok_condition' => get_post_meta( $maybe_id, 'va_marok_condition', true ),
+            'marok_manufacture_year' => get_post_meta( $maybe_id, 'va_marok_manufacture_year', true ),
+            'marok_origin_country' => get_post_meta( $maybe_id, 'va_marok_origin_country', true ),
+            'marok_action_type' => get_post_meta( $maybe_id, 'va_marok_action_type', true ),
+            'marok_magazine_capacity' => get_post_meta( $maybe_id, 'va_marok_magazine_capacity', true ),
+            'marok_cylinder_capacity' => get_post_meta( $maybe_id, 'va_marok_cylinder_capacity', true ),
+            'marok_revolver_action' => get_post_meta( $maybe_id, 'va_marok_revolver_action', true ),
+            'marok_barrel_length_mm' => get_post_meta( $maybe_id, 'va_marok_barrel_length_mm', true ),
+            'marok_total_length_mm' => get_post_meta( $maybe_id, 'va_marok_total_length_mm', true ),
+            'marok_weight_g' => get_post_meta( $maybe_id, 'va_marok_weight_g', true ),
+            'marok_frame_material' => get_post_meta( $maybe_id, 'va_marok_frame_material', true ),
+            'marok_slide_material' => get_post_meta( $maybe_id, 'va_marok_slide_material', true ),
+            'marok_sight_type' => get_post_meta( $maybe_id, 'va_marok_sight_type', true ),
+            'marok_optic_ready' => get_post_meta( $maybe_id, 'va_marok_optic_ready', true ),
+            'marok_optic_mount' => get_post_meta( $maybe_id, 'va_marok_optic_mount', true ),
+            'marok_red_dot_compatibility' => get_post_meta( $maybe_id, 'va_marok_red_dot_compatibility', true ),
+            'marok_threaded_barrel' => get_post_meta( $maybe_id, 'va_marok_threaded_barrel', true ),
+            'marok_rail_type' => get_post_meta( $maybe_id, 'va_marok_rail_type', true ),
+            'marok_accessories' => get_post_meta( $maybe_id, 'va_marok_accessories', true ),
+            'marok_license_required' => get_post_meta( $maybe_id, 'va_marok_license_required', true ),
+            'marok_legal_category' => get_post_meta( $maybe_id, 'va_marok_legal_category', true ),
+            'marok_technical_exam_valid' => get_post_meta( $maybe_id, 'va_marok_technical_exam_valid', true ),
+            'marok_cip_marking' => get_post_meta( $maybe_id, 'va_marok_cip_marking', true ),
+            'marok_transfer_license_only' => get_post_meta( $maybe_id, 'va_marok_transfer_license_only', true ),
+            'marok_personal_pickup' => get_post_meta( $maybe_id, 'va_marok_personal_pickup', true ),
+            'marok_serial_masked' => get_post_meta( $maybe_id, 'va_marok_serial_masked', true ),
+            'marok_usage' => get_post_meta( $maybe_id, 'va_marok_usage', true ),
+            'marok_price_deal' => get_post_meta( $maybe_id, 'va_marok_price_deal', true ),
+            'marok_price_exchange' => get_post_meta( $maybe_id, 'va_marok_price_exchange', true ),
+            'marok_transfer_methods' => get_post_meta( $maybe_id, 'va_marok_transfer_methods', true ),
+            'marok_required_media' => get_post_meta( $maybe_id, 'va_marok_required_media', true ),
+            'marok_recommended_media' => get_post_meta( $maybe_id, 'va_marok_recommended_media', true ),
+            'marok_round_count' => get_post_meta( $maybe_id, 'va_marok_round_count', true ),
+            'marok_trigger_tuning' => get_post_meta( $maybe_id, 'va_marok_trigger_tuning', true ),
+            'marok_sport_categories' => get_post_meta( $maybe_id, 'va_marok_sport_categories', true ),
+            'marok_ipsc_ready' => get_post_meta( $maybe_id, 'va_marok_ipsc_ready', true ),
+            'marok_race_trigger' => get_post_meta( $maybe_id, 'va_marok_race_trigger', true ),
+            'marok_moderation_flags' => get_post_meta( $maybe_id, 'va_marok_moderation_flags', true ),
             // Jármű extra mezők
             'mileage'          => get_post_meta( $maybe_id, 'va_mileage',          true ),
             'fuel_type'        => get_post_meta( $maybe_id, 'va_fuel_type',        true ),
@@ -6462,6 +6501,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyHandgunDynamicFields() {
+        var type = (($('#va-marok-type').val() || '') + '').trim();
+        var opticReady = (($('#va-marok-optic-ready').val() || '') + '').trim();
+        $('.va-marok-dynamic-group').hide();
+        if (type === 'revolver') {
+            $('.va-marok-revolver-only').show();
+        }
+        if (type === 'sportpisztoly' || type === 'verseny') {
+            $('.va-marok-sport-only').show();
+        }
+        if (opticReady && opticReady !== 'nincs') {
+            $('.va-marok-optic-only').show();
+        }
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -6558,6 +6612,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-shoe-main-type', function(){
         applyShoeDynamicFields();
     });
+    $(document).on('change', '#va-marok-type, #va-marok-optic-ready', function(){
+        applyHandgunDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6574,6 +6631,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyCategorySpecificFieldVisibility();
     applyVadcameraDynamicFields();
     applyShoeDynamicFields();
+    applyHandgunDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -6764,6 +6822,14 @@ document.addEventListener('DOMContentLoaded', function() {
             knife_condition: 'Állapot',
             knife_blade_length_mm: 'Pengehossz (mm)',
             knife_steel_type: 'Acél',
+            marok_type: 'Maroklőfegyver típusa',
+            marok_condition: 'Állapot',
+            marok_action_type: 'Működési rendszer',
+            marok_magazine_capacity: 'Tárkapacitás',
+            marok_license_required: 'Engedélyköteles',
+            marok_legal_category: 'Jogi kategória',
+            marok_cip_marking: 'MKH / CIP jelölés',
+            marok_transfer_license_only: 'Csak engedéllyel átvehető',
         };
         var missing = [];
 
@@ -6837,6 +6903,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(cipő|cipo|bakancs|lábbeli|labbeli)/.test(selectedCatText);
         var isClothingCategory = /ruhazat/.test(slug)
             || /(ruházat|ruhazat|nadrág|nadrag|póló|polo|kabát|kabat)/.test(selectedCatText);
+        var isHandgunCategory = /maroklofegyver/.test(slug)
+            || /(maroklőfegyver|maroklofegyver|pisztoly|revolver)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -6846,6 +6914,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
+
+        $('.va-handgun-fields-grid').toggle(isHandgunCategory);
+        if (isHandgunCategory) {
+            applyHandgunDynamicFields();
+        }
 
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
@@ -6937,6 +7010,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isKnifeCategory) {
             $('.va-knife-fields-grid input, .va-knife-fields-grid select, .va-knife-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isHandgunCategory) {
+            $('.va-handgun-fields-grid input, .va-handgun-fields-grid select, .va-handgun-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
