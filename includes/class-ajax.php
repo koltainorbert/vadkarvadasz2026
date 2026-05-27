@@ -1388,6 +1388,14 @@ class VA_Ajax {
             'knife_blade_length_mm' => $knife_blade_length_mm,
             'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
+            'marok_type' => sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) ),
+            'marok_condition' => sanitize_key( wp_unslash( $_POST['marok_condition'] ?? '' ) ),
+            'marok_action_type' => sanitize_key( wp_unslash( $_POST['marok_action_type'] ?? '' ) ),
+            'marok_magazine_capacity' => sanitize_text_field( wp_unslash( $_POST['marok_magazine_capacity'] ?? '' ) ),
+            'marok_license_required' => sanitize_key( wp_unslash( $_POST['marok_license_required'] ?? '' ) ),
+            'marok_legal_category' => sanitize_key( wp_unslash( $_POST['marok_legal_category'] ?? '' ) ),
+            'marok_cip_marking' => sanitize_key( wp_unslash( $_POST['marok_cip_marking'] ?? '' ) ),
+            'marok_transfer_license_only' => sanitize_key( wp_unslash( $_POST['marok_transfer_license_only'] ?? '' ) ),
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
             'trophy_style' => $trophy_style,
@@ -2234,6 +2242,9 @@ class VA_Ajax {
         $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
         $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
         $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
+        $marok_type = sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) );
+        $marok_condition = sanitize_key( wp_unslash( $_POST['marok_condition'] ?? '' ) );
+        $marok_action_type = sanitize_key( wp_unslash( $_POST['marok_action_type'] ?? '' ) );
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
@@ -2576,6 +2587,14 @@ class VA_Ajax {
             'knife_blade_length_mm' => $knife_blade_length_mm,
             'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
+            'marok_type' => sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) ),
+            'marok_condition' => sanitize_key( wp_unslash( $_POST['marok_condition'] ?? '' ) ),
+            'marok_action_type' => sanitize_key( wp_unslash( $_POST['marok_action_type'] ?? '' ) ),
+            'marok_magazine_capacity' => sanitize_text_field( wp_unslash( $_POST['marok_magazine_capacity'] ?? '' ) ),
+            'marok_license_required' => sanitize_key( wp_unslash( $_POST['marok_license_required'] ?? '' ) ),
+            'marok_legal_category' => sanitize_key( wp_unslash( $_POST['marok_legal_category'] ?? '' ) ),
+            'marok_cip_marking' => sanitize_key( wp_unslash( $_POST['marok_cip_marking'] ?? '' ) ),
+            'marok_transfer_license_only' => sanitize_key( wp_unslash( $_POST['marok_transfer_license_only'] ?? '' ) ),
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
             'trophy_style' => $trophy_style,
