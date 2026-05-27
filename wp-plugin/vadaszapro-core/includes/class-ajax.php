@@ -169,7 +169,7 @@ class VA_Ajax {
             'soretes-puska'     => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-            'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model' ] ],
+            'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
             'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
@@ -227,6 +227,12 @@ class VA_Ajax {
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
             'other_weapon_kind' => 'Egyéb fegyverek kategória',
+            'hatastalanitott_weapon_type' => 'Fegyver típusa',
+            'hatastalanitott_is_deactivated' => 'Hatástalanított?',
+            'hatastalanitott_deactivation_type' => 'Hatástalanítás típusa',
+            'hatastalanitott_certificate' => 'Tanúsítvány van?',
+            'hatastalanitott_mkh_cip' => 'MKH / CIP jelölés?',
+            'hatastalanitott_condition' => 'Állapot',
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
@@ -745,6 +751,20 @@ class VA_Ajax {
         $feed_min_order = sanitize_text_field( wp_unslash( $_POST['feed_min_order'] ?? '' ) );
         $feed_delivery_available = sanitize_key( wp_unslash( $_POST['feed_delivery_available'] ?? '' ) );
         $feed_loading_available = sanitize_key( wp_unslash( $_POST['feed_loading_available'] ?? '' ) );
+        $hatastalanitott_weapon_type = sanitize_key( wp_unslash( $_POST['hatastalanitott_weapon_type'] ?? '' ) );
+        $hatastalanitott_origin_country = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_origin_country'] ?? '' ) );
+        $hatastalanitott_is_deactivated = sanitize_key( wp_unslash( $_POST['hatastalanitott_is_deactivated'] ?? '' ) );
+        $hatastalanitott_deactivation_type = sanitize_key( wp_unslash( $_POST['hatastalanitott_deactivation_type'] ?? '' ) );
+        $hatastalanitott_certificate = sanitize_key( wp_unslash( $_POST['hatastalanitott_certificate'] ?? '' ) );
+        $hatastalanitott_mkh_cip = sanitize_key( wp_unslash( $_POST['hatastalanitott_mkh_cip'] ?? '' ) );
+        $hatastalanitott_deactivation_year = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_deactivation_year'] ?? '' ) );
+        $hatastalanitott_deactivation_org = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_deactivation_org'] ?? '' ) );
+        $hatastalanitott_condition = sanitize_key( wp_unslash( $_POST['hatastalanitott_condition'] ?? '' ) );
+        $hatastalanitott_serial_admin = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_serial_admin'] ?? '' ) );
+        $hatastalanitott_working_parts = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_working_parts'] ?? [] ) ) ) );
+        $hatastalanitott_original_finish = sanitize_key( wp_unslash( $_POST['hatastalanitott_original_finish'] ?? '' ) );
+        $hatastalanitott_original_parts_ratio = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_original_parts_ratio'] ?? '' ) );
+        $hatastalanitott_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_accessories'] ?? [] ) ) ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -762,6 +782,12 @@ class VA_Ajax {
             'model' => $model,
             'caliber' => $caliber,
             'other_weapon_kind' => $other_weapon_kind,
+            'hatastalanitott_weapon_type' => $hatastalanitott_weapon_type,
+            'hatastalanitott_is_deactivated' => $hatastalanitott_is_deactivated,
+            'hatastalanitott_deactivation_type' => $hatastalanitott_deactivation_type,
+            'hatastalanitott_certificate' => $hatastalanitott_certificate,
+            'hatastalanitott_mkh_cip' => $hatastalanitott_mkh_cip,
+            'hatastalanitott_condition' => $hatastalanitott_condition,
             'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
@@ -1188,6 +1214,20 @@ class VA_Ajax {
         $feed_min_order = sanitize_text_field( wp_unslash( $_POST['feed_min_order'] ?? '' ) );
         $feed_delivery_available = sanitize_key( wp_unslash( $_POST['feed_delivery_available'] ?? '' ) );
         $feed_loading_available = sanitize_key( wp_unslash( $_POST['feed_loading_available'] ?? '' ) );
+        $hatastalanitott_weapon_type = sanitize_key( wp_unslash( $_POST['hatastalanitott_weapon_type'] ?? '' ) );
+        $hatastalanitott_origin_country = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_origin_country'] ?? '' ) );
+        $hatastalanitott_is_deactivated = sanitize_key( wp_unslash( $_POST['hatastalanitott_is_deactivated'] ?? '' ) );
+        $hatastalanitott_deactivation_type = sanitize_key( wp_unslash( $_POST['hatastalanitott_deactivation_type'] ?? '' ) );
+        $hatastalanitott_certificate = sanitize_key( wp_unslash( $_POST['hatastalanitott_certificate'] ?? '' ) );
+        $hatastalanitott_mkh_cip = sanitize_key( wp_unslash( $_POST['hatastalanitott_mkh_cip'] ?? '' ) );
+        $hatastalanitott_deactivation_year = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_deactivation_year'] ?? '' ) );
+        $hatastalanitott_deactivation_org = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_deactivation_org'] ?? '' ) );
+        $hatastalanitott_condition = sanitize_key( wp_unslash( $_POST['hatastalanitott_condition'] ?? '' ) );
+        $hatastalanitott_serial_admin = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_serial_admin'] ?? '' ) );
+        $hatastalanitott_working_parts = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_working_parts'] ?? [] ) ) ) );
+        $hatastalanitott_original_finish = sanitize_key( wp_unslash( $_POST['hatastalanitott_original_finish'] ?? '' ) );
+        $hatastalanitott_original_parts_ratio = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_original_parts_ratio'] ?? '' ) );
+        $hatastalanitott_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_accessories'] ?? [] ) ) ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -1205,6 +1245,12 @@ class VA_Ajax {
             'model' => $model,
             'caliber' => $caliber,
             'other_weapon_kind' => $other_weapon_kind,
+            'hatastalanitott_weapon_type' => $hatastalanitott_weapon_type,
+            'hatastalanitott_is_deactivated' => $hatastalanitott_is_deactivated,
+            'hatastalanitott_deactivation_type' => $hatastalanitott_deactivation_type,
+            'hatastalanitott_certificate' => $hatastalanitott_certificate,
+            'hatastalanitott_mkh_cip' => $hatastalanitott_mkh_cip,
+            'hatastalanitott_condition' => $hatastalanitott_condition,
             'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
