@@ -2766,21 +2766,21 @@ body.va-modal-open {
                 </div>
                 <div class="va-form-group" style="grid-column:1 / -1;">
                     <label>Felszereltség</label>
-                    <div>
-                        <label><input type="checkbox" name="accommodation_features[]" value="wifi"<?php checked( in_array('wifi', $accommodation_features_saved, true) ); ?>> wifi</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="klima"<?php checked( in_array('klima', $accommodation_features_saved, true) ); ?>> klíma</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="futes"<?php checked( in_array('futes', $accommodation_features_saved, true) ); ?>> fűtés</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="konyha"<?php checked( in_array('konyha', $accommodation_features_saved, true) ); ?>> konyha</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="bogracshely"<?php checked( in_array('bogracshely', $accommodation_features_saved, true) ); ?>> bográcshely</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="grillezo"<?php checked( in_array('grillezo', $accommodation_features_saved, true) ); ?>> grillező</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="szauna"<?php checked( in_array('szauna', $accommodation_features_saved, true) ); ?>> szauna</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="jacuzzi"<?php checked( in_array('jacuzzi', $accommodation_features_saved, true) ); ?>> jacuzzi</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="medence"<?php checked( in_array('medence', $accommodation_features_saved, true) ); ?>> medence</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="parkolo"<?php checked( in_array('parkolo', $accommodation_features_saved, true) ); ?>> parkoló</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="fedett-parkolo"<?php checked( in_array('fedett-parkolo', $accommodation_features_saved, true) ); ?>> fedett parkoló</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="tv"<?php checked( in_array('tv', $accommodation_features_saved, true) ); ?>> TV</label><br>
-                        <label><input type="checkbox" name="accommodation_features[]" value="mosogep"<?php checked( in_array('mosogep', $accommodation_features_saved, true) ); ?>> mosógép</label>
-                    </div>
+                    <select name="accommodation_features[]" class="va-select" multiple data-placeholder="Válassz felszereltséget">
+                        <option value="wifi"<?php selected( in_array('wifi', $accommodation_features_saved, true), true ); ?>>Wifi</option>
+                        <option value="klima"<?php selected( in_array('klima', $accommodation_features_saved, true), true ); ?>>Klíma</option>
+                        <option value="futes"<?php selected( in_array('futes', $accommodation_features_saved, true), true ); ?>>Fűtés</option>
+                        <option value="konyha"<?php selected( in_array('konyha', $accommodation_features_saved, true), true ); ?>>Konyha</option>
+                        <option value="bogracshely"<?php selected( in_array('bogracshely', $accommodation_features_saved, true), true ); ?>>Bográcshely</option>
+                        <option value="grillezo"<?php selected( in_array('grillezo', $accommodation_features_saved, true), true ); ?>>Grillező</option>
+                        <option value="szauna"<?php selected( in_array('szauna', $accommodation_features_saved, true), true ); ?>>Szauna</option>
+                        <option value="jacuzzi"<?php selected( in_array('jacuzzi', $accommodation_features_saved, true), true ); ?>>Jacuzzi</option>
+                        <option value="medence"<?php selected( in_array('medence', $accommodation_features_saved, true), true ); ?>>Medence</option>
+                        <option value="parkolo"<?php selected( in_array('parkolo', $accommodation_features_saved, true), true ); ?>>Parkoló</option>
+                        <option value="fedett-parkolo"<?php selected( in_array('fedett-parkolo', $accommodation_features_saved, true), true ); ?>>Fedett parkoló</option>
+                        <option value="tv"<?php selected( in_array('tv', $accommodation_features_saved, true), true ); ?>>TV</option>
+                        <option value="mosogep"<?php selected( in_array('mosogep', $accommodation_features_saved, true), true ); ?>>Mosógép</option>
+                    </select>
                 </div>
                 <div class="va-form-group">
                     <label>Étkezés</label>
@@ -2810,29 +2810,29 @@ body.va-modal-open {
                 </div>
                 <div class="va-form-group" style="grid-column:1 / -1;">
                     <label>Vadfajok a közelben</label>
-                    <div>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="szarvas"<?php checked( in_array('szarvas', $accommodation_nearby_species_saved, true) ); ?>> szarvas</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="vaddiszno"<?php checked( in_array('vaddiszno', $accommodation_nearby_species_saved, true) ); ?>> vaddisznó</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="oz"<?php checked( in_array('oz', $accommodation_nearby_species_saved, true) ); ?>> őz</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="muflon"<?php checked( in_array('muflon', $accommodation_nearby_species_saved, true) ); ?>> muflon</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="damszarvas"<?php checked( in_array('damszarvas', $accommodation_nearby_species_saved, true) ); ?>> dámszarvas</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="facan"<?php checked( in_array('facan', $accommodation_nearby_species_saved, true) ); ?>> fácán</label><br>
-                        <label><input type="checkbox" name="accommodation_nearby_species[]" value="nyul"<?php checked( in_array('nyul', $accommodation_nearby_species_saved, true) ); ?>> nyúl</label>
-                    </div>
+                    <select name="accommodation_nearby_species[]" class="va-select" multiple data-placeholder="Válassz vadfajt">
+                        <option value="szarvas"<?php selected( in_array('szarvas', $accommodation_nearby_species_saved, true), true ); ?>>Szarvas</option>
+                        <option value="vaddiszno"<?php selected( in_array('vaddiszno', $accommodation_nearby_species_saved, true), true ); ?>>Vaddisznó</option>
+                        <option value="oz"<?php selected( in_array('oz', $accommodation_nearby_species_saved, true), true ); ?>>Őz</option>
+                        <option value="muflon"<?php selected( in_array('muflon', $accommodation_nearby_species_saved, true), true ); ?>>Muflon</option>
+                        <option value="damszarvas"<?php selected( in_array('damszarvas', $accommodation_nearby_species_saved, true), true ); ?>>Dámszarvas</option>
+                        <option value="facan"<?php selected( in_array('facan', $accommodation_nearby_species_saved, true), true ); ?>>Fácán</option>
+                        <option value="nyul"<?php selected( in_array('nyul', $accommodation_nearby_species_saved, true), true ); ?>>Nyúl</option>
+                    </select>
                 </div>
                 <div class="va-form-group" style="grid-column:1 / -1;">
                     <label>Programok</label>
-                    <div>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="hajtas"<?php checked( in_array('hajtas', $accommodation_programs_saved, true) ); ?>> hajtás</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="cserkeles"<?php checked( in_array('cserkeles', $accommodation_programs_saved, true) ); ?>> cserkelés</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="lesvadaszat"<?php checked( in_array('lesvadaszat', $accommodation_programs_saved, true) ); ?>> lesvadászat</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="vadhivas"<?php checked( in_array('vadhivas', $accommodation_programs_saved, true) ); ?>> vadhívás</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="kutyas-vadaszat"<?php checked( in_array('kutyas-vadaszat', $accommodation_programs_saved, true) ); ?>> kutyás vadászat</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="vizi-vadaszat"<?php checked( in_array('vizi-vadaszat', $accommodation_programs_saved, true) ); ?>> vízi vadászat</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="trofeabiralat"<?php checked( in_array('trofeabiralat', $accommodation_programs_saved, true) ); ?>> trófeabírálat</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="fegyverbemutato"<?php checked( in_array('fegyverbemutato', $accommodation_programs_saved, true) ); ?>> fegyverbemutató</label><br>
-                        <label><input type="checkbox" name="accommodation_programs[]" value="loiskola"<?php checked( in_array('loiskola', $accommodation_programs_saved, true) ); ?>> lőiskola</label>
-                    </div>
+                    <select name="accommodation_programs[]" class="va-select" multiple data-placeholder="Válassz programot">
+                        <option value="hajtas"<?php selected( in_array('hajtas', $accommodation_programs_saved, true), true ); ?>>Hajtás</option>
+                        <option value="cserkeles"<?php selected( in_array('cserkeles', $accommodation_programs_saved, true), true ); ?>>Cserkelés</option>
+                        <option value="lesvadaszat"<?php selected( in_array('lesvadaszat', $accommodation_programs_saved, true), true ); ?>>Lesvadászat</option>
+                        <option value="vadhivas"<?php selected( in_array('vadhivas', $accommodation_programs_saved, true), true ); ?>>Vadhívás</option>
+                        <option value="kutyas-vadaszat"<?php selected( in_array('kutyas-vadaszat', $accommodation_programs_saved, true), true ); ?>>Kutyás vadászat</option>
+                        <option value="vizi-vadaszat"<?php selected( in_array('vizi-vadaszat', $accommodation_programs_saved, true), true ); ?>>Vízi vadászat</option>
+                        <option value="trofeabiralat"<?php selected( in_array('trofeabiralat', $accommodation_programs_saved, true), true ); ?>>Trófeabírálat</option>
+                        <option value="fegyverbemutato"<?php selected( in_array('fegyverbemutato', $accommodation_programs_saved, true), true ); ?>>Fegyverbemutató</option>
+                        <option value="loiskola"<?php selected( in_array('loiskola', $accommodation_programs_saved, true), true ); ?>>Lőiskola</option>
+                    </select>
                 </div>
                 </div><!-- /va-step2-4col-inner -->
             </div><!-- /.va-accommodation-fields-grid -->
