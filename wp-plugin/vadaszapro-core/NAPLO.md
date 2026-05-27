@@ -6,6 +6,7 @@
 - Kérés: legyen egy dedikált WP aloldal, ahol a Facebook csoport teljes szelessegu elrendezésben jelenik meg.
 - Megvalósítás: új slug-template készült `page-facebook-csoport.php` néven (root + futó theme mirror), amely a `facebook-csoport` slugú oldalhoz automatikusan betölt.
 - Megvalósítás: az oldal a Facebook hivatalos Group embedet (`fb-group`) tölti be HU SDK-val, plusz kapott egy kiemelt `Megnyitas Facebookon` gombot.
+- Kényelmi beállítás: a csoport URL forrása prioritásosan az oldal tartalma (ha oda URL kerül), utána a `va_facebook_group_url` post meta, majd a globál opció; így adminból kódmódosítás nélkül állítható.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 
