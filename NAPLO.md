@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #szallas-teljes-ujrairas-checkbox
+- Kérés: a szállás modul teljes újraírása, mert a mezők keveredtek a munka résszel.
+- UI: a `szallas` blokk nulláról újrarakva a kért mezőkkel (típus, település/megye/ország/pontos cím, férőhely bontás, vadász-specifikus igen/nem mezők).
+- UI: `Felszereltség`, `Vadfajok a közelben`, `Programok` most checkbox rendszerben működik a kérés szerint.
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült az új `accommodation_*` sanitize, validáció és `va_accommodation_*` meta mentés.
+- Szinkron: root + plugin mirror fájlok 1:1-be igazítva (`submit-form.php`, `class-ajax.php`).
+
 ## 2026. 05. 27. – Session #live-fatal-hotfix-rollback
 - Jelenség: a live oldalon (`https://vadkarvadasz.hu/`) WordPress fatál hiba oldal jelent meg (`Súlyos hiba történt a webhelyünkön`).
 - Intézkedés: az új szállás-fejlesztéshez tartozó friss auto commitok visszavonása `git revert` hotfix ágon (nem history-törlés).
