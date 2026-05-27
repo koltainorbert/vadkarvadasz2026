@@ -266,7 +266,7 @@ $category_required_rules = [
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
     'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
-    'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+    'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
     'kesek'              => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -552,6 +552,32 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hunt_has_offroad' => get_post_meta( $maybe_id, 'va_hunt_has_offroad', true ),
             'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
             'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
+            'hunt_damage_main_type' => get_post_meta( $maybe_id, 'va_hunt_damage_main_type', true ),
+            'hunt_settlement' => get_post_meta( $maybe_id, 'va_hunt_settlement', true ),
+            'hunt_land_type' => get_post_meta( $maybe_id, 'va_hunt_land_type', true ),
+            'hunt_response_time' => get_post_meta( $maybe_id, 'va_hunt_response_time', true ),
+            'hunt_availability_mode' => get_post_meta( $maybe_id, 'va_hunt_availability_mode', true ),
+            'hunt_executor_type' => get_post_meta( $maybe_id, 'va_hunt_executor_type', true ),
+            'hunt_executor_capacity' => get_post_meta( $maybe_id, 'va_hunt_executor_capacity', true ),
+            'hunt_tools' => get_post_meta( $maybe_id, 'va_hunt_tools', true ),
+            'hunt_weapon_use_required' => get_post_meta( $maybe_id, 'va_hunt_weapon_use_required', true ),
+            'hunt_land_manager_permit' => get_post_meta( $maybe_id, 'va_hunt_land_manager_permit', true ),
+            'hunt_hunting_company_coop' => get_post_meta( $maybe_id, 'va_hunt_hunting_company_coop', true ),
+            'hunt_liability_insurance' => get_post_meta( $maybe_id, 'va_hunt_liability_insurance', true ),
+            'hunt_damage_nature' => get_post_meta( $maybe_id, 'va_hunt_damage_nature', true ),
+            'hunt_pricing_model' => get_post_meta( $maybe_id, 'va_hunt_pricing_model', true ),
+            'hunt_travel_fee' => get_post_meta( $maybe_id, 'va_hunt_travel_fee', true ),
+            'hunt_contract_type' => get_post_meta( $maybe_id, 'va_hunt_contract_type', true ),
+            'hunt_site_conditions' => get_post_meta( $maybe_id, 'va_hunt_site_conditions', true ),
+            'hunt_reference_media' => get_post_meta( $maybe_id, 'va_hunt_reference_media', true ),
+            'hunt_agri_hectare_size' => get_post_meta( $maybe_id, 'va_hunt_agri_hectare_size', true ),
+            'hunt_agri_culture_type' => get_post_meta( $maybe_id, 'va_hunt_agri_culture_type', true ),
+            'hunt_urgent_immediate_start' => get_post_meta( $maybe_id, 'va_hunt_urgent_immediate_start', true ),
+            'hunt_urgent_duty_phone' => get_post_meta( $maybe_id, 'va_hunt_urgent_duty_phone', true ),
+            'hunt_long_term_yearly_discount' => get_post_meta( $maybe_id, 'va_hunt_long_term_yearly_discount', true ),
+            'hunt_package_auto_seasonal' => get_post_meta( $maybe_id, 'va_hunt_package_auto_seasonal', true ),
+            'hunt_package_monthly_model' => get_post_meta( $maybe_id, 'va_hunt_package_monthly_model', true ),
+            'hunt_package_monitoring_intervention' => get_post_meta( $maybe_id, 'va_hunt_package_monitoring_intervention', true ),
             'hunt_type' => get_post_meta( $maybe_id, 'va_hunt_type', true ),
             'hunt_game_species' => get_post_meta( $maybe_id, 'va_hunt_game_species', true ),
             'hunt_country' => get_post_meta( $maybe_id, 'va_hunt_country', true ),
@@ -3905,7 +3931,49 @@ body.va-modal-open {
                 $hunt_required_media_saved = $hunt_multi( 'hunt_required_media' );
                 $hunt_video_saved = $hunt_multi( 'hunt_video_types' );
                 $hunt_moderation_saved = $hunt_multi( 'hunt_moderation_flags' );
+                $hunt_tools_saved = $hunt_multi( 'hunt_tools' );
+                $hunt_reference_media_saved = $hunt_multi( 'hunt_reference_media' );
                 ?>
+                <div class="va-form-group va-vadkar-only">
+                    <label>Vadkár elhárítás fő típusa</label>
+                    <?php $v = (string)($edit_meta['hunt_damage_main_type'] ?? ''); ?>
+                    <select id="va-hunt-damage-main-type" name="hunt_damage_main_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="megelozo-vadkar-elharitas"<?php selected($v, 'megelozo-vadkar-elharitas'); ?>>Megelőző vadkár elhárítás</option>
+                        <option value="aktiv-vadkar-csokkentes"<?php selected($v, 'aktiv-vadkar-csokkentes'); ?>>Aktív vadkár csökkentés</option>
+                        <option value="szezonalis-vedelem"<?php selected($v, 'szezonalis-vedelem'); ?>>Szezonális védelem</option>
+                        <option value="folyamatos-teruletvedelem"<?php selected($v, 'folyamatos-teruletvedelem'); ?>>Folyamatos területvédelem</option>
+                        <option value="surgossegi-beavatkozas"<?php selected($v, 'surgossegi-beavatkozas'); ?>>Sürgősségi beavatkozás</option>
+                        <option value="mezogazdasagi-vedelem"<?php selected($v, 'mezogazdasagi-vedelem'); ?>>Mezőgazdasági védelem</option>
+                        <option value="erdeszeti-vedelem"<?php selected($v, 'erdeszeti-vedelem'); ?>>Erdészeti védelem</option>
+                        <option value="vegyes-teruletvedelem"<?php selected($v, 'vegyes-teruletvedelem'); ?>>Vegyes területvédelem</option>
+                    </select>
+                </div>
+                <div class="va-form-group va-vadkar-only"><label>Település</label><input type="text" name="hunt_settlement" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_settlement'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-only"><label>Terület típusa</label><?php $v = (string)($edit_meta['hunt_land_type'] ?? ''); ?><select id="va-hunt-land-type" name="hunt_land_type" class="va-select"><option value="">– Válasszon –</option><option value="szantofold"<?php selected($v, 'szantofold'); ?>>Szántóföld</option><option value="kukorica"<?php selected($v, 'kukorica'); ?>>Kukorica</option><option value="napraforgo"<?php selected($v, 'napraforgo'); ?>>Napraforgó</option><option value="buza"<?php selected($v, 'buza'); ?>>Búza</option><option value="szolo"<?php selected($v, 'szolo'); ?>>Szőlő</option><option value="gyumolcsos"<?php selected($v, 'gyumolcsos'); ?>>Gyümölcsös</option><option value="erdo"<?php selected($v, 'erdo'); ?>>Erdő</option><option value="legelo"<?php selected($v, 'legelo'); ?>>Legelő</option><option value="vegyes-mezogazdasagi"<?php selected($v, 'vegyes-mezogazdasagi'); ?>>Vegyes mezőgazdasági terület</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Reakcióidő</label><?php $v = (string)($edit_meta['hunt_response_time'] ?? ''); ?><select id="va-hunt-response-time" name="hunt_response_time" class="va-select"><option value="">– Válasszon –</option><option value="azonnal-0-2"<?php selected($v, 'azonnal-0-2'); ?>>Azonnal (0-2 óra)</option><option value="24-oran-belul"<?php selected($v, '24-oran-belul'); ?>>24 órán belül</option><option value="48-oran-belul"<?php selected($v, '48-oran-belul'); ?>>48 órán belül</option><option value="szezonalis-jelenlet"<?php selected($v, 'szezonalis-jelenlet'); ?>>Szezonális jelenlét</option><option value="folyamatos-jelenlet"<?php selected($v, 'folyamatos-jelenlet'); ?>>Folyamatos jelenlét</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Elérhetőség</label><?php $v = (string)($edit_meta['hunt_availability_mode'] ?? ''); ?><select id="va-hunt-availability-mode" name="hunt_availability_mode" class="va-select"><option value="">– Válasszon –</option><option value="0-24"<?php selected($v, '0-24'); ?>>0-24</option><option value="nappali"<?php selected($v, 'nappali'); ?>>Nappali</option><option value="ejszakai"<?php selected($v, 'ejszakai'); ?>>Éjszakai</option><option value="elore-egyeztetett"<?php selected($v, 'elore-egyeztetett'); ?>>Előre egyeztetett</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Végrehajtó</label><?php $v = (string)($edit_meta['hunt_executor_type'] ?? ''); ?><select name="hunt_executor_type" class="va-select"><option value="">– Válasszon –</option><option value="hivatasos-vadasz"<?php selected($v, 'hivatasos-vadasz'); ?>>Hivatásos vadász</option><option value="vador"<?php selected($v, 'vador'); ?>>Vadőr</option><option value="mezogazdasagi-partner"<?php selected($v, 'mezogazdasagi-partner'); ?>>Mezőgazdasági partner</option><option value="vallalkozas"<?php selected($v, 'vallalkozas'); ?>>Vállalkozás</option><option value="csapat"<?php selected($v, 'csapat'); ?>>Csapat</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Kapacitás</label><?php $v = (string)($edit_meta['hunt_executor_capacity'] ?? ''); ?><select name="hunt_executor_capacity" class="va-select"><option value="">– Válasszon –</option><option value="1-fo"<?php selected($v, '1-fo'); ?>>1 fő</option><option value="2-3-fo"<?php selected($v, '2-3-fo'); ?>>2-3 fő</option><option value="4-6-fo"<?php selected($v, '4-6-fo'); ?>>4-6 fő</option><option value="nagyobb-egyseg"<?php selected($v, 'nagyobb-egyseg'); ?>>Nagyobb egység</option></select></div>
+                <div class="va-form-group va-vadkar-only" style="grid-column:1 / -1;"><label>Eszközök</label><select name="hunt_tools[]" class="va-select" multiple data-placeholder="Válassz eszközöket"><option value="vadkamera"<?php echo in_array( 'vadkamera', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Vadkamera</option><option value="hokamera"<?php echo in_array( 'hokamera', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Hőkamera</option><option value="ejjellato"<?php echo in_array( 'ejjellato', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Éjjellátó</option><option value="dron"<?php echo in_array( 'dron', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Drón</option><option value="optika"<?php echo in_array( 'optika', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Optika</option><option value="terepjaro"<?php echo in_array( 'terepjaro', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Terepjáró</option><option value="quad"<?php echo in_array( 'quad', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Quad</option><option value="keritesrendszer"<?php echo in_array( 'keritesrendszer', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Kerítésrendszer</option><option value="csapda"<?php echo in_array( 'csapda', $hunt_tools_saved, true ) ? ' selected' : ''; ?>>Csapda</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Fegyverhasználat szükséges?</label><?php $v = (string)($edit_meta['hunt_weapon_use_required'] ?? ''); ?><select name="hunt_weapon_use_required" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Területgazdálkodói engedély?</label><?php $v = (string)($edit_meta['hunt_land_manager_permit'] ?? ''); ?><select name="hunt_land_manager_permit" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Együttműködés vadásztársasággal?</label><?php $v = (string)($edit_meta['hunt_hunting_company_coop'] ?? ''); ?><select name="hunt_hunting_company_coop" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Felelősségbiztosítás</label><?php $v = (string)($edit_meta['hunt_liability_insurance'] ?? ''); ?><select name="hunt_liability_insurance" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Van</option><option value="nem"<?php selected($v, 'nem'); ?>>Nincs</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Kár jellege</label><?php $v = (string)($edit_meta['hunt_damage_nature'] ?? ''); ?><select name="hunt_damage_nature" class="va-select"><option value="">– Válasszon –</option><option value="termenykar"<?php selected($v, 'termenykar'); ?>>Terménykár</option><option value="erdokar"<?php selected($v, 'erdokar'); ?>>Erdőkár</option><option value="taposasi-kar"<?php selected($v, 'taposasi-kar'); ?>>Taposási kár</option><option value="ragasi-kar"<?php selected($v, 'ragasi-kar'); ?>>Rágáskár</option><option value="infrastruktura-kar"<?php selected($v, 'infrastruktura-kar'); ?>>Infrastruktúra kár</option><option value="vegyes"<?php selected($v, 'vegyes'); ?>>Vegyes</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Árazás modell</label><?php $v = (string)($edit_meta['hunt_pricing_model'] ?? ''); ?><select id="va-hunt-pricing-model" name="hunt_pricing_model" class="va-select"><option value="">– Válasszon –</option><option value="oradij"<?php selected($v, 'oradij'); ?>>Óradíj</option><option value="napidij"<?php selected($v, 'napidij'); ?>>Napidíj</option><option value="hektar-alapu"<?php selected($v, 'hektar-alapu'); ?>>Hektár alapú</option><option value="szerzodeses"<?php selected($v, 'szerzodeses'); ?>>Szerződéses</option><option value="sikerdijas"<?php selected($v, 'sikerdijas'); ?>>Sikerdíjas</option><option value="egyedi-ajanlat"<?php selected($v, 'egyedi-ajanlat'); ?>>Egyedi ajánlat</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Kiszállás díja</label><input type="text" name="hunt_travel_fee" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_travel_fee'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-only"><label>Szerződés típusa</label><?php $v = (string)($edit_meta['hunt_contract_type'] ?? ''); ?><select id="va-hunt-contract-type" name="hunt_contract_type" class="va-select"><option value="">– Válasszon –</option><option value="eseti"<?php selected($v, 'eseti'); ?>>Eseti</option><option value="szezonalis"<?php selected($v, 'szezonalis'); ?>>Szezonális</option><option value="eves"<?php selected($v, 'eves'); ?>>Éves</option><option value="folyamatos"<?php selected($v, 'folyamatos'); ?>>Folyamatos</option></select></div>
+                <div class="va-form-group va-vadkar-only" style="grid-column:1 / -1;"><label>Helyszíni feltételek</label><select name="hunt_site_conditions[]" class="va-select" multiple data-placeholder="Válassz feltételeket"><option value="szallas-van"<?php echo in_array( 'szallas-van', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Szállás van</option><option value="terepjaro-biztositott"<?php echo in_array( 'terepjaro-biztositott', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Terepjáró biztosított</option><option value="sajat-eszkoz-kell"<?php echo in_array( 'sajat-eszkoz-kell', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Saját eszköz kell</option><option value="partner-biztositja"<?php echo in_array( 'partner-biztositja', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Partner biztosítja az eszközöket</option></select></div>
+                <div class="va-form-group va-vadkar-only" style="grid-column:1 / -1;"><label>Referencia média</label><select name="hunt_reference_media[]" class="va-select" multiple data-placeholder="Válassz referenciát"><option value="korabbi-vadkar-eredmenyek"<?php echo in_array( 'korabbi-vadkar-eredmenyek', $hunt_reference_media_saved, true ) ? ' selected' : ''; ?>>Korábbi vadkár eredmények</option><option value="elotte-utana"<?php echo in_array( 'elotte-utana', $hunt_reference_media_saved, true ) ? ' selected' : ''; ?>>Előtte/utána</option></select></div>
+                <div class="va-form-group va-vadkar-dynamic-group" data-vadkar-land="agri" style="display:none;"><label>Hektár méret</label><input type="text" name="hunt_agri_hectare_size" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_agri_hectare_size'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-dynamic-group" data-vadkar-land="agri" style="display:none;"><label>Kultúra típusa</label><input type="text" name="hunt_agri_culture_type" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_agri_culture_type'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-dynamic-group" data-vadkar-response="urgent" style="display:none;"><label>Azonnali indulás</label><?php $v = (string)($edit_meta['hunt_urgent_immediate_start'] ?? ''); ?><select name="hunt_urgent_immediate_start" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-vadkar-dynamic-group" data-vadkar-response="urgent" style="display:none;"><label>Ügyeleti szám</label><input type="text" name="hunt_urgent_duty_phone" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_urgent_duty_phone'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-dynamic-group" data-vadkar-contract="long" style="display:none;"><label>Éves szerződés kedvezmény</label><input type="text" name="hunt_long_term_yearly_discount" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_long_term_yearly_discount'] ?? '')); ?>"></div>
+                <div class="va-form-group va-vadkar-only" style="grid-column:1 / -1;"><label>Területvédelmi csomag</label><select name="hunt_package_auto_seasonal" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected((string)($edit_meta['hunt_package_auto_seasonal'] ?? ''), 'igen'); ?>>Automatikus szezonos védelem</option><option value="nem"<?php selected((string)($edit_meta['hunt_package_auto_seasonal'] ?? ''), 'nem'); ?>>Nincs</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Havi díjas modell</label><?php $v = (string)($edit_meta['hunt_package_monthly_model'] ?? ''); ?><select name="hunt_package_monthly_model" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-vadkar-only"><label>Monitoring + beavatkozás</label><?php $v = (string)($edit_meta['hunt_package_monitoring_intervention'] ?? ''); ?><select name="hunt_package_monitoring_intervention" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
                 <div class="va-form-group">
                     <label>Vadászat típusa</label>
                     <?php $v = (string)($edit_meta['hunt_type'] ?? ''); ?>
@@ -3938,6 +4006,10 @@ body.va-modal-open {
                         <option value="fogoly"<?php echo in_array( 'fogoly', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Fogoly</option>
                         <option value="vadkacsa"<?php echo in_array( 'vadkacsa', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Vadkacsa</option>
                         <option value="liba"<?php echo in_array( 'liba', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Liba</option>
+                        <option value="sakal"<?php echo in_array( 'sakal', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Sakál</option>
+                        <option value="roka"<?php echo in_array( 'roka', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Róka</option>
+                        <option value="mezei-nyul"<?php echo in_array( 'mezei-nyul', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Mezei nyúl</option>
+                        <option value="galamb-madarkar"<?php echo in_array( 'galamb-madarkar', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Galamb / madárkár</option>
                         <option value="ragadozo"<?php echo in_array( 'ragadozo', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Ragadozó (róka, sakál)</option>
                         <option value="egyeb"<?php echo in_array( 'egyeb', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Egyéb</option>
                     </select>
@@ -3967,7 +4039,7 @@ body.va-modal-open {
                 <div class="va-form-group"><label>Ár maximum</label><input type="text" name="hunt_price_max" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_price_max'] ?? '')); ?>"></div>
                 <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartalmazza</label><select name="hunt_price_includes[]" class="va-select" multiple data-placeholder="Válassz elemeket"><option value="kiseret"<?php echo in_array( 'kiseret', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Kíséret</option><option value="terulet-hasznalat"<?php echo in_array( 'terulet-hasznalat', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Terület használat</option><option value="trofea-feldolgozas"<?php echo in_array( 'trofea-feldolgozas', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Trófea feldolgozás</option><option value="szallas"<?php echo in_array( 'szallas', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Szállás</option><option value="etkezes"<?php echo in_array( 'etkezes', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Étkezés</option></select></div>
                 <div class="va-form-group"><label>Kíséret típusa</label><?php $v = (string)($edit_meta['hunt_guide_type'] ?? ''); ?><select name="hunt_guide_type" class="va-select"><option value="">– Válasszon –</option><option value="hivatasos-vadasz"<?php selected($v, 'hivatasos-vadasz'); ?>>Hivatásos vadász</option><option value="vador"<?php selected($v, 'vador'); ?>>Vadőr</option><option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs kíséret</option><option value="opcionalis"<?php selected($v, 'opcionalis'); ?>>Opcionális</option></select></div>
-                <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadászati módszer</label><select id="va-hunt-methods" name="hunt_methods[]" class="va-select" multiple data-placeholder="Válassz módszert"><option value="les"<?php echo in_array( 'les', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Les</option><option value="cserkeles"<?php echo in_array( 'cserkeles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option><option value="hajtas"<?php echo in_array( 'hajtas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="etetes"<?php echo in_array( 'etetes', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Etetés</option><option value="hivas"<?php echo in_array( 'hivas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hívás</option><option value="leskunyho"<?php echo in_array( 'leskunyho', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Leskunyhó</option><option value="magasles"<?php echo in_array( 'magasles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Magasles</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadászati módszer</label><select id="va-hunt-methods" name="hunt_methods[]" class="va-select" multiple data-placeholder="Válassz módszert"><option value="les"<?php echo in_array( 'les', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Les</option><option value="cserkeles"<?php echo in_array( 'cserkeles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option><option value="hajtas"<?php echo in_array( 'hajtas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="etetes"<?php echo in_array( 'etetes', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Etetés</option><option value="hivas"<?php echo in_array( 'hivas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hívás</option><option value="leskunyho"<?php echo in_array( 'leskunyho', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Leskunyhó</option><option value="magasles"<?php echo in_array( 'magasles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Magasles</option><option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option><option value="ejszakai-megfigyeles"<?php echo in_array( 'ejszakai-megfigyeles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Éjszakai megfigyelés</option><option value="szoro-alkalmazas"<?php echo in_array( 'szoro-alkalmazas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Szóró alkalmazás</option><option value="riasztas-hang-feny"<?php echo in_array( 'riasztas-hang-feny', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Riasztás (hang/fény)</option><option value="kerites-fizikai-vedelem"<?php echo in_array( 'kerites-fizikai-vedelem', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Kerítés / fizikai védelem</option><option value="dronos-megfigyeles"<?php echo in_array( 'dronos-megfigyeles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Drónos megfigyelés</option><option value="csapdazas"<?php echo in_array( 'csapdazas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Csapdázás</option><option value="vadtereles"<?php echo in_array( 'vadtereles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Vadterelés</option></select></div>
                 <div class="va-form-group" style="grid-column:1 / -1;"><label>Szolgáltatások a helyszínen</label><select name="hunt_onsite_services[]" class="va-select" multiple data-placeholder="Válassz szolgáltatásokat"><option value="trofea-kezeles"<?php echo in_array( 'trofea-kezeles', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Trófea kezelés</option><option value="vadhutes"<?php echo in_array( 'vadhutes', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Vadhűtés</option><option value="zsigereles"<?php echo in_array( 'zsigereles', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Zsigerelés</option><option value="szallitas"<?php echo in_array( 'szallitas', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Szállítás</option><option value="fegyverkolcsonzes"<?php echo in_array( 'fegyverkolcsonzes', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Fegyverkölcsönzés</option><option value="optika-biztositas"<?php echo in_array( 'optika-biztositas', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Optika biztosítás</option></select></div>
                 <div class="va-form-group"><label>Vadászjegy szükséges?</label><?php $v = (string)($edit_meta['hunt_hunting_license_required'] ?? ''); ?><select name="hunt_hunting_license_required" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
                 <div class="va-form-group"><label>Engedély szükséges?</label><?php $v = (string)($edit_meta['hunt_permit_required'] ?? ''); ?><select name="hunt_permit_required" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
@@ -6861,6 +6933,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function applyVadkarDynamicFields() {
+        var landType = (($('#va-hunt-land-type').val() || '') + '').trim();
+        var response = (($('#va-hunt-response-time').val() || '') + '').trim();
+        var contract = (($('#va-hunt-contract-type').val() || '') + '').trim();
+
+        var isAgri = ['szantofold','kukorica','napraforgo','buza','szolo','gyumolcsos','vegyes-mezogazdasagi'].indexOf(landType) !== -1;
+        var isUrgent = response === 'azonnal-0-2';
+        var isLong = contract === 'eves' || contract === 'folyamatos';
+
+        $('.va-vadkar-dynamic-group').hide();
+        if (isAgri) {
+            $('.va-vadkar-dynamic-group[data-vadkar-land="agri"]').show();
+        }
+        if (isUrgent) {
+            $('.va-vadkar-dynamic-group[data-vadkar-response="urgent"]').show();
+        }
+        if (isLong) {
+            $('.va-vadkar-dynamic-group[data-vadkar-contract="long"]').show();
+        }
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -6966,6 +7059,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-hunt-price-type, #va-hunt-type, #va-hunt-methods', function(){
         applyHuntDynamicFields();
     });
+    $(document).on('change', '#va-hunt-land-type, #va-hunt-response-time, #va-hunt-contract-type', function(){
+        applyVadkarDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6985,6 +7081,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyHandgunDynamicFields();
     applyTrophyDynamicFields();
     applyHuntDynamicFields();
+    applyVadkarDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -7197,6 +7294,23 @@ document.addEventListener('DOMContentLoaded', function() {
             hunt_difficulty_level: 'Nehézségi szint',
             hunt_season_start: 'Kezdő dátum',
             hunt_season_end: 'Záró dátum',
+            hunt_damage_main_type: 'Vadkár elhárítás fő típusa',
+            hunt_settlement: 'Település',
+            hunt_land_type: 'Terület típusa',
+            hunt_response_time: 'Reakcióidő',
+            hunt_availability_mode: 'Elérhetőség',
+            hunt_executor_type: 'Végrehajtó',
+            hunt_executor_capacity: 'Kapacitás',
+            hunt_tools: 'Eszközök',
+            hunt_weapon_use_required: 'Fegyverhasználat szükséges',
+            hunt_land_manager_permit: 'Területgazdálkodói engedély',
+            hunt_hunting_company_coop: 'Együttműködés vadásztársasággal',
+            hunt_liability_insurance: 'Felelősségbiztosítás',
+            hunt_damage_nature: 'Kár jellege',
+            hunt_pricing_model: 'Árazás modell',
+            hunt_travel_fee: 'Kiszállás díja',
+            hunt_contract_type: 'Szerződés típusa',
+            hunt_site_conditions: 'Helyszíni feltételek',
             vadcamera_camera_type: 'Kamera típusa',
             vadcamera_connectivity: 'Adatkapcsolat',
             vadcamera_trigger_speed: 'Trigger idő',
@@ -7292,6 +7406,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(szállás|szallas|booking|apartman|vendégház|vendeghaz|vadászház|vadaszhaz)/.test(selectedCatText);
         var isHuntOptionCategory = /vadaszati-lehetoseg|vadkarelharitas|vadaszterulet-berlet|vadasz-lehetoseg/.test(slug)
             || /(vadászati lehetőség|vadaszati lehetoseg|vadkárelhárítás|vadkarelharitas|lesbérlet|lesberlet|bérbeadás|berbeadas)/.test(selectedCatText);
+        var isDamageControlCategory = /vadkarelharitas/.test(slug)
+            || /(vadkárelhárítás|vadkarelharitas|vadkár elhárítás|vadkar elharitas)/.test(selectedCatText);
         var isTrophyPlateCategory = /trofea-aletet|trofea|trofeak/.test(slug)
             || /(trófea|trofea|alátét|alatet|agyar|koponya)/.test(selectedCatText);
         var isShoeCategory = /cipo|bakancs|labbeli/.test(slug)
@@ -7355,6 +7471,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle hunting-option fields grid
         $('.va-hunt-option-fields-grid').toggle(isHuntOptionCategory);
+        $('.va-vadkar-only').toggle(isDamageControlCategory);
+        if (isDamageControlCategory) {
+            applyVadkarDynamicFields();
+        } else {
+            $('.va-vadkar-dynamic-group').hide();
+        }
 
         // Handle telescope fields grid
         $('.va-telescope-fields-grid').toggle(isTelescopeCategory);
@@ -7430,7 +7552,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply required attributes to hunting-option fields
         if (isHuntOptionCategory) {
             $('.va-hunt-option-fields-grid input, .va-hunt-option-fields-grid select, .va-hunt-option-fields-grid textarea').each(function(){
-                var fieldName = ($(this).attr('name') || '').trim();
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
             });

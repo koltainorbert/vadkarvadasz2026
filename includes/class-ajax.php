@@ -186,7 +186,7 @@ class VA_Ajax {
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
-            'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
             'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -360,6 +360,23 @@ class VA_Ajax {
             'hunt_required_media' => 'Kötelező képek',
             'hunt_video_types' => 'Videó',
             'hunt_moderation_flags' => 'Moderációs jelölők',
+            'hunt_damage_main_type' => 'Vadkár elhárítás fő típusa',
+            'hunt_settlement' => 'Település',
+            'hunt_land_type' => 'Terület típusa',
+            'hunt_response_time' => 'Reakcióidő',
+            'hunt_availability_mode' => 'Elérhetőség',
+            'hunt_executor_type' => 'Végrehajtó',
+            'hunt_executor_capacity' => 'Kapacitás',
+            'hunt_tools' => 'Eszközök',
+            'hunt_weapon_use_required' => 'Fegyverhasználat szükséges',
+            'hunt_land_manager_permit' => 'Területgazdálkodói engedély',
+            'hunt_hunting_company_coop' => 'Együttműködés vadásztársasággal',
+            'hunt_liability_insurance' => 'Felelősségbiztosítás',
+            'hunt_damage_nature' => 'Kár jellege',
+            'hunt_pricing_model' => 'Árazás modell',
+            'hunt_travel_fee' => 'Kiszállás díja',
+            'hunt_contract_type' => 'Szerződés típusa',
+            'hunt_site_conditions' => 'Helyszíni feltételek',
             'hunt_trophy_category' => 'Várható trófea kategória',
             'hunt_trophy_weight_limit' => 'Súlyhatár',
             'hunt_travel_assist' => 'Utazás segítés',
@@ -1851,7 +1868,7 @@ class VA_Ajax {
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
         $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
-        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-lehetoseg';
+        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'vadaszati-lehetoseg', 'vadkarelharitas' ], true );
         $hunt_moderation_hits = $is_hunt_category ? self::detect_hunt_moderation_hits( $title, $description, $hunt_moderation_flags . "\n" . $hunt_area_name . "\n" . $hunt_game_species ) : [];
 
         wp_update_post( [
@@ -3450,7 +3467,7 @@ class VA_Ajax {
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
         $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
-        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-lehetoseg';
+        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'vadaszati-lehetoseg', 'vadkarelharitas' ], true );
         $hunt_moderation_hits = $is_hunt_category ? self::detect_hunt_moderation_hits( $title, $description, $hunt_moderation_flags . "\n" . $hunt_area_name . "\n" . $hunt_game_species ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
