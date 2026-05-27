@@ -263,7 +263,7 @@ $category_required_rules = [
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
     'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
@@ -659,6 +659,42 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'feed_loading_available' => get_post_meta( $maybe_id, 'va_feed_loading_available', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
+            'service_type' => get_post_meta( $maybe_id, 'va_service_type', true ),
+            'service_provider_type' => get_post_meta( $maybe_id, 'va_service_provider_type', true ),
+            'service_provider_name' => get_post_meta( $maybe_id, 'va_service_provider_name', true ),
+            'service_country' => get_post_meta( $maybe_id, 'va_service_country', true ),
+            'service_county' => get_post_meta( $maybe_id, 'va_service_county', true ),
+            'service_town' => get_post_meta( $maybe_id, 'va_service_town', true ),
+            'service_area' => get_post_meta( $maybe_id, 'va_service_area', true ),
+            'service_gps_lat' => get_post_meta( $maybe_id, 'va_service_gps_lat', true ),
+            'service_gps_lng' => get_post_meta( $maybe_id, 'va_service_gps_lng', true ),
+            'service_pricing_type' => get_post_meta( $maybe_id, 'va_service_pricing_type', true ),
+            'service_min_price' => get_post_meta( $maybe_id, 'va_service_min_price', true ),
+            'service_travel_fee' => get_post_meta( $maybe_id, 'va_service_travel_fee', true ),
+            'service_schedule' => get_post_meta( $maybe_id, 'va_service_schedule', true ),
+            'service_available_weekend' => get_post_meta( $maybe_id, 'va_service_available_weekend', true ),
+            'service_available_24_7' => get_post_meta( $maybe_id, 'va_service_available_24_7', true ),
+            'service_seasonal' => get_post_meta( $maybe_id, 'va_service_seasonal', true ),
+            'service_hunting_specialization' => get_post_meta( $maybe_id, 'va_service_hunting_specialization', true ),
+            'service_hunting_species' => get_post_meta( $maybe_id, 'va_service_hunting_species', true ),
+            'service_weapon_categories' => get_post_meta( $maybe_id, 'va_service_weapon_categories', true ),
+            'service_equipment' => get_post_meta( $maybe_id, 'va_service_equipment', true ),
+            'service_permits' => get_post_meta( $maybe_id, 'va_service_permits', true ),
+            'service_reference_rating' => get_post_meta( $maybe_id, 'va_service_reference_rating', true ),
+            'service_completed_jobs' => get_post_meta( $maybe_id, 'va_service_completed_jobs', true ),
+            'service_reference_notes' => get_post_meta( $maybe_id, 'va_service_reference_notes', true ),
+            'service_media_required' => get_post_meta( $maybe_id, 'va_service_media_required', true ),
+            'service_media_video' => get_post_meta( $maybe_id, 'va_service_media_video', true ),
+            'service_verified_provider' => get_post_meta( $maybe_id, 'va_service_verified_provider', true ),
+            'service_document_verified' => get_post_meta( $maybe_id, 'va_service_document_verified', true ),
+            'service_phone_verified' => get_post_meta( $maybe_id, 'va_service_phone_verified', true ),
+            'service_business_verified' => get_post_meta( $maybe_id, 'va_service_business_verified', true ),
+            'service_sos_service' => get_post_meta( $maybe_id, 'va_service_sos_service', true ),
+            'service_urgent_repair' => get_post_meta( $maybe_id, 'va_service_urgent_repair', true ),
+            'service_full_prep' => get_post_meta( $maybe_id, 'va_service_full_prep', true ),
+            'service_night_work' => get_post_meta( $maybe_id, 'va_service_night_work', true ),
+            'service_caliber_support' => get_post_meta( $maybe_id, 'va_service_caliber_support', true ),
+            'service_moderation_flags' => get_post_meta( $maybe_id, 'va_service_moderation_flags', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
@@ -6962,12 +6998,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
-        if (isJobCategory || isServiceCategory) {
+        if (isJobCategory) {
             if (required.indexOf('job_location') === -1) required.push('job_location');
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
+        if (isServiceCategory) {
+            ['service_type','service_provider_type','service_country','service_county','service_town','service_area','service_pricing_type'].forEach(function(field){
+                if (required.indexOf(field) === -1) required.push(field);
+            });
+        }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
+
+        $('.va-service-fields-grid').toggle(isServiceCategory);
+        if (isServiceCategory) {
+            applyServiceDynamicFields();
+        } else {
+            $('.va-service-dynamic-group').hide();
+        }
 
         $('.va-handgun-fields-grid').toggle(isHandgunCategory);
         if (isHandgunCategory) {
@@ -7010,6 +7058,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             $('.va-other-weapon-subgroup').hide();
         }
+
+        if (isServiceCategory) {
+            var serviceType = ($('#va-service-type').val() || '').trim();
+            $('.va-service-dynamic-group').each(function(){
+                var types = (($(this).data('serviceTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+                $(this).toggle(types.indexOf(serviceType) !== -1);
+            });
+        }
         
         // Hide spektiv option for non-scope telescope categories (hőkamera, éjjellátó)
         var $opticType = $('#va-optic-type');
@@ -7030,6 +7086,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isTelescopeCategory) {
             $('.va-telescope-fields-grid input, .va-telescope-fields-grid select, .va-telescope-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isServiceCategory) {
+            $('.va-service-fields-grid input, .va-service-fields-grid select, .va-service-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
             });
