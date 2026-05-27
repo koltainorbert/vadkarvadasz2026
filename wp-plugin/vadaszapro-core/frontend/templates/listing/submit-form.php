@@ -263,7 +263,7 @@ $category_required_rules = [
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
     'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
@@ -659,6 +659,42 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'feed_loading_available' => get_post_meta( $maybe_id, 'va_feed_loading_available', true ),
             'job_location' => get_post_meta( $maybe_id, 'va_job_location', true ),
             'job_type' => get_post_meta( $maybe_id, 'va_job_type', true ),
+            'service_type' => get_post_meta( $maybe_id, 'va_service_type', true ),
+            'service_provider_type' => get_post_meta( $maybe_id, 'va_service_provider_type', true ),
+            'service_provider_name' => get_post_meta( $maybe_id, 'va_service_provider_name', true ),
+            'service_country' => get_post_meta( $maybe_id, 'va_service_country', true ),
+            'service_county' => get_post_meta( $maybe_id, 'va_service_county', true ),
+            'service_town' => get_post_meta( $maybe_id, 'va_service_town', true ),
+            'service_area' => get_post_meta( $maybe_id, 'va_service_area', true ),
+            'service_gps_lat' => get_post_meta( $maybe_id, 'va_service_gps_lat', true ),
+            'service_gps_lng' => get_post_meta( $maybe_id, 'va_service_gps_lng', true ),
+            'service_pricing_type' => get_post_meta( $maybe_id, 'va_service_pricing_type', true ),
+            'service_min_price' => get_post_meta( $maybe_id, 'va_service_min_price', true ),
+            'service_travel_fee' => get_post_meta( $maybe_id, 'va_service_travel_fee', true ),
+            'service_schedule' => get_post_meta( $maybe_id, 'va_service_schedule', true ),
+            'service_available_weekend' => get_post_meta( $maybe_id, 'va_service_available_weekend', true ),
+            'service_available_24_7' => get_post_meta( $maybe_id, 'va_service_available_24_7', true ),
+            'service_seasonal' => get_post_meta( $maybe_id, 'va_service_seasonal', true ),
+            'service_hunting_specialization' => get_post_meta( $maybe_id, 'va_service_hunting_specialization', true ),
+            'service_hunting_species' => get_post_meta( $maybe_id, 'va_service_hunting_species', true ),
+            'service_weapon_categories' => get_post_meta( $maybe_id, 'va_service_weapon_categories', true ),
+            'service_equipment' => get_post_meta( $maybe_id, 'va_service_equipment', true ),
+            'service_permits' => get_post_meta( $maybe_id, 'va_service_permits', true ),
+            'service_reference_rating' => get_post_meta( $maybe_id, 'va_service_reference_rating', true ),
+            'service_completed_jobs' => get_post_meta( $maybe_id, 'va_service_completed_jobs', true ),
+            'service_reference_notes' => get_post_meta( $maybe_id, 'va_service_reference_notes', true ),
+            'service_media_required' => get_post_meta( $maybe_id, 'va_service_media_required', true ),
+            'service_media_video' => get_post_meta( $maybe_id, 'va_service_media_video', true ),
+            'service_verified_provider' => get_post_meta( $maybe_id, 'va_service_verified_provider', true ),
+            'service_document_verified' => get_post_meta( $maybe_id, 'va_service_document_verified', true ),
+            'service_phone_verified' => get_post_meta( $maybe_id, 'va_service_phone_verified', true ),
+            'service_business_verified' => get_post_meta( $maybe_id, 'va_service_business_verified', true ),
+            'service_sos_service' => get_post_meta( $maybe_id, 'va_service_sos_service', true ),
+            'service_urgent_repair' => get_post_meta( $maybe_id, 'va_service_urgent_repair', true ),
+            'service_full_prep' => get_post_meta( $maybe_id, 'va_service_full_prep', true ),
+            'service_night_work' => get_post_meta( $maybe_id, 'va_service_night_work', true ),
+            'service_caliber_support' => get_post_meta( $maybe_id, 'va_service_caliber_support', true ),
+            'service_moderation_flags' => get_post_meta( $maybe_id, 'va_service_moderation_flags', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
@@ -4609,6 +4645,103 @@ body.va-modal-open {
                     </div>
                 </div>
             </div>
+            <?php
+            $service_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $service_schedule_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_schedule' ) ) ) );
+            $service_hunting_specialization_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_hunting_specialization' ) ) ) );
+            $service_hunting_species_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_hunting_species' ) ) ) );
+            $service_weapon_categories_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_weapon_categories' ) ) ) );
+            $service_equipment_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_equipment' ) ) ) );
+            $service_permits_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_permits' ) ) ) );
+            $service_media_required_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_media_required' ) ) ) );
+            $service_moderation_saved = array_filter( array_map( 'trim', explode( ',', $service_meta( 'service_moderation_flags' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-service-fields-grid" data-categories="szolgaltatas" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Szolgáltatás típusa</label>
+                        <?php $v = $service_meta( 'service_type' ); ?>
+                        <select name="service_type" id="va-service-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="vadaszati-szolgaltatas"<?php selected( $v, 'vadaszati-szolgaltatas' ); ?>>Vadászati szolgáltatás</option>
+                            <option value="fegyvermusz"<?php selected( $v, 'fegyvermusz' ); ?>>Fegyver / optika</option>
+                            <option value="preparator"<?php selected( $v, 'preparator' ); ?>>Trófea / preparálás</option>
+                            <option value="kutyas-szolgaltatas"<?php selected( $v, 'kutyas-szolgaltatas' ); ?>>Kutyás szolgáltatás</option>
+                            <option value="terulet-erdo"<?php selected( $v, 'terulet-erdo' ); ?>>Terület / erdő</option>
+                            <option value="oktatas"<?php selected( $v, 'oktatas' ); ?>>Oktatás</option>
+                            <option value="szallitas"<?php selected( $v, 'szallitas' ); ?>>Szállítás</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szolgáltató típusa</label>
+                        <?php $v = $service_meta( 'service_provider_type' ); ?>
+                        <select name="service_provider_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="ceg"<?php selected( $v, 'ceg' ); ?>>Cég</option>
+                            <option value="maganszemely"<?php selected( $v, 'maganszemely' ); ?>>Magánszemély</option>
+                            <option value="egyesulet"<?php selected( $v, 'egyesulet' ); ?>>Egyesület</option>
+                            <option value="vadtarsasag"<?php selected( $v, 'vadtarsasag' ); ?>>Vadásztársaság</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szolgáltató neve</label>
+                        <input type="text" name="service_provider_name" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_provider_name' ) ); ?>" placeholder="pl. Név / műhely / cég">
+                    </div>
+                    <div class="va-form-group"><label>Ország</label><input type="text" name="service_country" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_country' ) ); ?>" placeholder="pl. Magyarország"></div>
+                    <div class="va-form-group">
+                        <label>Megye</label>
+                        <?php $service_county_val = (int) $service_meta( 'service_county' ); ?>
+                        <select name="service_county" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <?php foreach ( $counties as $county ): ?><option value="<?php echo esc_attr( $county->term_id ); ?>"<?php echo selected( $service_county_val, (int) $county->term_id, false ); ?>><?php echo esc_html( $county->name ); ?></option><?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Település</label><input type="text" name="service_town" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_town' ) ); ?>" placeholder="pl. Kaposvár"></div>
+                    <div class="va-form-group">
+                        <label>Kiszállási terület</label>
+                        <?php $v = $service_meta( 'service_area' ); ?>
+                        <select name="service_area" class="va-select"><option value="">– Válasszon –</option><option value="helyi"<?php selected( $v, 'helyi' ); ?>>Helyi</option><option value="megyei"<?php selected( $v, 'megyei' ); ?>>Megyei</option><option value="orszagos"<?php selected( $v, 'orszagos' ); ?>>Országos</option><option value="nemzetkozi"<?php selected( $v, 'nemzetkozi' ); ?>>Nemzetközi</option></select>
+                    </div>
+                    <div class="va-form-group"><label>GPS koordináta</label><div class="va-two-up"><input type="text" name="service_gps_lat" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_gps_lat' ) ); ?>" placeholder="lat"><input type="text" name="service_gps_lng" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_gps_lng' ) ); ?>" placeholder="lng"></div></div>
+                    <div class="va-form-group"><label>Ár típusa</label><?php $v = $service_meta( 'service_pricing_type' ); ?><select name="service_pricing_type" class="va-select"><option value="">– Válasszon –</option><option value="oradij"<?php selected( $v, 'oradij' ); ?>>Óradíj</option><option value="fix"<?php selected( $v, 'fix' ); ?>>Fix</option><option value="km-alapu"<?php selected( $v, 'km-alapu' ); ?>>Km alapú</option><option value="projekt"<?php selected( $v, 'projekt' ); ?>>Projekt alapú</option><option value="egyedi-ajanlat"<?php selected( $v, 'egyedi-ajanlat' ); ?>>Egyedi ajánlat</option></select></div>
+                    <div class="va-form-group"><label>Minimum ár</label><input type="text" name="service_min_price" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_min_price' ) ); ?>" placeholder="pl. 25 000 Ft"></div>
+                    <div class="va-form-group"><label>Kiszállási díj</label><input type="text" name="service_travel_fee" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_travel_fee' ) ); ?>" placeholder="pl. 120 Ft/km vagy fix díj"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Elérhetőség</label><select name="service_schedule[]" class="va-select" multiple data-placeholder="Válassz elérhetőséget"><option value="hétköznap"<?php echo in_array( 'hétköznap', $service_schedule_saved, true ) ? ' selected' : ''; ?>>Hétköznap</option><option value="hétvége"<?php echo in_array( 'hétvége', $service_schedule_saved, true ) ? ' selected' : ''; ?>>Hétvége</option><option value="0-24"<?php echo in_array( '0-24', $service_schedule_saved, true ) ? ' selected' : ''; ?>>0-24</option><option value="szezonalis"<?php echo in_array( 'szezonalis', $service_schedule_saved, true ) ? ' selected' : ''; ?>>Szezonális</option></select></div>
+                    <div class="va-form-group"><label>Hétvégi elérhetőség</label><?php $v = $service_meta( 'service_available_weekend' ); ?><select name="service_available_weekend" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>0-24 elérhető</label><?php $v = $service_meta( 'service_available_24_7' ); ?><select name="service_available_24_7" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Szezonális szolgáltatás</label><?php $v = $service_meta( 'service_seasonal' ); ?><select name="service_seasonal" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Eszközök</label><select name="service_equipment[]" class="va-select" multiple data-placeholder="Válassz eszközöket"><option value="terepjaro"<?php echo in_array( 'terepjaro', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Terepjáró</option><option value="quad"<?php echo in_array( 'quad', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Quad</option><option value="dron"<?php echo in_array( 'dron', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Drón</option><option value="hokamera"<?php echo in_array( 'hokamera', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Hőkamera</option><option value="vereb"<?php echo in_array( 'vereb', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Véreb</option><option value="muhely"<?php echo in_array( 'muhely', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Műhely</option><option value="mobil-szerviz"<?php echo in_array( 'mobil-szerviz', $service_equipment_saved, true ) ? ' selected' : ''; ?>>Mobil szerviz</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Engedélyek</label><select name="service_permits[]" class="va-select" multiple data-placeholder="Válassz engedélyt"><option value="fegyvermester-engedely"<?php echo in_array( 'fegyvermester-engedely', $service_permits_saved, true ) ? ' selected' : ''; ?>>Fegyvermester engedély</option><option value="vadaszjegy"<?php echo in_array( 'vadaszjegy', $service_permits_saved, true ) ? ' selected' : ''; ?>>Vadászjegy</option><option value="preparatori-engedely"<?php echo in_array( 'preparatori-engedely', $service_permits_saved, true ) ? ' selected' : ''; ?>>Preparátori engedély</option><option value="vallalkozas"<?php echo in_array( 'vallalkozas', $service_permits_saved, true ) ? ' selected' : ''; ?>>Vállalkozás</option><option value="biztositas"<?php echo in_array( 'biztositas', $service_permits_saved, true ) ? ' selected' : ''; ?>>Biztosítás</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadászati specializáció</label><select name="service_hunting_specialization[]" class="va-select" multiple data-placeholder="Válassz specializációt"><option value="vadaszatszervezes"<?php echo in_array( 'vadaszatszervezes', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Vadászat szervezés</option><option value="bervadasztatas"<?php echo in_array( 'bervadasztatas', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Bérvadásztatás</option><option value="hivatasos-vadasz"<?php echo in_array( 'hivatasos-vadasz', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Hivatásos vadász szolgáltatás</option><option value="vadkar-elharitas"<?php echo in_array( 'vadkar-elharitas', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Vadkár elhárítás</option><option value="vadbefogas"<?php echo in_array( 'vadbefogas', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Vadbefogás</option><option value="csapdazas"<?php echo in_array( 'csapdazas', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Csapdázás</option><option value="nyomkovetes"<?php echo in_array( 'nyomkovetes', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Nyomkövetés</option><option value="utankereses"<?php echo in_array( 'utankereses', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Utánkeresés</option><option value="vereb-szolgaltatas"<?php echo in_array( 'vereb-szolgaltatas', $service_hunting_specialization_saved, true ) ? ' selected' : ''; ?>>Véreb szolgáltatás</option></select></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="fegyvermusz" style="display:none;"><label>Vállalt kaliberek</label><input type="text" name="service_caliber_support" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_caliber_support' ) ); ?>" placeholder="pl. .22 LR, 9x19, .308 Win"></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="fegyvermusz" style="display:none;"><label>Sürgős javítás</label><?php $v = $service_meta( 'service_urgent_repair' ); ?><select name="service_urgent_repair" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="preparator" style="display:none;"><label>Vadfajok</label><select name="service_hunting_species[]" class="va-select" multiple data-placeholder="Válassz vadfajt"><option value="szarvas"<?php echo in_array( 'szarvas', $service_hunting_species_saved, true ) ? ' selected' : ''; ?>>Szarvas</option><option value="oez"<?php echo in_array( 'oez', $service_hunting_species_saved, true ) ? ' selected' : ''; ?>>Őz</option><option value="vaddiszno"<?php echo in_array( 'vaddiszno', $service_hunting_species_saved, true ) ? ' selected' : ''; ?>>Vaddisznó</option><option value="muflon"<?php echo in_array( 'muflon', $service_hunting_species_saved, true ) ? ' selected' : ''; ?>>Muflon</option><option value="aprovad"<?php echo in_array( 'aprovad', $service_hunting_species_saved, true ) ? ' selected' : ''; ?>>Apróvad</option></select></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="preparator" style="display:none;"><label>Teljes preparálás</label><?php $v = $service_meta( 'service_full_prep' ); ?><select name="service_full_prep" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="utankereses,kutyas-szolgaltatas" style="display:none;"><label>Véreb fajta</label><input type="text" name="service_hound_breed" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_hound_breed' ) ); ?>" placeholder="pl. véreb, drótszőrű vizsla"></div>
+                    <div class="va-form-group va-service-dynamic-group" data-service-types="utankereses,kutyas-szolgaltatas" style="display:none;"><label>Éjszakai vállalás</label><?php $v = $service_meta( 'service_night_work' ); ?><select name="service_night_work" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Referenciák</strong></div>
+                    <div class="va-form-group"><label>Ügyfél értékelés</label><?php $v = $service_meta( 'service_reference_rating' ); ?><select name="service_reference_rating" class="va-select"><option value="">– Válasszon –</option><option value="1"<?php selected( $v, '1' ); ?>>1</option><option value="2"<?php selected( $v, '2' ); ?>>2</option><option value="3"<?php selected( $v, '3' ); ?>>3</option><option value="4"<?php selected( $v, '4' ); ?>>4</option><option value="5"<?php selected( $v, '5' ); ?>>5</option></select></div>
+                    <div class="va-form-group"><label>Elvégzett munkák</label><input type="text" name="service_completed_jobs" class="va-input" value="<?php echo esc_attr( $service_meta( 'service_completed_jobs' ) ); ?>" placeholder="pl. 120+ sikeres megbízás"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Referencia megjegyzés</label><textarea name="service_reference_notes" class="va-input" rows="3" placeholder="Referencia képek, ügyfél visszajelzés, műhely leírás..."><?php echo esc_textarea( $service_meta( 'service_reference_notes' ) ); ?></textarea></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Média kötelező elemek</label><select name="service_media_required[]" class="va-select" multiple data-placeholder="Válassz kötelező képet"><option value="muhely"<?php echo in_array( 'muhely', $service_media_required_saved, true ) ? ' selected' : ''; ?>>Műhely</option><option value="munka-kozben"<?php echo in_array( 'munka-kozben', $service_media_required_saved, true ) ? ' selected' : ''; ?>>Munka közben</option><option value="referencia-munka"<?php echo in_array( 'referencia-munka', $service_media_required_saved, true ) ? ' selected' : ''; ?>>Referencia munka</option><option value="felszereles"<?php echo in_array( 'felszereles', $service_media_required_saved, true ) ? ' selected' : ''; ?>>Felszerelés</option></select></div>
+                    <div class="va-form-group"><label>Videó</label><?php $v = $service_meta( 'service_media_video' ); ?><select name="service_media_video" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Ellenőrzött szolgáltató</label><?php $v = $service_meta( 'service_verified_provider' ); ?><select name="service_verified_provider" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Dokumentum ellenőrzés</label><?php $v = $service_meta( 'service_document_verified' ); ?><select name="service_document_verified" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Telefonszám ellenőrzés</label><?php $v = $service_meta( 'service_phone_verified' ); ?><select name="service_phone_verified" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Vállalkozás ellenőrzés</label><?php $v = $service_meta( 'service_business_verified' ); ?><select name="service_business_verified" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>SOS szolgáltatás</label><?php $v = $service_meta( 'service_sos_service' ); ?><select name="service_sos_service" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="service_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="illegalis-fegyverjavitas"<?php echo in_array( 'illegalis-fegyverjavitas', $service_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális fegyverjavítás</option><option value="engedely-nelkuli-szolgaltatas"<?php echo in_array( 'engedely-nelkuli-szolgaltatas', $service_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli szolgáltatás</option><option value="tiltott-vadaszati-tevekenyseg"<?php echo in_array( 'tiltott-vadaszati-tevekenyseg', $service_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott vadászati tevékenység</option></select></div>
+                </div>
+            </div>
             <?php endif; ?>
 
         <?php
@@ -6962,12 +7095,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
-        if (isJobCategory || isServiceCategory) {
+        if (isJobCategory) {
             if (required.indexOf('job_location') === -1) required.push('job_location');
             if (required.indexOf('job_type') === -1) required.push('job_type');
         }
+        if (isServiceCategory) {
+            ['service_type','service_provider_type','service_country','service_county','service_town','service_area','service_pricing_type'].forEach(function(field){
+                if (required.indexOf(field) === -1) required.push(field);
+            });
+        }
 
         $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
+
+        $('.va-service-fields-grid').toggle(isServiceCategory);
+        if (isServiceCategory) {
+            applyServiceDynamicFields();
+        } else {
+            $('.va-service-dynamic-group').hide();
+        }
 
         $('.va-handgun-fields-grid').toggle(isHandgunCategory);
         if (isHandgunCategory) {
@@ -7010,6 +7155,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             $('.va-other-weapon-subgroup').hide();
         }
+
+        if (isServiceCategory) {
+            var serviceType = ($('#va-service-type').val() || '').trim();
+            $('.va-service-dynamic-group').each(function(){
+                var types = (($(this).data('serviceTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+                $(this).toggle(types.indexOf(serviceType) !== -1);
+            });
+        }
         
         // Hide spektiv option for non-scope telescope categories (hőkamera, éjjellátó)
         var $opticType = $('#va-optic-type');
@@ -7030,6 +7183,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isTelescopeCategory) {
             $('.va-telescope-fields-grid input, .va-telescope-fields-grid select, .va-telescope-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim();
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isServiceCategory) {
+            $('.va-service-fields-grid input, .va-service-fields-grid select, .va-service-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
             });

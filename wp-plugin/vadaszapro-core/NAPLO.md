@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #szolgaltatas-kategoria-komplex-mezorendszer
+- Kérés: a `Szolgáltatás` kategória teljes, szűrő- és trustközpontú mezőrendszere készüljön el.
+- Frontend: külön `va-service-fields-grid` blokk került be a szolgáltatás típusokra, provider/location/pricing/availability/equipment/permits/referencia/média/moderáció mezőkkel és típusfüggő almezőkkel.
+- Backend: mindkét AJAX ágban bekerült a szolgáltatás mezők sanitize + mentés + moderation logika, valamint a szolgáltatás szűrőmeták (`va_service_filter_*`).
+- Kötelező mezők: a `szolgaltatas` slug új required szabályt kapott (`service_type`, `service_provider_type`, `service_country`, `service_county`, `service_town`, `service_area`, `service_pricing_type`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés lefutott (`No errors found`).
+
 ## 2026. 05. 27. – Session #maroklofegyver-kategoria-komplex-mezorendszer
 - Kérés: teljes `Maroklőfegyver` kategória mezőrendszer és backend mentési/logikai támogatás a kért jogi és technikai mezőkkel.
 - Frontend: bekerült dedikált `va-handgun-fields-grid` blokk (típus, állapot, műszaki paraméterek, irányzék/optika, menetes cső, sín, tartozékok, jogi adatok, átvétel, média, sport/specifikus mezők).

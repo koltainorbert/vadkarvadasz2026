@@ -183,7 +183,7 @@ class VA_Ajax {
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-            'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+            'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
@@ -319,6 +319,42 @@ class VA_Ajax {
             'knife_condition' => 'Állapot',
             'knife_blade_length_mm' => 'Pengehossz (mm)',
             'knife_steel_type' => 'Acél',
+            'service_type' => 'Szolgáltatás típusa',
+            'service_provider_type' => 'Szolgáltató típusa',
+            'service_provider_name' => 'Szolgáltató neve',
+            'service_country' => 'Ország',
+            'service_county' => 'Megye',
+            'service_town' => 'Település',
+            'service_area' => 'Kiszállási terület',
+            'service_gps_lat' => 'GPS szélesség',
+            'service_gps_lng' => 'GPS hosszúság',
+            'service_pricing_type' => 'Ár típusa',
+            'service_min_price' => 'Minimum ár',
+            'service_travel_fee' => 'Kiszállási díj',
+            'service_schedule' => 'Elérhetőség',
+            'service_available_weekend' => 'Hétvégi elérhetőség',
+            'service_available_24_7' => '0-24 elérhető',
+            'service_seasonal' => 'Szezonális',
+            'service_hunting_specialization' => 'Vadászati specializáció',
+            'service_hunting_species' => 'Vadfajok',
+            'service_weapon_categories' => 'Fegyver / optika',
+            'service_equipment' => 'Felszereltség',
+            'service_permits' => 'Engedélyek',
+            'service_reference_rating' => 'Ügyfél értékelés',
+            'service_completed_jobs' => 'Elvégzett munkák',
+            'service_reference_notes' => 'Referencia megjegyzés',
+            'service_media_required' => 'Média kötelező elemek',
+            'service_media_video' => 'Videó',
+            'service_verified_provider' => 'Ellenőrzött szolgáltató',
+            'service_document_verified' => 'Dokumentum ellenőrzés',
+            'service_phone_verified' => 'Telefonszám ellenőrzés',
+            'service_business_verified' => 'Vállalkozás ellenőrzés',
+            'service_sos_service' => 'SOS szolgáltatás',
+            'service_urgent_repair' => 'Sürgős javítás',
+            'service_full_prep' => 'Teljes preparálás',
+            'service_night_work' => 'Éjszakai vállalás',
+            'service_caliber_support' => 'Vállalt kaliberek',
+            'service_moderation_flags' => 'Moderációs jelzők',
             'marok_type' => 'Maroklőfegyver típusa',
             'marok_condition' => 'Állapot',
             'marok_action_type' => 'Működési rendszer',
@@ -438,6 +474,31 @@ class VA_Ajax {
             'illegalis penge',
             'illegális penge',
             'rejtett penge',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_service_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'illegalis fegyverjavitas',
+            'illegális fegyverjavítás',
+            'engedely nelkuli szolgaltatas',
+            'engedély nélküli szolgáltatás',
+            'tiltott vadaszati tevekenyseg',
+            'tiltott vadászati tevékenység',
         ];
 
         $hits = [];
@@ -898,6 +959,43 @@ class VA_Ajax {
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
+        $service_type = sanitize_key( wp_unslash( $_POST['service_type'] ?? '' ) );
+        $service_provider_type = sanitize_key( wp_unslash( $_POST['service_provider_type'] ?? '' ) );
+        $service_provider_name = sanitize_text_field( wp_unslash( $_POST['service_provider_name'] ?? '' ) );
+        $service_country = sanitize_text_field( wp_unslash( $_POST['service_country'] ?? '' ) );
+        $service_county = absint( wp_unslash( $_POST['service_county'] ?? 0 ) );
+        $service_town = sanitize_text_field( wp_unslash( $_POST['service_town'] ?? '' ) );
+        $service_area = sanitize_key( wp_unslash( $_POST['service_area'] ?? '' ) );
+        $service_gps_lat = sanitize_text_field( wp_unslash( $_POST['service_gps_lat'] ?? '' ) );
+        $service_gps_lng = sanitize_text_field( wp_unslash( $_POST['service_gps_lng'] ?? '' ) );
+        $service_pricing_type = sanitize_key( wp_unslash( $_POST['service_pricing_type'] ?? '' ) );
+        $service_min_price = sanitize_text_field( wp_unslash( $_POST['service_min_price'] ?? '' ) );
+        $service_travel_fee = sanitize_text_field( wp_unslash( $_POST['service_travel_fee'] ?? '' ) );
+        $service_schedule = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_schedule'] ?? [] ) ) ) );
+        $service_available_weekend = sanitize_key( wp_unslash( $_POST['service_available_weekend'] ?? '' ) );
+        $service_available_24_7 = sanitize_key( wp_unslash( $_POST['service_available_24_7'] ?? '' ) );
+        $service_seasonal = sanitize_key( wp_unslash( $_POST['service_seasonal'] ?? '' ) );
+        $service_hunting_specialization = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_hunting_specialization'] ?? [] ) ) ) );
+        $service_hunting_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_hunting_species'] ?? [] ) ) ) );
+        $service_weapon_categories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_weapon_categories'] ?? [] ) ) ) );
+        $service_equipment = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_equipment'] ?? [] ) ) ) );
+        $service_permits = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_permits'] ?? [] ) ) ) );
+        $service_reference_rating = sanitize_text_field( wp_unslash( $_POST['service_reference_rating'] ?? '' ) );
+        $service_completed_jobs = sanitize_text_field( wp_unslash( $_POST['service_completed_jobs'] ?? '' ) );
+        $service_reference_notes = sanitize_textarea_field( wp_unslash( $_POST['service_reference_notes'] ?? '' ) );
+        $service_media_required = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_media_required'] ?? [] ) ) ) );
+        $service_media_video = sanitize_key( wp_unslash( $_POST['service_media_video'] ?? '' ) );
+        $service_verified_provider = sanitize_key( wp_unslash( $_POST['service_verified_provider'] ?? '' ) );
+        $service_document_verified = sanitize_key( wp_unslash( $_POST['service_document_verified'] ?? '' ) );
+        $service_phone_verified = sanitize_key( wp_unslash( $_POST['service_phone_verified'] ?? '' ) );
+        $service_business_verified = sanitize_key( wp_unslash( $_POST['service_business_verified'] ?? '' ) );
+        $service_sos_service = sanitize_key( wp_unslash( $_POST['service_sos_service'] ?? '' ) );
+        $service_urgent_repair = sanitize_key( wp_unslash( $_POST['service_urgent_repair'] ?? '' ) );
+        $service_full_prep = sanitize_key( wp_unslash( $_POST['service_full_prep'] ?? '' ) );
+        $service_night_work = sanitize_key( wp_unslash( $_POST['service_night_work'] ?? '' ) );
+        $service_hound_breed = sanitize_text_field( wp_unslash( $_POST['service_hound_breed'] ?? '' ) );
+        $service_caliber_support = sanitize_text_field( wp_unslash( $_POST['service_caliber_support'] ?? '' ) );
+        $service_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_moderation_flags'] ?? [] ) ) ) );
         $clothing_type = sanitize_key( wp_unslash( $_POST['clothing_type'] ?? '' ) );
         $clothing_condition = sanitize_key( wp_unslash( $_POST['clothing_condition'] ?? '' ) );
         $clothing_gender = sanitize_key( wp_unslash( $_POST['clothing_gender'] ?? '' ) );
@@ -1421,6 +1519,24 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
+            'service_type' => $service_type,
+            'service_provider_type' => $service_provider_type,
+            'service_country' => $service_country,
+            'service_county' => $service_county,
+            'service_town' => $service_town,
+            'service_area' => $service_area,
+            'service_pricing_type' => $service_pricing_type,
+            'service_available_weekend' => $service_available_weekend,
+            'service_available_24_7' => $service_available_24_7,
+            'service_seasonal' => $service_seasonal,
+            'service_verified_provider' => $service_verified_provider,
+            'service_document_verified' => $service_document_verified,
+            'service_phone_verified' => $service_phone_verified,
+            'service_business_verified' => $service_business_verified,
+            'service_sos_service' => $service_sos_service,
+            'service_urgent_repair' => $service_urgent_repair,
+            'service_full_prep' => $service_full_prep,
+            'service_night_work' => $service_night_work,
             'clothing_type' => $clothing_type,
             'clothing_condition' => $clothing_condition,
             'clothing_gender' => $clothing_gender,
@@ -1498,6 +1614,8 @@ class VA_Ajax {
         $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
+        $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
+        $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1642,6 +1760,52 @@ class VA_Ajax {
             'va_dog_purebred'=> $dog_purebred,
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
+            'va_service_type' => $service_type,
+            'va_service_provider_type' => $service_provider_type,
+            'va_service_provider_name' => $service_provider_name,
+            'va_service_country' => $service_country,
+            'va_service_county' => $service_county,
+            'va_service_town' => $service_town,
+            'va_service_area' => $service_area,
+            'va_service_gps_lat' => $service_gps_lat,
+            'va_service_gps_lng' => $service_gps_lng,
+            'va_service_pricing_type' => $service_pricing_type,
+            'va_service_min_price' => $service_min_price,
+            'va_service_travel_fee' => $service_travel_fee,
+            'va_service_schedule' => $service_schedule,
+            'va_service_available_weekend' => $service_available_weekend,
+            'va_service_available_24_7' => $service_available_24_7,
+            'va_service_seasonal' => $service_seasonal,
+            'va_service_hunting_specialization' => $service_hunting_specialization,
+            'va_service_hunting_species' => $service_hunting_species,
+            'va_service_weapon_categories' => $service_weapon_categories,
+            'va_service_equipment' => $service_equipment,
+            'va_service_permits' => $service_permits,
+            'va_service_reference_rating' => $service_reference_rating,
+            'va_service_completed_jobs' => $service_completed_jobs,
+            'va_service_reference_notes' => $service_reference_notes,
+            'va_service_media_required' => $service_media_required,
+            'va_service_media_video' => $service_media_video,
+            'va_service_verified_provider' => $service_verified_provider,
+            'va_service_document_verified' => $service_document_verified,
+            'va_service_phone_verified' => $service_phone_verified,
+            'va_service_business_verified' => $service_business_verified,
+            'va_service_sos_service' => $service_sos_service,
+            'va_service_urgent_repair' => $service_urgent_repair,
+            'va_service_full_prep' => $service_full_prep,
+            'va_service_night_work' => $service_night_work,
+            'va_service_hound_breed' => $service_hound_breed,
+            'va_service_caliber_support' => $service_caliber_support,
+            'va_service_moderation_flags' => $service_moderation_flags,
+            'va_service_needs_review' => ! empty( $service_moderation_hits ) ? '1' : '0',
+            'va_service_review_hits' => implode( ',', $service_moderation_hits ),
+            'va_service_filter_type' => $service_type,
+            'va_service_filter_area' => $service_area,
+            'va_service_filter_pricing_type' => $service_pricing_type,
+            'va_service_filter_available_weekend' => $service_available_weekend,
+            'va_service_filter_verified_provider' => $service_verified_provider,
+            'va_service_filter_hunting_specialization' => $service_hunting_specialization,
+            'va_service_filter_sos_service' => $service_sos_service,
             'va_clothing_type' => $clothing_type,
             'va_clothing_condition' => $clothing_condition,
             'va_clothing_gender' => $clothing_gender,
@@ -2218,6 +2382,43 @@ class VA_Ajax {
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
+        $service_type = sanitize_key( wp_unslash( $_POST['service_type'] ?? '' ) );
+        $service_provider_type = sanitize_key( wp_unslash( $_POST['service_provider_type'] ?? '' ) );
+        $service_provider_name = sanitize_text_field( wp_unslash( $_POST['service_provider_name'] ?? '' ) );
+        $service_country = sanitize_text_field( wp_unslash( $_POST['service_country'] ?? '' ) );
+        $service_county = absint( wp_unslash( $_POST['service_county'] ?? 0 ) );
+        $service_town = sanitize_text_field( wp_unslash( $_POST['service_town'] ?? '' ) );
+        $service_area = sanitize_key( wp_unslash( $_POST['service_area'] ?? '' ) );
+        $service_gps_lat = sanitize_text_field( wp_unslash( $_POST['service_gps_lat'] ?? '' ) );
+        $service_gps_lng = sanitize_text_field( wp_unslash( $_POST['service_gps_lng'] ?? '' ) );
+        $service_pricing_type = sanitize_key( wp_unslash( $_POST['service_pricing_type'] ?? '' ) );
+        $service_min_price = sanitize_text_field( wp_unslash( $_POST['service_min_price'] ?? '' ) );
+        $service_travel_fee = sanitize_text_field( wp_unslash( $_POST['service_travel_fee'] ?? '' ) );
+        $service_schedule = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_schedule'] ?? [] ) ) ) );
+        $service_available_weekend = sanitize_key( wp_unslash( $_POST['service_available_weekend'] ?? '' ) );
+        $service_available_24_7 = sanitize_key( wp_unslash( $_POST['service_available_24_7'] ?? '' ) );
+        $service_seasonal = sanitize_key( wp_unslash( $_POST['service_seasonal'] ?? '' ) );
+        $service_hunting_specialization = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_hunting_specialization'] ?? [] ) ) ) );
+        $service_hunting_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_hunting_species'] ?? [] ) ) ) );
+        $service_weapon_categories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_weapon_categories'] ?? [] ) ) ) );
+        $service_equipment = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_equipment'] ?? [] ) ) ) );
+        $service_permits = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_permits'] ?? [] ) ) ) );
+        $service_reference_rating = sanitize_text_field( wp_unslash( $_POST['service_reference_rating'] ?? '' ) );
+        $service_completed_jobs = sanitize_text_field( wp_unslash( $_POST['service_completed_jobs'] ?? '' ) );
+        $service_reference_notes = sanitize_textarea_field( wp_unslash( $_POST['service_reference_notes'] ?? '' ) );
+        $service_media_required = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_media_required'] ?? [] ) ) ) );
+        $service_media_video = sanitize_key( wp_unslash( $_POST['service_media_video'] ?? '' ) );
+        $service_verified_provider = sanitize_key( wp_unslash( $_POST['service_verified_provider'] ?? '' ) );
+        $service_document_verified = sanitize_key( wp_unslash( $_POST['service_document_verified'] ?? '' ) );
+        $service_phone_verified = sanitize_key( wp_unslash( $_POST['service_phone_verified'] ?? '' ) );
+        $service_business_verified = sanitize_key( wp_unslash( $_POST['service_business_verified'] ?? '' ) );
+        $service_sos_service = sanitize_key( wp_unslash( $_POST['service_sos_service'] ?? '' ) );
+        $service_urgent_repair = sanitize_key( wp_unslash( $_POST['service_urgent_repair'] ?? '' ) );
+        $service_full_prep = sanitize_key( wp_unslash( $_POST['service_full_prep'] ?? '' ) );
+        $service_night_work = sanitize_key( wp_unslash( $_POST['service_night_work'] ?? '' ) );
+        $service_hound_breed = sanitize_text_field( wp_unslash( $_POST['service_hound_breed'] ?? '' ) );
+        $service_caliber_support = sanitize_text_field( wp_unslash( $_POST['service_caliber_support'] ?? '' ) );
+        $service_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['service_moderation_flags'] ?? [] ) ) ) );
         $clothing_type = sanitize_key( wp_unslash( $_POST['clothing_type'] ?? '' ) );
         $clothing_condition = sanitize_key( wp_unslash( $_POST['clothing_condition'] ?? '' ) );
         $clothing_gender = sanitize_key( wp_unslash( $_POST['clothing_gender'] ?? '' ) );
@@ -2708,6 +2909,24 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
+            'service_type' => $service_type,
+            'service_provider_type' => $service_provider_type,
+            'service_country' => $service_country,
+            'service_county' => $service_county,
+            'service_town' => $service_town,
+            'service_area' => $service_area,
+            'service_pricing_type' => $service_pricing_type,
+            'service_available_weekend' => $service_available_weekend,
+            'service_available_24_7' => $service_available_24_7,
+            'service_seasonal' => $service_seasonal,
+            'service_verified_provider' => $service_verified_provider,
+            'service_document_verified' => $service_document_verified,
+            'service_phone_verified' => $service_phone_verified,
+            'service_business_verified' => $service_business_verified,
+            'service_sos_service' => $service_sos_service,
+            'service_urgent_repair' => $service_urgent_repair,
+            'service_full_prep' => $service_full_prep,
+            'service_night_work' => $service_night_work,
             'clothing_type' => $clothing_type,
             'clothing_condition' => $clothing_condition,
             'clothing_gender' => $clothing_gender,
@@ -2786,6 +3005,8 @@ class VA_Ajax {
         $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
+        $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
+        $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
@@ -2931,6 +3152,52 @@ class VA_Ajax {
             'va_dog_purebred'=> $dog_purebred,
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
+            'va_service_type' => $service_type,
+            'va_service_provider_type' => $service_provider_type,
+            'va_service_provider_name' => $service_provider_name,
+            'va_service_country' => $service_country,
+            'va_service_county' => $service_county,
+            'va_service_town' => $service_town,
+            'va_service_area' => $service_area,
+            'va_service_gps_lat' => $service_gps_lat,
+            'va_service_gps_lng' => $service_gps_lng,
+            'va_service_pricing_type' => $service_pricing_type,
+            'va_service_min_price' => $service_min_price,
+            'va_service_travel_fee' => $service_travel_fee,
+            'va_service_schedule' => $service_schedule,
+            'va_service_available_weekend' => $service_available_weekend,
+            'va_service_available_24_7' => $service_available_24_7,
+            'va_service_seasonal' => $service_seasonal,
+            'va_service_hunting_specialization' => $service_hunting_specialization,
+            'va_service_hunting_species' => $service_hunting_species,
+            'va_service_weapon_categories' => $service_weapon_categories,
+            'va_service_equipment' => $service_equipment,
+            'va_service_permits' => $service_permits,
+            'va_service_reference_rating' => $service_reference_rating,
+            'va_service_completed_jobs' => $service_completed_jobs,
+            'va_service_reference_notes' => $service_reference_notes,
+            'va_service_media_required' => $service_media_required,
+            'va_service_media_video' => $service_media_video,
+            'va_service_verified_provider' => $service_verified_provider,
+            'va_service_document_verified' => $service_document_verified,
+            'va_service_phone_verified' => $service_phone_verified,
+            'va_service_business_verified' => $service_business_verified,
+            'va_service_sos_service' => $service_sos_service,
+            'va_service_urgent_repair' => $service_urgent_repair,
+            'va_service_full_prep' => $service_full_prep,
+            'va_service_night_work' => $service_night_work,
+            'va_service_hound_breed' => $service_hound_breed,
+            'va_service_caliber_support' => $service_caliber_support,
+            'va_service_moderation_flags' => $service_moderation_flags,
+            'va_service_needs_review' => ! empty( $service_moderation_hits ) ? '1' : '0',
+            'va_service_review_hits' => implode( ',', $service_moderation_hits ),
+            'va_service_filter_type' => $service_type,
+            'va_service_filter_area' => $service_area,
+            'va_service_filter_pricing_type' => $service_pricing_type,
+            'va_service_filter_available_weekend' => $service_available_weekend,
+            'va_service_filter_verified_provider' => $service_verified_provider,
+            'va_service_filter_hunting_specialization' => $service_hunting_specialization,
+            'va_service_filter_sos_service' => $service_sos_service,
             'va_clothing_type' => $clothing_type,
             'va_clothing_condition' => $clothing_condition,
             'va_clothing_gender' => $clothing_gender,
