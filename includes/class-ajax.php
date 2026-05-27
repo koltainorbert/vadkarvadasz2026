@@ -183,7 +183,7 @@ class VA_Ajax {
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-            'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
+            'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
@@ -319,6 +319,42 @@ class VA_Ajax {
             'knife_condition' => 'Állapot',
             'knife_blade_length_mm' => 'Pengehossz (mm)',
             'knife_steel_type' => 'Acél',
+            'service_type' => 'Szolgáltatás típusa',
+            'service_provider_type' => 'Szolgáltató típusa',
+            'service_provider_name' => 'Szolgáltató neve',
+            'service_country' => 'Ország',
+            'service_county' => 'Megye',
+            'service_town' => 'Település',
+            'service_area' => 'Kiszállási terület',
+            'service_gps_lat' => 'GPS szélesség',
+            'service_gps_lng' => 'GPS hosszúság',
+            'service_pricing_type' => 'Ár típusa',
+            'service_min_price' => 'Minimum ár',
+            'service_travel_fee' => 'Kiszállási díj',
+            'service_schedule' => 'Elérhetőség',
+            'service_available_weekend' => 'Hétvégi elérhetőség',
+            'service_available_24_7' => '0-24 elérhető',
+            'service_seasonal' => 'Szezonális',
+            'service_hunting_specialization' => 'Vadászati specializáció',
+            'service_hunting_species' => 'Vadfajok',
+            'service_weapon_categories' => 'Fegyver / optika',
+            'service_equipment' => 'Felszereltség',
+            'service_permits' => 'Engedélyek',
+            'service_reference_rating' => 'Ügyfél értékelés',
+            'service_completed_jobs' => 'Elvégzett munkák',
+            'service_reference_notes' => 'Referencia megjegyzés',
+            'service_media_required' => 'Média kötelező elemek',
+            'service_media_video' => 'Videó',
+            'service_verified_provider' => 'Ellenőrzött szolgáltató',
+            'service_document_verified' => 'Dokumentum ellenőrzés',
+            'service_phone_verified' => 'Telefonszám ellenőrzés',
+            'service_business_verified' => 'Vállalkozás ellenőrzés',
+            'service_sos_service' => 'SOS szolgáltatás',
+            'service_urgent_repair' => 'Sürgős javítás',
+            'service_full_prep' => 'Teljes preparálás',
+            'service_night_work' => 'Éjszakai vállalás',
+            'service_caliber_support' => 'Vállalt kaliberek',
+            'service_moderation_flags' => 'Moderációs jelzők',
             'marok_type' => 'Maroklőfegyver típusa',
             'marok_condition' => 'Állapot',
             'marok_action_type' => 'Működési rendszer',
@@ -438,6 +474,31 @@ class VA_Ajax {
             'illegalis penge',
             'illegális penge',
             'rejtett penge',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_service_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'illegalis fegyverjavitas',
+            'illegális fegyverjavítás',
+            'engedely nelkuli szolgaltatas',
+            'engedély nélküli szolgáltatás',
+            'tiltott vadaszati tevekenyseg',
+            'tiltott vadászati tevékenység',
         ];
 
         $hits = [];
