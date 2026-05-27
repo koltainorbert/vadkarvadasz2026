@@ -260,7 +260,7 @@ $category_required_rules = [
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
     'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
-    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_size', 'shoe_condition', 'shoe_boot_height' ] ],
+    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -4696,11 +4696,12 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ══ Cipőméret popup picker ════════════════════════ */
     (function initShoeSizePicker(){
         var $input = $('#va-shoe-size-input');
+        var $euInput = $('[name="shoe_eu_size"]');
         var $modal = $('#va-shoe-size-modal');
         var $grid = $('#va-shoe-size-grid');
         if (!$input.length || !$modal.length || !$grid.length) return;
 
-        var sizes = ['EU 35','EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42','EU 43','EU 44','EU 45','EU 46','EU 47','EU 48'];
+        var sizes = ['EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42','EU 43','EU 44','EU 45','EU 46','EU 47','EU 48','EU 49','EU 50','EU 50+'];
 
         function renderSizes() {
             var selected = (($input.val() || '') + '').trim();
@@ -4730,6 +4731,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var size = (($(this).data('size') || '') + '').trim();
             if (size) {
                 $input.val(size).trigger('input').trigger('change');
+                if ($euInput.length) {
+                    $euInput.val(size).trigger('input').trigger('change');
+                }
             }
             closeShoeModal();
         });
@@ -5985,6 +5989,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyShoeDynamicFields() {
+        var type = (($('#va-shoe-main-type').val() || '') + '').trim();
+        $('.va-shoe-dynamic-group').each(function(){
+            var list = (($(this).data('shoeTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
@@ -6066,6 +6078,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-vadcamera-camera-type', function(){
         applyVadcameraDynamicFields();
     });
+    $(document).on('change', '#va-shoe-main-type', function(){
+        applyShoeDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6081,6 +6096,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
     applyCategorySpecificFieldVisibility();
     applyVadcameraDynamicFields();
+    applyShoeDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
     switchBrandModelFieldMode();
@@ -6256,6 +6272,10 @@ document.addEventListener('DOMContentLoaded', function() {
             vadcamera_video_resolution: 'Videó felbontás',
             vadcamera_ip_rating: 'IP védelem',
             vadcamera_sim_slot: 'SIM kártyás?',
+            shoe_main_type: 'Típus',
+            shoe_eu_size: 'EU méret',
+            shoe_condition: 'Állapot',
+            shoe_boot_height: 'Szármagasság',
             estate_main_type: 'Hagyaték fő típusa',
         };
         var missing = [];
