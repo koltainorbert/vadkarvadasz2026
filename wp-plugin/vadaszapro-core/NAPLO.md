@@ -55,6 +55,11 @@
 - Javítás: az extra tartozék mező és az íj checkbox blokk aljára külön alsó margó került, így nem érnek össze a következő mezővel.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-permit-checkbox
+- Kérés: az `Egyéb fegyverek` blokkban a `Fegyverengedély szükséges a vásárláshoz` mező is legyen kipipálható.
+- Javítás: az igen/nem select helyett checkbox került be, ugyanazzal az 1/üres mentéssel, mint a többi parity mezőnél.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.

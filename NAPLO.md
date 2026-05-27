@@ -55,6 +55,11 @@
 - Javítás: az extra tartozék mező és az íj checkbox blokk aljára külön alsó margó került, így nem érnek össze a következő mezővel.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-permit-checkbox
+- Kérés: az `Egyéb fegyverek` blokkban a `Fegyverengedély szükséges a vásárláshoz` mező is legyen kipipálható.
+- Javítás: az igen/nem select helyett checkbox került be, ugyanazzal az 1/üres mentéssel, mint a többi parity mezőnél.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.

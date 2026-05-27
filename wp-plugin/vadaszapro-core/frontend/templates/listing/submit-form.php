@@ -1809,12 +1809,8 @@ body.va-modal-open {
                         </select>
                     </div>
                     <div class="va-form-group">
-                        <label>Engedélyköteles?</label>
-                        <select name="other_weapon_permit_required" class="va-select">
-                            <option value="">– Válasszon –</option>
-                            <option value="igen"<?php echo selected( (string)($edit_meta['other_weapon_permit_required'] ?? ''), 'igen', false ); ?>>Igen</option>
-                            <option value="nem"<?php echo selected( (string)($edit_meta['other_weapon_permit_required'] ?? ''), 'nem', false ); ?>>Nem</option>
-                        </select>
+                        <label>Fegyverengedély szükséges a vásárláshoz</label>
+                        <label class="va-check-label"><input type="checkbox" name="other_weapon_permit_required" value="1"<?php echo ((string)($edit_meta['other_weapon_permit_required'] ?? '') === '1') ? ' checked' : ''; ?>> Igen</label>
                     </div>
                     <div class="va-form-group">
                         <label>Csak személyes átvétel?</label>
