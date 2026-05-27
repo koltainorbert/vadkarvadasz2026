@@ -174,7 +174,7 @@ class VA_Ajax {
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
             'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
-            'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
+            'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'thermal_device_type', 'thermal_sensor_resolution', 'thermal_netd', 'thermal_refresh_hz' ] ],
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
@@ -189,10 +189,11 @@ class VA_Ajax {
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
-            'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
-            'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
-            'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_blade_length' ] ],
-            'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type' ] ],
+            'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
             'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
         ];
     }
@@ -271,6 +272,10 @@ class VA_Ajax {
             'optic_shipping_methods' => 'Szállítás módja',
             'optic_recommended_use' => 'Ajánlott felhasználás',
             'optic_moderation_flags' => 'Moderációs jelzők',
+            'thermal_device_type' => 'Hőkamera típus',
+            'thermal_sensor_resolution' => 'Szenzor felbontás',
+            'thermal_netd' => 'NETD érzékenység',
+            'thermal_refresh_hz' => 'Frissítési frekvencia',
             'dog_age_months' => 'Kutya életkor (hónap)',
             'dog_breed' => 'Kutya fajtája',
             'dog_gender' => 'Neme',
@@ -310,6 +315,10 @@ class VA_Ajax {
             'shoe_condition' => 'Állapot',
             'shoe_boot_height' => 'Szármagasság',
             'estate_main_type' => 'Hagyaték fő típusa',
+            'knife_type' => 'Kés típusa',
+            'knife_condition' => 'Állapot',
+            'knife_blade_length_mm' => 'Pengehossz (mm)',
+            'knife_steel_type' => 'Acél',
         ];
 
         $missing = [];
@@ -395,6 +404,32 @@ class VA_Ajax {
             'hamis márka',
             'replika',
             'fake',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_knife_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'automata kes',
+            'automata kés',
+            'rugoskes',
+            'rugóskés',
+            'illegalis penge',
+            'illegális penge',
+            'rejtett penge',
         ];
 
         $hits = [];
@@ -784,6 +819,40 @@ class VA_Ajax {
         $optic_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_shipping_methods'] ?? [] ) ) ) );
         $optic_recommended_use = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_recommended_use'] ?? [] ) ) ) );
         $optic_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_moderation_flags'] ?? [] ) ) ) );
+        $thermal_device_type = sanitize_key( wp_unslash( $_POST['thermal_device_type'] ?? '' ) );
+        $thermal_condition = sanitize_key( wp_unslash( $_POST['thermal_condition'] ?? '' ) );
+        $thermal_warranty = sanitize_key( wp_unslash( $_POST['thermal_warranty'] ?? '' ) );
+        $thermal_manufacture_year = sanitize_text_field( wp_unslash( $_POST['thermal_manufacture_year'] ?? '' ) );
+        $thermal_sensor_resolution = sanitize_key( wp_unslash( $_POST['thermal_sensor_resolution'] ?? '' ) );
+        $thermal_pixel_pitch = sanitize_key( wp_unslash( $_POST['thermal_pixel_pitch'] ?? '' ) );
+        $thermal_netd = sanitize_key( wp_unslash( $_POST['thermal_netd'] ?? '' ) );
+        $thermal_refresh_hz = sanitize_key( wp_unslash( $_POST['thermal_refresh_hz'] ?? '' ) );
+        $thermal_base_magnification = sanitize_text_field( wp_unslash( $_POST['thermal_base_magnification'] ?? '' ) );
+        $thermal_digital_zoom = sanitize_key( wp_unslash( $_POST['thermal_digital_zoom'] ?? '' ) );
+        $thermal_lens_size = sanitize_key( wp_unslash( $_POST['thermal_lens_size'] ?? '' ) );
+        $thermal_fov_degree = sanitize_text_field( wp_unslash( $_POST['thermal_fov_degree'] ?? '' ) );
+        $thermal_fov_m100 = sanitize_text_field( wp_unslash( $_POST['thermal_fov_m100'] ?? '' ) );
+        $thermal_detect_human_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_human_m'] ?? '' ) );
+        $thermal_detect_game_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_game_m'] ?? '' ) );
+        $thermal_detect_vehicle_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_vehicle_m'] ?? '' ) );
+        $thermal_display_type = sanitize_key( wp_unslash( $_POST['thermal_display_type'] ?? '' ) );
+        $thermal_display_resolution = sanitize_text_field( wp_unslash( $_POST['thermal_display_resolution'] ?? '' ) );
+        $thermal_palettes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_palettes'] ?? [] ) ) ) );
+        $thermal_photo = sanitize_key( wp_unslash( $_POST['thermal_photo'] ?? '' ) );
+        $thermal_video = sanitize_key( wp_unslash( $_POST['thermal_video'] ?? '' ) );
+        $thermal_audio = sanitize_key( wp_unslash( $_POST['thermal_audio'] ?? '' ) );
+        $thermal_internal_memory_gb = sanitize_text_field( wp_unslash( $_POST['thermal_internal_memory_gb'] ?? '' ) );
+        $thermal_sd_support = sanitize_key( wp_unslash( $_POST['thermal_sd_support'] ?? '' ) );
+        $thermal_connectivity = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_connectivity'] ?? [] ) ) ) );
+        $thermal_mobile_app = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_mobile_app'] ?? [] ) ) ) );
+        $thermal_extra_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_extra_features'] ?? [] ) ) ) );
+        $thermal_battery_type = sanitize_key( wp_unslash( $_POST['thermal_battery_type'] ?? '' ) );
+        $thermal_runtime_hours = sanitize_text_field( wp_unslash( $_POST['thermal_runtime_hours'] ?? '' ) );
+        $thermal_powerbank_compatible = sanitize_key( wp_unslash( $_POST['thermal_powerbank_compatible'] ?? '' ) );
+        $thermal_ip_rating = sanitize_key( wp_unslash( $_POST['thermal_ip_rating'] ?? '' ) );
+        $thermal_recoil_resistance = sanitize_key( wp_unslash( $_POST['thermal_recoil_resistance'] ?? '' ) );
+        $thermal_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_weapon_compatibility'] ?? [] ) ) ) );
+        $thermal_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_accessories'] ?? [] ) ) ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
         $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
@@ -863,6 +932,50 @@ class VA_Ajax {
         $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $knife_condition = sanitize_key( wp_unslash( $_POST['knife_condition'] ?? '' ) );
+        $knife_manufacture_year = sanitize_text_field( wp_unslash( $_POST['knife_manufacture_year'] ?? '' ) );
+        $knife_total_length_cm = sanitize_text_field( wp_unslash( $_POST['knife_total_length_cm'] ?? '' ) );
+        $knife_blade_length_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_length_mm'] ?? '' ) );
+        $knife_blade_thickness_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_thickness_mm'] ?? '' ) );
+        $knife_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_weight_g'] ?? '' ) );
+        $knife_steel_type = sanitize_key( wp_unslash( $_POST['knife_steel_type'] ?? '' ) );
+        $knife_blade_shape = sanitize_key( wp_unslash( $_POST['knife_blade_shape'] ?? '' ) );
+        $knife_blade_edge = sanitize_key( wp_unslash( $_POST['knife_blade_edge'] ?? '' ) );
+        $knife_finish = sanitize_key( wp_unslash( $_POST['knife_finish'] ?? '' ) );
+        $knife_construction = sanitize_key( wp_unslash( $_POST['knife_construction'] ?? '' ) );
+        $knife_locking_type = sanitize_key( wp_unslash( $_POST['knife_locking_type'] ?? '' ) );
+        $knife_one_hand_opening = sanitize_key( wp_unslash( $_POST['knife_one_hand_opening'] ?? '' ) );
+        $knife_handle_material = sanitize_key( wp_unslash( $_POST['knife_handle_material'] ?? '' ) );
+        $knife_handle_color = sanitize_text_field( wp_unslash( $_POST['knife_handle_color'] ?? '' ) );
+        $knife_has_sheath = sanitize_key( wp_unslash( $_POST['knife_has_sheath'] ?? '' ) );
+        $knife_sheath_type = sanitize_key( wp_unslash( $_POST['knife_sheath_type'] ?? '' ) );
+        $knife_belt_carry = sanitize_key( wp_unslash( $_POST['knife_belt_carry'] ?? '' ) );
+        $knife_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_usage'] ?? [] ) ) ) );
+        $knife_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_features'] ?? [] ) ) ) );
+        $knife_age_restriction = sanitize_key( wp_unslash( $_POST['knife_age_restriction'] ?? '' ) );
+        $knife_restricted = sanitize_key( wp_unslash( $_POST['knife_restricted'] ?? '' ) );
+        $knife_public_carry = sanitize_key( wp_unslash( $_POST['knife_public_carry'] ?? '' ) );
+        $knife_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_accessories'] ?? [] ) ) ) );
+        $knife_price_deal = sanitize_key( wp_unslash( $_POST['knife_price_deal'] ?? '' ) );
+        $knife_price_exchange = sanitize_key( wp_unslash( $_POST['knife_price_exchange'] ?? '' ) );
+        $knife_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_shipping_methods'] ?? [] ) ) ) );
+        $knife_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_required_media'] ?? [] ) ) ) );
+        $knife_sharpening_state = sanitize_key( wp_unslash( $_POST['knife_sharpening_state'] ?? '' ) );
+        $knife_collectible_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_collectible_flags'] ?? [] ) ) ) );
+        $knife_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_moderation_flags'] ?? [] ) ) ) );
+        $knife_axe_head_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_axe_head_weight_g'] ?? '' ) );
+        $knife_axe_handle_material = sanitize_text_field( wp_unslash( $_POST['knife_axe_handle_material'] ?? '' ) );
+        $knife_multitool_function_count = sanitize_text_field( wp_unslash( $_POST['knife_multitool_function_count'] ?? '' ) );
+        if ( $knife_blade_length_mm === '' && $knife_blade_length !== '' && is_numeric( $knife_blade_length ) ) {
+            $knife_blade_length_mm = (string) ( (int) round( (float) $knife_blade_length * 10 ) );
+        }
+        if ( $knife_blade_length === '' && $knife_blade_length_mm !== '' && is_numeric( $knife_blade_length_mm ) ) {
+            $knife_blade_length = (string) round( (float) $knife_blade_length_mm / 10, 1 );
+        }
+        $knife_filter_type = in_array( $knife_type, [ 'bicska', 'zsebkes' ], true ) ? 'bicska' : 'fix';
+        $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
+        $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
+        $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
@@ -1217,6 +1330,10 @@ class VA_Ajax {
             'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
+            'thermal_device_type' => $thermal_device_type,
+            'thermal_sensor_resolution' => $thermal_sensor_resolution,
+            'thermal_netd' => $thermal_netd,
+            'thermal_refresh_hz' => $thermal_refresh_hz,
             'dog_age_months' => $dog_age_months,
             'dog_breed' => $dog_breed,
             'dog_gender' => $dog_gender,
@@ -1229,6 +1346,9 @@ class VA_Ajax {
             'clothing_gender' => $clothing_gender,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
+            'knife_condition' => $knife_condition,
+            'knife_blade_length_mm' => $knife_blade_length_mm,
+            'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
@@ -1286,6 +1406,8 @@ class VA_Ajax {
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
         $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
         $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
+        $is_knife_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'kesek', 'vadaszkes-vadasztor', 'taktikai-kes-taktikai-tor', 'konyhakes', 'svajci-bicska' ], true );
+        $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1341,6 +1463,40 @@ class VA_Ajax {
             'va_optic_shipping_methods' => $optic_shipping_methods,
             'va_optic_recommended_use' => $optic_recommended_use,
             'va_optic_moderation_flags' => $optic_moderation_flags,
+            'va_thermal_device_type' => $thermal_device_type,
+            'va_thermal_condition' => $thermal_condition,
+            'va_thermal_warranty' => $thermal_warranty,
+            'va_thermal_manufacture_year' => $thermal_manufacture_year,
+            'va_thermal_sensor_resolution' => $thermal_sensor_resolution,
+            'va_thermal_pixel_pitch' => $thermal_pixel_pitch,
+            'va_thermal_netd' => $thermal_netd,
+            'va_thermal_refresh_hz' => $thermal_refresh_hz,
+            'va_thermal_base_magnification' => $thermal_base_magnification,
+            'va_thermal_digital_zoom' => $thermal_digital_zoom,
+            'va_thermal_lens_size' => $thermal_lens_size,
+            'va_thermal_fov_degree' => $thermal_fov_degree,
+            'va_thermal_fov_m100' => $thermal_fov_m100,
+            'va_thermal_detect_human_m' => $thermal_detect_human_m,
+            'va_thermal_detect_game_m' => $thermal_detect_game_m,
+            'va_thermal_detect_vehicle_m' => $thermal_detect_vehicle_m,
+            'va_thermal_display_type' => $thermal_display_type,
+            'va_thermal_display_resolution' => $thermal_display_resolution,
+            'va_thermal_palettes' => $thermal_palettes,
+            'va_thermal_photo' => $thermal_photo,
+            'va_thermal_video' => $thermal_video,
+            'va_thermal_audio' => $thermal_audio,
+            'va_thermal_internal_memory_gb' => $thermal_internal_memory_gb,
+            'va_thermal_sd_support' => $thermal_sd_support,
+            'va_thermal_connectivity' => $thermal_connectivity,
+            'va_thermal_mobile_app' => $thermal_mobile_app,
+            'va_thermal_extra_features' => $thermal_extra_features,
+            'va_thermal_battery_type' => $thermal_battery_type,
+            'va_thermal_runtime_hours' => $thermal_runtime_hours,
+            'va_thermal_powerbank_compatible' => $thermal_powerbank_compatible,
+            'va_thermal_ip_rating' => $thermal_ip_rating,
+            'va_thermal_recoil_resistance' => $thermal_recoil_resistance,
+            'va_thermal_weapon_compatibility' => $thermal_weapon_compatibility,
+            'va_thermal_accessories' => $thermal_accessories,
             'va_dog_age_months' => $dog_age_months,
             'va_dog_breed'   => $dog_breed,
             'va_dog_gender'  => $dog_gender,
@@ -1380,6 +1536,52 @@ class VA_Ajax {
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
+            'va_knife_condition' => $knife_condition,
+            'va_knife_manufacture_year' => $knife_manufacture_year,
+            'va_knife_total_length_cm' => $knife_total_length_cm,
+            'va_knife_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_blade_thickness_mm' => $knife_blade_thickness_mm,
+            'va_knife_weight_g' => $knife_weight_g,
+            'va_knife_steel_type' => $knife_steel_type,
+            'va_knife_blade_shape' => $knife_blade_shape,
+            'va_knife_blade_edge' => $knife_blade_edge,
+            'va_knife_finish' => $knife_finish,
+            'va_knife_construction' => $knife_construction,
+            'va_knife_locking_type' => $knife_locking_type,
+            'va_knife_one_hand_opening' => $knife_one_hand_opening,
+            'va_knife_handle_material' => $knife_handle_material,
+            'va_knife_handle_color' => $knife_handle_color,
+            'va_knife_has_sheath' => $knife_has_sheath,
+            'va_knife_sheath_type' => $knife_sheath_type,
+            'va_knife_belt_carry' => $knife_belt_carry,
+            'va_knife_usage' => $knife_usage,
+            'va_knife_features' => $knife_features,
+            'va_knife_age_restriction' => $knife_age_restriction,
+            'va_knife_restricted' => $knife_restricted,
+            'va_knife_public_carry' => $knife_public_carry,
+            'va_knife_accessories' => $knife_accessories,
+            'va_knife_price_deal' => $knife_price_deal,
+            'va_knife_price_exchange' => $knife_price_exchange,
+            'va_knife_shipping_methods' => $knife_shipping_methods,
+            'va_knife_required_media' => $knife_required_media,
+            'va_knife_sharpening_state' => $knife_sharpening_state,
+            'va_knife_collectible_flags' => $knife_collectible_flags,
+            'va_knife_moderation_flags' => $knife_moderation_flags,
+            'va_knife_axe_head_weight_g' => $knife_axe_head_weight_g,
+            'va_knife_axe_handle_material' => $knife_axe_handle_material,
+            'va_knife_multitool_function_count' => $knife_multitool_function_count,
+            'va_knife_filter_type' => $knife_filter_type,
+            'va_knife_filter_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_filter_steel_type' => $knife_steel_type,
+            'va_knife_filter_locking_type' => $knife_locking_type,
+            'va_knife_filter_handle_material' => $knife_handle_material,
+            'va_knife_filter_blade_shape' => $knife_blade_shape,
+            'va_knife_filter_full_tang' => $knife_filter_full_tang,
+            'va_knife_filter_bushcraft' => $knife_filter_bushcraft,
+            'va_knife_filter_vadasz' => $knife_filter_vadasz,
+            'va_knife_filter_condition' => $knife_condition,
+            'va_knife_needs_review' => ! empty( $knife_moderation_hits ) ? '1' : '0',
+            'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
             'va_trophy_mount_type' => $trophy_mount_type,
@@ -1837,6 +2039,40 @@ class VA_Ajax {
         $optic_type  = sanitize_key( wp_unslash( $_POST['optic_type'] ?? '' ) );
         $optic_zoom  = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
         $optic_objective = sanitize_text_field( wp_unslash( $_POST['optic_objective'] ?? '' ) );
+        $thermal_device_type = sanitize_key( wp_unslash( $_POST['thermal_device_type'] ?? '' ) );
+        $thermal_condition = sanitize_key( wp_unslash( $_POST['thermal_condition'] ?? '' ) );
+        $thermal_warranty = sanitize_key( wp_unslash( $_POST['thermal_warranty'] ?? '' ) );
+        $thermal_manufacture_year = sanitize_text_field( wp_unslash( $_POST['thermal_manufacture_year'] ?? '' ) );
+        $thermal_sensor_resolution = sanitize_key( wp_unslash( $_POST['thermal_sensor_resolution'] ?? '' ) );
+        $thermal_pixel_pitch = sanitize_key( wp_unslash( $_POST['thermal_pixel_pitch'] ?? '' ) );
+        $thermal_netd = sanitize_key( wp_unslash( $_POST['thermal_netd'] ?? '' ) );
+        $thermal_refresh_hz = sanitize_key( wp_unslash( $_POST['thermal_refresh_hz'] ?? '' ) );
+        $thermal_base_magnification = sanitize_text_field( wp_unslash( $_POST['thermal_base_magnification'] ?? '' ) );
+        $thermal_digital_zoom = sanitize_key( wp_unslash( $_POST['thermal_digital_zoom'] ?? '' ) );
+        $thermal_lens_size = sanitize_key( wp_unslash( $_POST['thermal_lens_size'] ?? '' ) );
+        $thermal_fov_degree = sanitize_text_field( wp_unslash( $_POST['thermal_fov_degree'] ?? '' ) );
+        $thermal_fov_m100 = sanitize_text_field( wp_unslash( $_POST['thermal_fov_m100'] ?? '' ) );
+        $thermal_detect_human_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_human_m'] ?? '' ) );
+        $thermal_detect_game_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_game_m'] ?? '' ) );
+        $thermal_detect_vehicle_m = sanitize_text_field( wp_unslash( $_POST['thermal_detect_vehicle_m'] ?? '' ) );
+        $thermal_display_type = sanitize_key( wp_unslash( $_POST['thermal_display_type'] ?? '' ) );
+        $thermal_display_resolution = sanitize_text_field( wp_unslash( $_POST['thermal_display_resolution'] ?? '' ) );
+        $thermal_palettes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_palettes'] ?? [] ) ) ) );
+        $thermal_photo = sanitize_key( wp_unslash( $_POST['thermal_photo'] ?? '' ) );
+        $thermal_video = sanitize_key( wp_unslash( $_POST['thermal_video'] ?? '' ) );
+        $thermal_audio = sanitize_key( wp_unslash( $_POST['thermal_audio'] ?? '' ) );
+        $thermal_internal_memory_gb = sanitize_text_field( wp_unslash( $_POST['thermal_internal_memory_gb'] ?? '' ) );
+        $thermal_sd_support = sanitize_key( wp_unslash( $_POST['thermal_sd_support'] ?? '' ) );
+        $thermal_connectivity = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_connectivity'] ?? [] ) ) ) );
+        $thermal_mobile_app = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_mobile_app'] ?? [] ) ) ) );
+        $thermal_extra_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_extra_features'] ?? [] ) ) ) );
+        $thermal_battery_type = sanitize_key( wp_unslash( $_POST['thermal_battery_type'] ?? '' ) );
+        $thermal_runtime_hours = sanitize_text_field( wp_unslash( $_POST['thermal_runtime_hours'] ?? '' ) );
+        $thermal_powerbank_compatible = sanitize_key( wp_unslash( $_POST['thermal_powerbank_compatible'] ?? '' ) );
+        $thermal_ip_rating = sanitize_key( wp_unslash( $_POST['thermal_ip_rating'] ?? '' ) );
+        $thermal_recoil_resistance = sanitize_key( wp_unslash( $_POST['thermal_recoil_resistance'] ?? '' ) );
+        $thermal_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_weapon_compatibility'] ?? [] ) ) ) );
+        $thermal_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_accessories'] ?? [] ) ) ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
         $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
@@ -1916,6 +2152,50 @@ class VA_Ajax {
         $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $knife_condition = sanitize_key( wp_unslash( $_POST['knife_condition'] ?? '' ) );
+        $knife_manufacture_year = sanitize_text_field( wp_unslash( $_POST['knife_manufacture_year'] ?? '' ) );
+        $knife_total_length_cm = sanitize_text_field( wp_unslash( $_POST['knife_total_length_cm'] ?? '' ) );
+        $knife_blade_length_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_length_mm'] ?? '' ) );
+        $knife_blade_thickness_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_thickness_mm'] ?? '' ) );
+        $knife_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_weight_g'] ?? '' ) );
+        $knife_steel_type = sanitize_key( wp_unslash( $_POST['knife_steel_type'] ?? '' ) );
+        $knife_blade_shape = sanitize_key( wp_unslash( $_POST['knife_blade_shape'] ?? '' ) );
+        $knife_blade_edge = sanitize_key( wp_unslash( $_POST['knife_blade_edge'] ?? '' ) );
+        $knife_finish = sanitize_key( wp_unslash( $_POST['knife_finish'] ?? '' ) );
+        $knife_construction = sanitize_key( wp_unslash( $_POST['knife_construction'] ?? '' ) );
+        $knife_locking_type = sanitize_key( wp_unslash( $_POST['knife_locking_type'] ?? '' ) );
+        $knife_one_hand_opening = sanitize_key( wp_unslash( $_POST['knife_one_hand_opening'] ?? '' ) );
+        $knife_handle_material = sanitize_key( wp_unslash( $_POST['knife_handle_material'] ?? '' ) );
+        $knife_handle_color = sanitize_text_field( wp_unslash( $_POST['knife_handle_color'] ?? '' ) );
+        $knife_has_sheath = sanitize_key( wp_unslash( $_POST['knife_has_sheath'] ?? '' ) );
+        $knife_sheath_type = sanitize_key( wp_unslash( $_POST['knife_sheath_type'] ?? '' ) );
+        $knife_belt_carry = sanitize_key( wp_unslash( $_POST['knife_belt_carry'] ?? '' ) );
+        $knife_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_usage'] ?? [] ) ) ) );
+        $knife_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_features'] ?? [] ) ) ) );
+        $knife_age_restriction = sanitize_key( wp_unslash( $_POST['knife_age_restriction'] ?? '' ) );
+        $knife_restricted = sanitize_key( wp_unslash( $_POST['knife_restricted'] ?? '' ) );
+        $knife_public_carry = sanitize_key( wp_unslash( $_POST['knife_public_carry'] ?? '' ) );
+        $knife_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_accessories'] ?? [] ) ) ) );
+        $knife_price_deal = sanitize_key( wp_unslash( $_POST['knife_price_deal'] ?? '' ) );
+        $knife_price_exchange = sanitize_key( wp_unslash( $_POST['knife_price_exchange'] ?? '' ) );
+        $knife_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_shipping_methods'] ?? [] ) ) ) );
+        $knife_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_required_media'] ?? [] ) ) ) );
+        $knife_sharpening_state = sanitize_key( wp_unslash( $_POST['knife_sharpening_state'] ?? '' ) );
+        $knife_collectible_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_collectible_flags'] ?? [] ) ) ) );
+        $knife_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_moderation_flags'] ?? [] ) ) ) );
+        $knife_axe_head_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_axe_head_weight_g'] ?? '' ) );
+        $knife_axe_handle_material = sanitize_text_field( wp_unslash( $_POST['knife_axe_handle_material'] ?? '' ) );
+        $knife_multitool_function_count = sanitize_text_field( wp_unslash( $_POST['knife_multitool_function_count'] ?? '' ) );
+        if ( $knife_blade_length_mm === '' && $knife_blade_length !== '' && is_numeric( $knife_blade_length ) ) {
+            $knife_blade_length_mm = (string) ( (int) round( (float) $knife_blade_length * 10 ) );
+        }
+        if ( $knife_blade_length === '' && $knife_blade_length_mm !== '' && is_numeric( $knife_blade_length_mm ) ) {
+            $knife_blade_length = (string) round( (float) $knife_blade_length_mm / 10, 1 );
+        }
+        $knife_filter_type = in_array( $knife_type, [ 'bicska', 'zsebkes' ], true ) ? 'bicska' : 'fix';
+        $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
+        $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
+        $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
@@ -2237,6 +2517,10 @@ class VA_Ajax {
             'optic_type' => $optic_type,
             'optic_zoom' => $optic_zoom,
             'optic_objective' => $optic_objective,
+            'thermal_device_type' => $thermal_device_type,
+            'thermal_sensor_resolution' => $thermal_sensor_resolution,
+            'thermal_netd' => $thermal_netd,
+            'thermal_refresh_hz' => $thermal_refresh_hz,
             'dog_age_months' => $dog_age_months,
             'dog_breed' => $dog_breed,
             'dog_gender' => $dog_gender,
@@ -2250,6 +2534,9 @@ class VA_Ajax {
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
+            'knife_condition' => $knife_condition,
+            'knife_blade_length_mm' => $knife_blade_length_mm,
+            'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
@@ -2307,6 +2594,8 @@ class VA_Ajax {
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
         $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
         $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
+        $is_knife_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'kesek', 'vadaszkes-vadasztor', 'taktikai-kes-taktikai-tor', 'konyhakes', 'svajci-bicska' ], true );
+        $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
@@ -2363,6 +2652,40 @@ class VA_Ajax {
             'va_optic_type'  => $optic_type,
             'va_optic_zoom'  => $optic_zoom,
             'va_optic_objective' => $optic_objective,
+            'va_thermal_device_type' => $thermal_device_type,
+            'va_thermal_condition' => $thermal_condition,
+            'va_thermal_warranty' => $thermal_warranty,
+            'va_thermal_manufacture_year' => $thermal_manufacture_year,
+            'va_thermal_sensor_resolution' => $thermal_sensor_resolution,
+            'va_thermal_pixel_pitch' => $thermal_pixel_pitch,
+            'va_thermal_netd' => $thermal_netd,
+            'va_thermal_refresh_hz' => $thermal_refresh_hz,
+            'va_thermal_base_magnification' => $thermal_base_magnification,
+            'va_thermal_digital_zoom' => $thermal_digital_zoom,
+            'va_thermal_lens_size' => $thermal_lens_size,
+            'va_thermal_fov_degree' => $thermal_fov_degree,
+            'va_thermal_fov_m100' => $thermal_fov_m100,
+            'va_thermal_detect_human_m' => $thermal_detect_human_m,
+            'va_thermal_detect_game_m' => $thermal_detect_game_m,
+            'va_thermal_detect_vehicle_m' => $thermal_detect_vehicle_m,
+            'va_thermal_display_type' => $thermal_display_type,
+            'va_thermal_display_resolution' => $thermal_display_resolution,
+            'va_thermal_palettes' => $thermal_palettes,
+            'va_thermal_photo' => $thermal_photo,
+            'va_thermal_video' => $thermal_video,
+            'va_thermal_audio' => $thermal_audio,
+            'va_thermal_internal_memory_gb' => $thermal_internal_memory_gb,
+            'va_thermal_sd_support' => $thermal_sd_support,
+            'va_thermal_connectivity' => $thermal_connectivity,
+            'va_thermal_mobile_app' => $thermal_mobile_app,
+            'va_thermal_extra_features' => $thermal_extra_features,
+            'va_thermal_battery_type' => $thermal_battery_type,
+            'va_thermal_runtime_hours' => $thermal_runtime_hours,
+            'va_thermal_powerbank_compatible' => $thermal_powerbank_compatible,
+            'va_thermal_ip_rating' => $thermal_ip_rating,
+            'va_thermal_recoil_resistance' => $thermal_recoil_resistance,
+            'va_thermal_weapon_compatibility' => $thermal_weapon_compatibility,
+            'va_thermal_accessories' => $thermal_accessories,
             'va_dog_age_months' => $dog_age_months,
             'va_dog_breed'   => $dog_breed,
             'va_dog_gender'  => $dog_gender,
@@ -2402,6 +2725,52 @@ class VA_Ajax {
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
+            'va_knife_condition' => $knife_condition,
+            'va_knife_manufacture_year' => $knife_manufacture_year,
+            'va_knife_total_length_cm' => $knife_total_length_cm,
+            'va_knife_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_blade_thickness_mm' => $knife_blade_thickness_mm,
+            'va_knife_weight_g' => $knife_weight_g,
+            'va_knife_steel_type' => $knife_steel_type,
+            'va_knife_blade_shape' => $knife_blade_shape,
+            'va_knife_blade_edge' => $knife_blade_edge,
+            'va_knife_finish' => $knife_finish,
+            'va_knife_construction' => $knife_construction,
+            'va_knife_locking_type' => $knife_locking_type,
+            'va_knife_one_hand_opening' => $knife_one_hand_opening,
+            'va_knife_handle_material' => $knife_handle_material,
+            'va_knife_handle_color' => $knife_handle_color,
+            'va_knife_has_sheath' => $knife_has_sheath,
+            'va_knife_sheath_type' => $knife_sheath_type,
+            'va_knife_belt_carry' => $knife_belt_carry,
+            'va_knife_usage' => $knife_usage,
+            'va_knife_features' => $knife_features,
+            'va_knife_age_restriction' => $knife_age_restriction,
+            'va_knife_restricted' => $knife_restricted,
+            'va_knife_public_carry' => $knife_public_carry,
+            'va_knife_accessories' => $knife_accessories,
+            'va_knife_price_deal' => $knife_price_deal,
+            'va_knife_price_exchange' => $knife_price_exchange,
+            'va_knife_shipping_methods' => $knife_shipping_methods,
+            'va_knife_required_media' => $knife_required_media,
+            'va_knife_sharpening_state' => $knife_sharpening_state,
+            'va_knife_collectible_flags' => $knife_collectible_flags,
+            'va_knife_moderation_flags' => $knife_moderation_flags,
+            'va_knife_axe_head_weight_g' => $knife_axe_head_weight_g,
+            'va_knife_axe_handle_material' => $knife_axe_handle_material,
+            'va_knife_multitool_function_count' => $knife_multitool_function_count,
+            'va_knife_filter_type' => $knife_filter_type,
+            'va_knife_filter_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_filter_steel_type' => $knife_steel_type,
+            'va_knife_filter_locking_type' => $knife_locking_type,
+            'va_knife_filter_handle_material' => $knife_handle_material,
+            'va_knife_filter_blade_shape' => $knife_blade_shape,
+            'va_knife_filter_full_tang' => $knife_filter_full_tang,
+            'va_knife_filter_bushcraft' => $knife_filter_bushcraft,
+            'va_knife_filter_vadasz' => $knife_filter_vadasz,
+            'va_knife_filter_condition' => $knife_condition,
+            'va_knife_needs_review' => ! empty( $knife_moderation_hits ) ? '1' : '0',
+            'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
             'va_trophy_mount_type' => $trophy_mount_type,

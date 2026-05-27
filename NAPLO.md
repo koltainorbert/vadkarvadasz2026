@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #kesek-kategoria-komplex-mezorendszer
+- Kérés: részletes, szűrőközpontú `Kések` mezőrendszer felvétele teljes kés-specifikus adatszerkezettel.
+- Frontend: a kés blokk teljesen bővítve lett (`Kés típusa`, állapot, méretek mm/cm/g, acél, pengeforma/él/felület, konstrukció, markolat, jogi rész, tartozékok, szállítás, média, élezési állapot, gyűjtői extra, moderációs flag-ek).
+- Dinamikus mezők: típusfüggő megjelenítés bekerült (`folding` -> zártípus + egykezes nyitás, `balta` -> fej súlya + nyél anyaga, `multitool` -> funkciók száma).
+- Kötelező mezők: frontend szabályok frissítve a késes slugokra (`kesek`, `vadaszkes-vadasztor`, `taktikai-kes-taktikai-tor`, `konyhakes`, `svajci-bicska`) új mezőkulcsokkal (`knife_condition`, `knife_blade_length_mm`, `knife_steel_type`).
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `knife_*` sanitize, mentés és dedikált szűrőmeták (`va_knife_filter_*`).
+- Moderáció: automatikus kés-kulcsszavas jelölés készült (`automata kés`, `rugóskés`, `illegális penge`, `rejtett penge`) -> `va_knife_needs_review`, `va_knife_review_hits`.
+- Szinkron: root és plugin mirror fájlok egységesítve (`submit-form.php`, `class-ajax.php`).
+
 ## 2026. 05. 27. – Session #egyeb-ruhazat-komplex-szurok-es-dinamikus-mezok
 - Kérés: az `Egyéb ruházat` kategória önálló, táska/vadászruha kategóriától külön kezelt, szűrő-első mezőrendszere készüljön el.
 - Frontend: a ruhatípus lista átalakítva a kért elemekre (`sapka`, `kalap`, `maszk`, `balaclava`, `sál`, `nyakmelegítő`, `kesztyű`, `zokni`, `öv`, `aláöltözet`, `thermo ruházat`, `esőponcsó`, `ghillie ruha`, `láthatósági mellény`, `karmelegítő`, `könyökvédő`, `térdvédő`, `egyéb`).

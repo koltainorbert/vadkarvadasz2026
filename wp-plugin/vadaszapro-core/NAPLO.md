@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #kesek-kategoria-komplex-mezorendszer
+- Kérés: részletes, szűrőközpontú `Kések` mezőrendszer felvétele teljes kés-specifikus adatszerkezettel.
+- Frontend: a kés blokk teljesen bővítve lett (`Kés típusa`, állapot, méretek mm/cm/g, acél, pengeforma/él/felület, konstrukció, markolat, jogi rész, tartozékok, szállítás, média, élezési állapot, gyűjtői extra, moderációs flag-ek).
+- Dinamikus mezők: típusfüggő megjelenítés bekerült (`folding` -> zártípus + egykezes nyitás, `balta` -> fej súlya + nyél anyaga, `multitool` -> funkciók száma).
+- Kötelező mezők: frontend szabályok frissítve a késes slugokra (`kesek`, `vadaszkes-vadasztor`, `taktikai-kes-taktikai-tor`, `konyhakes`, `svajci-bicska`) új mezőkulcsokkal (`knife_condition`, `knife_blade_length_mm`, `knife_steel_type`).
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `knife_*` sanitize, mentés és dedikált szűrőmeták (`va_knife_filter_*`).
+- Moderáció: automatikus kés-kulcsszavas jelölés készült (`automata kés`, `rugóskés`, `illegális penge`, `rejtett penge`) -> `va_knife_needs_review`, `va_knife_review_hits`.
+- Szinkron: root és plugin mirror fájlok egységesítve (`submit-form.php`, `class-ajax.php`).
+
 ## 2026. 05. 27. – Session #egyeb-ruhazat-komplex-szurok-es-dinamikus-mezok
 - Kérés: az `Egyéb ruházat` kategória önálló, táska/vadászruha kategóriától külön kezelt, szűrő-első mezőrendszere készüljön el.
 - Frontend: a ruhatípus lista átalakítva a kért elemekre (`sapka`, `kalap`, `maszk`, `balaclava`, `sál`, `nyakmelegítő`, `kesztyű`, `zokni`, `öv`, `aláöltözet`, `thermo ruházat`, `esőponcsó`, `ghillie ruha`, `láthatósági mellény`, `karmelegítő`, `könyökvédő`, `térdvédő`, `egyéb`).
@@ -11,7 +20,7 @@
 - Backend: mindkét AJAX ágban bekerült a teljes `clothing_*` sanitize és `va_clothing_*` meta mentés.
 - Szűrő meták: mentésre kerülnek a kritikus kulcsok (`va_clothing_filter_type`, `va_clothing_filter_size`, `va_clothing_filter_thermo`, `va_clothing_filter_waterproof`, `va_clothing_filter_camo`, `va_clothing_filter_silent`, `va_clothing_filter_season`, `va_clothing_filter_brand`).
 - Kötelező mezők: backend+frontend required szabály frissítve `egyeb-ruhazat` kategóriára (`brand`, `clothing_type`, `clothing_condition`, `clothing_gender`, `clothing_size`).
-- Szinkron + ellenőrzés: plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés `No errors found`.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
 
 ## 2026. 05. 27. – Session #cipo-bakancs-komplex-szurok-es-dinamikus-mezok
 - Kérés: a `Cipő / Bakancs` kategória komplett, szűrőközpontú mezőrendszere kerüljön be (méret, vízállóság, membrán, szezon, szármagasság, terep, felhasználás).
@@ -20,7 +29,7 @@
 - Kötelező mezők: `cipo-bakancs` required szabály frontend + backend oldalon bővítve (`shoe_main_type`, `shoe_eu_size`, `shoe_condition`, `shoe_boot_height`).
 - Backend: mindkét AJAX ágban bekerült a teljes `shoe_*` sanitize + `va_shoe_*` meta mentés, plusz dedikált szűrőmeták (`va_shoe_filter_*`: waterproof, goretex, winter, high_ankle, season, terrain, eu_size).
 - Moderáció: automatikus cipő kategóriás flag támogatás bekerült (`hamis márka`, `replika`, `fake`) -> `va_shoe_needs_review`, `va_shoe_review_hits`.
-- Szinkron + ellenőrzés: plugin mirror `submit-form.php` és `class-ajax.php` szinkronizálva, hibakeresés `No errors found`.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` szinkronizálva, hibakeresés mind a 4 fájlon `No errors found`.
 
 ## 2026. 05. 27. – Session #vadkamera-komplex-backend-es-szurok
 - Kérés: a `Vadkamera` kategória teljes backend támogatása a popup-only frontendhez igazítva.
@@ -28,7 +37,7 @@
 - Kötelező mezők: backend required szabály és label térkép bővítve (`kamera típus`, `adatkapcsolat`, `trigger`, `IR`, `éjszakai hatótáv`, `videó`, `IP`, `SIM`).
 - Szűrő elsőbbség: mentésre kerülnek a dedikált filter meták (`va_vadcamera_filter_*`), köztük 4G/WiFi/SIM/napelem jelzők.
 - Moderáció: tiltott kifejezések automatikus jelölése bekerült (`rejtett megfigyelő`, `illegális lehallgató`, `titkos kamera`) -> `va_vadcamera_needs_review`, `va_vadcamera_review_hits`.
-- Szinkron + ellenőrzés: plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés lefutott (`No errors found`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon (`No errors found`).
 
 ## 2026. 05. 27. – Session #vadaszati-hagyatek-popup-only-kotelezes
 - Kérés: a `Vadászati hagyaték` blokkban ne maradjon kipipálós mező, minden választás popup lenyílóval menjen.
@@ -36,7 +45,7 @@
 - Kompatibilitás: szerkesztésnél visszatöltés új CSV meta kulcsokból történik, fallbackkel a régi `va_estate_*` 0/1 meta értékekre.
 - Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült az új popup tömbök feldolgozása (`estate_*_items[]`), és továbbra is mentjük a régi 0/1 zászlókat is.
 - Új mentett meták: `va_estate_optic_items`, `va_estate_clothing_items`, `va_estate_trophy_items`, `va_estate_docs_items`, `va_estate_equipment_items`, `va_estate_media_items`.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
 
 ## 2026. 05. 27. – Session #vadaszati-hagyatek-kategoria-rendszer
 - Új kategória megvalósítás: `vadaszati-hagyatek` teljes feladási mezőstruktúrával a submit formban (fő típus, eladási/ár logika, tartalom összetétel, állapot, jogi státusz, átadás, hagyaték jellege, média check, részletes megjegyzés).
@@ -86,35 +95,35 @@
 ## 2026. 05. 27. – Session #szallas-reszletes-mezok-es-vadasz-opciok
 - Kérés: a `Szállás` kategória kapjon részletes, vadászathoz igazított mezőket (típus, helyadatok, férőhely bontás, vadászati kapcsolódó igen/nem opciók, felszereltség, közeli vadfajok, programok, foglalási részletek).
 - UI: a submit űrlapban bővült a `szallas` blokk új mezőkkel; az új többes választások popup-kompatibilis `select[multiple]` mezőként készültek (nem lista-szerű checkbox).
-- Backend: plugin AJAX mentésben bekerült az összes új `accommodation_*` sanitize + validáció + `va_accommodation_*` meta mentés (új feladás + szerkesztés ágakban is).
+- Backend: root + plugin mirror AJAX mentésben bekerült az összes új `accommodation_*` sanitize + validáció + `va_accommodation_*` meta mentés (új feladás + szerkesztés ágakban is).
 - Kötelező mezők: `szallas` kategóriában a kötelező validáció most a `accommodation_type`, `accommodation_capacity`, `accommodation_hunting_nearby`, `accommodation_hunt_available` mezőket ellenőrzi.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
 
 ## 2026. 05. 27. – Session #loszer-tolteny-reszletes-mezok
 - Kérés: a `Lőszer-Töltény` kategória kapjon részletes, gyakorlatias mezőstruktúrát (kategória, kaliber preset + egyedi, gyártó, típus, lövedéksúly, darabszám, LOT/év, állapot, újratöltés-komponens mezők).
 - UI: a submit űrlapba bekerült egy teljes `loszer-tolteny` blokk; új kategóriás mezőknél nem lista-szerű checkbox, hanem select/popup-kompatibilis mezők lettek használva.
-- Backend: plugin AJAX mentésben bekerült a teljes `loszer_*` sanitize + validáció + `va_loszer_*` meta mentés (új feladás + szerkesztés ágakban is).
+- Backend: root + plugin mirror AJAX mentésben bekerült a teljes `loszer_*` sanitize + validáció + `va_loszer_*` meta mentés (új feladás + szerkesztés ágakban is).
 - Kötelező mezők: `loszer-tolteny` kategóriánál a `brand`, `caliber`, `loszer_category`, `loszer_condition` mezők kötelezők.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
 
 ## 2026. 05. 27. – Session #hatastalanitott-kategoria-es-popup-szabaly
 - Kérés: az új kategóriáknál soha ne legyen lista-szerű kipipálható checkbox mező; popup lenyílós többválasztó legyen a standard.
 - Javítás: a `Hatástalanított fegyverek` kategória teljes mezőblokkal bekerült a feladási űrlapba (root + plugin mirror), a többválasztós mezők popup-kompatibilis `select[multiple]` formában készültek (`hatastalanitott_working_parts[]`, `hatastalanitott_accessories[]`).
 - Javítás: a backend mindkét AJAX ágban (új feladás + szerkesztés) szinkronban kezeli a `hatastalanitott_*` mezőket: sanitize, category-required validáció és `va_hatastalanitott_*` meta mentés.
 - Javítás: a required szabály és a felhasználói hibaüzenet-label térkép is bővítve lett a kötelező hatástalanított mezőkkel.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
 
 ## 2026. 05. 27. – Session #takarmany-vadfaj-popup
 - Kérés: a takarmány blokkban a `Milyen vadnak ajánlott` checkbox lista legyen popup lenyíló.
 - Javítás: a checkboxok helyett popup többválasztós mező került be (`feed_recommended_game_flags[]`).
 - Kompatibilitás: a backend mentés frissítve, hogy az új popup tömbből és a régi checkbox POST-ból is helyesen mentse a `va_feed_game_*` metát.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php` + plugin mirrorok.
 
 ## 2026. 05. 27. – Session #ij-tartozek-popup
 - Kérés: az íjaknál a kipipálható tartozéklista popup lenyíló legyen.
 - Javítás: a checkbox lista popup többválasztós mezőre cserélve (`bow_accessories_flags[]`) a submit formban.
 - Kompatibilitás: a backend mentés frissítve, hogy az új popup tömbből és a régi checkbox POST-ból is helyesen mentse a `va_bow_acc_*` metát.
-- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php` + plugin mirrorok.
 
 ## 2026. 05. 27. – Session #facebook-csoport-oldal-beagyazas
 - Kérés: legyen egy dedikált WP aloldal, ahol a Facebook csoport teljes szelessegu elrendezésben jelenik meg.
@@ -137,9 +146,9 @@
 - Kérés: mobilon ne kérdezze minden frissítésnél a pontos hely hozzáférést.
 - Javítás: a root + theme mirror oldalscriptekből kikerült az automatikus geolokációs prompt, helyette csak IP/fallback helyzet maradt.
 - Javítás: a megtekintés-számláló sem kér már GPS-t, csak sima view pinget küld.
-- Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `footer.php`, `wp-theme/vadaszapro-theme/footer.php`, `index.php`, `wp-theme/vadaszapro-theme/index.php`, `frontend/js/frontend.js`, `wp-plugin/vadaszapro-core/frontend/js/frontend.js`.
+- Érintett: `NAPLO.md`, `footer.php`, `wp-theme/vadaszapro-theme/footer.php`, `index.php`, `wp-theme/vadaszapro-theme/index.php`, `frontend/js/frontend.js`, `wp-plugin/vadaszapro-core/frontend/js/frontend.js`.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
-- Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
+- Érintett: `NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 
 ## 2026. 05. 27. – Session #allas-jogositvany-popup
 - Kérés: az `Állás` feladás `Jogosítvány` mezője checkbox lista helyett legyen popup lenyíló.
@@ -189,6 +198,194 @@
 - Javítás: az `other_weapon_permit_required` mező a felső év-blokkba lett áthelyezve, az egyéb fegyverek részéből kivéve.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
+- Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
+- Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.
+- Javítás: mindkét AJAX handlerben (root + plugin mirror) mindkét validációs ágba bekerült a hiányzó mezőtérkép (`job_location`, `job_type`), és konzisztenciából az `other_weapon_kind` átadása is.
+- Javítás 2: `job_location` ellenőrzés kapott fallbacket a sima `location` mezőre (`job_location !== '' ? job_location : location`), így nem akad el a feladás, ha a település a fő helyszín mezőben van megadva.
+- Ellenőrzés: szerkesztett fájlokon hibaellenőrzés lefutott, új hiba nincs.
+- Érintett: `NAPLO.md`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
+## 2026. 05. 27. – Session #zaro-mentes-reggeli-folytatas
+- Kérés: minden változás legyen elmentve, naplózva és pusholva, hogy reggel innen lehessen folytatni.
+- Állapot: az `Egyéb fegyverek` jogilag szétválasztott dinamikus mezői (root + plugin mirror) bent vannak, backend validáció + admin required szabály szinkronban.
+- Ellenőrzés: érintett fájlokon hibaellenőrzés lefutott, új hiba nem maradt.
+- Zárás: repository mentve és távoli repóba feltöltve; reggeli folytatási pont ez a bejegyzés.
+
+## 2026. 05. 26. – Session #egyeb-fegyverek-dynamic-fields
+- Kérés: az `Egyéb fegyverek` kategória kapjon jogilag óvatos, altípus-alapú mezőket, külön kezelve az íj, számszeríj, légfegyver, airsoft, gáz-riasztó, muzeális, díszfegyver, vadászkés és túlélő/taktikai eszköz vonalat.
+- Javítás: a root + plugin feladási űrlapban külön `Egyéb fegyverek` blokk készült kategória-választóval, általános tartozékokkal és altípusonként megjelenő műszaki mezőkkel.
+- Javítás: a lőfegyveres maradék blokkot kivettük ebből a kategóriából, így a kaliber/engedély jellegű mezők nem keverednek ide.
+- Javítás: a backend mindkét copy-ban menti az új `va_other_weapon_*` meta kulcsokat, és a required rule most az altípus-választót is kéri.
+- Javítás: az admin szerkesztő kategória-szabályai is szinkronizálva lettek, így ott is kötelező az altípus (`va_other_weapon_kind`) az `Egyéb fegyverek` kategóriánál.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `admin/class-listing-edit.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/admin/class-listing-edit.php`.
+
+## 2026. 05. 26. – Session #allas-category-fields
+- Kérés: az `Állás` kategória kapjon teljes, részletes mezőkészletet a feladási űrlapon.
+- Javítás: a root + plugin mirror űrlapba bekerült a strukturált job blokk: munkakör, foglalkoztatás típusa, település, megye, ország, végzettség, engedélyek, jogosítványok, tapasztalat, nyelv, feladatok, munkaidő, szállás, étkezés, jármű, fegyver, fizetés.
+- Javítás: edit módban minden új job mező visszatöltődik, és a backend mindkét copy-ban menti a `va_job_*` meta kulcsokat.
+- Javítás: a kötelezőmező-hibák szövege most `Munkavégzés települése` és `Foglalkoztatás típusa` néven jelenik meg.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
+## 2026. 05. 26. – Session #takarmany-field-gap-fix
+- Hiba: a `Takarmány` kategória blokkban az `Egyéb vadfaj megnevezése` input és a `Részletezés (opcionális)` textarea összeért.
+- Javítás: a `feed_recommended_game` mező kapott felső margót (`margin-top:8px`) root + plugin mirror sablonban.
+- Eredmény: a két mező között látható, egységes térköz van.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+## 2026. 05. 26. – Session #ijak-slug-visibility-fix
+- Hiba: az `Íjak` kategóriában nem jelent meg az új íj-specifikus mezőblokk, csak az engedély checkbox látszott.
+- Ok: a kategória slug `ijak`, de a bow mezőblokk `data-categories` listájából ez kimaradt.
+- Javítás: az `ijak` slug hozzáadva az íj mezőblokk és az engedély mező kategória-listájához (root + plugin mirror).
+- Eredmény: `Íjak` kiválasztásakor az íj-specifikus mezők most már megjelennek.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+## 2026. 05. 26. – Session #takarmany-category-detailed-fields
+- Kérés: a `Takarmány` hirdetéseknél részletes, célzott adatmezők legyenek (típus, ajánlott vad, összetétel, kiszerelés, tárolás, ár/átvétel/szállítás/rakodás).
+- Javítás: a feladási űrlap 2. lépésében új `takarmany` kategória-specifikus mezőblokk készült.
+- Új mezők: takarmány típusa, ajánlott vad (checkbox + egyéb + részletezés), összetevők, nedvességtartalom, adalékanyag, kiszerelés, zsáksúly, teljes mennyiség, raklapos mennyiség, friss/tavalyi termés, tárolási/állapot opciók, ár/kg vagy ár/zsák, minimum rendelés, szállítás, rakodás.
+- Javítás: edit módban minden új takarmány mező visszatöltődik.
+- Javítás: backend mentés bekerült új feladás és szerkesztés ágakba is (`va_feed_*` meta kulcsok), root + plugin mirror szinkronban.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
+## 2026. 05. 26. – Session #ij-category-fields-and-badge-text-cleanup
+- Kérés: a 2. lépésben a kategória badge szövegéből kerüljön ki a zárójel.
+- Javítás: a `Termék adatai` melletti kategóriafelirat most zárójelek nélkül jelenik meg.
+- Kérés: az `Íj`/`Számszeríj` kategóriáknál részletes mezők legyenek feladáskor (típus, kezesség, húzóerő, húzáshossz, tengelytáv/hossz, állapot részletek, húrcsere, használat, tartozékok, FPS, sorozatszám, anyag stb.).
+- Javítás: a 2. lépésbe bekerült egy teljes íj-specifikus mezőblokk kategória-szűrve (csak íj/számszeríj slugeknél látható), checkboxos tartozéklistával és szöveges részletezőkkel.
+- Javítás: edit módban minden új íj-specifikus mező visszatöltődik.
+- Javítás: backend mentés bekerült új feladás és szerkesztés ágba is (`va_bow_*` meta kulcsok), root + plugin mirror fájlokban szinkronban.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
+## 2026. 05. 26. – Session #step2-category-badge-parentheses
+- Kérés: a kiválasztott kategória a `Termék adatai` cím után látszódjon zárójelben.
+- Javítás: a 2. lépés címe melletti kategóriafelirat most badge-szerűen kiemelt és zárójeles formában jelenik meg (`(Csere)` stb.).
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+## 2026. 05. 26. – Session #csere-field-visible-and-step2-category-title
+- Hiba: a `Csere` kategóriánál a `Mire szeretném cserélni` mező nem jelent meg stabilan.
+- Javítás: a kategória gombok (`.va-cat-item`) kaptak inline fallback click kezelést, így biztosan frissül a `#va-category` hidden mező és a `change` esemény.
+- Javítás: a kategória slug felismerés fallbacket kapott a kijelölt kártyára, így a csere-specifikus mezők láthatósága megbízhatóbb.
+- Fejlesztés: a 2. lépés címe most mutatja a kiválasztott kategóriát: `Termék adatai (kategória)`.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+## 2026. 05. 26. – Session #csere-category-exchange-target-field
+- Kérés: a hirdetés feladásában a `Csere` kategóriánál legyen egy `Mire szeretném cserélni` mező, de ne legyen kötelező.
+- Javítás: az űrlap 2. lépésébe bekerült a `Mire szeretném cserélni` szövegmező, amely csak `csere` kategória esetén látszik.
+- Javítás: edit módban a mező értéke visszatöltődik.
+- Javítás: backend mentés mind új feladásnál, mind szerkesztésnél bekerült (`va_exchange_target` meta).
+- Érintett: `NAPLO.md`, `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
+## 2026. 05. 26. – Session #archive-header-and-catbar-fix
+- Megállapítás: a korábbi módosítás nem a ténylegesen futó `/hirdetes/?s=...` archive felületre ment, ezért a live oldalon nem látszott változás.
+- Javítás: az archive/tax oldalak tetején megjelenő header kategória gyorsmenü teljesen kikerült a header sablonból.
+- Javítás: az archive fejléc ikonmentes, breadcrumbos blokk lett, fehér főcímmel és dinamikus `Főoldal / aktuális szűrés` felirattal.
+- Eredmény: a felső kategóriasor eltűnik, a főcím fehér marad, és a keresett kifejezés például `bm` címsorként jelenik meg.
+- Érintett: `NAPLO.md`, `archive.php`, `header.php`, `wp-theme/vadaszapro-theme/archive.php`, `wp-theme/vadaszapro-theme/header.php`.
+
+## 2026. 05. 26. – Session #search-topbar-breadcrumb-cleanup
+- Kérés: a keresési oldal tetejéről tűnjenek el a kategória/chip elemek, a főcím legyen fehér, a kis ikon kerüljön ki, és helyette jelenjen meg egy `Főoldal / aktuális szűrés` sáv.
+- Javítás: a keresési landing blokk a felső chip-listák helyett breadcrumb sort és nagy fehér H1 címet renderel.
+- Javítás: a breadcrumb második eleme dinamikusan az aktuális szűrésből épül (`bmw`, márka + modell, kategória vagy alap cím).
+- Javítás: a szűrősáv címe megtisztítva jelenik meg, így a korábbi emoji/ikon nem látszik.
+- Érintett: `NAPLO.md`, `frontend/templates/listing/search.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/search.php`.
+
+## 2026. 05. 26. – Session #header-search-archive-route-fix
+- Hiba: az `Összes találat` link továbbra is a `va-hirdetes-kereses/?s=...` URL-re ment, ami live környezetben 404-et adott.
+- Ok: a header keresőformjai és a dropdown all-results linkje a külön keresőoldal permalinkjét használta alap-URL-nek, nem a stabil hirdetés archive útvonalat.
+- Javítás: a header desktop és mobil keresője, valamint az `Összes találat` link most a `va_listing` archive URL-re épül, végső fallbackként a `/hirdetes/` útvonalra.
+- Eredmény: a header keresés többé nem függ a `va-hirdetes-kereses` oldal létezésétől vagy helyes rewrite-jától.
+- Érintett: `NAPLO.md`, `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
+## 2026. 05. 26. – Session #radar-detail-size-boost
+- Kérés: a részletes `Vadkár Radar` nézetben maga a radar legyen sokkal nagyobb, mert túl sok üres hely maradt körülötte.
+- Javítás: a részletes radar SVG konténerének maximális szélessége jelentősen megnőtt, és a kétoszlopos modal layout több helyet ad a radarnak.
+- Javítás: a nem-widget `renderSpider()` ág nagyobb sugárral, nagyobb viewBoxszal és erősebb feliratméretekkel rajzolja újra a pókdiagramot.
+- Eredmény: a részletes popup bal oldali radarja most érdemben kitölti a rendelkezésre álló teret, jobban olvasható számokkal és címkékkel.
+- Érintett: `NAPLO.md`, `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #search-all-results-404-fix
+- Hiba: a header live search `Összes találat` linkje 404 oldalra vitt.
+- Ok: a header több helyen fixen a `/va-hirdetes-kereses` slugra mutatott, ami live környezetben hiányozhat vagy eltérő permalinket kaphat.
+- Javítás: a header kereső- és navigációs linkjei most a keresőoldal feloldott permalinkjét használják, fallbackként a `va_listing` archive URL-lel, végső esetben `/hirdetes/` útvonallal.
+- Érintett: `NAPLO.md`, `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
+## 2026. 05. 26. – Session #header-border-visual-confusion-fix
+- Jelenség: a képen látható mozgó narancs vonal header border hibának tűnt, de a vizuális zavart a jobb oldali narancs scrollbar és a legfelső vadászati naptárblokk narancs elválasztója erősítette.
+- Javítás: a globális scrollbar thumb semleges szürke tónust kapott, így nem néz ki többé leszakadt header accentnek.
+- Javítás: a vadászati idények blokk fejlécének alsó narancs elválasztója vissza lett véve neutrális fehér/szürke borderre.
+- Eredmény: a viewportban már nem jelenik meg lent mozgó narancs vonal olyan formában, ami header bordernek látszik.
+- Érintett: `NAPLO.md`, `functions.php`, `index.php`, `wp-theme/vadaszapro-theme/functions.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #header-bottom-border-anchor-fix
+- Hiba: a header alsó narancs borderje elszabadult, nem a header alján jelent meg, hanem oldal alji, scrollal mozgó vonalként látszott.
+- Javítás: a dinamikus `border-bottom` helyett a header aljára rögzített `::after` pseudo-elem rajzolja a vonalat.
+- Eredmény: a narancs vonal a fixed headerhez kötve marad, nem csúszik le más layout rétegre.
+- Érintett: `NAPLO.md`, `functions.php`, `wp-theme/vadaszapro-theme/functions.php`.
+
+## 2026. 05. 26. – Session #header-brand-and-moon-background-cleanup
+- Kérés: a fejlécben a logó melletti felirat ne `Vadkár Radar`, hanem `Vadkár Vadász` legyen.
+- Kérés: a holdnaptár widgetben a hold mögül tűnjön el a négyzetes háttér.
+- Javítás: a header látható brand neve mind a root, mind a theme header sablonban `Vadkár Vadász` lett.
+- Javítás: a hold widget rajzolásából kikerült a teljes canvasra húzott glow-réteg, így a hold mögötti kockás háttér eltűnik.
+- Érintett: `NAPLO.md`, `header.php`, `index.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #radar-widget-above-agrar-and-equal-spacing
+- Kérés: a radar widget kerüljön az agrár naptár widget fölé, minden sidebar widget azonos távolságra legyen egymástól, és a részletes popup címében a szöveg `Teljes Vadkár Radar detektálás` legyen.
+- Javítás: a sidebar widgetek explicit flex sorrendet kaptak, így a `Vadkár Radar` közvetlenül az agrár naptár elé került.
+- Javítás: a sidebaron belül a widgetek egyedi külső margói nullázva lettek, így az egységes `gap` adja a távolságot minden elem között.
+- Javítás: a részletes radar popup blokkcíme `Teljes Vadkár Radar detektálás` lett.
+- Érintett: `NAPLO.md`, `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #radar-widget-below-calendar-and-cta-text
+- Kérés: a radar widget kerüljön a naptár widget alá, és a látható szöveg legyen `Teljes Vadkár Radar detektálás`.
+- Javítás: a sidebar flex sorrendje úgy lett beállítva, hogy a radar widget közvetlenül a `Holdnaptár` után jelenjen meg, az időjárás elé kerülve.
+- Javítás: a radar widget CTA gombszövege `Teljes Vadkár Radar detektálás` lett.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #radar-light-pollution-label-short
+- Kérés: az `Éjszakai fényterhelés` mező elég legyen csak `Fényszennyezés`.
+- Javítás: a mező látható címkéje és a picker címe lerövidítve `Fényszennyezés`-re.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #radar-picker-top-border-fix
+- Hiba: a legfelső, alapértelmezett picker opció felső borderje hiányzónak látszott.
+- Ok: az első aktív elem a scrollozható opciókonténerben `-1px` transform miatt felül levágódott.
+- Javítás: a picker opciókonténer kapott felső belső paddinget, így az első elem felső borderje nem klippelődik.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #radar-special-settings-double
+- Kérés: a speciális beállítások menü alatt kb. 2x ennyi beállítás legyen.
+- Megvalósítás: a korábbi 12 mező mellé még 12 új speciális tényező került ugyanabba a picker-rendszerbe.
+- Új mezők: tábla perem takarása, dagonya/sárfolt, sózó, vadkamera aktivitás, emberi forgalom, kutya/ragadozónyom, éjszakai fényterhelés, nappali fekvőhely, friss ürülék, rejtett vonulási sáv, vadriasztás, táblaszéli kárjelek.
+- Logika: az új mezők nem csak UI-elemek, hanem fajonként módosítják a kockázati score-t és a fő indoklásokat is.
+- Érintett: `index.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #vadkar-radar-two-line-title
+- Kérés: a widgetben a `Vadkár Radar` ne egy sorban legyen, mert kilóg, a logó viszont maradjon.
+- Javítás: a widget címe két soros lett (`Vadkár` / `Radar`), a logó bal oldalon maradt.
+- CSS: az egysoros `nowrap` kikerült, a cím oszlopos elrendezést kapott.
+- Érintett: `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #vadkar-radar-header-revert-widget-align
+- Kérés: a headerben az előző 2x nagyítás azonnal legyen visszaállítva.
+- Kérés: a widgetben a logó kerüljön balra, a `Vadkár Radar` felirat jobbra, azonos magasságban és nagyobban, hogy jobban olvasható legyen.
+- Javítás: a header logómagassága és szövegmérete visszaállt a normál értékre.
+- Javítás: a compact radar widget fejlécsora új grid elrendezést kapott, `52x52` bal oldali logóval és nagyobb, vízszintesen igazított címmel.
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #vadkar-radar-brand-scale-up
+- Kérés: a frissen átírt `Vadkár Radar` branding legyen 2x nagyobb.
+- Javítás: a fejléc logóképe 2x header magassággal renderel, a logószöveg inline 2x méretet kapott.
+- Javítás: a compact radar widget cím/logó sora is 2x-re nőtt (`17px` -> `34px`, `0.6rem` -> `1.2rem`).
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`, `wp-theme/vadaszapro-theme/index.php`.
+
+## 2026. 05. 26. – Session #vadkar-radar-brand-name-fix
+- Kérés: a radar widget és a látható logónév egységesen `Vadkár Radar` legyen.
+- Megállapítás: a widget cím már jó volt, a fejléc logó szövege még régi/eltérő brandnévre tudott épülni.
+- Javítás: a fejléc látható logóneve mind a root, mind a futó theme mirror fájlban fixen `Vadkár Radar` lett.
+- Érintett: `header.php`, `wp-theme/vadaszapro-theme/header.php`.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.
@@ -196,43 +393,65 @@
 - Érintett: `wp-theme/vadaszapro-theme/index.php`.
 
 ## 2026. 05. 26. – Session #radar-modal-top-layer-fix
-- A részletes radar popup max z-indexre emelve.
-- Modal/picker runtime áthelyezve a `body` alá a stacking context hiba kivédésére.
+- Hiba: a részletes radar popup scroll közben egyes elemek mögé került (stacking context probléma).
+- Javítás: radar modal/picker max z-indexre állítva, és futáskor közvetlenül a `body` alá mozgatva.
+- Eredmény: a popup teljesen előtérben marad, nem csúszik más rétegek mögé.
 - Érintett: `wp-theme/vadaszapro-theme/index.php`.
 - Deploy commit: `e701af1`.
 
 ## 2026. 05. 26. – Session #radar-trend-context-fix
-- A 7 napos trend panel referenciaalapokkal bővítve: mai csúcsindex + 7 nap átlag.
-- Napi oszlopok: delta a mai naphoz, napi score, napi fő faj rövidítés.
-- Színezés score-alapú (HSL), jobb elkülönülés érdekében.
+- Kérés: a 7 napos trend önmagában nem informatív, legyen viszonyítás és napi kontextus.
+- Javítás: trend panel kapott két referencia sort (`Alap: mai csúcsindex`, `7 nap átlag`), napi delta jelölést (mai naphoz képest), napi score értéket és napi fő faj rövidítést.
+- Színezés: oszlopok score-alapú HSL színskálával, így jól elkülönülnek egymástól.
 - Érintett: `wp-theme/vadaszapro-theme/index.php`.
 - Deploy commit: `deb9982`.
 
 ## 2026. 05. 26. – Session #radar-detail-cleanup
-- A részletes radar nézetből eltávolítva a `Napi csúcsindex` panel.
-- `renderSpiderStats()` csak 2 blokkot hagy meg: fajkockázat + 7 napos trend.
+- Kérés: a részletes radar nézetben ne jelenjen meg a `Napi csúcsindex` panel.
+- Javítás: `renderSpiderStats()` már csak a `Fajok kockázata` és `7 napos trend` blokkokat rendereli.
 - Érintett: `wp-theme/vadaszapro-theme/index.php`.
 - Deploy commit: `4b520ee`.
 
 ## 2026. 05. 26. – Session #radar-band-overflow-fix
-- Mobil/szűk nézetben a `Pont` oszlop levágása javítva.
-- Grid és tipográfia finomhangolás: `minmax(0,1fr)`, szélesebb score oszlop, `nowrap`, rövidebb legendafelirat.
+- Hiba: a sávos widget jobb oldali `Pont` oszlopa mobil/szűk nézetben levágódott (`66/1...`).
+- Javítás: grid oszlopok `minmax(0,1fr)` középoszloppal, szélesebb pont oszlop, `nowrap` + tabuláris számok, rövidebb fejléc (`Kárkockázati sáv` → `Sáv`).
 - Érintett: `wp-theme/vadaszapro-theme/index.php`.
 - Deploy commit: `d5294b5`.
 
 ## 2026. 05. 26. – Session #radar-band-system
-- SVG radar panel eltávolítva a compact widgetből.
-- Új, valós score-alapú sávos fajlista került be (fajnév + bar + pontszám).
-- Külön kiemelés: „Aznapi legnagyobb probléma” (legmagasabb napi score-ú faj).
-- Érintett: `wp-theme/vadaszapro-theme/index.php`.
-- Deploy commit: `1ef30d7`.
+
+### Kérés
+- SVG helyett valós, hiteles sávos rendszer kell a vadkáros fajok listájával, mellette grafikonos (bar) megjelenítéssel.
+- Külön legyen kiemelve, melyik faj az aznapi legnagyobb probléma.
+
+### Megvalósítás
+- A compact radar widgetből az SVG render teljesen kikerült.
+- Új fajonkénti sávos panel készült: minden fajhoz score-alapú bar (`0-100`) és pontérték jelenik meg.
+- A panel fejlécében explicit kiemelés: „Aznapi legnagyobb probléma” + fajnév + pontszám.
+- A pontok a meglévő élő scoring motorból jönnek (óra/meteo + beállítások), nem statikus értékek.
+
+### Érintett fájl
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Deploy
+- Commit: `1ef30d7`.
 
 ## 2026. 05. 26. – Session #radar-svg-widget-replace
-- Kérés: a radar helyén a feltöltött `radar.svg` jelenjen meg, és az alsó logó mutassa a valós score pozíciót.
-- Megvalósítás: a compact widget pókdiagram helyett SVG renderre állt, a logó x-pozíciója score alapú dinamikus számításból jön.
-- Fallback: ha az SVG hiányzik, a widget nem áll le.
-- Érintett: `wp-theme/vadaszapro-theme/index.php`, `wp-theme/vadaszapro-theme/radar.svg`.
-- Deploy commit: `3b78681`.
+
+### Kérés
+- A radar helyén a feltöltött `radar.svg` jelenjen meg, és az alul lévő logó mutassa a valós kockázati pozíciót.
+
+### Megvalósítás
+- A compact widget render a pókdiagram helyett most a theme-ben lévő `radar.svg` tartalmát rajzolja ki.
+- Az alsó logó vízszintes pozíciója dinamikusan a `0..100` score alapján számolódik, így ténylegesen „hol tartunk” jelzőként működik.
+- Fallback ág bekerült: ha az SVG nem elérhető, a widget nem törik el.
+
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `wp-theme/vadaszapro-theme/radar.svg`
+
+### Deploy
+- Commit: `3b78681` (push megtörtént, workflow indult).
 
 ## 2026. 05. 26. – Session: Időjárás + Radar betöltési hiba (CORS) gyorsjavítás
 
@@ -251,41 +470,104 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ---
 
-## 2026. 05. 26. – Session #radar-svg-source-fix
-- Kérés: a mozgó mutatóhoz konkrétan a `radar.svg` kell, nem abból kinyert PNG.
-- Javítás: pointer forrás átállítva teljes SVG adat URI-ra (`data:image/svg+xml`).
-- A PNG-kivonatolás eltávolítva.
-- A logós mutató méret/stílus módosítva (`78x30`, jobban olvasható SVG badge).
-- Érintett: `wp-theme/vadaszapro-theme/index.php`, `index.php`.
-- Deploy commit: `174c2f0`.
+## 2026. 05. 26. – Session #radar-svg-source-fix — "az SVG azt akarom" javítás
 
-## 2026. 05. 26. – Session #radar-logo-pointer
-- Kérés: a skálán mozgó mutató logója a `radar.svg`-ből jöjjön (ne fallback ikon), és valós értékre pozícionálódjon.
-- CSS/JS: külön `is-logo` mutató mód + `--vhr-logo` háttérképes renderelés.
-- PHP/JS híd: `radar.svg` fájlból regexszel kinyert `data:image/png;base64` logó elsődleges forrás, fallback marad (`va_brand_icon_url`/site icon).
-- Útvonal-robosztus keresés: több mappa-szintet végigpróbál a `radar.svg` megtalálásához.
-- Érintett: `wp-theme/vadaszapro-theme/index.php`, lokális mirror: `index.php`.
-- Deploy: push ütközés után pull+merge, majd sikeres feltöltés (`5b70ee3`).
-- Holnap: élő vizuális ellenőrzés (desktop/mobil), hogy a mutatóban mindenhol a radar.svg logó látszik.
+### Kérés
+- A mutató ikonja ne SVG-ből kivett PNG legyen, hanem maga a `radar.svg`.
 
-## 2026. 05. 26. – Session #radar-widget-legibility
-- Kérés: a Vadkár radar legyen nagyobb/olvashatóbb, és a fölötte lévő túl nagy gap tűnjön el.
-- CSS: `#vhrSpiderWidget` negatív margók helyett `margin:2px 0 10px`; SVG méret növelés `268px` (mobil `232px`).
-- JS: `renderSpider` widget geometriája tágítva (`cy:136`, `mR:94`, nagyobb widget viewBox), nagyobb widget feliratméret.
-- Érintett: `index.php` + `wp-theme/vadaszapro-theme/index.php` (szinkron).
-- Deploy task lefutott, de nem volt új commit (`Everything up-to-date`).
+### Megvalósítás
+- A mutató logóforrása most a teljes `radar.svg` tartalom `data:image/svg+xml` URI-vá alakítva.
+- A korábbi base64 PNG-kivonatolás kikerült.
+- A logós mutató mérete/pill formája módosult (`78x30`), hogy az SVG jobban olvasható legyen.
 
-## 2026. 05. 19. – Split layout + interaktív radar + 3 statisztika panel
-- HTML: `va-home-radar__split` grid (bal=radar, jobb=stats), `#vhrSpiderStats`
-- renderSpider: cx=170,cy=175,mR=75, viewBox 380×350, hover/click interaktivitás
-- renderSpiderStats: faj sávok, 7 napos trend spark, félkör gauge csúcsindex
-- Mindkét fájlban szinkronban
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `index.php`
 
-## 2026. 05. 19. – Spider chart + 7 új input + picker fix
-- Vadkár Radar modálba SVG spider/pentagon chart kerül (5 faj kockázat vizuálisan)
-- Csordaméret helyett 7 vadászias mező (szél, nyom, szomszéd, etető, csendes, vadföld, kijárás)
-- Picker modal centered + white text fix
-- Érintett: `index.php` + `wp-theme/vadaszapro-theme/index.php`
+### Deploy
+- Commit: `174c2f0` (sikeres push, workflow indult).
+
+## 2026. 05. 26. – Session #radar-logo-pointer — radar.svg logó a mozgó mutatóban
+
+### Kérés
+- A skálán mozgó mutató ne fallback ikont használjon, hanem a `radar.svg` fájlból vett logót, és mindig a valós kockázati pozícióra álljon.
+
+### Megvalósítás
+- A HUD skála mutató kapott külön logó-mód stílust (`.vhr-gauge__knob.is-logo`), hogy a logó tisztábban jelenjen meg.
+- A JS pointer-logo forrás most elsődlegesen a `radar.svg` beágyazott `data:image/png;base64,...` képéből jön (regex kivonatolással).
+- Több útvonalas SVG-keresés került be, hogy különböző könyvtárstruktúrában is megtalálja a fájlt.
+- Ha a radar.svg logó nem érhető el, a régi fallback (brand icon / site icon) megmarad.
+
+### Érintett fájlok
+- `wp-theme/vadaszapro-theme/index.php`
+- `index.php` (lokális mirror frissítve)
+
+### Deploy
+- Első push elutasítva (remote előrébb volt), pull+merge után sikeres push.
+- Commitok: `bd0b2cb` + merge `5b70ee3`.
+
+### Holnap mivel kell kezdeni
+- Élő oldalon vizuális ellenőrzés: a mutatóban biztosan a radar.svg logó látszik-e minden breakpointon.
+
+## 2026. 05. 26. – Session #radar-widget-legibility — Vadkár radar olvashatóság + gap fix
+
+### Kérés
+- A Vadkár radar widget legyen nagyobb, jobban kivehető, és a fölötte lévő túl nagy üres tér szűnjön meg.
+
+### Megvalósítás
+- CSS: a `#vhrSpiderWidget` negatív margóit megszüntettem (`margin:2px 0 10px`), így eltűnt a túl nagy felső gap.
+- CSS: a widget radar SVG méretét növeltem (`268px`, mobilon `232px`) az olvashatóság javítására.
+- JS (`renderSpider`): widget geometriát tágítottam (`cy:136`, `mR:94`, nagyobb widget viewBox), és a widget feliratméreteit növeltem.
+- A módosítás root + theme mirror fájlban szinkronban ment.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Megjegyzés
+- Deploy task lefutott, de új commit nem készült (working tree tiszta, `Everything up-to-date`).
+
+## 2026. 05. 19. – Session #spidersplit — Split layout + interaktív radar + 3 statisztika panel
+
+### Kérés
+- Bal: interaktív radar (hover/click), jobb: 3 grafikon (faj kockázati sávok, 7 napos trend, csúcsindex szintmérő).
+- ViewBox teteje ne vágja le a labeleket.
+- Teljes fajnév (label), nem rövidítés.
+
+### Megvalósítás
+- HTML: `<div class="va-home-radar__split">` → bal `#vhrSpiderWidget`, jobb `#vhrSpiderStats`.
+- CSS: `.va-home-radar__split` grid 1fr/1fr, `.va-srs` panel blokkok, is-low/moderate/high/very-high/critical sávszínek, `.va-srs__gsv` gauge SVG.
+- JS: `spiderStatsEl` elemref, `renderSpider` cx=170,cy=175,mR=75, viewBox="0 0 380 350", data-sp pontok hover/click interaktivitással.
+- `renderSpiderStats(forecast,top)`: b1=faj sávok, b2=7 napos trend spark, b3=félkör gauge (pathLength=100, stroke-dasharray=score 100).
+- Mindkét fájlban (root + wp-theme mirror) szinkronban.
+
+### Érintett fájlok
+- `index.php`, `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 19. – Session #spiderchart — Vadkár Radar spider chart (faj kockázati pentagon)
+
+### Kérés
+- A Vadkár Radar modálba kerüljön egy SVG spider/pentagon chart, ami az 5 faj kockázati pontszámát mutatja vizuálisan.
+- Csordaméret input helyett 7 vadászias mező (szél iránya, vadcsapás/nyom, szomszéd tábla, etetőhely, csendes időszak, vadföld, kijárási irány).
+- Picker modal középre igazítva, fehér szöveg.
+
+### Megvalósítás
+- HTML: `<div class="va-home-radar__spider" id="vhrSpider">` container a modálba illesztve (Fő kockázati okok blokk elé).
+- CSS: `.va-home-radar__spider` + SVG stílusok.
+- JS: `var spiderEl` elemref, `renderSpider(ctx,ctl)` függvény (tiszta SVG, grid pentagonok, filled polygon, dot+label per faj), `render()` hívásban `if(spiderEl){renderSpider(top.ctx,controls());}`.
+- Picker fix: `position:fixed;display:flex;align-items:center;justify-content:center` → backdrop-filter miatti containing block probléma megoldva.
+- Picker title: `color:#fff !important`.
+- 7 új input: `vhrWind, vhrTrack, vhrNeighbor, vhrFeeder, vhrQuiet, vhrGameStrip, vhrExit` (setupPicker + listener + score logika).
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+### Holnap mivel kell kezdeni
+- Élő teszten ellenőrizni: spider chart megjelenik-e a modálban, helyes-e a fajokhoz tartozó pontszám-ábrázolásnál
+- Ha kell: label pozíció finomhangolás (szélső fajok feliratai ne lógjon ki)
 
 ---
 
@@ -497,6 +779,139 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ---
 
+## 2026. 05. 18. – Session #360f — Filmszerű faj-sziluett és parancsnoki heatmap a radar popupban
+
+### Kérés
+- A részletes radar popup legyen még filmszerűbb animált faj-sziluettel, pulzáló threat ringgel és komolyabb micro-interakciókkal.
+- A heti trend mellé kerüljön valódi parancsnoki heatmap mátrix is.
+
+### Javítás
+- A részletes modal kapott egy új cinematic stage blokkot:
+  - animált faj-sziluett
+  - pulzáló threat ring
+  - központi pulse core
+  - három taktikai signal kártya (`Primary Target`, `Threat Pulse`, `Pattern`)
+- A radar most nemcsak a napi top kockázatot számolja, hanem fajonkénti heti mátrixot is épít.
+- Ebből készült egy új `Parancsnoki heti heatmap`, ami 5 vadfaj × 7 nap rácsban mutatja a becsült kockázati intenzitást.
+- A modal vizuális hangsúlya így már nemcsak információs, hanem prezentációs szintű is lett.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 18. – Session #360e — Vadkár Radar brutális vizuális újrahúzás
+
+### Kérés
+- A radar ne csak működjön, hanem legyen sokkal komolyabb, látványosabb, prémiumabb és egyedibb minden tekintetben.
+
+### Javítás
+- A főoldali Vadkár Radar teljes vizuális rétege újra lett tervezve.
+- Új elemek:
+  - ambient glow és scan effekt
+  - erősebb státusz/HUD fejléc
+  - hangsúlyosabb risk score panel
+  - taktikai összkép blokk
+  - gazdagabb meta kártyák
+  - prémiumabb detail modal és picker modal
+- A widget kockázati szint alapján dinamikusan vált accent színeket, így a vizuális intenzitás követi az aktuális előrejelzést.
+- A teljes redesign megtartotta a korábbi radarlogikát, popup választókat és fajspecifikus becslést.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 18. – Session #360d — Vadkár Radar popup választók a fekete lenyílók helyett
+
+### Kérés
+- A radar mezőinél a natív lenyílók fekete alapon rosszul olvashatók voltak; helyettük fehér szöveges, popupos választó kellett.
+
+### Javítás
+- A főoldali Vadkár Radar összes választómezője popup pickerre váltott.
+- A natív `select` mezők rejtve maradtak állapotkezelésre, de a felhasználó most minden mezőt egy külön, sötét popup panelben választ ki.
+- A picker fehér tipográfiát kapott, így a teljes radar egységesen a fekete dizájnhoz igazodik.
+- A kultúraváltás továbbra is dinamikusan frissíti a fenológia opcióit, és a popup gomb felirata is automatikusan követi a kiválasztást.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 18. – Session #360c — Vadkár Radar popup részletes nézettel
+
+### Kérés
+- A főoldali Vadkár Radar ne csak egy kártya legyen, hanem megnyitható popupban részletes nézettel is.
+
+### Javítás
+- A főoldali radar kapott egy `Részletes radar` gombot.
+- A gomb egy modal/popup nézetet nyit, ahol bent van:
+  - fenológia
+  - vadászati nyomás
+  - villanypásztor
+  - részletes fajspecifikus fő kockázati okok
+  - 7 napos trend
+  - kibővített konfidencia és időablak megjelenítés
+- A popup ugyanabból az élő meteorológiai alapból dolgozik, mint a fő kártya, de részletesebb vadkár-logikát futtat.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 18. – Session #360b — Vadkár Radar áthelyezés a tényleges főoldali widgetzónába
+
+### Kérés
+- A widget továbbra sem látszott; ki kellett deríteni, hogy a nézett főoldali kártyák nem a `footer.php` jobb oldalsávjából jönnek.
+
+### Javítás
+- Kiderült, hogy a Holdnaptár, Időjárás, Agrár naptár és Vadászati idény közvetlenül az `index.php` főoldali widget-stackjében renderelődik.
+- A `Vadkár Radar` ezért bekerült közvetlenül ebbe a kezdőoldali widgetoszlopba is.
+- A blokk most rövid, látható kártyaként jelenik meg saját lokációval, kockázati pontszámmal, fő fajjal, időablakkal, konfidenciával és 3 napos mini trenddel.
+
+### Érintett fájlok
+- `index.php`
+- `wp-theme/vadaszapro-theme/index.php`
+
+---
+
+## 2026. 05. 18. – Session #360a — Jobb oldalsáv Vadkár Radar MVP
+
+### Kérés
+- Kerüljön az oldal jobb sidebarjába egy tényleges, látható előrejelző blokk, a holdnaptárhoz hasonló widgetként, de vadkár-logikával.
+
+### Javítás
+- A jobb oldalsávba bekerült egy új `Vadkár Radar` kártya.
+- A widget nem sima időjárásdoboz: fajspecifikus, pontozásos becslést ad ezekből:
+  - kultúra
+  - fenológia
+  - erdőtávolság
+  - korábbi kár
+  - vadászati nyomás
+  - villanypásztor
+  - Open-Meteo meteorológiai adatok
+  - holdfény/felhőzet korrekció
+- Kimenetek:
+  - napi vadkár-index
+  - fő kockázati faj
+  - kritikus időablak
+  - konfidencia
+  - fő kockázati okok
+  - 7 napos heti trend
+- Mobilon is látható marad: a jobb sidebar 1100 px alatt is megjeleníthető a widgethez igazított layouttal.
+
+### Érintett fájlok
+- `footer.php`
+- `wp-theme/vadaszapro-theme/footer.php`
+
+### Megjegyzés
+- A repo jelenleg detached HEAD állapotban van; ezért automatikus push nem történt.
+
+---
 ## 2026. 05. 15. – Session #359p — Szállás + Vadászati lehetőség / Vadkárelhárítás popup űrlap
 
 ### Kérés
@@ -769,6 +1184,386 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 ### Deploy
 - Deploy All futtatva.
 
+## 2026. 05. 15. – Session #359h — Step 2 kompakt 4-oszlopos grid layout
+
+### Változtatás
+- **Minden kategóriában** a step 2 (Termék adatai) mezői kompakt 4-oszlopos grid elrendezést kaptak
+- Korábban: `.va-form-row` = 2 oszlop, távcső = 1 oszlop (8 sor), kutya = 2 oszlop
+- Most: minden grid 4 oszlopos → kevesebb függőleges görgetés
+
+### CSS override helye
+- `frontend/templates/listing/submit-form.php` inline `<style>` blokk (~677. sor)
+- Érintett elemek:
+  - `.va-wstep[data-step="2"] .va-form-row` → `repeat(4, minmax(0, 1fr))`
+  - `.va-telescope-fields-grid` → `display:grid; repeat(4, minmax(0, 1fr))` (8 mező = 2 sor)
+  - `.va-dog-fields-wrap` → `repeat(4, minmax(0, 1fr))` + `.va-dog-row { display: contents }`
+  - `.va-specs-grid` (jármű) → `repeat(4, minmax(0, 1fr))`
+- Reszponzív: 980px alatt → 2 col, 600px alatt → 1 col
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+---
+
+## 2026. 05. 15. – Session #359f — Távcső kategória debug javítás (mező megjelenítés)
+
+### Probléma
+- A távcső kategóriában az új mezők nem jelentek meg (rejtve maradtak)
+
+### Okozat
+- Az `.va-cat-rule-field` elemek az `.each()` ciklusban externálisan rejtve voltak
+- Ezeknek nem volt `data-categories` attribútuma → `visible = false` logika
+- A wrapper `.va-telescope-fields-grid` nem tudta tartalmát kezelni
+
+### Megoldás
+- HTML: `.va-cat-rule-field` → `.va-telescope-field` elemek (grid belsejében)
+- JS: `applyCategorySpecificFieldVisibility()` selektor frissítés:
+  - `.va-telescope-field[data-visibility="tavcsovek"]` (objektív átmérő láthatóság)
+  - Separált távcső-specifikus required handling
+- CSS: `.va-telescope-field` új stílus (flex column, 6px gap)
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+- `style.css`
+
+### Teszthez szükséges
+- Böngésző cache ürítés (Ctrl+Shift+R)
+- Távcső kategória új hirdetés
+
+### Deploy
+- Push futtatandó
+
+---
+
+## 2026. 05. 15. – Session #359e — Távcső kategória kompakt felépítés + 6 új mező
+
+### Kérés (KRITIKUS - UX)
+- Távcső kategóriák (tavcsovek, ejjellato-tavcso, hokamerak) mezői szétszórtak, márkák alig látszanak
+- Szükséges új kötelező mezők: Típus (Monokuláris/Biokuláris), Szürkületi érték, Bevonatok
+- Keresőtávcső, Spektív mezők hiányoznak
+- Kompakt 2-oszlopos layout kívánatos
+
+### Megoldás
+**Új mezők hozzáadása:**
+- `finder_scope` – Keresőtávcső (text)
+- `spectiv_type` – Spektív (text)
+- `scope_type` – **Típus dropdown** (Monokuláris | Biokuláris) ← kötelező!
+- `scope_coatings` – Bevonatok (text)
+- `twilight_value` – Szürkületi érték (text) ← kötelező!
+- `scope_accessories` – Tartozékok (text)
+
+**Layout átalakítás:**
+- Új `va-telescope-fields-grid` CSS grid wrapper (2 oszlop)
+- 4 sor mezőpár: 
+  1. Nagyítás | Objektív átmérő
+  2. Keresőtávcső | Spektív
+  3. Típus | Szürkületi érték
+  4. Bevonatok | Tartozékok
+
+**Kategória-specifikus szükségletek:**
+- `tavcsovek`: brand, model, optic_zoom, optic_objective, scope_type, scope_coatings, twilight_value (kötelezők)
+- `ejjellato-tavcso`: brand, model, optic_zoom, scope_type, twilight_value (kötelezők)
+- `hokamerak`: brand, model, optic_zoom, scope_type (kötelezők)
+
+### Deploy
+- Push futtatandó az aktuális módosítások élesítéséhez.
+
+---
+
+## 2026. 05. 15. – Session #359d — Fegyvergyártó lista vágási limit javítás
+
+### Kérés
+- Fegyvereknél a gyártó listában túl kevés elem jelenik meg, miközben sokkal több gyártó van feltöltve.
+
+### Javítás
+- A custom datalist panel 120-as globális limitje miatt a lista le volt vágva.
+- A limit dinamikus lett: `va-brand-list` esetén 2000 elem, egyéb listáknál 400.
+- Így a fegyvergyártó mezőben a teljesebb gyártólista megjelenik és görgethető.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
+## 2026. 05. 15. – Session #359c — Vadászkutya fajtalista nem görgetett (forrás javítás)
+
+### Kérés
+- A fajtalista nem görgethető/ túl rövidnek látszik.
+
+### Javítás
+- A kutyafajta lista forrása javítva lett: elsődlegesen a vadászati adatforrásból (`$hunting_brand_models['vadaszkutya']`) épül.
+- A korábbi rövid lista azért volt, mert rossz adatszerkezetből történt a beolvasás.
+- A lista most csoport + elem bontásban töltődik, ezért jóval hosszabb és görgethető.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
+## 2026. 05. 15. – Session #359b — Vadászkutya fajtalista dinamikus adatforrásból
+
+### Kérés
+- Az összes elérhető vadászkutya fajta kerüljön be a listába külső/forrás adatból, ne fix kézi felsorolásból.
+
+### Javítás
+- A `Kutya fajtája` legördülő már nem hardcoded lista.
+- A lista a rendszerben lévő `vadaszkutya` adatforrásból (`hunting-brand-models.json`) épül fel dinamikusan.
+- Ha ez az adatforrás hiányzik, egy rövidebb fallback lista marad aktív.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
+## 2026. 05. 15. – Session #359a — Wizard gombok átrendezése (Bezárás jobb felső)
+
+### Kérés
+- A `Vissza` + `Tovább` + számozás maradjon a footerben, a `Bezárás` gomb kerüljön jobb felső pozícióba.
+
+### Javítás
+- A `Bezárás` gomb kikerült a wizard footerből.
+- Új felső jobb oldali blokkba került a wizard főpanel tetején.
+- A footer így a léptetésre maradt: `Vissza`, `1 / 4`, `Tovább` (és végén `Feladás/Mentés`).
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
+## 2026. 05. 14. – Session #358u — Vadászkutya fajta és szín választható lista
+
+### Kérés
+- A vadászkutya kategóriában a fajta és szín mezők legyenek választható listák.
+
+### Javítás
+- A `Kutya fajtája` mező szövegmező helyett legördülő (`select`) lett előre definiált vadászkutya fajtákkal.
+- A `Színe` mező szintén legördülő (`select`) lett előre definiált színlistával.
+- Korábban mentett egyedi érték esetén az érték nem vész el, kiválasztva megjelenik (`korábban mentett`).
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Push futtatandó a módosítások élesítéséhez.
+
+## 2026. 05. 14. – Session #358t — Duplikált kategóriák kiszűrése a submit wizardből
+
+### Kérés
+- Az ismétlődő kategóriák tűnjenek el a hirdetésfeladási listából.
+
+### Javítás
+- A `va_category` taxonomy-ból betöltött kategóriák a render előtt normalizált név alapján deduplikálva lesznek.
+- Ha egy kategórianév többször szerepel, csak az első példány marad meg a listában.
+- Az `Egyéb` továbbra is a lista végére kerül.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358s — Separator top extension egységesítése
+
+### Kérés
+- A felsőre húzott elválasztó vonal ugyanannak a csíknak látszódjon, azonos színnel.
+
+### Javítás
+- A külön shell `::after` separator szegmens el lett távolítva.
+- A vonalhosszabbítás átkerült a sidebar saját `::before` elemére, így a jobb oldali separator egybefüggőbbnek látszik.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358r — Sidebar elválasztó csík felhúzása
+
+### Kérés
+- A sidebar jobb oldali elválasztó csík érjen fel teljesen a tetejéig.
+
+### Javítás
+- A wizard shell kapott egy külön `::after` felső separator szegmenst a bal oszlop jobb szélére.
+- Így a sidebar `border-right` vizuálisan folyamatos a felső gapen keresztül is.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358q — Sidebar és felső kitöltés egységes színre
+
+### Kérés
+- A felső kitöltés színe folytatódjon tovább ugyanazzal a színnel.
+
+### Javítás
+- A felső kitöltő `::before` sáv mellé maga a wizard sidebar is fix `#1F1305` háttérszínt kapott.
+- Így a bal felső rész és az alatta lévő sidebar egyetlen egységes színblokkot ad.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358p — Sidebar top-gap fix színre állítása
+
+### Kérés
+- A felső kitöltő sáv színe legyen fixen `#1F1305`.
+
+### Javítás
+- A wizard shell bal felső kitöltő `::before` rétegének háttere gradient helyett fix `#1F1305` lett.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358o — Sidebar felső gap kitöltése
+
+### Kérés
+- A sidebar felső része és a border között látható fekete sáv is legyen kitöltve a sidebar háttérszínével.
+
+### Javítás
+- A wizard shell kapott egy célzott `::before` kitöltő réteget a bal felső 280x15 px sávra.
+- A sidebar `z-index` fölé lett emelve, így a kitöltés a border alatt látszik, de nem takarja a tartalmat.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358n — Utolsó sidebar háttérmódosítás visszavonása
+
+### Kérés
+- Az utolsó módosítás visszavonása.
+
+### Javítás
+- A legutóbb hozzáadott, bal oldali sidebar teljes magasságú háttérkitöltés override el lett távolítva.
+- A korábbi lépés- és layout igazítások változatlanul maradtak.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358m — Bal oldali fekete sáv kitöltése
+
+### Kérés
+- A lépések bal oldali paneljén a border alatt látható fekete sáv is kapjon hátteret.
+
+### Javítás
+- A wizard sidebar teljes magasságú, erősebb narancsos alapgradientet kapott, így az alsó fekete sáv is a panel háttérének része lett.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358l — Bal oldali lépések panel top gap csökkentés
+
+### Kérés
+- A bal oldali lépések háttere érjen fel a panel tetejéig, ne maradjon nagy felső üres sáv.
+
+### Javítás
+- A wizard sidebar kapott egy magasabb specifikusságú `padding-top:8px !important` override-ot, így a lépések blokkja feljebb ül és jobban kitölti a bal oldali hátteret.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358k — Footer nyújtás + gomb teljes jobbra tolása
+
+### Kérés
+- A `Bezárás` gomb tényleg a jobb oldali szélig menjen.
+
+### Javítás
+- A wizard footer most `display:flex`, `align-self:stretch` és `width:100%` beállítást kapott.
+- A `Bezárás` gomb `margin-left:auto` + `margin-right:0` szabállyal lett a sor jobb szélére kényszerítve.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358j — Erősebb háttér blur + teljes jobb szélig húzott Bezárás
+
+### Kérés
+- A hirdetésfeladás popup háttér blurje legyen erősebb, kevésbé látszódjon át a háttér.
+- A `Bezárás` gomb menjen teljesen jobbra, illesztve a szélig.
+
+### Javítás
+- A submit popup overlay kapott sötétebb háttérszínt és erősebb blur szűrőt.
+- A wizard footer szélessége ki lett nyitva a shell jobb széléig, így a `Bezárás` gomb ténylegesen flush jobbra tud állni.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
+## 2026. 05. 14. – Session #358i — Bezárás gomb jobbszélre húzása
+
+### Kérés
+- A hirdetésfeladás popupban a `Bezárom` gomb legyen még jobban a jobb szélhez húzva.
+
+### Javítás
+- A submit wizard footerben a `.va-submit-page-close` gomb jobboldali eltartása nullára lett állítva, így a gomb flush a jobb széléhez ül.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Még nem futott külön deploy ebben a sessionben.
+
 ## 2026. 05. 14. – Session #358h — „puska” szövegkivezetés + fekete gyártási év popup
 
 ### Kérés
@@ -791,6 +1586,10 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 - `frontend/templates/listing/submit-form.php`
 - `includes/class-ajax.php`
 - `includes/factory-defaults.json`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+  - `wp-plugin/vadaszapro-core/includes/factory-defaults.json`
 
 ### Mi maradt
 - Ha a régi taxonómia nevek már adatbázisban léteznek, admin oldali tömeges átnevezés/migráció még külön kör lehet.
@@ -814,6 +1613,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Mi maradt
 - Frontend vizuális ellenőrzés élesen cache ürítés után (ha még eltérés látszik, további célzott override).
@@ -837,6 +1638,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva a módosítás után.
@@ -855,6 +1658,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva a módosítás után.
@@ -870,6 +1675,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva a módosítás után.
@@ -890,6 +1697,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva a módosítás után.
@@ -909,6 +1718,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva a módosítás után.
@@ -929,6 +1740,8 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 
 ### Érintett fájlok
 - `frontend/templates/listing/submit-form.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
 
 ### Deploy
 - Deploy All futtatva, éles commitok: `7665fe3`, `14bf12b`, `3bfed11`.
@@ -951,31 +1764,369 @@ Az időjárás és a vadkár radar widget újra betölt az oldalon. A rendszer p
 ### Érintett fájlok
 - `includes/class-user-roles.php`
 - `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/includes/class-user-roles.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
 
 ### Deploy
 - Deploy All futtatva a változások után.
 
-## 2026. 05. 13. – Session #357f — Kategória kártya grid visszaadása responsive elrendezéssel
+## 2026. 05. 13. – Session #357t — Egyéb kategória popup + állapot kijelölés fix
+
+### Kérés
+- `Egyéb` kategóriánál popup/blur felület jelenjen meg, ahol a user be tudja írni az egyedi kategóriát.
+- Az állapot kiválasztás legyen egyértelműen jelölve.
+
+### Javítás
+- `Egyéb` kategóriára kattintáskor modal (blur overlay) nyílik:
+  - kötelező szövegbevitel `other_category` mezőbe,
+  - mentés/mégse, ESC és backdrop bezárás támogatás.
+- Form validáció bővítve:
+  - ha kiválasztott kategória `egyeb`, üres egyéb mezővel nem mehet tovább/submit.
+- Backend mentés bővítve:
+  - új meta kulcs: `va_other_category` (submit + update útvonal).
+- Állapot gombok vizuális fix:
+  - `.va-cond-btn.is-selected` narancs kiemelést kap.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `includes/class-ajax.php`
+- mirror:
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357s — Egységes cím tipográfia a wizardban
+
+### Kérés
+- Egységes betűméret és stílus a wizard címsorában.
+
+### Javítás
+- A step-1 címben az eltérő kiemelés (`<em>`) eltávolítva, egységes szöveggé alakítva.
+- Célzott CSS egységesítés:
+  - `.va-wstep-title` és `.va-wstep-title em` azonos méret/stílus/súly
+  - nincs dőlt eltérés, azonos fehér szín és sortáv.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357r — Wizard footer: balra zárás + narancs gombok
+
+### Kérés
+- A wizard footer gombsor teljesen balra zárjon.
+- A gombok mindig az oldal narancssárga színét használják.
+
+### Javítás
+- A `Vissza` gomb első lépéses rejtése `visibility:hidden` helyett `display:none` lett, így nem foglal üres helyet bal oldalon.
+- JS léptetésben ennek megfelelően rejtés/megjelenítés frissítve.
+- A footer gombokra (`.va-wizard-footer .va-btn`) fix narancs színkényszer került minden állapotra (`normal/hover/focus/active`): `#ff8a00`.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357q — Keret infó áthelyezés a Lépések oszlopba
+
+### Kérés
+- A felső zöld keret infó (`Keretedből még ...`) ne a fő tartalmi blokk tetején legyen, hanem a bal oldali `Lépések` oszlopban.
+
+### Javítás
+- A plan notice blokk átkerült a sidebarba, közvetlenül a lépéskártyák alá.
+- A fő (`va-wizard-main`) tartalomból eltávolításra került ugyanaz a blokk, így nincs duplikáció.
+- Kiegészítő spacing szabály: sidebarban `margin-top` és `margin-bottom` finomhangolva.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357p — Kategória csempék vékonyítása
+
+### Kérés
+- A wizard 1. lépés kategória csempéi túl vastagok lettek.
+
+### Javítás
+- A `.va-cat-item` magasság/padding visszavéve laposabb megjelenésre:
+  - `min-height: 84px` → `56px`
+  - `padding: 14px 16px` → `10px 14px`
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357o — Modal eleje szétesés hotfix (kategória lista)
+
+### Hiba
+- A feladás wizard 1. lépésén a kategória blokk szétesett (bullet pontok, keskeny gombsor), mert a renderelt markup (`.va-cat-list`) és a rá célzott hard CSS (`.va-cat-cards`) elcsúszott egymástól.
+
+### Javítás
+- Új, célzott hotfix CSS került be a submit template-be a jelenlegi markupra:
+  - `.va-cat-list` grid + list-style reset
+  - `.va-cat-item` teljes szélességű kártya stílus
+  - hover + selected (`data-selected="1"`) vizuális állapot
+  - responsive 3/2/1 oszlop töréspontok
+
+### Eredmény
+- A modal elejének kategória választó UI visszaállt stabil, olvasható kártya-grid nézetre.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357n — Irányítószám ↔ város autofill stabilizálás
+
+### Hiba
+- A feladás űrlapon továbbra sem működött megbízhatóan az irányítószám→város és város→irányítószám automatikus kitöltés.
+
+### Javítás
+- A cím seed betöltés robusztusra lett átírva:
+  - biztonságos fájl-ellenőrzés (`file_exists`),
+  - BOM-tisztítás,
+  - garantált fallback (`records: []`) JSON hiba esetére.
+- A JS normalizálás védett lett:
+  - `toLocaleLowerCase('hu-HU')` fallback `toLowerCase()`-re,
+  - `normalize()` csak támogatott környezetben fut.
+- Rekordfeldolgozás szigorítva:
+  - irányítószám kötelezően 4 számjegyre tisztítva,
+  - üres/hibás rekordok kihagyva,
+  - üres utcaértékek nem kerülnek be a street mapbe.
+
+### Eredmény
+- A ZIP↔város kétirányú map stabilan épül fel akkor is, ha a seed részben hibás vagy a kliens környezet korlátozottabb.
+
+### Érintett fájlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357m — Tanuló autocomplete adatbázis (ismeretlen beírások mentése)
 
 ### Elvegzett munkak
-- Az előző `<select>` dropdown helyett visszaadva a kategória-kártya grid rendszert (responsív!):
-  - **Desktop (1200px+)**: 3 oszlop
-  - **Tablet (760px-1200px)**: 2 oszlop
-  - **Mobil (<760px)**: 1 oszlop
-- A kategória gombokra kattintás már működik, és beállítja a rejtett `#va-category` inputot
+- Uj tanulo tabla kerult a pluginbe: `wp_va_learning_terms`
+  - mezok: `term_type`, `term_value`, `term_value_norm`, `category_slug`, `usage_count`, idobelyegek
+  - egyedi kulcs: `(term_type, term_value_norm, category_slug)` duplikacio ellen
+- A tabla letrehozasa automatikus:
+  - aktivacio alatt (`va_activate`)
+  - es futasi idoben verziozott upgrade-kent (`va_maybe_upgrade_learning_terms`)
+- A frontend listing submit + update mentesnel automatikus tanulas kerult be:
+  - tipusok: `brand`, `model`, `caliber`, `location`, `street`
+  - a rendszer minden uj/szabad szoveges erteket eltessz es novel egy `usage_count` szamlalot
+- A submit wizard autocomplete kibovitve tanult adatokkal:
+  - marka/modell datalist kiegeszites kategoriara szurve is
+  - kaliber datalist kiegeszites kategoriavaltaskor is
+  - varos/cim javaslatokba bekerulnek a korabban tanult elemek
+  - utca autocomplete mar 2 karaktertol elindul, tanult + cim DB javaslatok merge-olesevel
+
+### Eredmeny
+- A rendszer most mar folyamatosan tanul a felhasznaloi beirasokbol.
+- Ismeretlen ertekek nem vesznek el: kovetkezo alkalommal mar javaslatkent jelennek meg gepeles kozben.
+- Duplikacio-kepzes ellen vedett tarolas valosul meg (normalizalt kulccsal).
+
+### Erintett fajlok
+- `vadaszapro-core.php`
+- `includes/class-ajax.php`
+- `frontend/templates/listing/submit-form.php`
+- es mindharom fajl mirror parja:
+  - `wp-plugin/vadaszapro-core/vadaszapro-core.php`
+  - `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+  - `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a valtozasok utan.
+
+---
+
+## 2026. 05. 13. – Session #357l — XLSX beolvasás kész, márka/modell + kaliber tisztítás
+
+### Elvegzett munkak
+- A `Kategoria/` mappaba betett XLSX forrasokbol lefutott a teljes merge a meglevo seed adatbazisokra:
+  - `magnum_marka_tipus_terkep.xlsx`
+  - `vilag_fegyvermarkak.xlsx`
+  - `vilag_fegyvermarkak(1).xlsx`
+  - `magnum_markak.xlsx`
+  - `vilag_fegyver_kaliberek.xlsx`
+- A header-felismeres normalizalt (ekezetfuggetlen) parserre lett javitva, hogy a `Marka/Fokategoria/Alkategoria/Al-alkategoria` mezok biztosan egyezzenek.
+- A marka-modell adatbazis ujratoltve es deduplikalva kategoriankent.
+- A kaliber adatbazis tisztitva: a nem-kaliber zajok eldobva (pl. `AK-47`, `AK-74`, `Osszesen...` jellegu sorok), majd ujra deduplikalas.
+- Root + mirror fajlok teljes szinkronban tartva.
+
+### Eredmeny
+- `hunting-brand-models.json`: `17` kategoriakulcs
+- Fo kategoriak brandszamai:
+  - `golyos-puska`: `91`
+  - `soretes-puska`: `21`
+  - `vegyescsovu-puska`: `12`
+  - `maroklofegyver`: `40`
+  - `loszer-tolteny`: `29`
+  - `tavcsovek`: `34`
+  - `ejjellato-tavcso`: `14`
+  - `hokamerak`: `13`
+  - `vadkamera`: `11`
+  - `vadasz-felszereles`: `306`
+- `hunting-calibers.json`: `636` tisztitott, egyedi tétel
+- Root/mirror paritas ellenorizve: minden erintett JSON fajl byte-szinten egyezik.
+
+### Erintett fajlok
+- `includes/hunting-brand-models.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-brand-models.json`
+- `includes/hunting-calibers.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-calibers.json`
+- `NAPLO.md`
+
+### Takaritas
+- Torolve: `.tmp_magnum_mapping_report.json`
+
+### Deploy
+- Deploy All futtatva a valtozasok utan.
+
+---
+
+## 2026. 05. 13. – Session #357k — Termék- és kaliber seed bővítés CSV-ből
+
+### Elvegzett munkak
+- A `d:\Downloads\kategoriak_v2.csv` teljes tartalmából elkészült egy új, duplikációmentes termékkategória seed: `includes/hunting-product-categories.json`
+- A seed tükre létrejött itt is: `wp-plugin/vadaszapro-core/includes/hunting-product-categories.json`
+- A `VA_Vehicle_Catalog` új betöltőt kapott: `get_hunting_product_categories()`
+- A meglévő kaliber adatbázis kiegészült a CSV-ből egyértelműen kinyerhető új tételekkel:
+  - `.177`, `.22`, `.25`, `.30`
+  - `.43 RAM`, `.50 RAM`, `.68 RAM`
+  - `4.5 BB`, `6mm BB`
+- A kaliber seedek root + mirror oldalon is frissültek, duplikáció nélkül
+
+### Eredmeny
+- Új termékkategória adatbázis: `320` egyedi kategóriaelem
+- Frissített kaliber adatbázis: `203` tétel
+- Root és mirror JSON fájlok tartalma ellenőrizve, egyeznek
+
+### Blokkolo tenyezo
+- A csatolt XLSX fájlok neve látszott, de a session környezetből nem voltak fizikailag elérhetők fájlként, ezért a márka/típus adatbázis bővítése ebben a körben nem volt biztonságosan elvégezhető.
+- Emiatt a meglévő `hunting-brand-models.json` most szándékosan változatlan maradt.
+
+### Erintett fajlok
+- `includes/class-vehicle-catalog.php`
+- `wp-plugin/vadaszapro-core/includes/class-vehicle-catalog.php`
+- `includes/hunting-calibers.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-calibers.json`
+- `includes/hunting-product-categories.json`
+- `wp-plugin/vadaszapro-core/includes/hunting-product-categories.json`
+
+### Deploy
+- Deploy All futtatva a változások után.
+
+---
+
+## 2026. 05. 13. – Session #357j — Helyszín autofill javítás
+
+### Elvegzett munkak
+- A helyszín mezők sorrendje most: irányítószám → város → cím
+- Javítva lett a címadatbázis betöltési útvonala, így a JS már valódi adatot kap
+- Az irányítószám mező most gépelés közben is automatikusan kitölti a várost
+- A város mező datalist javaslatokat kapott, és visszaírja az irányítószámot is
+- Az utca mező továbbra is az adott városhoz tartozó címjavaslatokat kapja
+
+### Erintett fajlok
+- `frontend/templates/listing/submit-form.php`
+- `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`
+
+### Deploy
+- Deploy All futtatva a javítás után.
+
+---
+
+## 2026. 05. 13. – Session #357i — Helyszín mezők: irányítószám-város-utca keresés
+
+### Elvegzett munkak
+- **Layout javítása**: `.va-loc-grid` CSS 3 oszlopba (desktopra), 2 tabletre, 1 mobilra + jó térközök
+- **Irányítószám-város-utca integráció**:
+  - `hu-address-seed.json` betöltése JavaScript-be
+  - Irányítószám change → város automatikus kitöltés
+  - Város change → utcák megjelenítése datalist-ben
+  - Utca autocomplete (user írás közben javaslatok jelennek meg)
+- **Responsive**: media queries tablet/mobil-hez
 - Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+
+### CSS módosítás
+```css
+.va-loc-grid {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+@media (max-width:1200px) { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@media (max-width:760px) { grid-template-columns:1fr; }
+```
 
 ### Deploy
 - Git push committed + deployed.
 
 ---
 
-## 2026. 05. 13. – Session #357d — Kompakt lenyíló kategóriaválasztás
+## 2026. 05. 13. – Session #357h — Kategória lista 3 oszlopba
 
 ### Elvegzett munkak
-- A nagy kategória-kártya rács helyett kompakt lenyíló (`select`) kategóriaválasztó lett az első lépésben.
-- A modalból kivezetve a panelt vágó fix magasság/scroll kényszer, így nem esik szét és nem marad nagy felső gap.
-- Erintett fajlok: `frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`.
+- Egyszerű kategória lista 3 oszlopba
+- HTML: `.va-cat-list` (ul) + `.va-cat-item` (li button)
+- CSS: grid 3 oszlopba, Media queries tablet/mobil-hez
+- JS: `.va-cat-item` click kezelés
+
+### Deploy
+- Git push committed + deployed (`5807c32`).
+
+---
+
+## 2026. 05. 13. – Session #357g — E-commerce megamenu (visszavont)
+
+### Elvegzett munkak
+- E-commerce stílus kategória menü megvalósítása:
+  - Szülő kategóriák oszlopokba
+  - Al-kategóriák lista formátumban
+  - **VISZONT:** PHP errort okozott, az oldal szétment
+  - **Megoldás:** Revert az utolsó jó verzióra (`9185b34`)
+
+### Status
+- **VISSZAVONT** – szétment az oldal
+
+---
+
+## 2026. 05. 13. – Session #357f — Kategória kártya grid responsív
+
+### Elvegzett munkak
+- Kategória-kártya grid: 3 oszlop desktopra, 2 tabletre, 1 mobilra
+- Deploy: `9185b34`
+
+---
 
 ### Deploy
 - Eles deploy commit: `3777b37`.
@@ -8202,6 +9353,119 @@ A Stripe fizetés most két csatornán is biztonságosan működik: visszairány
 - [ ] Stripe Dashboardban webhook endpoint felvétele teszt módban
 - [ ] `checkout.session.completed` esemény bekötése
 - [ ] Webhook signing secret bemásolása adminba (`va_payment_webhook_secret`)
+
+---
+
+## 2026. 05. 14. – Session: Jármű kötelező mezők validációja
+
+### Mit csináltunk [x]
+- [x] Frontend wizard Step 2 validációba bekerült a jármű kötelező mezőellenőrzés
+- [x] Submit előtti végső ellenőrzésbe is bekerült a jármű kötelező mezőellenőrzés
+- [x] Kötelező jármű mezők listája bevezetve: márka, modell, évjárat, futás, üzemanyag, váltó, hajtás, állapot, teljesítmény, hengerűrtartalom
+- [x] Backend oldali védelmi validáció bevezetve (AJAX submit + update útvonal)
+- [x] Egységes hibaüzenet bevezetve hiányzó kötelező jármű adatok esetére
+- [x] Plugin mirror fájl frissítve: `wp-plugin/vadaszapro-core/includes/class-ajax.php`
+
+### Hol tartunk
+Jármű módban már nem engedhető át hiányos autós hirdetés: frontend és backend is blokkolja a mentést, ha az alap jármű adatok nincsenek kitöltve.
+
+### TODO
+- [ ] Éles felületen gyors ellenőrzés: jármű kategóriában minden kötelező mező látható és hibaüzenet rendben jelenik meg
+
+---
+
+## 2026. 05. 14. – Session: Jármű kategória tényleges aktiválási javítás
+
+### Mit csináltunk [x]
+- [x] Javítva: a jármű mezőblokk ne csak `site_type=jarmu` esetén renderelődjön
+- [x] Bevezetve frontend detektor: kiválasztott kategória slug/szöveg alapján is járműnek minősítés
+- [x] Jármű mezőblokk láthatóság kapcsolása kategóriaváltásra (`.va-vehicle-only`)
+- [x] Jármű kötelező validáció frontend oldalon kategóriaalapra átállítva
+- [x] Jármű kötelező validáció backend oldalon kategóriaalapra átállítva (`is_vehicle_category`)
+- [x] Root + plugin mirror fájlok szinkronban frissítve
+
+### Hol tartunk
+Jármű kategória kiválasztásakor már ténylegesen megjelennek és ellenőrzésre kerülnek a jármű-specifikus mezők, nem csak globális jármű site típusnál.
+
+---
+
+## 2026. 05. 14. – Session: Jármű márka/típus + modal scroll javítás
+
+### Mit csináltunk [x]
+- [x] Jármű kategóriánál márka/típus mezők dinamikus átváltása autós select listára
+- [x] Vadász kategóriáknál visszaváltás szabad szöveges márka/típus inputokra
+- [x] Mindkét adathalmaz átadása JS-nek (`vehicle_brands`, `vehicle_brand_models`, `hunting_brand_models`)
+- [x] Modal görgetés javítva: wizard overlay és fő tartalom vertikális scroll engedélyezve
+- [x] Root + plugin template fájlok szinkron frissítve
+
+### Hol tartunk
+Jármű kategória esetén már autóspecifikus márkák/típusok jelennek meg, és a hosszú űrlap a modalban legörgethető.
+
+---
+
+## 2026. 05. 14. – Session: Modell beírás + scroll hard-fix
+
+### Mit csináltunk [x]
+- [x] Jármű módban a `model` mező visszaállítva beírható input + datalist működésre
+- [x] Márkaváltáskor a modell lista újratöltése delegált eventtel (`#va-brand` dinamikus csere mellett is)
+- [x] Autós modelllista betöltés javítva case-insensitive márka kulcs egyeztetéssel
+- [x] Scroll javítás megerősítve a legkésőbbi override CSS blokkban (`overflow-y:auto!important`)
+- [x] Root + plugin template fájlok szinkron frissítve
+
+### Hol tartunk
+Jármű kategóriánál a modell mező szabadon írható, közben ajánl autós modelleket, és a modal tartalom lefelé görgethető.
+
+---
+
+## 2026. 05. 14. – Session: Modell ajánló fallback javítás
+
+### Mit csináltunk [x]
+- [x] Ha a kiválasztott márkához nincs találat, fallbackként globális autós modelllista töltődik
+- [x] Jármű modellajánló frissítés bekötve `focus` és `input` eseményre is
+- [x] Márkaváltás utáni modelllista töltés megtartva, de robusztusabb fallbackgel
+- [x] Root + plugin template fájlok szinkronban frissítve
+
+### Hol tartunk
+Márkafüggő modell-ajánló működik, és üres márka-találat esetén sem marad üres a modell lista.
+
+---
+
+## 2026. 05. 14. – Session: Modal középre igazítás visszaállítás
+
+### Mit csináltunk [x]
+- [x] Visszaállítva a teljes feladás modal vertikális középre igazítása
+- [x] Scroll logika áthelyezve belső konténerre (`.va-wizard-main`), hogy ne csússzon fel a teljes modal
+- [x] Root + plugin submit template CSS szinkron frissítve
+
+### Hol tartunk
+A feladás modal ismét középen marad, miközben a belső tartalom görgethető marad.
+
+---
+
+## 2026. 05. 14. – Session: Modal középzár hard-fix
+
+### Mit csináltunk [x]
+- [x] Erős középzár beállítás a wizard overlay-re: `position: fixed`, `top/left: 50%`, `transform: translate(-50%, -50%)`
+- [x] Scroll maradt belső konténeren, hogy a modal ne csússzon fel
+- [x] Root + plugin submit template frissítve
+
+### Hol tartunk
+A teljes feladás modal fixen középre van zárva minden lépésnél.
+
+---
+
+## 2026. 05. 14. – Session: Vadászkutya mezők átalakítása
+
+### Mit csináltunk [x]
+- [x] Vadászkutya kategóriánál elrejtve a Márka / Modell / Gyártási év mezők
+- [x] Új mezők bevezetve: Kutya fajtája, Neme, Színe, Fajtatisztaság (Igen/Nem)
+- [x] Kategória-kötelező szabály átállítva kutyás mezőkre frontend oldalon
+- [x] Backend kategória-kötelező szabály és label map frissítve ugyanígy
+- [x] Új kutyás mezők mentése és edit visszatöltése bevezetve (`va_dog_breed`, `va_dog_gender`, `va_dog_color`, `va_dog_purebred`)
+- [x] Root + plugin mirror fájlok szinkronban frissítve
+
+### Hol tartunk
+Vadászkutya kategóriában már a kutyához releváns adatok jelennek meg és kötelezően validálódnak mentés előtt.
 
 ---
 
