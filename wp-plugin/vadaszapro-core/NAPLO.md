@@ -45,6 +45,11 @@
 - Javítás: a mező full-width sorfeszítése kikerült, így most a többi szakmai mezővel azonos oszlopszélességben jelenik meg.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-tartozek-popup
+- Kérés: az `Egyéb fegyver tartozékok` mező is ugyanaz a popup lenyíló legyen, mint a jogosítvány.
+- Javítás: a checkbox lista helyett popup-kompatibilis `select[multiple]` került be, a méret pedig normál oszlopszélességre állt.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.

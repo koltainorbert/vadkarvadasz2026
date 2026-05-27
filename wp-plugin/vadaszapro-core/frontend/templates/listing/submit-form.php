@@ -1785,17 +1785,19 @@ body.va-modal-open {
                         <label>Megjegyzés</label>
                         <textarea name="other_weapon_general_notes" class="va-input" rows="2" placeholder="Rövid leírás a rendeltetésről, eredetről vagy különleges megkötésről."><?php echo esc_textarea((string)($edit_meta['other_weapon_general_notes'] ?? '')); ?></textarea>
                     </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
+                    <div class="va-form-group">
                         <label>Tartozékok</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="eredeti-doboz"<?php echo in_array('eredeti-doboz', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Eredeti doboz</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tok"<?php echo in_array('tok', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Tok</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="optika"<?php echo in_array('optika', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Optika</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="heveder"<?php echo in_array('heveder', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Heveder</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="vesszo"<?php echo in_array('vesszo', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Vesszők</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tar"<?php echo in_array('tar', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Tárak</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="gaspatron"<?php echo in_array('gaspatron', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Gázpatron</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="akkumulator"<?php echo in_array('akkumulator', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Akkumulátor</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_accessories[]" value="tolto"<?php echo in_array('tolto', $other_weapon_accessories_saved, true) ? ' checked' : ''; ?>> Töltő</label>
+                        <select name="other_weapon_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot">
+                            <option value="eredeti-doboz"<?php echo in_array('eredeti-doboz', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Eredeti doboz</option>
+                            <option value="tok"<?php echo in_array('tok', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Tok</option>
+                            <option value="optika"<?php echo in_array('optika', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Optika</option>
+                            <option value="heveder"<?php echo in_array('heveder', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Heveder</option>
+                            <option value="vesszo"<?php echo in_array('vesszo', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Vesszők</option>
+                            <option value="tar"<?php echo in_array('tar', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Tárak</option>
+                            <option value="gaspatron"<?php echo in_array('gaspatron', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Gázpatron</option>
+                            <option value="akkumulator"<?php echo in_array('akkumulator', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Akkumulátor</option>
+                            <option value="tolto"<?php echo in_array('tolto', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Töltő</option>
+                        </select>
                         <input type="text" name="other_weapon_accessories_other" class="va-input" placeholder="Egyéb tartozékok" value="<?php echo esc_attr((string)($edit_meta['other_weapon_accessories_other'] ?? '')); ?>">
                     </div>
                     <div class="va-form-group">
