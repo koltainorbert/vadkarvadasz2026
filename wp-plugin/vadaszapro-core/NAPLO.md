@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #loszer-tolteny-reszletes-mezok
+- Kérés: a `Lőszer-Töltény` kategória kapjon részletes, gyakorlatias mezőstruktúrát (kategória, kaliber preset + egyedi, gyártó, típus, lövedéksúly, darabszám, LOT/év, állapot, újratöltés-komponens mezők).
+- UI: a submit űrlapba bekerült egy teljes `loszer-tolteny` blokk; új kategóriás mezőknél nem lista-szerű checkbox, hanem select/popup-kompatibilis mezők lettek használva.
+- Backend: plugin AJAX mentésben bekerült a teljes `loszer_*` sanitize + validáció + `va_loszer_*` meta mentés (új feladás + szerkesztés ágakban is).
+- Kötelező mezők: `loszer-tolteny` kategóriánál a `brand`, `caliber`, `loszer_category`, `loszer_condition` mezők kötelezők.
+- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+
 ## 2026. 05. 27. – Session #hatastalanitott-kategoria-es-popup-szabaly
 - Kérés: az új kategóriáknál soha ne legyen lista-szerű kipipálható checkbox mező; popup lenyílós többválasztó legyen a standard.
 - Javítás: a `Hatástalanított fegyverek` kategória teljes mezőblokkal bekerült a feladási űrlapba (root + plugin mirror), a többválasztós mezők popup-kompatibilis `select[multiple]` formában készültek (`hatastalanitott_working_parts[]`, `hatastalanitott_accessories[]`).
