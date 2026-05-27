@@ -260,7 +260,7 @@ $category_required_rules = [
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
     'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
-    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -344,6 +344,38 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'dog_color' => get_post_meta( $maybe_id, 'va_dog_color', true ),
             'dog_purebred' => get_post_meta( $maybe_id, 'va_dog_purebred', true ),
             'shoe_size'   => get_post_meta( $maybe_id, 'va_shoe_size',   true ),
+            'shoe_main_type' => get_post_meta( $maybe_id, 'va_shoe_main_type', true ),
+            'shoe_condition' => get_post_meta( $maybe_id, 'va_shoe_condition', true ),
+            'shoe_gender' => get_post_meta( $maybe_id, 'va_shoe_gender', true ),
+            'shoe_eu_size' => get_post_meta( $maybe_id, 'va_shoe_eu_size', true ),
+            'shoe_uk_size' => get_post_meta( $maybe_id, 'va_shoe_uk_size', true ),
+            'shoe_us_size' => get_post_meta( $maybe_id, 'va_shoe_us_size', true ),
+            'shoe_boot_height' => get_post_meta( $maybe_id, 'va_shoe_boot_height', true ),
+            'shoe_outer_material' => get_post_meta( $maybe_id, 'va_shoe_outer_material', true ),
+            'shoe_lining' => get_post_meta( $maybe_id, 'va_shoe_lining', true ),
+            'shoe_sole_material' => get_post_meta( $maybe_id, 'va_shoe_sole_material', true ),
+            'shoe_protections' => get_post_meta( $maybe_id, 'va_shoe_protections', true ),
+            'shoe_season' => get_post_meta( $maybe_id, 'va_shoe_season', true ),
+            'shoe_terrain' => get_post_meta( $maybe_id, 'va_shoe_terrain', true ),
+            'shoe_use_cases' => get_post_meta( $maybe_id, 'va_shoe_use_cases', true ),
+            'shoe_sole_pattern' => get_post_meta( $maybe_id, 'va_shoe_sole_pattern', true ),
+            'shoe_stiffness' => get_post_meta( $maybe_id, 'va_shoe_stiffness', true ),
+            'shoe_weight_single_g' => get_post_meta( $maybe_id, 'va_shoe_weight_single_g', true ),
+            'shoe_weight_pair_g' => get_post_meta( $maybe_id, 'va_shoe_weight_pair_g', true ),
+            'shoe_accessories' => get_post_meta( $maybe_id, 'va_shoe_accessories', true ),
+            'shoe_shipping_methods' => get_post_meta( $maybe_id, 'va_shoe_shipping_methods', true ),
+            'shoe_required_media' => get_post_meta( $maybe_id, 'va_shoe_required_media', true ),
+            'shoe_rubber_shaft_cm' => get_post_meta( $maybe_id, 'va_shoe_rubber_shaft_cm', true ),
+            'shoe_rubber_neoprene_lining' => get_post_meta( $maybe_id, 'va_shoe_rubber_neoprene_lining', true ),
+            'shoe_tactical_steel_toe' => get_post_meta( $maybe_id, 'va_shoe_tactical_steel_toe', true ),
+            'shoe_tactical_quick_lace' => get_post_meta( $maybe_id, 'va_shoe_tactical_quick_lace', true ),
+            'shoe_winter_comfort_temp_c' => get_post_meta( $maybe_id, 'va_shoe_winter_comfort_temp_c', true ),
+            'shoe_foot_type' => get_post_meta( $maybe_id, 'va_shoe_foot_type', true ),
+            'shoe_sole_wear_percent' => get_post_meta( $maybe_id, 'va_shoe_sole_wear_percent', true ),
+            'shoe_inner_wear' => get_post_meta( $maybe_id, 'va_shoe_inner_wear', true ),
+            'shoe_waterproof_retained' => get_post_meta( $maybe_id, 'va_shoe_waterproof_retained', true ),
+            'shoe_resoled' => get_post_meta( $maybe_id, 'va_shoe_resoled', true ),
+            'shoe_notes' => get_post_meta( $maybe_id, 'va_shoe_notes', true ),
             'clothing_type' => get_post_meta( $maybe_id, 'va_clothing_type', true ),
             'clothing_size_system' => get_post_meta( $maybe_id, 'va_clothing_size_system', true ),
             'clothing_size' => get_post_meta( $maybe_id, 'va_clothing_size', true ),
@@ -2394,6 +2426,60 @@ body.va-modal-open {
                 <div class="va-year-input-wrap">
                     <input type="text" name="shoe_size" id="va-shoe-size-input" class="va-input" placeholder="pl. EU 43" readonly value="<?php echo esc_attr((string)($edit_meta['shoe_size'] ?? '')); ?>">
                     <button type="button" class="va-year-open-btn" id="va-shoe-size-open">Mérettáblázat</button>
+                </div>
+            </div>
+            <?php
+            $shoe_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $shoe_protections_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_protections' ) ) ) );
+            $shoe_season_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_season' ) ) ) );
+            $shoe_terrain_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_terrain' ) ) ) );
+            $shoe_use_cases_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_use_cases' ) ) ) );
+            $shoe_accessories_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_accessories' ) ) ) );
+            $shoe_shipping_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_shipping_methods' ) ) ) );
+            $shoe_required_media_saved = array_filter( array_map( 'trim', explode( ',', $shoe_meta( 'shoe_required_media' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-shoe-fields-grid" data-categories="cipo-bakancs,bakancs-felcipo,ruhazat-labbeli" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Típus</label><?php $v = $shoe_meta( 'shoe_main_type' ); ?><select name="shoe_main_type" id="va-shoe-main-type" class="va-select"><option value="">– Válasszon –</option><option value="vadaszbakancs"<?php selected( $v, 'vadaszbakancs' ); ?>>Vadászbakancs</option><option value="turabakancs"<?php selected( $v, 'turabakancs' ); ?>>Túrabakancs</option><option value="gumicsizma"<?php selected( $v, 'gumicsizma' ); ?>>Gumicsizma</option><option value="felcipo"<?php selected( $v, 'felcipo' ); ?>>Félcipő</option><option value="teli-csizma"<?php selected( $v, 'teli-csizma' ); ?>>Téli csizma</option><option value="nyari-cipo"<?php selected( $v, 'nyari-cipo' ); ?>>Nyári cipő</option><option value="taktikai-bakancs"<?php selected( $v, 'taktikai-bakancs' ); ?>>Taktikai bakancs</option><option value="hotaposo"<?php selected( $v, 'hotaposo' ); ?>>Hótaposó</option><option value="munkabakancs"<?php selected( $v, 'munkabakancs' ); ?>>Munkabakancs</option><option value="wading-csizma"<?php selected( $v, 'wading-csizma' ); ?>>Wading csizma</option><option value="vadasz-gumicsizma"<?php selected( $v, 'vadasz-gumicsizma' ); ?>>Vadász gumicsizma</option><option value="lescsizma"<?php selected( $v, 'lescsizma' ); ?>>Lescsizma</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $shoe_meta( 'shoe_condition' ); ?><select name="shoe_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="javitott"<?php selected( $v, 'javitott' ); ?>>Javított</option></select></div>
+                    <div class="va-form-group"><label>Nem</label><?php $v = $shoe_meta( 'shoe_gender' ); ?><select name="shoe_gender" class="va-select"><option value="">– Válasszon –</option><option value="ferfi"<?php selected( $v, 'ferfi' ); ?>>Férfi</option><option value="noi"<?php selected( $v, 'noi' ); ?>>Női</option><option value="unisex"<?php selected( $v, 'unisex' ); ?>>Unisex</option></select></div>
+                    <div class="va-form-group"><label>EU méret</label><input type="text" name="shoe_eu_size" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_eu_size' ) !== '' ? $shoe_meta( 'shoe_eu_size' ) : $shoe_meta( 'shoe_size' ) ); ?>" placeholder="pl. EU 43"></div>
+                    <div class="va-form-group"><label>UK méret</label><input type="text" name="shoe_uk_size" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_uk_size' ) ); ?>" placeholder="pl. UK 9"></div>
+                    <div class="va-form-group"><label>US méret</label><input type="text" name="shoe_us_size" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_us_size' ) ); ?>" placeholder="pl. US 10"></div>
+                    <div class="va-form-group"><label>Szármagasság</label><?php $v = $shoe_meta( 'shoe_boot_height' ); ?><select name="shoe_boot_height" class="va-select"><option value="">– Válasszon –</option><option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option></select></div>
+                    <div class="va-form-group"><label>Külső anyag</label><?php $v = $shoe_meta( 'shoe_outer_material' ); ?><select name="shoe_outer_material" class="va-select"><option value="">– Válasszon –</option><option value="bor"<?php selected( $v, 'bor' ); ?>>Bőr</option><option value="nubuk"<?php selected( $v, 'nubuk' ); ?>>Nubuk</option><option value="velur"<?php selected( $v, 'velur' ); ?>>Velúr</option><option value="cordura"<?php selected( $v, 'cordura' ); ?>>Cordura</option><option value="textil"<?php selected( $v, 'textil' ); ?>>Textil</option><option value="gumi"<?php selected( $v, 'gumi' ); ?>>Gumi</option><option value="kevert"<?php selected( $v, 'kevert' ); ?>>Kevert</option></select></div>
+                    <div class="va-form-group"><label>Bélés</label><?php $v = $shoe_meta( 'shoe_lining' ); ?><select name="shoe_lining" class="va-select"><option value="">– Válasszon –</option><option value="gore-tex"<?php selected( $v, 'gore-tex' ); ?>>Gore-Tex</option><option value="sympatex"<?php selected( $v, 'sympatex' ); ?>>Sympatex</option><option value="thinsulate"<?php selected( $v, 'thinsulate' ); ?>>Thinsulate</option><option value="polar"<?php selected( $v, 'polar' ); ?>>Polár</option><option value="gyapju"<?php selected( $v, 'gyapju' ); ?>>Gyapjú</option><option value="beleletlen"<?php selected( $v, 'beleletlen' ); ?>>Béleletlen</option></select></div>
+                    <div class="va-form-group"><label>Talp anyaga</label><?php $v = $shoe_meta( 'shoe_sole_material' ); ?><select name="shoe_sole_material" class="va-select"><option value="">– Válasszon –</option><option value="vibram"<?php selected( $v, 'vibram' ); ?>>Vibram</option><option value="gumi"<?php selected( $v, 'gumi' ); ?>>Gumi</option><option value="pu"<?php selected( $v, 'pu' ); ?>>PU</option><option value="eva"<?php selected( $v, 'eva' ); ?>>EVA</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Védelem</label><select name="shoe_protections[]" class="va-select" multiple data-placeholder="Válassz védelmeket"><option value="vizallo"<?php echo in_array( 'vizallo', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Vízálló</option><option value="vizlepergeto"<?php echo in_array( 'vizlepergeto', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Vízlepergető</option><option value="legatereszto"<?php echo in_array( 'legatereszto', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Légáteresztő</option><option value="szelallo"<?php echo in_array( 'szelallo', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Szélálló</option><option value="hoszigetelt"<?php echo in_array( 'hoszigetelt', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Hőszigetelt</option><option value="olajallo"<?php echo in_array( 'olajallo', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Olajálló</option><option value="csuszasmentes"<?php echo in_array( 'csuszasmentes', $shoe_protections_saved, true ) ? ' selected' : ''; ?>>Csúszásmentes</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Használati szezon</label><select name="shoe_season[]" class="va-select" multiple data-placeholder="Válassz szezont"><option value="nyari"<?php echo in_array( 'nyari', $shoe_season_saved, true ) ? ' selected' : ''; ?>>Nyári</option><option value="oszi"<?php echo in_array( 'oszi', $shoe_season_saved, true ) ? ' selected' : ''; ?>>Őszi</option><option value="teli"<?php echo in_array( 'teli', $shoe_season_saved, true ) ? ' selected' : ''; ?>>Téli</option><option value="negyevszakos"<?php echo in_array( 'negyevszakos', $shoe_season_saved, true ) ? ' selected' : ''; ?>>Négyévszakos</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Terep típus</label><select name="shoe_terrain[]" class="va-select" multiple data-placeholder="Válassz terepet"><option value="erdo"<?php echo in_array( 'erdo', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Erdő</option><option value="hegyvidek"<?php echo in_array( 'hegyvidek', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Hegyvidék</option><option value="sar"<?php echo in_array( 'sar', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Sár</option><option value="ho"<?php echo in_array( 'ho', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Hó</option><option value="sziklas"<?php echo in_array( 'sziklas', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Sziklás terep</option><option value="vizes-terulet"<?php echo in_array( 'vizes-terulet', $shoe_terrain_saved, true ) ? ' selected' : ''; ?>>Vizes terület</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="shoe_use_cases[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="vadaszat"<?php echo in_array( 'vadaszat', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Vadászat</option><option value="cserkeles"<?php echo in_array( 'cserkeles', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option><option value="hajtas"<?php echo in_array( 'hajtas', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="tura"<?php echo in_array( 'tura', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Túra</option><option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option><option value="horgaszat"<?php echo in_array( 'horgaszat', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Horgászat</option><option value="airsoft"<?php echo in_array( 'airsoft', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Airsoft</option><option value="munkavegzes"<?php echo in_array( 'munkavegzes', $shoe_use_cases_saved, true ) ? ' selected' : ''; ?>>Munkavégzés</option></select></div>
+                    <div class="va-form-group"><label>Talpminta</label><?php $v = $shoe_meta( 'shoe_sole_pattern' ); ?><select name="shoe_sole_pattern" class="va-select"><option value="">– Válasszon –</option><option value="mely-mintas"<?php selected( $v, 'mely-mintas' ); ?>>Mély mintás</option><option value="univerzalis"<?php selected( $v, 'univerzalis' ); ?>>Univerzális</option><option value="teli"<?php selected( $v, 'teli' ); ?>>Téli</option><option value="terep"<?php selected( $v, 'terep' ); ?>>Terep</option></select></div>
+                    <div class="va-form-group"><label>Merevség</label><?php $v = $shoe_meta( 'shoe_stiffness' ); ?><select name="shoe_stiffness" class="va-select"><option value="">– Válasszon –</option><option value="puha"<?php selected( $v, 'puha' ); ?>>Puha</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="merev"<?php selected( $v, 'merev' ); ?>>Merev</option></select></div>
+                    <div class="va-form-group"><label>Egy cipő súlya (g)</label><input type="text" name="shoe_weight_single_g" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_weight_single_g' ) ); ?>" placeholder="pl. 620"></div>
+                    <div class="va-form-group"><label>Pár súlya (g)</label><input type="text" name="shoe_weight_pair_g" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_weight_pair_g' ) ); ?>" placeholder="pl. 1240"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="shoe_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékokat"><option value="eredeti-doboz"<?php echo in_array( 'eredeti-doboz', $shoe_accessories_saved, true ) ? ' selected' : ''; ?>>Eredeti doboz</option><option value="plusz-fuzo"<?php echo in_array( 'plusz-fuzo', $shoe_accessories_saved, true ) ? ' selected' : ''; ?>>Plusz fűző</option><option value="impregnalo"<?php echo in_array( 'impregnalo', $shoe_accessories_saved, true ) ? ' selected' : ''; ?>>Impregnáló</option><option value="talpbetet"<?php echo in_array( 'talpbetet', $shoe_accessories_saved, true ) ? ' selected' : ''; ?>>Talpbetét</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Szállítás</label><select name="shoe_shipping_methods[]" class="va-select" multiple data-placeholder="Válassz szállítási módot"><option value="posta"<?php echo in_array( 'posta', $shoe_shipping_saved, true ) ? ' selected' : ''; ?>>Posta</option><option value="futar"<?php echo in_array( 'futar', $shoe_shipping_saved, true ) ? ' selected' : ''; ?>>Futár</option><option value="szemelyes"<?php echo in_array( 'szemelyes', $shoe_shipping_saved, true ) ? ' selected' : ''; ?>>Személyes</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Kötelező képek</label><select name="shoe_required_media[]" class="va-select" multiple data-placeholder="Válassz kötelező fotókat"><option value="oldalnezet"<?php echo in_array( 'oldalnezet', $shoe_required_media_saved, true ) ? ' selected' : ''; ?>>Oldalnézet</option><option value="talp"<?php echo in_array( 'talp', $shoe_required_media_saved, true ) ? ' selected' : ''; ?>>Talp</option><option value="belso-resz"<?php echo in_array( 'belso-resz', $shoe_required_media_saved, true ) ? ' selected' : ''; ?>>Belső rész</option><option value="meret-cimke"<?php echo in_array( 'meret-cimke', $shoe_required_media_saved, true ) ? ' selected' : ''; ?>>Méret címke</option><option value="orr-resz"<?php echo in_array( 'orr-resz', $shoe_required_media_saved, true ) ? ' selected' : ''; ?>>Orr rész</option></select></div>
+                    <div class="va-form-group va-shoe-dynamic-group" data-shoe-types="gumicsizma,vadasz-gumicsizma,lescsizma,wading-csizma" style="display:none;"><label>Szármagasság (cm)</label><input type="text" name="shoe_rubber_shaft_cm" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_rubber_shaft_cm' ) ); ?>" placeholder="pl. 38"></div>
+                    <div class="va-form-group va-shoe-dynamic-group" data-shoe-types="gumicsizma,vadasz-gumicsizma,lescsizma,wading-csizma" style="display:none;"><label>Neoprene bélés</label><?php $v = $shoe_meta( 'shoe_rubber_neoprene_lining' ); ?><select name="shoe_rubber_neoprene_lining" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-shoe-dynamic-group" data-shoe-types="taktikai-bakancs" style="display:none;"><label>Acélbetét</label><?php $v = $shoe_meta( 'shoe_tactical_steel_toe' ); ?><select name="shoe_tactical_steel_toe" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-shoe-dynamic-group" data-shoe-types="taktikai-bakancs" style="display:none;"><label>Gyorsfűző</label><?php $v = $shoe_meta( 'shoe_tactical_quick_lace' ); ?><select name="shoe_tactical_quick_lace" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-shoe-dynamic-group" data-shoe-types="teli-csizma,hotaposo" style="display:none;"><label>Komfort hőmérséklet (°C)</label><input type="text" name="shoe_winter_comfort_temp_c" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_winter_comfort_temp_c' ) ); ?>" placeholder="pl. -20"></div>
+                    <div class="va-form-group"><label>Lábtípus</label><?php $v = $shoe_meta( 'shoe_foot_type' ); ?><select name="shoe_foot_type" class="va-select"><option value="">– Válasszon –</option><option value="normal"<?php selected( $v, 'normal' ); ?>>Normál</option><option value="szeles"<?php selected( $v, 'szeles' ); ?>>Széles</option><option value="keskeny"<?php selected( $v, 'keskeny' ); ?>>Keskeny</option></select></div>
+                    <div class="va-form-group"><label>Talp kopása (%)</label><input type="text" name="shoe_sole_wear_percent" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_sole_wear_percent' ) ); ?>" placeholder="pl. 15"></div>
+                    <div class="va-form-group"><label>Belső kopás</label><input type="text" name="shoe_inner_wear" class="va-input" value="<?php echo esc_attr( $shoe_meta( 'shoe_inner_wear' ) ); ?>" placeholder="pl. minimális"></div>
+                    <div class="va-form-group"><label>Vízállóság megmaradt?</label><?php $v = $shoe_meta( 'shoe_waterproof_retained' ); ?><select name="shoe_waterproof_retained" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option><option value="reszben"<?php selected( $v, 'reszben' ); ?>>Részben</option></select></div>
+                    <div class="va-form-group"><label>Újratalpalt?</label><?php $v = $shoe_meta( 'shoe_resoled' ); ?><select name="shoe_resoled" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Megjegyzés</label><textarea name="shoe_notes" class="va-input" rows="3" placeholder="pl. membrán állapota, tereptapasztalat, egyéb részlet"><?php echo esc_textarea( $shoe_meta( 'shoe_notes' ) ); ?></textarea></div>
                 </div>
             </div>
             <div class="va-cat-rule-field" data-categories="vadasz-ruhazat,egyeb-ruhazat">
@@ -4610,11 +4696,12 @@ document.addEventListener('DOMContentLoaded', function() {
     /* ══ Cipőméret popup picker ════════════════════════ */
     (function initShoeSizePicker(){
         var $input = $('#va-shoe-size-input');
+        var $euInput = $('[name="shoe_eu_size"]');
         var $modal = $('#va-shoe-size-modal');
         var $grid = $('#va-shoe-size-grid');
         if (!$input.length || !$modal.length || !$grid.length) return;
 
-        var sizes = ['EU 35','EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42','EU 43','EU 44','EU 45','EU 46','EU 47','EU 48'];
+        var sizes = ['EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42','EU 43','EU 44','EU 45','EU 46','EU 47','EU 48','EU 49','EU 50','EU 50+'];
 
         function renderSizes() {
             var selected = (($input.val() || '') + '').trim();
@@ -4644,6 +4731,9 @@ document.addEventListener('DOMContentLoaded', function() {
             var size = (($(this).data('size') || '') + '').trim();
             if (size) {
                 $input.val(size).trigger('input').trigger('change');
+                if ($euInput.length) {
+                    $euInput.val(size).trigger('input').trigger('change');
+                }
             }
             closeShoeModal();
         });
@@ -5899,6 +5989,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyShoeDynamicFields() {
+        var type = (($('#va-shoe-main-type').val() || '') + '').trim();
+        $('.va-shoe-dynamic-group').each(function(){
+            var list = (($(this).data('shoeTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
@@ -5980,6 +6078,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-vadcamera-camera-type', function(){
         applyVadcameraDynamicFields();
     });
+    $(document).on('change', '#va-shoe-main-type', function(){
+        applyShoeDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -5995,6 +6096,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
     applyCategorySpecificFieldVisibility();
     applyVadcameraDynamicFields();
+    applyShoeDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
     switchBrandModelFieldMode();
@@ -6170,6 +6272,10 @@ document.addEventListener('DOMContentLoaded', function() {
             vadcamera_video_resolution: 'Videó felbontás',
             vadcamera_ip_rating: 'IP védelem',
             vadcamera_sim_slot: 'SIM kártyás?',
+            shoe_main_type: 'Típus',
+            shoe_eu_size: 'EU méret',
+            shoe_condition: 'Állapot',
+            shoe_boot_height: 'Szármagasság',
             estate_main_type: 'Hagyaték fő típusa',
         };
         var missing = [];
