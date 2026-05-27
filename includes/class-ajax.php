@@ -932,6 +932,50 @@ class VA_Ajax {
         $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $knife_condition = sanitize_key( wp_unslash( $_POST['knife_condition'] ?? '' ) );
+        $knife_manufacture_year = sanitize_text_field( wp_unslash( $_POST['knife_manufacture_year'] ?? '' ) );
+        $knife_total_length_cm = sanitize_text_field( wp_unslash( $_POST['knife_total_length_cm'] ?? '' ) );
+        $knife_blade_length_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_length_mm'] ?? '' ) );
+        $knife_blade_thickness_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_thickness_mm'] ?? '' ) );
+        $knife_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_weight_g'] ?? '' ) );
+        $knife_steel_type = sanitize_key( wp_unslash( $_POST['knife_steel_type'] ?? '' ) );
+        $knife_blade_shape = sanitize_key( wp_unslash( $_POST['knife_blade_shape'] ?? '' ) );
+        $knife_blade_edge = sanitize_key( wp_unslash( $_POST['knife_blade_edge'] ?? '' ) );
+        $knife_finish = sanitize_key( wp_unslash( $_POST['knife_finish'] ?? '' ) );
+        $knife_construction = sanitize_key( wp_unslash( $_POST['knife_construction'] ?? '' ) );
+        $knife_locking_type = sanitize_key( wp_unslash( $_POST['knife_locking_type'] ?? '' ) );
+        $knife_one_hand_opening = sanitize_key( wp_unslash( $_POST['knife_one_hand_opening'] ?? '' ) );
+        $knife_handle_material = sanitize_key( wp_unslash( $_POST['knife_handle_material'] ?? '' ) );
+        $knife_handle_color = sanitize_text_field( wp_unslash( $_POST['knife_handle_color'] ?? '' ) );
+        $knife_has_sheath = sanitize_key( wp_unslash( $_POST['knife_has_sheath'] ?? '' ) );
+        $knife_sheath_type = sanitize_key( wp_unslash( $_POST['knife_sheath_type'] ?? '' ) );
+        $knife_belt_carry = sanitize_key( wp_unslash( $_POST['knife_belt_carry'] ?? '' ) );
+        $knife_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_usage'] ?? [] ) ) ) );
+        $knife_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_features'] ?? [] ) ) ) );
+        $knife_age_restriction = sanitize_key( wp_unslash( $_POST['knife_age_restriction'] ?? '' ) );
+        $knife_restricted = sanitize_key( wp_unslash( $_POST['knife_restricted'] ?? '' ) );
+        $knife_public_carry = sanitize_key( wp_unslash( $_POST['knife_public_carry'] ?? '' ) );
+        $knife_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_accessories'] ?? [] ) ) ) );
+        $knife_price_deal = sanitize_key( wp_unslash( $_POST['knife_price_deal'] ?? '' ) );
+        $knife_price_exchange = sanitize_key( wp_unslash( $_POST['knife_price_exchange'] ?? '' ) );
+        $knife_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_shipping_methods'] ?? [] ) ) ) );
+        $knife_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_required_media'] ?? [] ) ) ) );
+        $knife_sharpening_state = sanitize_key( wp_unslash( $_POST['knife_sharpening_state'] ?? '' ) );
+        $knife_collectible_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_collectible_flags'] ?? [] ) ) ) );
+        $knife_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_moderation_flags'] ?? [] ) ) ) );
+        $knife_axe_head_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_axe_head_weight_g'] ?? '' ) );
+        $knife_axe_handle_material = sanitize_text_field( wp_unslash( $_POST['knife_axe_handle_material'] ?? '' ) );
+        $knife_multitool_function_count = sanitize_text_field( wp_unslash( $_POST['knife_multitool_function_count'] ?? '' ) );
+        if ( $knife_blade_length_mm === '' && $knife_blade_length !== '' && is_numeric( $knife_blade_length ) ) {
+            $knife_blade_length_mm = (string) ( (int) round( (float) $knife_blade_length * 10 ) );
+        }
+        if ( $knife_blade_length === '' && $knife_blade_length_mm !== '' && is_numeric( $knife_blade_length_mm ) ) {
+            $knife_blade_length = (string) round( (float) $knife_blade_length_mm / 10, 1 );
+        }
+        $knife_filter_type = in_array( $knife_type, [ 'bicska', 'zsebkes' ], true ) ? 'bicska' : 'fix';
+        $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
+        $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
+        $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
@@ -1302,6 +1346,9 @@ class VA_Ajax {
             'clothing_gender' => $clothing_gender,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
+            'knife_condition' => $knife_condition,
+            'knife_blade_length_mm' => $knife_blade_length_mm,
+            'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
@@ -1359,6 +1406,8 @@ class VA_Ajax {
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
         $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
         $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
+        $is_knife_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'kesek', 'vadaszkes-vadasztor', 'taktikai-kes-taktikai-tor', 'konyhakes', 'svajci-bicska' ], true );
+        $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1487,6 +1536,52 @@ class VA_Ajax {
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
+            'va_knife_condition' => $knife_condition,
+            'va_knife_manufacture_year' => $knife_manufacture_year,
+            'va_knife_total_length_cm' => $knife_total_length_cm,
+            'va_knife_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_blade_thickness_mm' => $knife_blade_thickness_mm,
+            'va_knife_weight_g' => $knife_weight_g,
+            'va_knife_steel_type' => $knife_steel_type,
+            'va_knife_blade_shape' => $knife_blade_shape,
+            'va_knife_blade_edge' => $knife_blade_edge,
+            'va_knife_finish' => $knife_finish,
+            'va_knife_construction' => $knife_construction,
+            'va_knife_locking_type' => $knife_locking_type,
+            'va_knife_one_hand_opening' => $knife_one_hand_opening,
+            'va_knife_handle_material' => $knife_handle_material,
+            'va_knife_handle_color' => $knife_handle_color,
+            'va_knife_has_sheath' => $knife_has_sheath,
+            'va_knife_sheath_type' => $knife_sheath_type,
+            'va_knife_belt_carry' => $knife_belt_carry,
+            'va_knife_usage' => $knife_usage,
+            'va_knife_features' => $knife_features,
+            'va_knife_age_restriction' => $knife_age_restriction,
+            'va_knife_restricted' => $knife_restricted,
+            'va_knife_public_carry' => $knife_public_carry,
+            'va_knife_accessories' => $knife_accessories,
+            'va_knife_price_deal' => $knife_price_deal,
+            'va_knife_price_exchange' => $knife_price_exchange,
+            'va_knife_shipping_methods' => $knife_shipping_methods,
+            'va_knife_required_media' => $knife_required_media,
+            'va_knife_sharpening_state' => $knife_sharpening_state,
+            'va_knife_collectible_flags' => $knife_collectible_flags,
+            'va_knife_moderation_flags' => $knife_moderation_flags,
+            'va_knife_axe_head_weight_g' => $knife_axe_head_weight_g,
+            'va_knife_axe_handle_material' => $knife_axe_handle_material,
+            'va_knife_multitool_function_count' => $knife_multitool_function_count,
+            'va_knife_filter_type' => $knife_filter_type,
+            'va_knife_filter_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_filter_steel_type' => $knife_steel_type,
+            'va_knife_filter_locking_type' => $knife_locking_type,
+            'va_knife_filter_handle_material' => $knife_handle_material,
+            'va_knife_filter_blade_shape' => $knife_blade_shape,
+            'va_knife_filter_full_tang' => $knife_filter_full_tang,
+            'va_knife_filter_bushcraft' => $knife_filter_bushcraft,
+            'va_knife_filter_vadasz' => $knife_filter_vadasz,
+            'va_knife_filter_condition' => $knife_condition,
+            'va_knife_needs_review' => ! empty( $knife_moderation_hits ) ? '1' : '0',
+            'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
             'va_trophy_mount_type' => $trophy_mount_type,
@@ -2057,6 +2152,50 @@ class VA_Ajax {
         $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
+        $knife_condition = sanitize_key( wp_unslash( $_POST['knife_condition'] ?? '' ) );
+        $knife_manufacture_year = sanitize_text_field( wp_unslash( $_POST['knife_manufacture_year'] ?? '' ) );
+        $knife_total_length_cm = sanitize_text_field( wp_unslash( $_POST['knife_total_length_cm'] ?? '' ) );
+        $knife_blade_length_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_length_mm'] ?? '' ) );
+        $knife_blade_thickness_mm = sanitize_text_field( wp_unslash( $_POST['knife_blade_thickness_mm'] ?? '' ) );
+        $knife_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_weight_g'] ?? '' ) );
+        $knife_steel_type = sanitize_key( wp_unslash( $_POST['knife_steel_type'] ?? '' ) );
+        $knife_blade_shape = sanitize_key( wp_unslash( $_POST['knife_blade_shape'] ?? '' ) );
+        $knife_blade_edge = sanitize_key( wp_unslash( $_POST['knife_blade_edge'] ?? '' ) );
+        $knife_finish = sanitize_key( wp_unslash( $_POST['knife_finish'] ?? '' ) );
+        $knife_construction = sanitize_key( wp_unslash( $_POST['knife_construction'] ?? '' ) );
+        $knife_locking_type = sanitize_key( wp_unslash( $_POST['knife_locking_type'] ?? '' ) );
+        $knife_one_hand_opening = sanitize_key( wp_unslash( $_POST['knife_one_hand_opening'] ?? '' ) );
+        $knife_handle_material = sanitize_key( wp_unslash( $_POST['knife_handle_material'] ?? '' ) );
+        $knife_handle_color = sanitize_text_field( wp_unslash( $_POST['knife_handle_color'] ?? '' ) );
+        $knife_has_sheath = sanitize_key( wp_unslash( $_POST['knife_has_sheath'] ?? '' ) );
+        $knife_sheath_type = sanitize_key( wp_unslash( $_POST['knife_sheath_type'] ?? '' ) );
+        $knife_belt_carry = sanitize_key( wp_unslash( $_POST['knife_belt_carry'] ?? '' ) );
+        $knife_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_usage'] ?? [] ) ) ) );
+        $knife_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_features'] ?? [] ) ) ) );
+        $knife_age_restriction = sanitize_key( wp_unslash( $_POST['knife_age_restriction'] ?? '' ) );
+        $knife_restricted = sanitize_key( wp_unslash( $_POST['knife_restricted'] ?? '' ) );
+        $knife_public_carry = sanitize_key( wp_unslash( $_POST['knife_public_carry'] ?? '' ) );
+        $knife_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_accessories'] ?? [] ) ) ) );
+        $knife_price_deal = sanitize_key( wp_unslash( $_POST['knife_price_deal'] ?? '' ) );
+        $knife_price_exchange = sanitize_key( wp_unslash( $_POST['knife_price_exchange'] ?? '' ) );
+        $knife_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_shipping_methods'] ?? [] ) ) ) );
+        $knife_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_required_media'] ?? [] ) ) ) );
+        $knife_sharpening_state = sanitize_key( wp_unslash( $_POST['knife_sharpening_state'] ?? '' ) );
+        $knife_collectible_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_collectible_flags'] ?? [] ) ) ) );
+        $knife_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['knife_moderation_flags'] ?? [] ) ) ) );
+        $knife_axe_head_weight_g = sanitize_text_field( wp_unslash( $_POST['knife_axe_head_weight_g'] ?? '' ) );
+        $knife_axe_handle_material = sanitize_text_field( wp_unslash( $_POST['knife_axe_handle_material'] ?? '' ) );
+        $knife_multitool_function_count = sanitize_text_field( wp_unslash( $_POST['knife_multitool_function_count'] ?? '' ) );
+        if ( $knife_blade_length_mm === '' && $knife_blade_length !== '' && is_numeric( $knife_blade_length ) ) {
+            $knife_blade_length_mm = (string) ( (int) round( (float) $knife_blade_length * 10 ) );
+        }
+        if ( $knife_blade_length === '' && $knife_blade_length_mm !== '' && is_numeric( $knife_blade_length_mm ) ) {
+            $knife_blade_length = (string) round( (float) $knife_blade_length_mm / 10, 1 );
+        }
+        $knife_filter_type = in_array( $knife_type, [ 'bicska', 'zsebkes' ], true ) ? 'bicska' : 'fix';
+        $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
+        $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
+        $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
         $trophy_mount_type = sanitize_key( wp_unslash( $_POST['trophy_mount_type'] ?? '' ) );
         $trophy_style = sanitize_key( wp_unslash( $_POST['trophy_style'] ?? '' ) );
@@ -2395,6 +2534,9 @@ class VA_Ajax {
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
+            'knife_condition' => $knife_condition,
+            'knife_blade_length_mm' => $knife_blade_length_mm,
+            'knife_steel_type' => $knife_steel_type,
             'knife_blade_length' => $knife_blade_length,
             'trophy_species' => $trophy_species,
             'trophy_mount_type' => $trophy_mount_type,
@@ -2452,6 +2594,8 @@ class VA_Ajax {
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
         $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
         $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
+        $is_knife_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'kesek', 'vadaszkes-vadasztor', 'taktikai-kes-taktikai-tor', 'konyhakes', 'svajci-bicska' ], true );
+        $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
@@ -2581,6 +2725,52 @@ class VA_Ajax {
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
+            'va_knife_condition' => $knife_condition,
+            'va_knife_manufacture_year' => $knife_manufacture_year,
+            'va_knife_total_length_cm' => $knife_total_length_cm,
+            'va_knife_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_blade_thickness_mm' => $knife_blade_thickness_mm,
+            'va_knife_weight_g' => $knife_weight_g,
+            'va_knife_steel_type' => $knife_steel_type,
+            'va_knife_blade_shape' => $knife_blade_shape,
+            'va_knife_blade_edge' => $knife_blade_edge,
+            'va_knife_finish' => $knife_finish,
+            'va_knife_construction' => $knife_construction,
+            'va_knife_locking_type' => $knife_locking_type,
+            'va_knife_one_hand_opening' => $knife_one_hand_opening,
+            'va_knife_handle_material' => $knife_handle_material,
+            'va_knife_handle_color' => $knife_handle_color,
+            'va_knife_has_sheath' => $knife_has_sheath,
+            'va_knife_sheath_type' => $knife_sheath_type,
+            'va_knife_belt_carry' => $knife_belt_carry,
+            'va_knife_usage' => $knife_usage,
+            'va_knife_features' => $knife_features,
+            'va_knife_age_restriction' => $knife_age_restriction,
+            'va_knife_restricted' => $knife_restricted,
+            'va_knife_public_carry' => $knife_public_carry,
+            'va_knife_accessories' => $knife_accessories,
+            'va_knife_price_deal' => $knife_price_deal,
+            'va_knife_price_exchange' => $knife_price_exchange,
+            'va_knife_shipping_methods' => $knife_shipping_methods,
+            'va_knife_required_media' => $knife_required_media,
+            'va_knife_sharpening_state' => $knife_sharpening_state,
+            'va_knife_collectible_flags' => $knife_collectible_flags,
+            'va_knife_moderation_flags' => $knife_moderation_flags,
+            'va_knife_axe_head_weight_g' => $knife_axe_head_weight_g,
+            'va_knife_axe_handle_material' => $knife_axe_handle_material,
+            'va_knife_multitool_function_count' => $knife_multitool_function_count,
+            'va_knife_filter_type' => $knife_filter_type,
+            'va_knife_filter_blade_length_mm' => $knife_blade_length_mm,
+            'va_knife_filter_steel_type' => $knife_steel_type,
+            'va_knife_filter_locking_type' => $knife_locking_type,
+            'va_knife_filter_handle_material' => $knife_handle_material,
+            'va_knife_filter_blade_shape' => $knife_blade_shape,
+            'va_knife_filter_full_tang' => $knife_filter_full_tang,
+            'va_knife_filter_bushcraft' => $knife_filter_bushcraft,
+            'va_knife_filter_vadasz' => $knife_filter_vadasz,
+            'va_knife_filter_condition' => $knife_condition,
+            'va_knife_needs_review' => ! empty( $knife_moderation_hits ) ? '1' : '0',
+            'va_knife_review_hits' => implode( ',', $knife_moderation_hits ),
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
             'va_trophy_mount_type' => $trophy_mount_type,
