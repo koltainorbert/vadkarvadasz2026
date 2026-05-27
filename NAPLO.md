@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Session #takarmany-vadfaj-popup
+- Kérés: a takarmány blokkban a `Milyen vadnak ajánlott` checkbox lista legyen popup lenyíló.
+- Javítás: a checkboxok helyett popup többválasztós mező került be (`feed_recommended_game_flags[]`).
+- Kompatibilitás: a backend mentés frissítve, hogy az új popup tömbből és a régi checkbox POST-ból is helyesen mentse a `va_feed_game_*` metát.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php` + plugin mirrorok.
+
 ## 2026. 05. 27. – Session #ij-tartozek-popup
 - Kérés: az íjaknál a kipipálható tartozéklista popup lenyíló legyen.
 - Javítás: a checkbox lista popup többválasztós mezőre cserélve (`bow_accessories_flags[]`) a submit formban.
