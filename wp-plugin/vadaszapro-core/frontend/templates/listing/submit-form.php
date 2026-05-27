@@ -3247,7 +3247,7 @@ body.va-modal-open {
                     <?php
                     $knife_type_val = (string) ( $edit_meta['knife_type'] ?? '' );
                     $knife_usage_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_usage'] ?? '' ) ) ) );
-                    $knife_features_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_features'] ?? '' ) ) );
+                    $knife_features_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_features'] ?? '' ) ) ) );
                     $knife_accessories_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_accessories'] ?? '' ) ) ) );
                     $knife_shipping_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_shipping_methods'] ?? '' ) ) ) );
                     $knife_media_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_required_media'] ?? '' ) ) ) );
