@@ -186,7 +186,7 @@ class VA_Ajax {
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
             'szallas'           => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
-            'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+            'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
             'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -360,6 +360,23 @@ class VA_Ajax {
             'hunt_required_media' => 'Kötelező képek',
             'hunt_video_types' => 'Videó',
             'hunt_moderation_flags' => 'Moderációs jelölők',
+            'hunt_damage_main_type' => 'Vadkár elhárítás fő típusa',
+            'hunt_settlement' => 'Település',
+            'hunt_land_type' => 'Terület típusa',
+            'hunt_response_time' => 'Reakcióidő',
+            'hunt_availability_mode' => 'Elérhetőség',
+            'hunt_executor_type' => 'Végrehajtó',
+            'hunt_executor_capacity' => 'Kapacitás',
+            'hunt_tools' => 'Eszközök',
+            'hunt_weapon_use_required' => 'Fegyverhasználat szükséges',
+            'hunt_land_manager_permit' => 'Területgazdálkodói engedély',
+            'hunt_hunting_company_coop' => 'Együttműködés vadásztársasággal',
+            'hunt_liability_insurance' => 'Felelősségbiztosítás',
+            'hunt_damage_nature' => 'Kár jellege',
+            'hunt_pricing_model' => 'Árazás modell',
+            'hunt_travel_fee' => 'Kiszállás díja',
+            'hunt_contract_type' => 'Szerződés típusa',
+            'hunt_site_conditions' => 'Helyszíni feltételek',
             'hunt_trophy_category' => 'Várható trófea kategória',
             'hunt_trophy_weight_limit' => 'Súlyhatár',
             'hunt_travel_assist' => 'Utazás segítés',
@@ -627,6 +644,23 @@ class VA_Ajax {
         }
 
         return array_values( array_unique( $hits ) );
+    }
+
+    private static function map_response_time_to_hours( string $response_time ): int {
+        switch ( $response_time ) {
+            case 'azonnal-0-2':
+                return 2;
+            case '24-oran-belul':
+                return 24;
+            case '48-oran-belul':
+                return 48;
+            case 'szezonalis-jelenlet':
+                return 168;
+            case 'folyamatos-jelenlet':
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     private static function detect_marok_moderation_hits( string $title, string $description, string $notes = '' ): array {
@@ -1402,12 +1436,44 @@ class VA_Ajax {
         $hunt_shot_limit = sanitize_text_field( wp_unslash( $_POST['hunt_shot_limit'] ?? '' ) );
         $hunt_real_time_slots = sanitize_text_field( wp_unslash( $_POST['hunt_real_time_slots'] ?? '' ) );
         $hunt_bookable_dates = sanitize_text_field( wp_unslash( $_POST['hunt_bookable_dates'] ?? '' ) );
+        $hunt_damage_main_type = sanitize_key( wp_unslash( $_POST['hunt_damage_main_type'] ?? '' ) );
+        $hunt_settlement = sanitize_text_field( wp_unslash( $_POST['hunt_settlement'] ?? '' ) );
+        $hunt_land_type = sanitize_key( wp_unslash( $_POST['hunt_land_type'] ?? '' ) );
+        $hunt_response_time = sanitize_key( wp_unslash( $_POST['hunt_response_time'] ?? '' ) );
+        $hunt_availability_mode = sanitize_key( wp_unslash( $_POST['hunt_availability_mode'] ?? '' ) );
+        $hunt_executor_type = sanitize_key( wp_unslash( $_POST['hunt_executor_type'] ?? '' ) );
+        $hunt_executor_capacity = sanitize_key( wp_unslash( $_POST['hunt_executor_capacity'] ?? '' ) );
+        $hunt_tools = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_tools'] ?? [] ) ) ) );
+        $hunt_weapon_use_required = sanitize_key( wp_unslash( $_POST['hunt_weapon_use_required'] ?? '' ) );
+        $hunt_land_manager_permit = sanitize_key( wp_unslash( $_POST['hunt_land_manager_permit'] ?? '' ) );
+        $hunt_hunting_company_coop = sanitize_key( wp_unslash( $_POST['hunt_hunting_company_coop'] ?? '' ) );
+        $hunt_liability_insurance = sanitize_key( wp_unslash( $_POST['hunt_liability_insurance'] ?? '' ) );
+        $hunt_damage_nature = sanitize_key( wp_unslash( $_POST['hunt_damage_nature'] ?? '' ) );
+        $hunt_pricing_model = sanitize_key( wp_unslash( $_POST['hunt_pricing_model'] ?? '' ) );
+        $hunt_travel_fee = sanitize_text_field( wp_unslash( $_POST['hunt_travel_fee'] ?? '' ) );
+        $hunt_contract_type = sanitize_key( wp_unslash( $_POST['hunt_contract_type'] ?? '' ) );
+        $hunt_site_conditions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_site_conditions'] ?? [] ) ) ) );
+        $hunt_reference_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_reference_media'] ?? [] ) ) ) );
+        $hunt_agri_hectare_size = sanitize_text_field( wp_unslash( $_POST['hunt_agri_hectare_size'] ?? '' ) );
+        $hunt_agri_culture_type = sanitize_text_field( wp_unslash( $_POST['hunt_agri_culture_type'] ?? '' ) );
+        $hunt_urgent_immediate_start = sanitize_key( wp_unslash( $_POST['hunt_urgent_immediate_start'] ?? '' ) );
+        $hunt_urgent_duty_phone = sanitize_text_field( wp_unslash( $_POST['hunt_urgent_duty_phone'] ?? '' ) );
+        $hunt_long_term_yearly_discount = sanitize_text_field( wp_unslash( $_POST['hunt_long_term_yearly_discount'] ?? '' ) );
+        $hunt_package_auto_seasonal = sanitize_key( wp_unslash( $_POST['hunt_package_auto_seasonal'] ?? '' ) );
+        $hunt_package_monthly_model = sanitize_key( wp_unslash( $_POST['hunt_package_monthly_model'] ?? '' ) );
+        $hunt_package_monitoring_intervention = sanitize_key( wp_unslash( $_POST['hunt_package_monitoring_intervention'] ?? '' ) );
         if ( $hunt_species_list === '' && $hunt_game_species !== '' ) {
             $hunt_species_list = $hunt_game_species;
         }
         if ( $hunt_has_guide === '' && $hunt_guide_type !== '' ) {
             $hunt_has_guide = $hunt_guide_type === 'nincs' ? 'nem' : 'igen';
         }
+        if ( $hunt_price_type === '' && $hunt_pricing_model !== '' ) {
+            $hunt_price_type = $hunt_pricing_model;
+        }
+        $hunt_response_time_hours = self::map_response_time_to_hours( $hunt_response_time );
+        $hunt_availability_24_7 = $hunt_availability_mode === '0-24' ? '1' : '0';
+        $hunt_method_types = $hunt_methods;
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
@@ -1802,6 +1868,23 @@ class VA_Ajax {
             'hunt_difficulty_level' => $hunt_difficulty_level,
             'hunt_season_start' => $hunt_season_start,
             'hunt_season_end' => $hunt_season_end,
+            'hunt_damage_main_type' => $hunt_damage_main_type,
+            'hunt_settlement' => $hunt_settlement,
+            'hunt_land_type' => $hunt_land_type,
+            'hunt_response_time' => $hunt_response_time,
+            'hunt_availability_mode' => $hunt_availability_mode,
+            'hunt_executor_type' => $hunt_executor_type,
+            'hunt_executor_capacity' => $hunt_executor_capacity,
+            'hunt_tools' => $hunt_tools,
+            'hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'hunt_liability_insurance' => $hunt_liability_insurance,
+            'hunt_damage_nature' => $hunt_damage_nature,
+            'hunt_pricing_model' => $hunt_pricing_model,
+            'hunt_travel_fee' => $hunt_travel_fee,
+            'hunt_contract_type' => $hunt_contract_type,
+            'hunt_site_conditions' => $hunt_site_conditions,
             'vadcamera_camera_type' => $vadcamera_camera_type,
             'vadcamera_connectivity' => $vadcamera_connectivity,
             'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
@@ -1851,7 +1934,7 @@ class VA_Ajax {
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
         $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
-        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-lehetoseg';
+        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'vadaszati-lehetoseg', 'vadkarelharitas' ], true );
         $hunt_moderation_hits = $is_hunt_category ? self::detect_hunt_moderation_hits( $title, $description, $hunt_moderation_flags . "\n" . $hunt_area_name . "\n" . $hunt_game_species ) : [];
 
         wp_update_post( [
@@ -2249,6 +2332,32 @@ class VA_Ajax {
             'va_hunt_shot_limit' => $hunt_shot_limit,
             'va_hunt_real_time_slots' => $hunt_real_time_slots,
             'va_hunt_bookable_dates' => $hunt_bookable_dates,
+            'va_hunt_damage_main_type' => $hunt_damage_main_type,
+            'va_hunt_settlement' => $hunt_settlement,
+            'va_hunt_land_type' => $hunt_land_type,
+            'va_hunt_response_time' => $hunt_response_time,
+            'va_hunt_availability_mode' => $hunt_availability_mode,
+            'va_hunt_executor_type' => $hunt_executor_type,
+            'va_hunt_executor_capacity' => $hunt_executor_capacity,
+            'va_hunt_tools' => $hunt_tools,
+            'va_hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'va_hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'va_hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'va_hunt_liability_insurance' => $hunt_liability_insurance,
+            'va_hunt_damage_nature' => $hunt_damage_nature,
+            'va_hunt_pricing_model' => $hunt_pricing_model,
+            'va_hunt_travel_fee' => $hunt_travel_fee,
+            'va_hunt_contract_type' => $hunt_contract_type,
+            'va_hunt_site_conditions' => $hunt_site_conditions,
+            'va_hunt_reference_media' => $hunt_reference_media,
+            'va_hunt_agri_hectare_size' => $hunt_agri_hectare_size,
+            'va_hunt_agri_culture_type' => $hunt_agri_culture_type,
+            'va_hunt_urgent_immediate_start' => $hunt_urgent_immediate_start,
+            'va_hunt_urgent_duty_phone' => $hunt_urgent_duty_phone,
+            'va_hunt_long_term_yearly_discount' => $hunt_long_term_yearly_discount,
+            'va_hunt_package_auto_seasonal' => $hunt_package_auto_seasonal,
+            'va_hunt_package_monthly_model' => $hunt_package_monthly_model,
+            'va_hunt_package_monitoring_intervention' => $hunt_package_monitoring_intervention,
             'va_hunt_needs_review' => ! empty( $hunt_moderation_hits ) ? '1' : '0',
             'va_hunt_review_hits' => implode( ',', $hunt_moderation_hits ),
             'va_hunt_filter_game_species' => $hunt_game_species,
@@ -2257,6 +2366,12 @@ class VA_Ajax {
             'va_hunt_filter_price_min' => $hunt_price_min,
             'va_hunt_filter_price_max' => $hunt_price_max,
             'va_hunt_filter_methods' => $hunt_methods,
+            'va_hunt_filter_method_types' => $hunt_method_types,
+            'va_hunt_filter_land_type' => $hunt_land_type,
+            'va_hunt_filter_response_time_hours' => (string) $hunt_response_time_hours,
+            'va_hunt_filter_contract_type' => $hunt_contract_type,
+            'va_hunt_filter_pricing_model' => $hunt_pricing_model,
+            'va_hunt_filter_availability_24_7' => $hunt_availability_24_7,
             'va_hunt_filter_has_accommodation' => $hunt_has_accommodation === 'igen' ? '1' : '0',
             'va_hunt_filter_has_guide' => $hunt_guide_type === 'nincs' ? '0' : '1',
             'va_hunt_filter_difficulty_level' => $hunt_difficulty_level,
@@ -3033,12 +3148,44 @@ class VA_Ajax {
         $hunt_shot_limit = sanitize_text_field( wp_unslash( $_POST['hunt_shot_limit'] ?? '' ) );
         $hunt_real_time_slots = sanitize_text_field( wp_unslash( $_POST['hunt_real_time_slots'] ?? '' ) );
         $hunt_bookable_dates = sanitize_text_field( wp_unslash( $_POST['hunt_bookable_dates'] ?? '' ) );
+        $hunt_damage_main_type = sanitize_key( wp_unslash( $_POST['hunt_damage_main_type'] ?? '' ) );
+        $hunt_settlement = sanitize_text_field( wp_unslash( $_POST['hunt_settlement'] ?? '' ) );
+        $hunt_land_type = sanitize_key( wp_unslash( $_POST['hunt_land_type'] ?? '' ) );
+        $hunt_response_time = sanitize_key( wp_unslash( $_POST['hunt_response_time'] ?? '' ) );
+        $hunt_availability_mode = sanitize_key( wp_unslash( $_POST['hunt_availability_mode'] ?? '' ) );
+        $hunt_executor_type = sanitize_key( wp_unslash( $_POST['hunt_executor_type'] ?? '' ) );
+        $hunt_executor_capacity = sanitize_key( wp_unslash( $_POST['hunt_executor_capacity'] ?? '' ) );
+        $hunt_tools = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_tools'] ?? [] ) ) ) );
+        $hunt_weapon_use_required = sanitize_key( wp_unslash( $_POST['hunt_weapon_use_required'] ?? '' ) );
+        $hunt_land_manager_permit = sanitize_key( wp_unslash( $_POST['hunt_land_manager_permit'] ?? '' ) );
+        $hunt_hunting_company_coop = sanitize_key( wp_unslash( $_POST['hunt_hunting_company_coop'] ?? '' ) );
+        $hunt_liability_insurance = sanitize_key( wp_unslash( $_POST['hunt_liability_insurance'] ?? '' ) );
+        $hunt_damage_nature = sanitize_key( wp_unslash( $_POST['hunt_damage_nature'] ?? '' ) );
+        $hunt_pricing_model = sanitize_key( wp_unslash( $_POST['hunt_pricing_model'] ?? '' ) );
+        $hunt_travel_fee = sanitize_text_field( wp_unslash( $_POST['hunt_travel_fee'] ?? '' ) );
+        $hunt_contract_type = sanitize_key( wp_unslash( $_POST['hunt_contract_type'] ?? '' ) );
+        $hunt_site_conditions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_site_conditions'] ?? [] ) ) ) );
+        $hunt_reference_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunt_reference_media'] ?? [] ) ) ) );
+        $hunt_agri_hectare_size = sanitize_text_field( wp_unslash( $_POST['hunt_agri_hectare_size'] ?? '' ) );
+        $hunt_agri_culture_type = sanitize_text_field( wp_unslash( $_POST['hunt_agri_culture_type'] ?? '' ) );
+        $hunt_urgent_immediate_start = sanitize_key( wp_unslash( $_POST['hunt_urgent_immediate_start'] ?? '' ) );
+        $hunt_urgent_duty_phone = sanitize_text_field( wp_unslash( $_POST['hunt_urgent_duty_phone'] ?? '' ) );
+        $hunt_long_term_yearly_discount = sanitize_text_field( wp_unslash( $_POST['hunt_long_term_yearly_discount'] ?? '' ) );
+        $hunt_package_auto_seasonal = sanitize_key( wp_unslash( $_POST['hunt_package_auto_seasonal'] ?? '' ) );
+        $hunt_package_monthly_model = sanitize_key( wp_unslash( $_POST['hunt_package_monthly_model'] ?? '' ) );
+        $hunt_package_monitoring_intervention = sanitize_key( wp_unslash( $_POST['hunt_package_monitoring_intervention'] ?? '' ) );
         if ( $hunt_species_list === '' && $hunt_game_species !== '' ) {
             $hunt_species_list = $hunt_game_species;
         }
         if ( $hunt_has_guide === '' && $hunt_guide_type !== '' ) {
             $hunt_has_guide = $hunt_guide_type === 'nincs' ? 'nem' : 'igen';
         }
+        if ( $hunt_price_type === '' && $hunt_pricing_model !== '' ) {
+            $hunt_price_type = $hunt_pricing_model;
+        }
+        $hunt_response_time_hours = self::map_response_time_to_hours( $hunt_response_time );
+        $hunt_availability_24_7 = $hunt_availability_mode === '0-24' ? '1' : '0';
+        $hunt_method_types = $hunt_methods;
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
@@ -3401,6 +3548,23 @@ class VA_Ajax {
             'hunt_difficulty_level' => $hunt_difficulty_level,
             'hunt_season_start' => $hunt_season_start,
             'hunt_season_end' => $hunt_season_end,
+            'hunt_damage_main_type' => $hunt_damage_main_type,
+            'hunt_settlement' => $hunt_settlement,
+            'hunt_land_type' => $hunt_land_type,
+            'hunt_response_time' => $hunt_response_time,
+            'hunt_availability_mode' => $hunt_availability_mode,
+            'hunt_executor_type' => $hunt_executor_type,
+            'hunt_executor_capacity' => $hunt_executor_capacity,
+            'hunt_tools' => $hunt_tools,
+            'hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'hunt_liability_insurance' => $hunt_liability_insurance,
+            'hunt_damage_nature' => $hunt_damage_nature,
+            'hunt_pricing_model' => $hunt_pricing_model,
+            'hunt_travel_fee' => $hunt_travel_fee,
+            'hunt_contract_type' => $hunt_contract_type,
+            'hunt_site_conditions' => $hunt_site_conditions,
             'vadcamera_camera_type' => $vadcamera_camera_type,
             'vadcamera_connectivity' => $vadcamera_connectivity,
             'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
@@ -3450,7 +3614,7 @@ class VA_Ajax {
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
         $trophy_moderation_hits = $is_trophy_category ? self::detect_trophy_moderation_hits( $title, $description, $trophy_moderation_flags . "\n" . $trophy_maker ) : [];
-        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-lehetoseg';
+        $is_hunt_category = $estate_term && ! is_wp_error( $estate_term ) && in_array( sanitize_title( (string) $estate_term->slug ), [ 'vadaszati-lehetoseg', 'vadkarelharitas' ], true );
         $hunt_moderation_hits = $is_hunt_category ? self::detect_hunt_moderation_hits( $title, $description, $hunt_moderation_flags . "\n" . $hunt_area_name . "\n" . $hunt_game_species ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
@@ -3849,6 +4013,32 @@ class VA_Ajax {
             'va_hunt_shot_limit' => $hunt_shot_limit,
             'va_hunt_real_time_slots' => $hunt_real_time_slots,
             'va_hunt_bookable_dates' => $hunt_bookable_dates,
+            'va_hunt_damage_main_type' => $hunt_damage_main_type,
+            'va_hunt_settlement' => $hunt_settlement,
+            'va_hunt_land_type' => $hunt_land_type,
+            'va_hunt_response_time' => $hunt_response_time,
+            'va_hunt_availability_mode' => $hunt_availability_mode,
+            'va_hunt_executor_type' => $hunt_executor_type,
+            'va_hunt_executor_capacity' => $hunt_executor_capacity,
+            'va_hunt_tools' => $hunt_tools,
+            'va_hunt_weapon_use_required' => $hunt_weapon_use_required,
+            'va_hunt_land_manager_permit' => $hunt_land_manager_permit,
+            'va_hunt_hunting_company_coop' => $hunt_hunting_company_coop,
+            'va_hunt_liability_insurance' => $hunt_liability_insurance,
+            'va_hunt_damage_nature' => $hunt_damage_nature,
+            'va_hunt_pricing_model' => $hunt_pricing_model,
+            'va_hunt_travel_fee' => $hunt_travel_fee,
+            'va_hunt_contract_type' => $hunt_contract_type,
+            'va_hunt_site_conditions' => $hunt_site_conditions,
+            'va_hunt_reference_media' => $hunt_reference_media,
+            'va_hunt_agri_hectare_size' => $hunt_agri_hectare_size,
+            'va_hunt_agri_culture_type' => $hunt_agri_culture_type,
+            'va_hunt_urgent_immediate_start' => $hunt_urgent_immediate_start,
+            'va_hunt_urgent_duty_phone' => $hunt_urgent_duty_phone,
+            'va_hunt_long_term_yearly_discount' => $hunt_long_term_yearly_discount,
+            'va_hunt_package_auto_seasonal' => $hunt_package_auto_seasonal,
+            'va_hunt_package_monthly_model' => $hunt_package_monthly_model,
+            'va_hunt_package_monitoring_intervention' => $hunt_package_monitoring_intervention,
             'va_hunt_needs_review' => ! empty( $hunt_moderation_hits ) ? '1' : '0',
             'va_hunt_review_hits' => implode( ',', $hunt_moderation_hits ),
             'va_hunt_filter_game_species' => $hunt_game_species,
@@ -3857,6 +4047,12 @@ class VA_Ajax {
             'va_hunt_filter_price_min' => $hunt_price_min,
             'va_hunt_filter_price_max' => $hunt_price_max,
             'va_hunt_filter_methods' => $hunt_methods,
+            'va_hunt_filter_method_types' => $hunt_method_types,
+            'va_hunt_filter_land_type' => $hunt_land_type,
+            'va_hunt_filter_response_time_hours' => (string) $hunt_response_time_hours,
+            'va_hunt_filter_contract_type' => $hunt_contract_type,
+            'va_hunt_filter_pricing_model' => $hunt_pricing_model,
+            'va_hunt_filter_availability_24_7' => $hunt_availability_24_7,
             'va_hunt_filter_has_accommodation' => $hunt_has_accommodation === 'igen' ? '1' : '0',
             'va_hunt_filter_has_guide' => $hunt_guide_type === 'nincs' ? '0' : '1',
             'va_hunt_filter_difficulty_level' => $hunt_difficulty_level,

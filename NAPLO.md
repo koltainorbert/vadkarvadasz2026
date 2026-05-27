@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #vadkarelharitas-kategoria-kritikus-bovites
+- Kérés: a meglévő vadászati mezőrendszer megtartása mellett dedikált `Vadkárelhárítás` bővítés készüljön (reakcióidő, elérhetőség, végrehajtói kapacitás, területtípus, kártípus, árazás/szerződés, eszközök, jogi-biztosítási mezők, dinamikus alcsoportok).
+- Frontend: a `va-hunt-option-fields-grid` blokk vadkár-specifikus mezőket kapott (`hunt_damage_main_type`, `hunt_land_type`, `hunt_response_time`, `hunt_availability_mode`, `hunt_executor_*`, `hunt_tools`, `hunt_pricing_model`, `hunt_contract_type`, stb.) + új vadfaj/módszer opciók.
+- Dinamikus logika: új `applyVadkarDynamicFields()` készült mezőcsoportokhoz (`mezőgazdasági` terület, `azonnali` reakció, `hosszú távú` szerződés).
+- Validáció: frontend + backend required szabály frissítve a `vadkarelharitas` slug kritikus mezőire.
+- Backend: mindkét AJAX ágban bekerült a teljes vadkár-specifikus sanitize + validációs térkép + meta mentés (`va_hunt_*` kulcsok), és új vadkár-fókuszú filter meták (`response_time_hours`, `land_type`, `method_types`, `contract_type`, `pricing_model`, `availability_24_7`).
+- Moderáció: a vadkár kategória is bekerült a hunt moderációs detektor hatókörébe.
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 27. – Session #vadaszati-lehetoseg-kategoria-konverzios-bovites
 - Kérés: a `Vadászati lehetőség` kategória teljes konverziós mezőrendszere készüljön el (típus, vadfaj, helyszín, ár, módszer, jogi, biztonság, körülmények, trófea, média, dinamikus mezők).
 - Frontend: a vadászati blokk kibővítve többválasztós vadfaj/módszer/szolgáltatás/biztonság mezőkkel, dátum és ár modellel, trófea és külföldi opciókkal, valós idejű elérhetőség mezőkkel.
