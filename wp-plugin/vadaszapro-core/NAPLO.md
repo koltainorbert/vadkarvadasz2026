@@ -14,6 +14,8 @@
 - Technikai váltás: az `fb-group` SDK beágyazás helyett `facebook.com/plugins/group.php` iframe került be, stabilabb megjelenítéshez.
 - Végső módosítás: felhasználói kérésre az embed blokk teljesen kivezetve, minden extra háttér/stílusdoboz eltávolítva.
 - Végső módosítás 2: az oldal rövid késleltetéssel automatikusan a Facebook csoport URL-re irányít, így biztosan megnyílik a csoport (nincs `Not Found` iframe állapot).
+- Kérésre visszaállítás: az automatikus átirányítás kivezetve; a csoportoldal újra helyben marad.
+- Kérésre visszaállítás 2: minimál (extra háttér/blokk nélkül) Facebook iframe beágyazás került vissza, hogy a csoport a saját aloldalon nyíljon.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 

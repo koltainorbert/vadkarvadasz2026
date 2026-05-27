@@ -27,6 +27,19 @@ if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
 }
 
 $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebookon' );
+$iframe_src = add_query_arg(
+    [
+        'href'                   => $group_url,
+        'tabs'                   => 'timeline',
+        'width'                  => '1200',
+        'height'                 => '980',
+        'small_header'           => 'false',
+        'adapt_container_width'  => 'true',
+        'hide_cover'             => 'false',
+        'show_facepile'          => 'true',
+    ],
+    'https://www.facebook.com/plugins/page.php'
+);
 ?>
 
 <section class="va-fb-group-page" aria-label="Facebook csoport oldal">
@@ -37,14 +50,20 @@ $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebooko
                 <?php echo esc_html( $open_label ); ?>
             </a>
         </header>
+
+        <div class="va-fb-group-page__embed-wrap">
+            <iframe
+                class="va-fb-group-page__frame"
+                src="<?php echo esc_url( $iframe_src ); ?>"
+                allowfullscreen="true"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Facebook csoport beagyazas">
+            </iframe>
+        </div>
     </div>
 </section>
-
-<script>
-setTimeout(function(){
-    window.location.href = <?php echo wp_json_encode( esc_url( $group_url ) ); ?>;
-}, 220);
-</script>
 
 <style>
     .va-fb-group-page {
@@ -83,6 +102,29 @@ setTimeout(function(){
     .va-fb-group-page__open:hover {
         transform: translateY(-1px);
         background: rgba(255, 255, 255, .06);
+    }
+
+    .va-fb-group-page__embed-wrap {
+        margin-top: 16px;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        overflow: hidden;
+        background: transparent;
+    }
+
+    .va-fb-group-page__frame {
+        width: 100%;
+        min-height: 960px;
+        border: 0;
+        display: block;
+        background: transparent;
+    }
+
+    @media (max-width: 800px) {
+        .va-fb-group-page__frame {
+            min-height: 780px;
+        }
     }
 </style>
 
