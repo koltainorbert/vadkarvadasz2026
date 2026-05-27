@@ -70,6 +70,11 @@
 - Javítás: a checkbox átmozgatva a gyártási év blokk közvetlen alá, a korábbi helyéről kikerült.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-other-weapon-license-move
+- Kérés: az `Egyéb fegyverek` saját engedélykérő checkboxa is a gyártási év alá kerüljön.
+- Javítás: az `other_weapon_permit_required` mező a felső év-blokkba lett áthelyezve, az egyéb fegyverek részéből kivéve.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.

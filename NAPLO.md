@@ -70,6 +70,11 @@
 - Javítás: a checkbox átmozgatva a gyártási év blokk közvetlen alá, a korábbi helyéről kikerült.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-other-weapon-license-move
+- Kérés: az `Egyéb fegyverek` saját engedélykérő checkboxa is a gyártási év alá kerüljön.
+- Javítás: az `other_weapon_permit_required` mező a felső év-blokkba lett áthelyezve, az egyéb fegyverek részéből kivéve.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.
