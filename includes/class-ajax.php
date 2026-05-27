@@ -175,7 +175,7 @@ class VA_Ajax {
             'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
-            'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
+            'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
@@ -292,6 +292,14 @@ class VA_Ajax {
             'hunt_capacity' => 'Létszám / fő',
             'hunt_species_list' => 'Vadászható fajok listája',
             'hunt_lease_type' => 'Lesbérleti / hozzáférési forma',
+            'vadcamera_camera_type' => 'Kamera típusa',
+            'vadcamera_connectivity' => 'Adatkapcsolat',
+            'vadcamera_trigger_speed' => 'Trigger idő',
+            'vadcamera_ir_type' => 'Infra típusa',
+            'vadcamera_night_range_m' => 'Éjszakai hatótáv (m)',
+            'vadcamera_video_resolution' => 'Videó felbontás',
+            'vadcamera_ip_rating' => 'IP védelem',
+            'vadcamera_sim_slot' => 'SIM kártyás?',
             'estate_main_type' => 'Hagyaték fő típusa',
         ];
 
@@ -331,6 +339,30 @@ class VA_Ajax {
             'sorozatlövő',
             'katonai keszlet',
             'katonai készlet',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_vadcamera_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'rejtett megfigyelo',
+            'rejtett megfigyelő',
+            'illegalis lehallgato',
+            'illegális lehallgató',
+            'titkos kamera',
         ];
 
         $hits = [];
@@ -782,6 +814,45 @@ class VA_Ajax {
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
+        $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
+        $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
+        $vadcamera_manufacture_year = sanitize_text_field( wp_unslash( $_POST['vadcamera_manufacture_year'] ?? '' ) );
+        $vadcamera_photo_resolution = sanitize_key( wp_unslash( $_POST['vadcamera_photo_resolution'] ?? '' ) );
+        $vadcamera_video_resolution = sanitize_key( wp_unslash( $_POST['vadcamera_video_resolution'] ?? '' ) );
+        $vadcamera_video_fps = sanitize_key( wp_unslash( $_POST['vadcamera_video_fps'] ?? '' ) );
+        $vadcamera_video_audio = sanitize_key( wp_unslash( $_POST['vadcamera_video_audio'] ?? '' ) );
+        $vadcamera_ir_type = sanitize_key( wp_unslash( $_POST['vadcamera_ir_type'] ?? '' ) );
+        $vadcamera_night_range_m = sanitize_text_field( wp_unslash( $_POST['vadcamera_night_range_m'] ?? '' ) );
+        $vadcamera_ir_led_count = sanitize_text_field( wp_unslash( $_POST['vadcamera_ir_led_count'] ?? '' ) );
+        $vadcamera_trigger_speed = sanitize_key( wp_unslash( $_POST['vadcamera_trigger_speed'] ?? '' ) );
+        $vadcamera_pir_distance_m = sanitize_text_field( wp_unslash( $_POST['vadcamera_pir_distance_m'] ?? '' ) );
+        $vadcamera_view_angle_deg = sanitize_text_field( wp_unslash( $_POST['vadcamera_view_angle_deg'] ?? '' ) );
+        $vadcamera_connectivity = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_connectivity'] ?? [] ) ) ) );
+        $vadcamera_sim_slot = sanitize_key( wp_unslash( $_POST['vadcamera_sim_slot'] ?? '' ) );
+        $vadcamera_mobile_app = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_mobile_app'] ?? [] ) ) ) );
+        $vadcamera_sd_max_gb = sanitize_text_field( wp_unslash( $_POST['vadcamera_sd_max_gb'] ?? '' ) );
+        $vadcamera_internal_memory = sanitize_key( wp_unslash( $_POST['vadcamera_internal_memory'] ?? '' ) );
+        $vadcamera_power_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_power_types'] ?? [] ) ) ) );
+        $vadcamera_runtime = sanitize_text_field( wp_unslash( $_POST['vadcamera_runtime'] ?? '' ) );
+        $vadcamera_ip_rating = sanitize_key( wp_unslash( $_POST['vadcamera_ip_rating'] ?? '' ) );
+        $vadcamera_temp_range = sanitize_text_field( wp_unslash( $_POST['vadcamera_temp_range'] ?? '' ) );
+        $vadcamera_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_accessories'] ?? [] ) ) ) );
+        $vadcamera_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_use_cases'] ?? [] ) ) ) );
+        $vadcamera_audio_record = sanitize_key( wp_unslash( $_POST['vadcamera_audio_record'] ?? '' ) );
+        $vadcamera_public_area_use = sanitize_key( wp_unslash( $_POST['vadcamera_public_area_use'] ?? '' ) );
+        $vadcamera_mounting = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_mounting'] ?? [] ) ) ) );
+        $vadcamera_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_shipping_methods'] ?? [] ) ) ) );
+        $vadcamera_media_required = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_media_required'] ?? [] ) ) ) );
+        $vadcamera_sample_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_sample_media'] ?? [] ) ) ) );
+        $vadcamera_4g_carrier = sanitize_text_field( wp_unslash( $_POST['vadcamera_4g_carrier'] ?? '' ) );
+        $vadcamera_4g_app_support = sanitize_text_field( wp_unslash( $_POST['vadcamera_4g_app_support'] ?? '' ) );
+        $vadcamera_solar_panel_power = sanitize_text_field( wp_unslash( $_POST['vadcamera_solar_panel_power'] ?? '' ) );
+        $vadcamera_notes = sanitize_textarea_field( wp_unslash( $_POST['vadcamera_notes'] ?? '' ) );
+        $vadcamera_filter_connectivity_4g = ( strpos( ',' . $vadcamera_connectivity . ',', ',4g,' ) !== false || strpos( ',' . $vadcamera_connectivity . ',', ',lte,' ) !== false ) ? '1' : '0';
+        $vadcamera_filter_connectivity_wifi = ( strpos( ',' . $vadcamera_connectivity . ',', ',wifi,' ) !== false ) ? '1' : '0';
+        $vadcamera_filter_is_solar = ( strpos( ',' . $vadcamera_power_types . ',', ',napelem,' ) !== false || $vadcamera_camera_type === 'napelemes' ) ? '1' : '0';
+        $vadcamera_filter_is_sim = ( $vadcamera_sim_slot === 'igen' ) ? '1' : '0';
         $estate_main_type = sanitize_key( wp_unslash( $_POST['estate_main_type'] ?? '' ) );
         $estate_sale_mode = sanitize_key( wp_unslash( $_POST['estate_sale_mode'] ?? '' ) );
         $estate_price_total = sanitize_text_field( wp_unslash( $_POST['estate_price_total'] ?? '' ) );
@@ -1069,6 +1140,14 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'vadcamera_camera_type' => $vadcamera_camera_type,
+            'vadcamera_connectivity' => $vadcamera_connectivity,
+            'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
+            'vadcamera_ir_type' => $vadcamera_ir_type,
+            'vadcamera_night_range_m' => $vadcamera_night_range_m,
+            'vadcamera_video_resolution' => $vadcamera_video_resolution,
+            'vadcamera_ip_rating' => $vadcamera_ip_rating,
+            'vadcamera_sim_slot' => $vadcamera_sim_slot,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -1094,6 +1173,10 @@ class VA_Ajax {
         $estate_term = $category > 0 ? get_term( $category, 'va_category' ) : null;
         $is_estate_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadaszati-hagyatek';
         $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
+        $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
+        $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
+        $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
+        $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1211,6 +1294,52 @@ class VA_Ajax {
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_exchange_target' => $exchange_target,
+            'va_vadcamera_camera_type' => $vadcamera_camera_type,
+            'va_vadcamera_condition' => $vadcamera_condition,
+            'va_vadcamera_warranty' => $vadcamera_warranty,
+            'va_vadcamera_manufacture_year' => $vadcamera_manufacture_year,
+            'va_vadcamera_photo_resolution' => $vadcamera_photo_resolution,
+            'va_vadcamera_video_resolution' => $vadcamera_video_resolution,
+            'va_vadcamera_video_fps' => $vadcamera_video_fps,
+            'va_vadcamera_video_audio' => $vadcamera_video_audio,
+            'va_vadcamera_ir_type' => $vadcamera_ir_type,
+            'va_vadcamera_night_range_m' => $vadcamera_night_range_m,
+            'va_vadcamera_ir_led_count' => $vadcamera_ir_led_count,
+            'va_vadcamera_trigger_speed' => $vadcamera_trigger_speed,
+            'va_vadcamera_pir_distance_m' => $vadcamera_pir_distance_m,
+            'va_vadcamera_view_angle_deg' => $vadcamera_view_angle_deg,
+            'va_vadcamera_connectivity' => $vadcamera_connectivity,
+            'va_vadcamera_sim_slot' => $vadcamera_sim_slot,
+            'va_vadcamera_mobile_app' => $vadcamera_mobile_app,
+            'va_vadcamera_sd_max_gb' => $vadcamera_sd_max_gb,
+            'va_vadcamera_internal_memory' => $vadcamera_internal_memory,
+            'va_vadcamera_power_types' => $vadcamera_power_types,
+            'va_vadcamera_runtime' => $vadcamera_runtime,
+            'va_vadcamera_ip_rating' => $vadcamera_ip_rating,
+            'va_vadcamera_temp_range' => $vadcamera_temp_range,
+            'va_vadcamera_accessories' => $vadcamera_accessories,
+            'va_vadcamera_use_cases' => $vadcamera_use_cases,
+            'va_vadcamera_audio_record' => $vadcamera_audio_record,
+            'va_vadcamera_public_area_use' => $vadcamera_public_area_use,
+            'va_vadcamera_mounting' => $vadcamera_mounting,
+            'va_vadcamera_shipping_methods' => $vadcamera_shipping_methods,
+            'va_vadcamera_media_required' => $vadcamera_media_required,
+            'va_vadcamera_sample_media' => $vadcamera_sample_media,
+            'va_vadcamera_4g_carrier' => $vadcamera_4g_carrier,
+            'va_vadcamera_4g_app_support' => $vadcamera_4g_app_support,
+            'va_vadcamera_solar_panel_power' => $vadcamera_solar_panel_power,
+            'va_vadcamera_notes' => $vadcamera_notes,
+            'va_vadcamera_filter_connectivity_4g' => $vadcamera_filter_connectivity_4g,
+            'va_vadcamera_filter_connectivity_wifi' => $vadcamera_filter_connectivity_wifi,
+            'va_vadcamera_filter_trigger_speed' => $vadcamera_trigger_speed,
+            'va_vadcamera_filter_ir_type' => $vadcamera_ir_type,
+            'va_vadcamera_filter_night_range_m' => $vadcamera_night_range_m,
+            'va_vadcamera_filter_video_resolution' => $vadcamera_video_resolution,
+            'va_vadcamera_filter_ip_rating' => $vadcamera_ip_rating,
+            'va_vadcamera_filter_is_solar' => $vadcamera_filter_is_solar,
+            'va_vadcamera_filter_is_sim' => $vadcamera_filter_is_sim,
+            'va_vadcamera_needs_review' => ! empty( $vadcamera_moderation_hits ) ? '1' : '0',
+            'va_vadcamera_review_hits' => implode( ',', $vadcamera_moderation_hits ),
             'va_estate_main_type' => $estate_main_type,
             'va_estate_sale_mode' => $estate_sale_mode,
             'va_estate_price_total' => $estate_price_total,
@@ -1584,6 +1713,45 @@ class VA_Ajax {
         $hunt_has_accommodation = sanitize_key( wp_unslash( $_POST['hunt_has_accommodation'] ?? '' ) );
         $hunt_can_buy_game = sanitize_key( wp_unslash( $_POST['hunt_can_buy_game'] ?? '' ) );
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
+        $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
+        $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
+        $vadcamera_manufacture_year = sanitize_text_field( wp_unslash( $_POST['vadcamera_manufacture_year'] ?? '' ) );
+        $vadcamera_photo_resolution = sanitize_key( wp_unslash( $_POST['vadcamera_photo_resolution'] ?? '' ) );
+        $vadcamera_video_resolution = sanitize_key( wp_unslash( $_POST['vadcamera_video_resolution'] ?? '' ) );
+        $vadcamera_video_fps = sanitize_key( wp_unslash( $_POST['vadcamera_video_fps'] ?? '' ) );
+        $vadcamera_video_audio = sanitize_key( wp_unslash( $_POST['vadcamera_video_audio'] ?? '' ) );
+        $vadcamera_ir_type = sanitize_key( wp_unslash( $_POST['vadcamera_ir_type'] ?? '' ) );
+        $vadcamera_night_range_m = sanitize_text_field( wp_unslash( $_POST['vadcamera_night_range_m'] ?? '' ) );
+        $vadcamera_ir_led_count = sanitize_text_field( wp_unslash( $_POST['vadcamera_ir_led_count'] ?? '' ) );
+        $vadcamera_trigger_speed = sanitize_key( wp_unslash( $_POST['vadcamera_trigger_speed'] ?? '' ) );
+        $vadcamera_pir_distance_m = sanitize_text_field( wp_unslash( $_POST['vadcamera_pir_distance_m'] ?? '' ) );
+        $vadcamera_view_angle_deg = sanitize_text_field( wp_unslash( $_POST['vadcamera_view_angle_deg'] ?? '' ) );
+        $vadcamera_connectivity = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_connectivity'] ?? [] ) ) ) );
+        $vadcamera_sim_slot = sanitize_key( wp_unslash( $_POST['vadcamera_sim_slot'] ?? '' ) );
+        $vadcamera_mobile_app = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_mobile_app'] ?? [] ) ) ) );
+        $vadcamera_sd_max_gb = sanitize_text_field( wp_unslash( $_POST['vadcamera_sd_max_gb'] ?? '' ) );
+        $vadcamera_internal_memory = sanitize_key( wp_unslash( $_POST['vadcamera_internal_memory'] ?? '' ) );
+        $vadcamera_power_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_power_types'] ?? [] ) ) ) );
+        $vadcamera_runtime = sanitize_text_field( wp_unslash( $_POST['vadcamera_runtime'] ?? '' ) );
+        $vadcamera_ip_rating = sanitize_key( wp_unslash( $_POST['vadcamera_ip_rating'] ?? '' ) );
+        $vadcamera_temp_range = sanitize_text_field( wp_unslash( $_POST['vadcamera_temp_range'] ?? '' ) );
+        $vadcamera_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_accessories'] ?? [] ) ) ) );
+        $vadcamera_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_use_cases'] ?? [] ) ) ) );
+        $vadcamera_audio_record = sanitize_key( wp_unslash( $_POST['vadcamera_audio_record'] ?? '' ) );
+        $vadcamera_public_area_use = sanitize_key( wp_unslash( $_POST['vadcamera_public_area_use'] ?? '' ) );
+        $vadcamera_mounting = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_mounting'] ?? [] ) ) ) );
+        $vadcamera_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_shipping_methods'] ?? [] ) ) ) );
+        $vadcamera_media_required = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_media_required'] ?? [] ) ) ) );
+        $vadcamera_sample_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['vadcamera_sample_media'] ?? [] ) ) ) );
+        $vadcamera_4g_carrier = sanitize_text_field( wp_unslash( $_POST['vadcamera_4g_carrier'] ?? '' ) );
+        $vadcamera_4g_app_support = sanitize_text_field( wp_unslash( $_POST['vadcamera_4g_app_support'] ?? '' ) );
+        $vadcamera_solar_panel_power = sanitize_text_field( wp_unslash( $_POST['vadcamera_solar_panel_power'] ?? '' ) );
+        $vadcamera_notes = sanitize_textarea_field( wp_unslash( $_POST['vadcamera_notes'] ?? '' ) );
+        $vadcamera_filter_connectivity_4g = ( strpos( ',' . $vadcamera_connectivity . ',', ',4g,' ) !== false || strpos( ',' . $vadcamera_connectivity . ',', ',lte,' ) !== false ) ? '1' : '0';
+        $vadcamera_filter_connectivity_wifi = ( strpos( ',' . $vadcamera_connectivity . ',', ',wifi,' ) !== false ) ? '1' : '0';
+        $vadcamera_filter_is_solar = ( strpos( ',' . $vadcamera_power_types . ',', ',napelem,' ) !== false || $vadcamera_camera_type === 'napelemes' ) ? '1' : '0';
+        $vadcamera_filter_is_sim = ( $vadcamera_sim_slot === 'igen' ) ? '1' : '0';
         $estate_main_type = sanitize_key( wp_unslash( $_POST['estate_main_type'] ?? '' ) );
         $estate_sale_mode = sanitize_key( wp_unslash( $_POST['estate_sale_mode'] ?? '' ) );
         $estate_price_total = sanitize_text_field( wp_unslash( $_POST['estate_price_total'] ?? '' ) );
@@ -1841,6 +2009,14 @@ class VA_Ajax {
             'hunt_capacity' => $hunt_capacity,
             'hunt_species_list' => $hunt_species_list,
             'hunt_lease_type' => $hunt_lease_type,
+            'vadcamera_camera_type' => $vadcamera_camera_type,
+            'vadcamera_connectivity' => $vadcamera_connectivity,
+            'vadcamera_trigger_speed' => $vadcamera_trigger_speed,
+            'vadcamera_ir_type' => $vadcamera_ir_type,
+            'vadcamera_night_range_m' => $vadcamera_night_range_m,
+            'vadcamera_video_resolution' => $vadcamera_video_resolution,
+            'vadcamera_ip_rating' => $vadcamera_ip_rating,
+            'vadcamera_sim_slot' => $vadcamera_sim_slot,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -1981,6 +2157,52 @@ class VA_Ajax {
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_exchange_target' => $exchange_target,
+            'va_vadcamera_camera_type' => $vadcamera_camera_type,
+            'va_vadcamera_condition' => $vadcamera_condition,
+            'va_vadcamera_warranty' => $vadcamera_warranty,
+            'va_vadcamera_manufacture_year' => $vadcamera_manufacture_year,
+            'va_vadcamera_photo_resolution' => $vadcamera_photo_resolution,
+            'va_vadcamera_video_resolution' => $vadcamera_video_resolution,
+            'va_vadcamera_video_fps' => $vadcamera_video_fps,
+            'va_vadcamera_video_audio' => $vadcamera_video_audio,
+            'va_vadcamera_ir_type' => $vadcamera_ir_type,
+            'va_vadcamera_night_range_m' => $vadcamera_night_range_m,
+            'va_vadcamera_ir_led_count' => $vadcamera_ir_led_count,
+            'va_vadcamera_trigger_speed' => $vadcamera_trigger_speed,
+            'va_vadcamera_pir_distance_m' => $vadcamera_pir_distance_m,
+            'va_vadcamera_view_angle_deg' => $vadcamera_view_angle_deg,
+            'va_vadcamera_connectivity' => $vadcamera_connectivity,
+            'va_vadcamera_sim_slot' => $vadcamera_sim_slot,
+            'va_vadcamera_mobile_app' => $vadcamera_mobile_app,
+            'va_vadcamera_sd_max_gb' => $vadcamera_sd_max_gb,
+            'va_vadcamera_internal_memory' => $vadcamera_internal_memory,
+            'va_vadcamera_power_types' => $vadcamera_power_types,
+            'va_vadcamera_runtime' => $vadcamera_runtime,
+            'va_vadcamera_ip_rating' => $vadcamera_ip_rating,
+            'va_vadcamera_temp_range' => $vadcamera_temp_range,
+            'va_vadcamera_accessories' => $vadcamera_accessories,
+            'va_vadcamera_use_cases' => $vadcamera_use_cases,
+            'va_vadcamera_audio_record' => $vadcamera_audio_record,
+            'va_vadcamera_public_area_use' => $vadcamera_public_area_use,
+            'va_vadcamera_mounting' => $vadcamera_mounting,
+            'va_vadcamera_shipping_methods' => $vadcamera_shipping_methods,
+            'va_vadcamera_media_required' => $vadcamera_media_required,
+            'va_vadcamera_sample_media' => $vadcamera_sample_media,
+            'va_vadcamera_4g_carrier' => $vadcamera_4g_carrier,
+            'va_vadcamera_4g_app_support' => $vadcamera_4g_app_support,
+            'va_vadcamera_solar_panel_power' => $vadcamera_solar_panel_power,
+            'va_vadcamera_notes' => $vadcamera_notes,
+            'va_vadcamera_filter_connectivity_4g' => $vadcamera_filter_connectivity_4g,
+            'va_vadcamera_filter_connectivity_wifi' => $vadcamera_filter_connectivity_wifi,
+            'va_vadcamera_filter_trigger_speed' => $vadcamera_trigger_speed,
+            'va_vadcamera_filter_ir_type' => $vadcamera_ir_type,
+            'va_vadcamera_filter_night_range_m' => $vadcamera_night_range_m,
+            'va_vadcamera_filter_video_resolution' => $vadcamera_video_resolution,
+            'va_vadcamera_filter_ip_rating' => $vadcamera_ip_rating,
+            'va_vadcamera_filter_is_solar' => $vadcamera_filter_is_solar,
+            'va_vadcamera_filter_is_sim' => $vadcamera_filter_is_sim,
+            'va_vadcamera_needs_review' => ! empty( $vadcamera_moderation_hits ) ? '1' : '0',
+            'va_vadcamera_review_hits' => implode( ',', $vadcamera_moderation_hits ),
             'va_estate_main_type' => $estate_main_type,
             'va_estate_sale_mode' => $estate_sale_mode,
             'va_estate_price_total' => $estate_price_total,
