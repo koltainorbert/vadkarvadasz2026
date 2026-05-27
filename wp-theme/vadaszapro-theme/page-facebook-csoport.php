@@ -11,8 +11,18 @@ add_filter( 'body_class', function( $classes ) {
 
 get_header();
 
-$group_url = trim( (string) get_option( 'va_facebook_group_url', '' ) );
-if ( $group_url === '' ) {
+$content_url = trim( wp_strip_all_tags( (string) get_the_content() ) );
+$meta_url    = trim( (string) get_post_meta( get_the_ID(), 'va_facebook_group_url', true ) );
+$option_url  = trim( (string) get_option( 'va_facebook_group_url', '' ) );
+
+$group_url = $content_url;
+if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
+    $group_url = $meta_url;
+}
+if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
+    $group_url = $option_url;
+}
+if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
     $group_url = 'https://www.facebook.com/groups/';
 }
 
