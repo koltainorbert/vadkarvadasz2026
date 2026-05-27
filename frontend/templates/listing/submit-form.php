@@ -2448,29 +2448,58 @@ body.va-modal-open {
                     </div>
                 </div>
             </div>
-            <!-- Távcső kompakt grid layout -->
+            <!-- Távcső bővített grid layout -->
             <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
                 <div class="va-step2-4col-inner">
-                <!-- ROW 0: Távcső típusa (teljes szélesség) -->
+                <?php
+                $optic_type_val = (string)($edit_meta['optic_type'] ?? '');
+                $optic_zoom_val = (string)($edit_meta['optic_zoom'] ?? '');
+                $optic_obj_val = (string)($edit_meta['optic_objective'] ?? '');
+                $optic_obj_opts = ['20','21','24','25','30','32','35','40','42','44','50','56','60','62','72','80','100'];
+                $optic_magnification_min_val = (string)($edit_meta['optic_magnification_min'] ?? '');
+                $optic_magnification_max_val = (string)($edit_meta['optic_magnification_max'] ?? '');
+                $optic_magnification_fixed_val = (string)($edit_meta['optic_magnification_fixed'] ?? '');
+                $optic_waterproof_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_waterproof_flags'] ?? ''))));
+                $optic_rail_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_rail_compatibility'] ?? ''))));
+                $optic_weapon_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_weapon_compatibility'] ?? ''))));
+                $scope_accessories_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['scope_accessories_flags'] ?? ''))));
+                $optic_shipping_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_shipping_methods'] ?? ''))));
+                $optic_use_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_recommended_use'] ?? ''))));
+                $optic_moderation_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['optic_moderation_flags'] ?? ''))));
+                ?>
                 <div class="va-telescope-field va-telescope-type-wrap">
                     <label>Távcső típusa</label>
-                    <?php
-                    $optic_type_val = (string)($edit_meta['optic_type'] ?? '');
-                    ?>
                     <select name="optic_type" id="va-optic-type" class="va-select">
                         <option value="">– Válasszon típust –</option>
                         <option value="celtavcso"<?php selected($optic_type_val, 'celtavcso'); ?>>Céltávcső</option>
-                        <option value="kereso"<?php selected($optic_type_val, 'kereso'); ?>>Kereső</option>
+                        <option value="binokular"<?php selected($optic_type_val, 'binokular'); ?>>Binokulár</option>
+                        <option value="monokular"<?php selected($optic_type_val, 'monokular'); ?>>Monokulár</option>
                         <option value="spektiv"<?php selected($optic_type_val, 'spektiv'); ?>>Spektív</option>
+                        <option value="red-dot"<?php selected($optic_type_val, 'red-dot'); ?>>Red dot</option>
+                        <option value="holografikus"<?php selected($optic_type_val, 'holografikus'); ?>>Holografikus irányzék</option>
+                        <option value="prizmas"<?php selected($optic_type_val, 'prizmas'); ?>>Prizmás optika</option>
+                        <option value="reflex"<?php selected($optic_type_val, 'reflex'); ?>>Reflex irányzék</option>
+                        <option value="pisztolyoptika"<?php selected($optic_type_val, 'pisztolyoptika'); ?>>Pisztolyoptika</option>
+                        <option value="kereso"<?php selected($optic_type_val, 'kereso'); ?>>Keresőtávcső</option>
+                        <option value="tavmeros-binokular"<?php selected($optic_type_val, 'tavmeros-binokular'); ?>>Távmérős binokulár</option>
+                        <option value="airsoft"<?php selected($optic_type_val, 'airsoft'); ?>>Airsoft optika</option>
                         <option value="egyeb"<?php selected($optic_type_val, 'egyeb'); ?>>Egyéb</option>
                     </select>
                 </div>
-                <!-- ROW 1: Nagyítás | Objektív átmérő -->
                 <div class="va-telescope-field">
-                    <label>Nagyítás</label>
-                    <?php
-                    $optic_zoom_val = (string)($edit_meta['optic_zoom'] ?? '');
-                    ?>
+                    <label>Nagyítás minimum (x)</label>
+                    <input type="text" name="optic_magnification_min" class="va-input" value="<?php echo esc_attr($optic_magnification_min_val); ?>" placeholder="pl. 3">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Nagyítás maximum (x)</label>
+                    <input type="text" name="optic_magnification_max" class="va-input" value="<?php echo esc_attr($optic_magnification_max_val); ?>" placeholder="pl. 12">
+                </div>
+                <div class="va-telescope-field" data-optic-types="red-dot,holografikus,reflex,prizmas,pisztolyoptika,airsoft,egyeb">
+                    <label>Fix nagyítás (x)</label>
+                    <input type="text" name="optic_magnification_fixed" class="va-input" value="<?php echo esc_attr($optic_magnification_fixed_val); ?>" placeholder="pl. 1 vagy 4">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Nagyítás (kompatibilitási mező)</label>
                     <select name="optic_zoom" id="va-optic-zoom" class="va-select">
                         <option value="">– Válasszon –</option>
                         <?php if ($optic_zoom_val !== ''): ?>
@@ -2480,10 +2509,6 @@ body.va-modal-open {
                 </div>
                 <div class="va-telescope-field" data-visibility="tavcsovek,ejjellato-tavcso,hokamerak">
                     <label>Objektív átmérő (mm)</label>
-                    <?php
-                    $optic_obj_val = (string)($edit_meta['optic_objective'] ?? '');
-                    $optic_obj_opts = ['20','21','24','25','30','32','35','40','42','44','50','56','60','62','72','80','100'];
-                    ?>
                     <select name="optic_objective" id="va-optic-objective" class="va-select">
                         <option value="">– Válasszon –</option>
                         <?php if ($optic_obj_val !== '' && !in_array($optic_obj_val, $optic_obj_opts, true)): ?>
@@ -2494,29 +2519,291 @@ body.va-modal-open {
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <!-- ROW 2: Típus | Szürkületi érték -->
                 <div class="va-telescope-field">
-                    <label>Típus</label>
-                    <select name="scope_type" class="va-input">
+                    <label>Objektív rendszer</label>
+                    <select name="scope_type" class="va-select">
                         <option value="">-- Válassz típust --</option>
                         <option value="monokuláris"<?php echo ($edit_meta['scope_type'] ?? '') === 'monokuláris' ? ' selected' : ''; ?>>Monokuláris</option>
                         <option value="biokuláris"<?php echo ($edit_meta['scope_type'] ?? '') === 'biokuláris' ? ' selected' : ''; ?>>Biokuláris</option>
                     </select>
                 </div>
                 <div class="va-telescope-field">
-                    <label>Szürkületi érték</label>
-                    <input type="text" name="twilight_value" class="va-input" placeholder="pl. 15" value="<?php echo esc_attr((string)($edit_meta['twilight_value'] ?? '')); ?>">
+                    <label>Csőátmérő (mm)</label>
+                    <select name="optic_tube_diameter" class="va-select">
+                        <?php $v = (string)($edit_meta['optic_tube_diameter'] ?? ''); ?>
+                        <option value="">– Válasszon –</option>
+                        <option value="25.4"<?php selected($v, '25.4'); ?>>25.4 mm (1 inch)</option>
+                        <option value="30"<?php selected($v, '30'); ?>>30 mm</option>
+                        <option value="34"<?php selected($v, '34'); ?>>34 mm</option>
+                        <option value="35"<?php selected($v, '35'); ?>>35 mm</option>
+                        <option value="36"<?php selected($v, '36'); ?>>36 mm</option>
+                        <option value="40"<?php selected($v, '40'); ?>>40 mm</option>
+                    </select>
                 </div>
-                <!-- ROW 4: Bevonatok | Tartozékok -->
                 <div class="va-telescope-field">
-                    <label>Bevonatok</label>
-                    <input type="text" name="scope_coatings" class="va-input" placeholder="pl. Multi-coated" value="<?php echo esc_attr((string)($edit_meta['scope_coatings'] ?? '')); ?>">
+                    <label>Kilépő pupilla (mm)</label>
+                    <input type="text" name="optic_exit_pupil" class="va-input" value="<?php echo esc_attr((string)($edit_meta['optic_exit_pupil'] ?? '')); ?>" placeholder="pl. 4.2">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Látómező 100 m-en (m)</label>
+                    <input type="text" name="optic_field_of_view" class="va-input" value="<?php echo esc_attr((string)($edit_meta['optic_field_of_view'] ?? '')); ?>" placeholder="pl. 11.3">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Eye relief (mm)</label>
+                    <input type="text" name="optic_eye_relief" class="va-input" value="<?php echo esc_attr((string)($edit_meta['optic_eye_relief'] ?? '')); ?>" placeholder="pl. 90">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Reticle típus</label>
+                    <?php $v = (string)($edit_meta['optic_reticle_type'] ?? ''); ?>
+                    <select name="optic_reticle_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="duplex"<?php selected($v, 'duplex'); ?>>Duplex</option>
+                        <option value="mil-dot"<?php selected($v, 'mil-dot'); ?>>Mil-Dot</option>
+                        <option value="moa"<?php selected($v, 'moa'); ?>>MOA</option>
+                        <option value="bdc"<?php selected($v, 'bdc'); ?>>BDC</option>
+                        <option value="4a"<?php selected($v, '4a'); ?>>4A</option>
+                        <option value="german-4"<?php selected($v, 'german-4'); ?>>German #4</option>
+                        <option value="horseshoe"<?php selected($v, 'horseshoe'); ?>>Horseshoe</option>
+                        <option value="dot"<?php selected($v, 'dot'); ?>>Dot</option>
+                        <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Reticle sík</label>
+                    <?php $v = (string)($edit_meta['optic_reticle_plane'] ?? ''); ?>
+                    <select name="optic_reticle_plane" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="ffp"<?php selected($v, 'ffp'); ?>>FFP</option>
+                        <option value="sfp"<?php selected($v, 'sfp'); ?>>SFP</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Megvilágítás</label>
+                    <?php $v = (string)($edit_meta['optic_illumination'] ?? ''); ?>
+                    <select name="optic_illumination" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs</option>
+                        <option value="piros"<?php selected($v, 'piros'); ?>>Piros</option>
+                        <option value="zold"<?php selected($v, 'zold'); ?>>Zöld</option>
+                        <option value="piros-zold"<?php selected($v, 'piros-zold'); ?>>Piros + zöld</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Megvilágítás színe</label>
+                    <input type="text" name="optic_illumination_color" class="va-input" value="<?php echo esc_attr((string)($edit_meta['optic_illumination_color'] ?? '')); ?>" placeholder="pl. piros/zöld">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Klikk érték</label>
+                    <?php $v = (string)($edit_meta['optic_click_value'] ?? ''); ?>
+                    <select name="optic_click_value" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="1-4-moa"<?php selected($v, '1-4-moa'); ?>>1/4 MOA</option>
+                        <option value="1-8-moa"<?php selected($v, '1-8-moa'); ?>>1/8 MOA</option>
+                        <option value="0-1-mrad"<?php selected($v, '0-1-mrad'); ?>>0.1 MRAD</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Parallax állítás</label>
+                    <?php $v = (string)($edit_meta['optic_parallax_adjustment'] ?? ''); ?>
+                    <select name="optic_parallax_adjustment" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="fix"<?php selected($v, 'fix'); ?>>Fix</option>
+                        <option value="ao"<?php selected($v, 'ao'); ?>>AO</option>
+                        <option value="oldalso"<?php selected($v, 'oldalso'); ?>>Oldalsó tekerő</option>
+                        <option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Torony típus</label>
+                    <?php $v = (string)($edit_meta['optic_turret_type'] ?? ''); ?>
+                    <select name="optic_turret_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="low-profile"<?php selected($v, 'low-profile'); ?>>Low profile</option>
+                        <option value="target"<?php selected($v, 'target'); ?>>Target</option>
+                        <option value="locking"<?php selected($v, 'locking'); ?>>Locking</option>
+                        <option value="capped"<?php selected($v, 'capped'); ?>>Capped</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Test anyag</label>
+                    <?php $v = (string)($edit_meta['optic_body_material'] ?? ''); ?>
+                    <select name="optic_body_material" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="aluminium"<?php selected($v, 'aluminium'); ?>>Alumínium</option>
+                        <option value="magnzium"<?php selected($v, 'magnzium'); ?>>Magnézium</option>
+                        <option value="acel"<?php selected($v, 'acel'); ?>>Acél</option>
+                        <option value="polymer"<?php selected($v, 'polymer'); ?>>Polimer</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Bevonat típusa</label>
+                    <?php $v = (string)($edit_meta['optic_coating_type'] ?? ''); ?>
+                    <select name="optic_coating_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="coated"<?php selected($v, 'coated'); ?>>Coated</option>
+                        <option value="fully-coated"<?php selected($v, 'fully-coated'); ?>>Fully coated</option>
+                        <option value="multi-coated"<?php selected($v, 'multi-coated'); ?>>Multi-coated</option>
+                        <option value="fully-multi-coated"<?php selected($v, 'fully-multi-coated'); ?>>Fully multi-coated</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Vízállóság</label>
+                    <select name="optic_waterproof_flags[]" class="va-select" multiple>
+                        <option value="vizallo"<?php echo in_array('vizallo', $optic_waterproof_saved, true) ? ' selected' : ''; ?>>Vízálló</option>
+                        <option value="paramentes"<?php echo in_array('paramentes', $optic_waterproof_saved, true) ? ' selected' : ''; ?>>Páramentes</option>
+                        <option value="nitrogen"<?php echo in_array('nitrogen', $optic_waterproof_saved, true) ? ' selected' : ''; ?>>Nitrogén töltés</option>
+                        <option value="argon"<?php echo in_array('argon', $optic_waterproof_saved, true) ? ' selected' : ''; ?>>Argon töltés</option>
+                        <option value="shockproof"<?php echo in_array('shockproof', $optic_waterproof_saved, true) ? ' selected' : ''; ?>>Ütésálló</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Prizma rendszer</label>
+                    <?php $v = (string)($edit_meta['optic_prism_system'] ?? ''); ?>
+                    <select name="optic_prism_system" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="roof"<?php selected($v, 'roof'); ?>>Roof</option>
+                        <option value="porro"<?php selected($v, 'porro'); ?>>Porro</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Üvegtípus</label>
+                    <?php $v = (string)($edit_meta['optic_glass_type'] ?? ''); ?>
+                    <select name="optic_glass_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="ed"<?php selected($v, 'ed'); ?>>ED</option>
+                        <option value="hd"<?php selected($v, 'hd'); ?>>HD</option>
+                        <option value="apokromat"<?php selected($v, 'apokromat'); ?>>Apokromát</option>
+                        <option value="standard"<?php selected($v, 'standard'); ?>>Standard</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field" data-optic-types="red-dot,holografikus,reflex,prizmas,pisztolyoptika,airsoft">
+                    <label>Pontméret (MOA)</label>
+                    <?php $v = (string)($edit_meta['optic_dot_size'] ?? ''); ?>
+                    <select name="optic_dot_size" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="1"<?php selected($v, '1'); ?>>1</option>
+                        <option value="2"<?php selected($v, '2'); ?>>2</option>
+                        <option value="3"<?php selected($v, '3'); ?>>3</option>
+                        <option value="4"<?php selected($v, '4'); ?>>4</option>
+                        <option value="5"<?php selected($v, '5'); ?>>5</option>
+                        <option value="6"<?php selected($v, '6'); ?>>6</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field" data-optic-types="red-dot,holografikus,reflex,prizmas,pisztolyoptika,airsoft,celtavcso,kereso">
+                    <label>Sín kompatibilitás</label>
+                    <select name="optic_rail_compatibility[]" class="va-select" multiple>
+                        <option value="11mm"<?php echo in_array('11mm', $optic_rail_saved, true) ? ' selected' : ''; ?>>11 mm</option>
+                        <option value="weaver"<?php echo in_array('weaver', $optic_rail_saved, true) ? ' selected' : ''; ?>>Weaver</option>
+                        <option value="picatinny"<?php echo in_array('picatinny', $optic_rail_saved, true) ? ' selected' : ''; ?>>Picatinny</option>
+                        <option value="zeiss"<?php echo in_array('zeiss', $optic_rail_saved, true) ? ' selected' : ''; ?>>Zeiss</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field" data-optic-types="tavmeros-binokular">
+                    <label>Távmérő max (m)</label>
+                    <input type="text" name="optic_rangefinder_max_m" class="va-input" value="<?php echo esc_attr((string)($edit_meta['optic_rangefinder_max_m'] ?? '')); ?>" placeholder="pl. 1800">
+                </div>
+                <div class="va-telescope-field" data-optic-types="tavmeros-binokular,celtavcso">
+                    <label>Ballisztikai kalkulátor</label>
+                    <?php $v = (string)($edit_meta['optic_ballistic_calc'] ?? ''); ?>
+                    <select name="optic_ballistic_calc" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs</option>
+                        <option value="van"<?php selected($v, 'van'); ?>>Van</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field" data-optic-types="spektiv">
+                    <label>Spektív zoom tartomány</label>
+                    <?php $v = (string)($edit_meta['optic_spektiv_zoom_range'] ?? ''); ?>
+                    <select name="optic_spektiv_zoom_range" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="15-45"<?php selected($v, '15-45'); ?>>15-45x</option>
+                        <option value="20-60"<?php selected($v, '20-60'); ?>>20-60x</option>
+                        <option value="25-75"<?php selected($v, '25-75'); ?>>25-75x</option>
+                        <option value="30-90"<?php selected($v, '30-90'); ?>>30-90x</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field" data-optic-types="spektiv">
+                    <label>Okulár típus</label>
+                    <?php $v = (string)($edit_meta['optic_eyepiece_type'] ?? ''); ?>
+                    <select name="optic_eyepiece_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="45-fok"<?php selected($v, '45-fok'); ?>>45°</option>
+                        <option value="egyenes"<?php selected($v, 'egyenes'); ?>>Egyenes</option>
+                        <option value="cserelheto"<?php selected($v, 'cserelheto'); ?>>Cserélhető</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Fegyver kompatibilitás</label>
+                    <select name="optic_weapon_compatibility[]" class="va-select" multiple>
+                        <option value="legpuska"<?php echo in_array('legpuska', $optic_weapon_saved, true) ? ' selected' : ''; ?>>Légpuska</option>
+                        <option value="22lr"<?php echo in_array('22lr', $optic_weapon_saved, true) ? ' selected' : ''; ?>>.22 LR</option>
+                        <option value="kozepkaliber"<?php echo in_array('kozepkaliber', $optic_weapon_saved, true) ? ' selected' : ''; ?>>Közepes kaliber</option>
+                        <option value="nagyvadu"<?php echo in_array('nagyvadu', $optic_weapon_saved, true) ? ' selected' : ''; ?>>Nagyvad</option>
+                        <option value="airsoft"<?php echo in_array('airsoft', $optic_weapon_saved, true) ? ' selected' : ''; ?>>Airsoft</option>
+                    </select>
                 </div>
                 <div class="va-telescope-field">
                     <label>Tartozékok</label>
                     <input type="text" name="scope_accessories" class="va-input" placeholder="pl. Tartó, lencsevédő" value="<?php echo esc_attr((string)($edit_meta['scope_accessories'] ?? '')); ?>">
                 </div>
-                </div><!-- /va-step2-4col-inner -->
+                <div class="va-telescope-field">
+                    <label>Tartozék jelölők</label>
+                    <select name="scope_accessories_flags[]" class="va-select" multiple>
+                        <option value="doboz"<?php echo in_array('doboz', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Doboz</option>
+                        <option value="kupak"<?php echo in_array('kupak', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Lencsevédő kupak</option>
+                        <option value="napellenzo"<?php echo in_array('napellenzo', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Napellenző</option>
+                        <option value="szerelék"<?php echo in_array('szerelék', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Szerelék</option>
+                        <option value="garancia"<?php echo in_array('garancia', $scope_accessories_saved, true) ? ' selected' : ''; ?>>Garancia</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Szerelék típusa</label>
+                    <?php $v = (string)($edit_meta['optic_mount_type'] ?? ''); ?>
+                    <select name="optic_mount_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="fix"<?php selected($v, 'fix'); ?>>Fix</option>
+                        <option value="quick-detach"<?php selected($v, 'quick-detach'); ?>>Quick detach</option>
+                        <option value="cantilever"<?php selected($v, 'cantilever'); ?>>Cantilever</option>
+                        <option value="ring"<?php selected($v, 'ring'); ?>>Gyűrűs</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Szállítás módja</label>
+                    <select name="optic_shipping_methods[]" class="va-select" multiple>
+                        <option value="szemelyes"<?php echo in_array('szemelyes', $optic_shipping_saved, true) ? ' selected' : ''; ?>>Személyes átvétel</option>
+                        <option value="futar"<?php echo in_array('futar', $optic_shipping_saved, true) ? ' selected' : ''; ?>>Futár</option>
+                        <option value="foxpost"<?php echo in_array('foxpost', $optic_shipping_saved, true) ? ' selected' : ''; ?>>Foxpost</option>
+                        <option value="posta"<?php echo in_array('posta', $optic_shipping_saved, true) ? ' selected' : ''; ?>>Posta</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Ajánlott felhasználás</label>
+                    <select name="optic_recommended_use[]" class="va-select" multiple>
+                        <option value="hajtas"<?php echo in_array('hajtas', $optic_use_saved, true) ? ' selected' : ''; ?>>Hajtás</option>
+                        <option value="lesen"<?php echo in_array('lesen', $optic_use_saved, true) ? ' selected' : ''; ?>>Les</option>
+                        <option value="sportloveszet"<?php echo in_array('sportloveszet', $optic_use_saved, true) ? ' selected' : ''; ?>>Sportlövészet</option>
+                        <option value="tura"<?php echo in_array('tura', $optic_use_saved, true) ? ' selected' : ''; ?>>Túra</option>
+                        <option value="airsoft"<?php echo in_array('airsoft', $optic_use_saved, true) ? ' selected' : ''; ?>>Airsoft</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Moderációs jelzők</label>
+                    <select name="optic_moderation_flags[]" class="va-select" multiple>
+                        <option value="sorozatszam-lathato"<?php echo in_array('sorozatszam-lathato', $optic_moderation_saved, true) ? ' selected' : ''; ?>>Sorozatszám látható</option>
+                        <option value="szereles-nelkul"<?php echo in_array('szereles-nelkul', $optic_moderation_saved, true) ? ' selected' : ''; ?>>Szerelék nélkül</option>
+                        <option value="sertesmentes-lencse"<?php echo in_array('sertesmentes-lencse', $optic_moderation_saved, true) ? ' selected' : ''; ?>>Sértésmentes lencse</option>
+                        <option value="eredeti-csomagolas"<?php echo in_array('eredeti-csomagolas', $optic_moderation_saved, true) ? ' selected' : ''; ?>>Eredeti csomagolás</option>
+                    </select>
+                </div>
+                <div class="va-telescope-field">
+                    <label>Szürkületi érték</label>
+                    <input type="text" name="twilight_value" class="va-input" placeholder="pl. 15" value="<?php echo esc_attr((string)($edit_meta['twilight_value'] ?? '')); ?>">
+                </div>
+                <div class="va-telescope-field">
+                    <label>Bevonatok</label>
+                    <input type="text" name="scope_coatings" class="va-input" placeholder="pl. Multi-coated" value="<?php echo esc_attr((string)($edit_meta['scope_coatings'] ?? '')); ?>">
+                </div>
+                </div>
             </div>
 
             <!-- Kés mezők grid -->
