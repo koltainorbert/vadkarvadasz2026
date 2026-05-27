@@ -1842,6 +1842,35 @@ class VA_Ajax {
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
+        $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
+        $clothing_type = sanitize_key( wp_unslash( $_POST['clothing_type'] ?? '' ) );
+        $clothing_condition = sanitize_key( wp_unslash( $_POST['clothing_condition'] ?? '' ) );
+        $clothing_gender = sanitize_key( wp_unslash( $_POST['clothing_gender'] ?? '' ) );
+        $clothing_size_system = sanitize_key( wp_unslash( $_POST['clothing_size_system'] ?? '' ) );
+        $clothing_size = sanitize_text_field( wp_unslash( $_POST['clothing_size'] ?? '' ) );
+        $clothing_accessory_size = sanitize_text_field( wp_unslash( $_POST['clothing_accessory_size'] ?? '' ) );
+        $clothing_glove_size = sanitize_text_field( wp_unslash( $_POST['clothing_glove_size'] ?? '' ) );
+        $clothing_hat_size = sanitize_key( wp_unslash( $_POST['clothing_hat_size'] ?? '' ) );
+        $clothing_hat_cm = sanitize_text_field( wp_unslash( $_POST['clothing_hat_cm'] ?? '' ) );
+        $clothing_belt_length_cm = sanitize_text_field( wp_unslash( $_POST['clothing_belt_length_cm'] ?? '' ) );
+        $clothing_colors = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_colors'] ?? [] ) ) ) );
+        $clothing_materials = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_materials'] ?? [] ) ) ) );
+        $clothing_protections = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_protections'] ?? [] ) ) ) );
+        $clothing_season = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_season'] ?? [] ) ) ) );
+        $clothing_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_use_cases'] ?? [] ) ) ) );
+        $clothing_special_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_special_features'] ?? [] ) ) ) );
+        $clothing_glove_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_glove_features'] ?? [] ) ) ) );
+        $clothing_headwear_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_headwear_features'] ?? [] ) ) ) );
+        $clothing_poncho_water_column = sanitize_text_field( wp_unslash( $_POST['clothing_poncho_water_column'] ?? '' ) );
+        $clothing_poncho_ultralight = sanitize_key( wp_unslash( $_POST['clothing_poncho_ultralight'] ?? '' ) );
+        $clothing_poncho_backpack_compatible = sanitize_key( wp_unslash( $_POST['clothing_poncho_backpack_compatible'] ?? '' ) );
+        $clothing_ghillie_type = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_type'] ?? [] ) ) ) );
+        $clothing_ghillie_pattern = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_pattern'] ?? [] ) ) ) );
+        $clothing_filter_thermo = ( strpos( ',' . $clothing_protections . ',', ',thermo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_waterproof = ( strpos( ',' . $clothing_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_camo = ( strpos( ',' . $clothing_colors . ',', ',terepmintas,' ) !== false || strpos( ',' . $clothing_colors . ',', ',realtree,' ) !== false || strpos( ',' . $clothing_colors . ',', ',multicam,' ) !== false ) ? '1' : '0';
+        $clothing_filter_silent = ( strpos( ',' . $clothing_special_features . ',', ',hangtalan,' ) !== false ) ? '1' : '0';
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
         $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
@@ -2216,6 +2245,8 @@ class VA_Ajax {
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
             'clothing_type' => $clothing_type,
+            'clothing_condition' => $clothing_condition,
+            'clothing_gender' => $clothing_gender,
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
