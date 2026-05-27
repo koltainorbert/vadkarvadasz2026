@@ -16,6 +16,7 @@
 - Végső módosítás 2: az oldal rövid késleltetéssel automatikusan a Facebook csoport URL-re irányít, így biztosan megnyílik a csoport (nincs `Not Found` iframe állapot).
 - Kérésre visszaállítás: az automatikus átirányítás kivezetve; a csoportoldal újra helyben marad.
 - Kérésre visszaállítás 2: minimál (extra háttér/blokk nélkül) Facebook iframe beágyazás került vissza, hogy a csoport a saját aloldalon nyíljon.
+- Végső stabilizálás: a Facebook iframe beágyazás ennél a csoportnál továbbra is hibás (`Not Found`), ezért a sablon fallback információs blokkra váltott és csak közvetlen csoport megnyitást kínál.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 
