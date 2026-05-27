@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 27. – Session #vadkamera-komplex-backend-es-szurok
+- Kérés: a `Vadkamera` kategória teljes backend támogatása a popup-only frontendhez igazítva.
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `vadcamera_*` sanitize + `va_vadcamera_*` meta mentés.
+- Kötelező mezők: backend required szabály és label térkép bővítve (`kamera típus`, `adatkapcsolat`, `trigger`, `IR`, `éjszakai hatótáv`, `videó`, `IP`, `SIM`).
+- Szűrő elsőbbség: mentésre kerülnek a dedikált filter meták (`va_vadcamera_filter_*`), köztük 4G/WiFi/SIM/napelem jelzők.
+- Moderáció: tiltott kifejezések automatikus jelölése bekerült (`rejtett megfigyelő`, `illegális lehallgató`, `titkos kamera`) -> `va_vadcamera_needs_review`, `va_vadcamera_review_hits`.
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon (`No errors found`).
+
 ## 2026. 05. 27. – Session #vadaszati-hagyatek-popup-only-kotelezes
 - Kérés: a `Vadászati hagyaték` blokkban ne maradjon kipipálós mező, minden választás popup lenyílóval menjen.
 - UI javítás: az összes checkbox csoport popup-kompatibilis `select[multiple]` mezőre cserélve (`optika`, `ruházat`, `trófea`, `dokumentum`, `egyéb felszerelés`, `média ellenőrző lista`).
