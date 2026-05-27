@@ -269,6 +269,11 @@ $category_required_rules = [
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
+    'kesek'              => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+    'vadaszkes-vadasztor' => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+    'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+    'konyhakes'          => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+    'svajci-bicska'      => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
 ];
 
@@ -435,6 +440,40 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'clothing_ghillie_pattern' => get_post_meta( $maybe_id, 'va_clothing_ghillie_pattern', true ),
             'knife_type' => get_post_meta( $maybe_id, 'va_knife_type', true ),
             'knife_blade_length' => get_post_meta( $maybe_id, 'va_knife_blade_length', true ),
+            'knife_condition' => get_post_meta( $maybe_id, 'va_knife_condition', true ),
+            'knife_manufacture_year' => get_post_meta( $maybe_id, 'va_knife_manufacture_year', true ),
+            'knife_total_length_cm' => get_post_meta( $maybe_id, 'va_knife_total_length_cm', true ),
+            'knife_blade_length_mm' => get_post_meta( $maybe_id, 'va_knife_blade_length_mm', true ),
+            'knife_blade_thickness_mm' => get_post_meta( $maybe_id, 'va_knife_blade_thickness_mm', true ),
+            'knife_weight_g' => get_post_meta( $maybe_id, 'va_knife_weight_g', true ),
+            'knife_steel_type' => get_post_meta( $maybe_id, 'va_knife_steel_type', true ),
+            'knife_blade_shape' => get_post_meta( $maybe_id, 'va_knife_blade_shape', true ),
+            'knife_blade_edge' => get_post_meta( $maybe_id, 'va_knife_blade_edge', true ),
+            'knife_finish' => get_post_meta( $maybe_id, 'va_knife_finish', true ),
+            'knife_construction' => get_post_meta( $maybe_id, 'va_knife_construction', true ),
+            'knife_locking_type' => get_post_meta( $maybe_id, 'va_knife_locking_type', true ),
+            'knife_one_hand_opening' => get_post_meta( $maybe_id, 'va_knife_one_hand_opening', true ),
+            'knife_handle_material' => get_post_meta( $maybe_id, 'va_knife_handle_material', true ),
+            'knife_handle_color' => get_post_meta( $maybe_id, 'va_knife_handle_color', true ),
+            'knife_has_sheath' => get_post_meta( $maybe_id, 'va_knife_has_sheath', true ),
+            'knife_sheath_type' => get_post_meta( $maybe_id, 'va_knife_sheath_type', true ),
+            'knife_belt_carry' => get_post_meta( $maybe_id, 'va_knife_belt_carry', true ),
+            'knife_usage' => get_post_meta( $maybe_id, 'va_knife_usage', true ),
+            'knife_features' => get_post_meta( $maybe_id, 'va_knife_features', true ),
+            'knife_age_restriction' => get_post_meta( $maybe_id, 'va_knife_age_restriction', true ),
+            'knife_restricted' => get_post_meta( $maybe_id, 'va_knife_restricted', true ),
+            'knife_public_carry' => get_post_meta( $maybe_id, 'va_knife_public_carry', true ),
+            'knife_accessories' => get_post_meta( $maybe_id, 'va_knife_accessories', true ),
+            'knife_price_deal' => get_post_meta( $maybe_id, 'va_knife_price_deal', true ),
+            'knife_price_exchange' => get_post_meta( $maybe_id, 'va_knife_price_exchange', true ),
+            'knife_shipping_methods' => get_post_meta( $maybe_id, 'va_knife_shipping_methods', true ),
+            'knife_required_media' => get_post_meta( $maybe_id, 'va_knife_required_media', true ),
+            'knife_sharpening_state' => get_post_meta( $maybe_id, 'va_knife_sharpening_state', true ),
+            'knife_collectible_flags' => get_post_meta( $maybe_id, 'va_knife_collectible_flags', true ),
+            'knife_moderation_flags' => get_post_meta( $maybe_id, 'va_knife_moderation_flags', true ),
+            'knife_axe_head_weight_g' => get_post_meta( $maybe_id, 'va_knife_axe_head_weight_g', true ),
+            'knife_axe_handle_material' => get_post_meta( $maybe_id, 'va_knife_axe_handle_material', true ),
+            'knife_multitool_function_count' => get_post_meta( $maybe_id, 'va_knife_multitool_function_count', true ),
             'trophy_species' => get_post_meta( $maybe_id, 'va_trophy_species', true ),
             'trophy_mount_type' => get_post_meta( $maybe_id, 'va_trophy_mount_type', true ),
             'trophy_style' => get_post_meta( $maybe_id, 'va_trophy_style', true ),
@@ -791,6 +830,7 @@ $cat_icons_map = [
     'loszer-tolteny' => '💥', 'tavcsovek' => '🔭', 'ejjellato-tavcso' => '🌙',
     'hokamerak' => '🌡️', 'vadkamera' => '📷', 'vadaszlampa' => '🔦',
     'vadaszkutya' => '🐕', 'vadasz-ruhazat' => '🧥', 'cipo-bakancs' => '👢',
+    'kesek' => '🔪',
     'vadasz-felszereles' => '🎒', 'egyeb' => '📦',
 ];
 $wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
@@ -3202,50 +3242,167 @@ body.va-modal-open {
             </div>
 
             <!-- Kés mezők grid -->
-            <div class="va-form-group va-knife-fields-grid" data-categories="bicska-tor-kard,vadaszkes-vadasztor,taktikai-kes-taktikai-tor,konyhakes,svajci-bicska,dobotor,machete-bozotvago,multiszerszam,tok-keslanc,keselezo" style="display:none">
+            <div class="va-form-group va-knife-fields-grid" data-categories="kesek,bicska-tor-kard,vadaszkes-vadasztor,taktikai-kes-taktikai-tor,konyhakes,svajci-bicska,dobotor,machete-bozotvago,multiszerszam,tok-keslanc,keselezo" style="display:none">
                 <div class="va-step2-4col-inner">
-                <!-- Kés típusa -->
-                <div class="va-knife-field va-knife-type-wrap">
-                    <label>Kés típusa</label>
-                    <?php $knife_type_val = (string)($edit_meta['knife_type'] ?? ''); ?>
-                    <select name="knife_type" id="va-knife-type" class="va-select">
-                        <option value="">– Válasszon típust –</option>
-                        <option value="vadaszkes"<?php selected($knife_type_val,'vadaszkes'); ?>>Vadászkés</option>
-                        <option value="vadasztor"<?php selected($knife_type_val,'vadasztor'); ?>>Vadásztőr</option>
-                        <option value="vadasz-bicska"<?php selected($knife_type_val,'vadasz-bicska'); ?>>Vadászbicska</option>
-                        <option value="nyuzoces"<?php selected($knife_type_val,'nyuzoces'); ?>>Nyúzókés</option>
-                        <option value="felezo-kes"<?php selected($knife_type_val,'felezo-kes'); ?>>Filéző kés</option>
-                        <option value="zsigereloces"<?php selected($knife_type_val,'zsigereloces'); ?>>Zsigerelő kés</option>
-                        <option value="szeleloces"<?php selected($knife_type_val,'szeleloces'); ?>>Szeletelő kés</option>
-                        <option value="csontfuresz-kes"<?php selected($knife_type_val,'csontfuresz-kes'); ?>>Csontfűrész kés</option>
-                        <option value="csontozo-kes"<?php selected($knife_type_val,'csontozo-kes'); ?>>Csontozó kés</option>
-                        <option value="boros-kes"<?php selected($knife_type_val,'boros-kes'); ?>>Bőrös kés</option>
-                        <option value="taktikai-kes"<?php selected($knife_type_val,'taktikai-kes'); ?>>Taktikai kés</option>
-                        <option value="tura-survival"<?php selected($knife_type_val,'tura-survival'); ?>>Túra / Survival kés</option>
-                        <option value="konyhai-kes"<?php selected($knife_type_val,'konyhai-kes'); ?>>Konyhakés</option>
-                        <option value="egyedi-kes"<?php selected($knife_type_val,'egyedi-kes'); ?>>Egyedi / Kézzel készített</option>
-                        <option value="egyeb"<?php selected($knife_type_val,'egyeb'); ?>>Egyéb</option>
-                    </select>
-                </div>
-                <!-- Penge hossza -->
-                <div class="va-knife-field">
-                    <label>Penge hossza (cm)</label>
                     <?php
-                    $knife_blade_val = (string)($edit_meta['knife_blade_length'] ?? '');
-                    $knife_blade_opts = ['5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','22','24','25','28','30'];
+                    $knife_type_val = (string) ( $edit_meta['knife_type'] ?? '' );
+                    $knife_usage_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_usage'] ?? '' ) ) ) );
+                    $knife_features_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_features'] ?? '' ) ) );
+                    $knife_accessories_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_accessories'] ?? '' ) ) ) );
+                    $knife_shipping_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_shipping_methods'] ?? '' ) ) ) );
+                    $knife_media_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_required_media'] ?? '' ) ) ) );
+                    $knife_collectible_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_collectible_flags'] ?? '' ) ) ) );
+                    $knife_moderation_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['knife_moderation_flags'] ?? '' ) ) ) );
+                    $knife_blade_mm_val = (string) ( $edit_meta['knife_blade_length_mm'] ?? '' );
+                    if ( $knife_blade_mm_val === '' ) {
+                        $legacy_cm = (string) ( $edit_meta['knife_blade_length'] ?? '' );
+                        if ( is_numeric( $legacy_cm ) ) {
+                            $knife_blade_mm_val = (string) ( (int) round( (float) $legacy_cm * 10 ) );
+                        }
+                    }
                     ?>
-                    <select name="knife_blade_length" id="va-knife-blade-length" class="va-select">
-                        <option value="">– Válasszon –</option>
-                        <?php if ($knife_blade_val !== '' && !in_array($knife_blade_val, $knife_blade_opts, true)): ?>
-                        <option value="<?php echo esc_attr($knife_blade_val); ?>" selected><?php echo esc_html($knife_blade_val); ?> cm</option>
-                        <?php endif; ?>
-                        <?php foreach ($knife_blade_opts as $cm): ?>
-                        <option value="<?php echo esc_attr($cm); ?>"<?php selected($knife_blade_val,$cm); ?>><?php echo esc_html($cm); ?> cm</option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="va-form-group">
+                        <label>Kés típusa</label>
+                        <select name="knife_type" id="va-knife-type" class="va-select">
+                            <option value="">- Válasszon típust -</option>
+                            <option value="vadaszkes"<?php selected( $knife_type_val, 'vadaszkes' ); ?>>Vadászkés</option>
+                            <option value="bicska"<?php selected( $knife_type_val, 'bicska' ); ?>>Bicska</option>
+                            <option value="fix-penges"<?php selected( $knife_type_val, 'fix-penges' ); ?>>Fix pengés</option>
+                            <option value="bushcraft-kes"<?php selected( $knife_type_val, 'bushcraft-kes' ); ?>>Bushcraft kés</option>
+                            <option value="tulelo-kes"<?php selected( $knife_type_val, 'tulelo-kes' ); ?>>Túlélőkés</option>
+                            <option value="nyuzokes"<?php selected( $knife_type_val, 'nyuzokes' ); ?>>Nyúzókés</option>
+                            <option value="filezo-kes"<?php selected( $knife_type_val, 'filezo-kes' ); ?>>Filéző kés</option>
+                            <option value="machete"<?php selected( $knife_type_val, 'machete' ); ?>>Machete</option>
+                            <option value="balta"<?php selected( $knife_type_val, 'balta' ); ?>>Balta</option>
+                            <option value="multitool"<?php selected( $knife_type_val, 'multitool' ); ?>>Multitool</option>
+                            <option value="zsebkes"<?php selected( $knife_type_val, 'zsebkes' ); ?>>Zsebkés</option>
+                            <option value="gyujtoi-kes"<?php selected( $knife_type_val, 'gyujtoi-kes' ); ?>>Gyűjtői kés</option>
+                            <option value="diszkes"<?php selected( $knife_type_val, 'diszkes' ); ?>>Díszkés</option>
+                            <option value="taktikai-kes"<?php selected( $knife_type_val, 'taktikai-kes' ); ?>>Taktikai kés</option>
+                            <option value="dobokes"<?php selected( $knife_type_val, 'dobokes' ); ?>>Dobókés</option>
+                            <option value="egyeb"<?php selected( $knife_type_val, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = (string) ( $edit_meta['knife_condition'] ?? '' ); ?>
+                        <select name="knife_condition" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="restauralt"<?php selected( $v, 'restauralt' ); ?>>Restaurált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyártási év (opcionális)</label>
+                        <input type="text" name="knife_manufacture_year" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_manufacture_year'] ?? '' ) ); ?>" placeholder="pl. 2022">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Teljes hossz (cm)</label>
+                        <input type="text" name="knife_total_length_cm" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_total_length_cm'] ?? '' ) ); ?>" placeholder="pl. 24">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Pengehossz (mm)</label>
+                        <input type="text" name="knife_blade_length_mm" class="va-input" value="<?php echo esc_attr( $knife_blade_mm_val ); ?>" placeholder="pl. 110">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Pengevastagság (mm)</label>
+                        <input type="text" name="knife_blade_thickness_mm" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_blade_thickness_mm'] ?? '' ) ); ?>" placeholder="pl. 3.8">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Súly (g)</label>
+                        <input type="text" name="knife_weight_g" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_weight_g'] ?? '' ) ); ?>" placeholder="pl. 185">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Acél</label>
+                        <?php $v = (string) ( $edit_meta['knife_steel_type'] ?? '' ); ?>
+                        <select name="knife_steel_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="420hc"<?php selected( $v, '420hc' ); ?>>420HC</option>
+                            <option value="440a"<?php selected( $v, '440a' ); ?>>440A</option>
+                            <option value="440c"<?php selected( $v, '440c' ); ?>>440C</option>
+                            <option value="d2"<?php selected( $v, 'd2' ); ?>>D2</option>
+                            <option value="n690"<?php selected( $v, 'n690' ); ?>>N690</option>
+                            <option value="bohler-m390"<?php selected( $v, 'bohler-m390' ); ?>>Böhler M390</option>
+                            <option value="cpm-s30v"<?php selected( $v, 'cpm-s30v' ); ?>>CPM S30V</option>
+                            <option value="cpm-s35vn"<?php selected( $v, 'cpm-s35vn' ); ?>>CPM S35VN</option>
+                            <option value="elmax"<?php selected( $v, 'elmax' ); ?>>Elmax</option>
+                            <option value="aus-8"<?php selected( $v, 'aus-8' ); ?>>AUS-8</option>
+                            <option value="vg10"<?php selected( $v, 'vg10' ); ?>>VG10</option>
+                            <option value="damaszk"<?php selected( $v, 'damaszk' ); ?>>Damaszk</option>
+                            <option value="szenacel"<?php selected( $v, 'szenacel' ); ?>>Szénacél</option>
+                            <option value="rozsdamentes"<?php selected( $v, 'rozsdamentes' ); ?>>Rozsdamentes</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Penge forma</label>
+                        <?php $v = (string) ( $edit_meta['knife_blade_shape'] ?? '' ); ?>
+                        <select name="knife_blade_shape" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="drop-point"<?php selected( $v, 'drop-point' ); ?>>Drop point</option>
+                            <option value="clip-point"<?php selected( $v, 'clip-point' ); ?>>Clip point</option>
+                            <option value="tanto"<?php selected( $v, 'tanto' ); ?>>Tanto</option>
+                            <option value="spear-point"<?php selected( $v, 'spear-point' ); ?>>Spear point</option>
+                            <option value="trailing-point"<?php selected( $v, 'trailing-point' ); ?>>Trailing point</option>
+                            <option value="skinner"<?php selected( $v, 'skinner' ); ?>>Skinner</option>
+                            <option value="kukri"<?php selected( $v, 'kukri' ); ?>>Kukri</option>
+                            <option value="wharncliffe"<?php selected( $v, 'wharncliffe' ); ?>>Wharncliffe</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Penge él</label>
+                        <?php $v = (string) ( $edit_meta['knife_blade_edge'] ?? '' ); ?>
+                        <select name="knife_blade_edge" class="va-select"><option value="">- Válasszon -</option><option value="sima"<?php selected( $v, 'sima' ); ?>>Sima</option><option value="reces"<?php selected( $v, 'reces' ); ?>>Recés</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Felület</label>
+                        <?php $v = (string) ( $edit_meta['knife_finish'] ?? '' ); ?>
+                        <select name="knife_finish" class="va-select"><option value="">- Válasszon -</option><option value="satin"<?php selected( $v, 'satin' ); ?>>Satin</option><option value="stonewash"<?php selected( $v, 'stonewash' ); ?>>Stonewash</option><option value="black-coated"<?php selected( $v, 'black-coated' ); ?>>Black coated</option><option value="dlc"<?php selected( $v, 'dlc' ); ?>>DLC</option><option value="bead-blasted"<?php selected( $v, 'bead-blasted' ); ?>>Bead blasted</option></select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Konstrukció</label>
+                        <?php $v = (string) ( $edit_meta['knife_construction'] ?? '' ); ?>
+                        <select name="knife_construction" class="va-select"><option value="">- Válasszon -</option><option value="full-tang"<?php selected( $v, 'full-tang' ); ?>>Full tang</option><option value="partial-tang"<?php selected( $v, 'partial-tang' ); ?>>Partial tang</option><option value="folding"<?php selected( $v, 'folding' ); ?>>Folding</option></select>
+                    </div>
+                    <div class="va-form-group va-knife-folding-only" style="display:none;">
+                        <label>Zár típusa</label>
+                        <?php $v = (string) ( $edit_meta['knife_locking_type'] ?? '' ); ?>
+                        <select name="knife_locking_type" class="va-select"><option value="">- Válasszon -</option><option value="liner-lock"<?php selected( $v, 'liner-lock' ); ?>>Liner lock</option><option value="frame-lock"<?php selected( $v, 'frame-lock' ); ?>>Frame lock</option><option value="back-lock"<?php selected( $v, 'back-lock' ); ?>>Back lock</option><option value="axis-lock"<?php selected( $v, 'axis-lock' ); ?>>Axis lock</option><option value="slipjoint"<?php selected( $v, 'slipjoint' ); ?>>Slipjoint</option></select>
+                    </div>
+                    <div class="va-form-group va-knife-folding-only" style="display:none;">
+                        <label>Egykezes nyitás</label>
+                        <?php $v = (string) ( $edit_meta['knife_one_hand_opening'] ?? '' ); ?>
+                        <select name="knife_one_hand_opening" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Markolat anyag</label>
+                        <?php $v = (string) ( $edit_meta['knife_handle_material'] ?? '' ); ?>
+                        <select name="knife_handle_material" class="va-select"><option value="">- Válasszon -</option><option value="fa"<?php selected( $v, 'fa' ); ?>>Fa</option><option value="g10"<?php selected( $v, 'g10' ); ?>>G10</option><option value="micarta"<?php selected( $v, 'micarta' ); ?>>Micarta</option><option value="gumi"<?php selected( $v, 'gumi' ); ?>>Gumi</option><option value="csont"<?php selected( $v, 'csont' ); ?>>Csont</option><option value="agancs"<?php selected( $v, 'agancs' ); ?>>Agancs</option><option value="aluminium"<?php selected( $v, 'aluminium' ); ?>>Aluminium</option><option value="titan"<?php selected( $v, 'titan' ); ?>>Titán</option><option value="karbon"<?php selected( $v, 'karbon' ); ?>>Karbon</option></select>
+                    </div>
+                    <div class="va-form-group"><label>Markolat szín</label><input type="text" name="knife_handle_color" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_handle_color'] ?? '' ) ); ?>" placeholder="pl. fekete"></div>
+                    <div class="va-form-group"><label>Tok van?</label><?php $v = (string) ( $edit_meta['knife_has_sheath'] ?? '' ); ?><select name="knife_has_sheath" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Tok típusa</label><?php $v = (string) ( $edit_meta['knife_sheath_type'] ?? '' ); ?><select name="knife_sheath_type" class="va-select"><option value="">- Válasszon -</option><option value="bor"<?php selected( $v, 'bor' ); ?>>Bőr</option><option value="kydex"<?php selected( $v, 'kydex' ); ?>>Kydex</option><option value="cordura"<?php selected( $v, 'cordura' ); ?>>Cordura</option><option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option></select></div>
+                    <div class="va-form-group"><label>Övre fűzhető?</label><?php $v = (string) ( $edit_meta['knife_belt_carry'] ?? '' ); ?><select name="knife_belt_carry" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="knife_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="vadaszat"<?php echo in_array( 'vadaszat', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Vadászat</option><option value="bushcraft"<?php echo in_array( 'bushcraft', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Bushcraft</option><option value="tuleles"<?php echo in_array( 'tuleles', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Túlélés</option><option value="horgaszat"<?php echo in_array( 'horgaszat', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Horgászat</option><option value="tura"<?php echo in_array( 'tura', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Túra</option><option value="taktikai"<?php echo in_array( 'taktikai', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Taktikai</option><option value="edc"<?php echo in_array( 'edc', $knife_usage_saved, true ) ? ' selected' : ''; ?>>EDC</option><option value="gyujtoi"<?php echo in_array( 'gyujtoi', $knife_usage_saved, true ) ? ' selected' : ''; ?>>Gyűjtői</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tulajdonságok</label><select name="knife_features[]" class="va-select" multiple data-placeholder="Válassz tulajdonságot"><option value="rozsdamentes"<?php echo in_array( 'rozsdamentes', $knife_features_saved, true ) ? ' selected' : ''; ?>>Rozsdamentes</option><option value="vizallo-markolat"<?php echo in_array( 'vizallo-markolat', $knife_features_saved, true ) ? ' selected' : ''; ?>>Vízálló markolat</option><option value="tuzgyujto-kompatibilis"<?php echo in_array( 'tuzgyujto-kompatibilis', $knife_features_saved, true ) ? ' selected' : ''; ?>>Tűzgyújtó kompatibilis</option><option value="uvegtoro"<?php echo in_array( 'uvegtoro', $knife_features_saved, true ) ? ' selected' : ''; ?>>Üvegtörő</option><option value="zsinorvago"<?php echo in_array( 'zsinorvago', $knife_features_saved, true ) ? ' selected' : ''; ?>>Zsinórvágó</option></select></div>
+                    <div class="va-form-group"><label>Korhatár</label><?php $v = (string) ( $edit_meta['knife_age_restriction'] ?? '' ); ?><select name="knife_age_restriction" class="va-select"><option value="">- Válasszon -</option><option value="18plus"<?php selected( $v, '18plus' ); ?>>18+</option></select></div>
+                    <div class="va-form-group"><label>Korlátozott?</label><?php $v = (string) ( $edit_meta['knife_restricted'] ?? '' ); ?><select name="knife_restricted" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Közterületen hordható?</label><?php $v = (string) ( $edit_meta['knife_public_carry'] ?? '' ); ?><select name="knife_public_carry" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="knife_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="eredeti-doboz"<?php echo in_array( 'eredeti-doboz', $knife_accessories_saved, true ) ? ' selected' : ''; ?>>Eredeti doboz</option><option value="fenoko"<?php echo in_array( 'fenoko', $knife_accessories_saved, true ) ? ' selected' : ''; ?>>Fenőkő</option><option value="firesteel"<?php echo in_array( 'firesteel', $knife_accessories_saved, true ) ? ' selected' : ''; ?>>Firesteel</option><option value="extra-tok"<?php echo in_array( 'extra-tok', $knife_accessories_saved, true ) ? ' selected' : ''; ?>>Extra tok</option><option value="tanusitvany"<?php echo in_array( 'tanusitvany', $knife_accessories_saved, true ) ? ' selected' : ''; ?>>Tanúsítvány</option></select></div>
+                    <div class="va-form-group"><label>Ár: alku</label><?php $v = (string) ( $edit_meta['knife_price_deal'] ?? '' ); ?><select name="knife_price_deal" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Ár: csere</label><?php $v = (string) ( $edit_meta['knife_price_exchange'] ?? '' ); ?><select name="knife_price_exchange" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Szállítás</label><select name="knife_shipping_methods[]" class="va-select" multiple data-placeholder="Válassz szállítást"><option value="posta"<?php echo in_array( 'posta', $knife_shipping_saved, true ) ? ' selected' : ''; ?>>Posta</option><option value="futar"<?php echo in_array( 'futar', $knife_shipping_saved, true ) ? ' selected' : ''; ?>>Futár</option><option value="szemelyes"<?php echo in_array( 'szemelyes', $knife_shipping_saved, true ) ? ' selected' : ''; ?>>Személyes</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Kötelező képek</label><select name="knife_required_media[]" class="va-select" multiple data-placeholder="Válassz képlistát"><option value="teljes-nezet"<?php echo in_array( 'teljes-nezet', $knife_media_saved, true ) ? ' selected' : ''; ?>>Teljes nézet</option><option value="penge"<?php echo in_array( 'penge', $knife_media_saved, true ) ? ' selected' : ''; ?>>Penge</option><option value="markolat"<?php echo in_array( 'markolat', $knife_media_saved, true ) ? ' selected' : ''; ?>>Markolat</option><option value="el-kozelrol"<?php echo in_array( 'el-kozelrol', $knife_media_saved, true ) ? ' selected' : ''; ?>>Él közelről</option><option value="tok"<?php echo in_array( 'tok', $knife_media_saved, true ) ? ' selected' : ''; ?>>Tok</option></select></div>
+                    <div class="va-form-group"><label>Élezési állapot</label><?php $v = (string) ( $edit_meta['knife_sharpening_state'] ?? '' ); ?><select name="knife_sharpening_state" class="va-select"><option value="">- Válasszon -</option><option value="gyari-el"<?php selected( $v, 'gyari-el' ); ?>>Gyári él</option><option value="borotvaeles"<?php selected( $v, 'borotvaeles' ); ?>>Borotvaéles</option><option value="hasznalati-el"<?php selected( $v, 'hasznalati-el' ); ?>>Használati él</option><option value="elezendo"<?php selected( $v, 'elezendo' ); ?>>Élezendő</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Gyűjtői extra</label><select name="knife_collectible_flags[]" class="va-select" multiple data-placeholder="Válassz gyűjtői jellemzőt"><option value="limitalt-szeria"<?php echo in_array( 'limitalt-szeria', $knife_collectible_saved, true ) ? ' selected' : ''; ?>>Limitált széria</option><option value="sorszamozott"<?php echo in_array( 'sorszamozott', $knife_collectible_saved, true ) ? ' selected' : ''; ?>>Sorszámozott</option><option value="custom-maker"<?php echo in_array( 'custom-maker', $knife_collectible_saved, true ) ? ' selected' : ''; ?>>Custom maker</option><option value="kezmuves"<?php echo in_array( 'kezmuves', $knife_collectible_saved, true ) ? ' selected' : ''; ?>>Kézműves</option><option value="tanusitvannyal"<?php echo in_array( 'tanusitvannyal', $knife_collectible_saved, true ) ? ' selected' : ''; ?>>Tanúsítvánnyal</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs jelölők</label><select name="knife_moderation_flags[]" class="va-select" multiple data-placeholder="Automatikus ellenőrzéshez"><option value="automata-kes"<?php echo in_array( 'automata-kes', $knife_moderation_saved, true ) ? ' selected' : ''; ?>>Automata kés</option><option value="rugoskes"<?php echo in_array( 'rugoskes', $knife_moderation_saved, true ) ? ' selected' : ''; ?>>Rugóskés</option><option value="illegalis-penge"<?php echo in_array( 'illegalis-penge', $knife_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális penge</option><option value="rejtett-penge"<?php echo in_array( 'rejtett-penge', $knife_moderation_saved, true ) ? ' selected' : ''; ?>>Rejtett penge</option></select></div>
+                    <div class="va-form-group va-knife-axe-only" style="display:none;"><label>Fej súlya (g)</label><input type="text" name="knife_axe_head_weight_g" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_axe_head_weight_g'] ?? '' ) ); ?>" placeholder="pl. 650"></div>
+                    <div class="va-form-group va-knife-axe-only" style="display:none;"><label>Nyél anyaga</label><input type="text" name="knife_axe_handle_material" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_axe_handle_material'] ?? '' ) ); ?>" placeholder="pl. hikorifa"></div>
+                    <div class="va-form-group va-knife-multitool-only" style="display:none;"><label>Funkciók száma</label><input type="text" name="knife_multitool_function_count" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['knife_multitool_function_count'] ?? '' ) ); ?>" placeholder="pl. 17"></div>
                 </div>
-                </div><!-- /va-step2-4col-inner -->
-            </div><!-- /.va-knife-fields-grid -->
+            </div>
 
             <!-- Trófeaalátét mezők grid -->
             <div class="va-form-group va-trophy-fields-grid" data-categories="trofea-aletet" style="display:none">
@@ -6604,6 +6761,9 @@ document.addEventListener('DOMContentLoaded', function() {
             shoe_condition: 'Állapot',
             shoe_boot_height: 'Szármagasság',
             estate_main_type: 'Hagyaték fő típusa',
+            knife_condition: 'Állapot',
+            knife_blade_length_mm: 'Pengehossz (mm)',
+            knife_steel_type: 'Acél',
         };
         var missing = [];
 
@@ -6663,7 +6823,7 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(távcső|tavcso|éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
         var isNonScopeTelescopeCategory = /ejjellato-tavcso|hokamerak/.test(slug)
             || /(éjjellátó|ejjellato|hőkamera|hokamera)/.test(selectedCatText);
-        var isKnifeCategory = /bicska-tor-kard|vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska|dobotor|machete-bozotvago|multiszerszam|tok-keslanc|keselezo/.test(slug)
+        var isKnifeCategory = /kesek|bicska-tor-kard|vadaszkes-vadasztor|taktikai-kes-taktikai-tor|konyhakes|svajci-bicska|dobotor|machete-bozotvago|multiszerszam|tok-keslanc|keselezo/.test(slug)
             || /(kés|kes|bicska|tőr|tor|machete|bozótvágó|bozotvago|multiszerszám|multiszerszam)/.test(selectedCatText);
         var isOtherWeaponCategory = /egyeb-fegyverek/.test(slug)
             || /(egyéb fegyverek|egyeb fegyverek)/.test(selectedCatText);
@@ -6689,6 +6849,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle knife fields grid
         $('.va-knife-fields-grid').toggle(isKnifeCategory);
+        if (isKnifeCategory) {
+            var knifeType = (($( '[name="knife_type"]' ).val() || '') + '').trim();
+            var isFoldingType = ['bicska', 'zsebkes'].indexOf(knifeType) !== -1;
+            $('.va-knife-folding-only').toggle(isFoldingType);
+            $('.va-knife-axe-only').toggle(knifeType === 'balta');
+            $('.va-knife-multitool-only').toggle(knifeType === 'multitool');
+        } else {
+            $('.va-knife-folding-only, .va-knife-axe-only, .va-knife-multitool-only').hide();
+        }
 
         // Handle other weapons fields grid
         $('.va-other-weapon-fields-grid').toggle(isOtherWeaponCategory);
@@ -6766,6 +6935,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        if (isKnifeCategory) {
+            $('.va-knife-fields-grid input, .va-knife-fields-grid select, .va-knife-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
         $('.va-cat-rule-field').each(function(){
             var $wrap = $(this);
             var list = (($wrap.data('categories') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
@@ -6803,6 +6980,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+
+    $(document).on('change', '[name="knife_type"]', function(){
+        applyCategorySpecificFieldVisibility();
+    });
 
     /* ══ Form submit ═════════════════════════════════════ */
     $('#va-submit-btn').on('click', function(e){

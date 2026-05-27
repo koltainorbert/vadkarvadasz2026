@@ -189,10 +189,11 @@ class VA_Ajax {
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
-            'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
-            'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_blade_length' ] ],
-            'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_blade_length' ] ],
-            'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type' ] ],
+            'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
+            'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
             'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
         ];
     }
@@ -314,6 +315,10 @@ class VA_Ajax {
             'shoe_condition' => 'Állapot',
             'shoe_boot_height' => 'Szármagasság',
             'estate_main_type' => 'Hagyaték fő típusa',
+            'knife_type' => 'Kés típusa',
+            'knife_condition' => 'Állapot',
+            'knife_blade_length_mm' => 'Pengehossz (mm)',
+            'knife_steel_type' => 'Acél',
         ];
 
         $missing = [];
@@ -399,6 +404,32 @@ class VA_Ajax {
             'hamis márka',
             'replika',
             'fake',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_knife_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'automata kes',
+            'automata kés',
+            'rugoskes',
+            'rugóskés',
+            'illegalis penge',
+            'illegális penge',
+            'rejtett penge',
         ];
 
         $hits = [];
