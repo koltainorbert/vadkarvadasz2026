@@ -2752,7 +2752,7 @@ body.va-modal-open {
                             <option value="nem"<?php echo selected( (string)($edit_meta['job_firearm_license'] ?? ''), 'nem', false ); ?>>Nem</option>
                         </select>
                     </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
+                    <div class="va-form-group">
                         <label>Jogosítvány</label>
                         <select name="job_drivers_license[]" class="va-select" multiple data-placeholder="Válassz jogosítványt">
                             <option value="b"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>B</option>
