@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 27. – Session #vadaszati-hagyatek-popup-only-kotelezes
+- Kérés: a `Vadászati hagyaték` blokkban ne maradjon kipipálós mező, minden választás popup lenyílóval menjen.
+- UI javítás: az összes checkbox csoport popup-kompatibilis `select[multiple]` mezőre cserélve (`optika`, `ruházat`, `trófea`, `dokumentum`, `egyéb felszerelés`, `média ellenőrző lista`).
+- Kompatibilitás: szerkesztésnél visszatöltés új CSV meta kulcsokból történik, fallbackkel a régi `va_estate_*` 0/1 meta értékekre.
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült az új popup tömbök feldolgozása (`estate_*_items[]`), és továbbra is mentjük a régi 0/1 zászlókat is.
+- Új mentett meták: `va_estate_optic_items`, `va_estate_clothing_items`, `va_estate_trophy_items`, `va_estate_docs_items`, `va_estate_equipment_items`, `va_estate_media_items`.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+
 ## 2026. 05. 27. – Session #vadaszati-hagyatek-kategoria-rendszer
 - Új kategória megvalósítás: `vadaszati-hagyatek` teljes feladási mezőstruktúrával a submit formban (fő típus, eladási/ár logika, tartalom összetétel, állapot, jogi státusz, átadás, hagyaték jellege, média check, részletes megjegyzés).
 - Kötelező mező szabály: a kategóriához bekerült az `estate_main_type` required ellenőrzés frontend + backend oldalon.
