@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #vadaszati-hagyatek-kategoria-rendszer
+- Új kategória megvalósítás: `vadaszati-hagyatek` teljes feladási mezőstruktúrával a submit formban (fő típus, eladási/ár logika, tartalom összetétel, állapot, jogi státusz, átadás, hagyaték jellege, média check, részletes megjegyzés).
+- Kötelező mező szabály: a kategóriához bekerült az `estate_main_type` required ellenőrzés frontend + backend oldalon.
+- Backend mentés: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `estate_*` sanitize és `va_estate_*` meta mentés, valamint kereshetőségi segédmeták (`va_estate_filter_*`).
+- Moderáció: automatikus kulcsszavas jelölés épült be hagyaték kategóriára (`élő fegyver`, `engedély nélkül`, `működő automata`, `sorozatlövő`, `katonai készlet`) → `va_estate_needs_review` + `va_estate_review_hits` meta.
+- Szinkron: root + plugin mirror fájlok egységesítve (`submit-form.php`, `class-ajax.php`).
+
 ## 2026. 05. 27. – Session #tavcso-bovites-es-nagyitasmodell
 - Kérés: a távcső kategória teljes bővítése, a meglévő mezők megtartásával és a hiányzó optikai adatok pótlásával.
 - UI: a `tavcsovek` blokk bővült új mezőkkel a root + plugin mirror `submit-form.php` fájlokban, beleértve a min/max/fix nagyítási mezőket, reticle/állítás/bevonat/vízállóság/kiegészítők és kompatibilitási opciókat.
