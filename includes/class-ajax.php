@@ -168,7 +168,7 @@ class VA_Ajax {
             'golyos-puska'      => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'soretes-puska'     => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-            'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+            'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
             'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
@@ -319,6 +319,14 @@ class VA_Ajax {
             'knife_condition' => 'Állapot',
             'knife_blade_length_mm' => 'Pengehossz (mm)',
             'knife_steel_type' => 'Acél',
+            'marok_type' => 'Maroklőfegyver típusa',
+            'marok_condition' => 'Állapot',
+            'marok_action_type' => 'Működési rendszer',
+            'marok_magazine_capacity' => 'Tárkapacitás',
+            'marok_license_required' => 'Engedélyköteles',
+            'marok_legal_category' => 'Kategória',
+            'marok_cip_marking' => 'MKH / CIP jelölés',
+            'marok_transfer_license_only' => 'Csak engedéllyel átvehető',
         ];
 
         $missing = [];
@@ -430,6 +438,36 @@ class VA_Ajax {
             'illegalis penge',
             'illegális penge',
             'rejtett penge',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_marok_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'automata',
+            'sorozatlovo',
+            'sorozatlövő',
+            'konverzio',
+            'konverzió',
+            'hangtompito',
+            'hangtompító',
+            'illegalis atalakitas',
+            'illegális átalakítás',
+            'engedely nelkul',
+            'engedély nélkül',
         ];
 
         $hits = [];
