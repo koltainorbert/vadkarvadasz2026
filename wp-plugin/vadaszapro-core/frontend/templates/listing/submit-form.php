@@ -60,15 +60,10 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                     echo '<option value="">– Válasszon –</option>';
                     if ( $val !== '' ) {
                         echo '<option value="' . esc_attr( (string) $val ) . '" selected>' . esc_html( (string) $val ) . '</option>';
-                    }
-                    echo '</select>';
-                    break;
-                }
-                echo '<select name="brand" id="va-brand" class="va-select">';
-                echo '<option value="">– Válasszon –</option>';
-                if ( $val !== '' && ! in_array( (string) $val, $brands, true ) ) {
                     echo '<option value="' . esc_attr( (string) $val ) . '" selected>' . esc_html( (string) $val ) . '</option>';
-                }
+                    $accommodation_features_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_features'] ?? ''))));
+                    $accommodation_nearby_species_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_nearby_species'] ?? ''))));
+                    $accommodation_programs_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_programs'] ?? ''))));
                 foreach ( $brands as $brand ) {
                     echo '<option value="' . esc_attr( $brand ) . '"' . selected( (string) $val, $brand, false ) . '>' . esc_html( $brand ) . '</option>';
                 }
@@ -78,14 +73,32 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 if ( $site_type !== 'jarmu' ) {
                     echo '<input type="text" name="model" id="va-model" class="va-input" list="va-model-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
                     echo '<datalist id="va-model-list"></datalist>';
+                            <option value="kulcsoshaz"<?php selected($accommodation_type_val, 'kulcsoshaz'); ?>>Kulcsosház</option>
+                            <option value="erdei-haz"<?php selected($accommodation_type_val, 'erdei-haz'); ?>>Erdei ház</option>
                     break;
                 }
                 $brand_value = (string) ( $ev['brand'] ?? '' );
                 $models_for_brand = isset( $brand_models[ $brand_value ] ) && is_array( $brand_models[ $brand_value ] ) ? $brand_models[ $brand_value ] : [];
                 echo '<select name="model" id="va-model" class="va-select" data-placeholder="' . esc_attr( $ph ) . '">';
                 echo '<option value="">– Válasszon –</option>';
+                    <div class="va-form-group">
+                        <label>Település</label>
+                        <input type="text" name="accommodation_settlement" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_settlement'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Megye</label>
+                        <input type="text" name="accommodation_county_text" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_county_text'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ország</label>
+                        <input type="text" name="accommodation_country" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_country'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Pontos cím (opcionális / rejtett)</label>
+                        <input type="text" name="accommodation_exact_address" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_exact_address'] ?? '')); ?>">
+                    </div>
                 if ( $val !== '' && ! in_array( (string) $val, $models_for_brand, true ) ) {
-                    echo '<option value="' . esc_attr( (string) $val ) . '" selected>' . esc_html( (string) $val ) . '</option>';
+                        <label>Férőhely</label>
                 }
                 foreach ( $models_for_brand as $model ) {
                     echo '<option value="' . esc_attr( $model ) . '"' . selected( (string) $val, $model, false ) . '>' . esc_html( $model ) . '</option>';
@@ -94,83 +107,155 @@ if ( ! function_exists( 'self_render_listing_field' ) ) {
                 break;
             case 'body_type':
                 echo '<select name="body_type" class="va-select">';
-                echo '<option value="">– Válasszon –</option>';
-                if ( $val !== '' && ! array_key_exists( (string) $val, $body_types ) ) {
-                    echo '<option value="' . esc_attr( (string) $val ) . '" selected>' . esc_html( (string) $val ) . '</option>';
-                }
-                foreach ( $body_types as $body_key => $body_label ) {
-                    echo '<option value="' . esc_attr( $body_key ) . '"' . selected( (string) $val, $body_key, false ) . '>' . esc_html( $body_label ) . '</option>';
-                }
-                echo '</select>';
-                break;
+                        <label>Felnőtt férőhely</label>
+                        <input type="text" name="accommodation_adult_capacity" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_adult_capacity'] ?? '')); ?>">
             case 'caliber':
                 echo '<input type="text" name="caliber" class="va-input" list="va-caliber-list" autocomplete="off" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
-                break;
-            case 'year':
-                echo '<input type="number" name="year" class="va-input" min="1800" max="' . date('Y') . '" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
-                break;
-            case 'license_req':
-                $checked = $val === '1' ? ' checked' : '';
-                echo '<label class="va-check-label"><input type="checkbox" name="license_req" value="1"' . $checked . '> Fegyverengedély szükséges a vásárláshoz</label>';
+                        <label>Szobák száma</label>
+                        <input type="text" name="accommodation_room_count" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_room_count'] ?? '')); ?>">
                 break;
             case 'price':
-                echo '<input type="number" name="price" class="va-input" min="0" placeholder="' . $ph . '" value="' . esc_attr( (string) $val ) . '">';
-                break;
-            case 'price_type':
-                $pt = (string) $val;
-                echo '<select name="price_type" class="va-select">';
-                foreach ( [ 'fixed' => 'Fix ár', 'negotiable' => 'Alkudható', 'free' => 'Ingyenes', 'on_request' => 'Érdeklődjön' ] as $k => $l ) {
-                    echo '<option value="' . esc_attr( $k ) . '"' . selected( $pt, $k, false ) . '>' . esc_html( $l ) . '</option>';
+                        <label>Ágyak száma</label>
+                        <input type="text" name="accommodation_bed_count" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_bed_count'] ?? '')); ?>">
                 }
                 echo '</select>';
-                break;
-            case 'description':
-                $desc_val = wp_kses_post( (string) $val );
-                ?>
-                <div id="va-quill-editor"></div>
-                <textarea name="description" id="va-desc-hidden" style="display:none"><?php echo esc_textarea( $desc_val ); ?></textarea>
-                <style>
+                        <label>Pótágy</label>
+                        <select name="accommodation_extra_bed" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_extra_bed'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_extra_bed'] ?? ''), 'nem'); ?>>Nem</option>
+                        </select>
                 .ql-toolbar.ql-snow{background:#1e1e1e;border:1px solid rgba(255,255,255,.15)!important;border-bottom:none!important;border-radius:6px 6px 0 0;}
                 .ql-container.ql-snow{background:#111;border:1px solid rgba(255,255,255,.15)!important;border-radius:0 0 6px 6px;font-size:15px;}
-                .ql-editor{color:#fff!important;min-height:200px;line-height:1.7;font-family:system-ui,sans-serif;}
-                .ql-editor p,.ql-editor span,.ql-editor li,.ql-editor strong,.ql-editor em,.ql-editor u,.ql-editor s{color:#fff!important;}
+                        <label>Vadászterület közelében?</label>
+                        <select name="accommodation_hunting_nearby" class="va-select">
                 .ql-editor.ql-blank::before{color:#9a9a9a!important;font-style:normal;}
-                .ql-snow .ql-stroke{stroke:#aaa!important;}
-                .ql-snow .ql-fill,.ql-snow .ql-stroke.ql-fill{fill:#aaa!important;}
-                .ql-snow .ql-picker{color:#bbb!important;}
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_hunting_nearby'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_hunting_nearby'] ?? ''), 'nem'); ?>>Nem</option>
                 .ql-snow .ql-picker-label{border-color:rgba(255,255,255,.15)!important;}
                 .ql-snow .ql-picker-options{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;}
                 .ql-snow .ql-picker-item{color:#bbb!important;}
-                .ql-snow .ql-picker-item:hover,.ql-snow .ql-picker-item.ql-selected{color:#fff!important;}
-                .ql-snow.ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button:hover .ql-stroke{stroke:#ff4444!important;}
+                        <label>Szervezett vadászat elérhető?</label>
+                        <select name="accommodation_hunt_available" class="va-select">
                 .ql-snow.ql-toolbar button.ql-active .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:#ff4444!important;}
-                .ql-snow.ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button:hover .ql-fill{fill:#ff4444!important;}
-                .ql-snow.ql-toolbar button.ql-active .ql-fill{fill:#ff4444!important;}
-                .ql-snow .ql-picker.ql-header .ql-picker-label::before,.ql-snow .ql-picker.ql-header .ql-picker-item::before{color:#bbb!important;}
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_hunt_available'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_hunt_available'] ?? ''), 'nem'); ?>>Nem</option>
                 .ql-editor a{color:#ff4444;}
                 .ql-editor img{max-width:100%;border-radius:6px;}
                 .ql-editor blockquote{border-left:3px solid #ff4444;padding-left:12px;color:#aaa;margin:8px 0;}
-                .ql-editor h2,.ql-editor h3{color:#e8e8e8;}
-                .ql-editor ol,.ql-editor ul{color:#e8e8e8;}
+                        <label>Trófeakezelés</label>
+                        <select name="accommodation_trophy_handling" class="va-select">
                 .ql-snow .ql-tooltip{background:#1e1e1e!important;border-color:rgba(255,255,255,.15)!important;color:#e8e8e8!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important;}
-                .ql-snow .ql-tooltip input[type=text]{background:#111!important;border-color:rgba(255,255,255,.2)!important;color:#e8e8e8!important;}
-                .ql-snow .ql-tooltip a.ql-action,.ql-snow .ql-tooltip a.ql-remove{color:#ff4444!important;}
-                #va-wizard-overlay.va-wizard-shell .va-wizard-sidebar{padding-top:8px!important;}
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_trophy_handling'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_trophy_handling'] ?? ''), 'nem'); ?>>Nem</option>
                 </style>
                 <?php
                 break;
-            case 'images':
-                $max_img = absint( get_option( 'va_max_images_per_listing', 10 ) );
+                        <label>Hűtőkamra</label>
+                        <select name="accommodation_cold_room" class="va-select">
                 ?>
-                <div class="va-img-picker" id="va-img-picker">
-                    <div class="va-img-grid" id="va-img-grid">
-                        <button type="button" class="va-img-add" id="va-img-add">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_cold_room'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_cold_room'] ?? ''), 'nem'); ?>>Nem</option>
                             <span>Képek<br>hozzáadása</span>
                         </button>
                     </div>
-                    <input type="file" id="va-img-file-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none" data-max="<?php echo esc_attr( (string) $max_img ); ?>">
-                    <input type="hidden" name="featured_image_index" id="va-featured-index" value="0">
+                        <label>Fegyvertároló</label>
+                        <select name="accommodation_gun_storage" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_gun_storage'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_gun_storage'] ?? ''), 'nem'); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Vadfeldolgozás</label>
+                        <select name="accommodation_game_processing" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_game_processing'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_game_processing'] ?? ''), 'nem'); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Terepjáró parkoló</label>
+                        <select name="accommodation_offroad_parking" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_offroad_parking'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_offroad_parking'] ?? ''), 'nem'); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Vadászkutya hozható?</label>
+                        <select name="accommodation_dog_allowed" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_dog_allowed'] ?? ''), 'igen'); ?>>Igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_dog_allowed'] ?? ''), 'nem'); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Felszereltség</label>
+                        <div>
+                            <label><input type="checkbox" name="accommodation_features[]" value="wifi"<?php checked( in_array('wifi', $accommodation_features_saved, true) ); ?>> wifi</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="klima"<?php checked( in_array('klima', $accommodation_features_saved, true) ); ?>> klíma</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="futes"<?php checked( in_array('futes', $accommodation_features_saved, true) ); ?>> fűtés</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="konyha"<?php checked( in_array('konyha', $accommodation_features_saved, true) ); ?>> konyha</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="bogracshely"<?php checked( in_array('bogracshely', $accommodation_features_saved, true) ); ?>> bográcshely</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="grillezo"<?php checked( in_array('grillezo', $accommodation_features_saved, true) ); ?>> grillező</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="szauna"<?php checked( in_array('szauna', $accommodation_features_saved, true) ); ?>> szauna</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="jacuzzi"<?php checked( in_array('jacuzzi', $accommodation_features_saved, true) ); ?>> jacuzzi</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="medence"<?php checked( in_array('medence', $accommodation_features_saved, true) ); ?>> medence</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="parkolo"<?php checked( in_array('parkolo', $accommodation_features_saved, true) ); ?>> parkoló</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="fedett-parkolo"<?php checked( in_array('fedett-parkolo', $accommodation_features_saved, true) ); ?>> fedett parkoló</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="tv"<?php checked( in_array('tv', $accommodation_features_saved, true) ); ?>> TV</label><br>
+                            <label><input type="checkbox" name="accommodation_features[]" value="mosogep"<?php checked( in_array('mosogep', $accommodation_features_saved, true) ); ?>> mosógép</label>
+                        </div>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Étkezés</label>
+                        <select name="accommodation_meal_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="onellato"<?php selected($accommodation_meal_type_val, 'onellato'); ?>>önellátó</option>
+                            <option value="reggeli"<?php selected($accommodation_meal_type_val, 'reggeli'); ?>>reggeli</option>
+                            <option value="felpanzio"<?php selected($accommodation_meal_type_val, 'felpanzio'); ?>>félpanzió</option>
+                            <option value="teljes-ellatas"<?php selected($accommodation_meal_type_val, 'teljes-ellatas'); ?>>teljes ellátás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Minimum éjszaka</label>
+                        <input type="text" name="accommodation_min_nights" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_min_nights'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Foglalható időszak</label>
+                        <input type="text" name="accommodation_bookable_period" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_bookable_period'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Azonnal foglalható?</label>
+                        <select name="accommodation_instant_book" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected((string)($edit_meta['accommodation_instant_book'] ?? ''), 'igen'); ?>>igen</option>
+                            <option value="nem"<?php selected((string)($edit_meta['accommodation_instant_book'] ?? ''), 'nem'); ?>>nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Vadfajok a közelben</label>
+                        <div>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="szarvas"<?php checked( in_array('szarvas', $accommodation_nearby_species_saved, true) ); ?>> szarvas</label><br>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="oz"<?php checked( in_array('oz', $accommodation_nearby_species_saved, true) ); ?>> őz</label><br>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="vaddiszno"<?php checked( in_array('vaddiszno', $accommodation_nearby_species_saved, true) ); ?>> vaddisznó</label><br>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="muflon"<?php checked( in_array('muflon', $accommodation_nearby_species_saved, true) ); ?>> muflon</label><br>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="facan"<?php checked( in_array('facan', $accommodation_nearby_species_saved, true) ); ?>> fácán</label><br>
+                            <label><input type="checkbox" name="accommodation_nearby_species[]" value="nyul"<?php checked( in_array('nyul', $accommodation_nearby_species_saved, true) ); ?>> nyúl</label>
+                        </div>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Programok</label>
+                        <div>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="lesvadaszat"<?php checked( in_array('lesvadaszat', $accommodation_programs_saved, true) ); ?>> lesvadászat</label><br>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="hajtas"<?php checked( in_array('hajtas', $accommodation_programs_saved, true) ); ?>> hajtás</label><br>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="cserkeles"<?php checked( in_array('cserkeles', $accommodation_programs_saved, true) ); ?>> cserkelés</label><br>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="horgaszat"<?php checked( in_array('horgaszat', $accommodation_programs_saved, true) ); ?>> horgászat</label><br>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="tura"<?php checked( in_array('tura', $accommodation_programs_saved, true) ); ?>> túra</label><br>
+                            <label><input type="checkbox" name="accommodation_programs[]" value="terepjarozas"<?php checked( in_array('terepjarozas', $accommodation_programs_saved, true) ); ?>> terepjárózás</label>
+                        </div>
+                    </div>
                     <input type="hidden" name="keep_images" id="va-keep-images" value="">
                     <p class="va-img-hint">Húzd a képeket az átrendezéshez &bull; &#9733; = borítókép beállítása</p>
                 </div>
@@ -264,7 +349,7 @@ $category_required_rules = [
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
-    'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_slot_mode', 'accommodation_from_hour', 'accommodation_to_hour' ] ],
+    'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
@@ -334,6 +419,28 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'accommodation_checkout_to' => get_post_meta( $maybe_id, 'va_accommodation_checkout_to', true ),
             'accommodation_meal_type' => get_post_meta( $maybe_id, 'va_accommodation_meal_type', true ),
             'accommodation_parking' => get_post_meta( $maybe_id, 'va_accommodation_parking', true ),
+            'accommodation_settlement' => get_post_meta( $maybe_id, 'va_accommodation_settlement', true ),
+            'accommodation_county_text' => get_post_meta( $maybe_id, 'va_accommodation_county_text', true ),
+            'accommodation_country' => get_post_meta( $maybe_id, 'va_accommodation_country', true ),
+            'accommodation_exact_address' => get_post_meta( $maybe_id, 'va_accommodation_exact_address', true ),
+            'accommodation_adult_capacity' => get_post_meta( $maybe_id, 'va_accommodation_adult_capacity', true ),
+            'accommodation_room_count' => get_post_meta( $maybe_id, 'va_accommodation_room_count', true ),
+            'accommodation_bed_count' => get_post_meta( $maybe_id, 'va_accommodation_bed_count', true ),
+            'accommodation_extra_bed' => get_post_meta( $maybe_id, 'va_accommodation_extra_bed', true ),
+            'accommodation_hunting_nearby' => get_post_meta( $maybe_id, 'va_accommodation_hunting_nearby', true ),
+            'accommodation_hunt_available' => get_post_meta( $maybe_id, 'va_accommodation_hunt_available', true ),
+            'accommodation_trophy_handling' => get_post_meta( $maybe_id, 'va_accommodation_trophy_handling', true ),
+            'accommodation_cold_room' => get_post_meta( $maybe_id, 'va_accommodation_cold_room', true ),
+            'accommodation_gun_storage' => get_post_meta( $maybe_id, 'va_accommodation_gun_storage', true ),
+            'accommodation_game_processing' => get_post_meta( $maybe_id, 'va_accommodation_game_processing', true ),
+            'accommodation_offroad_parking' => get_post_meta( $maybe_id, 'va_accommodation_offroad_parking', true ),
+            'accommodation_dog_allowed' => get_post_meta( $maybe_id, 'va_accommodation_dog_allowed', true ),
+            'accommodation_features' => get_post_meta( $maybe_id, 'va_accommodation_features', true ),
+            'accommodation_min_nights' => get_post_meta( $maybe_id, 'va_accommodation_min_nights', true ),
+            'accommodation_bookable_period' => get_post_meta( $maybe_id, 'va_accommodation_bookable_period', true ),
+            'accommodation_instant_book' => get_post_meta( $maybe_id, 'va_accommodation_instant_book', true ),
+            'accommodation_nearby_species' => get_post_meta( $maybe_id, 'va_accommodation_nearby_species', true ),
+            'accommodation_programs' => get_post_meta( $maybe_id, 'va_accommodation_programs', true ),
             'hunt_slot_from_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_from_hour', true ),
             'hunt_slot_to_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_to_hour', true ),
             'hunt_capacity' => get_post_meta( $maybe_id, 'va_hunt_capacity', true ),
@@ -5364,9 +5471,8 @@ document.addEventListener('DOMContentLoaded', function() {
             trophy_finish: 'Felületkezelés',
             accommodation_type: 'Szállás típusa',
             accommodation_capacity: 'Férőhely (fő)',
-            accommodation_slot_mode: 'Foglalási idősáv típusa',
-            accommodation_from_hour: 'Foglalható idősáv kezdete',
-            accommodation_to_hour: 'Foglalható idősáv vége',
+            accommodation_hunting_nearby: 'Vadászterület közelében?',
+            accommodation_hunt_available: 'Szervezett vadászat elérhető?',
             hunt_slot_from_hour: 'Idősáv kezdete (óra)',
             hunt_slot_to_hour: 'Idősáv vége (óra)',
             hunt_capacity: 'Létszám / fő',
