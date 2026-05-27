@@ -1798,7 +1798,7 @@ body.va-modal-open {
                             <option value="akkumulator"<?php echo in_array('akkumulator', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Akkumulátor</option>
                             <option value="tolto"<?php echo in_array('tolto', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Töltő</option>
                         </select>
-                        <input type="text" name="other_weapon_accessories_other" class="va-input" placeholder="Egyéb tartozékok" value="<?php echo esc_attr((string)($edit_meta['other_weapon_accessories_other'] ?? '')); ?>">
+                        <input type="text" name="other_weapon_accessories_other" class="va-input" style="margin-top:10px;" placeholder="Egyéb tartozékok" value="<?php echo esc_attr((string)($edit_meta['other_weapon_accessories_other'] ?? '')); ?>">
                     </div>
                     <div class="va-form-group">
                         <label>18+ termék?</label>
