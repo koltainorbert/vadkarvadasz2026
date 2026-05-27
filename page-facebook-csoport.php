@@ -23,7 +23,7 @@ if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
     $group_url = $option_url;
 }
 if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
-    $group_url = 'https://www.facebook.com/groups/';
+    $group_url = 'https://www.facebook.com/groups/738296572937664';
 }
 
 $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebookon' );
