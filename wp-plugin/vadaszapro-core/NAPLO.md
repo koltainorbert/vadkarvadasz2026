@@ -8,6 +8,9 @@
 - Megvalósítás: az oldal a Facebook hivatalos Group embedet (`fb-group`) tölti be HU SDK-val, plusz kapott egy kiemelt `Megnyitas Facebookon` gombot.
 - Kényelmi beállítás: a csoport URL forrása prioritásosan az oldal tartalma (ha oda URL kerül), utána a `va_facebook_group_url` post meta, majd a globál opció; így adminból kódmódosítás nélkül állítható.
 - Routing: a root + theme mirror `functions.php` kapott garantált publikus URL kezelést (`/facebook-csoport`), hasonlóan a kapcsolat/etika oldalakhoz.
+- UI finomítás: a felhasználói kérésre a piros háttér/accent kivezetve, a nézet radar-widgethez közelítő sötét-kékes stílust kapott, fehér főcímmel.
+- UI finomítás: a bevezető megjegyzés szöveg eltávolítva a fejlécből.
+- Technikai váltás: az `fb-group` SDK beágyazás helyett `facebook.com/plugins/group.php` iframe került be, stabilabb megjelenítéshez.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 

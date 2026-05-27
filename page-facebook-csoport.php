@@ -27,6 +27,15 @@ if ( ! filter_var( $group_url, FILTER_VALIDATE_URL ) ) {
 }
 
 $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebookon' );
+$iframe_src = add_query_arg(
+    [
+        'href'                => $group_url,
+        'show_social_context' => 'true',
+        'show_metadata'       => 'false',
+        'width'               => '1200',
+    ],
+    'https://www.facebook.com/plugins/group.php'
+);
 ?>
 
 <section class="va-fb-group-page" aria-label="Facebook csoport oldal">
@@ -35,26 +44,21 @@ $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebooko
     <div class="va-fb-group-page__inner">
         <header class="va-fb-group-page__hero">
             <h1>Facebook csoport</h1>
-            <p>
-                A Facebook technikai korlatai miatt a csoport nem jelenik meg 1:1-ben ugyanugy,
-                mint facebook.com-on. Az alabbi widget a hivatalos beagyazas,
-                teljes szelessegu oldalkornyezetben.
-            </p>
             <a class="va-fb-group-page__open" href="<?php echo esc_url( $group_url ); ?>" target="_blank" rel="noopener noreferrer">
                 <?php echo esc_html( $open_label ); ?>
             </a>
         </header>
 
-        <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v20.0"></script>
-
         <div class="va-fb-group-page__embed-wrap">
-            <div
-                class="fb-group"
-                data-href="<?php echo esc_url( $group_url ); ?>"
-                data-show-social-context="true"
-                data-show-metadata="false">
-            </div>
+            <iframe
+                class="va-fb-group-page__frame"
+                src="<?php echo esc_url( $iframe_src ); ?>"
+                allowfullscreen="true"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Facebook csoport feed">
+            </iframe>
         </div>
     </div>
 </section>
@@ -73,8 +77,8 @@ $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebooko
         position: absolute;
         inset: 0;
         background-image:
-            radial-gradient(circle at 18% 16%, rgba(255, 0, 0, .20), transparent 44%),
-            radial-gradient(circle at 84% 12%, rgba(255, 0, 0, .14), transparent 32%),
+            radial-gradient(circle at 14% 12%, rgba(0, 178, 255, .16), transparent 42%),
+            radial-gradient(circle at 84% 10%, rgba(76, 215, 158, .14), transparent 34%),
             radial-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px);
         background-size: auto, auto, 18px 18px;
         pointer-events: none;
@@ -88,16 +92,11 @@ $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebooko
     }
 
     .va-fb-group-page__hero h1 {
-        margin: 0 0 10px;
+        margin: 0 0 16px;
         font-size: clamp(2rem, 5vw, 3.2rem);
         line-height: 1.05;
         letter-spacing: .02em;
-    }
-
-    .va-fb-group-page__hero p {
-        max-width: 900px;
-        margin: 0 0 18px;
-        color: rgba(255, 255, 255, .82);
+        color: #fff;
     }
 
     .va-fb-group-page__open {
@@ -105,30 +104,45 @@ $open_label = get_option( 'va_facebook_group_button_label', 'Megnyitas Facebooko
         align-items: center;
         justify-content: center;
         padding: 10px 16px;
-        border: 1px solid rgba(255, 0, 0, .55);
+        border: 1px solid rgba(120, 190, 255, .45);
         border-radius: 999px;
         color: #fff;
         text-decoration: none;
-        background: rgba(255, 0, 0, .18);
+        background: linear-gradient(145deg, rgba(11, 31, 57, .88), rgba(10, 39, 73, .88));
+        box-shadow: 0 10px 28px rgba(0, 130, 255, .16), inset 0 0 22px rgba(71, 152, 255, .12);
         transition: transform .22s ease, background .22s ease;
     }
 
     .va-fb-group-page__open:hover {
         transform: translateY(-1px);
-        background: rgba(255, 0, 0, .28);
+        background: linear-gradient(145deg, rgba(13, 38, 70, .95), rgba(14, 51, 94, .95));
     }
 
     .va-fb-group-page__embed-wrap {
         margin-top: clamp(16px, 3vw, 26px);
-        min-height: 70vh;
+        min-height: 78vh;
         border: 1px solid rgba(255, 255, 255, .14);
         border-radius: 18px;
-        padding: clamp(8px, 1.2vw, 14px);
-        background: rgba(0, 0, 0, .35);
+        padding: 0;
+        overflow: hidden;
+        background: linear-gradient(160deg, rgba(6, 16, 28, .96) 0%, rgba(10, 22, 40, .95) 100%);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, .46);
     }
 
-    .va-fb-group-page .fb-group {
+    .va-fb-group-page__frame {
         width: 100%;
+        height: min(78vh, 960px);
+        min-height: 720px;
+        border: 0;
+        display: block;
+        background: #0a111d;
+    }
+
+    @media (max-width: 800px) {
+        .va-fb-group-page__frame {
+            min-height: 640px;
+            height: 74vh;
+        }
     }
 </style>
 
