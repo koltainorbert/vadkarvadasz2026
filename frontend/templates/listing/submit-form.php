@@ -2643,6 +2643,9 @@ body.va-modal-open {
                 $accommodation_checkout_to_val = (string)($edit_meta['accommodation_checkout_to'] ?? '');
                 $accommodation_meal_type_val = (string)($edit_meta['accommodation_meal_type'] ?? '');
                 $accommodation_parking_val = (string)($edit_meta['accommodation_parking'] ?? '');
+                $accommodation_features_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_features'] ?? ''))));
+                $accommodation_nearby_species_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_nearby_species'] ?? ''))));
+                $accommodation_programs_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_programs'] ?? ''))));
                 ?>
                 <div class="va-form-group">
                     <label>Szállás típusa</label>
@@ -2652,11 +2655,29 @@ body.va-modal-open {
                         <option value="vendeghaz"<?php selected($accommodation_type_val, 'vendeghaz'); ?>>Vendégház</option>
                         <option value="apartman"<?php selected($accommodation_type_val, 'apartman'); ?>>Apartman</option>
                         <option value="panzio"<?php selected($accommodation_type_val, 'panzio'); ?>>Panzió</option>
+                        <option value="kulcsoshaz"<?php selected($accommodation_type_val, 'kulcsoshaz'); ?>>Kulcsosház</option>
+                        <option value="erdei-haz"<?php selected($accommodation_type_val, 'erdei-haz'); ?>>Erdei ház</option>
                         <option value="hotel"<?php selected($accommodation_type_val, 'hotel'); ?>>Hotel</option>
                         <option value="fahaz"<?php selected($accommodation_type_val, 'fahaz'); ?>>Faház</option>
                         <option value="kemping"<?php selected($accommodation_type_val, 'kemping'); ?>>Kemping</option>
                         <option value="egyeb"<?php selected($accommodation_type_val, 'egyeb'); ?>>Egyéb</option>
                     </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Település</label>
+                    <input type="text" name="accommodation_settlement" class="va-input" placeholder="pl. Mátrakeresztes" value="<?php echo esc_attr((string)($edit_meta['accommodation_settlement'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Megye</label>
+                    <input type="text" name="accommodation_county_text" class="va-input" placeholder="pl. Heves" value="<?php echo esc_attr((string)($edit_meta['accommodation_county_text'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Ország</label>
+                    <input type="text" name="accommodation_country" class="va-input" placeholder="pl. Magyarország" value="<?php echo esc_attr((string)($edit_meta['accommodation_country'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Pontos cím (opcionális / rejtett)</label>
+                    <input type="text" name="accommodation_exact_address" class="va-input" placeholder="Nem kötelező, publikus oldalon rejthető" value="<?php echo esc_attr((string)($edit_meta['accommodation_exact_address'] ?? '')); ?>">
                 </div>
                 <div class="va-form-group">
                     <label>Férőhely (fő)</label>
@@ -2665,6 +2686,26 @@ body.va-modal-open {
                         <?php foreach ( ['1-2','3-4','5-8','9-12','13-20','20+'] as $cap): ?>
                         <option value="<?php echo esc_attr($cap); ?>"<?php selected($accommodation_capacity_val, $cap); ?>><?php echo esc_html($cap); ?> fő</option>
                         <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Felnőtt férőhely</label>
+                    <input type="text" name="accommodation_adult_capacity" class="va-input" placeholder="pl. 8" value="<?php echo esc_attr((string)($edit_meta['accommodation_adult_capacity'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Szobák száma</label>
+                    <input type="text" name="accommodation_room_count" class="va-input" placeholder="pl. 4" value="<?php echo esc_attr((string)($edit_meta['accommodation_room_count'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Ágyak száma</label>
+                    <input type="text" name="accommodation_bed_count" class="va-input" placeholder="pl. 10" value="<?php echo esc_attr((string)($edit_meta['accommodation_bed_count'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Pótágy</label>
+                    <select name="accommodation_extra_bed" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_extra_bed'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_extra_bed'] ?? ''), 'nem'); ?>>Nem</option>
                     </select>
                 </div>
                 <div class="va-form-group">
@@ -2736,10 +2777,10 @@ body.va-modal-open {
                     <label>Ellátás típusa</label>
                     <select name="accommodation_meal_type" class="va-select">
                         <option value="">– Válasszon –</option>
-                        <option value="nincs"<?php selected($accommodation_meal_type_val, 'nincs'); ?>>Nincs</option>
+                        <option value="onellato"<?php selected($accommodation_meal_type_val, 'onellato'); ?>>Önellátó</option>
                         <option value="reggeli"<?php selected($accommodation_meal_type_val, 'reggeli'); ?>>Reggeli</option>
                         <option value="felpanzio"<?php selected($accommodation_meal_type_val, 'felpanzio'); ?>>Félpanzió</option>
-                        <option value="teljes"<?php selected($accommodation_meal_type_val, 'teljes'); ?>>Teljes ellátás</option>
+                        <option value="teljes-ellatas"<?php selected($accommodation_meal_type_val, 'teljes-ellatas'); ?>>Teljes ellátás</option>
                     </select>
                 </div>
                 <div class="va-form-group">
@@ -2748,6 +2789,127 @@ body.va-modal-open {
                         <option value="">– Válasszon –</option>
                         <option value="igen"<?php selected($accommodation_parking_val, 'igen'); ?>>Igen</option>
                         <option value="nem"<?php selected($accommodation_parking_val, 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vadászati kapcsolódó mezők</strong></div>
+                <div class="va-form-group">
+                    <label>Vadászterület közelében?</label>
+                    <select name="accommodation_hunting_nearby" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_hunting_nearby'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_hunting_nearby'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Szervezett vadászat elérhető?</label>
+                    <select name="accommodation_hunt_available" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_hunt_available'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_hunt_available'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Trófeakezelés</label>
+                    <select name="accommodation_trophy_handling" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_trophy_handling'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_trophy_handling'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Hűtőkamra</label>
+                    <select name="accommodation_cold_room" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_cold_room'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_cold_room'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Fegyvertároló</label>
+                    <select name="accommodation_gun_storage" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_gun_storage'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_gun_storage'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Vadfeldolgozás</label>
+                    <select name="accommodation_game_processing" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_game_processing'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_game_processing'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Terepjáró parkoló</label>
+                    <select name="accommodation_offroad_parking" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_offroad_parking'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_offroad_parking'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Vadászkutya hozható?</label>
+                    <select name="accommodation_dog_allowed" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_dog_allowed'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_dog_allowed'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Felszereltség</label>
+                    <select name="accommodation_features[]" class="va-select" multiple data-placeholder="Válassz felszereltséget">
+                        <option value="wifi"<?php echo in_array('wifi', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Wifi</option>
+                        <option value="klima"<?php echo in_array('klima', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Klíma</option>
+                        <option value="futes"<?php echo in_array('futes', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Fűtés</option>
+                        <option value="konyha"<?php echo in_array('konyha', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Konyha</option>
+                        <option value="bogracshely"<?php echo in_array('bogracshely', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Bográcshely</option>
+                        <option value="grillezo"<?php echo in_array('grillezo', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Grillező</option>
+                        <option value="szauna"<?php echo in_array('szauna', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Szauna</option>
+                        <option value="jacuzzi"<?php echo in_array('jacuzzi', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Jacuzzi</option>
+                        <option value="medence"<?php echo in_array('medence', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Medence</option>
+                        <option value="parkolo"<?php echo in_array('parkolo', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Parkoló</option>
+                        <option value="fedett-parkolo"<?php echo in_array('fedett-parkolo', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Fedett parkoló</option>
+                        <option value="tv"<?php echo in_array('tv', $accommodation_features_saved, true) ? ' selected' : ''; ?>>TV</option>
+                        <option value="mosogep"<?php echo in_array('mosogep', $accommodation_features_saved, true) ? ' selected' : ''; ?>>Mosógép</option>
+                    </select>
+                </div>
+                <div class="va-form-group">
+                    <label>Minimum éjszaka</label>
+                    <input type="text" name="accommodation_min_nights" class="va-input" placeholder="pl. 2" value="<?php echo esc_attr((string)($edit_meta['accommodation_min_nights'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Foglalható időszak</label>
+                    <input type="text" name="accommodation_bookable_period" class="va-input" placeholder="pl. egész évben / szezonálisan" value="<?php echo esc_attr((string)($edit_meta['accommodation_bookable_period'] ?? '')); ?>">
+                </div>
+                <div class="va-form-group">
+                    <label>Azonnal foglalható?</label>
+                    <select name="accommodation_instant_book" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="igen"<?php selected((string)($edit_meta['accommodation_instant_book'] ?? ''), 'igen'); ?>>Igen</option>
+                        <option value="nem"<?php selected((string)($edit_meta['accommodation_instant_book'] ?? ''), 'nem'); ?>>Nem</option>
+                    </select>
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Vadfajok a közelben</label>
+                    <select name="accommodation_nearby_species[]" class="va-select" multiple data-placeholder="Válassz vadfajt">
+                        <option value="szarvas"<?php echo in_array('szarvas', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Szarvas</option>
+                        <option value="oz"<?php echo in_array('oz', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Őz</option>
+                        <option value="vaddiszno"<?php echo in_array('vaddiszno', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Vaddisznó</option>
+                        <option value="muflon"<?php echo in_array('muflon', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Muflon</option>
+                        <option value="facan"<?php echo in_array('facan', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Fácán</option>
+                        <option value="nyul"<?php echo in_array('nyul', $accommodation_nearby_species_saved, true) ? ' selected' : ''; ?>>Nyúl</option>
+                    </select>
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Programok</label>
+                    <select name="accommodation_programs[]" class="va-select" multiple data-placeholder="Válassz programot">
+                        <option value="lesvadaszat"<?php echo in_array('lesvadaszat', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Lesvadászat</option>
+                        <option value="hajtas"<?php echo in_array('hajtas', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Hajtás</option>
+                        <option value="cserkeles"<?php echo in_array('cserkeles', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Cserkelés</option>
+                        <option value="horgaszat"<?php echo in_array('horgaszat', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Horgászat</option>
+                        <option value="tura"<?php echo in_array('tura', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Túra</option>
+                        <option value="terepjarozas"<?php echo in_array('terepjarozas', $accommodation_programs_saved, true) ? ' selected' : ''; ?>>Terepjárózás</option>
                     </select>
                 </div>
                 </div><!-- /va-step2-4col-inner -->
