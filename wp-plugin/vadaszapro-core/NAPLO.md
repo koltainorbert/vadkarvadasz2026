@@ -33,6 +33,13 @@
 - Szinkron: root + plugin mirror `submit-form.php` egyszerre frissítve.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-jogositvany-popup-v2
+- Kérés: a jogosítvány mező működése/kinézete legyen pontosan olyan popup, mint a többi wizard lenyíló.
+- Javítás: a korábbi egyedi `.va-ms` blokk helyett natív `select[multiple]` került be, amit a meglévő `va-popup-select` modal kezel.
+- Javítás: a popup motor bővítve lett többes kijelölésre (`multiple`) ugyanabban a modal UI-ban.
+- Eredmény: a jogosítvány most a többi popup mezővel egységes kinézetet és működést ad.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.

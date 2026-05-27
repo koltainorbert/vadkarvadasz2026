@@ -33,6 +33,13 @@
 - Szinkron: root + plugin mirror `submit-form.php` egyszerre frissítve.
 - Deploy: `Deploy All` lefutott, live workflow indul.
 
+## 2026. 05. 27. – Session #allas-jogositvany-popup-v2
+- Kérés: a jogosítvány mező működése/kinézete legyen pontosan olyan popup, mint a többi wizard lenyíló.
+- Javítás: a korábbi egyedi `.va-ms` blokk helyett natív `select[multiple]` került be, amit a meglévő `va-popup-select` modal kezel.
+- Javítás: a popup motor bővítve lett többes kijelölésre (`multiple`) ugyanabban a modal UI-ban.
+- Eredmény: a jogosítvány most a többi popup mezővel egységes kinézetet és működést ad.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.
