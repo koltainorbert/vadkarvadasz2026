@@ -27,6 +27,12 @@
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 
+## 2026. 05. 27. – Session #allas-jogositvany-popup
+- Kérés: az `Állás` feladás `Jogosítvány` mezője checkbox lista helyett legyen popup lenyíló.
+- Javítás: a job `job_drivers_license[]` mezőcsoport popup paneles `.va-ms` markupot kapott, a többes kijelölés megmaradt.
+- Szinkron: root + plugin mirror `submit-form.php` egyszerre frissítve.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 27. – Session #allas-kotelezo-mezo-hiba-fix
 - Kérés: `PK / Állás` feladás végén ne dobjon fals kötelező mező hibát.
 - Hiba oka: az egyik mentési ágban a kategória-validáció nem kapta meg a `job_location` és `job_type` mezőket, ezért akkor is hiányzónak látta őket, ha a user kitöltötte.

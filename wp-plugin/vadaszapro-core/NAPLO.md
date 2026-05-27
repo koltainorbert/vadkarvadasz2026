@@ -27,6 +27,12 @@
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
 
+## 2026. 05. 27. – Session #allas-jogositvany-popup
+- Kérés: az `Állás` feladás `Jogosítvány` mezője checkbox lista helyett legyen popup lenyíló.
+- Javítás: a job `job_drivers_license[]` mezőcsoport popup paneles `.va-ms` markupot kapott, a többes kijelölés megmaradt.
+- Szinkron: root + plugin mirror `submit-form.php` egyszerre frissítve.
+- Deploy: `Deploy All` lefutott, live workflow indul.
+
 ## 2026. 05. 26. – Session #radar-widget-branding
 - Kérés: a compact widget neve legyen pontosan `Vadkár Radar`, és kapjon kis logót a cím mellé.
 - Megvalósítás: a fejléc cím átnevezve, logóforrás bevezetve (`va_brand_icon_url` fallback: `get_site_icon_url(64)`), kis logó megjelenítése a title sorban.
