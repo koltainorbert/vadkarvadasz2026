@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Session #szallas-teljes-popup-ujrairas
+- Kérés: a szállás blokk legyen teljesen újraírva, a keveredett részek nélkül, és kizárólag lenyíló/popup mezőkkel.
+- Javítás: a `Szállás` mezőcsoportban a 3 többválasztós rész (`Felszereltség`, `Vadfajok a közelben`, `Programok`) checkbox helyett popup-kompatibilis `select[multiple]` lett.
+- Korlát: radio mező a szállás blokkban nincs, a többválasztás popup listából történik.
+- Szinkron: root és plugin mirror `submit-form.php` egységesítve.
+
 ## 2026. 05. 27. – Session #szallas-template-helyreallitas-es-tiszta-ujraepites
 - Hiba: a `submit-form.php` korábbi patch után strukturálisan sérült (szállás HTML blokkok a fájl elejébe keveredtek), ezért kockázatos lett a deploy.
 - Javítás: a root + plugin `submit-form.php` visszaállítva stabil checkpointból, majd a `szallas` blokk célzottan újraépítve a kért mezőlistával (település/megye/ország, vadászat-specifikus igen/nem mezők, checkbox csoportok).
