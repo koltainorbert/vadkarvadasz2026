@@ -179,7 +179,7 @@ class VA_Ajax {
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
-            'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand' ] ],
+            'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -300,6 +300,10 @@ class VA_Ajax {
             'vadcamera_video_resolution' => 'Videó felbontás',
             'vadcamera_ip_rating' => 'IP védelem',
             'vadcamera_sim_slot' => 'SIM kártyás?',
+            'shoe_main_type' => 'Típus',
+            'shoe_eu_size' => 'EU méret',
+            'shoe_condition' => 'Állapot',
+            'shoe_boot_height' => 'Szármagasság',
             'estate_main_type' => 'Hagyaték fő típusa',
         ];
 
@@ -363,6 +367,29 @@ class VA_Ajax {
             'illegalis lehallgato',
             'illegális lehallgató',
             'titkos kamera',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_shoe_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'hamis marka',
+            'hamis márka',
+            'replika',
+            'fake',
         ];
 
         $hits = [];
@@ -760,6 +787,48 @@ class VA_Ajax {
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
+        $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
+        $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
+        $shoe_gender = sanitize_key( wp_unslash( $_POST['shoe_gender'] ?? '' ) );
+        $shoe_eu_size = sanitize_text_field( wp_unslash( $_POST['shoe_eu_size'] ?? '' ) );
+        $shoe_uk_size = sanitize_text_field( wp_unslash( $_POST['shoe_uk_size'] ?? '' ) );
+        $shoe_us_size = sanitize_text_field( wp_unslash( $_POST['shoe_us_size'] ?? '' ) );
+        $shoe_boot_height = sanitize_key( wp_unslash( $_POST['shoe_boot_height'] ?? '' ) );
+        $shoe_outer_material = sanitize_key( wp_unslash( $_POST['shoe_outer_material'] ?? '' ) );
+        $shoe_lining = sanitize_key( wp_unslash( $_POST['shoe_lining'] ?? '' ) );
+        $shoe_sole_material = sanitize_key( wp_unslash( $_POST['shoe_sole_material'] ?? '' ) );
+        $shoe_protections = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_protections'] ?? [] ) ) ) );
+        $shoe_season = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_season'] ?? [] ) ) ) );
+        $shoe_terrain = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_terrain'] ?? [] ) ) ) );
+        $shoe_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_use_cases'] ?? [] ) ) ) );
+        $shoe_sole_pattern = sanitize_key( wp_unslash( $_POST['shoe_sole_pattern'] ?? '' ) );
+        $shoe_stiffness = sanitize_key( wp_unslash( $_POST['shoe_stiffness'] ?? '' ) );
+        $shoe_weight_single_g = sanitize_text_field( wp_unslash( $_POST['shoe_weight_single_g'] ?? '' ) );
+        $shoe_weight_pair_g = sanitize_text_field( wp_unslash( $_POST['shoe_weight_pair_g'] ?? '' ) );
+        $shoe_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_accessories'] ?? [] ) ) ) );
+        $shoe_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_shipping_methods'] ?? [] ) ) ) );
+        $shoe_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_required_media'] ?? [] ) ) ) );
+        $shoe_rubber_shaft_cm = sanitize_text_field( wp_unslash( $_POST['shoe_rubber_shaft_cm'] ?? '' ) );
+        $shoe_rubber_neoprene_lining = sanitize_key( wp_unslash( $_POST['shoe_rubber_neoprene_lining'] ?? '' ) );
+        $shoe_tactical_steel_toe = sanitize_key( wp_unslash( $_POST['shoe_tactical_steel_toe'] ?? '' ) );
+        $shoe_tactical_quick_lace = sanitize_key( wp_unslash( $_POST['shoe_tactical_quick_lace'] ?? '' ) );
+        $shoe_winter_comfort_temp_c = sanitize_text_field( wp_unslash( $_POST['shoe_winter_comfort_temp_c'] ?? '' ) );
+        $shoe_foot_type = sanitize_key( wp_unslash( $_POST['shoe_foot_type'] ?? '' ) );
+        $shoe_sole_wear_percent = sanitize_text_field( wp_unslash( $_POST['shoe_sole_wear_percent'] ?? '' ) );
+        $shoe_inner_wear = sanitize_text_field( wp_unslash( $_POST['shoe_inner_wear'] ?? '' ) );
+        $shoe_waterproof_retained = sanitize_key( wp_unslash( $_POST['shoe_waterproof_retained'] ?? '' ) );
+        $shoe_resoled = sanitize_key( wp_unslash( $_POST['shoe_resoled'] ?? '' ) );
+        $shoe_notes = sanitize_textarea_field( wp_unslash( $_POST['shoe_notes'] ?? '' ) );
+        if ( $shoe_eu_size === '' ) {
+            $shoe_eu_size = $shoe_size;
+        }
+        if ( $shoe_size === '' ) {
+            $shoe_size = $shoe_eu_size;
+        }
+        $shoe_filter_waterproof = ( strpos( ',' . $shoe_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
+        $shoe_filter_goretex = ( $shoe_lining === 'gore-tex' ) ? '1' : '0';
+        $shoe_filter_winter = ( strpos( ',' . $shoe_season . ',', ',teli,' ) !== false || $shoe_main_type === 'teli-csizma' || $shoe_main_type === 'hotaposo' ) ? '1' : '0';
+        $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
@@ -1148,6 +1217,10 @@ class VA_Ajax {
             'vadcamera_video_resolution' => $vadcamera_video_resolution,
             'vadcamera_ip_rating' => $vadcamera_ip_rating,
             'vadcamera_sim_slot' => $vadcamera_sim_slot,
+            'shoe_main_type' => $shoe_main_type,
+            'shoe_eu_size' => $shoe_eu_size,
+            'shoe_condition' => $shoe_condition,
+            'shoe_boot_height' => $shoe_boot_height,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -1657,6 +1730,49 @@ class VA_Ajax {
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
+        $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
+        $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
+        $shoe_gender = sanitize_key( wp_unslash( $_POST['shoe_gender'] ?? '' ) );
+        $shoe_eu_size = sanitize_text_field( wp_unslash( $_POST['shoe_eu_size'] ?? '' ) );
+        $shoe_uk_size = sanitize_text_field( wp_unslash( $_POST['shoe_uk_size'] ?? '' ) );
+        $shoe_us_size = sanitize_text_field( wp_unslash( $_POST['shoe_us_size'] ?? '' ) );
+        $shoe_boot_height = sanitize_key( wp_unslash( $_POST['shoe_boot_height'] ?? '' ) );
+        $shoe_outer_material = sanitize_key( wp_unslash( $_POST['shoe_outer_material'] ?? '' ) );
+        $shoe_lining = sanitize_key( wp_unslash( $_POST['shoe_lining'] ?? '' ) );
+        $shoe_sole_material = sanitize_key( wp_unslash( $_POST['shoe_sole_material'] ?? '' ) );
+        $shoe_protections = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_protections'] ?? [] ) ) ) );
+        $shoe_season = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_season'] ?? [] ) ) ) );
+        $shoe_terrain = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_terrain'] ?? [] ) ) ) );
+        $shoe_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_use_cases'] ?? [] ) ) ) );
+        $shoe_sole_pattern = sanitize_key( wp_unslash( $_POST['shoe_sole_pattern'] ?? '' ) );
+        $shoe_stiffness = sanitize_key( wp_unslash( $_POST['shoe_stiffness'] ?? '' ) );
+        $shoe_weight_single_g = sanitize_text_field( wp_unslash( $_POST['shoe_weight_single_g'] ?? '' ) );
+        $shoe_weight_pair_g = sanitize_text_field( wp_unslash( $_POST['shoe_weight_pair_g'] ?? '' ) );
+        $shoe_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_accessories'] ?? [] ) ) ) );
+        $shoe_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_shipping_methods'] ?? [] ) ) ) );
+        $shoe_required_media = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shoe_required_media'] ?? [] ) ) ) );
+        $shoe_rubber_shaft_cm = sanitize_text_field( wp_unslash( $_POST['shoe_rubber_shaft_cm'] ?? '' ) );
+        $shoe_rubber_neoprene_lining = sanitize_key( wp_unslash( $_POST['shoe_rubber_neoprene_lining'] ?? '' ) );
+        $shoe_tactical_steel_toe = sanitize_key( wp_unslash( $_POST['shoe_tactical_steel_toe'] ?? '' ) );
+        $shoe_tactical_quick_lace = sanitize_key( wp_unslash( $_POST['shoe_tactical_quick_lace'] ?? '' ) );
+        $shoe_winter_comfort_temp_c = sanitize_text_field( wp_unslash( $_POST['shoe_winter_comfort_temp_c'] ?? '' ) );
+        $shoe_foot_type = sanitize_key( wp_unslash( $_POST['shoe_foot_type'] ?? '' ) );
+        $shoe_sole_wear_percent = sanitize_text_field( wp_unslash( $_POST['shoe_sole_wear_percent'] ?? '' ) );
+        $shoe_inner_wear = sanitize_text_field( wp_unslash( $_POST['shoe_inner_wear'] ?? '' ) );
+        $shoe_waterproof_retained = sanitize_key( wp_unslash( $_POST['shoe_waterproof_retained'] ?? '' ) );
+        $shoe_resoled = sanitize_key( wp_unslash( $_POST['shoe_resoled'] ?? '' ) );
+        $shoe_notes = sanitize_textarea_field( wp_unslash( $_POST['shoe_notes'] ?? '' ) );
+        if ( $shoe_eu_size === '' ) {
+            $shoe_eu_size = $shoe_size;
+        }
+        if ( $shoe_size === '' ) {
+            $shoe_size = $shoe_eu_size;
+        }
+        $shoe_filter_waterproof = ( strpos( ',' . $shoe_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
+        $shoe_filter_goretex = ( $shoe_lining === 'gore-tex' ) ? '1' : '0';
+        $shoe_filter_winter = ( strpos( ',' . $shoe_season . ',', ',teli,' ) !== false || $shoe_main_type === 'teli-csizma' || $shoe_main_type === 'hotaposo' ) ? '1' : '0';
+        $shoe_filter_high_ankle = ( $shoe_boot_height === 'magas' ) ? '1' : '0';
         $knife_type  = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
         $knife_blade_length = sanitize_text_field( wp_unslash( $_POST['knife_blade_length'] ?? '' ) );
         $trophy_species = sanitize_key( wp_unslash( $_POST['trophy_species'] ?? '' ) );
@@ -2015,6 +2131,10 @@ class VA_Ajax {
             'vadcamera_video_resolution' => $vadcamera_video_resolution,
             'vadcamera_ip_rating' => $vadcamera_ip_rating,
             'vadcamera_sim_slot' => $vadcamera_sim_slot,
+            'shoe_main_type' => $shoe_main_type,
+            'shoe_eu_size' => $shoe_eu_size,
+            'shoe_condition' => $shoe_condition,
+            'shoe_boot_height' => $shoe_boot_height,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
