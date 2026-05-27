@@ -251,7 +251,7 @@ $category_required_rules = [
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
-    'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
+    'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
     'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'optic_type', 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type' ] ],
@@ -431,6 +431,23 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hatastalanitott_original_finish' => get_post_meta( $maybe_id, 'va_hatastalanitott_original_finish', true ),
             'hatastalanitott_original_parts_ratio' => get_post_meta( $maybe_id, 'va_hatastalanitott_original_parts_ratio', true ),
             'hatastalanitott_accessories' => get_post_meta( $maybe_id, 'va_hatastalanitott_accessories', true ),
+            'loszer_category' => get_post_meta( $maybe_id, 'va_loszer_category', true ),
+            'loszer_caliber_preset' => get_post_meta( $maybe_id, 'va_loszer_caliber_preset', true ),
+            'loszer_caliber_custom' => get_post_meta( $maybe_id, 'va_loszer_caliber_custom', true ),
+            'loszer_manufacturer_preset' => get_post_meta( $maybe_id, 'va_loszer_manufacturer_preset', true ),
+            'loszer_manufacturer_custom' => get_post_meta( $maybe_id, 'va_loszer_manufacturer_custom', true ),
+            'loszer_projectile_type' => get_post_meta( $maybe_id, 'va_loszer_projectile_type', true ),
+            'loszer_projectile_weight' => get_post_meta( $maybe_id, 'va_loszer_projectile_weight', true ),
+            'loszer_projectile_weight_unit' => get_post_meta( $maybe_id, 'va_loszer_projectile_weight_unit', true ),
+            'loszer_piece_count' => get_post_meta( $maybe_id, 'va_loszer_piece_count', true ),
+            'loszer_piece_unit' => get_post_meta( $maybe_id, 'va_loszer_piece_unit', true ),
+            'loszer_lot_year' => get_post_meta( $maybe_id, 'va_loszer_lot_year', true ),
+            'loszer_condition' => get_post_meta( $maybe_id, 'va_loszer_condition', true ),
+            'loszer_component_case_condition' => get_post_meta( $maybe_id, 'va_loszer_component_case_condition', true ),
+            'loszer_powder_type' => get_post_meta( $maybe_id, 'va_loszer_powder_type', true ),
+            'loszer_powder_sealed' => get_post_meta( $maybe_id, 'va_loszer_powder_sealed', true ),
+            'loszer_powder_weight' => get_post_meta( $maybe_id, 'va_loszer_powder_weight', true ),
+            'loszer_primer_type' => get_post_meta( $maybe_id, 'va_loszer_primer_type', true ),
             'bow_acc_sight' => get_post_meta( $maybe_id, 'va_bow_acc_sight', true ),
             'bow_acc_release' => get_post_meta( $maybe_id, 'va_bow_acc_release', true ),
             'bow_acc_stabilizer' => get_post_meta( $maybe_id, 'va_bow_acc_stabilizer', true ),
@@ -2130,6 +2147,157 @@ body.va-modal-open {
                             <option value="dokumentacio"<?php echo in_array('dokumentacio', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Dokumentáció</option>
                             <option value="tanusitvany"<?php echo in_array('tanusitvany', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Tanúsítvány</option>
                             <option value="gyari-doboz"<?php echo in_array('gyari-doboz', $hatastalanitott_accessories_saved, true) ? ' selected' : ''; ?>>Gyári doboz</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="va-cat-rule-field" data-categories="loszer-tolteny" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <h3 class="va-specs-heading">Lőszer / töltény műszaki adatok</h3>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kategória</label>
+                        <select name="loszer_category" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="golyos-loszer"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'golyos-loszer', false ); ?>>Golyós lőszer</option>
+                            <option value="soretes-loszer"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'soretes-loszer', false ); ?>>Sörétes lőszer</option>
+                            <option value="peremgyujtasu"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'peremgyujtasu', false ); ?>>Peremgyújtású</option>
+                            <option value="vakloszer"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'vakloszer', false ); ?>>Vaktöltény</option>
+                            <option value="riaszto-patron"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'riaszto-patron', false ); ?>>Riasztó patron</option>
+                            <option value="gyujtoi-tolteny"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'gyujtoi-tolteny', false ); ?>>Gyűjtői töltény</option>
+                            <option value="huvely"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'huvely', false ); ?>>Hüvely</option>
+                            <option value="lovedek"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'lovedek', false ); ?>>Lövedék</option>
+                            <option value="csappantyu"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'csappantyu', false ); ?>>Csappantyú</option>
+                            <option value="lopor"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'lopor', false ); ?>>Lőpor</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['loszer_category'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kaliber (előre definiált)</label>
+                        <select name="loszer_caliber_preset" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="22lr"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '22lr', false ); ?>>.22 LR</option>
+                            <option value="223rem"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '223rem', false ); ?>>.223 Rem</option>
+                            <option value="308win"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '308win', false ); ?>>.308 Win</option>
+                            <option value="762x39"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '762x39', false ); ?>>7.62x39</option>
+                            <option value="9mmpak"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '9mmpak', false ); ?>>9mm P.A.K.</option>
+                            <option value="12-70"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), '12-70', false ); ?>>12/70</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['loszer_caliber_preset'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Egyedi kaliber</label>
+                        <input type="text" name="loszer_caliber_custom" class="va-input" placeholder="pl. 6.5 Creedmoor" value="<?php echo esc_attr((string)($edit_meta['loszer_caliber_custom'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyártó (lista)</label>
+                        <select name="loszer_manufacturer_preset" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="hornady"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'hornady', false ); ?>>Hornady</option>
+                            <option value="sellier-bellot"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'sellier-bellot', false ); ?>>Sellier &amp; Bellot</option>
+                            <option value="geco"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'geco', false ); ?>>Geco</option>
+                            <option value="norma"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'norma', false ); ?>>Norma</option>
+                            <option value="lapua"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'lapua', false ); ?>>Lapua</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['loszer_manufacturer_preset'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyártó (egyedi)</label>
+                        <input type="text" name="loszer_manufacturer_custom" class="va-input" placeholder="pl. Prvi Partizan" value="<?php echo esc_attr((string)($edit_meta['loszer_manufacturer_custom'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Típus</label>
+                        <select name="loszer_projectile_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="golyos"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'golyos', false ); ?>>Golyós</option>
+                            <option value="fmj"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'fmj', false ); ?>>FMJ</option>
+                            <option value="sp"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'sp', false ); ?>>SP</option>
+                            <option value="hp"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'hp', false ); ?>>HP</option>
+                            <option value="match"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'match', false ); ?>>Match</option>
+                            <option value="soft-point"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'soft-point', false ); ?>>Soft Point</option>
+                            <option value="ballistic-tip"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'ballistic-tip', false ); ?>>Ballistic Tip</option>
+                            <option value="slug"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'slug', false ); ?>>Slug</option>
+                            <option value="buckshot"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'buckshot', false ); ?>>Buckshot</option>
+                            <option value="birdshot"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'birdshot', false ); ?>>Birdshot</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['loszer_projectile_type'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Lövedéksúly</label>
+                        <input type="text" name="loszer_projectile_weight" class="va-input" placeholder="pl. 9.7" value="<?php echo esc_attr((string)($edit_meta['loszer_projectile_weight'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Lövedéksúly mértékegység</label>
+                        <select name="loszer_projectile_weight_unit" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="grain"<?php echo selected( (string)($edit_meta['loszer_projectile_weight_unit'] ?? ''), 'grain', false ); ?>>grain</option>
+                            <option value="gramm"<?php echo selected( (string)($edit_meta['loszer_projectile_weight_unit'] ?? ''), 'gramm', false ); ?>>gramm</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Darabszám</label>
+                        <input type="text" name="loszer_piece_count" class="va-input" placeholder="pl. 50" value="<?php echo esc_attr((string)($edit_meta['loszer_piece_count'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kiszerelés</label>
+                        <select name="loszer_piece_unit" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="doboz"<?php echo selected( (string)($edit_meta['loszer_piece_unit'] ?? ''), 'doboz', false ); ?>>doboz</option>
+                            <option value="db"<?php echo selected( (string)($edit_meta['loszer_piece_unit'] ?? ''), 'db', false ); ?>>db</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyártási év / LOT szám (opcionális)</label>
+                        <input type="text" name="loszer_lot_year" class="va-input" placeholder="pl. 2024 / LOT-A123" value="<?php echo esc_attr((string)($edit_meta['loszer_lot_year'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <select name="loszer_condition" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="uj"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'uj', false ); ?>>Új</option>
+                            <option value="bontatlan"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'bontatlan', false ); ?>>Bontatlan</option>
+                            <option value="bontott"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'bontott', false ); ?>>Bontott</option>
+                            <option value="gyujtoi"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'gyujtoi', false ); ?>>Gyűjtői</option>
+                            <option value="korrodalt"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'korrodalt', false ); ?>>Korrodált</option>
+                            <option value="ujratoltott"<?php echo selected( (string)($edit_meta['loszer_condition'] ?? ''), 'ujratoltott', false ); ?>>Újratöltött</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Újratöltés / komponens mezők (ha releváns)</strong></div>
+                    <div class="va-form-group">
+                        <label>Hüvely állapota</label>
+                        <select name="loszer_component_case_condition" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="uj"<?php echo selected( (string)($edit_meta['loszer_component_case_condition'] ?? ''), 'uj', false ); ?>>Új</option>
+                            <option value="egyszer-lott"<?php echo selected( (string)($edit_meta['loszer_component_case_condition'] ?? ''), 'egyszer-lott', false ); ?>>Egyszer lőtt</option>
+                            <option value="tisztitott"<?php echo selected( (string)($edit_meta['loszer_component_case_condition'] ?? ''), 'tisztitott', false ); ?>>Tisztított</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Lőpor típusa</label>
+                        <input type="text" name="loszer_powder_type" class="va-input" placeholder="pl. Vihtavuori N140" value="<?php echo esc_attr((string)($edit_meta['loszer_powder_type'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Lőpor bontatlan?</label>
+                        <select name="loszer_powder_sealed" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="igen"<?php echo selected( (string)($edit_meta['loszer_powder_sealed'] ?? ''), 'igen', false ); ?>>Igen</option>
+                            <option value="nem"<?php echo selected( (string)($edit_meta['loszer_powder_sealed'] ?? ''), 'nem', false ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Lőpor tömeg</label>
+                        <input type="text" name="loszer_powder_weight" class="va-input" placeholder="pl. 0.5 kg" value="<?php echo esc_attr((string)($edit_meta['loszer_powder_weight'] ?? '')); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Csappantyú típusa</label>
+                        <select name="loszer_primer_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="small-rifle"<?php echo selected( (string)($edit_meta['loszer_primer_type'] ?? ''), 'small-rifle', false ); ?>>Small Rifle</option>
+                            <option value="large-rifle"<?php echo selected( (string)($edit_meta['loszer_primer_type'] ?? ''), 'large-rifle', false ); ?>>Large Rifle</option>
+                            <option value="small-pistol"<?php echo selected( (string)($edit_meta['loszer_primer_type'] ?? ''), 'small-pistol', false ); ?>>Small Pistol</option>
+                            <option value="large-pistol"<?php echo selected( (string)($edit_meta['loszer_primer_type'] ?? ''), 'large-pistol', false ); ?>>Large Pistol</option>
+                            <option value="egyeb"<?php echo selected( (string)($edit_meta['loszer_primer_type'] ?? ''), 'egyeb', false ); ?>>Egyéb</option>
                         </select>
                     </div>
                 </div>
@@ -5167,6 +5335,8 @@ document.addEventListener('DOMContentLoaded', function() {
             hatastalanitott_certificate: 'Tanúsítvány van?',
             hatastalanitott_mkh_cip: 'MKH / CIP jelölés?',
             hatastalanitott_condition: 'Állapot',
+            loszer_category: 'Kategória',
+            loszer_condition: 'Állapot',
             optic_type: 'Távcső típusa',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
