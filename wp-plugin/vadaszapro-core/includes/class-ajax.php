@@ -171,7 +171,7 @@ class VA_Ajax {
             'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
-            'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber' ] ],
+            'loszer-tolteny'    => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
             'tavcsovek'         => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_zoom', 'optic_objective' ] ],
             'ejjellato-tavcso'  => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
             'hokamerak'         => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom' ] ],
@@ -233,6 +233,8 @@ class VA_Ajax {
             'hatastalanitott_certificate' => 'Tanúsítvány van?',
             'hatastalanitott_mkh_cip' => 'MKH / CIP jelölés?',
             'hatastalanitott_condition' => 'Állapot',
+            'loszer_category' => 'Kategória',
+            'loszer_condition' => 'Állapot',
             'optic_zoom' => 'Nagyítás',
             'optic_objective' => 'Objektív átmérő (mm)',
             'dog_age_months' => 'Kutya életkor (hónap)',
@@ -765,6 +767,23 @@ class VA_Ajax {
         $hatastalanitott_original_finish = sanitize_key( wp_unslash( $_POST['hatastalanitott_original_finish'] ?? '' ) );
         $hatastalanitott_original_parts_ratio = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_original_parts_ratio'] ?? '' ) );
         $hatastalanitott_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_accessories'] ?? [] ) ) ) );
+        $loszer_category = sanitize_key( wp_unslash( $_POST['loszer_category'] ?? '' ) );
+        $loszer_caliber_preset = sanitize_key( wp_unslash( $_POST['loszer_caliber_preset'] ?? '' ) );
+        $loszer_caliber_custom = sanitize_text_field( wp_unslash( $_POST['loszer_caliber_custom'] ?? '' ) );
+        $loszer_manufacturer_preset = sanitize_key( wp_unslash( $_POST['loszer_manufacturer_preset'] ?? '' ) );
+        $loszer_manufacturer_custom = sanitize_text_field( wp_unslash( $_POST['loszer_manufacturer_custom'] ?? '' ) );
+        $loszer_projectile_type = sanitize_key( wp_unslash( $_POST['loszer_projectile_type'] ?? '' ) );
+        $loszer_projectile_weight = sanitize_text_field( wp_unslash( $_POST['loszer_projectile_weight'] ?? '' ) );
+        $loszer_projectile_weight_unit = sanitize_key( wp_unslash( $_POST['loszer_projectile_weight_unit'] ?? '' ) );
+        $loszer_piece_count = sanitize_text_field( wp_unslash( $_POST['loszer_piece_count'] ?? '' ) );
+        $loszer_piece_unit = sanitize_key( wp_unslash( $_POST['loszer_piece_unit'] ?? '' ) );
+        $loszer_lot_year = sanitize_text_field( wp_unslash( $_POST['loszer_lot_year'] ?? '' ) );
+        $loszer_condition = sanitize_key( wp_unslash( $_POST['loszer_condition'] ?? '' ) );
+        $loszer_component_case_condition = sanitize_key( wp_unslash( $_POST['loszer_component_case_condition'] ?? '' ) );
+        $loszer_powder_type = sanitize_text_field( wp_unslash( $_POST['loszer_powder_type'] ?? '' ) );
+        $loszer_powder_sealed = sanitize_key( wp_unslash( $_POST['loszer_powder_sealed'] ?? '' ) );
+        $loszer_powder_weight = sanitize_text_field( wp_unslash( $_POST['loszer_powder_weight'] ?? '' ) );
+        $loszer_primer_type = sanitize_key( wp_unslash( $_POST['loszer_primer_type'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -1242,6 +1261,23 @@ class VA_Ajax {
         $hatastalanitott_original_finish = sanitize_key( wp_unslash( $_POST['hatastalanitott_original_finish'] ?? '' ) );
         $hatastalanitott_original_parts_ratio = sanitize_text_field( wp_unslash( $_POST['hatastalanitott_original_parts_ratio'] ?? '' ) );
         $hatastalanitott_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hatastalanitott_accessories'] ?? [] ) ) ) );
+        $loszer_category = sanitize_key( wp_unslash( $_POST['loszer_category'] ?? '' ) );
+        $loszer_caliber_preset = sanitize_key( wp_unslash( $_POST['loszer_caliber_preset'] ?? '' ) );
+        $loszer_caliber_custom = sanitize_text_field( wp_unslash( $_POST['loszer_caliber_custom'] ?? '' ) );
+        $loszer_manufacturer_preset = sanitize_key( wp_unslash( $_POST['loszer_manufacturer_preset'] ?? '' ) );
+        $loszer_manufacturer_custom = sanitize_text_field( wp_unslash( $_POST['loszer_manufacturer_custom'] ?? '' ) );
+        $loszer_projectile_type = sanitize_key( wp_unslash( $_POST['loszer_projectile_type'] ?? '' ) );
+        $loszer_projectile_weight = sanitize_text_field( wp_unslash( $_POST['loszer_projectile_weight'] ?? '' ) );
+        $loszer_projectile_weight_unit = sanitize_key( wp_unslash( $_POST['loszer_projectile_weight_unit'] ?? '' ) );
+        $loszer_piece_count = sanitize_text_field( wp_unslash( $_POST['loszer_piece_count'] ?? '' ) );
+        $loszer_piece_unit = sanitize_key( wp_unslash( $_POST['loszer_piece_unit'] ?? '' ) );
+        $loszer_lot_year = sanitize_text_field( wp_unslash( $_POST['loszer_lot_year'] ?? '' ) );
+        $loszer_condition = sanitize_key( wp_unslash( $_POST['loszer_condition'] ?? '' ) );
+        $loszer_component_case_condition = sanitize_key( wp_unslash( $_POST['loszer_component_case_condition'] ?? '' ) );
+        $loszer_powder_type = sanitize_text_field( wp_unslash( $_POST['loszer_powder_type'] ?? '' ) );
+        $loszer_powder_sealed = sanitize_key( wp_unslash( $_POST['loszer_powder_sealed'] ?? '' ) );
+        $loszer_powder_weight = sanitize_text_field( wp_unslash( $_POST['loszer_powder_weight'] ?? '' ) );
+        $loszer_primer_type = sanitize_key( wp_unslash( $_POST['loszer_primer_type'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
