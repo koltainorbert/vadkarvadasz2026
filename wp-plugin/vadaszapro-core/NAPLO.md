@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Session #szallas-template-helyreallitas-es-tiszta-ujraepites
+- Hiba: a `submit-form.php` korábbi patch után strukturálisan sérült (szállás HTML blokkok a fájl elejébe keveredtek), ezért kockázatos lett a deploy.
+- Javítás: a root + plugin `submit-form.php` visszaállítva stabil checkpointból, majd a `szallas` blokk célzottan újraépítve a kért mezőlistával (település/megye/ország, vadászat-specifikus igen/nem mezők, checkbox csoportok).
+- Javítás: a frontend required szabály/label frissítve (`accommodation_hunting_nearby`, `accommodation_hunt_available`), és az edit meta visszatöltéshez az új `accommodation_*` kulcsok bekötve.
+- Ellenőrzés: top-of-file sanity, szállás blokk lezárások, root+mirror szinkron, hibakeresés lefuttatva (`No errors found`).
+
 ## 2026. 05. 27. – Session #szallas-teljes-ujrairas-checkbox
 - Kérés: a szállás modul teljes újraírása, mert a mezők keveredtek a munka résszel.
 - UI: a `szallas` blokk nulláról újrarakva a kért mezőkkel (típus, település/megye/ország/pontos cím, férőhely bontás, vadász-specifikus igen/nem mezők).
