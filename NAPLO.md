@@ -2,6 +2,11 @@
 
 ---
 
+## 2026. 05. 27. – Hotfix #service-gps-field-gap
+- Javítás: a `Szolgáltatás` kategória GPS (`lat/lng`) inputjai összeértek mobil nézetben.
+- Megoldás: a GPS mezőpár wrapper (`va-two-up`) kapott explicit grid + `gap:10px` stílust.
+- Érintett fájlok: `frontend/templates/listing/submit-form.php` + plugin mirror.
+
 ## 2026. 05. 27. – Session #szolgaltatas-kategoria-komplex-mezorendszer
 - Kérés: a `Szolgáltatás` kategória teljes, szűrő- és trustközpontú mezőrendszere készüljön el.
 - Frontend: külön `va-service-fields-grid` blokk került be a szolgáltatás típusokra, provider/location/pricing/availability/equipment/permits/referencia/média/moderáció mezőkkel és típusfüggő almezőkkel.
