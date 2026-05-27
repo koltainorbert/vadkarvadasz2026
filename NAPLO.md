@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #hatastalanitott-kategoria-es-popup-szabaly
+- Kérés: az új kategóriáknál soha ne legyen lista-szerű kipipálható checkbox mező; popup lenyílós többválasztó legyen a standard.
+- Javítás: a `Hatástalanított fegyverek` kategória teljes mezőblokkal bekerült a feladási űrlapba (root + plugin mirror), a többválasztós mezők popup-kompatibilis `select[multiple]` formában készültek (`hatastalanitott_working_parts[]`, `hatastalanitott_accessories[]`).
+- Javítás: a backend mindkét AJAX ágban (új feladás + szerkesztés) szinkronban kezeli a `hatastalanitott_*` mezőket: sanitize, category-required validáció és `va_hatastalanitott_*` meta mentés.
+- Javítás: a required szabály és a felhasználói hibaüzenet-label térkép is bővítve lett a kötelező hatástalanított mezőkkel.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+
 ## 2026. 05. 27. – Session #takarmany-vadfaj-popup
 - Kérés: a takarmány blokkban a `Milyen vadnak ajánlott` checkbox lista legyen popup lenyíló.
 - Javítás: a checkboxok helyett popup többválasztós mező került be (`feed_recommended_game_flags[]`).
