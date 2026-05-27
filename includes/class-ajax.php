@@ -1248,6 +1248,8 @@ class VA_Ajax {
         $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
         $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
+        $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
+        $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
 
         wp_update_post( [
             'ID'           => $post_id,
@@ -1365,6 +1367,48 @@ class VA_Ajax {
             'va_hunt_has_accommodation' => $hunt_has_accommodation,
             'va_hunt_can_buy_game' => $hunt_can_buy_game,
             'va_exchange_target' => $exchange_target,
+            'va_shoe_size' => $shoe_size,
+            'va_shoe_main_type' => $shoe_main_type,
+            'va_shoe_condition' => $shoe_condition,
+            'va_shoe_gender' => $shoe_gender,
+            'va_shoe_eu_size' => $shoe_eu_size,
+            'va_shoe_uk_size' => $shoe_uk_size,
+            'va_shoe_us_size' => $shoe_us_size,
+            'va_shoe_boot_height' => $shoe_boot_height,
+            'va_shoe_outer_material' => $shoe_outer_material,
+            'va_shoe_lining' => $shoe_lining,
+            'va_shoe_sole_material' => $shoe_sole_material,
+            'va_shoe_protections' => $shoe_protections,
+            'va_shoe_season' => $shoe_season,
+            'va_shoe_terrain' => $shoe_terrain,
+            'va_shoe_use_cases' => $shoe_use_cases,
+            'va_shoe_sole_pattern' => $shoe_sole_pattern,
+            'va_shoe_stiffness' => $shoe_stiffness,
+            'va_shoe_weight_single_g' => $shoe_weight_single_g,
+            'va_shoe_weight_pair_g' => $shoe_weight_pair_g,
+            'va_shoe_accessories' => $shoe_accessories,
+            'va_shoe_shipping_methods' => $shoe_shipping_methods,
+            'va_shoe_required_media' => $shoe_required_media,
+            'va_shoe_rubber_shaft_cm' => $shoe_rubber_shaft_cm,
+            'va_shoe_rubber_neoprene_lining' => $shoe_rubber_neoprene_lining,
+            'va_shoe_tactical_steel_toe' => $shoe_tactical_steel_toe,
+            'va_shoe_tactical_quick_lace' => $shoe_tactical_quick_lace,
+            'va_shoe_winter_comfort_temp_c' => $shoe_winter_comfort_temp_c,
+            'va_shoe_foot_type' => $shoe_foot_type,
+            'va_shoe_sole_wear_percent' => $shoe_sole_wear_percent,
+            'va_shoe_inner_wear' => $shoe_inner_wear,
+            'va_shoe_waterproof_retained' => $shoe_waterproof_retained,
+            'va_shoe_resoled' => $shoe_resoled,
+            'va_shoe_notes' => $shoe_notes,
+            'va_shoe_filter_eu_size' => $shoe_eu_size,
+            'va_shoe_filter_waterproof' => $shoe_filter_waterproof,
+            'va_shoe_filter_membrane_type' => $shoe_lining,
+            'va_shoe_filter_goretex' => $shoe_filter_goretex,
+            'va_shoe_filter_boot_height' => $shoe_boot_height,
+            'va_shoe_filter_high_ankle' => $shoe_filter_high_ankle,
+            'va_shoe_filter_season' => $shoe_season,
+            'va_shoe_filter_season_winter' => $shoe_filter_winter,
+            'va_shoe_filter_terrain' => $shoe_terrain,
             'va_vadcamera_camera_type' => $vadcamera_camera_type,
             'va_vadcamera_condition' => $vadcamera_condition,
             'va_vadcamera_warranty' => $vadcamera_warranty,
@@ -1411,6 +1455,8 @@ class VA_Ajax {
             'va_vadcamera_filter_is_sim' => $vadcamera_filter_is_sim,
             'va_vadcamera_needs_review' => ! empty( $vadcamera_moderation_hits ) ? '1' : '0',
             'va_vadcamera_review_hits' => implode( ',', $vadcamera_moderation_hits ),
+            'va_shoe_needs_review' => ! empty( $shoe_moderation_hits ) ? '1' : '0',
+            'va_shoe_review_hits' => implode( ',', $shoe_moderation_hits ),
             'va_estate_main_type' => $estate_main_type,
             'va_estate_sale_mode' => $estate_sale_mode,
             'va_estate_price_total' => $estate_price_total,
@@ -2162,6 +2208,8 @@ class VA_Ajax {
         $estate_moderation_hits = $is_estate_category ? self::detect_estate_moderation_hits( $title, $description, $estate_notes ) : [];
         $is_vadcamera_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vadkamera';
         $vadcamera_moderation_hits = $is_vadcamera_category ? self::detect_vadcamera_moderation_hits( $title, $description, $vadcamera_notes ) : [];
+        $is_shoe_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'cipo-bakancs';
+        $shoe_moderation_hits = $is_shoe_category ? self::detect_shoe_moderation_hits( $title, $description, $shoe_notes ) : [];
 
         // Plan-alapú limit ellenőrzés (VA_User_Roles rendszer)
         $plan_check    = VA_User_Roles::can_post_listing( $user_id );
