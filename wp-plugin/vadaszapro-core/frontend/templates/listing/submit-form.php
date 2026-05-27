@@ -265,7 +265,7 @@ $category_required_rules = [
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
     'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
-    'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
+    'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_slot_from_hour', 'hunt_slot_to_hour', 'hunt_capacity', 'hunt_species_list', 'hunt_lease_type' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
     'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
@@ -552,6 +552,45 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'hunt_has_offroad' => get_post_meta( $maybe_id, 'va_hunt_has_offroad', true ),
             'hunt_has_accommodation' => get_post_meta( $maybe_id, 'va_hunt_has_accommodation', true ),
             'hunt_can_buy_game' => get_post_meta( $maybe_id, 'va_hunt_can_buy_game', true ),
+            'hunt_type' => get_post_meta( $maybe_id, 'va_hunt_type', true ),
+            'hunt_game_species' => get_post_meta( $maybe_id, 'va_hunt_game_species', true ),
+            'hunt_country' => get_post_meta( $maybe_id, 'va_hunt_country', true ),
+            'hunt_county' => get_post_meta( $maybe_id, 'va_hunt_county', true ),
+            'hunt_area_name' => get_post_meta( $maybe_id, 'va_hunt_area_name', true ),
+            'hunt_exact_area' => get_post_meta( $maybe_id, 'va_hunt_exact_area', true ),
+            'hunt_gps_lat' => get_post_meta( $maybe_id, 'va_hunt_gps_lat', true ),
+            'hunt_gps_lng' => get_post_meta( $maybe_id, 'va_hunt_gps_lng', true ),
+            'hunt_terrain_types' => get_post_meta( $maybe_id, 'va_hunt_terrain_types', true ),
+            'hunt_season_start' => get_post_meta( $maybe_id, 'va_hunt_season_start', true ),
+            'hunt_season_end' => get_post_meta( $maybe_id, 'va_hunt_season_end', true ),
+            'hunt_time_type' => get_post_meta( $maybe_id, 'va_hunt_time_type', true ),
+            'hunt_price_type' => get_post_meta( $maybe_id, 'va_hunt_price_type', true ),
+            'hunt_price_min' => get_post_meta( $maybe_id, 'va_hunt_price_min', true ),
+            'hunt_price_max' => get_post_meta( $maybe_id, 'va_hunt_price_max', true ),
+            'hunt_price_includes' => get_post_meta( $maybe_id, 'va_hunt_price_includes', true ),
+            'hunt_guide_type' => get_post_meta( $maybe_id, 'va_hunt_guide_type', true ),
+            'hunt_methods' => get_post_meta( $maybe_id, 'va_hunt_methods', true ),
+            'hunt_onsite_services' => get_post_meta( $maybe_id, 'va_hunt_onsite_services', true ),
+            'hunt_hunting_license_required' => get_post_meta( $maybe_id, 'va_hunt_hunting_license_required', true ),
+            'hunt_permit_required' => get_post_meta( $maybe_id, 'va_hunt_permit_required', true ),
+            'hunt_foreigners_allowed' => get_post_meta( $maybe_id, 'va_hunt_foreigners_allowed', true ),
+            'hunt_min_age' => get_post_meta( $maybe_id, 'va_hunt_min_age', true ),
+            'hunt_safety_features' => get_post_meta( $maybe_id, 'va_hunt_safety_features', true ),
+            'hunt_conditions' => get_post_meta( $maybe_id, 'va_hunt_conditions', true ),
+            'hunt_difficulty_level' => get_post_meta( $maybe_id, 'va_hunt_difficulty_level', true ),
+            'hunt_expected_trophy_quality' => get_post_meta( $maybe_id, 'va_hunt_expected_trophy_quality', true ),
+            'hunt_trophy_weight_age' => get_post_meta( $maybe_id, 'va_hunt_trophy_weight_age', true ),
+            'hunt_required_media' => get_post_meta( $maybe_id, 'va_hunt_required_media', true ),
+            'hunt_video_types' => get_post_meta( $maybe_id, 'va_hunt_video_types', true ),
+            'hunt_moderation_flags' => get_post_meta( $maybe_id, 'va_hunt_moderation_flags', true ),
+            'hunt_trophy_category' => get_post_meta( $maybe_id, 'va_hunt_trophy_category', true ),
+            'hunt_trophy_weight_limit' => get_post_meta( $maybe_id, 'va_hunt_trophy_weight_limit', true ),
+            'hunt_travel_assist' => get_post_meta( $maybe_id, 'va_hunt_travel_assist', true ),
+            'hunt_interpreter' => get_post_meta( $maybe_id, 'va_hunt_interpreter', true ),
+            'hunt_group_size' => get_post_meta( $maybe_id, 'va_hunt_group_size', true ),
+            'hunt_shot_limit' => get_post_meta( $maybe_id, 'va_hunt_shot_limit', true ),
+            'hunt_real_time_slots' => get_post_meta( $maybe_id, 'va_hunt_real_time_slots', true ),
+            'hunt_bookable_dates' => get_post_meta( $maybe_id, 'va_hunt_bookable_dates', true ),
             'exchange_target' => get_post_meta( $maybe_id, 'va_exchange_target', true ),
             'job_role' => get_post_meta( $maybe_id, 'va_job_role', true ),
             'job_role_other' => get_post_meta( $maybe_id, 'va_job_role_other', true ),
@@ -3849,7 +3888,107 @@ body.va-modal-open {
                 $hunt_has_offroad_val = (string)($edit_meta['hunt_has_offroad'] ?? '');
                 $hunt_has_accommodation_val = (string)($edit_meta['hunt_has_accommodation'] ?? '');
                 $hunt_can_buy_game_val = (string)($edit_meta['hunt_can_buy_game'] ?? '');
+                $hunt_multi = static function( string $key ) use ( $edit_meta ) {
+                    $raw = (string) ( $edit_meta[ $key ] ?? '' );
+                    if ( $raw === '' ) {
+                        return [];
+                    }
+                    return array_values( array_filter( array_map( 'trim', explode( ',', $raw ) ) ) );
+                };
+                $hunt_game_species_saved = $hunt_multi( 'hunt_game_species' );
+                $hunt_terrain_saved = $hunt_multi( 'hunt_terrain_types' );
+                $hunt_price_includes_saved = $hunt_multi( 'hunt_price_includes' );
+                $hunt_methods_saved = $hunt_multi( 'hunt_methods' );
+                $hunt_onsite_services_saved = $hunt_multi( 'hunt_onsite_services' );
+                $hunt_safety_saved = $hunt_multi( 'hunt_safety_features' );
+                $hunt_conditions_saved = $hunt_multi( 'hunt_conditions' );
+                $hunt_required_media_saved = $hunt_multi( 'hunt_required_media' );
+                $hunt_video_saved = $hunt_multi( 'hunt_video_types' );
+                $hunt_moderation_saved = $hunt_multi( 'hunt_moderation_flags' );
                 ?>
+                <div class="va-form-group">
+                    <label>Vadászat típusa</label>
+                    <?php $v = (string)($edit_meta['hunt_type'] ?? ''); ?>
+                    <select id="va-hunt-type" name="hunt_type" class="va-select">
+                        <option value="">– Válasszon –</option>
+                        <option value="bervadaszat"<?php selected($v, 'bervadaszat'); ?>>Bérvadászat</option>
+                        <option value="egyeni-vadaszat"<?php selected($v, 'egyeni-vadaszat'); ?>>Egyéni vadászat</option>
+                        <option value="tarsas-vadaszat"<?php selected($v, 'tarsas-vadaszat'); ?>>Társas vadászat</option>
+                        <option value="kulfoldi-vadaszat"<?php selected($v, 'kulfoldi-vadaszat'); ?>>Külföldi vadászat</option>
+                        <option value="vendegvadaszat"<?php selected($v, 'vendegvadaszat'); ?>>Vendégvadászat</option>
+                        <option value="selejtezes"<?php selected($v, 'selejtezes'); ?>>Selejtezés</option>
+                        <option value="fotovadaszat"<?php selected($v, 'fotovadaszat'); ?>>Fotóvadászat</option>
+                        <option value="szorovadaszat"<?php selected($v, 'szorovadaszat'); ?>>Szóróvadászat</option>
+                        <option value="hajtovadaszat"<?php selected($v, 'hajtovadaszat'); ?>>Hajtóvadászat</option>
+                        <option value="cserkeles"<?php selected($v, 'cserkeles'); ?>>Cserkelés</option>
+                        <option value="lesvadaszat"<?php selected($v, 'lesvadaszat'); ?>>Lesvadászat</option>
+                        <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
+                    </select>
+                </div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Vadfaj</label>
+                    <select name="hunt_game_species[]" class="va-select" multiple data-placeholder="Válassz vadfajt">
+                        <option value="gimszarvas"<?php echo in_array( 'gimszarvas', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Gímszarvas</option>
+                        <option value="damszarvas"<?php echo in_array( 'damszarvas', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Dámszarvas</option>
+                        <option value="oz"<?php echo in_array( 'oz', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Őz</option>
+                        <option value="muflon"<?php echo in_array( 'muflon', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Muflon</option>
+                        <option value="vaddiszno"<?php echo in_array( 'vaddiszno', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Vaddisznó</option>
+                        <option value="nyul"<?php echo in_array( 'nyul', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Nyúl</option>
+                        <option value="facan"<?php echo in_array( 'facan', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Fácán</option>
+                        <option value="fogoly"<?php echo in_array( 'fogoly', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Fogoly</option>
+                        <option value="vadkacsa"<?php echo in_array( 'vadkacsa', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Vadkacsa</option>
+                        <option value="liba"<?php echo in_array( 'liba', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Liba</option>
+                        <option value="ragadozo"<?php echo in_array( 'ragadozo', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Ragadozó (róka, sakál)</option>
+                        <option value="egyeb"<?php echo in_array( 'egyeb', $hunt_game_species_saved, true ) ? ' selected' : ''; ?>>Egyéb</option>
+                    </select>
+                </div>
+                <div class="va-form-group"><label>Ország</label><input type="text" name="hunt_country" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_country'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Megye</label><input type="text" name="hunt_county" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_county'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Vadászterület neve</label><input type="text" name="hunt_area_name" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_area_name'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Pontos terület (opcionális)</label><input type="text" name="hunt_exact_area" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_exact_area'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>GPS lat (opcionális)</label><input type="text" name="hunt_gps_lat" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_gps_lat'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>GPS lng (opcionális)</label><input type="text" name="hunt_gps_lng" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_gps_lng'] ?? '')); ?>"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;">
+                    <label>Terület jellemzők</label>
+                    <select name="hunt_terrain_types[]" class="va-select" multiple data-placeholder="Válassz tereptípust">
+                        <option value="erdo"<?php echo in_array( 'erdo', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Erdő</option>
+                        <option value="mezo"<?php echo in_array( 'mezo', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Mező</option>
+                        <option value="hegyvidek"<?php echo in_array( 'hegyvidek', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Hegyvidék</option>
+                        <option value="sikvidek"<?php echo in_array( 'sikvidek', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Síkvidék</option>
+                        <option value="mocsar"<?php echo in_array( 'mocsar', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Mocsár</option>
+                        <option value="vegyes"<?php echo in_array( 'vegyes', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Vegyes</option>
+                    </select>
+                </div>
+                <div class="va-form-group"><label>Kezdő dátum</label><input type="date" name="hunt_season_start" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_season_start'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Záró dátum</label><input type="date" name="hunt_season_end" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_season_end'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Időpont típus</label><?php $v = (string)($edit_meta['hunt_time_type'] ?? ''); ?><select name="hunt_time_type" class="va-select"><option value="">– Válasszon –</option><option value="fix-datum"<?php selected($v, 'fix-datum'); ?>>Fix dátum</option><option value="szezon"<?php selected($v, 'szezon'); ?>>Szezon</option><option value="egesz-ev"<?php selected($v, 'egesz-ev'); ?>>Egész év</option><option value="hetvegi"<?php selected($v, 'hetvegi'); ?>>Hétvégi</option><option value="egyedi-egyeztetes"<?php selected($v, 'egyedi-egyeztetes'); ?>>Egyedi egyeztetés</option></select></div>
+                <div class="va-form-group"><label>Ár típusa</label><?php $v = (string)($edit_meta['hunt_price_type'] ?? ''); ?><select id="va-hunt-price-type" name="hunt_price_type" class="va-select"><option value="">– Válasszon –</option><option value="trofea-alapu"<?php selected($v, 'trofea-alapu'); ?>>Trófea alapú</option><option value="napidij"<?php selected($v, 'napidij'); ?>>Napidíj</option><option value="lovesenkent"<?php selected($v, 'lovesenkent'); ?>>Lövésenként</option><option value="csomag-ar"<?php selected($v, 'csomag-ar'); ?>>Csomag ár</option><option value="egyedi-ajanlat"<?php selected($v, 'egyedi-ajanlat'); ?>>Egyedi ajánlat</option></select></div>
+                <div class="va-form-group"><label>Ár minimum</label><input type="text" name="hunt_price_min" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_price_min'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Ár maximum</label><input type="text" name="hunt_price_max" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_price_max'] ?? '')); ?>"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartalmazza</label><select name="hunt_price_includes[]" class="va-select" multiple data-placeholder="Válassz elemeket"><option value="kiseret"<?php echo in_array( 'kiseret', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Kíséret</option><option value="terulet-hasznalat"<?php echo in_array( 'terulet-hasznalat', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Terület használat</option><option value="trofea-feldolgozas"<?php echo in_array( 'trofea-feldolgozas', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Trófea feldolgozás</option><option value="szallas"<?php echo in_array( 'szallas', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Szállás</option><option value="etkezes"<?php echo in_array( 'etkezes', $hunt_price_includes_saved, true ) ? ' selected' : ''; ?>>Étkezés</option></select></div>
+                <div class="va-form-group"><label>Kíséret típusa</label><?php $v = (string)($edit_meta['hunt_guide_type'] ?? ''); ?><select name="hunt_guide_type" class="va-select"><option value="">– Válasszon –</option><option value="hivatasos-vadasz"<?php selected($v, 'hivatasos-vadasz'); ?>>Hivatásos vadász</option><option value="vador"<?php selected($v, 'vador'); ?>>Vadőr</option><option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs kíséret</option><option value="opcionalis"<?php selected($v, 'opcionalis'); ?>>Opcionális</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadászati módszer</label><select id="va-hunt-methods" name="hunt_methods[]" class="va-select" multiple data-placeholder="Válassz módszert"><option value="les"<?php echo in_array( 'les', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Les</option><option value="cserkeles"<?php echo in_array( 'cserkeles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option><option value="hajtas"<?php echo in_array( 'hajtas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="etetes"<?php echo in_array( 'etetes', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Etetés</option><option value="hivas"<?php echo in_array( 'hivas', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Hívás</option><option value="leskunyho"<?php echo in_array( 'leskunyho', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Leskunyhó</option><option value="magasles"<?php echo in_array( 'magasles', $hunt_methods_saved, true ) ? ' selected' : ''; ?>>Magasles</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Szolgáltatások a helyszínen</label><select name="hunt_onsite_services[]" class="va-select" multiple data-placeholder="Válassz szolgáltatásokat"><option value="trofea-kezeles"<?php echo in_array( 'trofea-kezeles', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Trófea kezelés</option><option value="vadhutes"<?php echo in_array( 'vadhutes', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Vadhűtés</option><option value="zsigereles"<?php echo in_array( 'zsigereles', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Zsigerelés</option><option value="szallitas"<?php echo in_array( 'szallitas', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Szállítás</option><option value="fegyverkolcsonzes"<?php echo in_array( 'fegyverkolcsonzes', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Fegyverkölcsönzés</option><option value="optika-biztositas"<?php echo in_array( 'optika-biztositas', $hunt_onsite_services_saved, true ) ? ' selected' : ''; ?>>Optika biztosítás</option></select></div>
+                <div class="va-form-group"><label>Vadászjegy szükséges?</label><?php $v = (string)($edit_meta['hunt_hunting_license_required'] ?? ''); ?><select name="hunt_hunting_license_required" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group"><label>Engedély szükséges?</label><?php $v = (string)($edit_meta['hunt_permit_required'] ?? ''); ?><select name="hunt_permit_required" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group"><label>Külföldiek is vadászhatnak?</label><?php $v = (string)($edit_meta['hunt_foreigners_allowed'] ?? ''); ?><select id="va-hunt-foreigners-allowed" name="hunt_foreigners_allowed" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group"><label>Minimum életkor</label><input type="text" name="hunt_min_age" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_min_age'] ?? '')); ?>" placeholder="pl. 18"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Biztonság</label><select name="hunt_safety_features[]" class="va-select" multiple data-placeholder="Válassz biztonsági elemeket"><option value="biztositott-kiseret"<?php echo in_array( 'biztositott-kiseret', $hunt_safety_saved, true ) ? ' selected' : ''; ?>>Biztosított kíséret</option><option value="felelossegbiztositas"<?php echo in_array( 'felelossegbiztositas', $hunt_safety_saved, true ) ? ' selected' : ''; ?>>Felelősségbiztosítás</option><option value="balesetvedelem"<?php echo in_array( 'balesetvedelem', $hunt_safety_saved, true ) ? ' selected' : ''; ?>>Balesetvédelem</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Körülmények</label><select name="hunt_conditions[]" class="va-select" multiple data-placeholder="Válassz körülményeket"><option value="vadaszhaz-elerheto"<?php echo in_array( 'vadaszhaz-elerheto', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Vadászház elérhető</option><option value="szallas-biztositott"<?php echo in_array( 'szallas-biztositott', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Szállás biztosított</option><option value="etkezes-biztositott"<?php echo in_array( 'etkezes-biztositott', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Étkezés biztosított</option><option value="terepjaro-biztositott"<?php echo in_array( 'terepjaro-biztositott', $hunt_conditions_saved, true ) ? ' selected' : ''; ?>>Terepjáró biztosított</option></select></div>
+                <div class="va-form-group"><label>Nehézségi szint</label><?php $v = (string)($edit_meta['hunt_difficulty_level'] ?? ''); ?><select name="hunt_difficulty_level" class="va-select"><option value="">– Válasszon –</option><option value="konnyu"<?php selected($v, 'konnyu'); ?>>Könnyű</option><option value="kozepes"<?php selected($v, 'kozepes'); ?>>Közepes</option><option value="nehez"<?php selected($v, 'nehez'); ?>>Nehéz</option><option value="extrem"<?php selected($v, 'extrem'); ?>>Extrém</option></select></div>
+                <div class="va-form-group"><label>Várható trófea minőség</label><?php $v = (string)($edit_meta['hunt_expected_trophy_quality'] ?? ''); ?><select name="hunt_expected_trophy_quality" class="va-select"><option value="">– Válasszon –</option><option value="gyenge"<?php selected($v, 'gyenge'); ?>>Gyenge</option><option value="atlagos"<?php selected($v, 'atlagos'); ?>>Átlagos</option><option value="jo"<?php selected($v, 'jo'); ?>>Jó</option><option value="kivalo"<?php selected($v, 'kivalo'); ?>>Kiváló</option></select></div>
+                <div class="va-form-group"><label>Súly / korosztály (ha ismert)</label><input type="text" name="hunt_trophy_weight_age" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_trophy_weight_age'] ?? '')); ?>"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Kötelező képek</label><select name="hunt_required_media[]" class="va-select" multiple data-placeholder="Válassz kötelező képeket"><option value="vadaszterulet"<?php echo in_array( 'vadaszterulet', $hunt_required_media_saved, true ) ? ' selected' : ''; ?>>Vadászterület</option><option value="les"<?php echo in_array( 'les', $hunt_required_media_saved, true ) ? ' selected' : ''; ?>>Les</option><option value="allomany"<?php echo in_array( 'allomany', $hunt_required_media_saved, true ) ? ' selected' : ''; ?>>Állomány</option><option value="szallas"<?php echo in_array( 'szallas', $hunt_required_media_saved, true ) ? ' selected' : ''; ?>>Szállás</option><option value="trofeak"<?php echo in_array( 'trofeak', $hunt_required_media_saved, true ) ? ' selected' : ''; ?>>Trófeák (referencia)</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Videó</label><select name="hunt_video_types[]" class="va-select" multiple data-placeholder="Válassz videótípust"><option value="vadaszat-kozben"<?php echo in_array( 'vadaszat-kozben', $hunt_video_saved, true ) ? ' selected' : ''; ?>>Vadászat közben</option><option value="terulet-bemutato"<?php echo in_array( 'terulet-bemutato', $hunt_video_saved, true ) ? ' selected' : ''; ?>>Terület bemutató</option></select></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-price="trofea-alapu" style="display:none;"><label>Várható trófea kategória</label><input type="text" name="hunt_trophy_category" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_trophy_category'] ?? '')); ?>"></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-price="trofea-alapu" style="display:none;"><label>Súlyhatár</label><input type="text" name="hunt_trophy_weight_limit" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_trophy_weight_limit'] ?? '')); ?>"></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-type="kulfoldi-vadaszat" style="display:none;"><label>Utazás segítés</label><?php $v = (string)($edit_meta['hunt_travel_assist'] ?? ''); ?><select name="hunt_travel_assist" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-type="kulfoldi-vadaszat" style="display:none;"><label>Tolmács</label><?php $v = (string)($edit_meta['hunt_interpreter'] ?? ''); ?><select name="hunt_interpreter" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-method="hajtas" style="display:none;"><label>Csoport méret</label><input type="text" name="hunt_group_size" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_group_size'] ?? '')); ?>"></div>
+                <div class="va-form-group va-hunt-dynamic-group" data-hunt-method="hajtas" style="display:none;"><label>Lövésszám limit</label><input type="text" name="hunt_shot_limit" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_shot_limit'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Valós idejű szabad helyek száma</label><input type="text" name="hunt_real_time_slots" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_real_time_slots'] ?? '')); ?>"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Foglalható időpontok (naptár)</label><input type="text" name="hunt_bookable_dates" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_bookable_dates'] ?? '')); ?>" placeholder="pl. 2026-10-02, 2026-10-09"></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="hunt_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="engedely-nelkuli-vadaszat"<?php echo in_array( 'engedely-nelkuli-vadaszat', $hunt_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli vadászat</option><option value="vedett-faj"<?php echo in_array( 'vedett-faj', $hunt_moderation_saved, true ) ? ' selected' : ''; ?>>Védett faj</option><option value="illegalis-terulet"<?php echo in_array( 'illegalis-terulet', $hunt_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális terület</option><option value="hamis-allomany"<?php echo in_array( 'hamis-allomany', $hunt_moderation_saved, true ) ? ' selected' : ''; ?>>Hamis állomány</option></select></div>
                 <div class="va-form-group">
                     <label>Idősáv kezdete (óra)</label>
                     <select name="hunt_slot_from_hour" class="va-select">
@@ -6708,6 +6847,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyHuntDynamicFields() {
+        var priceType = (($('#va-hunt-price-type').val() || '') + '').trim();
+        var huntType = (($('#va-hunt-type').val() || '') + '').trim();
+        var methodsVal = $('#va-hunt-methods').val();
+        var methods = Array.isArray(methodsVal) ? methodsVal : (methodsVal ? [methodsVal] : []);
+
+        $('.va-hunt-dynamic-group').hide();
+        $('.va-hunt-dynamic-group[data-hunt-price="' + priceType + '"]').show();
+        $('.va-hunt-dynamic-group[data-hunt-type="' + huntType + '"]').show();
+        if (methods.indexOf('hajtas') !== -1) {
+            $('.va-hunt-dynamic-group[data-hunt-method="hajtas"]').show();
+        }
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -6810,6 +6963,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-trophy-custom-made', function(){
         applyTrophyDynamicFields();
     });
+    $(document).on('change', '#va-hunt-price-type, #va-hunt-type, #va-hunt-methods', function(){
+        applyHuntDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -6828,6 +6984,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyShoeDynamicFields();
     applyHandgunDynamicFields();
     applyTrophyDynamicFields();
+    applyHuntDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -7029,6 +7186,17 @@ document.addEventListener('DOMContentLoaded', function() {
             hunt_capacity: 'Létszám / fő',
             hunt_species_list: 'Vadászható fajok listája',
             hunt_lease_type: 'Lesbérleti / hozzáférési forma',
+            hunt_type: 'Vadászat típusa',
+            hunt_game_species: 'Vadfaj',
+            hunt_country: 'Ország',
+            hunt_county: 'Megye',
+            hunt_price_type: 'Ár típusa',
+            hunt_price_min: 'Ár minimum',
+            hunt_methods: 'Vadászati módszer',
+            hunt_guide_type: 'Kíséret típusa',
+            hunt_difficulty_level: 'Nehézségi szint',
+            hunt_season_start: 'Kezdő dátum',
+            hunt_season_end: 'Záró dátum',
             vadcamera_camera_type: 'Kamera típusa',
             vadcamera_connectivity: 'Adatkapcsolat',
             vadcamera_trigger_speed: 'Trigger idő',

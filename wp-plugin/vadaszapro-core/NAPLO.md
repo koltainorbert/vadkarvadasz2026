@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #vadaszati-lehetoseg-kategoria-konverzios-bovites
+- Kérés: a `Vadászati lehetőség` kategória teljes konverziós mezőrendszere készüljön el (típus, vadfaj, helyszín, ár, módszer, jogi, biztonság, körülmények, trófea, média, dinamikus mezők).
+- Frontend: a vadászati blokk kibővítve többválasztós vadfaj/módszer/szolgáltatás/biztonság mezőkkel, dátum és ár modellel, trófea és külföldi opciókkal, valós idejű elérhetőség mezőkkel.
+- Dinamikus logika: ár típus (`trófea alapú`), vadászat típus (`külföldi`), és módszer (`hajtás`) alapján automatikusan nyíló mezőcsoportok.
+- Kötelező validáció frissítve a kritikus vadászati szűrőkre: vadfaj, ország/megye, árazás, módszer, kíséret, szállás, nehézség, időszak.
+- Backend: mindkét AJAX ágban bekerült a teljes `hunt_*` sanitize, validációs értéktérkép, mentés és dedikált szűrő meta (`va_hunt_filter_*`).
+- Moderáció: új vadászati detektor (`engedély nélküli vadászat`, `védett faj`, `illegális terület`, `hamis állomány`) + `va_hunt_needs_review`, `va_hunt_review_hits` mentés.
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, mind a 4 fájl hibamentes (`No errors found`).
+
 ## 2026. 05. 27. – Hotfix #trofea-kotelezo-kepek-kiveve
 - Kérés: a trófea alátét űrlapon a kötelező képek mező kerüljön ki.
 - Frontend: a `trophy_required_media[]` mező teljesen eltávolítva a trófea blokkból.
