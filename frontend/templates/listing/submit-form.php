@@ -2754,11 +2754,16 @@ body.va-modal-open {
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Jogosítvány</label>
-                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="b"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> B</label>
-                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="be"<?php echo in_array('be', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> BE</label>
-                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="c"<?php echo in_array('c', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> C</label>
-                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="t"<?php echo in_array('t', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> T</label>
-                        <label class="va-check-label"><input type="checkbox" name="job_drivers_license[]" value="egyeb"<?php echo in_array('egyeb', $job_drivers_license_saved, true) ? ' checked' : ''; ?>> Egyéb</label>
+                        <div class="va-ms" data-placeholder="Válassz jogosítványt">
+                            <button type="button" class="va-ms__btn">Válassz jogosítványt</button>
+                            <div class="va-ms__panel">
+                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="b" data-label="B"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">B</span></label>
+                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="be" data-label="BE"<?php echo in_array('be', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">BE</span></label>
+                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="c" data-label="C"<?php echo in_array('c', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">C</span></label>
+                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="t" data-label="T"<?php echo in_array('t', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">T</span></label>
+                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="egyeb" data-label="Egyéb"<?php echo in_array('egyeb', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">Egyéb</span></label>
+                            </div>
+                        </div>
                     </div>
                     <div class="va-form-group">
                         <label>Tapasztalat</label>
