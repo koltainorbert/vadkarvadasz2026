@@ -2754,16 +2754,13 @@ body.va-modal-open {
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Jogosítvány</label>
-                        <div class="va-ms" data-placeholder="Válassz jogosítványt">
-                            <button type="button" class="va-ms__btn">Válassz jogosítványt</button>
-                            <div class="va-ms__panel">
-                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="b" data-label="B"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">B</span></label>
-                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="be" data-label="BE"<?php echo in_array('be', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">BE</span></label>
-                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="c" data-label="C"<?php echo in_array('c', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">C</span></label>
-                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="t" data-label="T"<?php echo in_array('t', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">T</span></label>
-                                <label class="va-ms__opt"><input type="checkbox" name="job_drivers_license[]" value="egyeb" data-label="Egyéb"<?php echo in_array('egyeb', $job_drivers_license_saved, true) ? ' checked' : ''; ?>><span class="va-ms__label">Egyéb</span></label>
-                            </div>
-                        </div>
+                        <select name="job_drivers_license[]" class="va-select" multiple data-placeholder="Válassz jogosítványt">
+                            <option value="b"<?php echo in_array('b', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>B</option>
+                            <option value="be"<?php echo in_array('be', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>BE</option>
+                            <option value="c"<?php echo in_array('c', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>C</option>
+                            <option value="t"<?php echo in_array('t', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>T</option>
+                            <option value="egyeb"<?php echo in_array('egyeb', $job_drivers_license_saved, true) ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
                     </div>
                     <div class="va-form-group">
                         <label>Tapasztalat</label>
@@ -3569,6 +3566,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var $popupSelectSearch = $('#va-popup-select-search');
     var $popupSelectList = $('#va-popup-select-list');
     var $activePopupSelect = $();
+    var activePopupIsMultiple = false;
+    var activePopupMultiValues = [];
 
     function normalizePopupSelectText(value) {
         return ((value || '') + '').replace(/\s+/g, ' ').trim();
@@ -3583,6 +3582,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getPopupSelectButtonLabel($select) {
+        if ($select && $select.length && $select.prop('multiple')) {
+            var selectedTexts = [];
+            $select.find('option:selected').each(function(){
+                var txt = normalizePopupSelectText($(this).text());
+                if (txt) selectedTexts.push(txt);
+            });
+            if (!selectedTexts.length) return getPopupSelectPlaceholder($select);
+            return selectedTexts.join(', ');
+        }
+
         var $selected = $select.find('option:selected').first();
         var rawValue = normalizePopupSelectText($select.val());
         var selectedValue = normalizePopupSelectText($selected.val());
@@ -3612,7 +3621,51 @@ document.addEventListener('DOMContentLoaded', function() {
             domSelect.add(new Option(customValue, customValue, false, false));
         }
 
-        $select.val(customValue);
+        if ($select.prop('multiple')) {
+            var currentValues = $select.val();
+            if (!Array.isArray(currentValues)) currentValues = currentValues ? [currentValues] : [];
+            var alreadySelected = false;
+            for (var j = 0; j < currentValues.length; j++) {
+                if (normalizePopupSelectText(currentValues[j]) === customValue) {
+                    alreadySelected = true;
+                    break;
+                }
+            }
+            if (!alreadySelected) currentValues.push(customValue);
+            $select.val(currentValues);
+        } else {
+            $select.val(customValue);
+        }
+        $select.trigger('input').trigger('change');
+    }
+
+    function getPopupSelectSelectedValues($select) {
+        if (!$select || !$select.length) return [];
+        var raw = $select.val();
+        if (Array.isArray(raw)) {
+            return raw.map(function(v){ return normalizePopupSelectText(v); }).filter(function(v){ return v !== ''; });
+        }
+        var one = normalizePopupSelectText(raw);
+        return one ? [one] : [];
+    }
+
+    function setPopupSelectSelectedValues($select, values) {
+        if (!$select || !$select.length) return;
+        var list = Array.isArray(values) ? values : [];
+        var cleaned = [];
+        var seen = {};
+        list.forEach(function(v){
+            var n = normalizePopupSelectText(v);
+            if (!n || seen[n]) return;
+            seen[n] = true;
+            cleaned.push(n);
+        });
+
+        if ($select.prop('multiple')) {
+            $select.val(cleaned);
+        } else {
+            $select.val(cleaned.length ? cleaned[0] : '');
+        }
         $select.trigger('input').trigger('change');
     }
 
@@ -3642,7 +3695,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var $button = $select.data('vaPopupButton');
         if (!$button || !$button.length) return;
 
-        var hasValue = normalizePopupSelectText($select.val()) !== '';
+        var hasValue = getPopupSelectSelectedValues($select).length > 0;
         $button.find('.va-popup-select-trigger__value').text(getPopupSelectButtonLabel($select));
         $button.toggleClass('is-placeholder', !hasValue);
         $button.prop('disabled', $select.is(':disabled'));
@@ -3652,7 +3705,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderPopupSelectOptions(query) {
         if (!$activePopupSelect.length) return;
 
-        var selectedValue = (($activePopupSelect.val() || '') + '').trim();
+        var selectedValues = activePopupIsMultiple ? activePopupMultiValues.slice() : getPopupSelectSelectedValues($activePopupSelect);
         var filter = normalizePopupSelectText(query).toLocaleLowerCase('hu-HU');
         var visibleCount = 0;
 
@@ -3669,11 +3722,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             visibleCount++;
 
+            var isSelected = selectedValues.indexOf(value) !== -1;
+
             var $item = $('<button>', {
                 type: 'button',
-                class: 'va-popup-select-item' + (value === selectedValue ? ' is-selected' : ''),
+                class: 'va-popup-select-item' + (isSelected ? ' is-selected' : ''),
                 'data-value': value,
-                'aria-pressed': value === selectedValue ? 'true' : 'false'
+                'aria-pressed': isSelected ? 'true' : 'false'
             });
 
             $('<span>', {
@@ -3703,6 +3758,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!$select.length || $select.is(':disabled')) return;
 
         $activePopupSelect = $select;
+        activePopupIsMultiple = !!$select.prop('multiple');
+        activePopupMultiValues = getPopupSelectSelectedValues($select);
         $popupSelectTitle.text(getPopupSelectFieldLabel($select));
         $popupSelectSearch.val('');
         renderPopupSelectOptions('');
@@ -3728,6 +3785,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $activePopupSelect = $();
+        activePopupIsMultiple = false;
+        activePopupMultiValues = [];
         $popupSelectModal.removeClass('is-open').attr('aria-hidden', 'true');
         $('body').removeClass('va-modal-open');
     }
@@ -3738,7 +3797,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var $select = $(this);
             if (!$select.closest('#va-submit-form').length) return;
             if ($select.closest('#va-popup-select-modal').length) return;
-            if ($select.is('[multiple]')) return;
             if ($select.data('vaPopupReady')) {
                 syncPopupSelectButton($select);
                 return;
@@ -3781,6 +3839,13 @@ document.addEventListener('DOMContentLoaded', function() {
     $popupSelectList.on('click', '.va-popup-select-item', function(){
         if (!$activePopupSelect.length) return;
         var value = (($(this).data('value') || '') + '').trim();
+        if (activePopupIsMultiple) {
+            var idx = activePopupMultiValues.indexOf(value);
+            if (idx === -1) activePopupMultiValues.push(value);
+            else activePopupMultiValues.splice(idx, 1);
+            renderPopupSelectOptions($popupSelectSearch.val());
+            return;
+        }
         $activePopupSelect.val(value).trigger('input').trigger('change');
         closePopupSelect();
     });
@@ -3793,12 +3858,20 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         var customValue = (($popupSelectSearch.val() || '') + '').trim();
-        console.log('[VA] Add button clicked, customValue:', customValue);
+        if (activePopupIsMultiple) {
+            if (customValue) {
+                setPopupSelectValue($activePopupSelect, customValue);
+                activePopupMultiValues = getPopupSelectSelectedValues($activePopupSelect);
+            }
+            setPopupSelectSelectedValues($activePopupSelect, activePopupMultiValues);
+            closePopupSelect();
+            return;
+        }
+
         if (!customValue) {
             alert('Kérlek írj be egy értéket!');
             return;
         }
-        console.log('[VA] Setting value on', $activePopupSelect.attr('name'));
         setPopupSelectValue($activePopupSelect, customValue);
         setTimeout(closePopupSelect, 100);
     });
