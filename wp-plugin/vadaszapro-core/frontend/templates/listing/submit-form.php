@@ -1725,7 +1725,7 @@ body.va-modal-open {
                         <label>Tartozékok (leírás)</label>
                         <textarea name="bow_accessories" class="va-input" rows="3" placeholder="Írd le pontosan, mi jár hozzá."><?php echo esc_textarea((string)($edit_meta['bow_accessories'] ?? '')); ?></textarea>
                     </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
+                    <div class="va-form-group" style="grid-column:1 / -1; margin-bottom:10px;">
                         <label class="va-check-label"><input type="checkbox" name="bow_acc_sight" value="1"<?php echo (($edit_meta['bow_acc_sight'] ?? '') === '1') ? ' checked' : ''; ?>> Irányzék</label>
                         <label class="va-check-label"><input type="checkbox" name="bow_acc_release" value="1"<?php echo (($edit_meta['bow_acc_release'] ?? '') === '1') ? ' checked' : ''; ?>> Kioldó</label>
                         <label class="va-check-label"><input type="checkbox" name="bow_acc_stabilizer" value="1"<?php echo (($edit_meta['bow_acc_stabilizer'] ?? '') === '1') ? ' checked' : ''; ?>> Stabilizátor</label>
@@ -1785,7 +1785,7 @@ body.va-modal-open {
                         <label>Megjegyzés</label>
                         <textarea name="other_weapon_general_notes" class="va-input" rows="2" placeholder="Rövid leírás a rendeltetésről, eredetről vagy különleges megkötésről."><?php echo esc_textarea((string)($edit_meta['other_weapon_general_notes'] ?? '')); ?></textarea>
                     </div>
-                    <div class="va-form-group">
+                    <div class="va-form-group" style="margin-bottom:10px;">
                         <label>Tartozékok</label>
                         <select name="other_weapon_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot">
                             <option value="eredeti-doboz"<?php echo in_array('eredeti-doboz', $other_weapon_accessories_saved, true) ? ' selected' : ''; ?>>Eredeti doboz</option>
