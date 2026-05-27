@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 27. – Session #ij-tartozek-popup
+- Kérés: az íjaknál a kipipálható tartozéklista popup lenyíló legyen.
+- Javítás: a checkbox lista popup többválasztós mezőre cserélve (`bow_accessories_flags[]`) a submit formban.
+- Kompatibilitás: a backend mentés frissítve, hogy az új popup tömbből és a régi checkbox POST-ból is helyesen mentse a `va_bow_acc_*` metát.
+- Érintett: `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`.
+
 ## 2026. 05. 27. – Session #facebook-csoport-oldal-beagyazas
 - Kérés: legyen egy dedikált WP aloldal, ahol a Facebook csoport teljes szelessegu elrendezésben jelenik meg.
 - Megvalósítás: új slug-template készült `page-facebook-csoport.php` néven (root + futó theme mirror), amely a `facebook-csoport` slugú oldalhoz automatikusan betölt.
