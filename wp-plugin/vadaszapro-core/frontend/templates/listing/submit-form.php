@@ -1726,13 +1726,16 @@ body.va-modal-open {
                         <textarea name="bow_accessories" class="va-input" rows="3" placeholder="Írd le pontosan, mi jár hozzá."><?php echo esc_textarea((string)($edit_meta['bow_accessories'] ?? '')); ?></textarea>
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1; margin-bottom:10px;">
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_sight" value="1"<?php echo (($edit_meta['bow_acc_sight'] ?? '') === '1') ? ' checked' : ''; ?>> Irányzék</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_release" value="1"<?php echo (($edit_meta['bow_acc_release'] ?? '') === '1') ? ' checked' : ''; ?>> Kioldó</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_stabilizer" value="1"<?php echo (($edit_meta['bow_acc_stabilizer'] ?? '') === '1') ? ' checked' : ''; ?>> Stabilizátor</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_arrows" value="1"<?php echo (($edit_meta['bow_acc_arrows'] ?? '') === '1') ? ' checked' : ''; ?>> Vesszők</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_case" value="1"<?php echo (($edit_meta['bow_acc_case'] ?? '') === '1') ? ' checked' : ''; ?>> Tok</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_quiver" value="1"<?php echo (($edit_meta['bow_acc_quiver'] ?? '') === '1') ? ' checked' : ''; ?>> Tegez</label>
-                        <label class="va-check-label"><input type="checkbox" name="bow_acc_target" value="1"<?php echo (($edit_meta['bow_acc_target'] ?? '') === '1') ? ' checked' : ''; ?>> Céltábla</label>
+                        <label>Íj tartozékok</label>
+                        <select name="bow_accessories_flags[]" class="va-select" multiple data-placeholder="Válassz tartozékot">
+                            <option value="bow_acc_sight"<?php echo (($edit_meta['bow_acc_sight'] ?? '') === '1') ? ' selected' : ''; ?>>Irányzék</option>
+                            <option value="bow_acc_release"<?php echo (($edit_meta['bow_acc_release'] ?? '') === '1') ? ' selected' : ''; ?>>Kioldó</option>
+                            <option value="bow_acc_stabilizer"<?php echo (($edit_meta['bow_acc_stabilizer'] ?? '') === '1') ? ' selected' : ''; ?>>Stabilizátor</option>
+                            <option value="bow_acc_arrows"<?php echo (($edit_meta['bow_acc_arrows'] ?? '') === '1') ? ' selected' : ''; ?>>Vesszők</option>
+                            <option value="bow_acc_case"<?php echo (($edit_meta['bow_acc_case'] ?? '') === '1') ? ' selected' : ''; ?>>Tok</option>
+                            <option value="bow_acc_quiver"<?php echo (($edit_meta['bow_acc_quiver'] ?? '') === '1') ? ' selected' : ''; ?>>Tegez</option>
+                            <option value="bow_acc_target"<?php echo (($edit_meta['bow_acc_target'] ?? '') === '1') ? ' selected' : ''; ?>>Céltábla</option>
+                        </select>
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Csigák / kábelek állapota</label>
