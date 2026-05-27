@@ -255,7 +255,7 @@ $category_required_rules = [
             'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type' ] ],
-    'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model' ] ],
+    'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
@@ -3276,6 +3276,105 @@ body.va-modal-open {
             </div><!-- /.va-hunt-option-fields-grid -->
 
             <?php
+            $vadcamera_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $vadcamera_connectivity_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_connectivity' ) ) ) );
+            $vadcamera_app_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_mobile_app' ) ) ) );
+            $vadcamera_power_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_power_types' ) ) ) );
+            $vadcamera_accessories_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_accessories' ) ) ) );
+            $vadcamera_use_cases_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_use_cases' ) ) ) );
+            $vadcamera_mounting_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_mounting' ) ) ) );
+            $vadcamera_shipping_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_shipping_methods' ) ) ) );
+            $vadcamera_media_required_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_media_required' ) ) ) );
+            $vadcamera_sample_media_saved = array_filter( array_map( 'trim', explode( ',', $vadcamera_meta( 'vadcamera_sample_media' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-vadcamera-fields-grid" data-categories="vadkamera" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Kamera típusa</label>
+                        <?php $v = $vadcamera_meta( 'vadcamera_camera_type' ); ?>
+                        <select name="vadcamera_camera_type" class="va-select" id="va-vadcamera-camera-type">
+                            <option value="">– Válasszon –</option>
+                            <option value="klasszikus"<?php selected( $v, 'klasszikus' ); ?>>Klasszikus vadkamera</option>
+                            <option value="4g-lte"<?php selected( $v, '4g-lte' ); ?>>4G/LTE vadkamera</option>
+                            <option value="mms"<?php selected( $v, 'mms' ); ?>>MMS vadkamera</option>
+                            <option value="wifi"<?php selected( $v, 'wifi' ); ?>>WiFi vadkamera</option>
+                            <option value="bluetooth"<?php selected( $v, 'bluetooth' ); ?>>Bluetooth vadkamera</option>
+                            <option value="napelemes"<?php selected( $v, 'napelemes' ); ?>>Napelemes vadkamera</option>
+                            <option value="mini"<?php selected( $v, 'mini' ); ?>>Mini vadkamera</option>
+                            <option value="biztonsagi"<?php selected( $v, 'biztonsagi' ); ?>>Biztonsági vadkamera</option>
+                            <option value="time-lapse"<?php selected( $v, 'time-lapse' ); ?>>Time-lapse kamera</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = $vadcamera_meta( 'vadcamera_condition' ); ?>
+                        <select name="vadcamera_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="hibas"<?php selected( $v, 'hibas' ); ?>>Hibás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Garancia</label>
+                        <?php $v = $vadcamera_meta( 'vadcamera_warranty' ); ?>
+                        <select name="vadcamera_warranty" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyártási év (opcionális)</label>
+                        <input type="text" name="vadcamera_manufacture_year" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_manufacture_year' ) ); ?>" placeholder="pl. 2024">
+                    </div>
+
+                    <div class="va-form-group"><label>Fotó felbontás</label><?php $v = $vadcamera_meta( 'vadcamera_photo_resolution' ); ?><select name="vadcamera_photo_resolution" class="va-select"><option value="">– Válasszon –</option><option value="12mp"<?php selected( $v, '12mp' ); ?>>12 MP</option><option value="16mp"<?php selected( $v, '16mp' ); ?>>16 MP</option><option value="20mp"<?php selected( $v, '20mp' ); ?>>20 MP</option><option value="24mp"<?php selected( $v, '24mp' ); ?>>24 MP</option><option value="30mp"<?php selected( $v, '30mp' ); ?>>30 MP</option><option value="36mp"<?php selected( $v, '36mp' ); ?>>36 MP</option><option value="48mp"<?php selected( $v, '48mp' ); ?>>48 MP</option></select></div>
+                    <div class="va-form-group"><label>Videó felbontás</label><?php $v = $vadcamera_meta( 'vadcamera_video_resolution' ); ?><select name="vadcamera_video_resolution" class="va-select"><option value="">– Válasszon –</option><option value="hd"<?php selected( $v, 'hd' ); ?>>HD</option><option value="full-hd"<?php selected( $v, 'full-hd' ); ?>>Full HD</option><option value="2k"<?php selected( $v, '2k' ); ?>>2K</option><option value="4k"<?php selected( $v, '4k' ); ?>>4K</option></select></div>
+                    <div class="va-form-group"><label>FPS</label><?php $v = $vadcamera_meta( 'vadcamera_video_fps' ); ?><select name="vadcamera_video_fps" class="va-select"><option value="">– Válasszon –</option><option value="15"<?php selected( $v, '15' ); ?>>15</option><option value="24"<?php selected( $v, '24' ); ?>>24</option><option value="30"<?php selected( $v, '30' ); ?>>30</option><option value="60"<?php selected( $v, '60' ); ?>>60</option></select></div>
+                    <div class="va-form-group"><label>Videó hanggal?</label><?php $v = $vadcamera_meta( 'vadcamera_video_audio' ); ?><select name="vadcamera_video_audio" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group"><label>Infra típusa</label><?php $v = $vadcamera_meta( 'vadcamera_ir_type' ); ?><select name="vadcamera_ir_type" class="va-select"><option value="">– Válasszon –</option><option value="no-glow-940"<?php selected( $v, 'no-glow-940' ); ?>>No glow (940nm)</option><option value="low-glow-850"<?php selected( $v, 'low-glow-850' ); ?>>Low glow (850nm)</option><option value="feher-vaku"<?php selected( $v, 'feher-vaku' ); ?>>Fehér vaku</option></select></div>
+                    <div class="va-form-group"><label>Éjszakai hatótáv (m)</label><input type="text" name="vadcamera_night_range_m" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_night_range_m' ) ); ?>" placeholder="pl. 25"></div>
+                    <div class="va-form-group"><label>Infra LED-ek száma</label><input type="text" name="vadcamera_ir_led_count" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_ir_led_count' ) ); ?>" placeholder="pl. 44"></div>
+
+                    <div class="va-form-group"><label>Trigger idő</label><?php $v = $vadcamera_meta( 'vadcamera_trigger_speed' ); ?><select name="vadcamera_trigger_speed" class="va-select"><option value="">– Válasszon –</option><option value="0.1s"<?php selected( $v, '0.1s' ); ?>>0.1 sec</option><option value="0.2s"<?php selected( $v, '0.2s' ); ?>>0.2 sec</option><option value="0.3s"<?php selected( $v, '0.3s' ); ?>>0.3 sec</option><option value="0.4s"<?php selected( $v, '0.4s' ); ?>>0.4 sec</option><option value="0.5s"<?php selected( $v, '0.5s' ); ?>>0.5 sec</option><option value="1.0s"<?php selected( $v, '1.0s' ); ?>>1.0 sec</option></select></div>
+                    <div class="va-form-group"><label>PIR érzékelési távolság (m)</label><input type="text" name="vadcamera_pir_distance_m" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_pir_distance_m' ) ); ?>" placeholder="pl. 20"></div>
+                    <div class="va-form-group"><label>Látószög (fok)</label><input type="text" name="vadcamera_view_angle_deg" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_view_angle_deg' ) ); ?>" placeholder="pl. 120"></div>
+
+                    <div class="va-form-group" style="grid-column: span 2;"><label>Adatkapcsolat</label><select name="vadcamera_connectivity[]" class="va-select" multiple data-placeholder="Válassz kapcsolatot"><option value="2g"<?php echo in_array( '2g', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>2G</option><option value="3g"<?php echo in_array( '3g', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>3G</option><option value="4g"<?php echo in_array( '4g', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>4G</option><option value="lte"<?php echo in_array( 'lte', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>LTE</option><option value="wifi"<?php echo in_array( 'wifi', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>WiFi</option><option value="bluetooth"<?php echo in_array( 'bluetooth', $vadcamera_connectivity_saved, true ) ? ' selected' : ''; ?>>Bluetooth</option></select></div>
+                    <div class="va-form-group"><label>SIM kártyás?</label><?php $v = $vadcamera_meta( 'vadcamera_sim_slot' ); ?><select name="vadcamera_sim_slot" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Mobil app</label><select name="vadcamera_mobile_app[]" class="va-select" multiple data-placeholder="Válassz app támogatást"><option value="android"<?php echo in_array( 'android', $vadcamera_app_saved, true ) ? ' selected' : ''; ?>>Android</option><option value="ios"<?php echo in_array( 'ios', $vadcamera_app_saved, true ) ? ' selected' : ''; ?>>iOS</option></select></div>
+                    <div class="va-form-group va-vadcamera-dynamic-group" data-vadcamera-types="4g-lte" style="grid-column: span 2; display:none;"><label>Szolgáltató kompatibilitás</label><input type="text" name="vadcamera_4g_carrier" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_4g_carrier' ) ); ?>" placeholder="pl. Telekom, Yettel, Vodafone"></div>
+                    <div class="va-form-group va-vadcamera-dynamic-group" data-vadcamera-types="4g-lte" style="display:none;"><label>App támogatás részlete</label><input type="text" name="vadcamera_4g_app_support" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_4g_app_support' ) ); ?>" placeholder="pl. UCon, TrailCam Go"></div>
+
+                    <div class="va-form-group"><label>SD kártya támogatás (max GB)</label><input type="text" name="vadcamera_sd_max_gb" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_sd_max_gb' ) ); ?>" placeholder="pl. 128"></div>
+                    <div class="va-form-group"><label>Belső memória</label><?php $v = $vadcamera_meta( 'vadcamera_internal_memory' ); ?><select name="vadcamera_internal_memory" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column: span 2;"><label>Energiaforrás</label><select name="vadcamera_power_types[]" class="va-select" multiple data-placeholder="Válassz energiaforrást"><option value="aa"<?php echo in_array( 'aa', $vadcamera_power_saved, true ) ? ' selected' : ''; ?>>AA elem</option><option value="li-ion"<?php echo in_array( 'li-ion', $vadcamera_power_saved, true ) ? ' selected' : ''; ?>>Li-ion</option><option value="beepitett-akku"<?php echo in_array( 'beepitett-akku', $vadcamera_power_saved, true ) ? ' selected' : ''; ?>>Beépített akkumulátor</option><option value="kulso-12v"<?php echo in_array( 'kulso-12v', $vadcamera_power_saved, true ) ? ' selected' : ''; ?>>Külső 12V</option><option value="napelem"<?php echo in_array( 'napelem', $vadcamera_power_saved, true ) ? ' selected' : ''; ?>>Napelem</option></select></div>
+                    <div class="va-form-group"><label>Üzemidő</label><input type="text" name="vadcamera_runtime" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_runtime' ) ); ?>" placeholder="pl. 3 hónap"></div>
+                    <div class="va-form-group va-vadcamera-dynamic-group" data-vadcamera-types="napelemes" style="display:none;"><label>Panel teljesítmény</label><input type="text" name="vadcamera_solar_panel_power" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_solar_panel_power' ) ); ?>" placeholder="pl. 5W"></div>
+
+                    <div class="va-form-group"><label>IP védelem</label><?php $v = $vadcamera_meta( 'vadcamera_ip_rating' ); ?><select name="vadcamera_ip_rating" class="va-select"><option value="">– Válasszon –</option><option value="ip54"<?php selected( $v, 'ip54' ); ?>>IP54</option><option value="ip65"<?php selected( $v, 'ip65' ); ?>>IP65</option><option value="ip66"<?php selected( $v, 'ip66' ); ?>>IP66</option><option value="ip67"<?php selected( $v, 'ip67' ); ?>>IP67</option></select></div>
+                    <div class="va-form-group"><label>Hőmérséklet tartomány</label><input type="text" name="vadcamera_temp_range" class="va-input" value="<?php echo esc_attr( $vadcamera_meta( 'vadcamera_temp_range' ) ); ?>" placeholder="pl. -20°C – +60°C"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="vadcamera_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékokat"><option value="sd-kartya"<?php echo in_array( 'sd-kartya', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>SD kártya</option><option value="sim-kartya"<?php echo in_array( 'sim-kartya', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>SIM kártya</option><option value="napelem"<?php echo in_array( 'napelem', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Napelem</option><option value="akkumulator"<?php echo in_array( 'akkumulator', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Akkumulátor</option><option value="tartokonzol"<?php echo in_array( 'tartokonzol', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Tartókonzol</option><option value="heveder"<?php echo in_array( 'heveder', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Heveder</option><option value="doboz"<?php echo in_array( 'doboz', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Doboz</option><option value="tolto"<?php echo in_array( 'tolto', $vadcamera_accessories_saved, true ) ? ' selected' : ''; ?>>Töltő</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználási terület</label><select name="vadcamera_use_cases[]" class="va-select" multiple data-placeholder="Válassz felhasználási területet"><option value="vadmegfigyeles"<?php echo in_array( 'vadmegfigyeles', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Vadmegfigyelés</option><option value="eteto"<?php echo in_array( 'eteto', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Etető megfigyelés</option><option value="biztonsag"<?php echo in_array( 'biztonsag', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Biztonságtechnika</option><option value="termeszetfoto"<?php echo in_array( 'termeszetfoto', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Természetfotó</option><option value="time-lapse"<?php echo in_array( 'time-lapse', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Time-lapse</option><option value="farm"<?php echo in_array( 'farm', $vadcamera_use_cases_saved, true ) ? ' selected' : ''; ?>>Farm megfigyelés</option></select></div>
+                    <div class="va-form-group"><label>Hangrögzítés van?</label><?php $v = $vadcamera_meta( 'vadcamera_audio_record' ); ?><select name="vadcamera_audio_record" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Közterület megfigyelésre használható?</label><?php $v = $vadcamera_meta( 'vadcamera_public_area_use' ); ?><select name="vadcamera_public_area_use" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Elhelyezés</label><select name="vadcamera_mounting[]" class="va-select" multiple data-placeholder="Válassz elhelyezési módot"><option value="fara"<?php echo in_array( 'fara', $vadcamera_mounting_saved, true ) ? ' selected' : ''; ?>>Fára szerelhető</option><option value="tripod"<?php echo in_array( 'tripod', $vadcamera_mounting_saved, true ) ? ' selected' : ''; ?>>Tripod kompatibilis</option><option value="magneses"<?php echo in_array( 'magneses', $vadcamera_mounting_saved, true ) ? ' selected' : ''; ?>>Mágneses</option><option value="fix-konzol"<?php echo in_array( 'fix-konzol', $vadcamera_mounting_saved, true ) ? ' selected' : ''; ?>>Fix konzolos</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Szállítás</label><select name="vadcamera_shipping_methods[]" class="va-select" multiple data-placeholder="Válassz szállítási módot"><option value="posta"<?php echo in_array( 'posta', $vadcamera_shipping_saved, true ) ? ' selected' : ''; ?>>Posta</option><option value="futar"<?php echo in_array( 'futar', $vadcamera_shipping_saved, true ) ? ' selected' : ''; ?>>Futár</option><option value="szemelyes"<?php echo in_array( 'szemelyes', $vadcamera_shipping_saved, true ) ? ' selected' : ''; ?>>Személyes</option></select></div>
+                    <div class="va-form-group" style="grid-column: span 2;"><label>Kötelező képek</label><select name="vadcamera_media_required[]" class="va-select" multiple data-placeholder="Válassz kötelező képeket"><option value="elol"<?php echo in_array( 'elol', $vadcamera_media_required_saved, true ) ? ' selected' : ''; ?>>Elöl</option><option value="hatul"<?php echo in_array( 'hatul', $vadcamera_media_required_saved, true ) ? ' selected' : ''; ?>>Hátul</option><option value="infra-led"<?php echo in_array( 'infra-led', $vadcamera_media_required_saved, true ) ? ' selected' : ''; ?>>Infra LED</option><option value="kijelzo"<?php echo in_array( 'kijelzo', $vadcamera_media_required_saved, true ) ? ' selected' : ''; ?>>Kijelző</option><option value="tartozekok"<?php echo in_array( 'tartozekok', $vadcamera_media_required_saved, true ) ? ' selected' : ''; ?>>Tartozékok</option></select></div>
+                    <div class="va-form-group" style="grid-column: span 2;"><label>Mintaképek / videók</label><select name="vadcamera_sample_media[]" class="va-select" multiple data-placeholder="Válassz mintamédiát"><option value="nappali-kep"<?php echo in_array( 'nappali-kep', $vadcamera_sample_media_saved, true ) ? ' selected' : ''; ?>>Nappali mintakép</option><option value="ejszakai-kep"<?php echo in_array( 'ejszakai-kep', $vadcamera_sample_media_saved, true ) ? ' selected' : ''; ?>>Éjszakai mintakép</option><option value="video"<?php echo in_array( 'video', $vadcamera_sample_media_saved, true ) ? ' selected' : ''; ?>>Videóminta</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Technikai megjegyzés</label><textarea name="vadcamera_notes" class="va-input" rows="3" placeholder="pl. trigger valós mérés, app verzió, SIM/APN tapasztalatok..."><?php echo esc_textarea( $vadcamera_meta( 'vadcamera_notes' ) ); ?></textarea></div>
+                </div>
+            </div>
+
+            <?php
             $estate_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
@@ -5792,6 +5891,14 @@ document.addEventListener('DOMContentLoaded', function() {
         syncPopupSelectButton($size);
     }
 
+    function applyVadcameraDynamicFields() {
+        var type = (($('#va-vadcamera-camera-type').val() || '') + '').trim();
+        $('.va-vadcamera-dynamic-group').each(function(){
+            var list = (($(this).data('vadcameraTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
@@ -5870,6 +5977,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-other-weapon-kind', function(){
         applyCategorySpecificFieldVisibility();
     });
+    $(document).on('change', '#va-vadcamera-camera-type', function(){
+        applyVadcameraDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -5884,6 +5994,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })();
     applyCategorySpecificFieldVisibility();
+    applyVadcameraDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
     switchBrandModelFieldMode();
@@ -6051,6 +6162,14 @@ document.addEventListener('DOMContentLoaded', function() {
             hunt_capacity: 'Létszám / fő',
             hunt_species_list: 'Vadászható fajok listája',
             hunt_lease_type: 'Lesbérleti / hozzáférési forma',
+            vadcamera_camera_type: 'Kamera típusa',
+            vadcamera_connectivity: 'Adatkapcsolat',
+            vadcamera_trigger_speed: 'Trigger idő',
+            vadcamera_ir_type: 'Infra típusa',
+            vadcamera_night_range_m: 'Éjszakai hatótáv (m)',
+            vadcamera_video_resolution: 'Videó felbontás',
+            vadcamera_ip_rating: 'IP védelem',
+            vadcamera_sim_slot: 'SIM kártyás?',
             estate_main_type: 'Hagyaték fő típusa',
         };
         var missing = [];
