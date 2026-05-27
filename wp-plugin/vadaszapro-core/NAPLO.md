@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 27. – Session #cipo-bakancs-komplex-szurok-es-dinamikus-mezok
+- Kérés: a `Cipő / Bakancs` kategória komplett, szűrőközpontú mezőrendszere kerüljön be (méret, vízállóság, membrán, szezon, szármagasság, terep, felhasználás).
+- Frontend: bekerült egy teljes `va-shoe-fields-grid` blokk popup-only többválasztós mezőkkel (`shoe_protections[]`, `shoe_season[]`, `shoe_terrain[]`, `shoe_use_cases[]`, `shoe_accessories[]`, `shoe_shipping_methods[]`, `shoe_required_media[]`).
+- Dinamikus mezők: típusfüggő megjelenítés kész (`gumicsizma` -> szármagasság/neoprene, `taktikai` -> acélbetét/gyorsfűző, `téli` -> komfort hőmérséklet).
+- Kötelező mezők: `cipo-bakancs` required szabály frontend + backend oldalon bővítve (`shoe_main_type`, `shoe_eu_size`, `shoe_condition`, `shoe_boot_height`).
+- Backend: mindkét AJAX ágban bekerült a teljes `shoe_*` sanitize + `va_shoe_*` meta mentés, plusz dedikált szűrőmeták (`va_shoe_filter_*`: waterproof, goretex, winter, high_ankle, season, terrain, eu_size).
+- Moderáció: automatikus cipő kategóriás flag támogatás bekerült (`hamis márka`, `replika`, `fake`) -> `va_shoe_needs_review`, `va_shoe_review_hits`.
+- Szinkron + ellenőrzés: plugin mirror `submit-form.php` és `class-ajax.php` szinkronizálva, hibakeresés `No errors found`.
+
 ## 2026. 05. 27. – Session #vadkamera-komplex-backend-es-szurok
 - Kérés: a `Vadkamera` kategória teljes backend támogatása a popup-only frontendhez igazítva.
 - Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `vadcamera_*` sanitize + `va_vadcamera_*` meta mentés.
