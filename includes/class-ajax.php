@@ -194,7 +194,7 @@ class VA_Ajax {
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'konyhakes'            => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'svajci-bicska'        => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
-            'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_species', 'trophy_mount_type', 'trophy_style', 'trophy_material', 'trophy_finish' ] ],
+            'trofea-aletet'        => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
         ];
     }
 
@@ -287,12 +287,39 @@ class VA_Ajax {
             'clothing_condition' => 'Állapot',
             'clothing_gender' => 'Nem',
             'clothing_size' => 'Ruhaméret',
+            'trophy_type' => 'Trófeaalátét típusa',
+            'trophy_maker' => 'Készítő / márka',
+            'trophy_custom_made' => 'Kézzel készített',
+            'trophy_condition' => 'Állapot',
+            'trophy_manufacture_year' => 'Gyártási év',
+            'trophy_height_cm' => 'Magasság (cm)',
+            'trophy_width_cm' => 'Szélesség (cm)',
+            'trophy_thickness_cm' => 'Vastagság (cm)',
+            'trophy_compatible_species' => 'Trófea kompatibilitás',
             'trophy_species' => 'Vadfaj',
             'trophy_mount_type' => 'Trófeaalátét típus',
+            'trophy_mounting_type' => 'Rögzítés típusa',
+            'trophy_attachment_type' => 'Trófea rögzítés',
             'trophy_style' => 'Forma / stílus',
             'trophy_fang_mount' => 'Agyarfoglalat kivitel',
+            'trophy_material_type' => 'Alapanyag',
             'trophy_material' => 'Anyag',
+            'trophy_surface_finish' => 'Felületkezelés',
             'trophy_finish' => 'Felületkezelés',
+            'trophy_decoration_flags' => 'Díszítés',
+            'trophy_weight_kg' => 'Súly (kg)',
+            'trophy_usage_context' => 'Felhasználás',
+            'trophy_accessories' => 'Tartozékok',
+            'trophy_price_negotiable' => 'Ár: alku',
+            'trophy_custom_order' => 'Egyedi rendelés',
+            'trophy_shipping_methods' => 'Szállítás',
+            'trophy_fragile_handling' => 'Törékeny kezelés',
+            'trophy_required_media' => 'Kötelező képek',
+            'trophy_lead_time' => 'Elkészítési idő',
+            'trophy_orderable_sizes' => 'Rendelhető méret',
+            'trophy_custom_engraving' => 'Egyedi gravírozás',
+            'trophy_house_style' => 'Vadászház stílus illesztés',
+            'trophy_moderation_flags' => 'Moderációs jelölők',
             'accommodation_type' => 'Szállás típusa',
             'accommodation_capacity' => 'Férőhely (fő)',
             'accommodation_hunting_nearby' => 'Vadászterület közelében?',
@@ -499,6 +526,31 @@ class VA_Ajax {
             'engedély nélküli szolgáltatás',
             'tiltott vadaszati tevekenyseg',
             'tiltott vadászati tevékenység',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_trophy_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'vedett fafaj illegalis kereskedelem',
+            'védett fafaj illegális kereskedelem',
+            'hamis kezmuves eredet',
+            'hamis kézműves eredet',
+            'trofea manipulacio',
+            'trófea manipuláció',
         ];
 
         $hits = [];
