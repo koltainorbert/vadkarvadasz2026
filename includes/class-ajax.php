@@ -805,30 +805,97 @@ class VA_Ajax {
         $estate_legal_has_papers = sanitize_key( wp_unslash( $_POST['estate_legal_has_papers'] ?? '' ) );
         $estate_legal_bundle_only = sanitize_key( wp_unslash( $_POST['estate_legal_bundle_only'] ?? '' ) );
         $estate_transfer_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_transfer_methods'] ?? [] ) ) ) );
-        $estate_media_full = ! empty( $_POST['estate_media_full'] ) ? '1' : '0';
-        $estate_media_details = ! empty( $_POST['estate_media_details'] ) ? '1' : '0';
-        $estate_media_documents = ! empty( $_POST['estate_media_documents'] ) ? '1' : '0';
-        $estate_media_firearms = ! empty( $_POST['estate_media_firearms'] ) ? '1' : '0';
-        $estate_optic_celtavcso = ! empty( $_POST['estate_optic_celtavcso'] ) ? '1' : '0';
-        $estate_optic_binokular = ! empty( $_POST['estate_optic_binokular'] ) ? '1' : '0';
-        $estate_optic_spektiv = ! empty( $_POST['estate_optic_spektiv'] ) ? '1' : '0';
-        $estate_optic_reddot = ! empty( $_POST['estate_optic_reddot'] ) ? '1' : '0';
-        $estate_clothing_kabat = ! empty( $_POST['estate_clothing_kabat'] ) ? '1' : '0';
-        $estate_clothing_nadrag = ! empty( $_POST['estate_clothing_nadrag'] ) ? '1' : '0';
-        $estate_clothing_csizma = ! empty( $_POST['estate_clothing_csizma'] ) ? '1' : '0';
-        $estate_clothing_esoruha = ! empty( $_POST['estate_clothing_esoruha'] ) ? '1' : '0';
-        $estate_trophy_agancs = ! empty( $_POST['estate_trophy_agancs'] ) ? '1' : '0';
-        $estate_trophy_koponya = ! empty( $_POST['estate_trophy_koponya'] ) ? '1' : '0';
-        $estate_trophy_preparatum = ! empty( $_POST['estate_trophy_preparatum'] ) ? '1' : '0';
-        $estate_docs_engedelyek = ! empty( $_POST['estate_docs_engedelyek'] ) ? '1' : '0';
-        $estate_docs_vadasznaplo = ! empty( $_POST['estate_docs_vadasznaplo'] ) ? '1' : '0';
-        $estate_docs_konyvek = ! empty( $_POST['estate_docs_konyvek'] ) ? '1' : '0';
-        $estate_docs_tanusitvanyok = ! empty( $_POST['estate_docs_tanusitvanyok'] ) ? '1' : '0';
-        $estate_equipment_kes = ! empty( $_POST['estate_equipment_kes'] ) ? '1' : '0';
-        $estate_equipment_hatizsak = ! empty( $_POST['estate_equipment_hatizsak'] ) ? '1' : '0';
-        $estate_equipment_lampa = ! empty( $_POST['estate_equipment_lampa'] ) ? '1' : '0';
-        $estate_equipment_tavcso_tartozek = ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ? '1' : '0';
-        $estate_equipment_fegyverszef = ! empty( $_POST['estate_equipment_fegyverszef'] ) ? '1' : '0';
+
+        $estate_optic_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_optic_items'] ?? [] ) ),
+            array( 'celtavcso', 'binokular', 'spektiv', 'reddot' )
+        ) );
+        if ( empty( $estate_optic_items ) ) {
+            if ( ! empty( $_POST['estate_optic_celtavcso'] ) ) { $estate_optic_items[] = 'celtavcso'; }
+            if ( ! empty( $_POST['estate_optic_binokular'] ) ) { $estate_optic_items[] = 'binokular'; }
+            if ( ! empty( $_POST['estate_optic_spektiv'] ) ) { $estate_optic_items[] = 'spektiv'; }
+            if ( ! empty( $_POST['estate_optic_reddot'] ) ) { $estate_optic_items[] = 'reddot'; }
+        }
+
+        $estate_clothing_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_clothing_items'] ?? [] ) ),
+            array( 'kabat', 'nadrag', 'csizma', 'esoruha' )
+        ) );
+        if ( empty( $estate_clothing_items ) ) {
+            if ( ! empty( $_POST['estate_clothing_kabat'] ) ) { $estate_clothing_items[] = 'kabat'; }
+            if ( ! empty( $_POST['estate_clothing_nadrag'] ) ) { $estate_clothing_items[] = 'nadrag'; }
+            if ( ! empty( $_POST['estate_clothing_csizma'] ) ) { $estate_clothing_items[] = 'csizma'; }
+            if ( ! empty( $_POST['estate_clothing_esoruha'] ) ) { $estate_clothing_items[] = 'esoruha'; }
+        }
+
+        $estate_trophy_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_trophy_items'] ?? [] ) ),
+            array( 'agancs', 'koponya', 'preparatum' )
+        ) );
+        if ( empty( $estate_trophy_items ) ) {
+            if ( ! empty( $_POST['estate_trophy_agancs'] ) ) { $estate_trophy_items[] = 'agancs'; }
+            if ( ! empty( $_POST['estate_trophy_koponya'] ) ) { $estate_trophy_items[] = 'koponya'; }
+            if ( ! empty( $_POST['estate_trophy_preparatum'] ) ) { $estate_trophy_items[] = 'preparatum'; }
+        }
+
+        $estate_docs_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_docs_items'] ?? [] ) ),
+            array( 'engedelyek', 'vadasznaplo', 'konyvek', 'tanusitvanyok' )
+        ) );
+        if ( empty( $estate_docs_items ) ) {
+            if ( ! empty( $_POST['estate_docs_engedelyek'] ) ) { $estate_docs_items[] = 'engedelyek'; }
+            if ( ! empty( $_POST['estate_docs_vadasznaplo'] ) ) { $estate_docs_items[] = 'vadasznaplo'; }
+            if ( ! empty( $_POST['estate_docs_konyvek'] ) ) { $estate_docs_items[] = 'konyvek'; }
+            if ( ! empty( $_POST['estate_docs_tanusitvanyok'] ) ) { $estate_docs_items[] = 'tanusitvanyok'; }
+        }
+
+        $estate_equipment_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_equipment_items'] ?? [] ) ),
+            array( 'kes', 'hatizsak', 'lampa', 'tavcso_tartozek', 'fegyverszef' )
+        ) );
+        if ( empty( $estate_equipment_items ) ) {
+            if ( ! empty( $_POST['estate_equipment_kes'] ) ) { $estate_equipment_items[] = 'kes'; }
+            if ( ! empty( $_POST['estate_equipment_hatizsak'] ) ) { $estate_equipment_items[] = 'hatizsak'; }
+            if ( ! empty( $_POST['estate_equipment_lampa'] ) ) { $estate_equipment_items[] = 'lampa'; }
+            if ( ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ) { $estate_equipment_items[] = 'tavcso_tartozek'; }
+            if ( ! empty( $_POST['estate_equipment_fegyverszef'] ) ) { $estate_equipment_items[] = 'fegyverszef'; }
+        }
+
+        $estate_media_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_media_items'] ?? [] ) ),
+            array( 'full', 'details', 'documents', 'firearms' )
+        ) );
+        if ( empty( $estate_media_items ) ) {
+            if ( ! empty( $_POST['estate_media_full'] ) ) { $estate_media_items[] = 'full'; }
+            if ( ! empty( $_POST['estate_media_details'] ) ) { $estate_media_items[] = 'details'; }
+            if ( ! empty( $_POST['estate_media_documents'] ) ) { $estate_media_items[] = 'documents'; }
+            if ( ! empty( $_POST['estate_media_firearms'] ) ) { $estate_media_items[] = 'firearms'; }
+        }
+
+        $estate_media_full = in_array( 'full', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_details = in_array( 'details', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_documents = in_array( 'documents', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_firearms = in_array( 'firearms', $estate_media_items, true ) ? '1' : '0';
+        $estate_optic_celtavcso = in_array( 'celtavcso', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_binokular = in_array( 'binokular', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_spektiv = in_array( 'spektiv', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_reddot = in_array( 'reddot', $estate_optic_items, true ) ? '1' : '0';
+        $estate_clothing_kabat = in_array( 'kabat', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_nadrag = in_array( 'nadrag', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_csizma = in_array( 'csizma', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_esoruha = in_array( 'esoruha', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_trophy_agancs = in_array( 'agancs', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_trophy_koponya = in_array( 'koponya', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_trophy_preparatum = in_array( 'preparatum', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_docs_engedelyek = in_array( 'engedelyek', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_vadasznaplo = in_array( 'vadasznaplo', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_konyvek = in_array( 'konyvek', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_tanusitvanyok = in_array( 'tanusitvanyok', $estate_docs_items, true ) ? '1' : '0';
+        $estate_equipment_kes = in_array( 'kes', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_hatizsak = in_array( 'hatizsak', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_lampa = in_array( 'lampa', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_tavcso_tartozek = in_array( 'tavcso_tartozek', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_fegyverszef = in_array( 'fegyverszef', $estate_equipment_items, true ) ? '1' : '0';
         $estate_notes = sanitize_textarea_field( wp_unslash( $_POST['estate_notes'] ?? '' ) );
         $estate_filter_has_firearms = ( $estate_firearms_count !== '' || $estate_firearms_type !== '' || $estate_firearms_licensed === 'igen' ) ? '1' : '0';
         $estate_filter_has_optics = ( $estate_optics_count !== '' || $estate_optic_celtavcso === '1' || $estate_optic_binokular === '1' || $estate_optic_spektiv === '1' || $estate_optic_reddot === '1' ) ? '1' : '0';
@@ -1167,6 +1234,12 @@ class VA_Ajax {
             'va_estate_legal_has_papers' => $estate_legal_has_papers,
             'va_estate_legal_bundle_only' => $estate_legal_bundle_only,
             'va_estate_transfer_methods' => $estate_transfer_methods,
+            'va_estate_optic_items' => implode( ',', $estate_optic_items ),
+            'va_estate_clothing_items' => implode( ',', $estate_clothing_items ),
+            'va_estate_trophy_items' => implode( ',', $estate_trophy_items ),
+            'va_estate_docs_items' => implode( ',', $estate_docs_items ),
+            'va_estate_equipment_items' => implode( ',', $estate_equipment_items ),
+            'va_estate_media_items' => implode( ',', $estate_media_items ),
             'va_estate_media_full' => $estate_media_full,
             'va_estate_media_details' => $estate_media_details,
             'va_estate_media_documents' => $estate_media_documents,
@@ -1534,30 +1607,97 @@ class VA_Ajax {
         $estate_legal_has_papers = sanitize_key( wp_unslash( $_POST['estate_legal_has_papers'] ?? '' ) );
         $estate_legal_bundle_only = sanitize_key( wp_unslash( $_POST['estate_legal_bundle_only'] ?? '' ) );
         $estate_transfer_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_transfer_methods'] ?? [] ) ) ) );
-        $estate_media_full = ! empty( $_POST['estate_media_full'] ) ? '1' : '0';
-        $estate_media_details = ! empty( $_POST['estate_media_details'] ) ? '1' : '0';
-        $estate_media_documents = ! empty( $_POST['estate_media_documents'] ) ? '1' : '0';
-        $estate_media_firearms = ! empty( $_POST['estate_media_firearms'] ) ? '1' : '0';
-        $estate_optic_celtavcso = ! empty( $_POST['estate_optic_celtavcso'] ) ? '1' : '0';
-        $estate_optic_binokular = ! empty( $_POST['estate_optic_binokular'] ) ? '1' : '0';
-        $estate_optic_spektiv = ! empty( $_POST['estate_optic_spektiv'] ) ? '1' : '0';
-        $estate_optic_reddot = ! empty( $_POST['estate_optic_reddot'] ) ? '1' : '0';
-        $estate_clothing_kabat = ! empty( $_POST['estate_clothing_kabat'] ) ? '1' : '0';
-        $estate_clothing_nadrag = ! empty( $_POST['estate_clothing_nadrag'] ) ? '1' : '0';
-        $estate_clothing_csizma = ! empty( $_POST['estate_clothing_csizma'] ) ? '1' : '0';
-        $estate_clothing_esoruha = ! empty( $_POST['estate_clothing_esoruha'] ) ? '1' : '0';
-        $estate_trophy_agancs = ! empty( $_POST['estate_trophy_agancs'] ) ? '1' : '0';
-        $estate_trophy_koponya = ! empty( $_POST['estate_trophy_koponya'] ) ? '1' : '0';
-        $estate_trophy_preparatum = ! empty( $_POST['estate_trophy_preparatum'] ) ? '1' : '0';
-        $estate_docs_engedelyek = ! empty( $_POST['estate_docs_engedelyek'] ) ? '1' : '0';
-        $estate_docs_vadasznaplo = ! empty( $_POST['estate_docs_vadasznaplo'] ) ? '1' : '0';
-        $estate_docs_konyvek = ! empty( $_POST['estate_docs_konyvek'] ) ? '1' : '0';
-        $estate_docs_tanusitvanyok = ! empty( $_POST['estate_docs_tanusitvanyok'] ) ? '1' : '0';
-        $estate_equipment_kes = ! empty( $_POST['estate_equipment_kes'] ) ? '1' : '0';
-        $estate_equipment_hatizsak = ! empty( $_POST['estate_equipment_hatizsak'] ) ? '1' : '0';
-        $estate_equipment_lampa = ! empty( $_POST['estate_equipment_lampa'] ) ? '1' : '0';
-        $estate_equipment_tavcso_tartozek = ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ? '1' : '0';
-        $estate_equipment_fegyverszef = ! empty( $_POST['estate_equipment_fegyverszef'] ) ? '1' : '0';
+
+        $estate_optic_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_optic_items'] ?? [] ) ),
+            array( 'celtavcso', 'binokular', 'spektiv', 'reddot' )
+        ) );
+        if ( empty( $estate_optic_items ) ) {
+            if ( ! empty( $_POST['estate_optic_celtavcso'] ) ) { $estate_optic_items[] = 'celtavcso'; }
+            if ( ! empty( $_POST['estate_optic_binokular'] ) ) { $estate_optic_items[] = 'binokular'; }
+            if ( ! empty( $_POST['estate_optic_spektiv'] ) ) { $estate_optic_items[] = 'spektiv'; }
+            if ( ! empty( $_POST['estate_optic_reddot'] ) ) { $estate_optic_items[] = 'reddot'; }
+        }
+
+        $estate_clothing_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_clothing_items'] ?? [] ) ),
+            array( 'kabat', 'nadrag', 'csizma', 'esoruha' )
+        ) );
+        if ( empty( $estate_clothing_items ) ) {
+            if ( ! empty( $_POST['estate_clothing_kabat'] ) ) { $estate_clothing_items[] = 'kabat'; }
+            if ( ! empty( $_POST['estate_clothing_nadrag'] ) ) { $estate_clothing_items[] = 'nadrag'; }
+            if ( ! empty( $_POST['estate_clothing_csizma'] ) ) { $estate_clothing_items[] = 'csizma'; }
+            if ( ! empty( $_POST['estate_clothing_esoruha'] ) ) { $estate_clothing_items[] = 'esoruha'; }
+        }
+
+        $estate_trophy_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_trophy_items'] ?? [] ) ),
+            array( 'agancs', 'koponya', 'preparatum' )
+        ) );
+        if ( empty( $estate_trophy_items ) ) {
+            if ( ! empty( $_POST['estate_trophy_agancs'] ) ) { $estate_trophy_items[] = 'agancs'; }
+            if ( ! empty( $_POST['estate_trophy_koponya'] ) ) { $estate_trophy_items[] = 'koponya'; }
+            if ( ! empty( $_POST['estate_trophy_preparatum'] ) ) { $estate_trophy_items[] = 'preparatum'; }
+        }
+
+        $estate_docs_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_docs_items'] ?? [] ) ),
+            array( 'engedelyek', 'vadasznaplo', 'konyvek', 'tanusitvanyok' )
+        ) );
+        if ( empty( $estate_docs_items ) ) {
+            if ( ! empty( $_POST['estate_docs_engedelyek'] ) ) { $estate_docs_items[] = 'engedelyek'; }
+            if ( ! empty( $_POST['estate_docs_vadasznaplo'] ) ) { $estate_docs_items[] = 'vadasznaplo'; }
+            if ( ! empty( $_POST['estate_docs_konyvek'] ) ) { $estate_docs_items[] = 'konyvek'; }
+            if ( ! empty( $_POST['estate_docs_tanusitvanyok'] ) ) { $estate_docs_items[] = 'tanusitvanyok'; }
+        }
+
+        $estate_equipment_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_equipment_items'] ?? [] ) ),
+            array( 'kes', 'hatizsak', 'lampa', 'tavcso_tartozek', 'fegyverszef' )
+        ) );
+        if ( empty( $estate_equipment_items ) ) {
+            if ( ! empty( $_POST['estate_equipment_kes'] ) ) { $estate_equipment_items[] = 'kes'; }
+            if ( ! empty( $_POST['estate_equipment_hatizsak'] ) ) { $estate_equipment_items[] = 'hatizsak'; }
+            if ( ! empty( $_POST['estate_equipment_lampa'] ) ) { $estate_equipment_items[] = 'lampa'; }
+            if ( ! empty( $_POST['estate_equipment_tavcso_tartozek'] ) ) { $estate_equipment_items[] = 'tavcso_tartozek'; }
+            if ( ! empty( $_POST['estate_equipment_fegyverszef'] ) ) { $estate_equipment_items[] = 'fegyverszef'; }
+        }
+
+        $estate_media_items = array_values( array_intersect(
+            array_map( 'sanitize_key', (array) wp_unslash( $_POST['estate_media_items'] ?? [] ) ),
+            array( 'full', 'details', 'documents', 'firearms' )
+        ) );
+        if ( empty( $estate_media_items ) ) {
+            if ( ! empty( $_POST['estate_media_full'] ) ) { $estate_media_items[] = 'full'; }
+            if ( ! empty( $_POST['estate_media_details'] ) ) { $estate_media_items[] = 'details'; }
+            if ( ! empty( $_POST['estate_media_documents'] ) ) { $estate_media_items[] = 'documents'; }
+            if ( ! empty( $_POST['estate_media_firearms'] ) ) { $estate_media_items[] = 'firearms'; }
+        }
+
+        $estate_media_full = in_array( 'full', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_details = in_array( 'details', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_documents = in_array( 'documents', $estate_media_items, true ) ? '1' : '0';
+        $estate_media_firearms = in_array( 'firearms', $estate_media_items, true ) ? '1' : '0';
+        $estate_optic_celtavcso = in_array( 'celtavcso', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_binokular = in_array( 'binokular', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_spektiv = in_array( 'spektiv', $estate_optic_items, true ) ? '1' : '0';
+        $estate_optic_reddot = in_array( 'reddot', $estate_optic_items, true ) ? '1' : '0';
+        $estate_clothing_kabat = in_array( 'kabat', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_nadrag = in_array( 'nadrag', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_csizma = in_array( 'csizma', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_clothing_esoruha = in_array( 'esoruha', $estate_clothing_items, true ) ? '1' : '0';
+        $estate_trophy_agancs = in_array( 'agancs', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_trophy_koponya = in_array( 'koponya', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_trophy_preparatum = in_array( 'preparatum', $estate_trophy_items, true ) ? '1' : '0';
+        $estate_docs_engedelyek = in_array( 'engedelyek', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_vadasznaplo = in_array( 'vadasznaplo', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_konyvek = in_array( 'konyvek', $estate_docs_items, true ) ? '1' : '0';
+        $estate_docs_tanusitvanyok = in_array( 'tanusitvanyok', $estate_docs_items, true ) ? '1' : '0';
+        $estate_equipment_kes = in_array( 'kes', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_hatizsak = in_array( 'hatizsak', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_lampa = in_array( 'lampa', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_tavcso_tartozek = in_array( 'tavcso_tartozek', $estate_equipment_items, true ) ? '1' : '0';
+        $estate_equipment_fegyverszef = in_array( 'fegyverszef', $estate_equipment_items, true ) ? '1' : '0';
         $estate_notes = sanitize_textarea_field( wp_unslash( $_POST['estate_notes'] ?? '' ) );
         $estate_filter_has_firearms = ( $estate_firearms_count !== '' || $estate_firearms_type !== '' || $estate_firearms_licensed === 'igen' ) ? '1' : '0';
         $estate_filter_has_optics = ( $estate_optics_count !== '' || $estate_optic_celtavcso === '1' || $estate_optic_binokular === '1' || $estate_optic_spektiv === '1' || $estate_optic_reddot === '1' ) ? '1' : '0';
@@ -1864,6 +2004,12 @@ class VA_Ajax {
             'va_estate_legal_has_papers' => $estate_legal_has_papers,
             'va_estate_legal_bundle_only' => $estate_legal_bundle_only,
             'va_estate_transfer_methods' => $estate_transfer_methods,
+            'va_estate_optic_items' => implode( ',', $estate_optic_items ),
+            'va_estate_clothing_items' => implode( ',', $estate_clothing_items ),
+            'va_estate_trophy_items' => implode( ',', $estate_trophy_items ),
+            'va_estate_docs_items' => implode( ',', $estate_docs_items ),
+            'va_estate_equipment_items' => implode( ',', $estate_equipment_items ),
+            'va_estate_media_items' => implode( ',', $estate_media_items ),
             'va_estate_media_full' => $estate_media_full,
             'va_estate_media_details' => $estate_media_details,
             'va_estate_media_documents' => $estate_media_documents,
