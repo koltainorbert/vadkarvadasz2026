@@ -826,4 +826,64 @@
     va_init_overlay_scrollbars();
   }
 
+  function initVaMs() {
+    var blocks = document.querySelectorAll('.va-ms');
+    if (!blocks.length) {
+      return;
+    }
+
+    blocks.forEach(function(block) {
+      if (block.getAttribute('data-ms-ready') === '1') {
+        return;
+      }
+      block.setAttribute('data-ms-ready', '1');
+
+      var btn = block.querySelector('.va-ms__btn');
+      var checks = block.querySelectorAll('input[type="checkbox"]');
+      if (!btn || !checks.length) {
+        return;
+      }
+
+      function refreshLabel() {
+        var labels = [];
+        checks.forEach(function(ch) {
+          if (ch.checked) {
+            labels.push((ch.getAttribute('data-label') || '').trim());
+          }
+        });
+        btn.textContent = labels.length ? labels.join(', ') : 'Válassz jogosítványt';
+      }
+
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.va-ms.is-open').forEach(function(openBlock) {
+          if (openBlock !== block) {
+            openBlock.classList.remove('is-open');
+          }
+        });
+        block.classList.toggle('is-open');
+      });
+
+      checks.forEach(function(ch) {
+        ch.addEventListener('change', refreshLabel);
+      });
+
+      refreshLabel();
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.va-ms')) {
+        document.querySelectorAll('.va-ms.is-open').forEach(function(openBlock) {
+          openBlock.classList.remove('is-open');
+        });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVaMs);
+  } else {
+    initVaMs();
+  }
+
 })(jQuery);

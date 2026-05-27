@@ -119,6 +119,50 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
+.va-ms {
+  position: relative;
+  max-width: 360px;
+}
+
+.va-ms__btn {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.va-ms__panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 8px 10px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
+.va-ms.is-open .va-ms__panel {
+  display: block;
+}
+
+.va-ms__opt {
+  display: block;
+  padding: 4px 0;
+}
+
+.va-ms__label {
+  margin-left: 6px;
+}
+
 @media print {
   body * {
     visibility: hidden !important;
