@@ -5984,7 +5984,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hunt_slot_to_hour: 'Idősáv vége (óra)',
             hunt_capacity: 'Létszám / fő',
             hunt_species_list: 'Vadászható fajok listája',
-            hunt_lease_type: 'Lesbérleti / hozzáférési forma'
+            hunt_lease_type: 'Lesbérleti / hozzáférési forma',
             estate_main_type: 'Hagyaték fő típusa',
         };
         var missing = [];
