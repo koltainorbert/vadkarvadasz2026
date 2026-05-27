@@ -259,7 +259,7 @@ $category_required_rules = [
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
-    'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'clothing_type', 'clothing_size_system', 'clothing_size' ] ],
+    'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
     'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -377,8 +377,28 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'shoe_resoled' => get_post_meta( $maybe_id, 'va_shoe_resoled', true ),
             'shoe_notes' => get_post_meta( $maybe_id, 'va_shoe_notes', true ),
             'clothing_type' => get_post_meta( $maybe_id, 'va_clothing_type', true ),
+            'clothing_condition' => get_post_meta( $maybe_id, 'va_clothing_condition', true ),
+            'clothing_gender' => get_post_meta( $maybe_id, 'va_clothing_gender', true ),
             'clothing_size_system' => get_post_meta( $maybe_id, 'va_clothing_size_system', true ),
             'clothing_size' => get_post_meta( $maybe_id, 'va_clothing_size', true ),
+            'clothing_accessory_size' => get_post_meta( $maybe_id, 'va_clothing_accessory_size', true ),
+            'clothing_glove_size' => get_post_meta( $maybe_id, 'va_clothing_glove_size', true ),
+            'clothing_hat_size' => get_post_meta( $maybe_id, 'va_clothing_hat_size', true ),
+            'clothing_hat_cm' => get_post_meta( $maybe_id, 'va_clothing_hat_cm', true ),
+            'clothing_belt_length_cm' => get_post_meta( $maybe_id, 'va_clothing_belt_length_cm', true ),
+            'clothing_colors' => get_post_meta( $maybe_id, 'va_clothing_colors', true ),
+            'clothing_materials' => get_post_meta( $maybe_id, 'va_clothing_materials', true ),
+            'clothing_protections' => get_post_meta( $maybe_id, 'va_clothing_protections', true ),
+            'clothing_season' => get_post_meta( $maybe_id, 'va_clothing_season', true ),
+            'clothing_use_cases' => get_post_meta( $maybe_id, 'va_clothing_use_cases', true ),
+            'clothing_special_features' => get_post_meta( $maybe_id, 'va_clothing_special_features', true ),
+            'clothing_glove_features' => get_post_meta( $maybe_id, 'va_clothing_glove_features', true ),
+            'clothing_headwear_features' => get_post_meta( $maybe_id, 'va_clothing_headwear_features', true ),
+            'clothing_poncho_water_column' => get_post_meta( $maybe_id, 'va_clothing_poncho_water_column', true ),
+            'clothing_poncho_ultralight' => get_post_meta( $maybe_id, 'va_clothing_poncho_ultralight', true ),
+            'clothing_poncho_backpack_compatible' => get_post_meta( $maybe_id, 'va_clothing_poncho_backpack_compatible', true ),
+            'clothing_ghillie_type' => get_post_meta( $maybe_id, 'va_clothing_ghillie_type', true ),
+            'clothing_ghillie_pattern' => get_post_meta( $maybe_id, 'va_clothing_ghillie_pattern', true ),
             'knife_type' => get_post_meta( $maybe_id, 'va_knife_type', true ),
             'knife_blade_length' => get_post_meta( $maybe_id, 'va_knife_blade_length', true ),
             'trophy_species' => get_post_meta( $maybe_id, 'va_trophy_species', true ),
@@ -2491,19 +2511,23 @@ body.va-modal-open {
                             <?php
                             $clothing_type_val = (string)($edit_meta['clothing_type'] ?? '');
                             $clothing_type_options = [
-                                'nadrag' => 'Nadrág',
-                                'polo' => 'Póló',
-                                'ing' => 'Ing',
-                                'pulover' => 'Pulóver',
-                                'melleny' => 'Mellény',
-                                'kabat' => 'Kabát',
-                                'dzseki' => 'Dzseki',
-                                'overal' => 'Overál',
-                                'kamasli' => 'Kamásli',
-                                'esoruha' => 'Esőruházat',
-                                'vadasz-kalap' => 'Vadász kalap',
                                 'sapka' => 'Sapka',
+                                'kalap' => 'Kalap',
+                                'maszk' => 'Maszk',
+                                'balaclava' => 'Balaclava',
+                                'sal' => 'Sál',
+                                'nyakmelegito' => 'Nyakmelegítő',
                                 'kesztyu' => 'Kesztyű',
+                                'zokni' => 'Zokni',
+                                'ov' => 'Öv',
+                                'alaoltozet' => 'Aláöltözet',
+                                'thermo-ruhazat' => 'Thermo ruházat',
+                                'esoponcso' => 'Esőponcsó',
+                                'ghillie-ruha' => 'Ghillie ruha',
+                                'lathatosagi-melleny' => 'Láthatósági mellény',
+                                'karmelegito' => 'Karmelegítő',
+                                'konyokvedo' => 'Könyökvédő',
+                                'terdvedo' => 'Térdvédő',
                                 'egyeb' => 'Egyéb'
                             ];
                             if ( $clothing_type_val !== '' && ! array_key_exists( $clothing_type_val, $clothing_type_options ) ) {
@@ -2527,10 +2551,202 @@ body.va-modal-open {
                             <option value="en"<?php echo selected( $clothing_size_system_val, 'en', false ); ?>>EN</option>
                         </select>
                     </div>
+                    <div class="va-form-group va-cat-rule-field" data-categories="egyeb-ruhazat" style="display:none;">
+                        <label>Állapot</label>
+                        <?php $v = (string) ( $edit_meta['clothing_condition'] ?? '' ); ?>
+                        <select name="clothing_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="javitott"<?php selected( $v, 'javitott' ); ?>>Javított</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-cat-rule-field" data-categories="egyeb-ruhazat" style="display:none;">
+                        <label>Nem</label>
+                        <?php $v = (string) ( $edit_meta['clothing_gender'] ?? '' ); ?>
+                        <select name="clothing_gender" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="ferfi"<?php selected( $v, 'ferfi' ); ?>>Férfi</option>
+                            <option value="noi"<?php selected( $v, 'noi' ); ?>>Női</option>
+                            <option value="unisex"<?php selected( $v, 'unisex' ); ?>>Unisex</option>
+                        </select>
+                    </div>
                     <div class="va-form-group">
                         <label>Ruhaméret</label>
                         <select name="clothing_size" id="va-clothing-size" class="va-select" data-selected="<?php echo esc_attr((string)($edit_meta['clothing_size'] ?? '')); ?>">
                             <option value="">– Válasszon –</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-cat-rule-field" data-categories="egyeb-ruhazat" style="display:none;">
+                        <label>Kiegészítő méret</label>
+                        <input type="text" name="clothing_accessory_size" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['clothing_accessory_size'] ?? '' ) ); ?>" placeholder="pl. M/L vagy 58 cm">
+                    </div>
+                </div>
+            </div>
+            <?php
+            $clothing_colors_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_colors'] ?? '' ) ) ) );
+            $clothing_materials_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_materials'] ?? '' ) ) ) );
+            $clothing_protections_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_protections'] ?? '' ) ) ) );
+            $clothing_season_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_season'] ?? '' ) ) ) );
+            $clothing_use_cases_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_use_cases'] ?? '' ) ) ) );
+            $clothing_special_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_special_features'] ?? '' ) ) ) );
+            $clothing_glove_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_glove_features'] ?? '' ) ) ) );
+            $clothing_headwear_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_headwear_features'] ?? '' ) ) ) );
+            $clothing_ghillie_type_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_ghillie_type'] ?? '' ) ) ) );
+            $clothing_ghillie_pattern_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['clothing_ghillie_pattern'] ?? '' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field" data-categories="egyeb-ruhazat" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="kesztyu" style="display:none;">
+                        <label>Kesztyű méret</label>
+                        <?php $v = (string) ( $edit_meta['clothing_glove_size'] ?? '' ); ?>
+                        <select name="clothing_glove_size" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="6"<?php selected( $v, '6' ); ?>>6</option>
+                            <option value="7"<?php selected( $v, '7' ); ?>>7</option>
+                            <option value="8"<?php selected( $v, '8' ); ?>>8</option>
+                            <option value="9"<?php selected( $v, '9' ); ?>>9</option>
+                            <option value="10"<?php selected( $v, '10' ); ?>>10</option>
+                            <option value="xl"<?php selected( $v, 'xl' ); ?>>XL</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="sapka,kalap,maszk,balaclava" style="display:none;">
+                        <label>Fejméret</label>
+                        <?php $v = (string) ( $edit_meta['clothing_hat_size'] ?? '' ); ?>
+                        <select name="clothing_hat_size" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="s-m"<?php selected( $v, 's-m' ); ?>>S/M</option>
+                            <option value="l-xl"<?php selected( $v, 'l-xl' ); ?>>L/XL</option>
+                            <option value="cm"<?php selected( $v, 'cm' ); ?>>cm alapú</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="sapka,kalap,maszk,balaclava" style="display:none;">
+                        <label>Fejkörfogat (cm)</label>
+                        <input type="text" name="clothing_hat_cm" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['clothing_hat_cm'] ?? '' ) ); ?>" placeholder="pl. 58">
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="ov" style="display:none;">
+                        <label>Öv hossza (cm)</label>
+                        <input type="text" name="clothing_belt_length_cm" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['clothing_belt_length_cm'] ?? '' ) ); ?>" placeholder="pl. 110">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Szín / minta</label>
+                        <select name="clothing_colors[]" class="va-select" multiple data-placeholder="Válassz színt / mintát">
+                            <option value="zold"<?php echo in_array( 'zold', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Zöld</option>
+                            <option value="barna"<?php echo in_array( 'barna', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Barna</option>
+                            <option value="fekete"<?php echo in_array( 'fekete', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Fekete</option>
+                            <option value="terepmintas"<?php echo in_array( 'terepmintas', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Terepmintás</option>
+                            <option value="blaze-orange"<?php echo in_array( 'blaze-orange', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Blaze orange</option>
+                            <option value="realtree"<?php echo in_array( 'realtree', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Realtree</option>
+                            <option value="multicam"<?php echo in_array( 'multicam', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Multicam</option>
+                            <option value="ho-mintas"<?php echo in_array( 'ho-mintas', $clothing_colors_saved, true ) ? ' selected' : ''; ?>>Hó mintás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Anyag</label>
+                        <select name="clothing_materials[]" class="va-select" multiple data-placeholder="Válassz anyagot">
+                            <option value="merino"<?php echo in_array( 'merino', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Merino</option>
+                            <option value="fleece"<?php echo in_array( 'fleece', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Fleece</option>
+                            <option value="gyapju"<?php echo in_array( 'gyapju', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Gyapjú</option>
+                            <option value="polyester"<?php echo in_array( 'polyester', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Polyester</option>
+                            <option value="softshell"<?php echo in_array( 'softshell', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Softshell</option>
+                            <option value="gore-tex"<?php echo in_array( 'gore-tex', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Gore-Tex</option>
+                            <option value="neopren"<?php echo in_array( 'neopren', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Neoprén</option>
+                            <option value="pamut"<?php echo in_array( 'pamut', $clothing_materials_saved, true ) ? ' selected' : ''; ?>>Pamut</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Védelem</label>
+                        <select name="clothing_protections[]" class="va-select" multiple data-placeholder="Válassz védelmet">
+                            <option value="vizallo"<?php echo in_array( 'vizallo', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Vízálló</option>
+                            <option value="szelallo"<?php echo in_array( 'szelallo', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Szélálló</option>
+                            <option value="thermo"<?php echo in_array( 'thermo', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Thermo</option>
+                            <option value="legatereszto"<?php echo in_array( 'legatereszto', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Légáteresztő</option>
+                            <option value="uv-vedelem"<?php echo in_array( 'uv-vedelem', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>UV védelem</option>
+                            <option value="szunyogallo"<?php echo in_array( 'szunyogallo', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Szúnyogálló</option>
+                            <option value="tuskebiztos"<?php echo in_array( 'tuskebiztos', $clothing_protections_saved, true ) ? ' selected' : ''; ?>>Tüskebiztos</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Szezon</label>
+                        <select name="clothing_season[]" class="va-select" multiple data-placeholder="Válassz szezont">
+                            <option value="nyari"<?php echo in_array( 'nyari', $clothing_season_saved, true ) ? ' selected' : ''; ?>>Nyári</option>
+                            <option value="teli"<?php echo in_array( 'teli', $clothing_season_saved, true ) ? ' selected' : ''; ?>>Téli</option>
+                            <option value="atmeneti"<?php echo in_array( 'atmeneti', $clothing_season_saved, true ) ? ' selected' : ''; ?>>Átmeneti</option>
+                            <option value="negyevszakos"<?php echo in_array( 'negyevszakos', $clothing_season_saved, true ) ? ' selected' : ''; ?>>Négyévszakos</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Felhasználás</label>
+                        <select name="clothing_use_cases[]" class="va-select" multiple data-placeholder="Válassz felhasználást">
+                            <option value="vadaszat"<?php echo in_array( 'vadaszat', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Vadászat</option>
+                            <option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option>
+                            <option value="cserkeles"<?php echo in_array( 'cserkeles', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option>
+                            <option value="hajtas"<?php echo in_array( 'hajtas', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Hajtás</option>
+                            <option value="tura"<?php echo in_array( 'tura', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Túra</option>
+                            <option value="horgaszat"<?php echo in_array( 'horgaszat', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Horgászat</option>
+                            <option value="airsoft"<?php echo in_array( 'airsoft', $clothing_use_cases_saved, true ) ? ' selected' : ''; ?>>Airsoft</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Speciális tulajdonságok</label>
+                        <select name="clothing_special_features[]" class="va-select" multiple data-placeholder="Válassz tulajdonságot">
+                            <option value="hangtalan"<?php echo in_array( 'hangtalan', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Hangtalan</option>
+                            <option value="erintokepernyo-kompatibilis"<?php echo in_array( 'erintokepernyo-kompatibilis', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Érintőképernyő kompatibilis</option>
+                            <option value="gyorsan-szarado"<?php echo in_array( 'gyorsan-szarado', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Gyorsan száradó</option>
+                            <option value="stretch"<?php echo in_array( 'stretch', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Stretch</option>
+                            <option value="kompresszios"<?php echo in_array( 'kompresszios', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Kompressziós</option>
+                            <option value="belelt"<?php echo in_array( 'belelt', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Bélelt</option>
+                            <option value="langallo"<?php echo in_array( 'langallo', $clothing_special_saved, true ) ? ' selected' : ''; ?>>Lángálló</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="kesztyu" style="grid-column:1 / -1;display:none;">
+                        <label>Kesztyű specifikus</label>
+                        <select name="clothing_glove_features[]" class="va-select" multiple data-placeholder="Válassz kesztyű jellemzőt">
+                            <option value="ujj-nelkuli"<?php echo in_array( 'ujj-nelkuli', $clothing_glove_saved, true ) ? ' selected' : ''; ?>>Ujj nélküli</option>
+                            <option value="lovesz-kesztyu"<?php echo in_array( 'lovesz-kesztyu', $clothing_glove_saved, true ) ? ' selected' : ''; ?>>Lövész kesztyű</option>
+                            <option value="teli"<?php echo in_array( 'teli', $clothing_glove_saved, true ) ? ' selected' : ''; ?>>Téli</option>
+                            <option value="vizallo-tenyer"<?php echo in_array( 'vizallo-tenyer', $clothing_glove_saved, true ) ? ' selected' : ''; ?>>Vízálló tenyér</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="sapka,kalap,maszk,balaclava" style="grid-column:1 / -1;display:none;">
+                        <label>Fejfedő specifikus</label>
+                        <select name="clothing_headwear_features[]" class="va-select" multiple data-placeholder="Válassz fejfedő jellemzőt">
+                            <option value="baseball-sapka"<?php echo in_array( 'baseball-sapka', $clothing_headwear_saved, true ) ? ' selected' : ''; ?>>Baseball sapka</option>
+                            <option value="boonie"<?php echo in_array( 'boonie', $clothing_headwear_saved, true ) ? ' selected' : ''; ?>>Boonie</option>
+                            <option value="kotott-sapka"<?php echo in_array( 'kotott-sapka', $clothing_headwear_saved, true ) ? ' selected' : ''; ?>>Kötött sapka</option>
+                            <option value="premes-sapka"<?php echo in_array( 'premes-sapka', $clothing_headwear_saved, true ) ? ' selected' : ''; ?>>Prémes sapka</option>
+                            <option value="halos-sapka"<?php echo in_array( 'halos-sapka', $clothing_headwear_saved, true ) ? ' selected' : ''; ?>>Hálós sapka</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="esoponcso" style="display:none;">
+                        <label>Vízoszlop (mm)</label>
+                        <input type="text" name="clothing_poncho_water_column" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['clothing_poncho_water_column'] ?? '' ) ); ?>" placeholder="pl. 10000">
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="esoponcso" style="display:none;">
+                        <label>Ultrakönnyű</label>
+                        <?php $v = (string) ( $edit_meta['clothing_poncho_ultralight'] ?? '' ); ?>
+                        <select name="clothing_poncho_ultralight" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="esoponcso" style="display:none;">
+                        <label>Hátizsák kompatibilis</label>
+                        <?php $v = (string) ( $edit_meta['clothing_poncho_backpack_compatible'] ?? '' ); ?>
+                        <select name="clothing_poncho_backpack_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="ghillie-ruha" style="grid-column:1 / -1;display:none;">
+                        <label>Ghillie típus</label>
+                        <select name="clothing_ghillie_type[]" class="va-select" multiple data-placeholder="Válassz típust">
+                            <option value="teljes-ruha"<?php echo in_array( 'teljes-ruha', $clothing_ghillie_type_saved, true ) ? ' selected' : ''; ?>>Teljes ruha</option>
+                            <option value="felso"<?php echo in_array( 'felso', $clothing_ghillie_type_saved, true ) ? ' selected' : ''; ?>>Felső</option>
+                            <option value="poncso"<?php echo in_array( 'poncso', $clothing_ghillie_type_saved, true ) ? ' selected' : ''; ?>>Poncsó</option>
+                            <option value="3d-levelzet"<?php echo in_array( '3d-levelzet', $clothing_ghillie_type_saved, true ) ? ' selected' : ''; ?>>3D levélzet</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-clothing-dynamic-group" data-clothing-types="ghillie-ruha" style="grid-column:1 / -1;display:none;">
+                        <label>Ghillie minta</label>
+                        <select name="clothing_ghillie_pattern[]" class="va-select" multiple data-placeholder="Válassz mintát">
+                            <option value="woodland"<?php echo in_array( 'woodland', $clothing_ghillie_pattern_saved, true ) ? ' selected' : ''; ?>>Woodland</option>
+                            <option value="snow"<?php echo in_array( 'snow', $clothing_ghillie_pattern_saved, true ) ? ' selected' : ''; ?>>Snow</option>
                         </select>
                     </div>
                 </div>
@@ -5956,9 +6172,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var system = (($sizeSystem.val() || 'eu') + '').toLowerCase();
         var selectedSize = (($size.val() || $size.data('selected') || '') + '').trim();
         var sizeMap = {
-            eu: ['XS','S','M','L','XL','XXL','3XL','4XL','44','46','48','50','52','54','56','58','60'],
-            usa: ['XS','S','M','L','XL','XXL','3XL','4XL','30','32','34','36','38','40','42','44','46'],
-            en: ['XS','S','M','L','XL','XXL','3XL','4XL','34','36','38','40','42','44','46','48','50']
+            eu: ['XS','S','M','L','XL','XXL','3XL+'],
+            usa: ['XS','S','M','L','XL','XXL','3XL+'],
+            en: ['XS','S','M','L','XL','XXL','3XL+']
         };
         var options = sizeMap[system] || sizeMap.eu;
         var html = '<option value="">– Válasszon –</option>';
@@ -5997,6 +6213,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyOtherClothingDynamicFields() {
+        var type = (($('#va-clothing-type').val() || '') + '').trim();
+        $('.va-clothing-dynamic-group').each(function(){
+            var list = (($(this).data('clothingTypes') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     $('#va-category').on('change', function(){
         if (typeof VA_Data !== 'undefined' && VA_Data.site_type !== 'jarmu') {
             $('#va-brand').val('');
@@ -6004,6 +6228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             applyLearnedCaliberDatalist();
             applyCategorySpecificFieldVisibility();
             rebuildClothingSizeOptions();
+            applyOtherClothingDynamicFields();
         }
         applyVehicleCategoryVisibility();
         switchBrandModelFieldMode();
@@ -6071,6 +6296,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-clothing-size-system', function(){
         rebuildClothingSizeOptions();
     });
+    $(document).on('change', '#va-clothing-type', function(){
+        applyOtherClothingDynamicFields();
+    });
 
     $(document).on('change', '#va-other-weapon-kind', function(){
         applyCategorySpecificFieldVisibility();
@@ -6097,6 +6325,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyCategorySpecificFieldVisibility();
     applyVadcameraDynamicFields();
     applyShoeDynamicFields();
+    applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
     switchBrandModelFieldMode();
@@ -6245,6 +6474,8 @@ document.addEventListener('DOMContentLoaded', function() {
             job_location: 'Munkavégzés települése',
             job_type: 'Foglalkoztatás típusa',
             clothing_type: 'Ruhatípus',
+            clothing_condition: 'Állapot',
+            clothing_gender: 'Nem',
             clothing_size_system: 'Méretrendszer',
             clothing_size: 'Ruhaméret',
             knife_type: 'Kés típusa',

@@ -179,6 +179,7 @@ class VA_Ajax {
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+            'egyeb-ruhazat'     => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
@@ -277,6 +278,10 @@ class VA_Ajax {
             'dog_purebred' => 'Fajtatisztaság',
             'job_location' => 'Munkavégzés települése',
             'job_type' => 'Foglalkoztatás típusa',
+            'clothing_type' => 'Ruhatípus',
+            'clothing_condition' => 'Állapot',
+            'clothing_gender' => 'Nem',
+            'clothing_size' => 'Ruhaméret',
             'trophy_species' => 'Vadfaj',
             'trophy_mount_type' => 'Trófeaalátét típus',
             'trophy_style' => 'Forma / stílus',
@@ -786,6 +791,33 @@ class VA_Ajax {
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
+        $clothing_type = sanitize_key( wp_unslash( $_POST['clothing_type'] ?? '' ) );
+        $clothing_condition = sanitize_key( wp_unslash( $_POST['clothing_condition'] ?? '' ) );
+        $clothing_gender = sanitize_key( wp_unslash( $_POST['clothing_gender'] ?? '' ) );
+        $clothing_size_system = sanitize_key( wp_unslash( $_POST['clothing_size_system'] ?? '' ) );
+        $clothing_size = sanitize_text_field( wp_unslash( $_POST['clothing_size'] ?? '' ) );
+        $clothing_accessory_size = sanitize_text_field( wp_unslash( $_POST['clothing_accessory_size'] ?? '' ) );
+        $clothing_glove_size = sanitize_text_field( wp_unslash( $_POST['clothing_glove_size'] ?? '' ) );
+        $clothing_hat_size = sanitize_key( wp_unslash( $_POST['clothing_hat_size'] ?? '' ) );
+        $clothing_hat_cm = sanitize_text_field( wp_unslash( $_POST['clothing_hat_cm'] ?? '' ) );
+        $clothing_belt_length_cm = sanitize_text_field( wp_unslash( $_POST['clothing_belt_length_cm'] ?? '' ) );
+        $clothing_colors = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_colors'] ?? [] ) ) ) );
+        $clothing_materials = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_materials'] ?? [] ) ) ) );
+        $clothing_protections = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_protections'] ?? [] ) ) ) );
+        $clothing_season = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_season'] ?? [] ) ) ) );
+        $clothing_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_use_cases'] ?? [] ) ) ) );
+        $clothing_special_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_special_features'] ?? [] ) ) ) );
+        $clothing_glove_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_glove_features'] ?? [] ) ) ) );
+        $clothing_headwear_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_headwear_features'] ?? [] ) ) ) );
+        $clothing_poncho_water_column = sanitize_text_field( wp_unslash( $_POST['clothing_poncho_water_column'] ?? '' ) );
+        $clothing_poncho_ultralight = sanitize_key( wp_unslash( $_POST['clothing_poncho_ultralight'] ?? '' ) );
+        $clothing_poncho_backpack_compatible = sanitize_key( wp_unslash( $_POST['clothing_poncho_backpack_compatible'] ?? '' ) );
+        $clothing_ghillie_type = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_type'] ?? [] ) ) ) );
+        $clothing_ghillie_pattern = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_pattern'] ?? [] ) ) ) );
+        $clothing_filter_thermo = ( strpos( ',' . $clothing_protections . ',', ',thermo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_waterproof = ( strpos( ',' . $clothing_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_camo = ( strpos( ',' . $clothing_colors . ',', ',terepmintas,' ) !== false || strpos( ',' . $clothing_colors . ',', ',realtree,' ) !== false || strpos( ',' . $clothing_colors . ',', ',multicam,' ) !== false ) ? '1' : '0';
+        $clothing_filter_silent = ( strpos( ',' . $clothing_special_features . ',', ',hangtalan,' ) !== false ) ? '1' : '0';
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
         $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
@@ -1192,6 +1224,10 @@ class VA_Ajax {
             'dog_purebred' => $dog_purebred,
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
+            'clothing_type' => $clothing_type,
+            'clothing_condition' => $clothing_condition,
+            'clothing_gender' => $clothing_gender,
+            'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
             'knife_blade_length' => $knife_blade_length,
             'trophy_species' => $trophy_species,
@@ -1312,6 +1348,37 @@ class VA_Ajax {
             'va_dog_purebred'=> $dog_purebred,
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
+            'va_clothing_type' => $clothing_type,
+            'va_clothing_condition' => $clothing_condition,
+            'va_clothing_gender' => $clothing_gender,
+            'va_clothing_size_system' => $clothing_size_system,
+            'va_clothing_size' => $clothing_size,
+            'va_clothing_accessory_size' => $clothing_accessory_size,
+            'va_clothing_glove_size' => $clothing_glove_size,
+            'va_clothing_hat_size' => $clothing_hat_size,
+            'va_clothing_hat_cm' => $clothing_hat_cm,
+            'va_clothing_belt_length_cm' => $clothing_belt_length_cm,
+            'va_clothing_colors' => $clothing_colors,
+            'va_clothing_materials' => $clothing_materials,
+            'va_clothing_protections' => $clothing_protections,
+            'va_clothing_season' => $clothing_season,
+            'va_clothing_use_cases' => $clothing_use_cases,
+            'va_clothing_special_features' => $clothing_special_features,
+            'va_clothing_glove_features' => $clothing_glove_features,
+            'va_clothing_headwear_features' => $clothing_headwear_features,
+            'va_clothing_poncho_water_column' => $clothing_poncho_water_column,
+            'va_clothing_poncho_ultralight' => $clothing_poncho_ultralight,
+            'va_clothing_poncho_backpack_compatible' => $clothing_poncho_backpack_compatible,
+            'va_clothing_ghillie_type' => $clothing_ghillie_type,
+            'va_clothing_ghillie_pattern' => $clothing_ghillie_pattern,
+            'va_clothing_filter_type' => $clothing_type,
+            'va_clothing_filter_size' => $clothing_size,
+            'va_clothing_filter_thermo' => $clothing_filter_thermo,
+            'va_clothing_filter_waterproof' => $clothing_filter_waterproof,
+            'va_clothing_filter_camo' => $clothing_filter_camo,
+            'va_clothing_filter_silent' => $clothing_filter_silent,
+            'va_clothing_filter_season' => $clothing_season,
+            'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
@@ -1775,6 +1842,35 @@ class VA_Ajax {
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
+        $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
+        $clothing_type = sanitize_key( wp_unslash( $_POST['clothing_type'] ?? '' ) );
+        $clothing_condition = sanitize_key( wp_unslash( $_POST['clothing_condition'] ?? '' ) );
+        $clothing_gender = sanitize_key( wp_unslash( $_POST['clothing_gender'] ?? '' ) );
+        $clothing_size_system = sanitize_key( wp_unslash( $_POST['clothing_size_system'] ?? '' ) );
+        $clothing_size = sanitize_text_field( wp_unslash( $_POST['clothing_size'] ?? '' ) );
+        $clothing_accessory_size = sanitize_text_field( wp_unslash( $_POST['clothing_accessory_size'] ?? '' ) );
+        $clothing_glove_size = sanitize_text_field( wp_unslash( $_POST['clothing_glove_size'] ?? '' ) );
+        $clothing_hat_size = sanitize_key( wp_unslash( $_POST['clothing_hat_size'] ?? '' ) );
+        $clothing_hat_cm = sanitize_text_field( wp_unslash( $_POST['clothing_hat_cm'] ?? '' ) );
+        $clothing_belt_length_cm = sanitize_text_field( wp_unslash( $_POST['clothing_belt_length_cm'] ?? '' ) );
+        $clothing_colors = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_colors'] ?? [] ) ) ) );
+        $clothing_materials = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_materials'] ?? [] ) ) ) );
+        $clothing_protections = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_protections'] ?? [] ) ) ) );
+        $clothing_season = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_season'] ?? [] ) ) ) );
+        $clothing_use_cases = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_use_cases'] ?? [] ) ) ) );
+        $clothing_special_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_special_features'] ?? [] ) ) ) );
+        $clothing_glove_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_glove_features'] ?? [] ) ) ) );
+        $clothing_headwear_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_headwear_features'] ?? [] ) ) ) );
+        $clothing_poncho_water_column = sanitize_text_field( wp_unslash( $_POST['clothing_poncho_water_column'] ?? '' ) );
+        $clothing_poncho_ultralight = sanitize_key( wp_unslash( $_POST['clothing_poncho_ultralight'] ?? '' ) );
+        $clothing_poncho_backpack_compatible = sanitize_key( wp_unslash( $_POST['clothing_poncho_backpack_compatible'] ?? '' ) );
+        $clothing_ghillie_type = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_type'] ?? [] ) ) ) );
+        $clothing_ghillie_pattern = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_ghillie_pattern'] ?? [] ) ) ) );
+        $clothing_filter_thermo = ( strpos( ',' . $clothing_protections . ',', ',thermo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_waterproof = ( strpos( ',' . $clothing_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
+        $clothing_filter_camo = ( strpos( ',' . $clothing_colors . ',', ',terepmintas,' ) !== false || strpos( ',' . $clothing_colors . ',', ',realtree,' ) !== false || strpos( ',' . $clothing_colors . ',', ',multicam,' ) !== false ) ? '1' : '0';
+        $clothing_filter_silent = ( strpos( ',' . $clothing_special_features . ',', ',hangtalan,' ) !== false ) ? '1' : '0';
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
         $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
@@ -2149,6 +2245,8 @@ class VA_Ajax {
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
             'clothing_type' => $clothing_type,
+            'clothing_condition' => $clothing_condition,
+            'clothing_gender' => $clothing_gender,
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
             'knife_type' => $knife_type,
@@ -2270,6 +2368,39 @@ class VA_Ajax {
             'va_dog_gender'  => $dog_gender,
             'va_dog_color'   => $dog_color,
             'va_dog_purebred'=> $dog_purebred,
+            'va_job_location' => $job_location,
+            'va_job_type'   => $job_type,
+            'va_clothing_type' => $clothing_type,
+            'va_clothing_condition' => $clothing_condition,
+            'va_clothing_gender' => $clothing_gender,
+            'va_clothing_size_system' => $clothing_size_system,
+            'va_clothing_size' => $clothing_size,
+            'va_clothing_accessory_size' => $clothing_accessory_size,
+            'va_clothing_glove_size' => $clothing_glove_size,
+            'va_clothing_hat_size' => $clothing_hat_size,
+            'va_clothing_hat_cm' => $clothing_hat_cm,
+            'va_clothing_belt_length_cm' => $clothing_belt_length_cm,
+            'va_clothing_colors' => $clothing_colors,
+            'va_clothing_materials' => $clothing_materials,
+            'va_clothing_protections' => $clothing_protections,
+            'va_clothing_season' => $clothing_season,
+            'va_clothing_use_cases' => $clothing_use_cases,
+            'va_clothing_special_features' => $clothing_special_features,
+            'va_clothing_glove_features' => $clothing_glove_features,
+            'va_clothing_headwear_features' => $clothing_headwear_features,
+            'va_clothing_poncho_water_column' => $clothing_poncho_water_column,
+            'va_clothing_poncho_ultralight' => $clothing_poncho_ultralight,
+            'va_clothing_poncho_backpack_compatible' => $clothing_poncho_backpack_compatible,
+            'va_clothing_ghillie_type' => $clothing_ghillie_type,
+            'va_clothing_ghillie_pattern' => $clothing_ghillie_pattern,
+            'va_clothing_filter_type' => $clothing_type,
+            'va_clothing_filter_size' => $clothing_size,
+            'va_clothing_filter_thermo' => $clothing_filter_thermo,
+            'va_clothing_filter_waterproof' => $clothing_filter_waterproof,
+            'va_clothing_filter_camo' => $clothing_filter_camo,
+            'va_clothing_filter_silent' => $clothing_filter_silent,
+            'va_clothing_filter_season' => $clothing_season,
+            'va_clothing_filter_brand' => $brand,
             'va_knife_type' => $knife_type,
             'va_knife_blade_length' => $knife_blade_length,
             'va_trophy_species' => $trophy_species,
