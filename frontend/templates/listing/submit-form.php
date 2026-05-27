@@ -254,7 +254,7 @@ $category_required_rules = [
     'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
             'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
     'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
-    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type' ] ],
+    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'thermal_device_type', 'thermal_sensor_resolution', 'thermal_netd', 'thermal_refresh_hz' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_breed', 'dog_gender', 'dog_color', 'dog_purebred' ] ],
@@ -338,6 +338,40 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'optic_shipping_methods' => get_post_meta( $maybe_id, 'va_optic_shipping_methods', true ),
             'optic_recommended_use' => get_post_meta( $maybe_id, 'va_optic_recommended_use', true ),
             'optic_moderation_flags' => get_post_meta( $maybe_id, 'va_optic_moderation_flags', true ),
+            'thermal_device_type' => get_post_meta( $maybe_id, 'va_thermal_device_type', true ),
+            'thermal_condition' => get_post_meta( $maybe_id, 'va_thermal_condition', true ),
+            'thermal_warranty' => get_post_meta( $maybe_id, 'va_thermal_warranty', true ),
+            'thermal_manufacture_year' => get_post_meta( $maybe_id, 'va_thermal_manufacture_year', true ),
+            'thermal_sensor_resolution' => get_post_meta( $maybe_id, 'va_thermal_sensor_resolution', true ),
+            'thermal_pixel_pitch' => get_post_meta( $maybe_id, 'va_thermal_pixel_pitch', true ),
+            'thermal_netd' => get_post_meta( $maybe_id, 'va_thermal_netd', true ),
+            'thermal_refresh_hz' => get_post_meta( $maybe_id, 'va_thermal_refresh_hz', true ),
+            'thermal_base_magnification' => get_post_meta( $maybe_id, 'va_thermal_base_magnification', true ),
+            'thermal_digital_zoom' => get_post_meta( $maybe_id, 'va_thermal_digital_zoom', true ),
+            'thermal_lens_size' => get_post_meta( $maybe_id, 'va_thermal_lens_size', true ),
+            'thermal_fov_degree' => get_post_meta( $maybe_id, 'va_thermal_fov_degree', true ),
+            'thermal_fov_m100' => get_post_meta( $maybe_id, 'va_thermal_fov_m100', true ),
+            'thermal_detect_human_m' => get_post_meta( $maybe_id, 'va_thermal_detect_human_m', true ),
+            'thermal_detect_game_m' => get_post_meta( $maybe_id, 'va_thermal_detect_game_m', true ),
+            'thermal_detect_vehicle_m' => get_post_meta( $maybe_id, 'va_thermal_detect_vehicle_m', true ),
+            'thermal_display_type' => get_post_meta( $maybe_id, 'va_thermal_display_type', true ),
+            'thermal_display_resolution' => get_post_meta( $maybe_id, 'va_thermal_display_resolution', true ),
+            'thermal_palettes' => get_post_meta( $maybe_id, 'va_thermal_palettes', true ),
+            'thermal_photo' => get_post_meta( $maybe_id, 'va_thermal_photo', true ),
+            'thermal_video' => get_post_meta( $maybe_id, 'va_thermal_video', true ),
+            'thermal_audio' => get_post_meta( $maybe_id, 'va_thermal_audio', true ),
+            'thermal_internal_memory_gb' => get_post_meta( $maybe_id, 'va_thermal_internal_memory_gb', true ),
+            'thermal_sd_support' => get_post_meta( $maybe_id, 'va_thermal_sd_support', true ),
+            'thermal_connectivity' => get_post_meta( $maybe_id, 'va_thermal_connectivity', true ),
+            'thermal_mobile_app' => get_post_meta( $maybe_id, 'va_thermal_mobile_app', true ),
+            'thermal_extra_features' => get_post_meta( $maybe_id, 'va_thermal_extra_features', true ),
+            'thermal_battery_type' => get_post_meta( $maybe_id, 'va_thermal_battery_type', true ),
+            'thermal_runtime_hours' => get_post_meta( $maybe_id, 'va_thermal_runtime_hours', true ),
+            'thermal_powerbank_compatible' => get_post_meta( $maybe_id, 'va_thermal_powerbank_compatible', true ),
+            'thermal_ip_rating' => get_post_meta( $maybe_id, 'va_thermal_ip_rating', true ),
+            'thermal_recoil_resistance' => get_post_meta( $maybe_id, 'va_thermal_recoil_resistance', true ),
+            'thermal_weapon_compatibility' => get_post_meta( $maybe_id, 'va_thermal_weapon_compatibility', true ),
+            'thermal_accessories' => get_post_meta( $maybe_id, 'va_thermal_accessories', true ),
             'dog_age_months' => get_post_meta( $maybe_id, 'va_dog_age_months', true ),
             'dog_breed' => get_post_meta( $maybe_id, 'va_dog_breed', true ),
             'dog_gender' => get_post_meta( $maybe_id, 'va_dog_gender', true ),
@@ -3106,6 +3140,64 @@ body.va-modal-open {
                     <label>Bevonatok</label>
                     <input type="text" name="scope_coatings" class="va-input" placeholder="pl. Multi-coated" value="<?php echo esc_attr((string)($edit_meta['scope_coatings'] ?? '')); ?>">
                 </div>
+                </div>
+            </div>
+
+            <?php
+            $thermal_palettes_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_palettes'] ?? '' ) ) ) );
+            $thermal_connectivity_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_connectivity'] ?? '' ) ) ) );
+            $thermal_mobile_app_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_mobile_app'] ?? '' ) ) ) );
+            $thermal_extra_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_extra_features'] ?? '' ) ) ) );
+            $thermal_weapon_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_weapon_compatibility'] ?? '' ) ) ) );
+            $thermal_accessories_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['thermal_accessories'] ?? '' ) ) ) );
+            ?>
+            <div class="va-form-group va-thermal-fields-grid" data-categories="hokamerak" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Típus</label><?php $v = (string)($edit_meta['thermal_device_type'] ?? ''); ?><select name="thermal_device_type" class="va-select"><option value="">– Válasszon –</option><option value="kezi-hokamera"<?php selected($v,'kezi-hokamera'); ?>>Kézi hőkamera</option><option value="elotet-clip-on"<?php selected($v,'elotet-clip-on'); ?>>Előtét (clip-on)</option><option value="celtavcso-hokamera"<?php selected($v,'celtavcso-hokamera'); ?>>Céltávcső hőkamera</option><option value="binokular-hokamera"<?php selected($v,'binokular-hokamera'); ?>>Binokulár hőkamera</option><option value="monokular"<?php selected($v,'monokular'); ?>>Monokulár</option><option value="megfigyelo"<?php selected($v,'megfigyelo'); ?>>Megfigyelő</option><option value="kereso"<?php selected($v,'kereso'); ?>>Kereső</option><option value="ipari-hokamera"<?php selected($v,'ipari-hokamera'); ?>>Ipari hőkamera</option><option value="dron-kompatibilis"<?php selected($v,'dron-kompatibilis'); ?>>Drón kompatibilis</option><option value="jarmuves"<?php selected($v,'jarmuves'); ?>>Járműves</option><option value="egyeb"<?php selected($v,'egyeb'); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = (string)($edit_meta['thermal_condition'] ?? ''); ?><select name="thermal_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected($v,'uj'); ?>>Új</option><option value="ujszeru"<?php selected($v,'ujszeru'); ?>>Újszerű</option><option value="hasznalt"<?php selected($v,'hasznalt'); ?>>Használt</option><option value="hibas"<?php selected($v,'hibas'); ?>>Hibás</option></select></div>
+                    <div class="va-form-group"><label>Garancia</label><?php $v = (string)($edit_meta['thermal_warranty'] ?? ''); ?><select name="thermal_warranty" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Gyártási év</label><input type="text" name="thermal_manufacture_year" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_manufacture_year'] ?? '')); ?>" placeholder="pl. 2024"></div>
+
+                    <div class="va-form-group"><label>Szenzor felbontás</label><?php $v = (string)($edit_meta['thermal_sensor_resolution'] ?? ''); ?><select name="thermal_sensor_resolution" class="va-select"><option value="">– Válasszon –</option><option value="160x120"<?php selected($v,'160x120'); ?>>160x120</option><option value="256x192"<?php selected($v,'256x192'); ?>>256x192</option><option value="384x288"<?php selected($v,'384x288'); ?>>384x288</option><option value="640x480"<?php selected($v,'640x480'); ?>>640x480</option><option value="1024-plus"<?php selected($v,'1024-plus'); ?>>1024+</option></select></div>
+                    <div class="va-form-group"><label>Pixel méret</label><?php $v = (string)($edit_meta['thermal_pixel_pitch'] ?? ''); ?><select name="thermal_pixel_pitch" class="va-select"><option value="">– Válasszon –</option><option value="12um"<?php selected($v,'12um'); ?>>12 um</option><option value="17um"<?php selected($v,'17um'); ?>>17 um</option></select></div>
+                    <div class="va-form-group"><label>NETD érzékenység</label><?php $v = (string)($edit_meta['thermal_netd'] ?? ''); ?><select name="thermal_netd" class="va-select"><option value="">– Válasszon –</option><option value="lt20mk"<?php selected($v,'lt20mk'); ?>>&lt;20 mK</option><option value="lt25mk"<?php selected($v,'lt25mk'); ?>>&lt;25 mK</option><option value="lt35mk"<?php selected($v,'lt35mk'); ?>>&lt;35 mK</option><option value="lt40mk"<?php selected($v,'lt40mk'); ?>>&lt;40 mK</option><option value="lt50mk"<?php selected($v,'lt50mk'); ?>>&lt;50 mK</option></select></div>
+                    <div class="va-form-group"><label>Frissítési frekvencia</label><?php $v = (string)($edit_meta['thermal_refresh_hz'] ?? ''); ?><select name="thermal_refresh_hz" class="va-select"><option value="">– Válasszon –</option><option value="25hz"<?php selected($v,'25hz'); ?>>25 Hz</option><option value="30hz"<?php selected($v,'30hz'); ?>>30 Hz</option><option value="50hz"<?php selected($v,'50hz'); ?>>50 Hz</option><option value="60hz"<?php selected($v,'60hz'); ?>>60 Hz</option></select></div>
+
+                    <div class="va-form-group"><label>Alap nagyítás</label><input type="text" name="thermal_base_magnification" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_base_magnification'] ?? '')); ?>" placeholder="pl. 2x"></div>
+                    <div class="va-form-group"><label>Digitális zoom</label><?php $v = (string)($edit_meta['thermal_digital_zoom'] ?? ''); ?><select name="thermal_digital_zoom" class="va-select"><option value="">– Válasszon –</option><option value="2x"<?php selected($v,'2x'); ?>>2x</option><option value="4x"<?php selected($v,'4x'); ?>>4x</option><option value="8x"<?php selected($v,'8x'); ?>>8x</option><option value="16x"<?php selected($v,'16x'); ?>>16x</option></select></div>
+                    <div class="va-form-group"><label>Objektív méret</label><?php $v = (string)($edit_meta['thermal_lens_size'] ?? ''); ?><select name="thermal_lens_size" class="va-select"><option value="">– Válasszon –</option><option value="19"<?php selected($v,'19'); ?>>19 mm</option><option value="25"<?php selected($v,'25'); ?>>25 mm</option><option value="35"<?php selected($v,'35'); ?>>35 mm</option><option value="50"<?php selected($v,'50'); ?>>50 mm</option><option value="75"<?php selected($v,'75'); ?>>75 mm</option></select></div>
+                    <div class="va-form-group"><label>Látómező (fok)</label><input type="text" name="thermal_fov_degree" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_fov_degree'] ?? '')); ?>" placeholder="pl. 10.5"></div>
+                    <div class="va-form-group"><label>Látómező (m / 100m)</label><input type="text" name="thermal_fov_m100" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_fov_m100'] ?? '')); ?>" placeholder="pl. 18.4"></div>
+
+                    <div class="va-form-group"><label>Felismerési táv (ember, m)</label><input type="text" name="thermal_detect_human_m" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_detect_human_m'] ?? '')); ?>" placeholder="pl. 1800"></div>
+                    <div class="va-form-group"><label>Felismerési táv (vad, m)</label><input type="text" name="thermal_detect_game_m" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_detect_game_m'] ?? '')); ?>" placeholder="pl. 1400"></div>
+                    <div class="va-form-group"><label>Felismerési táv (jármű, m)</label><input type="text" name="thermal_detect_vehicle_m" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_detect_vehicle_m'] ?? '')); ?>" placeholder="pl. 2500"></div>
+
+                    <div class="va-form-group"><label>Kijelző típusa</label><?php $v = (string)($edit_meta['thermal_display_type'] ?? ''); ?><select name="thermal_display_type" class="va-select"><option value="">– Válasszon –</option><option value="oled"<?php selected($v,'oled'); ?>>OLED</option><option value="amoled"<?php selected($v,'amoled'); ?>>AMOLED</option><option value="lcos"<?php selected($v,'lcos'); ?>>LCOS</option><option value="lcd"<?php selected($v,'lcd'); ?>>LCD</option></select></div>
+                    <div class="va-form-group"><label>Kijelző felbontás</label><input type="text" name="thermal_display_resolution" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_display_resolution'] ?? '')); ?>" placeholder="pl. 1024x768"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Színpaletta</label><select name="thermal_palettes[]" class="va-select" multiple data-placeholder="Válassz palettát"><option value="white-hot"<?php echo in_array('white-hot', $thermal_palettes_saved, true) ? ' selected' : ''; ?>>White hot</option><option value="black-hot"<?php echo in_array('black-hot', $thermal_palettes_saved, true) ? ' selected' : ''; ?>>Black hot</option><option value="red-hot"<?php echo in_array('red-hot', $thermal_palettes_saved, true) ? ' selected' : ''; ?>>Red hot</option><option value="rainbow"<?php echo in_array('rainbow', $thermal_palettes_saved, true) ? ' selected' : ''; ?>>Rainbow</option><option value="iron"<?php echo in_array('iron', $thermal_palettes_saved, true) ? ' selected' : ''; ?>>Iron</option></select></div>
+
+                    <div class="va-form-group"><label>Fotó</label><?php $v = (string)($edit_meta['thermal_photo'] ?? ''); ?><select name="thermal_photo" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Videó</label><?php $v = (string)($edit_meta['thermal_video'] ?? ''); ?><select name="thermal_video" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Hangrögzítés</label><?php $v = (string)($edit_meta['thermal_audio'] ?? ''); ?><select name="thermal_audio" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Belső memória (GB)</label><input type="text" name="thermal_internal_memory_gb" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_internal_memory_gb'] ?? '')); ?>" placeholder="pl. 64"></div>
+                    <div class="va-form-group"><label>SD kártya támogatás</label><?php $v = (string)($edit_meta['thermal_sd_support'] ?? ''); ?><select name="thermal_sd_support" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Kapcsolat</label><select name="thermal_connectivity[]" class="va-select" multiple data-placeholder="Válassz kapcsolatot"><option value="wifi"<?php echo in_array('wifi', $thermal_connectivity_saved, true) ? ' selected' : ''; ?>>WiFi</option><option value="bluetooth"<?php echo in_array('bluetooth', $thermal_connectivity_saved, true) ? ' selected' : ''; ?>>Bluetooth</option><option value="usb-c"<?php echo in_array('usb-c', $thermal_connectivity_saved, true) ? ' selected' : ''; ?>>USB-C</option><option value="hdmi"<?php echo in_array('hdmi', $thermal_connectivity_saved, true) ? ' selected' : ''; ?>>HDMI</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Mobil app</label><select name="thermal_mobile_app[]" class="va-select" multiple data-placeholder="Válassz app platformot"><option value="android"<?php echo in_array('android', $thermal_mobile_app_saved, true) ? ' selected' : ''; ?>>Android</option><option value="ios"<?php echo in_array('ios', $thermal_mobile_app_saved, true) ? ' selected' : ''; ?>>iOS</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Extra funkciók</label><select name="thermal_extra_features[]" class="va-select" multiple data-placeholder="Válassz extra funkciót"><option value="lrf"<?php echo in_array('lrf', $thermal_extra_saved, true) ? ' selected' : ''; ?>>LRF (lézeres távmérő)</option><option value="ballisztikai-kalkulator"<?php echo in_array('ballisztikai-kalkulator', $thermal_extra_saved, true) ? ' selected' : ''; ?>>Ballisztikai kalkulátor</option><option value="hotspot-tracking"<?php echo in_array('hotspot-tracking', $thermal_extra_saved, true) ? ' selected' : ''; ?>>Hotspot tracking</option><option value="pip"<?php echo in_array('pip', $thermal_extra_saved, true) ? ' selected' : ''; ?>>PIP</option><option value="giroszkop"<?php echo in_array('giroszkop', $thermal_extra_saved, true) ? ' selected' : ''; ?>>Giroszkóp</option><option value="iranytu"<?php echo in_array('iranytu', $thermal_extra_saved, true) ? ' selected' : ''; ?>>Iránytű</option><option value="gps"<?php echo in_array('gps', $thermal_extra_saved, true) ? ' selected' : ''; ?>>GPS</option><option value="video-stream"<?php echo in_array('video-stream', $thermal_extra_saved, true) ? ' selected' : ''; ?>>Videó stream</option></select></div>
+
+                    <div class="va-form-group"><label>Akkumulátor típus</label><?php $v = (string)($edit_meta['thermal_battery_type'] ?? ''); ?><select name="thermal_battery_type" class="va-select"><option value="">– Válasszon –</option><option value="18650"<?php selected($v,'18650'); ?>>18650</option><option value="21700"<?php selected($v,'21700'); ?>>21700</option><option value="beepitett"<?php selected($v,'beepitett'); ?>>Beépített</option><option value="csereheto"<?php selected($v,'csereheto'); ?>>Cserélhető</option></select></div>
+                    <div class="va-form-group"><label>Üzemidő (óra)</label><input type="text" name="thermal_runtime_hours" class="va-input" value="<?php echo esc_attr((string)($edit_meta['thermal_runtime_hours'] ?? '')); ?>" placeholder="pl. 8"></div>
+                    <div class="va-form-group"><label>Powerbank kompatibilis</label><?php $v = (string)($edit_meta['thermal_powerbank_compatible'] ?? ''); ?><select name="thermal_powerbank_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v,'igen'); ?>>Igen</option><option value="nem"<?php selected($v,'nem'); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group"><label>IP szabvány</label><?php $v = (string)($edit_meta['thermal_ip_rating'] ?? ''); ?><select name="thermal_ip_rating" class="va-select"><option value="">– Válasszon –</option><option value="ip65"<?php selected($v,'ip65'); ?>>IP65</option><option value="ip66"<?php selected($v,'ip66'); ?>>IP66</option><option value="ip67"<?php selected($v,'ip67'); ?>>IP67</option></select></div>
+                    <div class="va-form-group"><label>Ütésállóság</label><?php $v = (string)($edit_meta['thermal_recoil_resistance'] ?? ''); ?><select name="thermal_recoil_resistance" class="va-select"><option value="">– Válasszon –</option><option value="308win"<?php selected($v,'308win'); ?>>.308 Win</option><option value="30-06"<?php selected($v,'30-06'); ?>>.30-06</option><option value="300winmag"<?php selected($v,'300winmag'); ?>>.300 Win Mag</option><option value="12-76"<?php selected($v,'12-76'); ?>>12/76</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Fegyver kompatibilitás</label><select name="thermal_weapon_compatibility[]" class="va-select" multiple data-placeholder="Válassz kompatibilitást"><option value="golyos"<?php echo in_array('golyos', $thermal_weapon_saved, true) ? ' selected' : ''; ?>>Golyós</option><option value="soretes"<?php echo in_array('soretes', $thermal_weapon_saved, true) ? ' selected' : ''; ?>>Sörétes</option><option value="legfegyver"<?php echo in_array('legfegyver', $thermal_weapon_saved, true) ? ' selected' : ''; ?>>Légfegyver</option><option value="airsoft"<?php echo in_array('airsoft', $thermal_weapon_saved, true) ? ' selected' : ''; ?>>Airsoft</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="thermal_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="szerulek"<?php echo in_array('szerulek', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Szerelék</option><option value="gyuru"<?php echo in_array('gyuru', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Gyűrű</option><option value="tolto"<?php echo in_array('tolto', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Töltő</option><option value="akkumulator"<?php echo in_array('akkumulator', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Akkumulátor</option><option value="kulso-akku"<?php echo in_array('kulso-akku', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Külső akku</option><option value="tok"<?php echo in_array('tok', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Tok</option><option value="gyari-doboz"<?php echo in_array('gyari-doboz', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Gyári doboz</option><option value="napellenzo"<?php echo in_array('napellenzo', $thermal_accessories_saved, true) ? ' selected' : ''; ?>>Napellenző</option></select></div>
                 </div>
             </div>
 
@@ -6462,6 +6554,10 @@ document.addEventListener('DOMContentLoaded', function() {
             optic_type: 'Távcső típusa',
             optic_zoom: 'Nagyítás',
             optic_objective: 'Objektív átmérő (mm)',
+            thermal_device_type: 'Hőkamera típus',
+            thermal_sensor_resolution: 'Szenzor felbontás',
+            thermal_netd: 'NETD érzékenység',
+            thermal_refresh_hz: 'Frissítési frekvencia',
             scope_type: 'Típus (Monokuláris/Biokuláris)',
             scope_coatings: 'Bevonatok',
             twilight_value: 'Szürkületi érték',
