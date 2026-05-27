@@ -1813,57 +1813,17 @@ body.va-home-radar-picker-open{overflow:hidden;}
       });
     }
 
-    function requestGeo(highAccuracy){
-      if(!navigator.geolocation){
-        ipFallback();
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(function(pos){
-        saveAndPublish(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
-      },function(err){
-        if(err&&err.code===1){
-          ipFallback();
-          return;
-        }
-        ipFallback();
-      },{enableHighAccuracy:!!highAccuracy,timeout:12000,maximumAge:0});
-    }
-
     hardTimer=setTimeout(function(){
       ipFallback();
     },16000);
 
     retryTimer=setTimeout(function(){
       if(!settled){
-        requestGeo(false);
+        ipFallback();
       }
     },4500);
 
-    if(navigator.geolocation){
-      if(navigator.permissions&&navigator.permissions.query){
-        navigator.permissions.query({name:'geolocation'}).then(function(permission){
-          permissionRef=permission;
-          if(permission.state==='granted'){
-            requestGeo(false);
-            return;
-          }
-          if(typeof permission.onchange!=='undefined'){
-            permission.onchange=function(){
-              if(!settled&&permission.state==='granted'){
-                requestGeo(false);
-              }
-            };
-          }
-          requestGeo(true);
-        }).catch(function(){
-          requestGeo(true);
-        });
-      }else{
-        requestGeo(true);
-      }
-    }else{
-      ipFallback();
-    }
+    ipFallback();
   };
   window.vaResolveSharedLocation=resolveSharedLocation;
 
@@ -2182,12 +2142,6 @@ body.va-home-radar-picker-open{overflow:hidden;}
         fetchForecast(47.093,17.911,'Veszprém mintahely');
       }
     });
-  }else if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(function(pos){
-      fetchForecast(pos.coords.latitude,pos.coords.longitude,'Aktuális hely');
-    },function(){
-      fetchForecast(47.093,17.911,'Veszprém mintahely');
-    },{enableHighAccuracy:false,timeout:10000,maximumAge:0});
   }else{
     fetchForecast(47.093,17.911,'Veszprém mintahely');
   }
