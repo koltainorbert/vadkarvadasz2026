@@ -1558,11 +1558,13 @@ body.va-modal-open {
                     </div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Milyen vadnak ajánlott</label>
-                        <label class="va-check-label"><input type="checkbox" name="feed_game_boar" value="1"<?php echo (($edit_meta['feed_game_boar'] ?? '') === '1') ? ' checked' : ''; ?>> Vaddisznó</label>
-                        <label class="va-check-label"><input type="checkbox" name="feed_game_roe" value="1"<?php echo (($edit_meta['feed_game_roe'] ?? '') === '1') ? ' checked' : ''; ?>> Őz</label>
-                        <label class="va-check-label"><input type="checkbox" name="feed_game_red_deer" value="1"<?php echo (($edit_meta['feed_game_red_deer'] ?? '') === '1') ? ' checked' : ''; ?>> Szarvas</label>
-                        <label class="va-check-label"><input type="checkbox" name="feed_game_pheasant" value="1"<?php echo (($edit_meta['feed_game_pheasant'] ?? '') === '1') ? ' checked' : ''; ?>> Fácán</label>
-                        <label class="va-check-label"><input type="checkbox" name="feed_game_other" value="1"<?php echo (($edit_meta['feed_game_other'] ?? '') === '1') ? ' checked' : ''; ?>> Egyéb</label>
+                        <select name="feed_recommended_game_flags[]" class="va-select" multiple data-placeholder="Válassz vadfajt">
+                            <option value="feed_game_boar"<?php echo (($edit_meta['feed_game_boar'] ?? '') === '1') ? ' selected' : ''; ?>>Vaddisznó</option>
+                            <option value="feed_game_roe"<?php echo (($edit_meta['feed_game_roe'] ?? '') === '1') ? ' selected' : ''; ?>>Őz</option>
+                            <option value="feed_game_red_deer"<?php echo (($edit_meta['feed_game_red_deer'] ?? '') === '1') ? ' selected' : ''; ?>>Szarvas</option>
+                            <option value="feed_game_pheasant"<?php echo (($edit_meta['feed_game_pheasant'] ?? '') === '1') ? ' selected' : ''; ?>>Fácán</option>
+                            <option value="feed_game_other"<?php echo (($edit_meta['feed_game_other'] ?? '') === '1') ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
                         <input type="text" name="feed_game_other_text" class="va-input" placeholder="Egyéb vadfaj megnevezése" value="<?php echo esc_attr((string)($edit_meta['feed_game_other_text'] ?? '')); ?>" style="margin-top:8px;">
                         <textarea name="feed_recommended_game" class="va-input" rows="2" placeholder="Részletezés (opcionális)" style="margin-top:8px;"><?php echo esc_textarea((string)($edit_meta['feed_recommended_game'] ?? '')); ?></textarea>
                     </div>
