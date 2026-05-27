@@ -2,6 +2,11 @@
 
 ---
 
+## 2026. 05. 27. – Session #szallas-munka-keveredes-vegleges-fix
+- Hiba oka: a frontend kategóriafelismerésben az `allas` regex beleillett a `szallas` slugba, ezért szállásnál is megjelent a teljes munka blokk.
+- Javítás: a munka kategória detektálás slug-lista alapú lett (pontos egyezés), és a szöveges fallback explicit kizárja a `szállás/szallas` találatot.
+- Eredmény: szállás kategóriában a munka mezők nem jelennek meg.
+
 ## 2026. 05. 27. – Session #szallas-teljes-popup-ujrairas
 - Kérés: a szállás blokk legyen teljesen újraírva, a keveredett részek nélkül, és kizárólag lenyíló/popup mezőkkel.
 - Javítás: a `Szállás` mezőcsoportban a 3 többválasztós rész (`Felszereltség`, `Vadfajok a közelben`, `Programok`) checkbox helyett popup-kompatibilis `select[multiple]` lett.
