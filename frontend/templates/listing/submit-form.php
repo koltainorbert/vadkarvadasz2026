@@ -2023,6 +2023,9 @@ body.va-modal-open {
                         <button type="button" class="va-year-open-btn" id="va-year-open">Év választása</button>
                     </div>
                 </div>
+                <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij" style="grid-column:1 / -1; margin-top:10px;">
+                    <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
+                </div>
             </div>
             <datalist id="va-caliber-list"></datalist>
             <div class="va-form-group va-cat-rule-field" data-categories="cipo-bakancs,bakancs-felcipo,ruhazat-labbeli">
@@ -2084,9 +2087,6 @@ body.va-modal-open {
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij">
-                <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
             </div>
             <!-- Távcső kompakt grid layout -->
             <div class="va-form-group va-telescope-fields-grid" data-categories="tavcsovek,ejjellato-tavcso,hokamerak">
