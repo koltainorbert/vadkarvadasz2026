@@ -225,7 +225,7 @@
     va_toast(msg, el.classList.contains('va-notice--error') ? 'error' : 'success');
   });
 
-  // ── Megtekintés számláló (GPS prioritas, ha engedelyezve) ────────
+  // ── Megtekintés számláló ────────
   function va_send_view_increment(extraData) {
     if (typeof VA_Data === 'undefined' || !VA_Data.post_id) return;
 
@@ -245,40 +245,7 @@
   }
 
   if (typeof VA_Data !== 'undefined' && VA_Data.post_id) {
-    if (navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
-      var settled = false;
-      var finish = function(extra) {
-        if (settled) return;
-        settled = true;
-        va_send_view_increment(extra || {});
-      };
-
-      var fallbackTimer = setTimeout(function() {
-        finish({});
-      }, 1400);
-
-      navigator.geolocation.getCurrentPosition(
-        function(pos) {
-          clearTimeout(fallbackTimer);
-          finish({
-            gps_lat: pos.coords && typeof pos.coords.latitude !== 'undefined' ? pos.coords.latitude : '',
-            gps_lng: pos.coords && typeof pos.coords.longitude !== 'undefined' ? pos.coords.longitude : '',
-            gps_accuracy: pos.coords && typeof pos.coords.accuracy !== 'undefined' ? pos.coords.accuracy : ''
-          });
-        },
-        function() {
-          clearTimeout(fallbackTimer);
-          finish({});
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 1200,
-          maximumAge: 60000
-        }
-      );
-    } else {
-      va_send_view_increment({});
-    }
+    va_send_view_increment({});
   }
 
   // ── Ár csúszka (range slider) ────────────────────────────

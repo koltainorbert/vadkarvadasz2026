@@ -240,57 +240,17 @@
                     }
 
                     function clamp(num,min,max){ return Math.max(min,Math.min(max,num)); }
-                    function riskLevel(score){
-                        if(score >= 85){ return {label:'Kritikus',cls:'critical'}; }
-                        if(score >= 70){ return {label:'Nagyon magas',cls:'very-high'}; }
-                        if(score >= 50){ return {label:'Magas',cls:'high'}; }
-                        if(score >= 25){ return {label:'Mérsékelt',cls:'moderate'}; }
-                        return {label:'Alacsony',cls:'low'};
-                    }
-                    function confidenceLabel(score){
-                        if(score >= 75){ return 'Magas'; }
-                        if(score >= 50){ return 'Közepes'; }
-                        return 'Alacsony';
-                    }
-                    function moonIllumination(date){
-                        var synodic=29.53058867;
-                        var knownNewMoon=Date.UTC(2024,0,11,11,57,0);
-                        var days=(date.getTime()-knownNewMoon)/86400000;
                         var phase=((days % synodic)+synodic)%synodic/synodic;
                         return (1-Math.cos(2*Math.PI*phase))/2;
                     }
-                    function dayName(index){ return ['V','H','K','Sze','Cs','P','Szo'][index] || ''; }
-                    function getCurrentControls(){
-                        return {
-                            crop:cropEl.value,
-                            phenology:phenologyEl.value,
-                            forest:forestEl.value,
-                            damage:damageEl.value,
-                            hunting:huntingEl.value,
-                            fence:fenceEl.value === '1'
-                        };
-                    }
-                    function getHourlyRows(data){
-                        if(!data || !data.hourly || !data.hourly.time){ return []; }
-                        var out=[];
-                        for(var i=0;i<data.hourly.time.length;i++){
-                            out.push({
-                                time:data.hourly.time[i],
-                                temp:Number(data.hourly.temperature_2m[i] || 0),
-                                humidity:Number(data.hourly.relative_humidity_2m[i] || 0),
-                                precip:Number(data.hourly.precipitation[i] || 0),
-                                wind:Number(data.hourly.wind_speed_10m[i] || 0),
-                                pressure:Number(data.hourly.pressure_msl[i] || 0),
-                                cloud:Number(data.hourly.cloud_cover[i] || 0),
-                                soil:Number(data.hourly.soil_moisture_0_to_1cm && data.hourly.soil_moisture_0_to_1cm[i] || 0)
-                            });
-                        }
-                        return out;
-                    }
-                    function findHour(rows,target){
-                        for(var i=0;i<rows.length;i++){
-                            if(rows[i].time === target){ return rows[i]; }
-                        }
+
+                                        retryTimer=setTimeout(function(){
+                                            if(!settled){
+                                                ipFallback();
+                                            }
+                                        },4500);
+
+                                        ipFallback();
                         return null;
                     }
                     function hoursBefore(rows,targetTime,count){
