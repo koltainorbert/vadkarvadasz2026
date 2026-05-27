@@ -1809,10 +1809,6 @@ body.va-modal-open {
                         </select>
                     </div>
                     <div class="va-form-group">
-                        <label>Fegyverengedély szükséges a vásárláshoz</label>
-                        <label class="va-check-label"><input type="checkbox" name="other_weapon_permit_required" value="1"<?php echo ((string)($edit_meta['other_weapon_permit_required'] ?? '') === '1') ? ' checked' : ''; ?>> Igen</label>
-                    </div>
-                    <div class="va-form-group">
                         <label>Csak személyes átvétel?</label>
                         <select name="other_weapon_personal_pickup" class="va-select">
                             <option value="">– Válasszon –</option>
@@ -2022,6 +2018,10 @@ body.va-modal-open {
                         <input type="text" name="year" id="va-year-input" class="va-input" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="pl. 2019" value="<?php echo esc_attr((string)($edit_meta['year'] ?? '')); ?>" readonly>
                         <button type="button" class="va-year-open-btn" id="va-year-open">Év választása</button>
                     </div>
+                </div>
+                <div class="va-form-group va-cat-rule-field" data-categories="egyeb-fegyverek" style="grid-column:1 / -1; margin-top:10px;">
+                    <label>Fegyverengedély szükséges a vásárláshoz</label>
+                    <label class="va-check-label"><input type="checkbox" name="other_weapon_permit_required" value="1"<?php echo ((string)($edit_meta['other_weapon_permit_required'] ?? '') === '1') ? ' checked' : ''; ?>> Igen</label>
                 </div>
                 <div class="va-form-group va-cat-rule-field" data-categories="golyos-puska,soretes-puska,vegyescsovu-puska,maroklofegyver,hatastalanitott,loszer-tolteny,ij-szamszerij-fuvocso,ij,ijak,szamszerij-nyilpuska,ijvesszo,fuvocso,nyilpisztoly,kiegeszitok-ij" style="grid-column:1 / -1; margin-top:10px;">
                     <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
