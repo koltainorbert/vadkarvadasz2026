@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 27. – Session #szallas-reszletes-mezok-es-vadasz-opciok
+- Kérés: a `Szállás` kategória kapjon részletes, vadászathoz igazított mezőket (típus, helyadatok, férőhely bontás, vadászati kapcsolódó igen/nem opciók, felszereltség, közeli vadfajok, programok, foglalási részletek).
+- UI: a submit űrlapban bővült a `szallas` blokk új mezőkkel; az új többes választások popup-kompatibilis `select[multiple]` mezőként készültek (nem lista-szerű checkbox).
+- Backend: root + plugin mirror AJAX mentésben bekerült az összes új `accommodation_*` sanitize + validáció + `va_accommodation_*` meta mentés (új feladás + szerkesztés ágakban is).
+- Kötelező mezők: `szallas` kategóriában a kötelező validáció most a `accommodation_type`, `accommodation_capacity`, `accommodation_hunting_nearby`, `accommodation_hunt_available` mezőket ellenőrzi.
+- Érintett: `frontend/templates/listing/submit-form.php`, `includes/class-ajax.php`, `wp-plugin/vadaszapro-core/frontend/templates/listing/submit-form.php`, `wp-plugin/vadaszapro-core/includes/class-ajax.php`, `NAPLO.md`, `wp-plugin/vadaszapro-core/NAPLO.md`.
+
 ## 2026. 05. 27. – Session #loszer-tolteny-reszletes-mezok
 - Kérés: a `Lőszer-Töltény` kategória kapjon részletes, gyakorlatias mezőstruktúrát (kategória, kaliber preset + egyedi, gyártó, típus, lövedéksúly, darabszám, LOT/év, állapot, újratöltés-komponens mezők).
 - UI: a submit űrlapba bekerült egy teljes `loszer-tolteny` blokk; új kategóriás mezőknél nem lista-szerű checkbox, hanem select/popup-kompatibilis mezők lettek használva.
