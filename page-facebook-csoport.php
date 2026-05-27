@@ -67,7 +67,7 @@ $iframe_src = add_query_arg(
     .va-fb-group-page {
         position: relative;
         min-height: calc(100vh - 120px);
-        background: rgb(6, 6, 6);
+        background: linear-gradient(160deg, #050b16 0%, #071225 55%, #08182d 100%);
         color: #fff;
         padding: clamp(20px, 4vw, 44px) clamp(14px, 3vw, 28px);
         overflow: hidden;
@@ -121,12 +121,12 @@ $iframe_src = add_query_arg(
     .va-fb-group-page__embed-wrap {
         margin-top: clamp(16px, 3vw, 26px);
         min-height: 78vh;
-        border: 1px solid rgba(255, 255, 255, .14);
-        border-radius: 18px;
-        padding: 0;
+        border: 1px solid rgba(110, 178, 255, .52);
+        border-radius: 24px;
+        padding: 8px;
         overflow: hidden;
-        background: linear-gradient(160deg, rgba(6, 16, 28, .96) 0%, rgba(10, 22, 40, .95) 100%);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, .46);
+        background: linear-gradient(155deg, rgba(9, 34, 66, .95) 0%, rgba(8, 24, 48, .97) 55%, rgba(6, 17, 36, .99) 100%);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, .46), inset 0 0 28px rgba(72, 151, 255, .16);
     }
 
     .va-fb-group-page__frame {
@@ -134,8 +134,9 @@ $iframe_src = add_query_arg(
         height: min(78vh, 960px);
         min-height: 720px;
         border: 0;
+        border-radius: 16px;
         display: block;
-        background: #0a111d;
+        background: #081427;
     }
 
     @media (max-width: 800px) {

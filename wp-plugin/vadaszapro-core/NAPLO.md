@@ -10,6 +10,7 @@
 - Routing: a root + theme mirror `functions.php` kapott garantált publikus URL kezelést (`/facebook-csoport`), hasonlóan a kapcsolat/etika oldalakhoz.
 - UI finomítás: a felhasználói kérésre a piros háttér/accent kivezetve, a nézet radar-widgethez közelítő sötét-kékes stílust kapott, fehér főcímmel.
 - UI finomítás: a bevezető megjegyzés szöveg eltávolítva a fejlécből.
+- UI finomítás 2: az embed blokk explicit kék hátteret és erősebb border-lekerekítést kapott (`24px` wrapper + `16px` iframe), a screenshot szerinti kérésre.
 - Technikai váltás: az `fb-group` SDK beágyazás helyett `facebook.com/plugins/group.php` iframe került be, stabilabb megjelenítéshez.
 - Megjegyzés: technikai okból nem lehet 1:1-ben ugyanaz a teljes Facebook felület embedben; ezért az oldal teljes szélességű keretben mutatja a hivatalos widgetet és közvetlen FB megnyitást ad.
 - Érintett: `wp-plugin/vadaszapro-core/NAPLO.md`, `page-facebook-csoport.php`, `wp-theme/vadaszapro-theme/page-facebook-csoport.php`.
