@@ -5416,7 +5416,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var rules = VA_Data.category_required_rules || {};
         var rule = rules[slug] || null;
-        var isJobCategory = /allas|munka|pozicio/.test(slug) || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        var isJobCategorySlug = ['allas', 'allas-hirdetes', 'munka', 'munkak', 'munkalehetoseg', 'munkalehetosegek'].indexOf(slug) !== -1;
+        var isJobCategoryText = /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText) && !/(szállás|szallas)/.test(selectedCatText);
+        var isJobCategory = isJobCategorySlug || isJobCategoryText;
         if (!rule && !isJobCategory) return '';
         if (!rule) {
             rule = { label: 'Állás', required: [] };
@@ -5525,8 +5527,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedCatText = (($('.va-cat-item[data-selected="1"]').text() || '') + '').toLowerCase();
         var isBowCategory = /(^|-)ij($|-)|szamszerij|ijvesszo|fuvocso|nyilpisztoly|nyilpuska/.test(slug)
             || /(íj|ij|számszeríj|szamszerij)/.test(selectedCatText);
-        var isJobCategory = /allas|munka|pozicio/.test(slug)
-            || /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText);
+        var isJobCategorySlug = ['allas', 'allas-hirdetes', 'munka', 'munkak', 'munkalehetoseg', 'munkalehetosegek'].indexOf(slug) !== -1;
+        var isJobCategoryText = /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText) && !/(szállás|szallas)/.test(selectedCatText);
+        var isJobCategory = isJobCategorySlug || isJobCategoryText;
         var isServiceCategory = /szolgaltatas|szolg/.test(slug)
             || /(szolgáltatás|szolgaltatas)/.test(selectedCatText);
         var isDogCategory = /vadaszkutya|kutya/.test(slug)
