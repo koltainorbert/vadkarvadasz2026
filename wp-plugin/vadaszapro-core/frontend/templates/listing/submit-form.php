@@ -3286,6 +3286,54 @@ body.va-modal-open {
                 return '';
             };
             $estate_transfer_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_transfer_methods' ) ) ) );
+
+            $estate_optic_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_optic_items' ) ) ) );
+            if ( empty( $estate_optic_saved ) ) {
+                if ( $estate_meta( 'estate_optic_celtavcso' ) === '1' ) { $estate_optic_saved[] = 'celtavcso'; }
+                if ( $estate_meta( 'estate_optic_binokular' ) === '1' ) { $estate_optic_saved[] = 'binokular'; }
+                if ( $estate_meta( 'estate_optic_spektiv' ) === '1' ) { $estate_optic_saved[] = 'spektiv'; }
+                if ( $estate_meta( 'estate_optic_reddot' ) === '1' ) { $estate_optic_saved[] = 'reddot'; }
+            }
+
+            $estate_clothing_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_clothing_items' ) ) ) );
+            if ( empty( $estate_clothing_saved ) ) {
+                if ( $estate_meta( 'estate_clothing_kabat' ) === '1' ) { $estate_clothing_saved[] = 'kabat'; }
+                if ( $estate_meta( 'estate_clothing_nadrag' ) === '1' ) { $estate_clothing_saved[] = 'nadrag'; }
+                if ( $estate_meta( 'estate_clothing_csizma' ) === '1' ) { $estate_clothing_saved[] = 'csizma'; }
+                if ( $estate_meta( 'estate_clothing_esoruha' ) === '1' ) { $estate_clothing_saved[] = 'esoruha'; }
+            }
+
+            $estate_trophy_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_trophy_items' ) ) ) );
+            if ( empty( $estate_trophy_saved ) ) {
+                if ( $estate_meta( 'estate_trophy_agancs' ) === '1' ) { $estate_trophy_saved[] = 'agancs'; }
+                if ( $estate_meta( 'estate_trophy_koponya' ) === '1' ) { $estate_trophy_saved[] = 'koponya'; }
+                if ( $estate_meta( 'estate_trophy_preparatum' ) === '1' ) { $estate_trophy_saved[] = 'preparatum'; }
+            }
+
+            $estate_docs_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_docs_items' ) ) ) );
+            if ( empty( $estate_docs_saved ) ) {
+                if ( $estate_meta( 'estate_docs_engedelyek' ) === '1' ) { $estate_docs_saved[] = 'engedelyek'; }
+                if ( $estate_meta( 'estate_docs_vadasznaplo' ) === '1' ) { $estate_docs_saved[] = 'vadasznaplo'; }
+                if ( $estate_meta( 'estate_docs_konyvek' ) === '1' ) { $estate_docs_saved[] = 'konyvek'; }
+                if ( $estate_meta( 'estate_docs_tanusitvanyok' ) === '1' ) { $estate_docs_saved[] = 'tanusitvanyok'; }
+            }
+
+            $estate_equipment_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_equipment_items' ) ) ) );
+            if ( empty( $estate_equipment_saved ) ) {
+                if ( $estate_meta( 'estate_equipment_kes' ) === '1' ) { $estate_equipment_saved[] = 'kes'; }
+                if ( $estate_meta( 'estate_equipment_hatizsak' ) === '1' ) { $estate_equipment_saved[] = 'hatizsak'; }
+                if ( $estate_meta( 'estate_equipment_lampa' ) === '1' ) { $estate_equipment_saved[] = 'lampa'; }
+                if ( $estate_meta( 'estate_equipment_tavcso_tartozek' ) === '1' ) { $estate_equipment_saved[] = 'tavcso_tartozek'; }
+                if ( $estate_meta( 'estate_equipment_fegyverszef' ) === '1' ) { $estate_equipment_saved[] = 'fegyverszef'; }
+            }
+
+            $estate_media_saved = array_filter( array_map( 'trim', explode( ',', $estate_meta( 'estate_media_items' ) ) ) );
+            if ( empty( $estate_media_saved ) ) {
+                if ( $estate_meta( 'estate_media_full' ) === '1' ) { $estate_media_saved[] = 'full'; }
+                if ( $estate_meta( 'estate_media_details' ) === '1' ) { $estate_media_saved[] = 'details'; }
+                if ( $estate_meta( 'estate_media_documents' ) === '1' ) { $estate_media_saved[] = 'documents'; }
+                if ( $estate_meta( 'estate_media_firearms' ) === '1' ) { $estate_media_saved[] = 'firearms'; }
+            }
             ?>
             <div class="va-cat-rule-field va-estate-fields-grid" data-categories="vadaszati-hagyatek" style="display:none;">
                 <div class="va-step2-4col-inner">
@@ -3371,10 +3419,13 @@ body.va-modal-open {
                         <input type="text" name="estate_optics_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_optics_count' ) ); ?>">
                     </div>
                     <div class="va-form-group" style="grid-column: span 3;">
-                        <label><input type="checkbox" name="estate_optic_celtavcso" value="1" <?php checked( $estate_meta( 'estate_optic_celtavcso' ), '1' ); ?>> Céltávcső</label>
-                        <label><input type="checkbox" name="estate_optic_binokular" value="1" <?php checked( $estate_meta( 'estate_optic_binokular' ), '1' ); ?>> Binokulár</label>
-                        <label><input type="checkbox" name="estate_optic_spektiv" value="1" <?php checked( $estate_meta( 'estate_optic_spektiv' ), '1' ); ?>> Spektív</label>
-                        <label><input type="checkbox" name="estate_optic_reddot" value="1" <?php checked( $estate_meta( 'estate_optic_reddot' ), '1' ); ?>> Red dot</label>
+                        <label>Optika típusok</label>
+                        <select name="estate_optic_items[]" class="va-select" multiple data-placeholder="Válassz optika típust">
+                            <option value="celtavcso"<?php echo in_array( 'celtavcso', $estate_optic_saved, true ) ? ' selected' : ''; ?>>Céltávcső</option>
+                            <option value="binokular"<?php echo in_array( 'binokular', $estate_optic_saved, true ) ? ' selected' : ''; ?>>Binokulár</option>
+                            <option value="spektiv"<?php echo in_array( 'spektiv', $estate_optic_saved, true ) ? ' selected' : ''; ?>>Spektív</option>
+                            <option value="reddot"<?php echo in_array( 'reddot', $estate_optic_saved, true ) ? ' selected' : ''; ?>>Red dot</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group">
@@ -3382,10 +3433,13 @@ body.va-modal-open {
                         <input type="text" name="estate_clothing_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_clothing_count' ) ); ?>">
                     </div>
                     <div class="va-form-group" style="grid-column: span 3;">
-                        <label><input type="checkbox" name="estate_clothing_kabat" value="1" <?php checked( $estate_meta( 'estate_clothing_kabat' ), '1' ); ?>> Kabát</label>
-                        <label><input type="checkbox" name="estate_clothing_nadrag" value="1" <?php checked( $estate_meta( 'estate_clothing_nadrag' ), '1' ); ?>> Nadrág</label>
-                        <label><input type="checkbox" name="estate_clothing_csizma" value="1" <?php checked( $estate_meta( 'estate_clothing_csizma' ), '1' ); ?>> Csizma</label>
-                        <label><input type="checkbox" name="estate_clothing_esoruha" value="1" <?php checked( $estate_meta( 'estate_clothing_esoruha' ), '1' ); ?>> Esőruha</label>
+                        <label>Ruházat típusok</label>
+                        <select name="estate_clothing_items[]" class="va-select" multiple data-placeholder="Válassz ruházat típust">
+                            <option value="kabat"<?php echo in_array( 'kabat', $estate_clothing_saved, true ) ? ' selected' : ''; ?>>Kabát</option>
+                            <option value="nadrag"<?php echo in_array( 'nadrag', $estate_clothing_saved, true ) ? ' selected' : ''; ?>>Nadrág</option>
+                            <option value="csizma"<?php echo in_array( 'csizma', $estate_clothing_saved, true ) ? ' selected' : ''; ?>>Csizma</option>
+                            <option value="esoruha"<?php echo in_array( 'esoruha', $estate_clothing_saved, true ) ? ' selected' : ''; ?>>Esőruha</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group">
@@ -3393,9 +3447,12 @@ body.va-modal-open {
                         <input type="text" name="estate_trophy_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_trophy_count' ) ); ?>">
                     </div>
                     <div class="va-form-group" style="grid-column: span 3;">
-                        <label><input type="checkbox" name="estate_trophy_agancs" value="1" <?php checked( $estate_meta( 'estate_trophy_agancs' ), '1' ); ?>> Agancs</label>
-                        <label><input type="checkbox" name="estate_trophy_koponya" value="1" <?php checked( $estate_meta( 'estate_trophy_koponya' ), '1' ); ?>> Koponya</label>
-                        <label><input type="checkbox" name="estate_trophy_preparatum" value="1" <?php checked( $estate_meta( 'estate_trophy_preparatum' ), '1' ); ?>> Preparátum</label>
+                        <label>Trófea típusok</label>
+                        <select name="estate_trophy_items[]" class="va-select" multiple data-placeholder="Válassz trófea típust">
+                            <option value="agancs"<?php echo in_array( 'agancs', $estate_trophy_saved, true ) ? ' selected' : ''; ?>>Agancs</option>
+                            <option value="koponya"<?php echo in_array( 'koponya', $estate_trophy_saved, true ) ? ' selected' : ''; ?>>Koponya</option>
+                            <option value="preparatum"<?php echo in_array( 'preparatum', $estate_trophy_saved, true ) ? ' selected' : ''; ?>>Preparátum</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group">
@@ -3403,10 +3460,13 @@ body.va-modal-open {
                         <input type="text" name="estate_docs_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_docs_count' ) ); ?>">
                     </div>
                     <div class="va-form-group" style="grid-column: span 3;">
-                        <label><input type="checkbox" name="estate_docs_engedelyek" value="1" <?php checked( $estate_meta( 'estate_docs_engedelyek' ), '1' ); ?>> Engedélyek</label>
-                        <label><input type="checkbox" name="estate_docs_vadasznaplo" value="1" <?php checked( $estate_meta( 'estate_docs_vadasznaplo' ), '1' ); ?>> Vadásznapló</label>
-                        <label><input type="checkbox" name="estate_docs_konyvek" value="1" <?php checked( $estate_meta( 'estate_docs_konyvek' ), '1' ); ?>> Könyvek</label>
-                        <label><input type="checkbox" name="estate_docs_tanusitvanyok" value="1" <?php checked( $estate_meta( 'estate_docs_tanusitvanyok' ), '1' ); ?>> Tanúsítványok</label>
+                        <label>Dokumentum típusok</label>
+                        <select name="estate_docs_items[]" class="va-select" multiple data-placeholder="Válassz dokumentum típust">
+                            <option value="engedelyek"<?php echo in_array( 'engedelyek', $estate_docs_saved, true ) ? ' selected' : ''; ?>>Engedélyek</option>
+                            <option value="vadasznaplo"<?php echo in_array( 'vadasznaplo', $estate_docs_saved, true ) ? ' selected' : ''; ?>>Vadásznapló</option>
+                            <option value="konyvek"<?php echo in_array( 'konyvek', $estate_docs_saved, true ) ? ' selected' : ''; ?>>Könyvek</option>
+                            <option value="tanusitvanyok"<?php echo in_array( 'tanusitvanyok', $estate_docs_saved, true ) ? ' selected' : ''; ?>>Tanúsítványok</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group">
@@ -3414,11 +3474,14 @@ body.va-modal-open {
                         <input type="text" name="estate_equipment_count" class="va-input" value="<?php echo esc_attr( $estate_meta( 'estate_equipment_count' ) ); ?>">
                     </div>
                     <div class="va-form-group" style="grid-column: span 3;">
-                        <label><input type="checkbox" name="estate_equipment_kes" value="1" <?php checked( $estate_meta( 'estate_equipment_kes' ), '1' ); ?>> Kés</label>
-                        <label><input type="checkbox" name="estate_equipment_hatizsak" value="1" <?php checked( $estate_meta( 'estate_equipment_hatizsak' ), '1' ); ?>> Hátizsák</label>
-                        <label><input type="checkbox" name="estate_equipment_lampa" value="1" <?php checked( $estate_meta( 'estate_equipment_lampa' ), '1' ); ?>> Lámpa</label>
-                        <label><input type="checkbox" name="estate_equipment_tavcso_tartozek" value="1" <?php checked( $estate_meta( 'estate_equipment_tavcso_tartozek' ), '1' ); ?>> Távcső tartozék</label>
-                        <label><input type="checkbox" name="estate_equipment_fegyverszef" value="1" <?php checked( $estate_meta( 'estate_equipment_fegyverszef' ), '1' ); ?>> Fegyverszéf</label>
+                        <label>Egyéb felszerelés típusok</label>
+                        <select name="estate_equipment_items[]" class="va-select" multiple data-placeholder="Válassz felszerelés típust">
+                            <option value="kes"<?php echo in_array( 'kes', $estate_equipment_saved, true ) ? ' selected' : ''; ?>>Kés</option>
+                            <option value="hatizsak"<?php echo in_array( 'hatizsak', $estate_equipment_saved, true ) ? ' selected' : ''; ?>>Hátizsák</option>
+                            <option value="lampa"<?php echo in_array( 'lampa', $estate_equipment_saved, true ) ? ' selected' : ''; ?>>Lámpa</option>
+                            <option value="tavcso_tartozek"<?php echo in_array( 'tavcso_tartozek', $estate_equipment_saved, true ) ? ' selected' : ''; ?>>Távcső tartozék</option>
+                            <option value="fegyverszef"<?php echo in_array( 'fegyverszef', $estate_equipment_saved, true ) ? ' selected' : ''; ?>>Fegyverszéf</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group">
@@ -3464,10 +3527,13 @@ body.va-modal-open {
 
                     <div class="va-form-group" style="grid-column:1 / -1;"><strong>Média ellenőrző lista</strong></div>
                     <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label><input type="checkbox" name="estate_media_full" value="1" <?php checked( $estate_meta( 'estate_media_full' ), '1' ); ?>> Teljes gyűjtemény fotó feltöltve</label>
-                        <label><input type="checkbox" name="estate_media_details" value="1" <?php checked( $estate_meta( 'estate_media_details' ), '1' ); ?>> Részletfotók feltöltve</label>
-                        <label><input type="checkbox" name="estate_media_documents" value="1" <?php checked( $estate_meta( 'estate_media_documents' ), '1' ); ?>> Dokumentumok fotózva</label>
-                        <label><input type="checkbox" name="estate_media_firearms" value="1" <?php checked( $estate_meta( 'estate_media_firearms' ), '1' ); ?>> Fegyverek külön fotózva</label>
+                        <label>Média elemek</label>
+                        <select name="estate_media_items[]" class="va-select" multiple data-placeholder="Válassz média elemet">
+                            <option value="full"<?php echo in_array( 'full', $estate_media_saved, true ) ? ' selected' : ''; ?>>Teljes gyűjtemény fotó feltöltve</option>
+                            <option value="details"<?php echo in_array( 'details', $estate_media_saved, true ) ? ' selected' : ''; ?>>Részletfotók feltöltve</option>
+                            <option value="documents"<?php echo in_array( 'documents', $estate_media_saved, true ) ? ' selected' : ''; ?>>Dokumentumok fotózva</option>
+                            <option value="firearms"<?php echo in_array( 'firearms', $estate_media_saved, true ) ? ' selected' : ''; ?>>Fegyverek külön fotózva</option>
+                        </select>
                     </div>
 
                     <div class="va-form-group" style="grid-column:1 / -1;">
