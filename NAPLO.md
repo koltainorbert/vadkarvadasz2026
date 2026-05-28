@@ -2,6 +2,16 @@
 
 ---
 
+## 2026. 05. 28. – Session #vadasz-felszereles-kategoria-komplex-mezorendszer
+- Kérés: a `Vadász felszerelés` (`vadasz-felszereles`) kategória kapjon teljes, szűrő- és moderáció-központú mezőrendszert a megadott felszereléstípusokkal, dinamikus almezőkkel és backend mentéssel.
+- Frontend: új `va-equipment-fields-grid` blokk került be a feladási űrlapba típus, állapot, felhasználás, anyag, szín/minta, méret/súly, tulajdonságok, elektronikus kiegészítők, tartozékok és moderációs jelzők mezőkkel.
+- Dinamikus logika: új `applyEquipmentDynamicFields()` készült, amely típustól függően nyitja a lámpa, lőbot/bipod/fegyvertámasz, vadhívó, csapda, tisztítókészlet, ülőke/vadászszék és üzemidő mezőket.
+- Kötelező validáció: frontend + backend required szabály bővítve `vadasz-felszereles` slugra (`brand`, `equipment_type`, `equipment_condition`, `equipment_hunting_usage`).
+- Backend: mindkét AJAX ágban bekerült a teljes `equipment_*` sanitize + `va_equipment_*` meta mentés, valamint dedikált filter meták (`va_equipment_filter_type`, `va_equipment_filter_usage`, `va_equipment_filter_condition`, `va_equipment_filter_brand`, `va_equipment_filter_waterproof`, `va_equipment_filter_silent`, `va_equipment_filter_foldable`).
+- Moderáció: új review státusz mentés készül a felszerelés flag-ekből (`va_equipment_moderation_flags`, `va_equipment_needs_review`, `va_equipment_review_hits`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesen frissítve, hibakeresés mind a 4 fájlon `No errors found`.
+- Maradt teendő: a frontend listázó/szűrő oldalon még külön UI-oldali használatba kell kötni az új `va_equipment_filter_*` kulcsokat, ha ezekre külön keresőfelület is készül.
+
 ## 2026. 05. 28. – Session #konyv-folyoirat-kategoria-komplex-mezorendszer
 - Kérés: a `Könyv & Folyóirat` (`konyv-folyoirat`) kategória kapjon teljes, gyűjtői fókuszú mezőrendszert (típus, témakör, kiadási adatok, folyóirat specifikus mezők, állapot/hibák, tartalom, gyűjtői és moderációs blokkok).
 - Frontend: új `va-publication-fields-grid` blokk került be a feladási űrlapba, popup-kompatibilis többválasztós mezőkkel (`publication_topics[]`, `publication_defects[]`, `publication_content_flags[]`, `publication_collector_flags[]`, `publication_usage[]`, `publication_moderation_flags[]`).

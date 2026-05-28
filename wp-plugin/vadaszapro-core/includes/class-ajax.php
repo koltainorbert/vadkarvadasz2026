@@ -190,7 +190,7 @@ class VA_Ajax {
             'vadaszati-lehetoseg' => [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
-            'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand' ] ],
+            'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
             'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -464,6 +464,9 @@ class VA_Ajax {
             'publication_condition' => 'Állapot',
             'publication_collector_value' => 'Gyűjtői érték',
             'publication_complete_volume' => 'Komplett évfolyam',
+            'equipment_type' => 'Felszerelés típusa',
+            'equipment_condition' => 'Állapot',
+            'equipment_hunting_usage' => 'Felhasználás',
         ];
 
         $missing = [];
@@ -1559,6 +1562,51 @@ class VA_Ajax {
         $publication_filter_collector_item = ( in_array( $publication_collector_value, [ 'magas', 'kiemelt' ], true ) || strpos( ',' . $publication_collector_flags . ',', ',ritka-kiadas,' ) !== false || strpos( ',' . $publication_collector_flags . ',', ',muzealis,' ) !== false || in_array( $publication_edition_type, [ 'gyujtoi', 'limitalt', 'antikvar' ], true ) ) ? '1' : '0';
         $publication_filter_complete_volume = $publication_complete_volume === 'igen' ? '1' : '0';
         $publication_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $publication_moderation_flags ) ) ) );
+        $equipment_type = sanitize_key( wp_unslash( $_POST['equipment_type'] ?? '' ) );
+        $equipment_condition = sanitize_key( wp_unslash( $_POST['equipment_condition'] ?? '' ) );
+        $equipment_hunting_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_hunting_usage'] ?? [] ) ) ) );
+        $equipment_material_type = sanitize_key( wp_unslash( $_POST['equipment_material_type'] ?? '' ) );
+        $equipment_color_pattern = sanitize_key( wp_unslash( $_POST['equipment_color_pattern'] ?? '' ) );
+        $equipment_length_cm = sanitize_text_field( wp_unslash( $_POST['equipment_length_cm'] ?? '' ) );
+        $equipment_width_cm = sanitize_text_field( wp_unslash( $_POST['equipment_width_cm'] ?? '' ) );
+        $equipment_height_cm = sanitize_text_field( wp_unslash( $_POST['equipment_height_cm'] ?? '' ) );
+        $equipment_weight_g = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_weight_g'] ?? '' ) );
+        $equipment_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_features'] ?? [] ) ) ) );
+        $equipment_light_lumen = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_light_lumen'] ?? '' ) );
+        $equipment_light_range_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_light_range_m'] ?? '' ) );
+        $equipment_light_battery_type = sanitize_text_field( wp_unslash( $_POST['equipment_light_battery_type'] ?? '' ) );
+        $equipment_light_usb_charge = sanitize_key( wp_unslash( $_POST['equipment_light_usb_charge'] ?? '' ) );
+        $equipment_light_color_modes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_light_color_modes'] ?? [] ) ) ) );
+        $equipment_light_color_temperature = sanitize_text_field( wp_unslash( $_POST['equipment_light_color_temperature'] ?? '' ) );
+        $equipment_support_height_range_cm = sanitize_text_field( wp_unslash( $_POST['equipment_support_height_range_cm'] ?? '' ) );
+        $equipment_support_legs = sanitize_text_field( wp_unslash( $_POST['equipment_support_legs'] ?? '' ) );
+        $equipment_support_head_swivel = sanitize_key( wp_unslash( $_POST['equipment_support_head_swivel'] ?? '' ) );
+        $equipment_support_material = sanitize_key( wp_unslash( $_POST['equipment_support_material'] ?? '' ) );
+        $equipment_call_type = sanitize_key( wp_unslash( $_POST['equipment_call_type'] ?? '' ) );
+        $equipment_call_species = sanitize_text_field( wp_unslash( $_POST['equipment_call_species'] ?? '' ) );
+        $equipment_call_volume = sanitize_text_field( wp_unslash( $_POST['equipment_call_volume'] ?? '' ) );
+        $equipment_trap_type = sanitize_key( wp_unslash( $_POST['equipment_trap_type'] ?? '' ) );
+        $equipment_trap_size = sanitize_text_field( wp_unslash( $_POST['equipment_trap_size'] ?? '' ) );
+        $equipment_cleaning_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_cleaning_caliber_compatibility'] ?? '' ) );
+        $equipment_cleaning_full_set = sanitize_key( wp_unslash( $_POST['equipment_cleaning_full_set'] ?? '' ) );
+        $equipment_cleaning_oil = sanitize_key( wp_unslash( $_POST['equipment_cleaning_oil'] ?? '' ) );
+        $equipment_cleaning_bronze_brush = sanitize_key( wp_unslash( $_POST['equipment_cleaning_bronze_brush'] ?? '' ) );
+        $equipment_seat_foldable = sanitize_key( wp_unslash( $_POST['equipment_seat_foldable'] ?? '' ) );
+        $equipment_seat_backrest = sanitize_key( wp_unslash( $_POST['equipment_seat_backrest'] ?? '' ) );
+        $equipment_seat_swivel = sanitize_key( wp_unslash( $_POST['equipment_seat_swivel'] ?? '' ) );
+        $equipment_seat_capacity_kg = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_seat_capacity_kg'] ?? '' ) );
+        $equipment_electronic_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_electronic_features'] ?? [] ) ) ) );
+        $equipment_runtime_hours = sanitize_text_field( wp_unslash( $_POST['equipment_runtime_hours'] ?? '' ) );
+        $equipment_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_accessories'] ?? [] ) ) ) );
+        $equipment_silence_level = sanitize_key( wp_unslash( $_POST['equipment_silence_level'] ?? '' ) );
+        $equipment_weapon_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_weapon_compatibility'] ?? '' ) );
+        $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
+        $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
+        $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $equipment_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $equipment_moderation_flags ) ) ) );
+        $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
+        $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
+        $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -1997,6 +2045,9 @@ class VA_Ajax {
             'publication_condition' => $publication_condition,
             'publication_collector_value' => $publication_collector_value,
             'publication_complete_volume' => $publication_complete_volume,
+            'equipment_type' => $equipment_type,
+            'equipment_condition' => $equipment_condition,
+            'equipment_hunting_usage' => $equipment_hunting_usage,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -2557,6 +2608,56 @@ class VA_Ajax {
             'va_publication_filter_complete_volume' => $publication_filter_complete_volume,
             'va_publication_needs_review' => ! empty( $publication_review_hits ) ? '1' : '0',
             'va_publication_review_hits' => implode( ',', $publication_review_hits ),
+            'va_equipment_type' => $equipment_type,
+            'va_equipment_condition' => $equipment_condition,
+            'va_equipment_hunting_usage' => $equipment_hunting_usage,
+            'va_equipment_material_type' => $equipment_material_type,
+            'va_equipment_color_pattern' => $equipment_color_pattern,
+            'va_equipment_length_cm' => $equipment_length_cm,
+            'va_equipment_width_cm' => $equipment_width_cm,
+            'va_equipment_height_cm' => $equipment_height_cm,
+            'va_equipment_weight_g' => $equipment_weight_g,
+            'va_equipment_features' => $equipment_features,
+            'va_equipment_light_lumen' => $equipment_light_lumen,
+            'va_equipment_light_range_m' => $equipment_light_range_m,
+            'va_equipment_light_battery_type' => $equipment_light_battery_type,
+            'va_equipment_light_usb_charge' => $equipment_light_usb_charge,
+            'va_equipment_light_color_modes' => $equipment_light_color_modes,
+            'va_equipment_light_color_temperature' => $equipment_light_color_temperature,
+            'va_equipment_support_height_range_cm' => $equipment_support_height_range_cm,
+            'va_equipment_support_legs' => $equipment_support_legs,
+            'va_equipment_support_head_swivel' => $equipment_support_head_swivel,
+            'va_equipment_support_material' => $equipment_support_material,
+            'va_equipment_call_type' => $equipment_call_type,
+            'va_equipment_call_species' => $equipment_call_species,
+            'va_equipment_call_volume' => $equipment_call_volume,
+            'va_equipment_trap_type' => $equipment_trap_type,
+            'va_equipment_trap_size' => $equipment_trap_size,
+            'va_equipment_cleaning_caliber_compatibility' => $equipment_cleaning_caliber_compatibility,
+            'va_equipment_cleaning_full_set' => $equipment_cleaning_full_set,
+            'va_equipment_cleaning_oil' => $equipment_cleaning_oil,
+            'va_equipment_cleaning_bronze_brush' => $equipment_cleaning_bronze_brush,
+            'va_equipment_seat_foldable' => $equipment_seat_foldable,
+            'va_equipment_seat_backrest' => $equipment_seat_backrest,
+            'va_equipment_seat_swivel' => $equipment_seat_swivel,
+            'va_equipment_seat_capacity_kg' => $equipment_seat_capacity_kg,
+            'va_equipment_electronic_features' => $equipment_electronic_features,
+            'va_equipment_runtime_hours' => $equipment_runtime_hours,
+            'va_equipment_accessories' => $equipment_accessories,
+            'va_equipment_silence_level' => $equipment_silence_level,
+            'va_equipment_weapon_compatibility' => $equipment_weapon_compatibility,
+            'va_equipment_caliber_compatibility' => $equipment_caliber_compatibility,
+            'va_equipment_moderation_flags' => $equipment_moderation_flags,
+            'va_equipment_notes' => $equipment_notes,
+            'va_equipment_filter_type' => $equipment_type,
+            'va_equipment_filter_usage' => $equipment_hunting_usage,
+            'va_equipment_filter_condition' => $equipment_condition,
+            'va_equipment_filter_brand' => sanitize_title( $brand ),
+            'va_equipment_filter_waterproof' => $equipment_filter_waterproof,
+            'va_equipment_filter_silent' => $equipment_filter_silent,
+            'va_equipment_filter_foldable' => $equipment_filter_foldable,
+            'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
+            'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_shoe_size' => $shoe_size,
             'va_shoe_main_type' => $shoe_main_type,
             'va_shoe_condition' => $shoe_condition,
@@ -3432,6 +3533,51 @@ class VA_Ajax {
         $publication_filter_collector_item = ( in_array( $publication_collector_value, [ 'magas', 'kiemelt' ], true ) || strpos( ',' . $publication_collector_flags . ',', ',ritka-kiadas,' ) !== false || strpos( ',' . $publication_collector_flags . ',', ',muzealis,' ) !== false || in_array( $publication_edition_type, [ 'gyujtoi', 'limitalt', 'antikvar' ], true ) ) ? '1' : '0';
         $publication_filter_complete_volume = $publication_complete_volume === 'igen' ? '1' : '0';
         $publication_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $publication_moderation_flags ) ) ) );
+        $equipment_type = sanitize_key( wp_unslash( $_POST['equipment_type'] ?? '' ) );
+        $equipment_condition = sanitize_key( wp_unslash( $_POST['equipment_condition'] ?? '' ) );
+        $equipment_hunting_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_hunting_usage'] ?? [] ) ) ) );
+        $equipment_material_type = sanitize_key( wp_unslash( $_POST['equipment_material_type'] ?? '' ) );
+        $equipment_color_pattern = sanitize_key( wp_unslash( $_POST['equipment_color_pattern'] ?? '' ) );
+        $equipment_length_cm = sanitize_text_field( wp_unslash( $_POST['equipment_length_cm'] ?? '' ) );
+        $equipment_width_cm = sanitize_text_field( wp_unslash( $_POST['equipment_width_cm'] ?? '' ) );
+        $equipment_height_cm = sanitize_text_field( wp_unslash( $_POST['equipment_height_cm'] ?? '' ) );
+        $equipment_weight_g = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_weight_g'] ?? '' ) );
+        $equipment_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_features'] ?? [] ) ) ) );
+        $equipment_light_lumen = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_light_lumen'] ?? '' ) );
+        $equipment_light_range_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_light_range_m'] ?? '' ) );
+        $equipment_light_battery_type = sanitize_text_field( wp_unslash( $_POST['equipment_light_battery_type'] ?? '' ) );
+        $equipment_light_usb_charge = sanitize_key( wp_unslash( $_POST['equipment_light_usb_charge'] ?? '' ) );
+        $equipment_light_color_modes = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_light_color_modes'] ?? [] ) ) ) );
+        $equipment_light_color_temperature = sanitize_text_field( wp_unslash( $_POST['equipment_light_color_temperature'] ?? '' ) );
+        $equipment_support_height_range_cm = sanitize_text_field( wp_unslash( $_POST['equipment_support_height_range_cm'] ?? '' ) );
+        $equipment_support_legs = sanitize_text_field( wp_unslash( $_POST['equipment_support_legs'] ?? '' ) );
+        $equipment_support_head_swivel = sanitize_key( wp_unslash( $_POST['equipment_support_head_swivel'] ?? '' ) );
+        $equipment_support_material = sanitize_key( wp_unslash( $_POST['equipment_support_material'] ?? '' ) );
+        $equipment_call_type = sanitize_key( wp_unslash( $_POST['equipment_call_type'] ?? '' ) );
+        $equipment_call_species = sanitize_text_field( wp_unslash( $_POST['equipment_call_species'] ?? '' ) );
+        $equipment_call_volume = sanitize_text_field( wp_unslash( $_POST['equipment_call_volume'] ?? '' ) );
+        $equipment_trap_type = sanitize_key( wp_unslash( $_POST['equipment_trap_type'] ?? '' ) );
+        $equipment_trap_size = sanitize_text_field( wp_unslash( $_POST['equipment_trap_size'] ?? '' ) );
+        $equipment_cleaning_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_cleaning_caliber_compatibility'] ?? '' ) );
+        $equipment_cleaning_full_set = sanitize_key( wp_unslash( $_POST['equipment_cleaning_full_set'] ?? '' ) );
+        $equipment_cleaning_oil = sanitize_key( wp_unslash( $_POST['equipment_cleaning_oil'] ?? '' ) );
+        $equipment_cleaning_bronze_brush = sanitize_key( wp_unslash( $_POST['equipment_cleaning_bronze_brush'] ?? '' ) );
+        $equipment_seat_foldable = sanitize_key( wp_unslash( $_POST['equipment_seat_foldable'] ?? '' ) );
+        $equipment_seat_backrest = sanitize_key( wp_unslash( $_POST['equipment_seat_backrest'] ?? '' ) );
+        $equipment_seat_swivel = sanitize_key( wp_unslash( $_POST['equipment_seat_swivel'] ?? '' ) );
+        $equipment_seat_capacity_kg = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['equipment_seat_capacity_kg'] ?? '' ) );
+        $equipment_electronic_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_electronic_features'] ?? [] ) ) ) );
+        $equipment_runtime_hours = sanitize_text_field( wp_unslash( $_POST['equipment_runtime_hours'] ?? '' ) );
+        $equipment_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_accessories'] ?? [] ) ) ) );
+        $equipment_silence_level = sanitize_key( wp_unslash( $_POST['equipment_silence_level'] ?? '' ) );
+        $equipment_weapon_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_weapon_compatibility'] ?? '' ) );
+        $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
+        $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
+        $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $equipment_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $equipment_moderation_flags ) ) ) );
+        $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
+        $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
+        $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -3838,6 +3984,9 @@ class VA_Ajax {
             'publication_condition' => $publication_condition,
             'publication_collector_value' => $publication_collector_value,
             'publication_complete_volume' => $publication_complete_volume,
+            'equipment_type' => $equipment_type,
+            'equipment_condition' => $equipment_condition,
+            'equipment_hunting_usage' => $equipment_hunting_usage,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -4399,6 +4548,56 @@ class VA_Ajax {
             'va_publication_filter_complete_volume' => $publication_filter_complete_volume,
             'va_publication_needs_review' => ! empty( $publication_review_hits ) ? '1' : '0',
             'va_publication_review_hits' => implode( ',', $publication_review_hits ),
+            'va_equipment_type' => $equipment_type,
+            'va_equipment_condition' => $equipment_condition,
+            'va_equipment_hunting_usage' => $equipment_hunting_usage,
+            'va_equipment_material_type' => $equipment_material_type,
+            'va_equipment_color_pattern' => $equipment_color_pattern,
+            'va_equipment_length_cm' => $equipment_length_cm,
+            'va_equipment_width_cm' => $equipment_width_cm,
+            'va_equipment_height_cm' => $equipment_height_cm,
+            'va_equipment_weight_g' => $equipment_weight_g,
+            'va_equipment_features' => $equipment_features,
+            'va_equipment_light_lumen' => $equipment_light_lumen,
+            'va_equipment_light_range_m' => $equipment_light_range_m,
+            'va_equipment_light_battery_type' => $equipment_light_battery_type,
+            'va_equipment_light_usb_charge' => $equipment_light_usb_charge,
+            'va_equipment_light_color_modes' => $equipment_light_color_modes,
+            'va_equipment_light_color_temperature' => $equipment_light_color_temperature,
+            'va_equipment_support_height_range_cm' => $equipment_support_height_range_cm,
+            'va_equipment_support_legs' => $equipment_support_legs,
+            'va_equipment_support_head_swivel' => $equipment_support_head_swivel,
+            'va_equipment_support_material' => $equipment_support_material,
+            'va_equipment_call_type' => $equipment_call_type,
+            'va_equipment_call_species' => $equipment_call_species,
+            'va_equipment_call_volume' => $equipment_call_volume,
+            'va_equipment_trap_type' => $equipment_trap_type,
+            'va_equipment_trap_size' => $equipment_trap_size,
+            'va_equipment_cleaning_caliber_compatibility' => $equipment_cleaning_caliber_compatibility,
+            'va_equipment_cleaning_full_set' => $equipment_cleaning_full_set,
+            'va_equipment_cleaning_oil' => $equipment_cleaning_oil,
+            'va_equipment_cleaning_bronze_brush' => $equipment_cleaning_bronze_brush,
+            'va_equipment_seat_foldable' => $equipment_seat_foldable,
+            'va_equipment_seat_backrest' => $equipment_seat_backrest,
+            'va_equipment_seat_swivel' => $equipment_seat_swivel,
+            'va_equipment_seat_capacity_kg' => $equipment_seat_capacity_kg,
+            'va_equipment_electronic_features' => $equipment_electronic_features,
+            'va_equipment_runtime_hours' => $equipment_runtime_hours,
+            'va_equipment_accessories' => $equipment_accessories,
+            'va_equipment_silence_level' => $equipment_silence_level,
+            'va_equipment_weapon_compatibility' => $equipment_weapon_compatibility,
+            'va_equipment_caliber_compatibility' => $equipment_caliber_compatibility,
+            'va_equipment_moderation_flags' => $equipment_moderation_flags,
+            'va_equipment_notes' => $equipment_notes,
+            'va_equipment_filter_type' => $equipment_type,
+            'va_equipment_filter_usage' => $equipment_hunting_usage,
+            'va_equipment_filter_condition' => $equipment_condition,
+            'va_equipment_filter_brand' => sanitize_title( $brand ),
+            'va_equipment_filter_waterproof' => $equipment_filter_waterproof,
+            'va_equipment_filter_silent' => $equipment_filter_silent,
+            'va_equipment_filter_foldable' => $equipment_filter_foldable,
+            'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
+            'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_shoe_size' => $shoe_size,
             'va_shoe_main_type' => $shoe_main_type,
             'va_shoe_condition' => $shoe_condition,
