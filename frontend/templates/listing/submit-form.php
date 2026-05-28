@@ -8082,6 +8082,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function calculateDogAgeMonths() {
+        var birthDate = (($('#va-dog-birth-date').val() || '') + '').trim();
+        var $age = $('#va-dog-age-months');
+        if (!$age.length) return '';
+        if (!birthDate) {
+            return (($age.val() || '') + '').trim();
+        }
+
+        var birth = new Date(birthDate + 'T00:00:00');
+        if (Number.isNaN(birth.getTime())) {
+            return (($age.val() || '') + '').trim();
+        }
+
+        var today = new Date();
+        var months = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
+        if (today.getDate() < birth.getDate()) {
+            months -= 1;
+        }
+        months = Math.max(0, months);
+        $age.val(months);
+        return String(months);
+    }
+
+    function applyDogDynamicFields() {
+        var trainingLevel = (($('#va-dog-training-level').val() || '') + '').trim();
+        var workingType = (($('#va-dog-working-type').val() || '') + '').trim();
+        var ageMonthsRaw = calculateDogAgeMonths();
+        var ageMonths = parseInt(ageMonthsRaw || '0', 10);
+        var isPuppy = !Number.isNaN(ageMonths) && ageMonths >= 0 && ageMonths < 12;
+        var isTrained = ['reszben-kepzett', 'kikepzett', 'vadaszatra-kesz'].indexOf(trainingLevel) !== -1;
+
+        $('.va-dog-dynamic-group').each(function(){
+            var $group = $(this);
+            var puppyRequired = (($group.attr('data-dog-puppy') || '') + '').trim() === 'yes';
+            var trainedRequired = (($group.attr('data-dog-trained') || '') + '').trim() === 'yes';
+            var workingTypes = (($group.attr('data-dog-working-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var puppyOk = !puppyRequired || isPuppy;
+            var trainedOk = !trainedRequired || isTrained;
+            var workingOk = !workingTypes.length || workingTypes.indexOf(workingType) !== -1;
+            $group.toggle(puppyOk && trainedOk && workingOk);
+        });
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -8199,6 +8242,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
         applyEquipmentDynamicFields();
     });
+    $(document).on('change input', '#va-dog-birth-date, #va-dog-training-level, #va-dog-working-type', function(){
+        applyDogDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -8222,6 +8268,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyExchangeDynamicFields();
     applyPublicationDynamicFields();
     applyEquipmentDynamicFields();
+    applyDogDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -8610,6 +8657,12 @@ document.addEventListener('DOMContentLoaded', function() {
             applyPublicationDynamicFields();
         } else {
             $('.va-publication-dynamic-group').hide();
+        }
+
+        if (isDogCategory) {
+            applyDogDynamicFields();
+        } else {
+            $('.va-dog-dynamic-group').hide();
         }
 
         $('.va-service-fields-grid').toggle(isServiceCategory);
