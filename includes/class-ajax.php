@@ -1130,10 +1130,74 @@ class VA_Ajax {
         $thermal_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_weapon_compatibility'] ?? [] ) ) ) );
         $thermal_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_accessories'] ?? [] ) ) ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $dog_working_type = sanitize_key( wp_unslash( $_POST['dog_working_type'] ?? '' ) );
         $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
+        $dog_name = sanitize_text_field( wp_unslash( $_POST['dog_name'] ?? '' ) );
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
+        $dog_breeder_name = sanitize_text_field( wp_unslash( $_POST['dog_breeder_name'] ?? '' ) );
+        $dog_kennel_name = sanitize_text_field( wp_unslash( $_POST['dog_kennel_name'] ?? '' ) );
+        $dog_pedigree_status = sanitize_key( wp_unslash( $_POST['dog_pedigree_status'] ?? '' ) );
+        $dog_origin_country = sanitize_text_field( wp_unslash( $_POST['dog_origin_country'] ?? '' ) );
+        $dog_bloodline_type = sanitize_key( wp_unslash( $_POST['dog_bloodline_type'] ?? '' ) );
+        $dog_documents = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_documents'] ?? [] ) ) ) );
+        $dog_birth_date = sanitize_text_field( wp_unslash( $_POST['dog_birth_date'] ?? '' ) );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $dog_birth_date ) ) {
+            $dog_birth_date = '';
+        }
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
+        $dog_appearance_type = sanitize_key( wp_unslash( $_POST['dog_appearance_type'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $dog_training_skills = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_training_skills'] ?? [] ) ) ) );
+        $dog_training_level = sanitize_key( wp_unslash( $_POST['dog_training_level'] ?? '' ) );
+        $dog_exam_level = sanitize_key( wp_unslash( $_POST['dog_exam_level'] ?? '' ) );
+        $dog_work_exam_type = sanitize_key( wp_unslash( $_POST['dog_work_exam_type'] ?? '' ) );
+        $dog_hunting_specialization = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_hunting_specialization'] ?? [] ) ) ) );
+        $dog_work_style = sanitize_key( wp_unslash( $_POST['dog_work_style'] ?? '' ) );
+        $dog_search_radius_m = sanitize_text_field( wp_unslash( $_POST['dog_search_radius_m'] ?? '' ) );
+        $dog_endurance_level = sanitize_key( wp_unslash( $_POST['dog_endurance_level'] ?? '' ) );
+        $dog_aggression_level = sanitize_key( wp_unslash( $_POST['dog_aggression_level'] ?? '' ) );
+        $dog_apport_stability = sanitize_key( wp_unslash( $_POST['dog_apport_stability'] ?? '' ) );
+        $dog_water_work_ability = sanitize_key( wp_unslash( $_POST['dog_water_work_ability'] ?? '' ) );
+        $dog_water_work = sanitize_key( wp_unslash( $_POST['dog_water_work'] ?? '' ) );
+        $dog_water_work_level = sanitize_key( wp_unslash( $_POST['dog_water_work_level'] ?? '' ) );
+        $dog_cold_water_tolerance = sanitize_key( wp_unslash( $_POST['dog_cold_water_tolerance'] ?? '' ) );
+        $dog_temperament = sanitize_key( wp_unslash( $_POST['dog_temperament'] ?? '' ) );
+        $dog_environment = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_environment'] ?? [] ) ) ) );
+        $dog_allergic = sanitize_key( wp_unslash( $_POST['dog_allergic'] ?? '' ) );
+        $dog_special_diet = sanitize_text_field( wp_unslash( $_POST['dog_special_diet'] ?? '' ) );
+        $dog_known_diseases = sanitize_textarea_field( wp_unslash( $_POST['dog_known_diseases'] ?? '' ) );
+        $dog_hip_dysplasia_screening = sanitize_key( wp_unslash( $_POST['dog_hip_dysplasia_screening'] ?? '' ) );
+        $dog_height_cm = sanitize_text_field( wp_unslash( $_POST['dog_height_cm'] ?? '' ) );
+        $dog_weight_kg = sanitize_text_field( wp_unslash( $_POST['dog_weight_kg'] ?? '' ) );
+        $dog_country = sanitize_text_field( wp_unslash( $_POST['dog_country'] ?? '' ) );
+        $dog_county = sanitize_text_field( wp_unslash( $_POST['dog_county'] ?? '' ) );
+        $dog_city = sanitize_text_field( wp_unslash( $_POST['dog_city'] ?? '' ) );
+        $dog_origin_qualification = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_origin_qualification'] ?? [] ) ) ) );
+        $dog_litter_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['dog_litter_count'] ?? '' ) );
+        $dog_available_from = sanitize_text_field( wp_unslash( $_POST['dog_available_from'] ?? '' ) );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $dog_available_from ) ) {
+            $dog_available_from = '';
+        }
+        $dog_tracking_distance_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['dog_tracking_distance_m'] ?? '' ) );
+        $dog_tracking_experience = sanitize_text_field( wp_unslash( $_POST['dog_tracking_experience'] ?? '' ) );
+        $dog_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_moderation_flags'] ?? [] ) ) ) );
+        $dog_work_video_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_work_video_types'] ?? [] ) ) ) );
+        $dog_work_video_url = esc_url_raw( wp_unslash( $_POST['dog_work_video_url'] ?? '' ) );
+        if ( $dog_birth_date !== '' ) {
+            try {
+                $dog_birth = new DateTimeImmutable( $dog_birth_date );
+                $dog_today = new DateTimeImmutable( current_time( 'Y-m-d' ) );
+                if ( $dog_birth <= $dog_today ) {
+                    $dog_diff = $dog_birth->diff( $dog_today );
+                    $dog_age_months = (string) ( ( $dog_diff->y * 12 ) + $dog_diff->m );
+                }
+            } catch ( Exception $e ) {
+            }
+        }
+        $dog_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $dog_moderation_flags ) ) ) );
+        $dog_filter_pedigree = $dog_pedigree_status === 'igen' ? '1' : '0';
+        $dog_filter_has_work_exam = ( $dog_work_exam_type !== '' || strpos( ',' . $dog_documents . ',', ',munkavizsga-papir,' ) !== false ) ? '1' : '0';
+        $dog_filter_water_work = ( $dog_water_work === 'igen' || in_array( $dog_water_work_level, [ 'eros', 'kozepes' ], true ) ) ? '1' : '0';
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $service_type = sanitize_key( wp_unslash( $_POST['service_type'] ?? '' ) );
@@ -1918,10 +1982,12 @@ class VA_Ajax {
             'thermal_netd' => $thermal_netd,
             'thermal_refresh_hz' => $thermal_refresh_hz,
             'dog_age_months' => $dog_age_months,
+            'dog_working_type' => $dog_working_type,
             'dog_breed' => $dog_breed,
             'dog_gender' => $dog_gender,
-            'dog_color' => $dog_color,
-            'dog_purebred' => $dog_purebred,
+            'dog_birth_date' => $dog_birth_date,
+            'dog_hunting_specialization' => $dog_hunting_specialization,
+            'dog_training_level' => $dog_training_level,
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
             'service_type' => $service_type,
@@ -2229,10 +2295,63 @@ class VA_Ajax {
             'va_thermal_weapon_compatibility' => $thermal_weapon_compatibility,
             'va_thermal_accessories' => $thermal_accessories,
             'va_dog_age_months' => $dog_age_months,
+            'va_dog_working_type' => $dog_working_type,
             'va_dog_breed'   => $dog_breed,
+            'va_dog_name' => $dog_name,
             'va_dog_gender'  => $dog_gender,
+            'va_dog_breeder_name' => $dog_breeder_name,
+            'va_dog_kennel_name' => $dog_kennel_name,
+            'va_dog_pedigree_status' => $dog_pedigree_status,
+            'va_dog_origin_country' => $dog_origin_country,
+            'va_dog_bloodline_type' => $dog_bloodline_type,
+            'va_dog_documents' => $dog_documents,
+            'va_dog_birth_date' => $dog_birth_date,
             'va_dog_color'   => $dog_color,
+            'va_dog_appearance_type' => $dog_appearance_type,
             'va_dog_purebred'=> $dog_purebred,
+            'va_dog_training_skills' => $dog_training_skills,
+            'va_dog_training_level' => $dog_training_level,
+            'va_dog_exam_level' => $dog_exam_level,
+            'va_dog_work_exam_type' => $dog_work_exam_type,
+            'va_dog_hunting_specialization' => $dog_hunting_specialization,
+            'va_dog_work_style' => $dog_work_style,
+            'va_dog_search_radius_m' => $dog_search_radius_m,
+            'va_dog_endurance_level' => $dog_endurance_level,
+            'va_dog_aggression_level' => $dog_aggression_level,
+            'va_dog_apport_stability' => $dog_apport_stability,
+            'va_dog_water_work_ability' => $dog_water_work_ability,
+            'va_dog_water_work' => $dog_water_work,
+            'va_dog_water_work_level' => $dog_water_work_level,
+            'va_dog_cold_water_tolerance' => $dog_cold_water_tolerance,
+            'va_dog_temperament' => $dog_temperament,
+            'va_dog_environment' => $dog_environment,
+            'va_dog_allergic' => $dog_allergic,
+            'va_dog_special_diet' => $dog_special_diet,
+            'va_dog_known_diseases' => $dog_known_diseases,
+            'va_dog_hip_dysplasia_screening' => $dog_hip_dysplasia_screening,
+            'va_dog_height_cm' => $dog_height_cm,
+            'va_dog_weight_kg' => $dog_weight_kg,
+            'va_dog_country' => $dog_country,
+            'va_dog_county' => $dog_county,
+            'va_dog_city' => $dog_city,
+            'va_dog_origin_qualification' => $dog_origin_qualification,
+            'va_dog_litter_count' => $dog_litter_count,
+            'va_dog_available_from' => $dog_available_from,
+            'va_dog_tracking_distance_m' => $dog_tracking_distance_m,
+            'va_dog_tracking_experience' => $dog_tracking_experience,
+            'va_dog_moderation_flags' => $dog_moderation_flags,
+            'va_dog_work_video_types' => $dog_work_video_types,
+            'va_dog_work_video_url' => $dog_work_video_url,
+            'va_dog_filter_breed' => $dog_breed,
+            'va_dog_filter_specialization' => $dog_hunting_specialization,
+            'va_dog_filter_training_level' => $dog_training_level,
+            'va_dog_filter_working_type' => $dog_working_type,
+            'va_dog_filter_pedigree' => $dog_filter_pedigree,
+            'va_dog_filter_bloodline' => $dog_bloodline_type,
+            'va_dog_filter_age_months' => $dog_age_months,
+            'va_dog_filter_has_work_exam' => $dog_filter_has_work_exam,
+            'va_dog_filter_water_work' => $dog_filter_water_work,
+            'va_dog_review_hits' => implode( ',', $dog_review_hits ),
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
             'va_service_type' => $service_type,
@@ -3101,10 +3220,74 @@ class VA_Ajax {
         $thermal_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_weapon_compatibility'] ?? [] ) ) ) );
         $thermal_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['thermal_accessories'] ?? [] ) ) ) );
         $dog_age_months = sanitize_text_field( wp_unslash( $_POST['dog_age_months'] ?? '' ) );
+        $dog_working_type = sanitize_key( wp_unslash( $_POST['dog_working_type'] ?? '' ) );
         $dog_breed  = sanitize_text_field( wp_unslash( $_POST['dog_breed'] ?? '' ) );
+        $dog_name = sanitize_text_field( wp_unslash( $_POST['dog_name'] ?? '' ) );
         $dog_gender = sanitize_key( wp_unslash( $_POST['dog_gender'] ?? '' ) );
+        $dog_breeder_name = sanitize_text_field( wp_unslash( $_POST['dog_breeder_name'] ?? '' ) );
+        $dog_kennel_name = sanitize_text_field( wp_unslash( $_POST['dog_kennel_name'] ?? '' ) );
+        $dog_pedigree_status = sanitize_key( wp_unslash( $_POST['dog_pedigree_status'] ?? '' ) );
+        $dog_origin_country = sanitize_text_field( wp_unslash( $_POST['dog_origin_country'] ?? '' ) );
+        $dog_bloodline_type = sanitize_key( wp_unslash( $_POST['dog_bloodline_type'] ?? '' ) );
+        $dog_documents = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_documents'] ?? [] ) ) ) );
+        $dog_birth_date = sanitize_text_field( wp_unslash( $_POST['dog_birth_date'] ?? '' ) );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $dog_birth_date ) ) {
+            $dog_birth_date = '';
+        }
         $dog_color  = sanitize_text_field( wp_unslash( $_POST['dog_color'] ?? '' ) );
+        $dog_appearance_type = sanitize_key( wp_unslash( $_POST['dog_appearance_type'] ?? '' ) );
         $dog_purebred = sanitize_key( wp_unslash( $_POST['dog_purebred'] ?? '' ) );
+        $dog_training_skills = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_training_skills'] ?? [] ) ) ) );
+        $dog_training_level = sanitize_key( wp_unslash( $_POST['dog_training_level'] ?? '' ) );
+        $dog_exam_level = sanitize_key( wp_unslash( $_POST['dog_exam_level'] ?? '' ) );
+        $dog_work_exam_type = sanitize_key( wp_unslash( $_POST['dog_work_exam_type'] ?? '' ) );
+        $dog_hunting_specialization = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_hunting_specialization'] ?? [] ) ) ) );
+        $dog_work_style = sanitize_key( wp_unslash( $_POST['dog_work_style'] ?? '' ) );
+        $dog_search_radius_m = sanitize_text_field( wp_unslash( $_POST['dog_search_radius_m'] ?? '' ) );
+        $dog_endurance_level = sanitize_key( wp_unslash( $_POST['dog_endurance_level'] ?? '' ) );
+        $dog_aggression_level = sanitize_key( wp_unslash( $_POST['dog_aggression_level'] ?? '' ) );
+        $dog_apport_stability = sanitize_key( wp_unslash( $_POST['dog_apport_stability'] ?? '' ) );
+        $dog_water_work_ability = sanitize_key( wp_unslash( $_POST['dog_water_work_ability'] ?? '' ) );
+        $dog_water_work = sanitize_key( wp_unslash( $_POST['dog_water_work'] ?? '' ) );
+        $dog_water_work_level = sanitize_key( wp_unslash( $_POST['dog_water_work_level'] ?? '' ) );
+        $dog_cold_water_tolerance = sanitize_key( wp_unslash( $_POST['dog_cold_water_tolerance'] ?? '' ) );
+        $dog_temperament = sanitize_key( wp_unslash( $_POST['dog_temperament'] ?? '' ) );
+        $dog_environment = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_environment'] ?? [] ) ) ) );
+        $dog_allergic = sanitize_key( wp_unslash( $_POST['dog_allergic'] ?? '' ) );
+        $dog_special_diet = sanitize_text_field( wp_unslash( $_POST['dog_special_diet'] ?? '' ) );
+        $dog_known_diseases = sanitize_textarea_field( wp_unslash( $_POST['dog_known_diseases'] ?? '' ) );
+        $dog_hip_dysplasia_screening = sanitize_key( wp_unslash( $_POST['dog_hip_dysplasia_screening'] ?? '' ) );
+        $dog_height_cm = sanitize_text_field( wp_unslash( $_POST['dog_height_cm'] ?? '' ) );
+        $dog_weight_kg = sanitize_text_field( wp_unslash( $_POST['dog_weight_kg'] ?? '' ) );
+        $dog_country = sanitize_text_field( wp_unslash( $_POST['dog_country'] ?? '' ) );
+        $dog_county = sanitize_text_field( wp_unslash( $_POST['dog_county'] ?? '' ) );
+        $dog_city = sanitize_text_field( wp_unslash( $_POST['dog_city'] ?? '' ) );
+        $dog_origin_qualification = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_origin_qualification'] ?? [] ) ) ) );
+        $dog_litter_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['dog_litter_count'] ?? '' ) );
+        $dog_available_from = sanitize_text_field( wp_unslash( $_POST['dog_available_from'] ?? '' ) );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $dog_available_from ) ) {
+            $dog_available_from = '';
+        }
+        $dog_tracking_distance_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['dog_tracking_distance_m'] ?? '' ) );
+        $dog_tracking_experience = sanitize_text_field( wp_unslash( $_POST['dog_tracking_experience'] ?? '' ) );
+        $dog_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_moderation_flags'] ?? [] ) ) ) );
+        $dog_work_video_types = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['dog_work_video_types'] ?? [] ) ) ) );
+        $dog_work_video_url = esc_url_raw( wp_unslash( $_POST['dog_work_video_url'] ?? '' ) );
+        if ( $dog_birth_date !== '' ) {
+            try {
+                $dog_birth = new DateTimeImmutable( $dog_birth_date );
+                $dog_today = new DateTimeImmutable( current_time( 'Y-m-d' ) );
+                if ( $dog_birth <= $dog_today ) {
+                    $dog_diff = $dog_birth->diff( $dog_today );
+                    $dog_age_months = (string) ( ( $dog_diff->y * 12 ) + $dog_diff->m );
+                }
+            } catch ( Exception $e ) {
+            }
+        }
+        $dog_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $dog_moderation_flags ) ) ) );
+        $dog_filter_pedigree = $dog_pedigree_status === 'igen' ? '1' : '0';
+        $dog_filter_has_work_exam = ( $dog_work_exam_type !== '' || strpos( ',' . $dog_documents . ',', ',munkavizsga-papir,' ) !== false ) ? '1' : '0';
+        $dog_filter_water_work = ( $dog_water_work === 'igen' || in_array( $dog_water_work_level, [ 'eros', 'kozepes' ], true ) ) ? '1' : '0';
         $job_location = sanitize_text_field( wp_unslash( $_POST['job_location'] ?? '' ) );
         $job_type   = sanitize_text_field( wp_unslash( $_POST['job_type'] ?? '' ) );
         $service_type = sanitize_key( wp_unslash( $_POST['service_type'] ?? '' ) );
@@ -3856,10 +4039,12 @@ class VA_Ajax {
             'thermal_netd' => $thermal_netd,
             'thermal_refresh_hz' => $thermal_refresh_hz,
             'dog_age_months' => $dog_age_months,
+            'dog_working_type' => $dog_working_type,
             'dog_breed' => $dog_breed,
             'dog_gender' => $dog_gender,
-            'dog_color' => $dog_color,
-            'dog_purebred' => $dog_purebred,
+            'dog_birth_date' => $dog_birth_date,
+            'dog_hunting_specialization' => $dog_hunting_specialization,
+            'dog_training_level' => $dog_training_level,
             'job_location' => $job_location !== '' ? $job_location : $location,
             'job_type' => $job_type,
             'service_type' => $service_type,
@@ -4169,10 +4354,63 @@ class VA_Ajax {
             'va_thermal_weapon_compatibility' => $thermal_weapon_compatibility,
             'va_thermal_accessories' => $thermal_accessories,
             'va_dog_age_months' => $dog_age_months,
+            'va_dog_working_type' => $dog_working_type,
             'va_dog_breed'   => $dog_breed,
+            'va_dog_name' => $dog_name,
             'va_dog_gender'  => $dog_gender,
+            'va_dog_breeder_name' => $dog_breeder_name,
+            'va_dog_kennel_name' => $dog_kennel_name,
+            'va_dog_pedigree_status' => $dog_pedigree_status,
+            'va_dog_origin_country' => $dog_origin_country,
+            'va_dog_bloodline_type' => $dog_bloodline_type,
+            'va_dog_documents' => $dog_documents,
+            'va_dog_birth_date' => $dog_birth_date,
             'va_dog_color'   => $dog_color,
+            'va_dog_appearance_type' => $dog_appearance_type,
             'va_dog_purebred'=> $dog_purebred,
+            'va_dog_training_skills' => $dog_training_skills,
+            'va_dog_training_level' => $dog_training_level,
+            'va_dog_exam_level' => $dog_exam_level,
+            'va_dog_work_exam_type' => $dog_work_exam_type,
+            'va_dog_hunting_specialization' => $dog_hunting_specialization,
+            'va_dog_work_style' => $dog_work_style,
+            'va_dog_search_radius_m' => $dog_search_radius_m,
+            'va_dog_endurance_level' => $dog_endurance_level,
+            'va_dog_aggression_level' => $dog_aggression_level,
+            'va_dog_apport_stability' => $dog_apport_stability,
+            'va_dog_water_work_ability' => $dog_water_work_ability,
+            'va_dog_water_work' => $dog_water_work,
+            'va_dog_water_work_level' => $dog_water_work_level,
+            'va_dog_cold_water_tolerance' => $dog_cold_water_tolerance,
+            'va_dog_temperament' => $dog_temperament,
+            'va_dog_environment' => $dog_environment,
+            'va_dog_allergic' => $dog_allergic,
+            'va_dog_special_diet' => $dog_special_diet,
+            'va_dog_known_diseases' => $dog_known_diseases,
+            'va_dog_hip_dysplasia_screening' => $dog_hip_dysplasia_screening,
+            'va_dog_height_cm' => $dog_height_cm,
+            'va_dog_weight_kg' => $dog_weight_kg,
+            'va_dog_country' => $dog_country,
+            'va_dog_county' => $dog_county,
+            'va_dog_city' => $dog_city,
+            'va_dog_origin_qualification' => $dog_origin_qualification,
+            'va_dog_litter_count' => $dog_litter_count,
+            'va_dog_available_from' => $dog_available_from,
+            'va_dog_tracking_distance_m' => $dog_tracking_distance_m,
+            'va_dog_tracking_experience' => $dog_tracking_experience,
+            'va_dog_moderation_flags' => $dog_moderation_flags,
+            'va_dog_work_video_types' => $dog_work_video_types,
+            'va_dog_work_video_url' => $dog_work_video_url,
+            'va_dog_filter_breed' => $dog_breed,
+            'va_dog_filter_specialization' => $dog_hunting_specialization,
+            'va_dog_filter_training_level' => $dog_training_level,
+            'va_dog_filter_working_type' => $dog_working_type,
+            'va_dog_filter_pedigree' => $dog_filter_pedigree,
+            'va_dog_filter_bloodline' => $dog_bloodline_type,
+            'va_dog_filter_age_months' => $dog_age_months,
+            'va_dog_filter_has_work_exam' => $dog_filter_has_work_exam,
+            'va_dog_filter_water_work' => $dog_filter_water_work,
+            'va_dog_review_hits' => implode( ',', $dog_review_hits ),
             'va_job_location' => $job_location,
             'va_job_type'   => $job_type,
             'va_service_type' => $service_type,
