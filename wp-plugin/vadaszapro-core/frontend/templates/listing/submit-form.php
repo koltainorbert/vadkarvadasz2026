@@ -1957,8 +1957,6 @@ body.va-modal-open {
                     return array_filter( array_map( 'trim', explode( ',', $raw ) ) );
                 };
                 $exchange_wanted_categories_saved = $exchange_saved_csv( 'exchange_wanted_categories' );
-                $exchange_required_images_saved = $exchange_saved_csv( 'exchange_required_images' );
-                $exchange_moderation_flags_saved = $exchange_saved_csv( 'exchange_moderation_flags' );
                 ?>
                 <div class="va-step2-4col-inner">
                     <div class="va-form-group">
@@ -2120,45 +2118,6 @@ body.va-modal-open {
                     <div class="va-form-group" style="grid-column:1 / -1;">
                         <label>Használati nyomok</label>
                         <textarea name="exchange_wear_signs" class="va-input" rows="2" placeholder="Karcok, kopások"><?php echo esc_textarea( $exchange_saved( 'exchange_wear_signs' ) ); ?></textarea>
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Jogi részletek</label>
-                        <textarea name="exchange_legal_notes" class="va-input" rows="2" placeholder="pl. engedélyköteles, csak hivatalos átírással"><?php echo esc_textarea( $exchange_saved( 'exchange_legal_notes' ) ); ?></textarea>
-                    </div>
-                    <div class="va-form-group">
-                        <label>18+ tartalom?</label>
-                        <?php $v = $exchange_saved( 'exchange_age_18' ); ?>
-                        <select name="exchange_age_18" class="va-select">
-                            <option value="">- Válasszon -</option>
-                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
-                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
-                        </select>
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Kötelező képek ellenőrzőlista</label>
-                        <select name="exchange_required_images[]" class="va-select" multiple data-placeholder="Milyen képeket töltesz fel?">
-                            <option value="teljes-nezet"<?php echo in_array( 'teljes-nezet', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Teljes nézet</option>
-                            <option value="allapot"<?php echo in_array( 'allapot', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Állapot</option>
-                            <option value="tartozekok"<?php echo in_array( 'tartozekok', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Tartozékok</option>
-                            <option value="hibak"<?php echo in_array( 'hibak', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Hibák</option>
-                        </select>
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Videó (opcionális URL)</label>
-                        <input type="url" name="exchange_video_url" class="va-input" placeholder="https://..." value="<?php echo esc_attr( $exchange_saved( 'exchange_video_url' ) ); ?>">
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Moderációs jelzők</label>
-                        <select name="exchange_moderation_flags[]" class="va-select" multiple data-placeholder="Automatikus ellenőrzéshez">
-                            <option value="illegalis-csere"<?php echo in_array( 'illegalis-csere', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Illegális csere</option>
-                            <option value="engedely-nelkuli-fegyver"<?php echo in_array( 'engedely-nelkuli-fegyver', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option>
-                            <option value="tiltott-termek"<?php echo in_array( 'tiltott-termek', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Tiltott termék</option>
-                            <option value="hamis-marka"<?php echo in_array( 'hamis-marka', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Hamis márka</option>
-                        </select>
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Partner elvárások / biztonság</label>
-                        <textarea name="exchange_partner_requirements" class="va-input" rows="2" placeholder="pl. megbízható partner, ellenőrzött felhasználó"><?php echo esc_textarea( $exchange_saved( 'exchange_partner_requirements' ) ); ?></textarea>
                     </div>
                 </div>
             </div>
