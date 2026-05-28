@@ -268,7 +268,7 @@ $category_required_rules = [
     'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
-    'szallas'            => [ 'label' => 'Szállás', 'required' => [ 'accommodation_type', 'accommodation_capacity', 'accommodation_hunting_nearby', 'accommodation_hunt_available' ] ],
+    'szallas'            => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
@@ -587,6 +587,32 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'accommodation_instant_book' => get_post_meta( $maybe_id, 'va_accommodation_instant_book', true ),
             'accommodation_nearby_species' => get_post_meta( $maybe_id, 'va_accommodation_nearby_species', true ),
             'accommodation_programs' => get_post_meta( $maybe_id, 'va_accommodation_programs', true ),
+            'accommodation_environment' => get_post_meta( $maybe_id, 'va_accommodation_environment', true ),
+            'accommodation_land_size_sqm' => get_post_meta( $maybe_id, 'va_accommodation_land_size_sqm', true ),
+            'accommodation_land_size_hectare' => get_post_meta( $maybe_id, 'va_accommodation_land_size_hectare', true ),
+            'accommodation_building_size_sqm' => get_post_meta( $maybe_id, 'va_accommodation_building_size_sqm', true ),
+            'accommodation_levels_count' => get_post_meta( $maybe_id, 'va_accommodation_levels_count', true ),
+            'accommodation_build_year' => get_post_meta( $maybe_id, 'va_accommodation_build_year', true ),
+            'accommodation_property_condition' => get_post_meta( $maybe_id, 'va_accommodation_property_condition', true ),
+            'accommodation_construction_type' => get_post_meta( $maybe_id, 'va_accommodation_construction_type', true ),
+            'accommodation_heating_type' => get_post_meta( $maybe_id, 'va_accommodation_heating_type', true ),
+            'accommodation_utilities' => get_post_meta( $maybe_id, 'va_accommodation_utilities', true ),
+            'accommodation_accessibility' => get_post_meta( $maybe_id, 'va_accommodation_accessibility', true ),
+            'accommodation_hunting_features' => get_post_meta( $maybe_id, 'va_accommodation_hunting_features', true ),
+            'accommodation_extras' => get_post_meta( $maybe_id, 'va_accommodation_extras', true ),
+            'accommodation_network_features' => get_post_meta( $maybe_id, 'va_accommodation_network_features', true ),
+            'accommodation_use_type' => get_post_meta( $maybe_id, 'va_accommodation_use_type', true ),
+            'accommodation_terrain_type' => get_post_meta( $maybe_id, 'va_accommodation_terrain_type', true ),
+            'accommodation_animal_housing' => get_post_meta( $maybe_id, 'va_accommodation_animal_housing', true ),
+            'accommodation_fafaj' => get_post_meta( $maybe_id, 'va_accommodation_fafaj', true ),
+            'accommodation_erdo_kora' => get_post_meta( $maybe_id, 'va_accommodation_erdo_kora', true ),
+            'accommodation_vadaszhaz_trofeaszoba' => get_post_meta( $maybe_id, 'va_accommodation_vadaszhaz_trofeaszoba', true ),
+            'accommodation_vadaszhaz_fegyvertarolo' => get_post_meta( $maybe_id, 'va_accommodation_vadaszhaz_fegyvertarolo', true ),
+            'accommodation_tanya_gazdasagi_epuletek' => get_post_meta( $maybe_id, 'va_accommodation_tanya_gazdasagi_epuletek', true ),
+            'accommodation_hunting_potential_wild_movement' => get_post_meta( $maybe_id, 'va_accommodation_hunting_potential_wild_movement', true ),
+            'accommodation_hunting_potential_isolation' => get_post_meta( $maybe_id, 'va_accommodation_hunting_potential_isolation', true ),
+            'accommodation_hunting_potential_forest_proximity' => get_post_meta( $maybe_id, 'va_accommodation_hunting_potential_forest_proximity', true ),
+            'accommodation_hunting_potential_infrastructure' => get_post_meta( $maybe_id, 'va_accommodation_hunting_potential_infrastructure', true ),
             'hunt_slot_from_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_from_hour', true ),
             'hunt_slot_to_hour' => get_post_meta( $maybe_id, 'va_hunt_slot_to_hour', true ),
             'hunt_capacity' => get_post_meta( $maybe_id, 'va_hunt_capacity', true ),
@@ -4216,19 +4242,32 @@ body.va-modal-open {
                 $accommodation_features_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_features'] ?? ''))));
                 $accommodation_nearby_species_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_nearby_species'] ?? ''))));
                 $accommodation_programs_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_programs'] ?? ''))));
+                $accommodation_environment_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_environment'] ?? ''))));
+                $accommodation_utilities_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_utilities'] ?? ''))));
+                $accommodation_accessibility_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_accessibility'] ?? ''))));
+                $accommodation_hunting_features_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_hunting_features'] ?? ''))));
+                $accommodation_extras_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_extras'] ?? ''))));
+                $accommodation_network_features_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_network_features'] ?? ''))));
+                $accommodation_animal_housing_saved = array_filter(array_map('trim', explode(',', (string)($edit_meta['accommodation_animal_housing'] ?? ''))));
                 ?>
                 <div class="va-form-group">
-                    <label>Szállás típusa</label>
-                    <select name="accommodation_type" class="va-select">
+                    <label>Ingatlan típusa</label>
+                    <select name="accommodation_type" id="va-accommodation-type" class="va-select">
                         <option value="">– Válasszon –</option>
                         <option value="vadaszhaz"<?php selected($accommodation_type_val, 'vadaszhaz'); ?>>Vadászház</option>
-                        <option value="vendeghaz"<?php selected($accommodation_type_val, 'vendeghaz'); ?>>Vendégház</option>
-                        <option value="apartmanhaz"<?php selected($accommodation_type_val, 'apartmanhaz'); ?>>Apartmanház</option>
-                        <option value="kulcsoshaz"<?php selected($accommodation_type_val, 'kulcsoshaz'); ?>>Kulcsosház</option>
                         <option value="erdei-haz"<?php selected($accommodation_type_val, 'erdei-haz'); ?>>Erdei ház</option>
-                        <option value="apartman"<?php selected($accommodation_type_val, 'apartman'); ?>>Apartman</option>
-                        <option value="panzio"<?php selected($accommodation_type_val, 'panzio'); ?>>Panzió</option>
-                        <option value="hotel"<?php selected($accommodation_type_val, 'hotel'); ?>>Hotel</option>
+                        <option value="tanya"<?php selected($accommodation_type_val, 'tanya'); ?>>Tanya</option>
+                        <option value="preshaz"<?php selected($accommodation_type_val, 'preshaz'); ?>>Présház</option>
+                        <option value="hetvegi-haz"<?php selected($accommodation_type_val, 'hetvegi-haz'); ?>>Hétvégi ház</option>
+                        <option value="fahaz"<?php selected($accommodation_type_val, 'fahaz'); ?>>Faház</option>
+                        <option value="vadasz-kunyho"<?php selected($accommodation_type_val, 'vadasz-kunyho'); ?>>Vadász kunyhó</option>
+                        <option value="erdei-kabin"<?php selected($accommodation_type_val, 'erdei-kabin'); ?>>Erdei kabin</option>
+                        <option value="mezogazdasagi-ingatlan"<?php selected($accommodation_type_val, 'mezogazdasagi-ingatlan'); ?>>Mezőgazdasági ingatlan</option>
+                        <option value="birtok"<?php selected($accommodation_type_val, 'birtok'); ?>>Birtok</option>
+                        <option value="telek"<?php selected($accommodation_type_val, 'telek'); ?>>Telek</option>
+                        <option value="erdoterulet"<?php selected($accommodation_type_val, 'erdoterulet'); ?>>Erdőterület</option>
+                        <option value="vegyes-ingatlan"<?php selected($accommodation_type_val, 'vegyes-ingatlan'); ?>>Vegyes ingatlan</option>
+                        <option value="egyeb"<?php selected($accommodation_type_val, 'egyeb'); ?>>Egyéb</option>
                     </select>
                 </div>
                 <div class="va-form-group">
@@ -4412,6 +4451,56 @@ body.va-modal-open {
                         <option value="loiskola"<?php selected( in_array('loiskola', $accommodation_programs_saved, true), true ); ?>>Lőiskola</option>
                     </select>
                 </div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Környezet</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Környezet jellemzők</label><select name="accommodation_environment[]" class="va-select" multiple data-placeholder="Válassz környezetet"><option value="erdo-mellett"<?php selected( in_array('erdo-mellett', $accommodation_environment_saved, true), true ); ?>>Erdő mellett</option><option value="vadaszterulet-kozeleben"<?php selected( in_array('vadaszterulet-kozeleben', $accommodation_environment_saved, true), true ); ?>>Vadászterület közelében</option><option value="vizpart"<?php selected( in_array('vizpart', $accommodation_environment_saved, true), true ); ?>>Vízpart</option><option value="hegyvidek"<?php selected( in_array('hegyvidek', $accommodation_environment_saved, true), true ); ?>>Hegyvidék</option><option value="mezogazdasagi-terulet"<?php selected( in_array('mezogazdasagi-terulet', $accommodation_environment_saved, true), true ); ?>>Mezőgazdasági terület</option><option value="elszigetelt"<?php selected( in_array('elszigetelt', $accommodation_environment_saved, true), true ); ?>>Elszigetelt</option><option value="termeszetvedelmi"<?php selected( in_array('termeszetvedelmi', $accommodation_environment_saved, true), true ); ?>>Természetvédelmi környezet</option><option value="kulterulet"<?php selected( in_array('kulterulet', $accommodation_environment_saved, true), true ); ?>>Külterület</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Terület adatok</strong></div>
+                <div class="va-form-group"><label>Telek méret (m²)</label><input type="text" name="accommodation_land_size_sqm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_land_size_sqm'] ?? '')); ?>" placeholder="pl. 2800"></div>
+                <div class="va-form-group"><label>Telek méret (hektár)</label><input type="text" name="accommodation_land_size_hectare" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_land_size_hectare'] ?? '')); ?>" placeholder="pl. 0.28"></div>
+                <div class="va-form-group"><label>Lakóterület (m²)</label><input type="text" name="accommodation_building_size_sqm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_building_size_sqm'] ?? '')); ?>" placeholder="pl. 96"></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Épület paraméterek</strong></div>
+                <div class="va-form-group"><label>Szintek száma</label><input type="text" name="accommodation_levels_count" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_levels_count'] ?? '')); ?>" placeholder="pl. 2"></div>
+                <div class="va-form-group"><label>Építés éve</label><input type="text" name="accommodation_build_year" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_build_year'] ?? '')); ?>" placeholder="pl. 2004"></div>
+                <div class="va-form-group"><label>Állapot</label><?php $v = (string)($edit_meta['accommodation_property_condition'] ?? ''); ?><select name="accommodation_property_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected($v, 'uj'); ?>>Új</option><option value="felujitott"<?php selected($v, 'felujitott'); ?>>Felújított</option><option value="jo"<?php selected($v, 'jo'); ?>>Jó</option><option value="felujitando"<?php selected($v, 'felujitando'); ?>>Felújítandó</option><option value="bontando"<?php selected($v, 'bontando'); ?>>Bontandó</option></select></div>
+                <div class="va-form-group"><label>Építési típus</label><?php $v = (string)($edit_meta['accommodation_construction_type'] ?? ''); ?><select name="accommodation_construction_type" class="va-select"><option value="">– Válasszon –</option><option value="tegla"<?php selected($v, 'tegla'); ?>>Tégla</option><option value="fa"<?php selected($v, 'fa'); ?>>Fa</option><option value="valyog"<?php selected($v, 'valyog'); ?>>Vályog</option><option value="konnyuszerkezet"<?php selected($v, 'konnyuszerkezet'); ?>>Könnyűszerkezet</option><option value="ko"<?php selected($v, 'ko'); ?>>Kő</option><option value="vegyes"<?php selected($v, 'vegyes'); ?>>Vegyes</option></select></div>
+                <div class="va-form-group"><label>Fűtés</label><?php $v = (string)($edit_meta['accommodation_heating_type'] ?? ''); ?><select name="accommodation_heating_type" class="va-select"><option value="">– Válasszon –</option><option value="kandallo"<?php selected($v, 'kandallo'); ?>>Kandalló</option><option value="fatuzeles"<?php selected($v, 'fatuzeles'); ?>>Fatüzelés</option><option value="gaz"<?php selected($v, 'gaz'); ?>>Gáz</option><option value="elektromos"<?php selected($v, 'elektromos'); ?>>Elektromos</option><option value="vegyes"<?php selected($v, 'vegyes'); ?>>Vegyes</option><option value="nincs"<?php selected($v, 'nincs'); ?>>Nincs</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Közművek</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Közművek</label><select name="accommodation_utilities[]" class="va-select" multiple data-placeholder="Válassz közműveket"><option value="villany"<?php selected( in_array('villany', $accommodation_utilities_saved, true), true ); ?>>Villany</option><option value="vezetekes-viz"<?php selected( in_array('vezetekes-viz', $accommodation_utilities_saved, true), true ); ?>>Vezetékes víz</option><option value="kut"<?php selected( in_array('kut', $accommodation_utilities_saved, true), true ); ?>>Kút</option><option value="gaz"<?php selected( in_array('gaz', $accommodation_utilities_saved, true), true ); ?>>Gáz</option><option value="internet"<?php selected( in_array('internet', $accommodation_utilities_saved, true), true ); ?>>Internet</option><option value="szennyviz"<?php selected( in_array('szennyviz', $accommodation_utilities_saved, true), true ); ?>>Szennyvíz</option><option value="napelem"<?php selected( in_array('napelem', $accommodation_utilities_saved, true), true ); ?>>Napelem</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Megközelíthetőség</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Megközelíthetőség</label><select name="accommodation_accessibility[]" class="va-select" multiple data-placeholder="Válassz megközelíthetőséget"><option value="aszfalt-ut"<?php selected( in_array('aszfalt-ut', $accommodation_accessibility_saved, true), true ); ?>>Aszfalt út</option><option value="murvas-ut"<?php selected( in_array('murvas-ut', $accommodation_accessibility_saved, true), true ); ?>>Murvás út</option><option value="foldut"<?php selected( in_array('foldut', $accommodation_accessibility_saved, true), true ); ?>>Földút</option><option value="terepjaro-ajanlott"<?php selected( in_array('terepjaro-ajanlott', $accommodation_accessibility_saved, true), true ); ?>>Terepjáró ajánlott</option><option value="egesz-evben"<?php selected( in_array('egesz-evben', $accommodation_accessibility_saved, true), true ); ?>>Egész évben megközelíthető</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vadászati kapcsolódás</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadászati kapcsolódás</label><select name="accommodation_hunting_features[]" class="va-select" multiple data-placeholder="Válassz kapcsolódó elemeket"><option value="vadaszterulet-kozeleben"<?php selected( in_array('vadaszterulet-kozeleben', $accommodation_hunting_features_saved, true), true ); ?>>Vadászterület közelében</option><option value="leshelyek-kozeleben"<?php selected( in_array('leshelyek-kozeleben', $accommodation_hunting_features_saved, true), true ); ?>>Leshelyek közelében</option><option value="vadtarolo"<?php selected( in_array('vadtarolo', $accommodation_hunting_features_saved, true), true ); ?>>Vadtároló</option><option value="fegyverszoba"<?php selected( in_array('fegyverszoba', $accommodation_hunting_features_saved, true), true ); ?>>Fegyverszoba</option><option value="trofeaszoba"<?php selected( in_array('trofeaszoba', $accommodation_hunting_features_saved, true), true ); ?>>Trófeaszoba</option><option value="vadfeldolgozo-helyiseg"<?php selected( in_array('vadfeldolgozo-helyiseg', $accommodation_hunting_features_saved, true), true ); ?>>Vadfeldolgozó helyiség</option><option value="vadeteto-kozeleben"<?php selected( in_array('vadeteto-kozeleben', $accommodation_hunting_features_saved, true), true ); ?>>Vadetető közelében</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Extrák</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Extrák</label><select name="accommodation_extras[]" class="va-select" multiple data-placeholder="Válassz extrákat"><option value="pince"<?php selected( in_array('pince', $accommodation_extras_saved, true), true ); ?>>Pince</option><option value="garazs"<?php selected( in_array('garazs', $accommodation_extras_saved, true), true ); ?>>Garázs</option><option value="muhely"<?php selected( in_array('muhely', $accommodation_extras_saved, true), true ); ?>>Műhely</option><option value="istallo"<?php selected( in_array('istallo', $accommodation_extras_saved, true), true ); ?>>Istálló</option><option value="tarolo"<?php selected( in_array('tarolo', $accommodation_extras_saved, true), true ); ?>>Tároló</option><option value="terasz"<?php selected( in_array('terasz', $accommodation_extras_saved, true), true ); ?>>Terasz</option><option value="kemence"<?php selected( in_array('kemence', $accommodation_extras_saved, true), true ); ?>>Kemence</option><option value="szauna"<?php selected( in_array('szauna', $accommodation_extras_saved, true), true ); ?>>Szauna</option><option value="grillezo"<?php selected( in_array('grillezo', $accommodation_extras_saved, true), true ); ?>>Grillező</option><option value="vadfeldolgozo"<?php selected( in_array('vadfeldolgozo', $accommodation_extras_saved, true), true ); ?>>Vadfeldolgozó</option></select></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Hálózat / kommunikáció</strong></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Hálózat</label><select name="accommodation_network_features[]" class="va-select" multiple data-placeholder="Válassz hálózati opciókat"><option value="mobilhalozat-van"<?php selected( in_array('mobilhalozat-van', $accommodation_network_features_saved, true), true ); ?>>Mobilhálózat van</option><option value="gyenge-terero"<?php selected( in_array('gyenge-terero', $accommodation_network_features_saved, true), true ); ?>>Gyenge térerő</option><option value="starlink-kompatibilis"<?php selected( in_array('starlink-kompatibilis', $accommodation_network_features_saved, true), true ); ?>>Starlink kompatibilis</option><option value="optikai-internet"<?php selected( in_array('optikai-internet', $accommodation_network_features_saved, true), true ); ?>>Optikai internet</option></select></div>
+
+                <div class="va-form-group"><label>Felhasználási típus</label><?php $v = (string)($edit_meta['accommodation_use_type'] ?? ''); ?><select name="accommodation_use_type" class="va-select"><option value="">– Válasszon –</option><option value="vadaszhaz"<?php selected($v, 'vadaszhaz'); ?>>Vadászház</option><option value="nyaralo"<?php selected($v, 'nyaralo'); ?>>Nyaraló</option><option value="allando-lakhatas"<?php selected($v, 'allando-lakhatas'); ?>>Állandó lakhatás</option><option value="gazdasagi-epulet"<?php selected($v, 'gazdasagi-epulet'); ?>>Gazdasági épület</option><option value="befektetes"<?php selected($v, 'befektetes'); ?>>Befektetés</option><option value="vendeghaz"<?php selected($v, 'vendeghaz'); ?>>Vendégház</option><option value="vadaszati-bazis"<?php selected($v, 'vadaszati-bazis'); ?>>Vadászati bázis</option></select></div>
+                <div class="va-form-group"><label>Terület jellege</label><?php $v = (string)($edit_meta['accommodation_terrain_type'] ?? ''); ?><select name="accommodation_terrain_type" class="va-select"><option value="">– Válasszon –</option><option value="sik"<?php selected($v, 'sik'); ?>>Sík</option><option value="dombos"<?php selected($v, 'dombos'); ?>>Dombos</option><option value="hegyvideki"<?php selected($v, 'hegyvideki'); ?>>Hegyvidéki</option><option value="erdos"<?php selected($v, 'erdos'); ?>>Erdős</option><option value="vegyes"<?php selected($v, 'vegyes'); ?>>Vegyes</option></select></div>
+                <div class="va-form-group" style="grid-column:1 / -1;"><label>Állattartás</label><select name="accommodation_animal_housing[]" class="va-select" multiple data-placeholder="Válassz állattartási opciókat"><option value="engedelyezett"<?php selected( in_array('engedelyezett', $accommodation_animal_housing_saved, true), true ); ?>>Engedélyezett</option><option value="kennel-kialakithato"<?php selected( in_array('kennel-kialakithato', $accommodation_animal_housing_saved, true), true ); ?>>Kennel kialakítható</option><option value="nagytestu-kutya"<?php selected( in_array('nagytestu-kutya', $accommodation_animal_housing_saved, true), true ); ?>>Nagytestű kutya tartható</option></select></div>
+
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="erdoterulet" style="grid-column:1 / -1; display:none;"><strong>Erdőterület adatok</strong></div>
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="erdoterulet" style="display:none;"><label>Fafaj</label><input type="text" name="accommodation_fafaj" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_fafaj'] ?? '')); ?>" placeholder="pl. tölgy, bükk"></div>
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="erdoterulet" style="display:none;"><label>Erdő kora</label><input type="text" name="accommodation_erdo_kora" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_erdo_kora'] ?? '')); ?>" placeholder="pl. 40 év"></div>
+
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="vadaszhaz" style="grid-column:1 / -1; display:none;"><strong>Vadászház specifikus</strong></div>
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="vadaszhaz" style="display:none;"><label>Trófeaszoba</label><?php $v = (string)($edit_meta['accommodation_vadaszhaz_trofeaszoba'] ?? ''); ?><select name="accommodation_vadaszhaz_trofeaszoba" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="vadaszhaz" style="display:none;"><label>Fegyvertároló</label><?php $v = (string)($edit_meta['accommodation_vadaszhaz_fegyvertarolo'] ?? ''); ?><select name="accommodation_vadaszhaz_fegyvertarolo" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected($v, 'igen'); ?>>Igen</option><option value="nem"<?php selected($v, 'nem'); ?>>Nem</option></select></div>
+
+                <div class="va-form-group va-accommodation-dynamic-group" data-accommodation-types="tanya" style="grid-column:1 / -1; display:none;"><label>Gazdasági épületek</label><input type="text" name="accommodation_tanya_gazdasagi_epuletek" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_tanya_gazdasagi_epuletek'] ?? '')); ?>" placeholder="pl. magtár, pajta, gépszín"></div>
+
+                <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vadászati potenciál (1-10)</strong></div>
+                <div class="va-form-group"><label>Vadmozgás</label><input type="text" name="accommodation_hunting_potential_wild_movement" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_hunting_potential_wild_movement'] ?? '')); ?>" placeholder="1-10"></div>
+                <div class="va-form-group"><label>Elszigeteltség</label><input type="text" name="accommodation_hunting_potential_isolation" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_hunting_potential_isolation'] ?? '')); ?>" placeholder="1-10"></div>
+                <div class="va-form-group"><label>Erdő közelség</label><input type="text" name="accommodation_hunting_potential_forest_proximity" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_hunting_potential_forest_proximity'] ?? '')); ?>" placeholder="1-10"></div>
+                <div class="va-form-group"><label>Infrastruktúra</label><input type="text" name="accommodation_hunting_potential_infrastructure" class="va-input" value="<?php echo esc_attr((string)($edit_meta['accommodation_hunting_potential_infrastructure'] ?? '')); ?>" placeholder="1-10"></div>
                 </div><!-- /va-step2-4col-inner -->
             </div><!-- /.va-accommodation-fields-grid -->
 
