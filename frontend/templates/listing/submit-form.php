@@ -963,9 +963,6 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'mixed_zero_distance_m' => get_post_meta( $maybe_id, 'va_mixed_zero_distance_m', true ),
             'mixed_safety_type' => get_post_meta( $maybe_id, 'va_mixed_safety_type', true ),
             'mixed_barrel_layout' => get_post_meta( $maybe_id, 'va_mixed_barrel_layout', true ),
-            'mixed_country' => get_post_meta( $maybe_id, 'va_mixed_country', true ),
-            'mixed_county' => get_post_meta( $maybe_id, 'va_mixed_county', true ),
-            'mixed_city' => get_post_meta( $maybe_id, 'va_mixed_city', true ),
             'mixed_barrel_internal' => get_post_meta( $maybe_id, 'va_mixed_barrel_internal', true ),
             'mixed_engraving' => get_post_meta( $maybe_id, 'va_mixed_engraving', true ),
             'mixed_factory_marking' => get_post_meta( $maybe_id, 'va_mixed_factory_marking', true ),
@@ -975,7 +972,6 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'mixed_mountain_weight_optimized' => get_post_meta( $maybe_id, 'va_mixed_mountain_weight_optimized', true ),
             'mixed_universal_label' => get_post_meta( $maybe_id, 'va_mixed_universal_label', true ),
             'mixed_condition' => get_post_meta( $maybe_id, 'va_mixed_condition', true ),
-            'mixed_moderation_flags' => get_post_meta( $maybe_id, 'va_mixed_moderation_flags', true ),
             'marok_manufacture_year' => get_post_meta( $maybe_id, 'va_marok_manufacture_year', true ),
             'marok_origin_country' => get_post_meta( $maybe_id, 'va_marok_origin_country', true ),
             'marok_action_type' => get_post_meta( $maybe_id, 'va_marok_action_type', true ),
@@ -3045,7 +3041,6 @@ body.va-modal-open {
             };
             $mixed_usage_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_usage' ) ) ) );
             $mixed_accessories_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_accessories' ) ) ) );
-            $mixed_moderation_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_moderation_flags' ) ) ) );
             ?>
             <div class="va-cat-rule-field va-mixed-fields-grid" data-categories="vegyescsovu-puska" style="display:none;">
                 <div class="va-step2-4col-inner">
@@ -3076,9 +3071,6 @@ body.va-modal-open {
                     <div class="va-form-group"><label>Teljes hossz (cm)</label><input type="text" name="mixed_total_length_cm" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_total_length_cm' ) ); ?>" placeholder="pl. 105"></div>
                     <div class="va-form-group"><label>Biztosíték típusa</label><?php $v = $mixed_saved( 'mixed_safety_type' ); ?><select name="mixed_safety_type" class="va-select"><option value="">- Válasszon -</option><option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option><option value="automata"<?php selected( $v, 'automata' ); ?>>Automata</option><option value="tang"<?php selected( $v, 'tang' ); ?>>Tang biztonság</option></select></div>
                     <div class="va-form-group"><label>Cső elrendezés</label><?php $v = $mixed_saved( 'mixed_barrel_layout' ); ?><select name="mixed_barrel_layout" class="va-select"><option value="">- Válasszon -</option><option value="golyo-felul-soret-alul"<?php selected( $v, 'golyo-felul-soret-alul' ); ?>>Golyó felül / sörét alul</option><option value="soret-felul-golyo-alul"<?php selected( $v, 'soret-felul-golyo-alul' ); ?>>Sörét felül / golyó alul</option><option value="oldalt"<?php selected( $v, 'oldalt' ); ?>>Oldalt</option></select></div>
-                    <div class="va-form-group"><label>Ország</label><input type="text" name="mixed_country" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_country' ) ); ?>"></div>
-                    <div class="va-form-group"><label>Megye</label><input type="text" name="mixed_county" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_county' ) ); ?>"></div>
-                    <div class="va-form-group"><label>Település</label><input type="text" name="mixed_city" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_city' ) ); ?>"></div>
 
                     <div class="va-form-group" style="grid-column:1 / -1;"><label>Használat</label><select name="mixed_usage[]" id="va-mixed-usage" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="nagyvad"<?php echo in_array( 'nagyvad', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Nagyvad</option><option value="aprovad"<?php echo in_array( 'aprovad', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Apróvad</option><option value="vegyes-vadaszat"<?php echo in_array( 'vegyes-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Vegyes vadászat</option><option value="hegyi-vadaszat"<?php echo in_array( 'hegyi-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Hegyi vadászat</option><option value="erdei-vadaszat"<?php echo in_array( 'erdei-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Erdei vadászat</option><option value="hajtas"<?php echo in_array( 'hajtas', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option><option value="univerzalis"<?php echo in_array( 'univerzalis', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Univerzális</option></select></div>
                     <div class="va-form-group va-mixed-dynamic-group" data-mixed-usage="hegyi-vadaszat" style="display:none;"><label>Súly optimalizálás</label><?php $v = $mixed_saved( 'mixed_mountain_weight_optimized' ); ?><select name="mixed_mountain_weight_optimized" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
@@ -3095,7 +3087,6 @@ body.va-modal-open {
                     <div class="va-form-group va-mixed-dynamic-group" data-mixed-type="drilling" style="display:none;"><label>Felső cső szerepe</label><input type="text" name="mixed_drilling_top_barrel_role" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_drilling_top_barrel_role' ) ); ?>" placeholder="pl. golyós"></div>
 
                     <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="mixed_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="eredeti-doboz"<?php echo in_array( 'eredeti-doboz', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Eredeti doboz</option><option value="puskaszij"<?php echo in_array( 'puskaszij', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Puskaszíj</option><option value="tok"<?php echo in_array( 'tok', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="tisztitokeszlet"<?php echo in_array( 'tisztitokeszlet', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Tisztítókészlet</option><option value="csokulcs"<?php echo in_array( 'csokulcs', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Csőkulcs</option><option value="iranyzek-tartozek"<?php echo in_array( 'iranyzek-tartozek', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Irányzék tartozék</option></select></div>
-                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="mixed_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="illegalis-atalakitas"<?php echo in_array( 'illegalis-atalakitas', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális átalakítás</option><option value="automata-fegyver-jelleg"<?php echo in_array( 'automata-fegyver-jelleg', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Automata fegyver jelleg</option><option value="tiltott-csokonverzio"<?php echo in_array( 'tiltott-csokonverzio', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott csőkonverzió</option><option value="engedely-nelkul"<?php echo in_array( 'engedely-nelkul', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option></select></div>
                 </div>
             </div>
 
