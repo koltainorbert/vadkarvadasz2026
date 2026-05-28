@@ -5089,6 +5089,259 @@ body.va-modal-open {
                 </div>
             </div>
             <?php
+            $publication_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $publication_csv = static function( string $key ) use ( $publication_meta ): array {
+                return array_filter( array_map( 'trim', explode( ',', (string) $publication_meta( $key ) ) ) );
+            };
+            $publication_topics_saved = $publication_csv( 'publication_topics' );
+            $publication_defects_saved = $publication_csv( 'publication_defects' );
+            $publication_content_saved = $publication_csv( 'publication_content_flags' );
+            $publication_collector_flags_saved = $publication_csv( 'publication_collector_flags' );
+            $publication_usage_saved = $publication_csv( 'publication_usage' );
+            $publication_moderation_saved = $publication_csv( 'publication_moderation_flags' );
+            ?>
+            <div class="va-cat-rule-field va-publication-fields-grid" data-categories="konyv-folyoirat" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Típus</label>
+                        <?php $v = $publication_meta( 'publication_type' ); ?>
+                        <select name="publication_type" id="va-publication-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="konyv"<?php selected( $v, 'konyv' ); ?>>Könyv</option>
+                            <option value="folyoirat"<?php selected( $v, 'folyoirat' ); ?>>Folyóirat</option>
+                            <option value="magazin"<?php selected( $v, 'magazin' ); ?>>Magazin</option>
+                            <option value="evkonyv"<?php selected( $v, 'evkonyv' ); ?>>Évkönyv</option>
+                            <option value="katalogus"<?php selected( $v, 'katalogus' ); ?>>Katalógus</option>
+                            <option value="kezikonyv"<?php selected( $v, 'kezikonyv' ); ?>>Kézikönyv</option>
+                            <option value="atlasz"<?php selected( $v, 'atlasz' ); ?>>Atlasz</option>
+                            <option value="oktatoanyag"<?php selected( $v, 'oktatoanyag' ); ?>>Oktatóanyag</option>
+                            <option value="gyujtoi-kiadvany"<?php selected( $v, 'gyujtoi-kiadvany' ); ?>>Gyűjtői kiadvány</option>
+                            <option value="digitalis-kiadvany"<?php selected( $v, 'digitalis-kiadvany' ); ?>>Digitális kiadvány</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Témakör</label>
+                        <select name="publication_topics[]" class="va-select" multiple data-placeholder="Válassz témakört">
+                            <option value="vadaszat"<?php echo in_array( 'vadaszat', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Vadászat</option>
+                            <option value="fegyverismeret"<?php echo in_array( 'fegyverismeret', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Fegyverismeret</option>
+                            <option value="ballisztika"<?php echo in_array( 'ballisztika', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Ballisztika</option>
+                            <option value="kutyakikepzes"<?php echo in_array( 'kutyakikepzes', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Kutyakiképzés</option>
+                            <option value="vadgazdalkodas"<?php echo in_array( 'vadgazdalkodas', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Vadgazdálkodás</option>
+                            <option value="erdeszet"<?php echo in_array( 'erdeszet', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Erdészet</option>
+                            <option value="termeszet"<?php echo in_array( 'termeszet', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Természet</option>
+                            <option value="tuleles"<?php echo in_array( 'tuleles', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Túlélés</option>
+                            <option value="bushcraft"<?php echo in_array( 'bushcraft', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Bushcraft</option>
+                            <option value="horgaszat"<?php echo in_array( 'horgaszat', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Horgászat</option>
+                            <option value="trofeabiralat"<?php echo in_array( 'trofeabiralat', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Trófeabírálat</option>
+                            <option value="preparalas"<?php echo in_array( 'preparalas', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Preparálás</option>
+                            <option value="tortenelmi"<?php echo in_array( 'tortenelmi', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Történelmi</option>
+                            <option value="katonai"<?php echo in_array( 'katonai', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Katonai</option>
+                            <option value="egyeb"<?php echo in_array( 'egyeb', $publication_topics_saved, true ) ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Cím</label><input type="text" name="publication_title" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_title' ) ); ?>" placeholder="pl. Régi Nimród évfolyam"></div>
+                    <div class="va-form-group"><label>Alcím</label><input type="text" name="publication_subtitle" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_subtitle' ) ); ?>" placeholder="opcionális"></div>
+                    <div class="va-form-group"><label>Szerző</label><input type="text" name="publication_author" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_author' ) ); ?>" placeholder="pl. Kovács István"></div>
+                    <div class="va-form-group"><label>Kiadó</label><input type="text" name="publication_publisher" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_publisher' ) ); ?>" placeholder="pl. Nimród Kiadó"></div>
+                    <div class="va-form-group"><label>Kiadás éve</label><input type="text" name="publication_year" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_year' ) ); ?>" placeholder="pl. 1986"></div>
+                    <div class="va-form-group">
+                        <label>Nyelv</label>
+                        <?php $v = $publication_meta( 'publication_language' ); ?>
+                        <select name="publication_language" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="magyar"<?php selected( $v, 'magyar' ); ?>>Magyar</option>
+                            <option value="angol"<?php selected( $v, 'angol' ); ?>>Angol</option>
+                            <option value="nemet"<?php selected( $v, 'nemet' ); ?>>Német</option>
+                            <option value="szlovak"<?php selected( $v, 'szlovak' ); ?>>Szlovák</option>
+                            <option value="roman"<?php selected( $v, 'roman' ); ?>>Román</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kiadás típusa</label>
+                        <?php $v = $publication_meta( 'publication_edition_type' ); ?>
+                        <select name="publication_edition_type" id="va-publication-edition-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="elso-kiadas"<?php selected( $v, 'elso-kiadas' ); ?>>Első kiadás</option>
+                            <option value="utannyomas"<?php selected( $v, 'utannyomas' ); ?>>Utánnyomás</option>
+                            <option value="limitalt"<?php selected( $v, 'limitalt' ); ?>>Limitált</option>
+                            <option value="dedikalt"<?php selected( $v, 'dedikalt' ); ?>>Dedikált</option>
+                            <option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option>
+                            <option value="antikvar"<?php selected( $v, 'antikvar' ); ?>>Antikvár</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-types="folyoirat,magazin,evkonyv">
+                        <label>Folyóirat neve</label>
+                        <input type="text" name="publication_periodical_name" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_periodical_name' ) ); ?>" placeholder="pl. Nimród">
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-types="folyoirat,magazin,evkonyv">
+                        <label>Évfolyam</label>
+                        <input type="text" name="publication_volume" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_volume' ) ); ?>" placeholder="pl. 1989/12">
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-types="folyoirat,magazin,evkonyv">
+                        <label>Lapszám</label>
+                        <input type="text" name="publication_issue" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_issue' ) ); ?>" placeholder="pl. 4">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Komplett évfolyam?</label>
+                        <?php $v = $publication_meta( 'publication_complete_volume' ); ?>
+                        <select name="publication_complete_volume" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Oldalszám</label><input type="text" name="publication_page_count" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_page_count' ) ); ?>" placeholder="pl. 240"></div>
+                    <div class="va-form-group">
+                        <label>Borító</label>
+                        <?php $v = $publication_meta( 'publication_cover_type' ); ?>
+                        <select name="publication_cover_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="kemenyfedeles"<?php selected( $v, 'kemenyfedeles' ); ?>>Keményfedeles</option>
+                            <option value="puhafedeles"<?php selected( $v, 'puhafedeles' ); ?>>Puhafedeles</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Méret</label><input type="text" name="publication_size" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_size' ) ); ?>" placeholder="pl. A4, 17x24 cm"></div>
+                    <div class="va-form-group">
+                        <label>Általános állapot</label>
+                        <?php $v = $publication_meta( 'publication_condition' ); ?>
+                        <select name="publication_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="jo"<?php selected( $v, 'jo' ); ?>>Jó</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="serult"<?php selected( $v, 'serult' ); ?>>Sérült</option>
+                            <option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Hibák</label>
+                        <select name="publication_defects[]" class="va-select" multiple data-placeholder="Válassz hibákat">
+                            <option value="szakadt"<?php echo in_array( 'szakadt', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Szakadt</option>
+                            <option value="firkalt"<?php echo in_array( 'firkalt', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Firkált</option>
+                            <option value="hianyos"<?php echo in_array( 'hianyos', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Hiányos</option>
+                            <option value="vizkaros"<?php echo in_array( 'vizkaros', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Vízkáros</option>
+                            <option value="laphiany"<?php echo in_array( 'laphiany', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Laphiány</option>
+                            <option value="kopott-borito"<?php echo in_array( 'kopott-borito', $publication_defects_saved, true ) ? ' selected' : ''; ?>>Kopott borító</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tartalom</label>
+                        <select name="publication_content_flags[]" class="va-select" multiple data-placeholder="Válassz tartalom típust">
+                            <option value="szines-kepek"<?php echo in_array( 'szines-kepek', $publication_content_saved, true ) ? ' selected' : ''; ?>>Színes képek</option>
+                            <option value="fekete-feher"<?php echo in_array( 'fekete-feher', $publication_content_saved, true ) ? ' selected' : ''; ?>>Fekete-fehér</option>
+                            <option value="terkepek"<?php echo in_array( 'terkepek', $publication_content_saved, true ) ? ' selected' : ''; ?>>Térképek</option>
+                            <option value="ballisztikai-tablazatok"<?php echo in_array( 'ballisztikai-tablazatok', $publication_content_saved, true ) ? ' selected' : ''; ?>>Ballisztikai táblázatok</option>
+                            <option value="fotok"<?php echo in_array( 'fotok', $publication_content_saved, true ) ? ' selected' : ''; ?>>Fotók</option>
+                            <option value="rajzok"<?php echo in_array( 'rajzok', $publication_content_saved, true ) ? ' selected' : ''; ?>>Rajzok</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Gyűjtői információ</label>
+                        <select name="publication_collector_flags[]" class="va-select" multiple data-placeholder="Válassz gyűjtői jelölést">
+                            <option value="ritka-kiadas"<?php echo in_array( 'ritka-kiadas', $publication_collector_flags_saved, true ) ? ' selected' : ''; ?>>Ritka kiadás</option>
+                            <option value="sorszamozott"<?php echo in_array( 'sorszamozott', $publication_collector_flags_saved, true ) ? ' selected' : ''; ?>>Sorszámozott</option>
+                            <option value="dedikalt"<?php echo in_array( 'dedikalt', $publication_collector_flags_saved, true ) ? ' selected' : ''; ?>>Dedikált</option>
+                            <option value="megszunt-kiadvany"<?php echo in_array( 'megszunt-kiadvany', $publication_collector_flags_saved, true ) ? ' selected' : ''; ?>>Megszűnt kiadvány</option>
+                            <option value="muzealis"<?php echo in_array( 'muzealis', $publication_collector_flags_saved, true ) ? ' selected' : ''; ?>>Muzeális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Gyűjtői érték</label>
+                        <?php $v = $publication_meta( 'publication_collector_value' ); ?>
+                        <select name="publication_collector_value" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option>
+                            <option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option>
+                            <option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option>
+                            <option value="kiemelt"<?php selected( $v, 'kiemelt' ); ?>>Kiemelt</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Felhasználás</label>
+                        <select name="publication_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást">
+                            <option value="oktatas"<?php echo in_array( 'oktatas', $publication_usage_saved, true ) ? ' selected' : ''; ?>>Oktatás</option>
+                            <option value="gyujtemeny"<?php echo in_array( 'gyujtemeny', $publication_usage_saved, true ) ? ' selected' : ''; ?>>Gyűjtemény</option>
+                            <option value="referencia"<?php echo in_array( 'referencia', $publication_usage_saved, true ) ? ' selected' : ''; ?>>Referencia</option>
+                            <option value="ajandek"<?php echo in_array( 'ajandek', $publication_usage_saved, true ) ? ' selected' : ''; ?>>Ajándék</option>
+                            <option value="kutatas"<?php echo in_array( 'kutatas', $publication_usage_saved, true ) ? ' selected' : ''; ?>>Kutatás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-editions="antikvar" style="grid-column:1 / -1;">
+                        <label>Állapot részletezés (antikvár)</label>
+                        <textarea name="publication_condition_details" class="va-input" rows="2" placeholder="pl. gerinc enyhén kopott, lapok épek"><?php echo esc_textarea( $publication_meta( 'publication_condition_details' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-editions="antikvar">
+                        <label>Eredetiség</label>
+                        <?php $v = $publication_meta( 'publication_authenticity' ); ?>
+                        <select name="publication_authenticity" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="eredeti"<?php selected( $v, 'eredeti' ); ?>>Eredeti</option>
+                            <option value="ismeretlen"<?php selected( $v, 'ismeretlen' ); ?>>Ismeretlen</option>
+                            <option value="masolat"<?php selected( $v, 'masolat' ); ?>>Másolat</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Dedikált példány?</label>
+                        <?php $v = $publication_meta( 'publication_signed_copy' ); ?>
+                        <select name="publication_signed_copy" id="va-publication-signed-copy" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-signed="yes">
+                        <label>Kinek szól</label>
+                        <input type="text" name="publication_signed_to" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_signed_to' ) ); ?>" placeholder="pl. Kovács úrnak">
+                    </div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-signed="yes">
+                        <label>Aláírás típusa</label>
+                        <?php $v = $publication_meta( 'publication_signature_type' ); ?>
+                        <select name="publication_signature_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="kezjegy"<?php selected( $v, 'kezjegy' ); ?>>Kézjegy</option>
+                            <option value="teljes-nev"<?php selected( $v, 'teljes-nev' ); ?>>Teljes név</option>
+                            <option value="uzenettel"<?php selected( $v, 'uzenettel' ); ?>>Üzenettel</option>
+                            <option value="ismeretlen"<?php selected( $v, 'ismeretlen' ); ?>>Ismeretlen</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>ISBN</label><input type="text" name="publication_isbn" class="va-input" value="<?php echo esc_attr( $publication_meta( 'publication_isbn' ) ); ?>" placeholder="pl. 9789630000000"></div>
+                    <div class="va-form-group va-publication-dynamic-group" data-publication-types="digitalis-kiadvany">
+                        <label>Digitális formátum</label>
+                        <?php $v = $publication_meta( 'publication_digital_format' ); ?>
+                        <select name="publication_digital_format" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="pdf"<?php selected( $v, 'pdf' ); ?>>PDF</option>
+                            <option value="epub"<?php selected( $v, 'epub' ); ?>>EPUB</option>
+                            <option value="mobi"<?php selected( $v, 'mobi' ); ?>>MOBI</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Moderáció</label>
+                        <select name="publication_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázati jelzők">
+                            <option value="szerzoi-jogserto-digitalis-masolat"<?php echo in_array( 'szerzoi-jogserto-digitalis-masolat', $publication_moderation_saved, true ) ? ' selected' : ''; ?>>Szerzői jogsértő digitális másolat</option>
+                            <option value="tiltott-tartalom"<?php echo in_array( 'tiltott-tartalom', $publication_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott tartalom</option>
+                            <option value="hamis-dedikalas"<?php echo in_array( 'hamis-dedikalas', $publication_moderation_saved, true ) ? ' selected' : ''; ?>>Hamis dedikálás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Megjegyzés</label>
+                        <textarea name="publication_notes" class="va-input" rows="2" placeholder="pl. régi Nimród évfolyam, hiánytalan sorozat"><?php echo esc_textarea( $publication_meta( 'publication_notes' ) ); ?></textarea>
+                    </div>
+                </div>
+            </div>
+            <?php
             $service_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
