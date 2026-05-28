@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 28. – Hotfix #csere-jogi-media-blokk-kiveve
+- Kérés: a `Csere` kategória feladási űrlapjából kerüljön ki a túlzott jogi/média/moderáció blokk.
+- Frontend: a csere blokkból eltávolítva: `Jogi részletek`, `18+ tartalom?`, `Kötelező képek ellenőrzőlista`, `Videó (opcionális URL)`, `Moderációs jelzők`, `Partner elvárások / biztonság`.
+- Tisztítás: törölve a már nem használt előkészítő változók (`$exchange_required_images_saved`, `$exchange_moderation_flags_saved`).
+- Szinkronállapot: a root `submit-form.php` már korábban ezen az állapoton volt; a plugin mirror ehhez lett igazítva.
+- Ellenőrzés + deploy: hibakeresés lefutott (`No errors found`), `Deploy All` commit+push megtörtént (`e1006500`).
+
 ## 2026. 05. 28. – Session #csere-kategoria-komplex-mezorendszer
 - Kérés: a `Csere` kategória a többi részletes feladási kategória mintájára teljes mezőstruktúrát kapjon (csere típus, kínált termék adatai, érték/ráfizetés, keresett kategóriák, jogi és média blokk, dinamikus fegyver/optika/kés mezők).
 - Frontend: a korábbi egymezős `exchange_target` blokk helyett teljes `va-exchange-fields-grid` szekció készült, popup-kompatibilis többválasztós mezőkkel (`exchange_wanted_categories[]`, `exchange_required_images[]`, `exchange_moderation_flags[]`) és részletes leíró mezőkkel.
