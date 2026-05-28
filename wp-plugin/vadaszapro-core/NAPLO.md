@@ -2,6 +2,13 @@
 
 ---
 
+## 2026. 05. 28. – Hotfix #submit-form-fekete-naptar
+- Kérés: a feladási űrlap dátumválasztója ne a böngésző fehér natív naptárát használja, hanem fekete stílusban illeszkedjen a site többi UI eleméhez.
+- Frontend: a `submit-form.php` négy érintett dátummezője (`hunt_season_start`, `hunt_season_end`, `dog_birth_date`, `dog_available_from`) saját sötét date picker wrapperre lett cserélve, a beküldött érték továbbra is ISO `YYYY-MM-DD` marad hidden inputon.
+- UI: bekerült a fekete naptár popup navigációval, mai nap jelöléssel, kiválasztott nap kiemeléssel és `Törlés` gombbal; a megjelenített formátum felhasználói oldalon `YYYY. MM. DD.`.
+- Dinamikus logika: új általános `initDarkDatePickers()` JS kezeli a renderelést, nyitás/zárást, dátum kiválasztást és a hidden mező szinkront; a kutya kor-számítás a `dog_birth_date` hidden inputon változatlanul működik.
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` egységesítve, hibakeresés mindkét érintett fájlon `No errors found`.
+
 ## 2026. 05. 28. – Session #vadaszkutya-kategoria-komplex-mezorendszer
 - Kérés: a `Vadászkutya` (`vadaszkutya`) kategória kapjon teljes, részletes mezőrendszert vérvonal, okmányok, kiképzés, specializáció, teljesítmény, vízmunka, egészség, helyszín, kölyök/véreb/képzett dinamikák és moderációs flag-ek mentésével.
 - Frontend: a korábbi minimál kutyablokk helyett teljes, szekciózott `va-dog-fields-wrap` került be a feladási űrlapba új mezőkkel (`dog_working_type`, `dog_birth_date`, `dog_training_skills[]`, `dog_hunting_specialization[]`, `dog_documents[]`, `dog_origin_qualification[]`, `dog_moderation_flags[]`, `dog_work_video_types[]` stb.).
