@@ -281,6 +281,7 @@ $category_required_rules = [
     'konyhakes'          => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
     'svajci-bicska'      => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
+    'kurtok-sipok'       => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
 ];
 
 /* ── Edit mód felismerés ───────────────────────────── */
