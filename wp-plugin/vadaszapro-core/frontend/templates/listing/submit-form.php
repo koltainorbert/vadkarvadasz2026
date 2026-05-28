@@ -7790,6 +7790,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyEquipmentDynamicFields() {
+        var equipmentType = (($('#va-equipment-type').val() || '') + '').trim();
+        var callType = (($('#va-equipment-call-type').val() || '') + '').trim();
+        var electronicValues = $('#va-equipment-electronic-features').val();
+        var electronicFeatures = Array.isArray(electronicValues) ? electronicValues : (electronicValues ? [electronicValues] : []);
+        var needsRuntime = ['elemlampa', 'fejlampa', 'akkumulator'].indexOf(equipmentType) !== -1 || callType === 'elektronikus' || electronicFeatures.length > 0;
+
+        $('.va-equipment-dynamic-group').each(function(){
+            var $group = $(this);
+            var typeList = (($group.attr('data-equipment-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var runtimeRequired = (($group.attr('data-equipment-runtime') || '') + '').trim() === 'yes';
+            var typeOk = !typeList.length || typeList.indexOf(equipmentType) !== -1;
+            var runtimeOk = !runtimeRequired || needsRuntime;
+            $group.toggle(typeOk && runtimeOk);
+        });
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -7904,6 +7921,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-publication-type, #va-publication-edition-type, #va-publication-signed-copy', function(){
         applyPublicationDynamicFields();
     });
+    $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
+        applyEquipmentDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -7926,6 +7946,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyVadkarDynamicFields();
     applyExchangeDynamicFields();
     applyPublicationDynamicFields();
+    applyEquipmentDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -8195,6 +8216,9 @@ document.addEventListener('DOMContentLoaded', function() {
             publication_condition: 'Állapot',
             publication_collector_value: 'Gyűjtői érték',
             publication_complete_volume: 'Komplett évfolyam',
+            equipment_type: 'Felszerelés típusa',
+            equipment_condition: 'Állapot',
+            equipment_hunting_usage: 'Felhasználás',
         };
         var missing = [];
 
