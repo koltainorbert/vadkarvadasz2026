@@ -4350,8 +4350,8 @@ body.va-modal-open {
                         <option value="vegyes"<?php echo in_array( 'vegyes', $hunt_terrain_saved, true ) ? ' selected' : ''; ?>>Vegyes</option>
                     </select>
                 </div>
-                <div class="va-form-group"><label>Kezdő dátum</label><input type="date" name="hunt_season_start" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_season_start'] ?? '')); ?>"></div>
-                <div class="va-form-group"><label>Záró dátum</label><input type="date" name="hunt_season_end" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_season_end'] ?? '')); ?>"></div>
+                <div class="va-form-group"><label>Kezdő dátum</label><div class="va-dark-date"><input type="hidden" name="hunt_season_start" class="va-date-value" value="<?php echo esc_attr((string)($edit_meta['hunt_season_start'] ?? '')); ?>"><input type="text" class="va-input va-date-display" placeholder="éééé. hh. nn." readonly><button type="button" class="va-date-btn" aria-label="Naptár megnyitása"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button><div class="va-dark-calendar" style="display:none;"><div class="va-dark-calendar__head"><button type="button" class="va-dark-calendar__nav" data-dir="prev" aria-label="Előző hónap">‹</button><div class="va-dark-calendar__title"></div><button type="button" class="va-dark-calendar__nav" data-dir="next" aria-label="Következő hónap">›</button></div><div class="va-dark-calendar__dow"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="va-dark-calendar__grid"></div><div class="va-dark-calendar__foot"><button type="button" class="va-dark-calendar__clear">Törlés</button></div></div></div></div>
+                <div class="va-form-group"><label>Záró dátum</label><div class="va-dark-date"><input type="hidden" name="hunt_season_end" class="va-date-value" value="<?php echo esc_attr((string)($edit_meta['hunt_season_end'] ?? '')); ?>"><input type="text" class="va-input va-date-display" placeholder="éééé. hh. nn." readonly><button type="button" class="va-date-btn" aria-label="Naptár megnyitása"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button><div class="va-dark-calendar" style="display:none;"><div class="va-dark-calendar__head"><button type="button" class="va-dark-calendar__nav" data-dir="prev" aria-label="Előző hónap">‹</button><div class="va-dark-calendar__title"></div><button type="button" class="va-dark-calendar__nav" data-dir="next" aria-label="Következő hónap">›</button></div><div class="va-dark-calendar__dow"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="va-dark-calendar__grid"></div><div class="va-dark-calendar__foot"><button type="button" class="va-dark-calendar__clear">Törlés</button></div></div></div></div>
                 <div class="va-form-group"><label>Időpont típus</label><?php $v = (string)($edit_meta['hunt_time_type'] ?? ''); ?><select name="hunt_time_type" class="va-select"><option value="">– Válasszon –</option><option value="fix-datum"<?php selected($v, 'fix-datum'); ?>>Fix dátum</option><option value="szezon"<?php selected($v, 'szezon'); ?>>Szezon</option><option value="egesz-ev"<?php selected($v, 'egesz-ev'); ?>>Egész év</option><option value="hetvegi"<?php selected($v, 'hetvegi'); ?>>Hétvégi</option><option value="egyedi-egyeztetes"<?php selected($v, 'egyedi-egyeztetes'); ?>>Egyedi egyeztetés</option></select></div>
                 <div class="va-form-group"><label>Ár típusa</label><?php $v = (string)($edit_meta['hunt_price_type'] ?? ''); ?><select id="va-hunt-price-type" name="hunt_price_type" class="va-select"><option value="">– Válasszon –</option><option value="trofea-alapu"<?php selected($v, 'trofea-alapu'); ?>>Trófea alapú</option><option value="napidij"<?php selected($v, 'napidij'); ?>>Napidíj</option><option value="lovesenkent"<?php selected($v, 'lovesenkent'); ?>>Lövésenként</option><option value="csomag-ar"<?php selected($v, 'csomag-ar'); ?>>Csomag ár</option><option value="egyedi-ajanlat"<?php selected($v, 'egyedi-ajanlat'); ?>>Egyedi ajánlat</option></select></div>
                 <div class="va-form-group"><label>Ár minimum</label><input type="text" name="hunt_price_min" class="va-input" value="<?php echo esc_attr((string)($edit_meta['hunt_price_min'] ?? '')); ?>"></div>
@@ -5010,7 +5010,7 @@ body.va-modal-open {
                     </div>
 
                     <div class="va-form-group" style="grid-column:1 / -1;"><strong>Alapadatok</strong></div>
-                    <div class="va-form-group"><label>Születési dátum</label><input type="date" name="dog_birth_date" id="va-dog-birth-date" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_birth_date'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Születési dátum</label><div class="va-dark-date"><input type="hidden" name="dog_birth_date" id="va-dog-birth-date" class="va-date-value" value="<?php echo esc_attr( (string) ( $edit_meta['dog_birth_date'] ?? '' ) ); ?>"><input type="text" class="va-input va-date-display" placeholder="éééé. hh. nn." readonly><button type="button" class="va-date-btn" aria-label="Naptár megnyitása"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button><div class="va-dark-calendar" style="display:none;"><div class="va-dark-calendar__head"><button type="button" class="va-dark-calendar__nav" data-dir="prev" aria-label="Előző hónap">‹</button><div class="va-dark-calendar__title"></div><button type="button" class="va-dark-calendar__nav" data-dir="next" aria-label="Következő hónap">›</button></div><div class="va-dark-calendar__dow"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="va-dark-calendar__grid"></div><div class="va-dark-calendar__foot"><button type="button" class="va-dark-calendar__clear">Törlés</button></div></div></div></div>
                     <div class="va-form-group"><label>Kor (hónap, automatikus)</label><input type="number" name="dog_age_months" id="va-dog-age-months" class="va-input" min="0" max="300" readonly value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>"></div>
                     <div class="va-form-group">
                         <label>Színe</label>
@@ -5174,7 +5174,7 @@ body.va-modal-open {
 
                     <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="grid-column:1 / -1; display:none;"><strong>Kölyök adatok</strong></div>
                     <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="display:none;"><label>Alom száma</label><input type="text" name="dog_litter_count" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_litter_count'] ?? '' ) ); ?>"></div>
-                    <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="display:none;"><label>Elvihetőség dátuma</label><input type="date" name="dog_available_from" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_available_from'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="display:none;"><label>Elvihetőség dátuma</label><div class="va-dark-date"><input type="hidden" name="dog_available_from" class="va-date-value" value="<?php echo esc_attr( (string) ( $edit_meta['dog_available_from'] ?? '' ) ); ?>"><input type="text" class="va-input va-date-display" placeholder="éééé. hh. nn." readonly><button type="button" class="va-date-btn" aria-label="Naptár megnyitása"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button><div class="va-dark-calendar" style="display:none;"><div class="va-dark-calendar__head"><button type="button" class="va-dark-calendar__nav" data-dir="prev" aria-label="Előző hónap">‹</button><div class="va-dark-calendar__title"></div><button type="button" class="va-dark-calendar__nav" data-dir="next" aria-label="Következő hónap">›</button></div><div class="va-dark-calendar__dow"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="va-dark-calendar__grid"></div><div class="va-dark-calendar__foot"><button type="button" class="va-dark-calendar__clear">Törlés</button></div></div></div></div>
 
                     <div class="va-form-group va-dog-dynamic-group" data-dog-working-types="vereb" style="grid-column:1 / -1; display:none;"><strong>Véreb specifikus</strong></div>
                     <div class="va-form-group va-dog-dynamic-group" data-dog-working-types="vereb" style="display:none;"><label>Nyomkövetési táv (m)</label><input type="text" name="dog_tracking_distance_m" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_tracking_distance_m'] ?? '' ) ); ?>"></div>
@@ -6076,6 +6076,25 @@ body.va-modal-open {
         .va-dog-fields-wrap .va-dog-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
         .va-dog-fields-wrap .va-dog-row--single { grid-template-columns:1fr; margin-bottom:0; }
         @media (max-width:760px){ .va-dog-fields-wrap .va-dog-row { grid-template-columns:1fr; } }
+        .va-dark-date { position:relative; }
+        .va-dark-date .va-date-display { padding-right:46px; cursor:pointer; }
+        .va-date-btn { position:absolute; top:50%; right:10px; transform:translateY(-50%); width:28px; height:28px; border-radius:8px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+        .va-date-btn:hover { border-color:rgba(255,0,0,.35); background:rgba(255,0,0,.12); }
+        .va-dark-calendar { position:absolute; top:calc(100% + 8px); left:0; width:100%; min-width:280px; border:1px solid rgba(255,255,255,.14); border-radius:12px; background:linear-gradient(180deg,#111,#080808); box-shadow:0 18px 40px rgba(0,0,0,.7); z-index:10020; padding:10px; }
+        .va-dark-calendar__head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+        .va-dark-calendar__nav { width:28px; height:28px; border-radius:8px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.04); color:#fff; cursor:pointer; font-size:18px; line-height:1; }
+        .va-dark-calendar__nav:hover { border-color:rgba(255,0,0,.35); background:rgba(255,0,0,.12); }
+        .va-dark-calendar__title { font-size:13px; font-weight:700; color:#fff; }
+        .va-dark-calendar__dow, .va-dark-calendar__grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+        .va-dark-calendar__dow span { text-align:center; font-size:10px; color:rgba(255,255,255,.45); padding:2px 0; }
+        .va-dark-calendar__day { height:28px; border-radius:7px; border:1px solid transparent; background:transparent; color:#fff; font-size:12px; cursor:pointer; }
+        .va-dark-calendar__day:hover { border-color:rgba(255,0,0,.35); background:rgba(255,0,0,.14); }
+        .va-dark-calendar__day--muted { color:rgba(255,255,255,.28); }
+        .va-dark-calendar__day--selected { border-color:rgba(255,0,0,.55); background:rgba(255,0,0,.22); }
+        .va-dark-calendar__day--today { box-shadow:0 0 0 1px rgba(255,255,255,.35) inset; }
+        .va-dark-calendar__foot { display:flex; justify-content:flex-start; margin-top:8px; }
+        .va-dark-calendar__clear { border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.04); color:#fff; border-radius:8px; height:30px; padding:0 12px; cursor:pointer; }
+        .va-dark-calendar__clear:hover { border-color:rgba(255,0,0,.35); background:rgba(255,0,0,.12); }
         </style>
         <div class="va-vehicle-only">
         <div class="va-vehicle-specs">
@@ -7963,6 +7982,175 @@ document.addEventListener('DOMContentLoaded', function() {
         syncPopupSelectButton($size);
     }
 
+    function parseIsoDate(iso) {
+        if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+        var parts = iso.split('-').map(function(x){ return parseInt(x, 10); });
+        var date = new Date(parts[0], parts[1] - 1, parts[2]);
+        if (date.getFullYear() !== parts[0] || date.getMonth() !== (parts[1] - 1) || date.getDate() !== parts[2]) return null;
+        return date;
+    }
+
+    function toIsoDate(date) {
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
+
+    function formatDateDisplay(iso) {
+        var date = parseIsoDate(iso);
+        if (!date) return '';
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '. ' + month + '. ' + day + '.';
+    }
+
+    function closeDarkDatePickers() {
+        $('.va-dark-date').each(function(){
+            var closeFn = $(this).data('darkDateClose');
+            if (typeof closeFn === 'function') {
+                closeFn();
+            }
+        });
+    }
+
+    function initDarkDatePickers() {
+        $('.va-dark-date').each(function(){
+            var $field = $(this);
+            if ($field.data('darkDateInit')) {
+                return;
+            }
+            $field.data('darkDateInit', true);
+
+            var $value = $field.find('.va-date-value');
+            var $display = $field.find('.va-date-display');
+            var $popup = $field.find('.va-dark-calendar');
+            var $title = $field.find('.va-dark-calendar__title');
+            var $grid = $field.find('.va-dark-calendar__grid');
+            var $prev = $field.find('.va-dark-calendar__nav[data-dir="prev"]');
+            var $next = $field.find('.va-dark-calendar__nav[data-dir="next"]');
+            var $clear = $field.find('.va-dark-calendar__clear');
+            var viewDate = parseIsoDate($value.val()) || new Date();
+
+            function syncDisplay() {
+                $display.val(formatDateDisplay($value.val()));
+            }
+
+            function closePopup() {
+                $popup.hide();
+                $field.removeClass('is-open');
+            }
+
+            function openPopup() {
+                closeDarkDatePickers();
+                renderCalendar();
+                $popup.show();
+                $field.addClass('is-open');
+            }
+
+            function renderCalendar() {
+                var months = ['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
+                var year = viewDate.getFullYear();
+                var month = viewDate.getMonth();
+                var selected = parseIsoDate($value.val());
+                var first = new Date(year, month, 1);
+                var offset = (first.getDay() + 6) % 7;
+                var daysInMonth = new Date(year, month + 1, 0).getDate();
+                var prevMonthDays = new Date(year, month, 0).getDate();
+                var today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                $title.text(year + '. ' + months[month]);
+                $grid.empty();
+
+                for (var i = 0; i < 42; i++) {
+                    var dateObj;
+                    var label;
+                    var $day = $('<button type="button" class="va-dark-calendar__day"></button>');
+                    if (i < offset) {
+                        label = prevMonthDays - offset + i + 1;
+                        dateObj = new Date(year, month - 1, label);
+                        $day.addClass('va-dark-calendar__day--muted');
+                    } else if (i >= offset + daysInMonth) {
+                        label = i - (offset + daysInMonth) + 1;
+                        dateObj = new Date(year, month + 1, label);
+                        $day.addClass('va-dark-calendar__day--muted');
+                    } else {
+                        label = i - offset + 1;
+                        dateObj = new Date(year, month, label);
+                    }
+                    var iso = toIsoDate(dateObj);
+                    $day.text(label).attr('data-iso', iso);
+                    if (selected && toIsoDate(selected) === iso) {
+                        $day.addClass('va-dark-calendar__day--selected');
+                    }
+                    if (toIsoDate(today) === iso) {
+                        $day.addClass('va-dark-calendar__day--today');
+                    }
+                    $grid.append($day);
+                }
+            }
+
+            $field.data('darkDateClose', closePopup);
+            syncDisplay();
+
+            $display.on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                if ($popup.is(':visible')) {
+                    closePopup();
+                } else {
+                    openPopup();
+                }
+            });
+
+            $field.find('.va-date-btn').on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                if ($popup.is(':visible')) {
+                    closePopup();
+                } else {
+                    openPopup();
+                }
+            });
+
+            $prev.on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+                renderCalendar();
+            });
+
+            $next.on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+                renderCalendar();
+            });
+
+            $clear.on('click', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                $value.val('').trigger('change').trigger('input');
+                syncDisplay();
+                closePopup();
+            });
+
+            $grid.on('click', '.va-dark-calendar__day', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                var iso = ($(this).attr('data-iso') || '').trim();
+                $value.val(iso).trigger('change').trigger('input');
+                viewDate = parseIsoDate(iso) || viewDate;
+                syncDisplay();
+                closePopup();
+            });
+
+            $value.on('change input', syncDisplay);
+        });
+    }
+
     function applyVadcameraDynamicFields() {
         var type = (($('#va-vadcamera-camera-type').val() || '') + '').trim();
         $('.va-vadcamera-dynamic-group').each(function(){
@@ -8245,9 +8433,16 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change input', '#va-dog-birth-date, #va-dog-training-level, #va-dog-working-type', function(){
         applyDogDynamicFields();
     });
+    $(document).on('click', function(e){
+        if ($(e.target).closest('.va-dark-date').length) {
+            return;
+        }
+        closeDarkDatePickers();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
+    initDarkDatePickers();
     rebuildClothingSizeOptions();
     var initialOpticType = $('#va-optic-type').val() || 'celtavcso';
     rebuildOpticZoomOptions(initialOpticType);
