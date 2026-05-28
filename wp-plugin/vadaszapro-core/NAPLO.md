@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 05. 28. – Session #vadaszkutya-kategoria-komplex-mezorendszer
+- Kérés: a `Vadászkutya` (`vadaszkutya`) kategória kapjon teljes, részletes mezőrendszert vérvonal, okmányok, kiképzés, specializáció, teljesítmény, vízmunka, egészség, helyszín, kölyök/véreb/képzett dinamikák és moderációs flag-ek mentésével.
+- Frontend: a korábbi minimál kutyablokk helyett teljes, szekciózott `va-dog-fields-wrap` került be a feladási űrlapba új mezőkkel (`dog_working_type`, `dog_birth_date`, `dog_training_skills[]`, `dog_hunting_specialization[]`, `dog_documents[]`, `dog_origin_qualification[]`, `dog_moderation_flags[]`, `dog_work_video_types[]` stb.).
+- Dinamikus logika: új `applyDogDynamicFields()` és automatikus kor-számítás készült; a kölyök mezők 12 hónap alatt nyílnak, a vizsga mezők képzett státusznál jelennek meg, a véreb blokk pedig a munkatípus alapján látszik.
+- Kötelező validáció: frontend + backend required szabály frissítve a kutyás kritikus mezőkre (`dog_working_type`, `dog_breed`, `dog_gender`, `dog_birth_date`, `dog_hunting_specialization`, `dog_training_level`), és a frontend required-kezelés most már a `[]` végű többválasztós mezőket is helyesen kezeli.
+- Backend: mindkét AJAX ágban bekerült a teljes `dog_*` sanitize + `va_dog_*` meta mentés az új mezőkhöz, beleértve a születési dátumból számolt `dog_age_months` értéket is.
+- Szűrőmeták: új dedikált kutyás filter kulcsok mentése készült (`va_dog_filter_breed`, `va_dog_filter_specialization`, `va_dog_filter_training_level`, `va_dog_filter_working_type`, `va_dog_filter_pedigree`, `va_dog_filter_bloodline`, `va_dog_filter_age_months`, `va_dog_filter_has_work_exam`, `va_dog_filter_water_work`).
+- Moderáció: bekerült a kutyás moderációs jelzők és review találatok mentése (`va_dog_moderation_flags`, `va_dog_review_hits`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesen frissítve, hibakeresés mind a 4 érintett fájlon `No errors found`.
+- Maradt teendő: ha a listázó/szűrő oldalon külön kutyás kereső UI készül, rá kell kötni az új `va_dog_filter_*` kulcsokra.
+
 ## 2026. 05. 28. – Session #vadasz-felszereles-kategoria-komplex-mezorendszer
 - Kérés: a `Vadász felszerelés` (`vadasz-felszereles`) kategória kapjon teljes, szűrő- és moderáció-központú mezőrendszert a megadott felszereléstípusokkal, dinamikus almezőkkel és backend mentéssel.
 - Frontend: új `va-equipment-fields-grid` blokk került be a feladási űrlapba típus, állapot, felhasználás, anyag, szín/minta, méret/súly, tulajdonságok, elektronikus kiegészítők, tartozékok és moderációs jelzők mezőkkel.
