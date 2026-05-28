@@ -2,6 +2,12 @@
 
 ---
 
+## 2026. 05. 28. – Hotfix #vegyescsovu-mezok-egyszerusites
+- Kérés: a `vegyescsovu-puska` űrlapban ne legyen `ország`, `megye`, `település` és `moderációs flag` mező.
+- Frontend: a vegyescsövű blokkból kikerültek az ország/megye/település inputok és a moderációs flag többválasztó mező.
+- Backend: mindkét AJAX ágban eltávolítva a kapcsolódó sanitize + meta mentés (`va_mixed_country`, `va_mixed_county`, `va_mixed_city`, `va_mixed_moderation_flags`).
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 28. – Session #vegyescsovu-lofegyver-kategoria-bovites
 - Kérés: a `Vegyescsövű lőfegyver` (`vegyescsovu-puska`) kategória minimál állapotból teljes, részletes mezőrendszerre bővítése frontend + backend oldalon.
 - Frontend: a `submit-form.php` vegyescsövű blokkot kapott teljes technikai, használati, tartozék és moderációs mezőkkel (típus, csőszám, golyós/sörétes kaliber, elsütés, zár, irányzék, optika kompatibilitás, méretek, anyagok, használat, drilling specifikus mezők, tartozékok, moderációs flag-ek).

@@ -1411,9 +1411,6 @@ class VA_Ajax {
         $mixed_zero_distance_m = sanitize_text_field( wp_unslash( $_POST['mixed_zero_distance_m'] ?? '' ) );
         $mixed_safety_type = sanitize_key( wp_unslash( $_POST['mixed_safety_type'] ?? '' ) );
         $mixed_barrel_layout = sanitize_key( wp_unslash( $_POST['mixed_barrel_layout'] ?? '' ) );
-        $mixed_country = sanitize_text_field( wp_unslash( $_POST['mixed_country'] ?? '' ) );
-        $mixed_county = sanitize_text_field( wp_unslash( $_POST['mixed_county'] ?? '' ) );
-        $mixed_city = sanitize_text_field( wp_unslash( $_POST['mixed_city'] ?? '' ) );
         $mixed_barrel_internal = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_internal'] ?? '' ) );
         $mixed_engraving = sanitize_text_field( wp_unslash( $_POST['mixed_engraving'] ?? '' ) );
         $mixed_factory_marking = sanitize_text_field( wp_unslash( $_POST['mixed_factory_marking'] ?? '' ) );
@@ -1423,7 +1420,6 @@ class VA_Ajax {
         $mixed_mountain_weight_optimized = sanitize_key( wp_unslash( $_POST['mixed_mountain_weight_optimized'] ?? '' ) );
         $mixed_universal_label = sanitize_key( wp_unslash( $_POST['mixed_universal_label'] ?? '' ) );
         $mixed_condition = sanitize_key( wp_unslash( $_POST['mixed_condition'] ?? '' ) );
-        $mixed_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_moderation_flags'] ?? [] ) ) ) );
         $mixed_filter_optic = $mixed_optic_compatible === 'igen' ? '1' : '0';
         $mixed_filter_universal = $mixed_universal_label === 'igen' ? '1' : '0';
         $marok_type = sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) );
@@ -2230,7 +2226,7 @@ class VA_Ajax {
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
         $is_mixed_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vegyescsovu-puska';
-        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description, $mixed_moderation_flags ) : [];
+        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
@@ -2284,9 +2280,6 @@ class VA_Ajax {
             'va_mixed_zero_distance_m' => $mixed_zero_distance_m,
             'va_mixed_safety_type' => $mixed_safety_type,
             'va_mixed_barrel_layout' => $mixed_barrel_layout,
-            'va_mixed_country' => $mixed_country,
-            'va_mixed_county' => $mixed_county,
-            'va_mixed_city' => $mixed_city,
             'va_mixed_barrel_internal' => $mixed_barrel_internal,
             'va_mixed_engraving' => $mixed_engraving,
             'va_mixed_factory_marking' => $mixed_factory_marking,
@@ -2296,7 +2289,6 @@ class VA_Ajax {
             'va_mixed_mountain_weight_optimized' => $mixed_mountain_weight_optimized,
             'va_mixed_universal_label' => $mixed_universal_label,
             'va_mixed_condition' => $mixed_condition,
-            'va_mixed_moderation_flags' => $mixed_moderation_flags,
             'va_mixed_filter_type' => $mixed_type,
             'va_mixed_filter_rifle_caliber' => $mixed_rifle_caliber,
             'va_mixed_filter_shotgun_caliber' => $mixed_shotgun_caliber,
@@ -3598,9 +3590,6 @@ class VA_Ajax {
         $mixed_zero_distance_m = sanitize_text_field( wp_unslash( $_POST['mixed_zero_distance_m'] ?? '' ) );
         $mixed_safety_type = sanitize_key( wp_unslash( $_POST['mixed_safety_type'] ?? '' ) );
         $mixed_barrel_layout = sanitize_key( wp_unslash( $_POST['mixed_barrel_layout'] ?? '' ) );
-        $mixed_country = sanitize_text_field( wp_unslash( $_POST['mixed_country'] ?? '' ) );
-        $mixed_county = sanitize_text_field( wp_unslash( $_POST['mixed_county'] ?? '' ) );
-        $mixed_city = sanitize_text_field( wp_unslash( $_POST['mixed_city'] ?? '' ) );
         $mixed_barrel_internal = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_internal'] ?? '' ) );
         $mixed_engraving = sanitize_text_field( wp_unslash( $_POST['mixed_engraving'] ?? '' ) );
         $mixed_factory_marking = sanitize_text_field( wp_unslash( $_POST['mixed_factory_marking'] ?? '' ) );
@@ -3610,7 +3599,6 @@ class VA_Ajax {
         $mixed_mountain_weight_optimized = sanitize_key( wp_unslash( $_POST['mixed_mountain_weight_optimized'] ?? '' ) );
         $mixed_universal_label = sanitize_key( wp_unslash( $_POST['mixed_universal_label'] ?? '' ) );
         $mixed_condition = sanitize_key( wp_unslash( $_POST['mixed_condition'] ?? '' ) );
-        $mixed_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_moderation_flags'] ?? [] ) ) ) );
         $mixed_filter_optic = $mixed_optic_compatible === 'igen' ? '1' : '0';
         $mixed_filter_universal = $mixed_universal_label === 'igen' ? '1' : '0';
         $marok_type = sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) );
@@ -4385,7 +4373,7 @@ class VA_Ajax {
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
         $is_mixed_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vegyescsovu-puska';
-        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description, $mixed_moderation_flags ) : [];
+        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
@@ -4471,9 +4459,6 @@ class VA_Ajax {
             'va_mixed_zero_distance_m' => $mixed_zero_distance_m,
             'va_mixed_safety_type' => $mixed_safety_type,
             'va_mixed_barrel_layout' => $mixed_barrel_layout,
-            'va_mixed_country' => $mixed_country,
-            'va_mixed_county' => $mixed_county,
-            'va_mixed_city' => $mixed_city,
             'va_mixed_barrel_internal' => $mixed_barrel_internal,
             'va_mixed_engraving' => $mixed_engraving,
             'va_mixed_factory_marking' => $mixed_factory_marking,
@@ -4483,7 +4468,6 @@ class VA_Ajax {
             'va_mixed_mountain_weight_optimized' => $mixed_mountain_weight_optimized,
             'va_mixed_universal_label' => $mixed_universal_label,
             'va_mixed_condition' => $mixed_condition,
-            'va_mixed_moderation_flags' => $mixed_moderation_flags,
             'va_mixed_filter_type' => $mixed_type,
             'va_mixed_filter_rifle_caliber' => $mixed_rifle_caliber,
             'va_mixed_filter_shotgun_caliber' => $mixed_shotgun_caliber,
