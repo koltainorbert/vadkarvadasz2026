@@ -6271,6 +6271,90 @@ body.va-modal-open {
                 </div>
             </div>
             <?php
+            $call_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $call_csv = static function( string $key ) use ( $call_meta ): array {
+                return array_filter( array_map( 'trim', explode( ',', $call_meta( $key ) ) ) );
+            };
+            $call_target_species_saved = $call_csv( 'call_target_species' );
+            $call_electronic_features_saved = $call_csv( 'call_electronic_features' );
+            $call_weather_resistance_saved = $call_csv( 'call_weather_resistance' );
+            $call_usage_saved = $call_csv( 'call_usage' );
+            $call_accessories_saved = $call_csv( 'call_accessories' );
+            ?>
+            <div class="va-cat-rule-field va-call-fields-grid" data-categories="kurtok-sipok" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Kürt / síp típusa</label>
+                        <?php $v = $call_meta( 'call_type' ); ?>
+                        <select name="call_type" id="va-call-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="vadaszkurt"<?php selected( $v, 'vadaszkurt' ); ?>>Vadászkürt</option>
+                            <option value="hivosip"<?php selected( $v, 'hivosip' ); ?>>Hívósíp</option>
+                            <option value="szarvasbogo"<?php selected( $v, 'szarvasbogo' ); ?>>Szarvasbőgő</option>
+                            <option value="rokahivo"<?php selected( $v, 'rokahivo' ); ?>>Rókahívó</option>
+                            <option value="kacsa-sip"<?php selected( $v, 'kacsa-sip' ); ?>>Kacsa síp</option>
+                            <option value="libahivo"<?php selected( $v, 'libahivo' ); ?>>Libahívó</option>
+                            <option value="ragadozohivo"<?php selected( $v, 'ragadozohivo' ); ?>>Ragadozóhívó</option>
+                            <option value="ozhivo"<?php selected( $v, 'ozhivo' ); ?>>Őzhívó</option>
+                            <option value="vaddiszno-hivo"<?php selected( $v, 'vaddiszno-hivo' ); ?>>Vaddisznó hívó</option>
+                            <option value="univerzalis-sip"<?php selected( $v, 'univerzalis-sip' ); ?>>Univerzális síp</option>
+                            <option value="tradicionalis-kurt"<?php selected( $v, 'tradicionalis-kurt' ); ?>>Tradicionális kürt</option>
+                            <option value="ceremonialis-kurt"<?php selected( $v, 'ceremonialis-kurt' ); ?>>Ceremoniális kürt</option>
+                            <option value="versenykurt"<?php selected( $v, 'versenykurt' ); ?>>Versenykürt</option>
+                            <option value="elektronikus-hivo"<?php selected( $v, 'elektronikus-hivo' ); ?>>Elektronikus hívó</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Cél vadfaj</label>
+                        <select name="call_target_species[]" class="va-select" multiple data-placeholder="Válassz vadfaj(oka)t">
+                            <option value="szarvas"<?php echo in_array( 'szarvas', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Szarvas</option>
+                            <option value="oz"<?php echo in_array( 'oz', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Őz</option>
+                            <option value="vaddiszno"<?php echo in_array( 'vaddiszno', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Vaddisznó</option>
+                            <option value="roka"<?php echo in_array( 'roka', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Róka</option>
+                            <option value="sakal"<?php echo in_array( 'sakal', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Sakál</option>
+                            <option value="kacsa"<?php echo in_array( 'kacsa', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Kacsa</option>
+                            <option value="liba"<?php echo in_array( 'liba', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Liba</option>
+                            <option value="varju"<?php echo in_array( 'varju', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Varjú</option>
+                            <option value="ragadozo-madar"<?php echo in_array( 'ragadozo-madar', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Ragadozó madár</option>
+                            <option value="aprovad"<?php echo in_array( 'aprovad', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Apróvad</option>
+                            <option value="univerzalis"<?php echo in_array( 'univerzalis', $call_target_species_saved, true ) ? ' selected' : ''; ?>>Univerzális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Hang típus</label><?php $v = $call_meta( 'call_sound_type' ); ?><select name="call_sound_type" class="va-select"><option value="">– Válasszon –</option><option value="mely"<?php selected( $v, 'mely' ); ?>>Mély</option><option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option><option value="termeszetes"<?php selected( $v, 'termeszetes' ); ?>>Természetes</option><option value="agressziv"<?php selected( $v, 'agressziv' ); ?>>Agresszív</option><option value="parzasi"<?php selected( $v, 'parzasi' ); ?>>Párzási hang</option><option value="riaszto"<?php selected( $v, 'riaszto' ); ?>>Riasztó hang</option><option value="hivo"<?php selected( $v, 'hivo' ); ?>>Hívó hang</option><option value="kontakt"<?php selected( $v, 'kontakt' ); ?>>Kontakt hang</option></select></div>
+                    <div class="va-form-group"><label>Anyag</label><?php $v = $call_meta( 'call_material_type' ); ?><select name="call_material_type" id="va-call-material-type" class="va-select"><option value="">– Válasszon –</option><option value="fa"<?php selected( $v, 'fa' ); ?>>Fa</option><option value="agancs"<?php selected( $v, 'agancs' ); ?>>Agancs</option><option value="szaru"<?php selected( $v, 'szaru' ); ?>>Szaru</option><option value="rez"<?php selected( $v, 'rez' ); ?>>Réz</option><option value="bronz"<?php selected( $v, 'bronz' ); ?>>Bronz</option><option value="aluminium"<?php selected( $v, 'aluminium' ); ?>>Alumínium</option><option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option><option value="akril"<?php selected( $v, 'akril' ); ?>>Akril</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group"><label>Működés</label><?php $v = $call_meta( 'call_operation_mode' ); ?><select name="call_operation_mode" id="va-call-operation-mode" class="va-select"><option value="">– Válasszon –</option><option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option><option value="membranos"<?php selected( $v, 'membranos' ); ?>>Membrános</option><option value="fuvos"<?php selected( $v, 'fuvos' ); ?>>Fúvós</option><option value="elektronikus"<?php selected( $v, 'elektronikus' ); ?>>Elektronikus</option><option value="digitalis-hangmintas"<?php selected( $v, 'digitalis-hangmintas' ); ?>>Digitális hangmintás</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Elektronikus tulajdonságok</label><select name="call_electronic_features[]" class="va-select" multiple data-placeholder="Válassz opciókat"><option value="akkumulatoros"<?php echo in_array( 'akkumulatoros', $call_electronic_features_saved, true ) ? ' selected' : ''; ?>>Akkumulátoros</option><option value="elemes"<?php echo in_array( 'elemes', $call_electronic_features_saved, true ) ? ' selected' : ''; ?>>Elemes</option><option value="usb-toltheto"<?php echo in_array( 'usb-toltheto', $call_electronic_features_saved, true ) ? ' selected' : ''; ?>>USB tölthető</option><option value="bluetooth"<?php echo in_array( 'bluetooth', $call_electronic_features_saved, true ) ? ' selected' : ''; ?>>Bluetooth</option><option value="taviranyito"<?php echo in_array( 'taviranyito', $call_electronic_features_saved, true ) ? ' selected' : ''; ?>>Távirányító</option></select></div>
+                    <div class="va-form-group"><label>Hangerő</label><?php $v = $call_meta( 'call_volume_level' ); ?><select name="call_volume_level" class="va-select"><option value="">– Válasszon –</option><option value="halk"<?php selected( $v, 'halk' ); ?>>Halk</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option><option value="nagy-hatotavu"<?php selected( $v, 'nagy-hatotavu' ); ?>>Nagy hatótávú</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Időjárás állóság</label><select name="call_weather_resistance[]" class="va-select" multiple data-placeholder="Válassz jellemzőt"><option value="vizallo"<?php echo in_array( 'vizallo', $call_weather_resistance_saved, true ) ? ' selected' : ''; ?>>Vízálló</option><option value="froccsenesallo"<?php echo in_array( 'froccsenesallo', $call_weather_resistance_saved, true ) ? ' selected' : ''; ?>>Fröccsenésálló</option><option value="kulteri"<?php echo in_array( 'kulteri', $call_weather_resistance_saved, true ) ? ' selected' : ''; ?>>Kültéri használatra</option></select></div>
+                    <div class="va-form-group"><label>Méret</label><?php $v = $call_meta( 'call_size_class' ); ?><select name="call_size_class" class="va-select"><option value="">– Válasszon –</option><option value="mini"<?php selected( $v, 'mini' ); ?>>Mini</option><option value="normal"<?php selected( $v, 'normal' ); ?>>Normál</option><option value="hosszu-kurt"<?php selected( $v, 'hosszu-kurt' ); ?>>Hosszú kürt</option><option value="kompakt"<?php selected( $v, 'kompakt' ); ?>>Kompakt</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="call_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="vadaszat"<?php echo in_array( 'vadaszat', $call_usage_saved, true ) ? ' selected' : ''; ?>>Vadászat</option><option value="vadmegfigyeles"<?php echo in_array( 'vadmegfigyeles', $call_usage_saved, true ) ? ' selected' : ''; ?>>Vadmegfigyelés</option><option value="verseny"<?php echo in_array( 'verseny', $call_usage_saved, true ) ? ' selected' : ''; ?>>Verseny</option><option value="hagyomanyorzes"<?php echo in_array( 'hagyomanyorzes', $call_usage_saved, true ) ? ' selected' : ''; ?>>Hagyományőrzés</option><option value="dekoracio"<?php echo in_array( 'dekoracio', $call_usage_saved, true ) ? ' selected' : ''; ?>>Dekoráció</option><option value="gyujtoi"<?php echo in_array( 'gyujtoi', $call_usage_saved, true ) ? ' selected' : ''; ?>>Gyűjtői</option></select></div>
+                    <div class="va-form-group"><label>Hangképzés</label><?php $v = $call_meta( 'call_sound_generation' ); ?><select name="call_sound_generation" class="va-select"><option value="">– Válasszon –</option><option value="allithato"<?php selected( $v, 'allithato' ); ?>>Állítható hang</option><option value="tobb-hang"<?php selected( $v, 'tobb-hang' ); ?>>Több hang</option><option value="fix"<?php selected( $v, 'fix' ); ?>>Fix hang</option><option value="cserelemembran"<?php selected( $v, 'cserelemembran' ); ?>>Cserélhető membrán</option></select></div>
+                    <div class="va-form-group"><label>Stílus</label><?php $v = $call_meta( 'call_style' ); ?><select name="call_style" id="va-call-style" class="va-select"><option value="">– Válasszon –</option><option value="klasszikus"<?php selected( $v, 'klasszikus' ); ?>>Klasszikus</option><option value="tradicionalis"<?php selected( $v, 'tradicionalis' ); ?>>Tradicionális</option><option value="modern"<?php selected( $v, 'modern' ); ?>>Modern</option><option value="premium-kezmuves"<?php selected( $v, 'premium-kezmuves' ); ?>>Prémium kézműves</option><option value="taktikai"<?php selected( $v, 'taktikai' ); ?>>Taktikai</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="call_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="tok"<?php echo in_array( 'tok', $call_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="nyakpant"<?php echo in_array( 'nyakpant', $call_accessories_saved, true ) ? ' selected' : ''; ?>>Nyakpánt</option><option value="tarto"<?php echo in_array( 'tarto', $call_accessories_saved, true ) ? ' selected' : ''; ?>>Tartó</option><option value="tartalek-membran"<?php echo in_array( 'tartalek-membran', $call_accessories_saved, true ) ? ' selected' : ''; ?>>Tartalék membrán</option><option value="taviranyito"<?php echo in_array( 'taviranyito', $call_accessories_saved, true ) ? ' selected' : ''; ?>>Távirányító</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $call_meta( 'call_condition' ); ?><select name="call_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="antik"<?php selected( $v, 'antik' ); ?>>Antik</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Hangminta URL (opcionális)</label><input type="url" name="call_sound_sample_url" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_sound_sample_url' ) ); ?>" placeholder="pl. https://.../hangminta.mp3"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-electronic="yes" style="grid-column:1 / -1; display:none;"><strong>Elektronikus adatok</strong></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-electronic="yes" style="display:none;"><label>Hangminták száma</label><input type="text" name="call_sample_count" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_sample_count' ) ); ?>" placeholder="pl. 120"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-electronic="yes" style="display:none;"><label>Hatótáv (m)</label><input type="text" name="call_range_m" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_range_m' ) ); ?>" placeholder="pl. 350"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-electronic="yes" style="display:none;"><label>Üzemidő (óra)</label><input type="text" name="call_runtime_hours" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_runtime_hours' ) ); ?>" placeholder="pl. 8"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-handmade="yes" style="grid-column:1 / -1; display:none;"><strong>Kézműves adatok</strong></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-handmade="yes" style="display:none;"><label>Készítő neve</label><input type="text" name="call_maker_name" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_maker_name' ) ); ?>" placeholder="pl. Kovács Mester"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-handmade="yes" style="display:none;"><label>Egyedi darab</label><?php $v = $call_meta( 'call_unique_piece' ); ?><select name="call_unique_piece" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-competition="yes" style="grid-column:1 / -1; display:none;"><strong>Versenykürt adatok</strong></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-competition="yes" style="display:none;"><label>Verseny szabvány</label><input type="text" name="call_competition_standard" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_competition_standard' ) ); ?>" placeholder="pl. országos vadászkürt szabvány"></div>
+                    <div class="va-form-group va-call-dynamic-group" data-call-competition="yes" style="display:none;"><label>Hangolás</label><input type="text" name="call_tuning" class="va-input" value="<?php echo esc_attr( $call_meta( 'call_tuning' ) ); ?>" placeholder="pl. Bb / C"></div>
+                </div>
+            </div>
+            <?php
             $service_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
@@ -8639,6 +8723,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyCallDynamicFields() {
+        var type = (($('#va-call-type').val() || '') + '').trim();
+        var operationMode = (($('#va-call-operation-mode').val() || '') + '').trim();
+        var style = (($('#va-call-style').val() || '') + '').trim();
+        var material = (($('#va-call-material-type').val() || '') + '').trim();
+        var isElectronic = ['elektronikus', 'digitalis-hangmintas'].indexOf(operationMode) !== -1 || type === 'elektronikus-hivo';
+        var isHandmade = style === 'premium-kezmuves' || (style === 'tradicionalis' && ['fa', 'agancs', 'szaru'].indexOf(material) !== -1);
+        var isCompetition = type === 'versenykurt';
+
+        $('.va-call-dynamic-group').each(function(){
+            var $group = $(this);
+            var needElectronic = (($group.attr('data-call-electronic') || '') + '').trim() === 'yes';
+            var needHandmade = (($group.attr('data-call-handmade') || '') + '').trim() === 'yes';
+            var needCompetition = (($group.attr('data-call-competition') || '') + '').trim() === 'yes';
+            var ok = true;
+            if (needElectronic) ok = ok && isElectronic;
+            if (needHandmade) ok = ok && isHandmade;
+            if (needCompetition) ok = ok && isCompetition;
+            $group.toggle(ok);
+        });
+    }
+
     function applyDecorDynamicFields() {
         var decorType = (($('#va-decor-type').val() || '') + '').trim();
         var decorMaterial = (($('#va-decor-material').val() || '') + '').trim();
@@ -8822,6 +8928,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
         applyEquipmentDynamicFields();
     });
+    $(document).on('change', '#va-call-type, #va-call-operation-mode, #va-call-style, #va-call-material-type', function(){
+        applyCallDynamicFields();
+    });
     $(document).on('change', '#va-decor-type, #va-decor-material', function(){
         applyDecorDynamicFields();
     });
@@ -8861,6 +8970,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyExchangeDynamicFields();
     applyPublicationDynamicFields();
     applyEquipmentDynamicFields();
+    applyCallDynamicFields();
     applyDecorDynamicFields();
     applyDogDynamicFields();
     applyOtherClothingDynamicFields();
@@ -9146,6 +9256,12 @@ document.addEventListener('DOMContentLoaded', function() {
             equipment_type: 'Felszerelés típusa',
             equipment_condition: 'Állapot',
             equipment_hunting_usage: 'Felhasználás',
+            call_type: 'Kürt / síp típusa',
+            call_target_species: 'Cél vadfaj',
+            call_operation_mode: 'Működés',
+            call_material_type: 'Anyag',
+            call_volume_level: 'Hangerő',
+            call_style: 'Stílus',
             decor_type: 'Dísztárgy típusa',
             decor_material: 'Anyag',
             decor_style: 'Stílus',
@@ -9242,6 +9358,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(könyv|konyv|folyóirat|folyoirat|magazin|évkönyv|evkonyv)/.test(selectedCatText);
         var isDecorCategory = /disztargy/.test(slug)
             || /(dísztárgy|disztargy|dekor|falidísz|falidisz|relief|replika)/.test(selectedCatText);
+        var isCallCategory = /kurtok-sipok/.test(slug)
+            || /(kürt|kurt|síp|sip|hívó|hivo|szarvasbőgő|szarvasbogo)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -9274,6 +9392,13 @@ document.addEventListener('DOMContentLoaded', function() {
             applyDecorDynamicFields();
         } else {
             $('.va-decor-dynamic-group').hide();
+        }
+
+        $('.va-call-fields-grid').toggle(isCallCategory);
+        if (isCallCategory) {
+            applyCallDynamicFields();
+        } else {
+            $('.va-call-dynamic-group').hide();
         }
 
         if (isDogCategory) {
