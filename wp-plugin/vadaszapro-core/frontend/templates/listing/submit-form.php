@@ -269,6 +269,8 @@ $category_required_rules = [
     'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
     'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
     'szallas'            => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
+    'ingatlan'           => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
+    'ingatlan-szallas'   => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
     'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
     'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
     'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
@@ -4229,7 +4231,7 @@ body.va-modal-open {
             </div><!-- /.va-trophy-fields-grid -->
 
             <!-- Szállás mezők grid -->
-            <div class="va-form-group va-accommodation-fields-grid" data-categories="szallas" style="display:none">
+            <div class="va-form-group va-accommodation-fields-grid" data-categories="szallas,ingatlan,ingatlan-szallas" style="display:none">
                 <div class="va-step2-4col-inner">
                 <?php
                 $hour_options = [];
@@ -9217,8 +9219,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(kés|kes|bicska|tőr|tor|machete|bozótvágó|bozotvago|multiszerszám|multiszerszam)/.test(selectedCatText);
         var isOtherWeaponCategory = /egyeb-fegyverek/.test(slug)
             || /(egyéb fegyverek|egyeb fegyverek)/.test(selectedCatText);
-        var isAccommodationCategory = /szallas|ingatlan-szallas/.test(slug)
-            || /(szállás|szallas|booking|apartman|vendégház|vendeghaz|vadászház|vadaszhaz)/.test(selectedCatText);
+        var isAccommodationCategory = /szallas|ingatlan|ingatlan-szallas/.test(slug)
+            || /(ingatlan|szállás|szallas|booking|apartman|vendégház|vendeghaz|vadászház|vadaszhaz)/.test(selectedCatText);
         var isHuntOptionCategory = /vadaszati-lehetoseg|vadkarelharitas|vadaszterulet-berlet|vadasz-lehetoseg/.test(slug)
             || /(vadászati lehetőség|vadaszati lehetoseg|vadkárelhárítás|vadkarelharitas|lesbérlet|lesberlet|bérbeadás|berbeadas)/.test(selectedCatText);
         var isDamageControlCategory = /vadkarelharitas/.test(slug)

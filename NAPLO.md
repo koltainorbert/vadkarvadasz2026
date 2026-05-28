@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 28. – Hotfix #ingatlan-szallas-slug-egysegesites
+- Hiba: az ingatlan mezoblokk csak a `szallas` slugra volt kotve, mikozben a taxonomyban kulon `ingatlan` es `ingatlan-szallas` slug is aktiv.
+- Tuntet: az `Ingatlan` kategoriaban a teljes ingatlan mezorendszer nem jelent meg (felhasznaloi visszajelzes: "semmi sem kerult bele").
+- Javitas frontend: a szallas blokk `data-categories` erteke bovult (`szallas,ingatlan,ingatlan-szallas`), a kategoriadetektalas regexe is kiegeszult `ingatlan` sluggal es szoveges talalattal.
+- Javitas required szabaly: a frontend category required map kapott ket alias kulcsot (`ingatlan`, `ingatlan-szallas`) a meglvo `szallas` szabaly melle.
+- Javitas backend: a `get_category_required_rules()` map is megkapta az `ingatlan` es `ingatlan-szallas` kulcsokat, ugyanazzal az accommodation required listaval.
+- Szinkron + ellenorzes: root + plugin mirror `submit-form.php` es `class-ajax.php` egységesitve, hibakereses mind a 4 fajlon `No errors found`.
+
 ## 2026. 05. 28. – Session #szallas-ingatlan-komplex-bovites
 - Keres: a `szallas` kategoriat teljes ingatlan-fokuszu mezorendszerre kellett boviteni (elhelyezkedes, kornyezet, terulet, epuletmuszaki adatok, kozmuvek, megkozelithetoeseg, vadaszati kapcsolodas, extrak, felhasznalasi/jelleg mezok, kritikus szurok, dinamikus almezok).
 - Frontend: a `submit-form.php` `va-accommodation-fields-grid` blokkja jelentosen bovitve lett uj `accommodation_*` mezokkel, es az edit prefill map is kiegeszult.
