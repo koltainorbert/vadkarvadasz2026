@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 28. – Session #csere-kategoria-komplex-mezorendszer
+- Kérés: a `Csere` kategória a többi részletes feladási kategória mintájára teljes mezőstruktúrát kapjon (csere típus, kínált termék adatai, érték/ráfizetés, keresett kategóriák, jogi és média blokk, dinamikus fegyver/optika/kés mezők).
+- Frontend: a korábbi egymezős `exchange_target` blokk helyett teljes `va-exchange-fields-grid` szekció készült, popup-kompatibilis többválasztós mezőkkel (`exchange_wanted_categories[]`, `exchange_required_images[]`, `exchange_moderation_flags[]`) és részletes leíró mezőkkel.
+- Dinamikus logika: új `applyExchangeDynamicFields()` kezeli a fő kategória alapú almezőket (`fegyver` -> kaliber/engedély, `optika/hőkamera` -> nagyítás/objektív, `kés` -> acél típus).
+- Kötelező validáció: frontend + backend required szabály bővítve `csere` slugra (`exchange_type`, `exchange_offer_category`, `exchange_brand`, `exchange_condition`, `exchange_estimated_value`, `exchange_extra_payment_direction`, `exchange_county`).
+- Backend: mindkét AJAX ágban (új feladás + szerkesztés) bekerült a teljes `exchange_*` sanitize + `va_exchange_*` meta mentés.
+- Szűrő prioritás: dedikált csere filter meta kulcsok mentése (`va_exchange_filter_offer_category`, `va_exchange_filter_wanted_categories`, `va_exchange_filter_estimated_value`, `va_exchange_filter_exchange_type`, `va_exchange_filter_extra_payment_direction`, `va_exchange_filter_extra_payment_amount`, `va_exchange_filter_condition`, `va_exchange_filter_county`, `va_exchange_filter_brand`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 érintett fájlon `No errors found`.
+
 ## 2026. 05. 27. – Session #vadkarelharitas-kategoria-kritikus-bovites
 - Kérés: a meglévő vadászati mezőrendszer megtartása mellett dedikált `Vadkárelhárítás` bővítés készüljön (reakcióidő, elérhetőség, végrehajtói kapacitás, területtípus, kártípus, árazás/szerződés, eszközök, jogi-biztosítási mezők, dinamikus alcsoportok).
 - Frontend: a `va-hunt-option-fields-grid` blokk vadkár-specifikus mezőket kapott (`hunt_damage_main_type`, `hunt_land_type`, `hunt_response_time`, `hunt_availability_mode`, `hunt_executor_*`, `hunt_tools`, `hunt_pricing_model`, `hunt_contract_type`, stb.) + új vadfaj/módszer opciók.
