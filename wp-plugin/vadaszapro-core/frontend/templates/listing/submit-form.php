@@ -4913,14 +4913,42 @@ body.va-modal-open {
                     'cifra-tarkas'    => 'Cifra / tarka',
                     'egyeb'           => 'Egyéb'
                 ];
+                $dog_documents_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_documents'] ?? '' ) ) ) );
+                $dog_training_skills_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_training_skills'] ?? '' ) ) ) );
+                $dog_specialization_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_hunting_specialization'] ?? '' ) ) ) );
+                $dog_environment_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_environment'] ?? '' ) ) ) );
+                $dog_origin_qualification_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_origin_qualification'] ?? '' ) ) ) );
+                $dog_moderation_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_moderation_flags'] ?? '' ) ) ) );
+                $dog_work_video_saved = array_filter( array_map( 'trim', explode( ',', (string) ( $edit_meta['dog_work_video_types'] ?? '' ) ) ) );
                 $saved_dog_breed = (string) ($edit_meta['dog_breed'] ?? '');
                 $saved_dog_color = (string) ($edit_meta['dog_color'] ?? '');
             ?>
             <div class="va-cat-rule-field va-dog-fields-wrap" data-categories="vadaszkutya">
                 <div class="va-step2-4col-inner va-dog-4col">
-                <div class="va-dog-row">
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vadászkutya típusa</strong></div>
                     <div class="va-form-group">
-                        <label>Kutya fajtája</label>
+                        <label>Vadászati feladat szerint</label>
+                        <?php $v = (string) ( $edit_meta['dog_working_type'] ?? '' ); ?>
+                        <select name="dog_working_type" id="va-dog-working-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="vizsla"<?php selected( $v, 'vizsla' ); ?>>Vizsla</option>
+                            <option value="drotszoru-vizsla"<?php selected( $v, 'drotszoru-vizsla' ); ?>>Drótszőrű vizsla</option>
+                            <option value="rovidszoru-vizsla"<?php selected( $v, 'rovidszoru-vizsla' ); ?>>Rövidszőrű vizsla</option>
+                            <option value="kopo"<?php selected( $v, 'kopo' ); ?>>Kopó</option>
+                            <option value="vereb"<?php selected( $v, 'vereb' ); ?>>Véreb</option>
+                            <option value="terrier"<?php selected( $v, 'terrier' ); ?>>Terrier</option>
+                            <option value="tacsko"<?php selected( $v, 'tacsko' ); ?>>Tacskó</option>
+                            <option value="agar"<?php selected( $v, 'agar' ); ?>>Agar</option>
+                            <option value="apportirozo"<?php selected( $v, 'apportirozo' ); ?>>Apportírozó kutya</option>
+                            <option value="hajtokutya"<?php selected( $v, 'hajtokutya' ); ?>>Hajtókutya</option>
+                            <option value="nyomkoveto"<?php selected( $v, 'nyomkoveto' ); ?>>Nyomkövető</option>
+                            <option value="vaddisznos-kutya"<?php selected( $v, 'vaddisznos-kutya' ); ?>>Vaddisznós kutya</option>
+                            <option value="univerzalis"<?php selected( $v, 'univerzalis' ); ?>>Univerzális vadászkutya</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fajta</label>
                         <select name="dog_breed" class="va-select">
                             <option value="">– Válasszon fajtát –</option>
                             <?php if ( $saved_dog_breed !== '' && ! isset( $dog_breed_options[ $saved_dog_breed ] ) ): ?>
@@ -4932,6 +4960,10 @@ body.va-modal-open {
                         </select>
                     </div>
                     <div class="va-form-group">
+                        <label>Név</label>
+                        <input type="text" name="dog_name" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_name'] ?? '' ) ); ?>" placeholder="pl. Rex">
+                    </div>
+                    <div class="va-form-group">
                         <label>Neme</label>
                         <select name="dog_gender" class="va-select">
                             <option value="">– Válasszon –</option>
@@ -4939,8 +4971,47 @@ body.va-modal-open {
                             <option value="szuka"<?php selected( (string)($edit_meta['dog_gender'] ?? ''), 'szuka' ); ?>>Szuka</option>
                         </select>
                     </div>
-                </div>
-                <div class="va-dog-row">
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vérvonal</strong></div>
+                    <div class="va-form-group"><label>Tenyésztő neve</label><input type="text" name="dog_breeder_name" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_breeder_name'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Kennel neve</label><input type="text" name="dog_kennel_name" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_kennel_name'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group">
+                        <label>FCI törzskönyv</label>
+                        <?php $v = (string) ( $edit_meta['dog_pedigree_status'] ?? '' ); ?>
+                        <select name="dog_pedigree_status" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                            <option value="folyamatban"<?php selected( $v, 'folyamatban' ); ?>>Folyamatban</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Származási ország</label><input type="text" name="dog_origin_country" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_origin_country'] ?? '' ) ); ?>" placeholder="pl. Magyarország"></div>
+                    <div class="va-form-group">
+                        <label>Vérvonal</label>
+                        <?php $v = (string) ( $edit_meta['dog_bloodline_type'] ?? '' ); ?>
+                        <select name="dog_bloodline_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="champion"<?php selected( $v, 'champion' ); ?>>Champion vérvonal</option>
+                            <option value="munka"<?php selected( $v, 'munka' ); ?>>Munkavér</option>
+                            <option value="vegyes"<?php selected( $v, 'vegyes' ); ?>>Vegyes vérvonal</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Okmányok</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Dokumentumok</label>
+                        <select name="dog_documents[]" class="va-select" multiple data-placeholder="Válassz dokumentumot">
+                            <option value="torzskonyv"<?php echo in_array( 'torzskonyv', $dog_documents_saved, true ) ? ' selected' : ''; ?>>Törzskönyv</option>
+                            <option value="oltasi-konyv"<?php echo in_array( 'oltasi-konyv', $dog_documents_saved, true ) ? ' selected' : ''; ?>>Oltási könyv</option>
+                            <option value="mikrochip"<?php echo in_array( 'mikrochip', $dog_documents_saved, true ) ? ' selected' : ''; ?>>Mikrochip</option>
+                            <option value="munkavizsga-papir"<?php echo in_array( 'munkavizsga-papir', $dog_documents_saved, true ) ? ' selected' : ''; ?>>Munkavizsga papír</option>
+                            <option value="tenyesztesi-engedely"<?php echo in_array( 'tenyesztesi-engedely', $dog_documents_saved, true ) ? ' selected' : ''; ?>>Tenyésztési engedély</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Alapadatok</strong></div>
+                    <div class="va-form-group"><label>Születési dátum</label><input type="date" name="dog_birth_date" id="va-dog-birth-date" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_birth_date'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Kor (hónap, automatikus)</label><input type="number" name="dog_age_months" id="va-dog-age-months" class="va-input" min="0" max="300" readonly value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>"></div>
                     <div class="va-form-group">
                         <label>Színe</label>
                         <select name="dog_color" class="va-select">
@@ -4951,6 +5022,17 @@ body.va-modal-open {
                             <?php foreach ( $dog_color_options as $opt_value => $opt_label ): ?>
                                 <option value="<?php echo esc_attr( $opt_value ); ?>"<?php selected( $saved_dog_color, $opt_value ); ?>><?php echo esc_html( $opt_label ); ?></option>
                             <?php endforeach; ?>
+                            <option value="vad-szin"<?php selected( $saved_dog_color, 'vad-szin' ); ?>>Vad szín</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Küllem</label>
+                        <?php $v = (string) ( $edit_meta['dog_appearance_type'] ?? '' ); ?>
+                        <select name="dog_appearance_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="egyszinu"<?php selected( $v, 'egyszinu' ); ?>>Egyszínű</option>
+                            <option value="foltos"<?php selected( $v, 'foltos' ); ?>>Foltos</option>
+                            <option value="tarka"<?php selected( $v, 'tarka' ); ?>>Tarka</option>
                         </select>
                     </div>
                     <div class="va-form-group">
@@ -4961,13 +5043,163 @@ body.va-modal-open {
                             <option value="nem"<?php selected( (string)($edit_meta['dog_purebred'] ?? ''), 'nem' ); ?>>Nem</option>
                         </select>
                     </div>
-                </div>
-                <div class="va-dog-row va-dog-row--single">
-                    <div class="va-form-group">
-                        <label>Kutya életkor (hónap)</label>
-                        <input type="number" name="dog_age_months" class="va-input" min="1" max="300" placeholder="pl. 18" value="<?php echo esc_attr((string)($edit_meta['dog_age_months'] ?? '')); ?>">
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Képzettség</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Képzési elemek</label>
+                        <select name="dog_training_skills[]" class="va-select" multiple data-placeholder="Válassz képzettséget">
+                            <option value="alap-engedelmesseg"<?php echo in_array( 'alap-engedelmesseg', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Alap engedelmesség</option>
+                            <option value="behivas-biztos"<?php echo in_array( 'behivas-biztos', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Behívás biztos</option>
+                            <option value="poraz-nelkul"<?php echo in_array( 'poraz-nelkul', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Póráz nélkül</option>
+                            <option value="apport"<?php echo in_array( 'apport', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Apport</option>
+                            <option value="nyomkovetes"<?php echo in_array( 'nyomkovetes', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Nyomkövetés</option>
+                            <option value="vadmegallas"<?php echo in_array( 'vadmegallas', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Vadmegállás</option>
+                            <option value="vercsapa-munka"<?php echo in_array( 'vercsapa-munka', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Vércsapa munka</option>
+                            <option value="vadjelzes"<?php echo in_array( 'vadjelzes', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Vadjelzés</option>
+                            <option value="loveshez-szokott"<?php echo in_array( 'loveshez-szokott', $dog_training_skills_saved, true ) ? ' selected' : ''; ?>>Lövéshez szokott</option>
+                        </select>
                     </div>
-                </div>
+                    <div class="va-form-group">
+                        <label>Kiképzés szintje</label>
+                        <?php $v = (string) ( $edit_meta['dog_training_level'] ?? '' ); ?>
+                        <select name="dog_training_level" id="va-dog-training-level" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="alap"<?php selected( $v, 'alap' ); ?>>Alap</option>
+                            <option value="reszben-kepzett"<?php selected( $v, 'reszben-kepzett' ); ?>>Részben képzett</option>
+                            <option value="kikepzett"<?php selected( $v, 'kikepzett' ); ?>>Kiképzett</option>
+                            <option value="kikepzes-alatt"<?php selected( $v, 'kikepzes-alatt' ); ?>>Kiképzés alatt</option>
+                            <option value="vadaszatra-kesz"<?php selected( $v, 'vadaszatra-kesz' ); ?>>Vadászatra kész</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-trained="yes" style="display:none;">
+                        <label>Vizsga szint</label>
+                        <?php $v = (string) ( $edit_meta['dog_exam_level'] ?? '' ); ?>
+                        <select name="dog_exam_level" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="alap"<?php selected( $v, 'alap' ); ?>>Alap</option>
+                            <option value="kozep"<?php selected( $v, 'kozep' ); ?>>Közép</option>
+                            <option value="halado"<?php selected( $v, 'halado' ); ?>>Haladó</option>
+                            <option value="verseny"<?php selected( $v, 'verseny' ); ?>>Verseny</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-trained="yes" style="display:none;">
+                        <label>Munkavizsga típusa</label>
+                        <?php $v = (string) ( $edit_meta['dog_work_exam_type'] ?? '' ); ?>
+                        <select name="dog_work_exam_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="oszi-tenyeszvizsga"<?php selected( $v, 'oszi-tenyeszvizsga' ); ?>>Őszi tenyészvizsga</option>
+                            <option value="mezei-vizsga"<?php selected( $v, 'mezei-vizsga' ); ?>>Mezei vizsga</option>
+                            <option value="vereb-vizsga"<?php selected( $v, 'vereb-vizsga' ); ?>>Véreb vizsga</option>
+                            <option value="vizi-vizsga"<?php selected( $v, 'vizi-vizsga' ); ?>>Vízi vizsga</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vadászati specializáció</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Specializáció</label>
+                        <select name="dog_hunting_specialization[]" class="va-select" multiple data-placeholder="Válassz specializációt">
+                            <option value="vaddiszno"<?php echo in_array( 'vaddiszno', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Vaddisznó</option>
+                            <option value="szarvas"<?php echo in_array( 'szarvas', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Szarvas</option>
+                            <option value="oz"<?php echo in_array( 'oz', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Őz</option>
+                            <option value="aprovad"<?php echo in_array( 'aprovad', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Apróvad</option>
+                            <option value="vizivad"<?php echo in_array( 'vizivad', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Vízivad</option>
+                            <option value="roka"<?php echo in_array( 'roka', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Róka</option>
+                            <option value="ragadozo"<?php echo in_array( 'ragadozo', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Ragadozó</option>
+                            <option value="vegyes"<?php echo in_array( 'vegyes', $dog_specialization_saved, true ) ? ' selected' : ''; ?>>Vegyes</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Munkastílus</label>
+                        <?php $v = (string) ( $edit_meta['dog_work_style'] ?? '' ); ?>
+                        <select name="dog_work_style" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="onallo"<?php selected( $v, 'onallo' ); ?>>Önálló</option>
+                            <option value="vezetett"<?php selected( $v, 'vezetett' ); ?>>Vezetett</option>
+                            <option value="hajto"<?php selected( $v, 'hajto' ); ?>>Hajtó</option>
+                            <option value="csendes-kereso"<?php selected( $v, 'csendes-kereso' ); ?>>Csendes kereső</option>
+                            <option value="intenziv-hajto"<?php selected( $v, 'intenziv-hajto' ); ?>>Intenzív hajtó</option>
+                            <option value="kitarto-nyomkoveto"<?php selected( $v, 'kitarto-nyomkoveto' ); ?>>Kitartó nyomkövető</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Teljesítmény adatok</strong></div>
+                    <div class="va-form-group"><label>Keresési sugár (m)</label><input type="text" name="dog_search_radius_m" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_search_radius_m'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Állóképesség</label><?php $v = (string) ( $edit_meta['dog_endurance_level'] ?? '' ); ?><select name="dog_endurance_level" class="va-select"><option value="">– Válasszon –</option><option value="gyenge"<?php selected( $v, 'gyenge' ); ?>>Gyenge</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option><option value="kiemelkedo"<?php selected( $v, 'kiemelkedo' ); ?>>Kiemelkedő</option></select></div>
+                    <div class="va-form-group"><label>Agresszió szint vad felé</label><?php $v = (string) ( $edit_meta['dog_aggression_level'] ?? '' ); ?><select name="dog_aggression_level" class="va-select"><option value="">– Válasszon –</option><option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option></select></div>
+                    <div class="va-form-group"><label>Apport stabilitás</label><?php $v = (string) ( $edit_meta['dog_apport_stability'] ?? '' ); ?><select name="dog_apport_stability" class="va-select"><option value="">– Válasszon –</option><option value="gyenge"<?php selected( $v, 'gyenge' ); ?>>Gyenge</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option></select></div>
+                    <div class="va-form-group"><label>Vízmunka képesség</label><?php $v = (string) ( $edit_meta['dog_water_work_ability'] ?? '' ); ?><select name="dog_water_work_ability" class="va-select"><option value="">– Válasszon –</option><option value="gyenge"<?php selected( $v, 'gyenge' ); ?>>Gyenge</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Vízmunka</strong></div>
+                    <div class="va-form-group"><label>Vízmunkára alkalmas</label><?php $v = (string) ( $edit_meta['dog_water_work'] ?? '' ); ?><select name="dog_water_work" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Vízmunka szint</label><?php $v = (string) ( $edit_meta['dog_water_work_level'] ?? '' ); ?><select name="dog_water_work_level" class="va-select"><option value="">– Válasszon –</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="gyenge"<?php selected( $v, 'gyenge' ); ?>>Gyenge</option></select></div>
+                    <div class="va-form-group"><label>Hideg víz tűrés</label><?php $v = (string) ( $edit_meta['dog_cold_water_tolerance'] ?? '' ); ?><select name="dog_cold_water_tolerance" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="korlatozott"<?php selected( $v, 'korlatozott' ); ?>>Korlátozott</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Temperamentum</label><?php $v = (string) ( $edit_meta['dog_temperament'] ?? '' ); ?><select name="dog_temperament" class="va-select"><option value="">– Válasszon –</option><option value="nyugodt"<?php selected( $v, 'nyugodt' ); ?>>Nyugodt</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="aktiv"<?php selected( $v, 'aktiv' ); ?>>Aktív</option><option value="nagyon-aktiv"<?php selected( $v, 'nagyon-aktiv' ); ?>>Nagyon aktív</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Környezet</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tarthatóság</label>
+                        <select name="dog_environment[]" class="va-select" multiple data-placeholder="Válassz környezetet">
+                            <option value="lakasban-tarthato"<?php echo in_array( 'lakasban-tarthato', $dog_environment_saved, true ) ? ' selected' : ''; ?>>Lakásban tartható</option>
+                            <option value="udvar-szukseges"<?php echo in_array( 'udvar-szukseges', $dog_environment_saved, true ) ? ' selected' : ''; ?>>Udvar szükséges</option>
+                            <option value="kennel-tartas"<?php echo in_array( 'kennel-tartas', $dog_environment_saved, true ) ? ' selected' : ''; ?>>Kennel tartás</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Táplálás / egészség</strong></div>
+                    <div class="va-form-group"><label>Allergiás-e</label><?php $v = (string) ( $edit_meta['dog_allergic'] ?? '' ); ?><select name="dog_allergic" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Speciális étrend</label><input type="text" name="dog_special_diet" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_special_diet'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Ismert betegségek</label><textarea name="dog_known_diseases" class="va-input" rows="2"><?php echo esc_textarea( (string) ( $edit_meta['dog_known_diseases'] ?? '' ) ); ?></textarea></div>
+                    <div class="va-form-group"><label>Csípő diszplázia szűrés</label><?php $v = (string) ( $edit_meta['dog_hip_dysplasia_screening'] ?? '' ); ?><select name="dog_hip_dysplasia_screening" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option><option value="folyamatban"<?php selected( $v, 'folyamatban' ); ?>>Folyamatban</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Méretek</strong></div>
+                    <div class="va-form-group"><label>Marmagasság (cm)</label><input type="text" name="dog_height_cm" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_height_cm'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Súly (kg)</label><input type="text" name="dog_weight_kg" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_weight_kg'] ?? '' ) ); ?>"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Helyszín</strong></div>
+                    <div class="va-form-group"><label>Ország</label><input type="text" name="dog_country" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_country'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Megye</label><input type="text" name="dog_county" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_county'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Település</label><input type="text" name="dog_city" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_city'] ?? '' ) ); ?>"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Származás minősítés</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Minősítés</label>
+                        <select name="dog_origin_qualification[]" class="va-select" multiple data-placeholder="Válassz minősítést">
+                            <option value="tenyesztesre-alkalmas"<?php echo in_array( 'tenyesztesre-alkalmas', $dog_origin_qualification_saved, true ) ? ' selected' : ''; ?>>Tenyésztésre alkalmas</option>
+                            <option value="munkara-alkalmas"<?php echo in_array( 'munkara-alkalmas', $dog_origin_qualification_saved, true ) ? ' selected' : ''; ?>>Munkára alkalmas</option>
+                            <option value="hobbi"<?php echo in_array( 'hobbi', $dog_origin_qualification_saved, true ) ? ' selected' : ''; ?>>Hobbi</option>
+                            <option value="kiallitasi-minoseg"<?php echo in_array( 'kiallitasi-minoseg', $dog_origin_qualification_saved, true ) ? ' selected' : ''; ?>>Kiállítási minőség</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="grid-column:1 / -1; display:none;"><strong>Kölyök adatok</strong></div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="display:none;"><label>Alom száma</label><input type="text" name="dog_litter_count" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_litter_count'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-puppy="yes" style="display:none;"><label>Elvihetőség dátuma</label><input type="date" name="dog_available_from" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_available_from'] ?? '' ) ); ?>"></div>
+
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-working-types="vereb" style="grid-column:1 / -1; display:none;"><strong>Véreb specifikus</strong></div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-working-types="vereb" style="display:none;"><label>Nyomkövetési táv (m)</label><input type="text" name="dog_tracking_distance_m" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_tracking_distance_m'] ?? '' ) ); ?>"></div>
+                    <div class="va-form-group va-dog-dynamic-group" data-dog-working-types="vereb" style="display:none;"><label>Tapasztalat</label><input type="text" name="dog_tracking_experience" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_tracking_experience'] ?? '' ) ); ?>" placeholder="pl. 3 szezon, 25 sikeres utánkeresés"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Munkateszt videó</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Videó típus</label>
+                        <select name="dog_work_video_types[]" class="va-select" multiple data-placeholder="Válassz videótípust">
+                            <option value="nyomkovetes"<?php echo in_array( 'nyomkovetes', $dog_work_video_saved, true ) ? ' selected' : ''; ?>>Nyomkövetés</option>
+                            <option value="apport"<?php echo in_array( 'apport', $dog_work_video_saved, true ) ? ' selected' : ''; ?>>Apport</option>
+                            <option value="loves-reakcio"<?php echo in_array( 'loves-reakcio', $dog_work_video_saved, true ) ? ' selected' : ''; ?>>Lövés reakció</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Videó URL</label><input type="url" name="dog_work_video_url" class="va-input" value="<?php echo esc_attr( (string) ( $edit_meta['dog_work_video_url'] ?? '' ) ); ?>" placeholder="https://..."></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><strong>Moderáció</strong></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Moderációs flag</label>
+                        <select name="dog_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázati jelzők">
+                            <option value="hamis-torzskonyv"<?php echo in_array( 'hamis-torzskonyv', $dog_moderation_saved, true ) ? ' selected' : ''; ?>>Hamis törzskönyv</option>
+                            <option value="illegalis-tenyesztes"<?php echo in_array( 'illegalis-tenyesztes', $dog_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális tenyésztés</option>
+                            <option value="egeszsegugyi-adat-hamisitas"<?php echo in_array( 'egeszsegugyi-adat-hamisitas', $dog_moderation_saved, true ) ? ' selected' : ''; ?>>Egészségügyi adat hamisítás</option>
+                        </select>
+                    </div>
                 </div><!-- /va-step2-4col-inner -->
             </div>
             <?php
