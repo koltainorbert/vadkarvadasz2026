@@ -3098,7 +3098,6 @@ body.va-modal-open {
             $rifle_usage_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_usage' ) ) ) );
             $rifle_accessories_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_accessories' ) ) ) );
             $rifle_special_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_special_build' ) ) ) );
-            $rifle_moderation_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_moderation_flags' ) ) ) );
             ?>
             <div class="va-cat-rule-field va-rifle-fields-grid" data-categories="golyos-puska" style="display:none;">
                 <div class="va-step2-4col-inner">
@@ -3141,11 +3140,6 @@ body.va-modal-open {
 
                     <div class="va-form-group"><label>Ütésbiztos rendszer</label><?php $v = $rifle_saved( 'rifle_impact_safe' ); ?><select name="rifle_impact_safe" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
                     <div class="va-form-group"><label>Zárt rendszer</label><?php $v = $rifle_saved( 'rifle_closed_system' ); ?><select name="rifle_closed_system" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
-                    <div class="va-form-group"><label>Vadász kompatibilitás (vad)</label><input type="text" name="rifle_hunter_profile_game" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_game' ) ); ?>" placeholder="pl. nagyvad"></div>
-                    <div class="va-form-group"><label>Vadász kompatibilitás (optika)</label><input type="text" name="rifle_hunter_profile_optic" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_optic' ) ); ?>" placeholder="pl. 3-12x56"></div>
-                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadász kompatibilitás (táv)</label><input type="text" name="rifle_hunter_profile_distance" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_distance' ) ); ?>" placeholder="pl. 80-250 m"></div>
-
-                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="rifle_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="illegalis-atalakitas"<?php echo in_array( 'illegalis-atalakitas', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális átalakítás</option><option value="automata-fegyver-gyanu"<?php echo in_array( 'automata-fegyver-gyanu', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Automata fegyver gyanú</option><option value="engedely-nelkuli-fegyver"<?php echo in_array( 'engedely-nelkuli-fegyver', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option><option value="tiltott-konfiguracio"<?php echo in_array( 'tiltott-konfiguracio', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott konfiguráció</option></select></div>
                 </div>
             </div>
 
