@@ -167,7 +167,7 @@ class VA_Ajax {
         return [
             'golyos-puska'      => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'soretes-puska'     => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-            'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+            'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'model', 'mixed_type', 'mixed_barrel_count', 'mixed_rifle_caliber', 'mixed_shotgun_caliber', 'mixed_condition' ] ],
             'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
             'hatastalanitott'   => [ 'label' => 'Hatástalanított', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
             'egyeb-fegyverek'   => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
@@ -231,6 +231,11 @@ class VA_Ajax {
             'brand'   => 'Márka / gyártó',
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
+            'mixed_type' => 'Vegyescsövű típus',
+            'mixed_barrel_count' => 'Csövek száma',
+            'mixed_rifle_caliber' => 'Golyós kaliber',
+            'mixed_shotgun_caliber' => 'Sörétes kaliber',
+            'mixed_condition' => 'Állapot',
             'other_weapon_kind' => 'Egyéb fegyverek kategória',
             'hatastalanitott_weapon_type' => 'Fegyver típusa',
             'hatastalanitott_is_deactivated' => 'Hatástalanított?',
@@ -704,6 +709,33 @@ class VA_Ajax {
             'hangtompító',
             'illegalis atalakitas',
             'illegális átalakítás',
+            'engedely nelkul',
+            'engedély nélkül',
+        ];
+
+        $hits = [];
+        foreach ( $needles as $needle ) {
+            if ( mb_strpos( $haystack, $needle ) !== false ) {
+                $hits[] = $needle;
+            }
+        }
+
+        return array_values( array_unique( $hits ) );
+    }
+
+    private static function detect_mixed_moderation_hits( string $title, string $description, string $notes = '' ): array {
+        $haystack = mb_strtolower( trim( $title . "\n" . wp_strip_all_tags( $description ) . "\n" . $notes ) );
+        if ( $haystack === '' ) {
+            return [];
+        }
+
+        $needles = [
+            'illegalis atalakitas',
+            'illegális átalakítás',
+            'automata fegyver jelleg',
+            'automata',
+            'tiltott csokonverzio',
+            'tiltott csőkonverzió',
             'engedely nelkul',
             'engedély nélkül',
         ];
@@ -2151,6 +2183,8 @@ class VA_Ajax {
         $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
+        $is_mixed_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vegyescsovu-puska';
+        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description, $mixed_moderation_flags ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
@@ -4209,6 +4243,8 @@ class VA_Ajax {
         $knife_moderation_hits = $is_knife_category ? self::detect_knife_moderation_hits( $title, $description, $knife_moderation_flags ) : [];
         $is_marok_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'maroklofegyver';
         $marok_moderation_hits = $is_marok_category ? self::detect_marok_moderation_hits( $title, $description, $marok_moderation_flags ) : [];
+        $is_mixed_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'vegyescsovu-puska';
+        $mixed_moderation_hits = $is_mixed_category ? self::detect_mixed_moderation_hits( $title, $description, $mixed_moderation_flags ) : [];
         $is_service_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'szolgaltatas';
         $service_moderation_hits = $is_service_category ? self::detect_service_moderation_hits( $title, $description, $service_reference_notes . "\n" . $service_moderation_flags ) : [];
         $is_trophy_category = $estate_term && ! is_wp_error( $estate_term ) && sanitize_title( (string) $estate_term->slug ) === 'trofea-aletet';
