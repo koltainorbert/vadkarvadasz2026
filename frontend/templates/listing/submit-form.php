@@ -5516,6 +5516,50 @@ body.va-modal-open {
                 </div>
             </div>
             <?php
+            $decor_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $decor_csv = static function( string $key ) use ( $decor_meta ): array {
+                return array_filter( array_map( 'trim', explode( ',', (string) $decor_meta( $key ) ) ) );
+            };
+            $decor_motif_saved = $decor_csv( 'decor_motif_tags' );
+            $decor_special_saved = $decor_csv( 'decor_special_features' );
+            ?>
+            <div class="va-cat-rule-field va-decor-fields-grid" data-categories="disztargyak,disztargy" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Dísztárgy típusa</label><?php $v = $decor_meta( 'decor_type' ); ?><select name="decor_type" id="va-decor-type" class="va-select"><option value="">– Válasszon –</option><option value="vadaszati-faldisz"<?php selected( $v, 'vadaszati-faldisz' ); ?>>Vadászati falidísz</option><option value="trofea-dekoracio"<?php selected( $v, 'trofea-dekoracio' ); ?>>Trófea dekoráció</option><option value="fegyver-replika-disz"<?php selected( $v, 'fegyver-replika-disz' ); ?>>Fegyver replika (dísz)</option><option value="kes-tor-disztargy"<?php selected( $v, 'kes-tor-disztargy' ); ?>>Kés / tőr dísztárgy</option><option value="allat-figura"<?php selected( $v, 'allat-figura' ); ?>>Állat figura</option><option value="bronz-fem-szobor"<?php selected( $v, 'bronz-fem-szobor' ); ?>>Bronz / fém szobor</option><option value="fa-faragas"<?php selected( $v, 'fa-faragas' ); ?>>Fa faragás</option><option value="pajzs-cimer"<?php selected( $v, 'pajzs-cimer' ); ?>>Pajzs / címer</option><option value="vadasz-jelenet-relief"<?php selected( $v, 'vadasz-jelenet-relief' ); ?>>Vadász jelenet relief</option><option value="asztali-disz"<?php selected( $v, 'asztali-disz' ); ?>>Asztali dísz</option><option value="falikep-relief"<?php selected( $v, 'falikep-relief' ); ?>>Falikép / relief</option><option value="vintage-retro-dekor"<?php selected( $v, 'vintage-retro-dekor' ); ?>>Vintage / retro dekor</option><option value="antik-jellegu-disztargy"<?php selected( $v, 'antik-jellegu-disztargy' ); ?>>Antik jellegű dísztárgy</option><option value="modern-dekor"<?php selected( $v, 'modern-dekor' ); ?>>Modern dekor</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Anyag</label><?php $v = $decor_meta( 'decor_material' ); ?><select name="decor_material" id="va-decor-material" class="va-select"><option value="">– Válasszon –</option><option value="fa"<?php selected( $v, 'fa' ); ?>>Fa</option><option value="tolgy"<?php selected( $v, 'tolgy' ); ?>>Tölgy</option><option value="bukk"<?php selected( $v, 'bukk' ); ?>>Bükk</option><option value="dio"<?php selected( $v, 'dio' ); ?>>Dió</option><option value="fem"<?php selected( $v, 'fem' ); ?>>Fém</option><option value="bronz-hatasu"<?php selected( $v, 'bronz-hatasu' ); ?>>Bronz hatású</option><option value="ontott-fem"<?php selected( $v, 'ontott-fem' ); ?>>Öntött fém (spiáter / ötvözet)</option><option value="keramia"<?php selected( $v, 'keramia' ); ?>>Kerámia</option><option value="uveg"<?php selected( $v, 'uveg' ); ?>>Üveg</option><option value="mugyanta"<?php selected( $v, 'mugyanta' ); ?>>Műgyanta</option><option value="pvc"<?php selected( $v, 'pvc' ); ?>>PVC</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group va-decor-dynamic-group" data-decor-material="fa" style="display:none;"><label>Fafaj</label><input type="text" name="decor_wood_type" class="va-input" value="<?php echo esc_attr( $decor_meta( 'decor_wood_type' ) ); ?>" placeholder="pl. tölgy"></div>
+                    <div class="va-form-group va-decor-dynamic-group" data-decor-material="fem" style="display:none;"><label>Ötvözet típusa</label><input type="text" name="decor_metal_alloy" class="va-input" value="<?php echo esc_attr( $decor_meta( 'decor_metal_alloy' ) ); ?>" placeholder="pl. bronz-cink"></div>
+
+                    <div class="va-form-group"><label>Stílus</label><?php $v = $decor_meta( 'decor_style' ); ?><select name="decor_style" class="va-select"><option value="">– Válasszon –</option><option value="vadaszati"<?php selected( $v, 'vadaszati' ); ?>>Vadászati</option><option value="klasszikus"<?php selected( $v, 'klasszikus' ); ?>>Klasszikus</option><option value="rusztikus"<?php selected( $v, 'rusztikus' ); ?>>Rusztikus</option><option value="antik"<?php selected( $v, 'antik' ); ?>>Antik</option><option value="modern"<?php selected( $v, 'modern' ); ?>>Modern</option><option value="minimalista"<?php selected( $v, 'minimalista' ); ?>>Minimalista</option><option value="katonai-jellegu"<?php selected( $v, 'katonai-jellegu' ); ?>>Katonai jellegű</option><option value="fantasy-replika"<?php selected( $v, 'fantasy-replika' ); ?>>Fantasy / replika</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="ipari"<?php selected( $v, 'ipari' ); ?>>Ipari</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Motívum</label><select name="decor_motif_tags[]" class="va-select" multiple data-placeholder="Válassz motívumot"><option value="vadasz-jelenet"<?php echo in_array( 'vadasz-jelenet', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Vadász jelenet</option><option value="trofea"<?php echo in_array( 'trofea', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Trófea</option><option value="vadallatok"<?php echo in_array( 'vadallatok', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Vadállatok</option><option value="fegyver"<?php echo in_array( 'fegyver', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Fegyver</option><option value="erdo-termeszet"<?php echo in_array( 'erdo-termeszet', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Erdő / természet</option><option value="koponya"<?php echo in_array( 'koponya', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Koponya</option><option value="agancs"<?php echo in_array( 'agancs', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Agancs</option><option value="vadaszkutya"<?php echo in_array( 'vadaszkutya', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Vadászkutya</option><option value="madarvadaszat"<?php echo in_array( 'madarvadaszat', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Madárvadászat</option><option value="tortenelmi"<?php echo in_array( 'tortenelmi', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Történelmi</option><option value="cimer-emblema"<?php echo in_array( 'cimer-emblema', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Címer / embléma</option><option value="fantasy"<?php echo in_array( 'fantasy', $decor_motif_saved, true ) ? ' selected' : ''; ?>>Fantasy</option></select></div>
+
+                    <div class="va-form-group"><label>Kivitel</label><?php $v = $decor_meta( 'decor_finish' ); ?><select name="decor_finish" class="va-select"><option value="">– Válasszon –</option><option value="falra-akaszthato"<?php selected( $v, 'falra-akaszthato' ); ?>>Falra akasztható</option><option value="asztali"<?php selected( $v, 'asztali' ); ?>>Asztali</option><option value="allo"<?php selected( $v, 'allo' ); ?>>Álló</option><option value="dombormu-relief"<?php selected( $v, 'dombormu-relief' ); ?>>Dombormű (relief)</option><option value="szobor"<?php selected( $v, 'szobor' ); ?>>Szobor</option><option value="plakett"<?php selected( $v, 'plakett' ); ?>>Plakett</option><option value="panel"<?php selected( $v, 'panel' ); ?>>Panel</option><option value="miniatur"<?php selected( $v, 'miniatur' ); ?>>Miniatűr</option></select></div>
+                    <div class="va-form-group"><label>Részletesség</label><?php $v = $decor_meta( 'decor_detailing' ); ?><select name="decor_detailing" class="va-select"><option value="">– Válasszon –</option><option value="egyszeru"<?php selected( $v, 'egyszeru' ); ?>>Egyszerű</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="reszletgazdag"<?php selected( $v, 'reszletgazdag' ); ?>>Részletgazdag</option><option value="muveszi"<?php selected( $v, 'muveszi' ); ?>>Művészi</option><option value="premium-kidolgozas"<?php selected( $v, 'premium-kidolgozas' ); ?>>Prémium kidolgozás</option></select></div>
+                    <div class="va-form-group"><label>Kor / korszak</label><?php $v = $decor_meta( 'decor_era' ); ?><select name="decor_era" class="va-select"><option value="">– Válasszon –</option><option value="modern"<?php selected( $v, 'modern' ); ?>>Modern</option><option value="vintage"<?php selected( $v, 'vintage' ); ?>>Vintage</option><option value="retro"<?php selected( $v, 'retro' ); ?>>Retro</option><option value="antik-hatasu"<?php selected( $v, 'antik-hatasu' ); ?>>Antik hatású</option><option value="kortars"<?php selected( $v, 'kortars' ); ?>>Kortárs</option><option value="tortenelmi-ihletesu"<?php selected( $v, 'tortenelmi-ihletesu' ); ?>>Történelmi ihletésű</option></select></div>
+                    <div class="va-form-group"><label>Készítés</label><?php $v = $decor_meta( 'decor_production_type' ); ?><select name="decor_production_type" class="va-select"><option value="">– Válasszon –</option><option value="kezzel-keszult"<?php selected( $v, 'kezzel-keszult' ); ?>>Kézzel készült</option><option value="gepi-gyartas"<?php selected( $v, 'gepi-gyartas' ); ?>>Gépi gyártás</option><option value="ontott"<?php selected( $v, 'ontott' ); ?>>Öntött</option><option value="faragott"<?php selected( $v, 'faragott' ); ?>>Faragott</option><option value="gravirozott"<?php selected( $v, 'gravirozott' ); ?>>Gravírozott</option><option value="nyomtatott"<?php selected( $v, 'nyomtatott' ); ?>>Nyomtatott</option><option value="kombinalt-technika"<?php selected( $v, 'kombinalt-technika' ); ?>>Kombinált technika</option></select></div>
+
+                    <div class="va-form-group"><label>Funkció</label><?php $v = $decor_meta( 'decor_function' ); ?><select name="decor_function" class="va-select"><option value="">– Válasszon –</option><option value="dekoracio"<?php selected( $v, 'dekoracio' ); ?>>Dekoráció</option><option value="gyujtoi-darab"<?php selected( $v, 'gyujtoi-darab' ); ?>>Gyűjtői darab</option><option value="ajandek"<?php selected( $v, 'ajandek' ); ?>>Ajándék</option><option value="vadaszhaz-dekor"<?php selected( $v, 'vadaszhaz-dekor' ); ?>>Vadászház dekor</option><option value="tematikus-belso-ter"<?php selected( $v, 'tematikus-belso-ter' ); ?>>Tematikus belső tér</option></select></div>
+                    <div class="va-form-group"><label>Tematikus csoport</label><?php $v = $decor_meta( 'decor_thematic_group' ); ?><select name="decor_thematic_group" class="va-select"><option value="">– Válasszon –</option><option value="vadaszat"<?php selected( $v, 'vadaszat' ); ?>>Vadászat</option><option value="katonai"<?php selected( $v, 'katonai' ); ?>>Katonai</option><option value="termeszet"<?php selected( $v, 'termeszet' ); ?>>Természet</option><option value="fantasy"<?php selected( $v, 'fantasy' ); ?>>Fantasy</option><option value="tortenelmi"<?php selected( $v, 'tortenelmi' ); ?>>Történelmi</option><option value="pop-culture-replika"<?php selected( $v, 'pop-culture-replika' ); ?>>Pop culture replika</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Különlegesség</label><select name="decor_special_features[]" class="va-select" multiple data-placeholder="Válassz különlegességet"><option value="limitalt-kiadas"<?php echo in_array( 'limitalt-kiadas', $decor_special_saved, true ) ? ' selected' : ''; ?>>Limitált kiadás</option><option value="ritka-darab"<?php echo in_array( 'ritka-darab', $decor_special_saved, true ) ? ' selected' : ''; ?>>Ritka darab</option><option value="kezmuves"<?php echo in_array( 'kezmuves', $decor_special_saved, true ) ? ' selected' : ''; ?>>Kézműves</option><option value="egyedi-keszites"<?php echo in_array( 'egyedi-keszites', $decor_special_saved, true ) ? ' selected' : ''; ?>>Egyedi készítés</option><option value="sorozat-resze"<?php echo in_array( 'sorozat-resze', $decor_special_saved, true ) ? ' selected' : ''; ?>>Sorozat része</option></select></div>
+                    <div class="va-form-group"><label>Felakasztható / rögzítés</label><?php $v = $decor_meta( 'decor_mounting' ); ?><select name="decor_mounting" class="va-select"><option value="">– Válasszon –</option><option value="akaszto-van"<?php selected( $v, 'akaszto-van' ); ?>>Akasztó van</option><option value="nincs-rogzites"<?php selected( $v, 'nincs-rogzites' ); ?>>Nincs rögzítés</option><option value="falra-szerelheto"<?php selected( $v, 'falra-szerelheto' ); ?>>Falra szerelhető</option><option value="allithato"<?php selected( $v, 'allithato' ); ?>>Állítható</option></select></div>
+                    <div class="va-form-group"><label>Méret kategória</label><?php $v = $decor_meta( 'decor_size_class' ); ?><select name="decor_size_class" class="va-select"><option value="">– Válasszon –</option><option value="kicsi"<?php selected( $v, 'kicsi' ); ?>>Kicsi</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="nagy"<?php selected( $v, 'nagy' ); ?>>Nagy</option><option value="extra-nagy"<?php selected( $v, 'extra-nagy' ); ?>>Extra nagy</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $decor_meta( 'decor_condition' ); ?><select name="decor_condition" class="va-select"><option value="">– Válasszon –</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="antik"<?php selected( $v, 'antik' ); ?>>Antik</option><option value="restauralt"<?php selected( $v, 'restauralt' ); ?>>Restaurált</option></select></div>
+                    <div class="va-form-group"><label>Gyűjtői jelölés</label><?php $v = $decor_meta( 'decor_collectible_flag' ); ?><select name="decor_collectible_flag" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group va-decor-dynamic-group" data-decor-type="fegyver-replika-disz" style="display:none;"><label>Replika típusa</label><input type="text" name="decor_replica_type" class="va-input" value="<?php echo esc_attr( $decor_meta( 'decor_replica_type' ) ); ?>" placeholder="pl. vadászpuskás replika"></div>
+                    <div class="va-form-group va-decor-dynamic-group" data-decor-type="fegyver-replika-disz" style="display:none;"><label>Hitelesség szint</label><?php $v = $decor_meta( 'decor_authenticity_level' ); ?><select name="decor_authenticity_level" class="va-select"><option value="">– Válasszon –</option><option value="alap"<?php selected( $v, 'alap' ); ?>>Alap</option><option value="reszletes"<?php selected( $v, 'reszletes' ); ?>>Részletes</option><option value="muzeumi"<?php selected( $v, 'muzeumi' ); ?>>Múzeumi</option></select></div>
+                </div>
+            </div>
+
+            <?php
             $publication_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
@@ -8400,6 +8444,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyDecorDynamicFields() {
+        var decorType = (($('#va-decor-type').val() || '') + '').trim();
+        var decorMaterial = (($('#va-decor-material').val() || '') + '').trim();
+
+        $('.va-decor-dynamic-group').each(function(){
+            var $group = $(this);
+            var typeNeed = (($group.attr('data-decor-type') || '') + '').trim();
+            var materialNeed = (($group.attr('data-decor-material') || '') + '').trim();
+            var typeOk = !typeNeed || typeNeed === decorType;
+            var materialOk = !materialNeed || materialNeed === decorMaterial;
+            $group.toggle(typeOk && materialOk);
+        });
+    }
+
     function calculateDogAgeMonths() {
         var birthDate = (($('#va-dog-birth-date').val() || '') + '').trim();
         var $age = $('#va-dog-age-months');
@@ -8563,6 +8621,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
         applyEquipmentDynamicFields();
     });
+    $(document).on('change', '#va-decor-type, #va-decor-material', function(){
+        applyDecorDynamicFields();
+    });
     $(document).on('change input', '#va-dog-birth-date, #va-dog-training-level, #va-dog-working-type', function(){
         applyDogDynamicFields();
     });
@@ -8597,6 +8658,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyExchangeDynamicFields();
     applyPublicationDynamicFields();
     applyEquipmentDynamicFields();
+    applyDecorDynamicFields();
     applyDogDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
@@ -8876,6 +8938,13 @@ document.addEventListener('DOMContentLoaded', function() {
             equipment_type: 'Felszerelés típusa',
             equipment_condition: 'Állapot',
             equipment_hunting_usage: 'Felhasználás',
+            decor_type: 'Dísztárgy típusa',
+            decor_material: 'Anyag',
+            decor_style: 'Stílus',
+            decor_motif_tags: 'Motívum',
+            decor_production_type: 'Készítés',
+            decor_size_class: 'Méret kategória',
+            decor_condition: 'Állapot',
         };
         var missing = [];
 
@@ -8961,6 +9030,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(csere)/.test(selectedCatText);
         var isPublicationCategory = /konyv-folyoirat/.test(slug)
             || /(könyv|konyv|folyóirat|folyoirat|magazin|évkönyv|evkonyv)/.test(selectedCatText);
+        var isDecorCategory = /disztargy/.test(slug)
+            || /(dísztárgy|disztargy|dekor|falidísz|falidisz|relief|replika)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -8974,7 +9045,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory || isDecorCategory));
 
         $('.va-exchange-fields-grid').toggle(isExchangeCategory);
         if (isExchangeCategory) {
@@ -8986,6 +9057,13 @@ document.addEventListener('DOMContentLoaded', function() {
             applyPublicationDynamicFields();
         } else {
             $('.va-publication-dynamic-group').hide();
+        }
+
+        $('.va-decor-fields-grid').toggle(isDecorCategory);
+        if (isDecorCategory) {
+            applyDecorDynamicFields();
+        } else {
+            $('.va-decor-dynamic-group').hide();
         }
 
         if (isDogCategory) {
