@@ -181,6 +181,7 @@ class VA_Ajax {
             'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
             'egyeb-ruhazat'     => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
+            'csere'             => [ 'label' => 'Csere', 'required' => [ 'exchange_type', 'exchange_offer_category', 'exchange_brand', 'exchange_condition', 'exchange_estimated_value', 'exchange_extra_payment_direction', 'exchange_county' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
@@ -446,6 +447,13 @@ class VA_Ajax {
             'marok_legal_category' => 'Kategória',
             'marok_cip_marking' => 'MKH / CIP jelölés',
             'marok_transfer_license_only' => 'Csak engedéllyel átvehető',
+            'exchange_type' => 'Csere típusa',
+            'exchange_offer_category' => 'Fő kategória (mit kínál?)',
+            'exchange_brand' => 'Márka',
+            'exchange_condition' => 'Állapot',
+            'exchange_estimated_value' => 'Becsült érték (Ft)',
+            'exchange_extra_payment_direction' => 'Ráfizetés',
+            'exchange_county' => 'Megye',
         ];
 
         $missing = [];
@@ -1475,6 +1483,35 @@ class VA_Ajax {
         $hunt_availability_24_7 = $hunt_availability_mode === '0-24' ? '1' : '0';
         $hunt_method_types = $hunt_methods;
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $exchange_type = sanitize_key( wp_unslash( $_POST['exchange_type'] ?? '' ) );
+        $exchange_offer_category = sanitize_key( wp_unslash( $_POST['exchange_offer_category'] ?? '' ) );
+        $exchange_item_name = sanitize_text_field( wp_unslash( $_POST['exchange_item_name'] ?? '' ) );
+        $exchange_brand = sanitize_text_field( wp_unslash( $_POST['exchange_brand'] ?? '' ) );
+        $exchange_model = sanitize_text_field( wp_unslash( $_POST['exchange_model'] ?? '' ) );
+        $exchange_condition = sanitize_key( wp_unslash( $_POST['exchange_condition'] ?? '' ) );
+        $exchange_short_desc = sanitize_textarea_field( wp_unslash( $_POST['exchange_short_desc'] ?? '' ) );
+        $exchange_description = sanitize_textarea_field( wp_unslash( $_POST['exchange_description'] ?? '' ) );
+        $exchange_defects = sanitize_textarea_field( wp_unslash( $_POST['exchange_defects'] ?? '' ) );
+        $exchange_wear_signs = sanitize_textarea_field( wp_unslash( $_POST['exchange_wear_signs'] ?? '' ) );
+        $exchange_estimated_value = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['exchange_estimated_value'] ?? '' ) );
+        $exchange_extra_payment_direction = sanitize_key( wp_unslash( $_POST['exchange_extra_payment_direction'] ?? '' ) );
+        $exchange_extra_payment_amount = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['exchange_extra_payment_amount'] ?? '' ) );
+        $exchange_wanted_categories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_wanted_categories'] ?? [] ) ) ) );
+        $exchange_country = sanitize_text_field( wp_unslash( $_POST['exchange_country'] ?? '' ) );
+        $exchange_county = sanitize_text_field( wp_unslash( $_POST['exchange_county'] ?? '' ) );
+        $exchange_city = sanitize_text_field( wp_unslash( $_POST['exchange_city'] ?? '' ) );
+        $exchange_method = sanitize_key( wp_unslash( $_POST['exchange_method'] ?? '' ) );
+        $exchange_legal_notes = sanitize_textarea_field( wp_unslash( $_POST['exchange_legal_notes'] ?? '' ) );
+        $exchange_age_18 = sanitize_key( wp_unslash( $_POST['exchange_age_18'] ?? '' ) );
+        $exchange_required_images = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_required_images'] ?? [] ) ) ) );
+        $exchange_video_url = esc_url_raw( wp_unslash( $_POST['exchange_video_url'] ?? '' ) );
+        $exchange_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_moderation_flags'] ?? [] ) ) ) );
+        $exchange_partner_requirements = sanitize_textarea_field( wp_unslash( $_POST['exchange_partner_requirements'] ?? '' ) );
+        $exchange_firearm_caliber = sanitize_text_field( wp_unslash( $_POST['exchange_firearm_caliber'] ?? '' ) );
+        $exchange_firearm_license = sanitize_key( wp_unslash( $_POST['exchange_firearm_license'] ?? '' ) );
+        $exchange_optic_zoom = sanitize_text_field( wp_unslash( $_POST['exchange_optic_zoom'] ?? '' ) );
+        $exchange_optic_objective = sanitize_text_field( wp_unslash( $_POST['exchange_optic_objective'] ?? '' ) );
+        $exchange_knife_steel = sanitize_text_field( wp_unslash( $_POST['exchange_knife_steel'] ?? '' ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -1897,6 +1934,13 @@ class VA_Ajax {
             'shoe_eu_size' => $shoe_eu_size,
             'shoe_condition' => $shoe_condition,
             'shoe_boot_height' => $shoe_boot_height,
+            'exchange_type' => $exchange_type,
+            'exchange_offer_category' => $exchange_offer_category,
+            'exchange_brand' => $exchange_brand,
+            'exchange_condition' => $exchange_condition,
+            'exchange_estimated_value' => $exchange_estimated_value,
+            'exchange_extra_payment_direction' => $exchange_extra_payment_direction,
+            'exchange_county' => $exchange_county,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -3187,6 +3231,35 @@ class VA_Ajax {
         $hunt_availability_24_7 = $hunt_availability_mode === '0-24' ? '1' : '0';
         $hunt_method_types = $hunt_methods;
         $exchange_target = sanitize_text_field( wp_unslash( $_POST['exchange_target'] ?? '' ) );
+        $exchange_type = sanitize_key( wp_unslash( $_POST['exchange_type'] ?? '' ) );
+        $exchange_offer_category = sanitize_key( wp_unslash( $_POST['exchange_offer_category'] ?? '' ) );
+        $exchange_item_name = sanitize_text_field( wp_unslash( $_POST['exchange_item_name'] ?? '' ) );
+        $exchange_brand = sanitize_text_field( wp_unslash( $_POST['exchange_brand'] ?? '' ) );
+        $exchange_model = sanitize_text_field( wp_unslash( $_POST['exchange_model'] ?? '' ) );
+        $exchange_condition = sanitize_key( wp_unslash( $_POST['exchange_condition'] ?? '' ) );
+        $exchange_short_desc = sanitize_textarea_field( wp_unslash( $_POST['exchange_short_desc'] ?? '' ) );
+        $exchange_description = sanitize_textarea_field( wp_unslash( $_POST['exchange_description'] ?? '' ) );
+        $exchange_defects = sanitize_textarea_field( wp_unslash( $_POST['exchange_defects'] ?? '' ) );
+        $exchange_wear_signs = sanitize_textarea_field( wp_unslash( $_POST['exchange_wear_signs'] ?? '' ) );
+        $exchange_estimated_value = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['exchange_estimated_value'] ?? '' ) );
+        $exchange_extra_payment_direction = sanitize_key( wp_unslash( $_POST['exchange_extra_payment_direction'] ?? '' ) );
+        $exchange_extra_payment_amount = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['exchange_extra_payment_amount'] ?? '' ) );
+        $exchange_wanted_categories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_wanted_categories'] ?? [] ) ) ) );
+        $exchange_country = sanitize_text_field( wp_unslash( $_POST['exchange_country'] ?? '' ) );
+        $exchange_county = sanitize_text_field( wp_unslash( $_POST['exchange_county'] ?? '' ) );
+        $exchange_city = sanitize_text_field( wp_unslash( $_POST['exchange_city'] ?? '' ) );
+        $exchange_method = sanitize_key( wp_unslash( $_POST['exchange_method'] ?? '' ) );
+        $exchange_legal_notes = sanitize_textarea_field( wp_unslash( $_POST['exchange_legal_notes'] ?? '' ) );
+        $exchange_age_18 = sanitize_key( wp_unslash( $_POST['exchange_age_18'] ?? '' ) );
+        $exchange_required_images = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_required_images'] ?? [] ) ) ) );
+        $exchange_video_url = esc_url_raw( wp_unslash( $_POST['exchange_video_url'] ?? '' ) );
+        $exchange_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['exchange_moderation_flags'] ?? [] ) ) ) );
+        $exchange_partner_requirements = sanitize_textarea_field( wp_unslash( $_POST['exchange_partner_requirements'] ?? '' ) );
+        $exchange_firearm_caliber = sanitize_text_field( wp_unslash( $_POST['exchange_firearm_caliber'] ?? '' ) );
+        $exchange_firearm_license = sanitize_key( wp_unslash( $_POST['exchange_firearm_license'] ?? '' ) );
+        $exchange_optic_zoom = sanitize_text_field( wp_unslash( $_POST['exchange_optic_zoom'] ?? '' ) );
+        $exchange_optic_objective = sanitize_text_field( wp_unslash( $_POST['exchange_optic_objective'] ?? '' ) );
+        $exchange_knife_steel = sanitize_text_field( wp_unslash( $_POST['exchange_knife_steel'] ?? '' ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -3577,6 +3650,13 @@ class VA_Ajax {
             'shoe_eu_size' => $shoe_eu_size,
             'shoe_condition' => $shoe_condition,
             'shoe_boot_height' => $shoe_boot_height,
+            'exchange_type' => $exchange_type,
+            'exchange_offer_category' => $exchange_offer_category,
+            'exchange_brand' => $exchange_brand,
+            'exchange_condition' => $exchange_condition,
+            'exchange_estimated_value' => $exchange_estimated_value,
+            'exchange_extra_payment_direction' => $exchange_extra_payment_direction,
+            'exchange_county' => $exchange_county,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
