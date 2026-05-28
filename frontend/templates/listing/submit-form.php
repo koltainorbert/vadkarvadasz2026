@@ -8540,6 +8540,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyAccommodationDynamicFields() {
+        var type = (($('#va-accommodation-type').val() || '') + '').trim();
+        $('.va-accommodation-dynamic-group').each(function(){
+            var list = (($(this).attr('data-accommodation-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     function applyTrophyDynamicFields() {
         var custom = (($('#va-trophy-custom-made').val() || '') + '').trim();
         $('.va-trophy-dynamic-group').each(function(){
@@ -8790,6 +8798,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-rifle-type', function(){
         applyRifleDynamicFields();
     });
+    $(document).on('change', '#va-accommodation-type', function(){
+        applyAccommodationDynamicFields();
+    });
     $(document).on('change', '#va-trophy-custom-made', function(){
         applyTrophyDynamicFields();
     });
@@ -8840,6 +8851,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyHandgunDynamicFields();
     applyMixedRifleDynamicFields();
     applyRifleDynamicFields();
+    applyAccommodationDynamicFields();
     applyTrophyDynamicFields();
     applyHuntDynamicFields();
     applyVadkarDynamicFields();
@@ -9311,6 +9323,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle accommodation fields grid
         $('.va-accommodation-fields-grid').toggle(isAccommodationCategory);
+        if (isAccommodationCategory) {
+            applyAccommodationDynamicFields();
+        } else {
+            $('.va-accommodation-dynamic-group').hide();
+        }
 
         // Handle hunting-option fields grid
         $('.va-hunt-option-fields-grid').toggle(isHuntOptionCategory);
@@ -9386,7 +9403,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply required attributes to accommodation fields
         if (isAccommodationCategory) {
             $('.va-accommodation-fields-grid input, .va-accommodation-fields-grid select, .va-accommodation-fields-grid textarea').each(function(){
-                var fieldName = ($(this).attr('name') || '').trim();
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
             });
