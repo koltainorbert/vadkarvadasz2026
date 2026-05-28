@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 28. – Session #golyos-lofegyver-kategoria-komplex-bovites
+- Kérés: a `Golyós lőfegyver` (`golyos-puska`) kategória teljes, részletes technikai/szűrő/moderáció fókuszú mezőrendszerének bővítése a jelenlegi blokk kiegészítésével.
+- Frontend: új, dedikált `va-rifle-fields-grid` került be a feladási űrlapba (típus, több kaliber, cső adatok, pontosság/nullázás, működés/elsütés, optika kompatibilitás, tartozékok, használat, speciális build, hegyi/precíziós/félautomata logikák, állapot, vadász kompatibilitás profil, moderációs jelzők).
+- Dinamikus logika: új `applyRifleDynamicFields()` készült, amely kategória- és típusfüggően kezeli a `precíziós` (MOA + lőtáv), `hegyi` (súly-optimalizálás) és `félautomata` (tárkapacitás) mezők megjelenését.
+- Kötelező validáció: frontend + backend required szabály bővítve `golyos-puska` slugra (`brand`, `model`, `rifle_type`, `rifle_caliber`, `rifle_barrel_length_cm`, `rifle_condition`, `rifle_optic_compatibility`) és label map frissítve.
+- Backend: mindkét AJAX ágban bekerült a teljes `rifle_*` sanitize, a validációs értéktérkép, valamint a teljes `va_rifle_*` meta mentés.
+- Szűrőmeták + moderáció: dedikált golyós filter kulcsok mentése készült (`va_rifle_filter_*`), plusz review státusz a moderációs flag-ekből (`va_rifle_needs_review`, `va_rifle_review_hits`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 érintett fájlon `No errors found`.
+
 ## 2026. 05. 28. – Session #disztargyak-kategoria-komplex-mezorendszer
 - Kérés: a `Dísztárgyak` (`disztargyak` / `disztargy`) kategória teljes, részletes mezőrendszerének megvalósítása dinamikus almezőkkel és kötelező validációval.
 - Frontend: bekerült a teljes `va-decor-fields-grid` blokk (típus, anyag, fafaj/ötvözet dinamikák, stílus, motívumok, kivitel, részletesség, korszak, készítés, funkció, tematika, különlegesség, rögzítés, méret, állapot, gyűjtői jelölés, replika-hitelesség mezők).
