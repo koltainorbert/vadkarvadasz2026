@@ -7450,6 +7450,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyPublicationDynamicFields() {
+        var publicationType = (($('#va-publication-type').val() || '') + '').trim();
+        var editionType = (($('#va-publication-edition-type').val() || '') + '').trim();
+        var signedCopy = (($('#va-publication-signed-copy').val() || '') + '').trim();
+        if (!signedCopy && editionType === 'dedikalt') {
+            signedCopy = 'igen';
+        }
+
+        $('.va-publication-dynamic-group').each(function(){
+            var $group = $(this);
+            var typeList = (($group.attr('data-publication-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var editionList = (($group.attr('data-publication-editions') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var needsSigned = (($group.attr('data-publication-signed') || '') + '').trim() === 'yes';
+            var typeOk = !typeList.length || typeList.indexOf(publicationType) !== -1;
+            var editionOk = !editionList.length || editionList.indexOf(editionType) !== -1;
+            var signedOk = !needsSigned || signedCopy === 'igen';
+            $group.toggle(typeOk && editionOk && signedOk);
+        });
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -7561,6 +7581,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-exchange-offer-category', function(){
         applyExchangeDynamicFields();
     });
+    $(document).on('change', '#va-publication-type, #va-publication-edition-type, #va-publication-signed-copy', function(){
+        applyPublicationDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -7582,6 +7605,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyHuntDynamicFields();
     applyVadkarDynamicFields();
     applyExchangeDynamicFields();
+    applyPublicationDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -7842,6 +7866,15 @@ document.addEventListener('DOMContentLoaded', function() {
             exchange_estimated_value: 'Becsült érték (Ft)',
             exchange_extra_payment_direction: 'Ráfizetés',
             exchange_county: 'Megye',
+            publication_type: 'Típus',
+            publication_topics: 'Témakör',
+            publication_title: 'Cím',
+            publication_author: 'Szerző',
+            publication_year: 'Kiadás éve',
+            publication_language: 'Nyelv',
+            publication_condition: 'Állapot',
+            publication_collector_value: 'Gyűjtői érték',
+            publication_complete_volume: 'Komplett évfolyam',
         };
         var missing = [];
 
@@ -7925,6 +7958,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(maroklőfegyver|maroklofegyver|pisztoly|revolver)/.test(selectedCatText);
         var isExchangeCategory = /csere/.test(slug)
             || /(csere)/.test(selectedCatText);
+        var isPublicationCategory = /konyv-folyoirat/.test(slug)
+            || /(könyv|konyv|folyóirat|folyoirat|magazin|évkönyv|evkonyv)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -7938,11 +7973,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory));
 
         $('.va-exchange-fields-grid').toggle(isExchangeCategory);
         if (isExchangeCategory) {
             applyExchangeDynamicFields();
+        }
+
+        $('.va-publication-fields-grid').toggle(isPublicationCategory);
+        if (isPublicationCategory) {
+            applyPublicationDynamicFields();
+        } else {
+            $('.va-publication-dynamic-group').hide();
         }
 
         $('.va-service-fields-grid').toggle(isServiceCategory);
@@ -8082,6 +8124,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isHandgunCategory) {
             $('.va-handgun-fields-grid input, .va-handgun-fields-grid select, .va-handgun-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isPublicationCategory) {
+            $('.va-publication-fields-grid input, .va-publication-fields-grid select, .va-publication-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
