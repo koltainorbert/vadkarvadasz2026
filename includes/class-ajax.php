@@ -205,6 +205,66 @@ class VA_Ajax {
         ];
     }
 
+    private static function collect_call_fields_from_request(): array {
+        $call_type = sanitize_key( wp_unslash( $_POST['call_type'] ?? '' ) );
+        $call_target_species = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['call_target_species'] ?? [] ) ) ) );
+        $call_sound_type = sanitize_key( wp_unslash( $_POST['call_sound_type'] ?? '' ) );
+        $call_material_type = sanitize_key( wp_unslash( $_POST['call_material_type'] ?? '' ) );
+        $call_operation_mode = sanitize_key( wp_unslash( $_POST['call_operation_mode'] ?? '' ) );
+        $call_electronic_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['call_electronic_features'] ?? [] ) ) ) );
+        $call_volume_level = sanitize_key( wp_unslash( $_POST['call_volume_level'] ?? '' ) );
+        $call_weather_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['call_weather_resistance'] ?? [] ) ) ) );
+        $call_size_class = sanitize_key( wp_unslash( $_POST['call_size_class'] ?? '' ) );
+        $call_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['call_usage'] ?? [] ) ) ) );
+        $call_sound_generation = sanitize_key( wp_unslash( $_POST['call_sound_generation'] ?? '' ) );
+        $call_style = sanitize_key( wp_unslash( $_POST['call_style'] ?? '' ) );
+        $call_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['call_accessories'] ?? [] ) ) ) );
+        $call_condition = sanitize_key( wp_unslash( $_POST['call_condition'] ?? '' ) );
+        $call_sample_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['call_sample_count'] ?? '' ) );
+        $call_range_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['call_range_m'] ?? '' ) );
+        $call_runtime_hours = sanitize_text_field( wp_unslash( $_POST['call_runtime_hours'] ?? '' ) );
+        $call_maker_name = sanitize_text_field( wp_unslash( $_POST['call_maker_name'] ?? '' ) );
+        $call_unique_piece = sanitize_key( wp_unslash( $_POST['call_unique_piece'] ?? '' ) );
+        $call_competition_standard = sanitize_text_field( wp_unslash( $_POST['call_competition_standard'] ?? '' ) );
+        $call_tuning = sanitize_text_field( wp_unslash( $_POST['call_tuning'] ?? '' ) );
+        $call_sound_sample_url = esc_url_raw( wp_unslash( $_POST['call_sound_sample_url'] ?? '' ) );
+        $call_filter_is_electronic = ( in_array( $call_operation_mode, [ 'elektronikus', 'digitalis-hangmintas' ], true ) || $call_type === 'elektronikus-hivo' ) ? '1' : '0';
+        $call_filter_waterproof = strpos( ',' . $call_weather_resistance . ',', ',vizallo,' ) !== false ? '1' : '0';
+
+        return [
+            'call_type' => $call_type,
+            'call_target_species' => $call_target_species,
+            'call_sound_type' => $call_sound_type,
+            'call_material_type' => $call_material_type,
+            'call_operation_mode' => $call_operation_mode,
+            'call_electronic_features' => $call_electronic_features,
+            'call_volume_level' => $call_volume_level,
+            'call_weather_resistance' => $call_weather_resistance,
+            'call_size_class' => $call_size_class,
+            'call_usage' => $call_usage,
+            'call_sound_generation' => $call_sound_generation,
+            'call_style' => $call_style,
+            'call_accessories' => $call_accessories,
+            'call_condition' => $call_condition,
+            'call_sample_count' => $call_sample_count,
+            'call_range_m' => $call_range_m,
+            'call_runtime_hours' => $call_runtime_hours,
+            'call_maker_name' => $call_maker_name,
+            'call_unique_piece' => $call_unique_piece,
+            'call_competition_standard' => $call_competition_standard,
+            'call_tuning' => $call_tuning,
+            'call_sound_sample_url' => $call_sound_sample_url,
+            'call_filter_type' => $call_type,
+            'call_filter_target_species' => $call_target_species,
+            'call_filter_operation_mode' => $call_operation_mode,
+            'call_filter_material_type' => $call_material_type,
+            'call_filter_volume_level' => $call_volume_level,
+            'call_filter_style' => $call_style,
+            'call_filter_waterproof' => $call_filter_waterproof,
+            'call_filter_is_electronic' => $call_filter_is_electronic,
+        ];
+    }
+
     private static function validate_category_required_fields( int $category_id, array $values ): string {
         if ( $category_id <= 0 ) {
             return '';
@@ -1852,6 +1912,7 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $call_fields = self::collect_call_fields_from_request();
         $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
         $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
         $decor_wood_type = sanitize_text_field( wp_unslash( $_POST['decor_wood_type'] ?? '' ) );
@@ -2332,6 +2393,12 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'call_type' => $call_fields['call_type'],
+            'call_target_species' => $call_fields['call_target_species'],
+            'call_operation_mode' => $call_fields['call_operation_mode'],
+            'call_material_type' => $call_fields['call_material_type'],
+            'call_volume_level' => $call_fields['call_volume_level'],
+            'call_style' => $call_fields['call_style'],
             'decor_type' => $decor_type,
             'decor_material' => $decor_material,
             'decor_style' => $decor_style,
@@ -4255,6 +4322,7 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $call_fields = self::collect_call_fields_from_request();
         $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
         $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
         $decor_wood_type = sanitize_text_field( wp_unslash( $_POST['decor_wood_type'] ?? '' ) );
@@ -4703,6 +4771,12 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'call_type' => $call_fields['call_type'],
+            'call_target_species' => $call_fields['call_target_species'],
+            'call_operation_mode' => $call_fields['call_operation_mode'],
+            'call_material_type' => $call_fields['call_material_type'],
+            'call_volume_level' => $call_fields['call_volume_level'],
+            'call_style' => $call_fields['call_style'],
             'decor_type' => $decor_type,
             'decor_material' => $decor_material,
             'decor_style' => $decor_style,
