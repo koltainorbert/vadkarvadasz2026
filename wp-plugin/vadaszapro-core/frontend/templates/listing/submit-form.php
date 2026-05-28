@@ -245,7 +245,7 @@ if ( is_array( $categories ) ) {
     }
 }
 $category_required_rules = [
-    'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'model', 'rifle_type', 'rifle_caliber', 'rifle_barrel_length_cm', 'rifle_condition', 'rifle_optic_compatibility' ] ],
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'model', 'mixed_type', 'mixed_barrel_count', 'mixed_rifle_caliber', 'mixed_shotgun_caliber', 'mixed_condition' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
@@ -937,6 +937,40 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'service_moderation_flags' => get_post_meta( $maybe_id, 'va_service_moderation_flags', true ),
             'year'        => get_post_meta( $maybe_id, 'va_year',        true ),
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
+            'rifle_type' => get_post_meta( $maybe_id, 'va_rifle_type', true ),
+            'rifle_caliber' => get_post_meta( $maybe_id, 'va_rifle_caliber', true ),
+            'rifle_barrel_length_cm' => get_post_meta( $maybe_id, 'va_rifle_barrel_length_cm', true ),
+            'rifle_barrel_material' => get_post_meta( $maybe_id, 'va_rifle_barrel_material', true ),
+            'rifle_rifling_type' => get_post_meta( $maybe_id, 'va_rifle_rifling_type', true ),
+            'rifle_barrel_condition' => get_post_meta( $maybe_id, 'va_rifle_barrel_condition', true ),
+            'rifle_accuracy_moa' => get_post_meta( $maybe_id, 'va_rifle_accuracy_moa', true ),
+            'rifle_zero_distance_m' => get_post_meta( $maybe_id, 'va_rifle_zero_distance_m', true ),
+            'rifle_factory_group' => get_post_meta( $maybe_id, 'va_rifle_factory_group', true ),
+            'rifle_action_type' => get_post_meta( $maybe_id, 'va_rifle_action_type', true ),
+            'rifle_trigger_type' => get_post_meta( $maybe_id, 'va_rifle_trigger_type', true ),
+            'rifle_safety_type' => get_post_meta( $maybe_id, 'va_rifle_safety_type', true ),
+            'rifle_stock_material' => get_post_meta( $maybe_id, 'va_rifle_stock_material', true ),
+            'rifle_optic_rail_type' => get_post_meta( $maybe_id, 'va_rifle_optic_rail_type', true ),
+            'rifle_optic_compatibility' => get_post_meta( $maybe_id, 'va_rifle_optic_compatibility', true ),
+            'rifle_zero_return' => get_post_meta( $maybe_id, 'va_rifle_zero_return', true ),
+            'rifle_accessories' => get_post_meta( $maybe_id, 'va_rifle_accessories', true ),
+            'rifle_weight_kg' => get_post_meta( $maybe_id, 'va_rifle_weight_kg', true ),
+            'rifle_total_length_cm' => get_post_meta( $maybe_id, 'va_rifle_total_length_cm', true ),
+            'rifle_usage' => get_post_meta( $maybe_id, 'va_rifle_usage', true ),
+            'rifle_special_build' => get_post_meta( $maybe_id, 'va_rifle_special_build', true ),
+            'rifle_barrel_mount_type' => get_post_meta( $maybe_id, 'va_rifle_barrel_mount_type', true ),
+            'rifle_impact_safe' => get_post_meta( $maybe_id, 'va_rifle_impact_safe', true ),
+            'rifle_closed_system' => get_post_meta( $maybe_id, 'va_rifle_closed_system', true ),
+            'rifle_effective_range_m' => get_post_meta( $maybe_id, 'va_rifle_effective_range_m', true ),
+            'rifle_stability_level' => get_post_meta( $maybe_id, 'va_rifle_stability_level', true ),
+            'rifle_recoil_level' => get_post_meta( $maybe_id, 'va_rifle_recoil_level', true ),
+            'rifle_temperament' => get_post_meta( $maybe_id, 'va_rifle_temperament', true ),
+            'rifle_mountain_weight_optimized' => get_post_meta( $maybe_id, 'va_rifle_mountain_weight_optimized', true ),
+            'rifle_magazine_capacity' => get_post_meta( $maybe_id, 'va_rifle_magazine_capacity', true ),
+            'rifle_moderation_flags' => get_post_meta( $maybe_id, 'va_rifle_moderation_flags', true ),
+            'rifle_hunter_profile_game' => get_post_meta( $maybe_id, 'va_rifle_hunter_profile_game', true ),
+            'rifle_hunter_profile_optic' => get_post_meta( $maybe_id, 'va_rifle_hunter_profile_optic', true ),
+            'rifle_hunter_profile_distance' => get_post_meta( $maybe_id, 'va_rifle_hunter_profile_distance', true ),
             'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
             'marok_condition' => get_post_meta( $maybe_id, 'va_marok_condition', true ),
             'mixed_type' => get_post_meta( $maybe_id, 'va_mixed_type', true ),
@@ -3056,6 +3090,65 @@ body.va-modal-open {
                     <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
                 </div>
             </div>
+            <?php
+            $rifle_saved = static function( string $key ) use ( $edit_meta ) {
+                return is_scalar( $edit_meta[ $key ] ?? '' ) ? (string) ( $edit_meta[ $key ] ?? '' ) : '';
+            };
+            $rifle_caliber_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_caliber' ) ) ) );
+            $rifle_usage_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_usage' ) ) ) );
+            $rifle_accessories_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_accessories' ) ) ) );
+            $rifle_special_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_special_build' ) ) ) );
+            $rifle_moderation_saved = array_filter( array_map( 'trim', explode( ',', $rifle_saved( 'rifle_moderation_flags' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-rifle-fields-grid" data-categories="golyos-puska" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Típus</label><?php $v = $rifle_saved( 'rifle_type' ); ?><select name="rifle_type" id="va-rifle-type" class="va-select"><option value="">- Válasszon -</option><option value="ismetlo-bolt-action"<?php selected( $v, 'ismetlo-bolt-action' ); ?>>Ismétlő (bolt action)</option><option value="felautomata"<?php selected( $v, 'felautomata' ); ?>>Félautomata</option><option value="egy-lovetu-kipplauf"<?php selected( $v, 'egy-lovetu-kipplauf' ); ?>>Egy lövetű (kipplauf)</option><option value="break-action-golyos"<?php selected( $v, 'break-action-golyos' ); ?>>Break action golyós</option><option value="kombinalt-golyos"<?php selected( $v, 'kombinalt-golyos' ); ?>>Kombinált golyós</option><option value="precizios-puska"<?php selected( $v, 'precizios-puska' ); ?>>Precíziós puska</option><option value="hegyi-puska"<?php selected( $v, 'hegyi-puska' ); ?>>Hegyi puska</option><option value="varmint-puska"<?php selected( $v, 'varmint-puska' ); ?>>Varmint puska</option><option value="taktikai-sport"<?php selected( $v, 'taktikai-sport' ); ?>>Taktikai / sport</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $rifle_saved( 'rifle_condition' ); ?><select name="rifle_condition" class="va-select"><option value="">- Válasszon -</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="restauralt"<?php selected( $v, 'restauralt' ); ?>>Restaurált</option></select></div>
+                    <div class="va-form-group"><label>Csőhossz (cm)</label><input type="text" name="rifle_barrel_length_cm" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_barrel_length_cm' ) ); ?>" placeholder="pl. 61"></div>
+                    <div class="va-form-group"><label>Teljes hossz (cm)</label><input type="text" name="rifle_total_length_cm" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_total_length_cm' ) ); ?>" placeholder="pl. 112"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Golyós kaliber</label><select name="rifle_caliber[]" class="va-select" multiple data-placeholder="Válassz kalibert"><option value="17-hmr"<?php echo in_array( '17-hmr', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.17 HMR</option><option value="22-lr"<?php echo in_array( '22-lr', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.22 LR</option><option value="22-wmr"<?php echo in_array( '22-wmr', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.22 WMR</option><option value="222-rem"<?php echo in_array( '222-rem', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.222 Rem</option><option value="223-rem"<?php echo in_array( '223-rem', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.223 Rem</option><option value="243-win"<?php echo in_array( '243-win', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.243 Win</option><option value="6-5-creedmoor"<?php echo in_array( '6-5-creedmoor', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>6.5 Creedmoor</option><option value="6-5x55-se"<?php echo in_array( '6-5x55-se', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>6.5x55 SE</option><option value="7x57"<?php echo in_array( '7x57', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>7x57</option><option value="7x64"<?php echo in_array( '7x64', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>7x64</option><option value="7x65r"<?php echo in_array( '7x65r', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>7x65R</option><option value="308-win"<?php echo in_array( '308-win', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.308 Win</option><option value="30-06-springfield"<?php echo in_array( '30-06-springfield', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.30-06 Springfield</option><option value="300-win-mag"<?php echo in_array( '300-win-mag', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.300 Win Mag</option><option value="338-lapua-magnum"<?php echo in_array( '338-lapua-magnum', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>.338 Lapua Magnum</option><option value="egyeb"<?php echo in_array( 'egyeb', $rifle_caliber_saved, true ) ? ' selected' : ''; ?>>Egyéb</option></select></div>
+
+                    <div class="va-form-group"><label>Cső anyaga</label><?php $v = $rifle_saved( 'rifle_barrel_material' ); ?><select name="rifle_barrel_material" class="va-select"><option value="">- Válasszon -</option><option value="acel"<?php selected( $v, 'acel' ); ?>>Acél</option><option value="krom-molibden"<?php selected( $v, 'krom-molibden' ); ?>>Króm-molibdén</option><option value="rozsdamentes"<?php selected( $v, 'rozsdamentes' ); ?>>Rozsdamentes</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Huzagolás típusa</label><?php $v = $rifle_saved( 'rifle_rifling_type' ); ?><select name="rifle_rifling_type" class="va-select"><option value="">- Válasszon -</option><option value="standard"<?php selected( $v, 'standard' ); ?>>Standard</option><option value="gyors"<?php selected( $v, 'gyors' ); ?>>Gyors</option><option value="precizios"<?php selected( $v, 'precizios' ); ?>>Precíziós</option></select></div>
+                    <div class="va-form-group"><label>Cső állapota</label><?php $v = $rifle_saved( 'rifle_barrel_condition' ); ?><select name="rifle_barrel_condition" class="va-select"><option value="">- Válasszon -</option><option value="kivalo"<?php selected( $v, 'kivalo' ); ?>>Kiváló</option><option value="jo"<?php selected( $v, 'jo' ); ?>>Jó</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option></select></div>
+                    <div class="va-form-group"><label>Zárszerkezet</label><?php $v = $rifle_saved( 'rifle_action_type' ); ?><select name="rifle_action_type" class="va-select"><option value="">- Válasszon -</option><option value="forgo-tolozar"<?php selected( $v, 'forgo-tolozar' ); ?>>Forgó tolózár</option><option value="billenocsoves"<?php selected( $v, 'billenocsoves' ); ?>>Billenőcsöves</option><option value="felautomata-rendszer"<?php selected( $v, 'felautomata-rendszer' ); ?>>Félautomata rendszer</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+
+                    <div class="va-form-group"><label>Elsütés</label><?php $v = $rifle_saved( 'rifle_trigger_type' ); ?><select name="rifle_trigger_type" class="va-select"><option value="">- Válasszon -</option><option value="egybillentyus"<?php selected( $v, 'egybillentyus' ); ?>>Egybillentyűs</option><option value="ketbillentyus"<?php selected( $v, 'ketbillentyus' ); ?>>Kétbillentyűs</option><option value="allithato-sutes"<?php selected( $v, 'allithato-sutes' ); ?>>Állítható sütés</option></select></div>
+                    <div class="va-form-group"><label>Biztosíték típusa</label><?php $v = $rifle_saved( 'rifle_safety_type' ); ?><select name="rifle_safety_type" class="va-select"><option value="">- Válasszon -</option><option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option><option value="csuszo"<?php selected( $v, 'csuszo' ); ?>>Csúszó</option><option value="tang"<?php selected( $v, 'tang' ); ?>>Tang</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group"><label>Ágyazás</label><?php $v = $rifle_saved( 'rifle_stock_material' ); ?><select name="rifle_stock_material" class="va-select"><option value="">- Válasszon -</option><option value="fa"<?php selected( $v, 'fa' ); ?>>Fa (dió, bükk)</option><option value="laminalt"<?php selected( $v, 'laminalt' ); ?>>Laminált</option><option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option><option value="szintetikus"<?php selected( $v, 'szintetikus' ); ?>>Szintetikus</option><option value="karbon"<?php selected( $v, 'karbon' ); ?>>Karbon</option><option value="gumirozott"<?php selected( $v, 'gumirozott' ); ?>>Gumírozott</option></select></div>
+                    <div class="va-form-group"><label>Súly (kg)</label><input type="text" name="rifle_weight_kg" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_weight_kg' ) ); ?>" placeholder="pl. 3.2"></div>
+
+                    <div class="va-form-group"><label>Sín típusa</label><?php $v = $rifle_saved( 'rifle_optic_rail_type' ); ?><select name="rifle_optic_rail_type" class="va-select"><option value="">- Válasszon -</option><option value="nincs"<?php selected( $v, 'nincs' ); ?>>Nincs</option><option value="11mm"<?php selected( $v, '11mm' ); ?>>11 mm</option><option value="weaver"<?php selected( $v, 'weaver' ); ?>>Weaver</option><option value="picatinny"<?php selected( $v, 'picatinny' ); ?>>Picatinny</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group"><label>Optika kompatibilitás</label><?php $v = $rifle_saved( 'rifle_optic_compatibility' ); ?><select name="rifle_optic_compatibility" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Zero visszaállítás</label><?php $v = $rifle_saved( 'rifle_zero_return' ); ?><select name="rifle_zero_return" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Cső / tok kapcsolat</label><?php $v = $rifle_saved( 'rifle_barrel_mount_type' ); ?><select name="rifle_barrel_mount_type" class="va-select"><option value="">- Válasszon -</option><option value="fix"<?php selected( $v, 'fix' ); ?>>Fix</option><option value="cserelheto-cso"<?php selected( $v, 'cserelheto-cso' ); ?>>Cserélhető cső</option><option value="modularis-rendszer"<?php selected( $v, 'modularis-rendszer' ); ?>>Moduláris rendszer</option></select></div>
+
+                    <div class="va-form-group va-rifle-dynamic-group" data-rifle-types="precizios-puska" style="display:none;"><label>MOA érték</label><input type="text" name="rifle_accuracy_moa" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_accuracy_moa' ) ); ?>" placeholder="pl. 0.8"></div>
+                    <div class="va-form-group va-rifle-dynamic-group" data-rifle-types="precizios-puska" style="display:none;"><label>Effektív lőtáv (m)</label><input type="text" name="rifle_effective_range_m" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_effective_range_m' ) ); ?>" placeholder="pl. 600"></div>
+                    <div class="va-form-group"><label>Belövési távolság (m)</label><input type="text" name="rifle_zero_distance_m" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_zero_distance_m' ) ); ?>" placeholder="pl. 100"></div>
+                    <div class="va-form-group"><label>Gyári szóráskép</label><input type="text" name="rifle_factory_group" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_factory_group' ) ); ?>" placeholder="pl. 25 mm / 100 m"></div>
+
+                    <div class="va-form-group va-rifle-dynamic-group" data-rifle-types="hegyi-puska" style="display:none;"><label>Súly optimalizálás</label><?php $v = $rifle_saved( 'rifle_mountain_weight_optimized' ); ?><select name="rifle_mountain_weight_optimized" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-rifle-dynamic-group" data-rifle-types="felautomata" style="display:none;"><label>Tárkapacitás (db)</label><input type="text" name="rifle_magazine_capacity" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_magazine_capacity' ) ); ?>" placeholder="pl. 5"></div>
+                    <div class="va-form-group"><label>Stabilitás</label><?php $v = $rifle_saved( 'rifle_stability_level' ); ?><select name="rifle_stability_level" class="va-select"><option value="">- Válasszon -</option><option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option></select></div>
+                    <div class="va-form-group"><label>Visszarúgás szint</label><?php $v = $rifle_saved( 'rifle_recoil_level' ); ?><select name="rifle_recoil_level" class="va-select"><option value="">- Válasszon -</option><option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option></select></div>
+                    <div class="va-form-group"><label>Temperamentum</label><?php $v = $rifle_saved( 'rifle_temperament' ); ?><select name="rifle_temperament" class="va-select"><option value="">- Válasszon -</option><option value="lagy-visszarugas"<?php selected( $v, 'lagy-visszarugas' ); ?>>Lágy visszarúgás</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="eros"<?php selected( $v, 'eros' ); ?>>Erős</option></select></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="rifle_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="tar"<?php echo in_array( 'tar', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Tár</option><option value="fegyverszij"<?php echo in_array( 'fegyverszij', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Fegyverszíj</option><option value="tok"<?php echo in_array( 'tok', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="tisztitokeszlet"<?php echo in_array( 'tisztitokeszlet', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Tisztítókészlet</option><option value="bipod"<?php echo in_array( 'bipod', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Bipod</option><option value="szerulek"<?php echo in_array( 'szerulek', $rifle_accessories_saved, true ) ? ' selected' : ''; ?>>Szerelék</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Felhasználás</label><select name="rifle_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="nagyvad-vadaszat"<?php echo in_array( 'nagyvad-vadaszat', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Nagyvad vadászat</option><option value="aprovad"<?php echo in_array( 'aprovad', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Apróvad</option><option value="hegyi-vadaszat"<?php echo in_array( 'hegyi-vadaszat', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Hegyi vadászat</option><option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option><option value="cserkeles"<?php echo in_array( 'cserkeles', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option><option value="sportloveszet"<?php echo in_array( 'sportloveszet', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Sportlövészet</option><option value="precizios-loveszet"<?php echo in_array( 'precizios-loveszet', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Precíziós lövészet</option><option value="varmint"<?php echo in_array( 'varmint', $rifle_usage_saved, true ) ? ' selected' : ''; ?>>Varmint</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Különleges kivitel</label><select name="rifle_special_build[]" class="va-select" multiple data-placeholder="Válassz különleges kivitelt"><option value="konnyitett-hegyi-kivitel"<?php echo in_array( 'konnyitett-hegyi-kivitel', $rifle_special_saved, true ) ? ' selected' : ''; ?>>Könnyített hegyi kivitel</option><option value="long-range-setup"<?php echo in_array( 'long-range-setup', $rifle_special_saved, true ) ? ' selected' : ''; ?>>Long range setup</option><option value="taktikai-platform"<?php echo in_array( 'taktikai-platform', $rifle_special_saved, true ) ? ' selected' : ''; ?>>Taktikai platform</option><option value="klasszikus-vadasz-puska"<?php echo in_array( 'klasszikus-vadasz-puska', $rifle_special_saved, true ) ? ' selected' : ''; ?>>Klasszikus vadász puska</option></select></div>
+
+                    <div class="va-form-group"><label>Ütésbiztos rendszer</label><?php $v = $rifle_saved( 'rifle_impact_safe' ); ?><select name="rifle_impact_safe" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Zárt rendszer</label><?php $v = $rifle_saved( 'rifle_closed_system' ); ?><select name="rifle_closed_system" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Vadász kompatibilitás (vad)</label><input type="text" name="rifle_hunter_profile_game" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_game' ) ); ?>" placeholder="pl. nagyvad"></div>
+                    <div class="va-form-group"><label>Vadász kompatibilitás (optika)</label><input type="text" name="rifle_hunter_profile_optic" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_optic' ) ); ?>" placeholder="pl. 3-12x56"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Vadász kompatibilitás (táv)</label><input type="text" name="rifle_hunter_profile_distance" class="va-input" value="<?php echo esc_attr( $rifle_saved( 'rifle_hunter_profile_distance' ) ); ?>" placeholder="pl. 80-250 m"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="rifle_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="illegalis-atalakitas"<?php echo in_array( 'illegalis-atalakitas', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális átalakítás</option><option value="automata-fegyver-gyanu"<?php echo in_array( 'automata-fegyver-gyanu', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Automata fegyver gyanú</option><option value="engedely-nelkuli-fegyver"<?php echo in_array( 'engedely-nelkuli-fegyver', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option><option value="tiltott-konfiguracio"<?php echo in_array( 'tiltott-konfiguracio', $rifle_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott konfiguráció</option></select></div>
+                </div>
+            </div>
+
             <?php
             $mixed_saved = static function( string $key ) use ( $edit_meta ) {
                 return is_scalar( $edit_meta[ $key ] ?? '' ) ? (string) ( $edit_meta[ $key ] ?? '' ) : '';
@@ -8356,6 +8449,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyRifleDynamicFields() {
+        var type = (($('#va-rifle-type').val() || '') + '').trim();
+        $('.va-rifle-dynamic-group').each(function(){
+            var list = (($(this).attr('data-rifle-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(type) !== -1);
+        });
+    }
+
     function applyTrophyDynamicFields() {
         var custom = (($('#va-trophy-custom-made').val() || '') + '').trim();
         $('.va-trophy-dynamic-group').each(function(){
@@ -8603,6 +8704,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-mixed-type, #va-mixed-optic-compatible, #va-mixed-usage', function(){
         applyMixedRifleDynamicFields();
     });
+    $(document).on('change', '#va-rifle-type', function(){
+        applyRifleDynamicFields();
+    });
     $(document).on('change', '#va-trophy-custom-made', function(){
         applyTrophyDynamicFields();
     });
@@ -8652,6 +8756,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyShoeDynamicFields();
     applyHandgunDynamicFields();
     applyMixedRifleDynamicFields();
+    applyRifleDynamicFields();
     applyTrophyDynamicFields();
     applyHuntDynamicFields();
     applyVadkarDynamicFields();
@@ -8785,6 +8890,11 @@ document.addEventListener('DOMContentLoaded', function() {
             brand: 'Márka / gyártó',
             model: 'Modell / típus',
             caliber: 'Kaliber',
+            rifle_type: 'Típus',
+            rifle_caliber: 'Golyós kaliber',
+            rifle_barrel_length_cm: 'Csőhossz (cm)',
+            rifle_condition: 'Állapot',
+            rifle_optic_compatibility: 'Optika kompatibilitás',
             other_weapon_kind: 'Egyéb fegyverek kategória',
             hatastalanitott_weapon_type: 'Fegyver típusa',
             hatastalanitott_is_deactivated: 'Hatástalanított?',
@@ -9026,6 +9136,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(ruházat|ruhazat|nadrág|nadrag|póló|polo|kabát|kabat)/.test(selectedCatText);
         var isHandgunCategory = /maroklofegyver/.test(slug)
             || /(maroklőfegyver|maroklofegyver|pisztoly|revolver)/.test(selectedCatText);
+        var isRifleCategory = /golyos-puska/.test(slug)
+            || /(golyós lőfegyver|golyos lofegyver|vadpuska|bolt action|semi-auto|precíziós puska|precizios puska)/.test(selectedCatText);
         var isExchangeCategory = /csere/.test(slug)
             || /(csere)/.test(selectedCatText);
         var isPublicationCategory = /konyv-folyoirat/.test(slug)
@@ -9082,6 +9194,13 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.va-handgun-fields-grid').toggle(isHandgunCategory);
         if (isHandgunCategory) {
             applyHandgunDynamicFields();
+        }
+
+        $('.va-rifle-fields-grid').toggle(isRifleCategory);
+        if (isRifleCategory) {
+            applyRifleDynamicFields();
+        } else {
+            $('.va-rifle-dynamic-group').hide();
         }
 
         // Handle knife fields grid
@@ -9209,6 +9328,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isHandgunCategory) {
             $('.va-handgun-fields-grid input, .va-handgun-fields-grid select, .va-handgun-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
+        if (isRifleCategory) {
+            $('.va-rifle-fields-grid input, .va-rifle-fields-grid select, .va-rifle-fields-grid textarea').each(function(){
                 var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
                 var requiredHere = required.indexOf(fieldName) !== -1;
                 $(this).prop('required', requiredHere);
