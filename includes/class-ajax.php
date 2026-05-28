@@ -182,6 +182,7 @@ class VA_Ajax {
             'egyeb-ruhazat'     => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'csere'             => [ 'label' => 'Csere', 'required' => [ 'exchange_type', 'exchange_offer_category', 'exchange_brand', 'exchange_condition', 'exchange_estimated_value', 'exchange_extra_payment_direction', 'exchange_county' ] ],
+            'konyv-folyoirat'   => [ 'label' => 'Könyv és folyóirat', 'required' => [ 'publication_type', 'publication_topics', 'publication_title', 'publication_author', 'publication_year', 'publication_language', 'publication_condition', 'publication_collector_value', 'publication_complete_volume' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
@@ -454,6 +455,15 @@ class VA_Ajax {
             'exchange_estimated_value' => 'Becsült érték (Ft)',
             'exchange_extra_payment_direction' => 'Ráfizetés',
             'exchange_county' => 'Megye',
+            'publication_type' => 'Típus',
+            'publication_topics' => 'Témakör',
+            'publication_title' => 'Cím',
+            'publication_author' => 'Szerző',
+            'publication_year' => 'Kiadás éve',
+            'publication_language' => 'Nyelv',
+            'publication_condition' => 'Állapot',
+            'publication_collector_value' => 'Gyűjtői érték',
+            'publication_complete_volume' => 'Komplett évfolyam',
         ];
 
         $missing = [];
@@ -1512,6 +1522,43 @@ class VA_Ajax {
         $exchange_optic_zoom = sanitize_text_field( wp_unslash( $_POST['exchange_optic_zoom'] ?? '' ) );
         $exchange_optic_objective = sanitize_text_field( wp_unslash( $_POST['exchange_optic_objective'] ?? '' ) );
         $exchange_knife_steel = sanitize_text_field( wp_unslash( $_POST['exchange_knife_steel'] ?? '' ) );
+        $publication_type = sanitize_key( wp_unslash( $_POST['publication_type'] ?? '' ) );
+        $publication_topics = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_topics'] ?? [] ) ) ) );
+        $publication_title = sanitize_text_field( wp_unslash( $_POST['publication_title'] ?? '' ) );
+        $publication_subtitle = sanitize_text_field( wp_unslash( $_POST['publication_subtitle'] ?? '' ) );
+        $publication_author = sanitize_text_field( wp_unslash( $_POST['publication_author'] ?? '' ) );
+        $publication_publisher = sanitize_text_field( wp_unslash( $_POST['publication_publisher'] ?? '' ) );
+        $publication_year = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['publication_year'] ?? '' ) );
+        $publication_language = sanitize_key( wp_unslash( $_POST['publication_language'] ?? '' ) );
+        $publication_edition_type = sanitize_key( wp_unslash( $_POST['publication_edition_type'] ?? '' ) );
+        $publication_periodical_name = sanitize_text_field( wp_unslash( $_POST['publication_periodical_name'] ?? '' ) );
+        $publication_volume = sanitize_text_field( wp_unslash( $_POST['publication_volume'] ?? '' ) );
+        $publication_issue = sanitize_text_field( wp_unslash( $_POST['publication_issue'] ?? '' ) );
+        $publication_complete_volume = sanitize_key( wp_unslash( $_POST['publication_complete_volume'] ?? '' ) );
+        $publication_page_count = sanitize_text_field( wp_unslash( $_POST['publication_page_count'] ?? '' ) );
+        $publication_cover_type = sanitize_key( wp_unslash( $_POST['publication_cover_type'] ?? '' ) );
+        $publication_size = sanitize_text_field( wp_unslash( $_POST['publication_size'] ?? '' ) );
+        $publication_condition = sanitize_key( wp_unslash( $_POST['publication_condition'] ?? '' ) );
+        $publication_defects = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_defects'] ?? [] ) ) ) );
+        $publication_content_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_content_flags'] ?? [] ) ) ) );
+        $publication_collector_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_collector_flags'] ?? [] ) ) ) );
+        $publication_collector_value = sanitize_key( wp_unslash( $_POST['publication_collector_value'] ?? '' ) );
+        $publication_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_usage'] ?? [] ) ) ) );
+        $publication_condition_details = sanitize_textarea_field( wp_unslash( $_POST['publication_condition_details'] ?? '' ) );
+        $publication_authenticity = sanitize_key( wp_unslash( $_POST['publication_authenticity'] ?? '' ) );
+        $publication_signed_copy = sanitize_key( wp_unslash( $_POST['publication_signed_copy'] ?? '' ) );
+        $publication_signed_to = sanitize_text_field( wp_unslash( $_POST['publication_signed_to'] ?? '' ) );
+        $publication_signature_type = sanitize_key( wp_unslash( $_POST['publication_signature_type'] ?? '' ) );
+        $publication_isbn = sanitize_text_field( wp_unslash( $_POST['publication_isbn'] ?? '' ) );
+        $publication_digital_format = sanitize_key( wp_unslash( $_POST['publication_digital_format'] ?? '' ) );
+        $publication_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['publication_moderation_flags'] ?? [] ) ) ) );
+        $publication_notes = sanitize_textarea_field( wp_unslash( $_POST['publication_notes'] ?? '' ) );
+        if ( $publication_signed_copy === '' && $publication_edition_type === 'dedikalt' ) {
+            $publication_signed_copy = 'igen';
+        }
+        $publication_filter_collector_item = ( in_array( $publication_collector_value, [ 'magas', 'kiemelt' ], true ) || strpos( ',' . $publication_collector_flags . ',', ',ritka-kiadas,' ) !== false || strpos( ',' . $publication_collector_flags . ',', ',muzealis,' ) !== false || in_array( $publication_edition_type, [ 'gyujtoi', 'limitalt', 'antikvar' ], true ) ) ? '1' : '0';
+        $publication_filter_complete_volume = $publication_complete_volume === 'igen' ? '1' : '0';
+        $publication_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $publication_moderation_flags ) ) ) );
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -1941,6 +1988,15 @@ class VA_Ajax {
             'exchange_estimated_value' => $exchange_estimated_value,
             'exchange_extra_payment_direction' => $exchange_extra_payment_direction,
             'exchange_county' => $exchange_county,
+            'publication_type' => $publication_type,
+            'publication_topics' => $publication_topics,
+            'publication_title' => $publication_title,
+            'publication_author' => $publication_author,
+            'publication_year' => $publication_year,
+            'publication_language' => $publication_language,
+            'publication_condition' => $publication_condition,
+            'publication_collector_value' => $publication_collector_value,
+            'publication_complete_volume' => $publication_complete_volume,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
