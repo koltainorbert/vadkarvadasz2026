@@ -1385,6 +1385,47 @@ class VA_Ajax {
         $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
         $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
         $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
+        $mixed_type = sanitize_key( wp_unslash( $_POST['mixed_type'] ?? '' ) );
+        $mixed_barrel_count = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_count'] ?? '' ) );
+        $mixed_has_rifle = sanitize_key( wp_unslash( $_POST['mixed_has_rifle'] ?? '' ) );
+        $mixed_rifle_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_rifle_caliber'] ?? '' ) );
+        $mixed_has_shotgun = sanitize_key( wp_unslash( $_POST['mixed_has_shotgun'] ?? '' ) );
+        $mixed_shotgun_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_shotgun_caliber'] ?? '' ) );
+        $mixed_trigger_type = sanitize_key( wp_unslash( $_POST['mixed_trigger_type'] ?? '' ) );
+        $mixed_action_system = sanitize_key( wp_unslash( $_POST['mixed_action_system'] ?? '' ) );
+        $mixed_lock_type = sanitize_key( wp_unslash( $_POST['mixed_lock_type'] ?? '' ) );
+        $mixed_sight_type = sanitize_key( wp_unslash( $_POST['mixed_sight_type'] ?? '' ) );
+        $mixed_optic_rail = sanitize_key( wp_unslash( $_POST['mixed_optic_rail'] ?? '' ) );
+        $mixed_optic_compatible = sanitize_key( wp_unslash( $_POST['mixed_optic_compatible'] ?? '' ) );
+        $mixed_barrel_length_cm = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_length_cm'] ?? '' ) );
+        $mixed_barrel_material = sanitize_key( wp_unslash( $_POST['mixed_barrel_material'] ?? '' ) );
+        $mixed_barrel_regulated = sanitize_key( wp_unslash( $_POST['mixed_barrel_regulated'] ?? '' ) );
+        $mixed_material = sanitize_key( wp_unslash( $_POST['mixed_material'] ?? '' ) );
+        $mixed_stock_material = sanitize_key( wp_unslash( $_POST['mixed_stock_material'] ?? '' ) );
+        $mixed_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_usage'] ?? [] ) ) ) );
+        $mixed_weight_kg = sanitize_text_field( wp_unslash( $_POST['mixed_weight_kg'] ?? '' ) );
+        $mixed_total_length_cm = sanitize_text_field( wp_unslash( $_POST['mixed_total_length_cm'] ?? '' ) );
+        $mixed_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_accessories'] ?? [] ) ) ) );
+        $mixed_rifle_moa = sanitize_text_field( wp_unslash( $_POST['mixed_rifle_moa'] ?? '' ) );
+        $mixed_shot_pattern = sanitize_text_field( wp_unslash( $_POST['mixed_shot_pattern'] ?? '' ) );
+        $mixed_zero_distance_m = sanitize_text_field( wp_unslash( $_POST['mixed_zero_distance_m'] ?? '' ) );
+        $mixed_safety_type = sanitize_key( wp_unslash( $_POST['mixed_safety_type'] ?? '' ) );
+        $mixed_barrel_layout = sanitize_key( wp_unslash( $_POST['mixed_barrel_layout'] ?? '' ) );
+        $mixed_country = sanitize_text_field( wp_unslash( $_POST['mixed_country'] ?? '' ) );
+        $mixed_county = sanitize_text_field( wp_unslash( $_POST['mixed_county'] ?? '' ) );
+        $mixed_city = sanitize_text_field( wp_unslash( $_POST['mixed_city'] ?? '' ) );
+        $mixed_barrel_internal = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_internal'] ?? '' ) );
+        $mixed_engraving = sanitize_text_field( wp_unslash( $_POST['mixed_engraving'] ?? '' ) );
+        $mixed_factory_marking = sanitize_text_field( wp_unslash( $_POST['mixed_factory_marking'] ?? '' ) );
+        $mixed_drilling_barrel1_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_drilling_barrel1_caliber'] ?? '' ) );
+        $mixed_drilling_top_barrel_role = sanitize_text_field( wp_unslash( $_POST['mixed_drilling_top_barrel_role'] ?? '' ) );
+        $mixed_optic_mount_type = sanitize_text_field( wp_unslash( $_POST['mixed_optic_mount_type'] ?? '' ) );
+        $mixed_mountain_weight_optimized = sanitize_key( wp_unslash( $_POST['mixed_mountain_weight_optimized'] ?? '' ) );
+        $mixed_universal_label = sanitize_key( wp_unslash( $_POST['mixed_universal_label'] ?? '' ) );
+        $mixed_condition = sanitize_key( wp_unslash( $_POST['mixed_condition'] ?? '' ) );
+        $mixed_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_moderation_flags'] ?? [] ) ) ) );
+        $mixed_filter_optic = $mixed_optic_compatible === 'igen' ? '1' : '0';
+        $mixed_filter_universal = $mixed_universal_label === 'igen' ? '1' : '0';
         $marok_type = sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) );
         $marok_condition = sanitize_key( wp_unslash( $_POST['marok_condition'] ?? '' ) );
         $marok_action_type = sanitize_key( wp_unslash( $_POST['marok_action_type'] ?? '' ) );
@@ -1997,6 +2038,11 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'mixed_type' => $mixed_type,
+            'mixed_barrel_count' => $mixed_barrel_count,
+            'mixed_rifle_caliber' => $mixed_rifle_caliber,
+            'mixed_shotgun_caliber' => $mixed_shotgun_caliber,
+            'mixed_condition' => $mixed_condition,
             'other_weapon_kind' => $other_weapon_kind,
             'hatastalanitott_weapon_type' => $hatastalanitott_weapon_type,
             'hatastalanitott_is_deactivated' => $hatastalanitott_is_deactivated,
@@ -3477,6 +3523,47 @@ class VA_Ajax {
         $knife_filter_full_tang = ( $knife_construction === 'full-tang' ) ? '1' : '0';
         $knife_filter_bushcraft = ( $knife_type === 'bushcraft-kes' || strpos( ',' . $knife_usage . ',', ',bushcraft,' ) !== false ) ? '1' : '0';
         $knife_filter_vadasz = ( $knife_type === 'vadaszkes' || strpos( ',' . $knife_usage . ',', ',vadaszat,' ) !== false ) ? '1' : '0';
+        $mixed_type = sanitize_key( wp_unslash( $_POST['mixed_type'] ?? '' ) );
+        $mixed_barrel_count = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_count'] ?? '' ) );
+        $mixed_has_rifle = sanitize_key( wp_unslash( $_POST['mixed_has_rifle'] ?? '' ) );
+        $mixed_rifle_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_rifle_caliber'] ?? '' ) );
+        $mixed_has_shotgun = sanitize_key( wp_unslash( $_POST['mixed_has_shotgun'] ?? '' ) );
+        $mixed_shotgun_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_shotgun_caliber'] ?? '' ) );
+        $mixed_trigger_type = sanitize_key( wp_unslash( $_POST['mixed_trigger_type'] ?? '' ) );
+        $mixed_action_system = sanitize_key( wp_unslash( $_POST['mixed_action_system'] ?? '' ) );
+        $mixed_lock_type = sanitize_key( wp_unslash( $_POST['mixed_lock_type'] ?? '' ) );
+        $mixed_sight_type = sanitize_key( wp_unslash( $_POST['mixed_sight_type'] ?? '' ) );
+        $mixed_optic_rail = sanitize_key( wp_unslash( $_POST['mixed_optic_rail'] ?? '' ) );
+        $mixed_optic_compatible = sanitize_key( wp_unslash( $_POST['mixed_optic_compatible'] ?? '' ) );
+        $mixed_barrel_length_cm = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_length_cm'] ?? '' ) );
+        $mixed_barrel_material = sanitize_key( wp_unslash( $_POST['mixed_barrel_material'] ?? '' ) );
+        $mixed_barrel_regulated = sanitize_key( wp_unslash( $_POST['mixed_barrel_regulated'] ?? '' ) );
+        $mixed_material = sanitize_key( wp_unslash( $_POST['mixed_material'] ?? '' ) );
+        $mixed_stock_material = sanitize_key( wp_unslash( $_POST['mixed_stock_material'] ?? '' ) );
+        $mixed_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_usage'] ?? [] ) ) ) );
+        $mixed_weight_kg = sanitize_text_field( wp_unslash( $_POST['mixed_weight_kg'] ?? '' ) );
+        $mixed_total_length_cm = sanitize_text_field( wp_unslash( $_POST['mixed_total_length_cm'] ?? '' ) );
+        $mixed_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_accessories'] ?? [] ) ) ) );
+        $mixed_rifle_moa = sanitize_text_field( wp_unslash( $_POST['mixed_rifle_moa'] ?? '' ) );
+        $mixed_shot_pattern = sanitize_text_field( wp_unslash( $_POST['mixed_shot_pattern'] ?? '' ) );
+        $mixed_zero_distance_m = sanitize_text_field( wp_unslash( $_POST['mixed_zero_distance_m'] ?? '' ) );
+        $mixed_safety_type = sanitize_key( wp_unslash( $_POST['mixed_safety_type'] ?? '' ) );
+        $mixed_barrel_layout = sanitize_key( wp_unslash( $_POST['mixed_barrel_layout'] ?? '' ) );
+        $mixed_country = sanitize_text_field( wp_unslash( $_POST['mixed_country'] ?? '' ) );
+        $mixed_county = sanitize_text_field( wp_unslash( $_POST['mixed_county'] ?? '' ) );
+        $mixed_city = sanitize_text_field( wp_unslash( $_POST['mixed_city'] ?? '' ) );
+        $mixed_barrel_internal = sanitize_text_field( wp_unslash( $_POST['mixed_barrel_internal'] ?? '' ) );
+        $mixed_engraving = sanitize_text_field( wp_unslash( $_POST['mixed_engraving'] ?? '' ) );
+        $mixed_factory_marking = sanitize_text_field( wp_unslash( $_POST['mixed_factory_marking'] ?? '' ) );
+        $mixed_drilling_barrel1_caliber = sanitize_text_field( wp_unslash( $_POST['mixed_drilling_barrel1_caliber'] ?? '' ) );
+        $mixed_drilling_top_barrel_role = sanitize_text_field( wp_unslash( $_POST['mixed_drilling_top_barrel_role'] ?? '' ) );
+        $mixed_optic_mount_type = sanitize_text_field( wp_unslash( $_POST['mixed_optic_mount_type'] ?? '' ) );
+        $mixed_mountain_weight_optimized = sanitize_key( wp_unslash( $_POST['mixed_mountain_weight_optimized'] ?? '' ) );
+        $mixed_universal_label = sanitize_key( wp_unslash( $_POST['mixed_universal_label'] ?? '' ) );
+        $mixed_condition = sanitize_key( wp_unslash( $_POST['mixed_condition'] ?? '' ) );
+        $mixed_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['mixed_moderation_flags'] ?? [] ) ) ) );
+        $mixed_filter_optic = $mixed_optic_compatible === 'igen' ? '1' : '0';
+        $mixed_filter_universal = $mixed_universal_label === 'igen' ? '1' : '0';
         $marok_type = sanitize_key( wp_unslash( $_POST['marok_type'] ?? '' ) );
         $marok_condition = sanitize_key( wp_unslash( $_POST['marok_condition'] ?? '' ) );
         $marok_action_type = sanitize_key( wp_unslash( $_POST['marok_action_type'] ?? '' ) );
@@ -4056,6 +4143,11 @@ class VA_Ajax {
             'brand' => $brand,
             'model' => $model,
             'caliber' => $caliber,
+            'mixed_type' => $mixed_type,
+            'mixed_barrel_count' => $mixed_barrel_count,
+            'mixed_rifle_caliber' => $mixed_rifle_caliber,
+            'mixed_shotgun_caliber' => $mixed_shotgun_caliber,
+            'mixed_condition' => $mixed_condition,
             'other_weapon_kind' => $other_weapon_kind,
             'hatastalanitott_weapon_type' => $hatastalanitott_weapon_type,
             'hatastalanitott_is_deactivated' => $hatastalanitott_is_deactivated,
