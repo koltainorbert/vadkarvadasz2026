@@ -247,7 +247,7 @@ if ( is_array( $categories ) ) {
 $category_required_rules = [
     'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
     'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'model', 'mixed_type', 'mixed_barrel_count', 'mixed_rifle_caliber', 'mixed_shotgun_caliber', 'mixed_condition' ] ],
     'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
     'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
     'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
@@ -937,6 +937,45 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'license_req' => get_post_meta( $maybe_id, 'va_license_req', true ),
             'marok_type' => get_post_meta( $maybe_id, 'va_marok_type', true ),
             'marok_condition' => get_post_meta( $maybe_id, 'va_marok_condition', true ),
+            'mixed_type' => get_post_meta( $maybe_id, 'va_mixed_type', true ),
+            'mixed_barrel_count' => get_post_meta( $maybe_id, 'va_mixed_barrel_count', true ),
+            'mixed_has_rifle' => get_post_meta( $maybe_id, 'va_mixed_has_rifle', true ),
+            'mixed_rifle_caliber' => get_post_meta( $maybe_id, 'va_mixed_rifle_caliber', true ),
+            'mixed_has_shotgun' => get_post_meta( $maybe_id, 'va_mixed_has_shotgun', true ),
+            'mixed_shotgun_caliber' => get_post_meta( $maybe_id, 'va_mixed_shotgun_caliber', true ),
+            'mixed_trigger_type' => get_post_meta( $maybe_id, 'va_mixed_trigger_type', true ),
+            'mixed_action_system' => get_post_meta( $maybe_id, 'va_mixed_action_system', true ),
+            'mixed_lock_type' => get_post_meta( $maybe_id, 'va_mixed_lock_type', true ),
+            'mixed_sight_type' => get_post_meta( $maybe_id, 'va_mixed_sight_type', true ),
+            'mixed_optic_rail' => get_post_meta( $maybe_id, 'va_mixed_optic_rail', true ),
+            'mixed_optic_compatible' => get_post_meta( $maybe_id, 'va_mixed_optic_compatible', true ),
+            'mixed_barrel_length_cm' => get_post_meta( $maybe_id, 'va_mixed_barrel_length_cm', true ),
+            'mixed_barrel_material' => get_post_meta( $maybe_id, 'va_mixed_barrel_material', true ),
+            'mixed_barrel_regulated' => get_post_meta( $maybe_id, 'va_mixed_barrel_regulated', true ),
+            'mixed_material' => get_post_meta( $maybe_id, 'va_mixed_material', true ),
+            'mixed_stock_material' => get_post_meta( $maybe_id, 'va_mixed_stock_material', true ),
+            'mixed_usage' => get_post_meta( $maybe_id, 'va_mixed_usage', true ),
+            'mixed_weight_kg' => get_post_meta( $maybe_id, 'va_mixed_weight_kg', true ),
+            'mixed_total_length_cm' => get_post_meta( $maybe_id, 'va_mixed_total_length_cm', true ),
+            'mixed_accessories' => get_post_meta( $maybe_id, 'va_mixed_accessories', true ),
+            'mixed_rifle_moa' => get_post_meta( $maybe_id, 'va_mixed_rifle_moa', true ),
+            'mixed_shot_pattern' => get_post_meta( $maybe_id, 'va_mixed_shot_pattern', true ),
+            'mixed_zero_distance_m' => get_post_meta( $maybe_id, 'va_mixed_zero_distance_m', true ),
+            'mixed_safety_type' => get_post_meta( $maybe_id, 'va_mixed_safety_type', true ),
+            'mixed_barrel_layout' => get_post_meta( $maybe_id, 'va_mixed_barrel_layout', true ),
+            'mixed_country' => get_post_meta( $maybe_id, 'va_mixed_country', true ),
+            'mixed_county' => get_post_meta( $maybe_id, 'va_mixed_county', true ),
+            'mixed_city' => get_post_meta( $maybe_id, 'va_mixed_city', true ),
+            'mixed_barrel_internal' => get_post_meta( $maybe_id, 'va_mixed_barrel_internal', true ),
+            'mixed_engraving' => get_post_meta( $maybe_id, 'va_mixed_engraving', true ),
+            'mixed_factory_marking' => get_post_meta( $maybe_id, 'va_mixed_factory_marking', true ),
+            'mixed_drilling_barrel1_caliber' => get_post_meta( $maybe_id, 'va_mixed_drilling_barrel1_caliber', true ),
+            'mixed_drilling_top_barrel_role' => get_post_meta( $maybe_id, 'va_mixed_drilling_top_barrel_role', true ),
+            'mixed_optic_mount_type' => get_post_meta( $maybe_id, 'va_mixed_optic_mount_type', true ),
+            'mixed_mountain_weight_optimized' => get_post_meta( $maybe_id, 'va_mixed_mountain_weight_optimized', true ),
+            'mixed_universal_label' => get_post_meta( $maybe_id, 'va_mixed_universal_label', true ),
+            'mixed_condition' => get_post_meta( $maybe_id, 'va_mixed_condition', true ),
+            'mixed_moderation_flags' => get_post_meta( $maybe_id, 'va_mixed_moderation_flags', true ),
             'marok_manufacture_year' => get_post_meta( $maybe_id, 'va_marok_manufacture_year', true ),
             'marok_origin_country' => get_post_meta( $maybe_id, 'va_marok_origin_country', true ),
             'marok_action_type' => get_post_meta( $maybe_id, 'va_marok_action_type', true ),
@@ -3000,6 +3039,66 @@ body.va-modal-open {
                     <label class="va-check-label"><input type="checkbox" name="license_req" value="1"<?php echo (($edit_meta['license_req'] ?? '') === '1') ? ' checked' : ''; ?>> Fegyverengedély szükséges a vásárláshoz</label>
                 </div>
             </div>
+            <?php
+            $mixed_saved = static function( string $key ) use ( $edit_meta ) {
+                return is_scalar( $edit_meta[ $key ] ?? '' ) ? (string) ( $edit_meta[ $key ] ?? '' ) : '';
+            };
+            $mixed_usage_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_usage' ) ) ) );
+            $mixed_accessories_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_accessories' ) ) ) );
+            $mixed_moderation_saved = array_filter( array_map( 'trim', explode( ',', $mixed_saved( 'mixed_moderation_flags' ) ) ) );
+            ?>
+            <div class="va-cat-rule-field va-mixed-fields-grid" data-categories="vegyescsovu-puska" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group"><label>Típus</label><?php $v = $mixed_saved( 'mixed_type' ); ?><select name="mixed_type" id="va-mixed-type" class="va-select"><option value="">- Válasszon -</option><option value="vegyescsovu"<?php selected( $v, 'vegyescsovu' ); ?>>Vegyescsövű (drilling / kombinált)</option><option value="bock"<?php selected( $v, 'bock' ); ?>>Bock (golyó + sörét)</option><option value="over-under"<?php selected( $v, 'over-under' ); ?>>Over-under kombinált</option><option value="side-by-side"<?php selected( $v, 'side-by-side' ); ?>>Side-by-side kombinált</option><option value="drilling"<?php selected( $v, 'drilling' ); ?>>Drilling (3 csöves)</option><option value="kipplauf-kombinalt"<?php selected( $v, 'kipplauf-kombinalt' ); ?>>Kipplauf kombinált</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Állapot</label><?php $v = $mixed_saved( 'mixed_condition' ); ?><select name="mixed_condition" class="va-select"><option value="">- Válasszon -</option><option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option><option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option><option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option><option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option><option value="restauralt"<?php selected( $v, 'restauralt' ); ?>>Restaurált</option></select></div>
+                    <div class="va-form-group"><label>Csövek száma</label><?php $v = $mixed_saved( 'mixed_barrel_count' ); ?><select name="mixed_barrel_count" class="va-select"><option value="">- Válasszon -</option><option value="2"<?php selected( $v, '2' ); ?>>2</option><option value="3"<?php selected( $v, '3' ); ?>>3</option></select></div>
+                    <div class="va-form-group"><label>Felhúzás / rendszer</label><?php $v = $mixed_saved( 'mixed_action_system' ); ?><select name="mixed_action_system" class="va-select"><option value="">- Válasszon -</option><option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option><option value="automata"<?php selected( $v, 'automata' ); ?>>Automata</option><option value="kipplauf"<?php selected( $v, 'kipplauf' ); ?>>Kipplauf</option><option value="billenocsoves"<?php selected( $v, 'billenocsoves' ); ?>>Billenőcsöves</option></select></div>
+
+                    <div class="va-form-group"><label>Golyós cső</label><?php $v = $mixed_saved( 'mixed_has_rifle' ); ?><select name="mixed_has_rifle" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Golyós kaliber</label><?php $v = $mixed_saved( 'mixed_rifle_caliber' ); ?><select name="mixed_rifle_caliber" class="va-select"><option value="">- Válasszon -</option><option value=".222-rem"<?php selected( $v, '.222-rem' ); ?>>.222 Rem</option><option value=".223-rem"<?php selected( $v, '.223-rem' ); ?>>.223 Rem</option><option value=".243-win"<?php selected( $v, '.243-win' ); ?>>.243 Win</option><option value="6.5x55"<?php selected( $v, '6.5x55' ); ?>>6.5x55</option><option value="7x57r"<?php selected( $v, '7x57r' ); ?>>7x57R</option><option value="7x65r"<?php selected( $v, '7x65r' ); ?>>7x65R</option><option value=".30-06"<?php selected( $v, '.30-06' ); ?>>.30-06</option><option value=".308-win"<?php selected( $v, '.308-win' ); ?>>.308 Win</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Sörétes cső</label><?php $v = $mixed_saved( 'mixed_has_shotgun' ); ?><select name="mixed_has_shotgun" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Sörétes kaliber</label><?php $v = $mixed_saved( 'mixed_shotgun_caliber' ); ?><select name="mixed_shotgun_caliber" class="va-select"><option value="">- Válasszon -</option><option value="12-70"<?php selected( $v, '12-70' ); ?>>12/70</option><option value="12-76"<?php selected( $v, '12-76' ); ?>>12/76</option><option value="16-70"<?php selected( $v, '16-70' ); ?>>16/70</option><option value="20-76"<?php selected( $v, '20-76' ); ?>>20/76</option><option value="28"<?php selected( $v, '28' ); ?>>28</option><option value=".410"<?php selected( $v, '.410' ); ?>>.410</option></select></div>
+
+                    <div class="va-form-group"><label>Elsütés</label><?php $v = $mixed_saved( 'mixed_trigger_type' ); ?><select name="mixed_trigger_type" class="va-select"><option value="">- Válasszon -</option><option value="egybillentyus"<?php selected( $v, 'egybillentyus' ); ?>>Egybillentyűs</option><option value="ketbillentyus"<?php selected( $v, 'ketbillentyus' ); ?>>Kétbillentyűs</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group"><label>Zár</label><?php $v = $mixed_saved( 'mixed_lock_type' ); ?><select name="mixed_lock_type" class="va-select"><option value="">- Válasszon -</option><option value="torocsapos"<?php selected( $v, 'torocsapos' ); ?>>Törőcsapos</option><option value="felso-zarrendszer"<?php selected( $v, 'felso-zarrendszer' ); ?>>Felső zárrendszer</option><option value="also-zar"<?php selected( $v, 'also-zar' ); ?>>Alsó zár</option><option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option></select></div>
+                    <div class="va-form-group"><label>Alap irányzék</label><?php $v = $mixed_saved( 'mixed_sight_type' ); ?><select name="mixed_sight_type" class="va-select"><option value="">- Válasszon -</option><option value="nyilt"<?php selected( $v, 'nyilt' ); ?>>Nyílt</option><option value="allithato"<?php selected( $v, 'allithato' ); ?>>Állítható</option><option value="fiber-optic"<?php selected( $v, 'fiber-optic' ); ?>>Fiber optic</option></select></div>
+                    <div class="va-form-group"><label>Optika sín</label><?php $v = $mixed_saved( 'mixed_optic_rail' ); ?><select name="mixed_optic_rail" class="va-select"><option value="">- Válasszon -</option><option value="11mm"<?php selected( $v, '11mm' ); ?>>11 mm</option><option value="weaver"<?php selected( $v, 'weaver' ); ?>>Weaver</option><option value="picatinny"<?php selected( $v, 'picatinny' ); ?>>Picatinny</option><option value="nincs"<?php selected( $v, 'nincs' ); ?>>Nincs</option></select></div>
+                    <div class="va-form-group"><label>Optika kompatibilitás</label><?php $v = $mixed_saved( 'mixed_optic_compatible' ); ?><select name="mixed_optic_compatible" id="va-mixed-optic-compatible" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group va-mixed-dynamic-group" data-mixed-optic="yes" style="display:none;"><label>Szerelék típusa</label><input type="text" name="mixed_optic_mount_type" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_optic_mount_type' ) ); ?>" placeholder="pl. gyorsoldású"></div>
+
+                    <div class="va-form-group"><label>Csőhossz (cm)</label><input type="text" name="mixed_barrel_length_cm" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_barrel_length_cm' ) ); ?>" placeholder="pl. 60"></div>
+                    <div class="va-form-group"><label>Cső anyaga</label><?php $v = $mixed_saved( 'mixed_barrel_material' ); ?><select name="mixed_barrel_material" class="va-select"><option value="">- Válasszon -</option><option value="acel"<?php selected( $v, 'acel' ); ?>>Acél</option><option value="krom-molibden"<?php selected( $v, 'krom-molibden' ); ?>>Króm-molibdén</option><option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option></select></div>
+                    <div class="va-form-group"><label>Cső összetartás</label><?php $v = $mixed_saved( 'mixed_barrel_regulated' ); ?><select name="mixed_barrel_regulated" class="va-select"><option value="">- Válasszon -</option><option value="regulalt"<?php selected( $v, 'regulalt' ); ?>>Regulált</option><option value="nem-regulalt"<?php selected( $v, 'nem-regulalt' ); ?>>Nem regulált</option></select></div>
+                    <div class="va-form-group"><label>Anyag</label><?php $v = $mixed_saved( 'mixed_material' ); ?><select name="mixed_material" class="va-select"><option value="">- Válasszon -</option><option value="acel"<?php selected( $v, 'acel' ); ?>>Acél</option><option value="krom-molibden"<?php selected( $v, 'krom-molibden' ); ?>>Króm-molibdén</option><option value="fa-gyazas"<?php selected( $v, 'fa-gyazas' ); ?>>Fa ágyazás</option><option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option><option value="kompozit"<?php selected( $v, 'kompozit' ); ?>>Kompozit</option></select></div>
+
+                    <div class="va-form-group"><label>Ágyazás</label><?php $v = $mixed_saved( 'mixed_stock_material' ); ?><select name="mixed_stock_material" class="va-select"><option value="">- Válasszon -</option><option value="diofa"<?php selected( $v, 'diofa' ); ?>>Diófa</option><option value="bukk"<?php selected( $v, 'bukk' ); ?>>Bükk</option><option value="laminalt"<?php selected( $v, 'laminalt' ); ?>>Laminált</option><option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option><option value="szintetikus"<?php selected( $v, 'szintetikus' ); ?>>Szintetikus</option><option value="gumirozott"<?php selected( $v, 'gumirozott' ); ?>>Gumírozott</option></select></div>
+                    <div class="va-form-group"><label>Súly (kg)</label><input type="text" name="mixed_weight_kg" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_weight_kg' ) ); ?>" placeholder="pl. 3.4"></div>
+                    <div class="va-form-group"><label>Teljes hossz (cm)</label><input type="text" name="mixed_total_length_cm" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_total_length_cm' ) ); ?>" placeholder="pl. 105"></div>
+                    <div class="va-form-group"><label>Biztosíték típusa</label><?php $v = $mixed_saved( 'mixed_safety_type' ); ?><select name="mixed_safety_type" class="va-select"><option value="">- Válasszon -</option><option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option><option value="automata"<?php selected( $v, 'automata' ); ?>>Automata</option><option value="tang"<?php selected( $v, 'tang' ); ?>>Tang biztonság</option></select></div>
+                    <div class="va-form-group"><label>Cső elrendezés</label><?php $v = $mixed_saved( 'mixed_barrel_layout' ); ?><select name="mixed_barrel_layout" class="va-select"><option value="">- Válasszon -</option><option value="golyo-felul-soret-alul"<?php selected( $v, 'golyo-felul-soret-alul' ); ?>>Golyó felül / sörét alul</option><option value="soret-felul-golyo-alul"<?php selected( $v, 'soret-felul-golyo-alul' ); ?>>Sörét felül / golyó alul</option><option value="oldalt"<?php selected( $v, 'oldalt' ); ?>>Oldalt</option></select></div>
+                    <div class="va-form-group"><label>Ország</label><input type="text" name="mixed_country" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_country' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Megye</label><input type="text" name="mixed_county" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_county' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Település</label><input type="text" name="mixed_city" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_city' ) ); ?>"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Használat</label><select name="mixed_usage[]" id="va-mixed-usage" class="va-select" multiple data-placeholder="Válassz felhasználást"><option value="nagyvad"<?php echo in_array( 'nagyvad', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Nagyvad</option><option value="aprovad"<?php echo in_array( 'aprovad', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Apróvad</option><option value="vegyes-vadaszat"<?php echo in_array( 'vegyes-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Vegyes vadászat</option><option value="hegyi-vadaszat"<?php echo in_array( 'hegyi-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Hegyi vadászat</option><option value="erdei-vadaszat"<?php echo in_array( 'erdei-vadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Erdei vadászat</option><option value="hajtas"<?php echo in_array( 'hajtas', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Hajtás</option><option value="lesvadaszat"<?php echo in_array( 'lesvadaszat', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Lesvadászat</option><option value="univerzalis"<?php echo in_array( 'univerzalis', $mixed_usage_saved, true ) ? ' selected' : ''; ?>>Univerzális</option></select></div>
+                    <div class="va-form-group va-mixed-dynamic-group" data-mixed-usage="hegyi-vadaszat" style="display:none;"><label>Súly optimalizálás</label><?php $v = $mixed_saved( 'mixed_mountain_weight_optimized' ); ?><select name="mixed_mountain_weight_optimized" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Univerzális vadászfegyver jelölés</label><?php $v = $mixed_saved( 'mixed_universal_label' ); ?><select name="mixed_universal_label" class="va-select"><option value="">- Válasszon -</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+
+                    <div class="va-form-group"><label>Golyós szórás (MOA)</label><input type="text" name="mixed_rifle_moa" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_rifle_moa' ) ); ?>" placeholder="pl. 1.2"></div>
+                    <div class="va-form-group"><label>Sörétes szóráskép</label><input type="text" name="mixed_shot_pattern" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_shot_pattern' ) ); ?>" placeholder="pl. 75% 35m-en"></div>
+                    <div class="va-form-group"><label>Belövési távolság (m)</label><input type="text" name="mixed_zero_distance_m" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_zero_distance_m' ) ); ?>" placeholder="pl. 100"></div>
+                    <div class="va-form-group"><label>Cső belső</label><input type="text" name="mixed_barrel_internal" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_barrel_internal' ) ); ?>" placeholder="pl. tükörfényes"></div>
+                    <div class="va-form-group"><label>Gravírozás</label><input type="text" name="mixed_engraving" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_engraving' ) ); ?>"></div>
+                    <div class="va-form-group"><label>Gyártási jelölés</label><input type="text" name="mixed_factory_marking" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_factory_marking' ) ); ?>"></div>
+
+                    <div class="va-form-group va-mixed-dynamic-group" data-mixed-type="drilling" style="display:none;"><label>1. cső kaliber</label><input type="text" name="mixed_drilling_barrel1_caliber" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_drilling_barrel1_caliber' ) ); ?>"></div>
+                    <div class="va-form-group va-mixed-dynamic-group" data-mixed-type="drilling" style="display:none;"><label>Felső cső szerepe</label><input type="text" name="mixed_drilling_top_barrel_role" class="va-input" value="<?php echo esc_attr( $mixed_saved( 'mixed_drilling_top_barrel_role' ) ); ?>" placeholder="pl. golyós"></div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Tartozékok</label><select name="mixed_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot"><option value="eredeti-doboz"<?php echo in_array( 'eredeti-doboz', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Eredeti doboz</option><option value="puskaszij"<?php echo in_array( 'puskaszij', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Puskaszíj</option><option value="tok"<?php echo in_array( 'tok', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option><option value="tisztitokeszlet"<?php echo in_array( 'tisztitokeszlet', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Tisztítókészlet</option><option value="csokulcs"<?php echo in_array( 'csokulcs', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Csőkulcs</option><option value="iranyzek-tartozek"<?php echo in_array( 'iranyzek-tartozek', $mixed_accessories_saved, true ) ? ' selected' : ''; ?>>Irányzék tartozék</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;"><label>Moderációs flag</label><select name="mixed_moderation_flags[]" class="va-select" multiple data-placeholder="Kockázatos jelölések"><option value="illegalis-atalakitas"<?php echo in_array( 'illegalis-atalakitas', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Illegális átalakítás</option><option value="automata-fegyver-jelleg"<?php echo in_array( 'automata-fegyver-jelleg', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Automata fegyver jelleg</option><option value="tiltott-csokonverzio"<?php echo in_array( 'tiltott-csokonverzio', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Tiltott csőkonverzió</option><option value="engedely-nelkul"<?php echo in_array( 'engedely-nelkul', $mixed_moderation_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option></select></div>
+                </div>
+            </div>
+
             <?php
             $marok_saved = static function( string $key ) use ( $edit_meta ) {
                 return is_scalar( $edit_meta[ $key ] ?? '' ) ? (string) ( $edit_meta[ $key ] ?? '' ) : '';
@@ -8182,6 +8281,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function applyMixedRifleDynamicFields() {
+        var type = (($('#va-mixed-type').val() || '') + '').trim();
+        var opticCompatible = (($('#va-mixed-optic-compatible').val() || '') + '').trim();
+        var usageValues = $('#va-mixed-usage').val();
+        var usageList = Array.isArray(usageValues) ? usageValues : (usageValues ? [usageValues] : []);
+
+        $('.va-mixed-dynamic-group').each(function(){
+            var $group = $(this);
+            var typeNeed = (($group.attr('data-mixed-type') || '') + '').trim();
+            var opticNeed = (($group.attr('data-mixed-optic') || '') + '').trim();
+            var usageNeed = (($group.attr('data-mixed-usage') || '') + '').trim();
+
+            var typeOk = !typeNeed || typeNeed === type;
+            var opticOk = !opticNeed || (opticNeed === 'yes' && opticCompatible === 'igen');
+            var usageOk = !usageNeed || usageList.indexOf(usageNeed) !== -1;
+            $group.toggle(typeOk && opticOk && usageOk);
+        });
+    }
+
     function applyTrophyDynamicFields() {
         var custom = (($('#va-trophy-custom-made').val() || '') + '').trim();
         $('.va-trophy-dynamic-group').each(function(){
@@ -8412,6 +8530,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-marok-type, #va-marok-optic-ready', function(){
         applyHandgunDynamicFields();
     });
+    $(document).on('change', '#va-mixed-type, #va-mixed-optic-compatible, #va-mixed-usage', function(){
+        applyMixedRifleDynamicFields();
+    });
     $(document).on('change', '#va-trophy-custom-made', function(){
         applyTrophyDynamicFields();
     });
@@ -8457,6 +8578,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyVadcameraDynamicFields();
     applyShoeDynamicFields();
     applyHandgunDynamicFields();
+    applyMixedRifleDynamicFields();
     applyTrophyDynamicFields();
     applyHuntDynamicFields();
     applyVadkarDynamicFields();
