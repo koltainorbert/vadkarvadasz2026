@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 05. 28. – Session #szallas-ingatlan-komplex-bovites
+- Keres: a `szallas` kategoriat teljes ingatlan-fokuszu mezorendszerre kellett boviteni (elhelyezkedes, kornyezet, terulet, epuletmuszaki adatok, kozmuvek, megkozelithetoeseg, vadaszati kapcsolodas, extrak, felhasznalasi/jelleg mezok, kritikus szurok, dinamikus almezok).
+- Frontend: a `submit-form.php` `va-accommodation-fields-grid` blokkja jelentosen bovitve lett uj `accommodation_*` mezokkel, es az edit prefill map is kiegeszult.
+- Dinamikus logika: uj `applyAccommodationDynamicFields()` kerult be, amely tipusfuggoen jeleniti meg az erdo/vadaszhaz/tanya specifikus almezoket.
+- Required kezeles: a frontend `category_required_rules['szallas']` frissult az uj kritikus ingatlan mezokre, es javitva lett a `[]` vegu tobbvalasztos required ellenorzes normalizalasa.
+- Backend: a `class-ajax.php` create + edit agaban egyarant bekerult a teljes uj `accommodation_*` sanitize, required payload, label map, `va_accommodation_*` es `va_accommodation_filter_*` meta mentes.
+- Szinkron + ellenorzes: root valtozasok atmasolva a plugin mirrorba (`submit-form.php`, `class-ajax.php`), hibakereses mind a 4 fajlon `No errors found`.
+- Deploy: `Deploy All` lefutott, commit+push kesz (`a13f00a2`), workflow triggerelt.
+- Maradt teendo: frontend listazo/szuro UI oldalon az uj `va_accommodation_filter_*` kulcsok bekotese (ha kulon ingatlan szurofelulet keszul).
+- Holnap ezzel kezdjuk: `szallas` kategoriaban vegigkattintani az uj dinamikus mezocsoportokat (erdo/vadaszhaz/tanya), majd ellenorizni a szuresi kulcsok valos hasznalatat a listazo oldalon.
+
 ## 2026. 05. 28. – Session #golyos-lofegyver-kategoria-komplex-bovites
 - Kérés: a `Golyós lőfegyver` (`golyos-puska`) kategória teljes, részletes technikai/szűrő/moderáció fókuszú mezőrendszerének bővítése a jelenlegi blokk kiegészítésével.
 - Frontend: új, dedikált `va-rifle-fields-grid` került be a feladási űrlapba (típus, több kaliber, cső adatok, pontosság/nullázás, működés/elsütés, optika kompatibilitás, tartozékok, használat, speciális build, hegyi/precíziós/félautomata logikák, állapot, vadász kompatibilitás profil, moderációs jelzők).
