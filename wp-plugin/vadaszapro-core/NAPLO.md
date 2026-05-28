@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 28. – Session #vegyescsovu-lofegyver-kategoria-bovites
+- Kérés: a `Vegyescsövű lőfegyver` (`vegyescsovu-puska`) kategória minimál állapotból teljes, részletes mezőrendszerre bővítése frontend + backend oldalon.
+- Frontend: a `submit-form.php` vegyescsövű blokkot kapott teljes technikai, használati, tartozék és moderációs mezőkkel (típus, csőszám, golyós/sörétes kaliber, elsütés, zár, irányzék, optika kompatibilitás, méretek, anyagok, használat, drilling specifikus mezők, tartozékok, moderációs flag-ek).
+- Dinamikus logika: új `applyMixedRifleDynamicFields()` kezeli a drilling-specifikus mezőket, az optika-kompatibilitás alapú szerelékmezőt és a használat alapú hegyi-optimalizálás blokkot.
+- Kötelező validáció: frontend + backend required szabály bővítve (`brand`, `model`, `mixed_type`, `mixed_barrel_count`, `mixed_rifle_caliber`, `mixed_shotgun_caliber`, `mixed_condition`).
+- Backend: mindkét AJAX ágban bekerült a teljes `mixed_*` sanitize, validációs értéktérkép és `va_mixed_*` meta mentés.
+- Szűrőmeták + moderáció: új dedikált kulcsok mentése (`va_mixed_filter_*`), plusz vegyescsövű moderációs detektor és review státusz (`va_mixed_needs_review`, `va_mixed_review_hits`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 28. – Hotfix #submit-form-fekete-naptar
 - Kérés: a feladási űrlap dátumválasztója ne a böngésző fehér natív naptárát használja, hanem fekete stílusban illeszkedjen a site többi UI eleméhez.
 - Frontend: a `submit-form.php` négy érintett dátummezője (`hunt_season_start`, `hunt_season_end`, `dog_birth_date`, `dog_available_from`) saját sötét date picker wrapperre lett cserélve, a beküldött érték továbbra is ISO `YYYY-MM-DD` marad hidden inputon.
