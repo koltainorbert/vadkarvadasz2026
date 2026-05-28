@@ -165,7 +165,7 @@ class VA_Ajax {
 
     private static function get_category_required_rules(): array {
         return [
-            'golyos-puska'      => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
+            'golyos-puska'      => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'model', 'rifle_type', 'rifle_caliber', 'rifle_barrel_length_cm', 'rifle_condition', 'rifle_optic_compatibility' ] ],
             'soretes-puska'     => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
             'vegyescsovu-puska' => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'model', 'mixed_type', 'mixed_barrel_count', 'mixed_rifle_caliber', 'mixed_shotgun_caliber', 'mixed_condition' ] ],
             'maroklofegyver'    => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
@@ -233,6 +233,11 @@ class VA_Ajax {
             'brand'   => 'Márka / gyártó',
             'model'   => 'Modell / típus',
             'caliber' => 'Kaliber',
+            'rifle_type' => 'Típus',
+            'rifle_caliber' => 'Golyós kaliber',
+            'rifle_barrel_length_cm' => 'Csőhossz (cm)',
+            'rifle_condition' => 'Állapot',
+            'rifle_optic_compatibility' => 'Optika kompatibilitás',
             'mixed_type' => 'Vegyescsövű típus',
             'mixed_barrel_count' => 'Csövek száma',
             'mixed_rifle_caliber' => 'Golyós kaliber',
