@@ -1944,9 +1944,223 @@ body.va-modal-open {
                     <?php self_render_listing_field( 'model', 'pl. R8, Z6...', '', $categories, $counties, $conditions, $brands, $body_types, $brand_models, $site_type, $edit_meta ); ?>
                 </div>
             </div>
-            <div class="va-form-group va-cat-rule-field" data-categories="csere">
-                <label>Mire szeretném cserélni</label>
-                <input type="text" name="exchange_target" class="va-input" placeholder="pl. távcső, bakancs, jármű" value="<?php echo esc_attr((string)($edit_meta['exchange_target'] ?? '')); ?>">
+            <div class="va-cat-rule-field va-exchange-fields-grid" data-categories="csere" style="display:none;">
+                <?php
+                $exchange_saved = static function ( string $key, string $default = '' ) use ( $edit_meta ): string {
+                    return (string) ( $edit_meta[ $key ] ?? $default );
+                };
+                $exchange_saved_csv = static function ( string $key ) use ( $edit_meta ): array {
+                    $raw = (string) ( $edit_meta[ $key ] ?? '' );
+                    if ( $raw === '' ) {
+                        return [];
+                    }
+                    return array_filter( array_map( 'trim', explode( ',', $raw ) ) );
+                };
+                $exchange_wanted_categories_saved = $exchange_saved_csv( 'exchange_wanted_categories' );
+                $exchange_required_images_saved = $exchange_saved_csv( 'exchange_required_images' );
+                $exchange_moderation_flags_saved = $exchange_saved_csv( 'exchange_moderation_flags' );
+                ?>
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Csere típusa</label>
+                        <?php $v = $exchange_saved( 'exchange_type' ); ?>
+                        <select name="exchange_type" class="va-select" id="va-exchange-type">
+                            <option value="">- Válasszon -</option>
+                            <option value="termek-csere"<?php selected( $v, 'termek-csere' ); ?>>Termék csere</option>
+                            <option value="rafizeteses-csere"<?php selected( $v, 'rafizeteses-csere' ); ?>>Ráfizetéses csere</option>
+                            <option value="ertekegyezteteses-csere"<?php selected( $v, 'ertekegyezteteses-csere' ); ?>>Értékegyeztetéses csere</option>
+                            <option value="szolgaltatas-csere"<?php selected( $v, 'szolgaltatas-csere' ); ?>>Szolgáltatás csere</option>
+                            <option value="gyujtoi-csere"<?php selected( $v, 'gyujtoi-csere' ); ?>>Gyűjtői csere</option>
+                            <option value="tobb-termek-egyre"<?php selected( $v, 'tobb-termek-egyre' ); ?>>Több termék egyre</option>
+                            <option value="egy-termek-tobbre"<?php selected( $v, 'egy-termek-tobbre' ); ?>>Egy termék többre</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Fő kategória (mit kínál?)</label>
+                        <?php $v = $exchange_saved( 'exchange_offer_category' ); ?>
+                        <select name="exchange_offer_category" class="va-select" id="va-exchange-offer-category">
+                            <option value="">- Válasszon -</option>
+                            <option value="fegyver"<?php selected( $v, 'fegyver' ); ?>>Fegyver</option>
+                            <option value="optika"<?php selected( $v, 'optika' ); ?>>Optika</option>
+                            <option value="hokamera"<?php selected( $v, 'hokamera' ); ?>>Hőkamera</option>
+                            <option value="kes"<?php selected( $v, 'kes' ); ?>>Kés</option>
+                            <option value="ruhazat"<?php selected( $v, 'ruhazat' ); ?>>Ruházat</option>
+                            <option value="elektronika"<?php selected( $v, 'elektronika' ); ?>>Elektronika</option>
+                            <option value="vadaszati-felszereles"<?php selected( $v, 'vadaszati-felszereles' ); ?>>Vadászati felszerelés</option>
+                            <option value="trofea"<?php selected( $v, 'trofea' ); ?>>Trófea</option>
+                            <option value="jarmu"<?php selected( $v, 'jarmu' ); ?>>Jármű</option>
+                            <option value="szolgaltatas"<?php selected( $v, 'szolgaltatas' ); ?>>Szolgáltatás</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Termék neve</label>
+                        <input type="text" name="exchange_item_name" class="va-input" placeholder="pl. Glock 17 Gen4" value="<?php echo esc_attr( $exchange_saved( 'exchange_item_name' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Márka</label>
+                        <input type="text" name="exchange_brand" class="va-input" placeholder="pl. Glock" value="<?php echo esc_attr( $exchange_saved( 'exchange_brand' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Modell</label>
+                        <input type="text" name="exchange_model" class="va-input" placeholder="pl. 17" value="<?php echo esc_attr( $exchange_saved( 'exchange_model' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = $exchange_saved( 'exchange_condition' ); ?>
+                        <select name="exchange_condition" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="hibas"<?php selected( $v, 'hibas' ); ?>>Hibás</option>
+                            <option value="gyujtoi"<?php selected( $v, 'gyujtoi' ); ?>>Gyűjtői</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Becsült érték (Ft)</label>
+                        <input type="text" name="exchange_estimated_value" class="va-input" inputmode="numeric" placeholder="pl. 450000" value="<?php echo esc_attr( $exchange_saved( 'exchange_estimated_value' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ráfizetés</label>
+                        <?php $v = $exchange_saved( 'exchange_extra_payment_direction' ); ?>
+                        <select name="exchange_extra_payment_direction" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="kerek-ra"<?php selected( $v, 'kerek-ra' ); ?>>Kérek rá</option>
+                            <option value="adok-ra"<?php selected( $v, 'adok-ra' ); ?>>Adok rá</option>
+                            <option value="nem-szukseges"<?php selected( $v, 'nem-szukseges' ); ?>>Nem szükséges</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ráfizetés összege (Ft)</label>
+                        <input type="text" name="exchange_extra_payment_amount" class="va-input" inputmode="numeric" placeholder="pl. 100000" value="<?php echo esc_attr( $exchange_saved( 'exchange_extra_payment_amount' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Keresett kategória</label>
+                        <select name="exchange_wanted_categories[]" class="va-select" multiple data-placeholder="Mit keres cserébe?">
+                            <option value="fegyver"<?php echo in_array( 'fegyver', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Fegyver</option>
+                            <option value="celtavcso"<?php echo in_array( 'celtavcso', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Céltávcső</option>
+                            <option value="hokamera"<?php echo in_array( 'hokamera', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Hőkamera</option>
+                            <option value="kes"<?php echo in_array( 'kes', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Kés</option>
+                            <option value="bakancs"<?php echo in_array( 'bakancs', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Bakancs</option>
+                            <option value="ruhazat"<?php echo in_array( 'ruhazat', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Ruházat</option>
+                            <option value="trofea"<?php echo in_array( 'trofea', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Trófea</option>
+                            <option value="elektronika"<?php echo in_array( 'elektronika', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Elektronika</option>
+                            <option value="szolgaltatas"<?php echo in_array( 'szolgaltatas', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Szolgáltatás</option>
+                            <option value="barmi-erdekel"<?php echo in_array( 'barmi-erdekel', $exchange_wanted_categories_saved, true ) ? ' selected' : ''; ?>>Bármi érdekel</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Konkrét keresés</label>
+                        <input type="text" name="exchange_target" class="va-input" placeholder="pl. Glock 17, Swarovski Z8i, Pulsar" value="<?php echo esc_attr( $exchange_saved( 'exchange_target' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Ország</label>
+                        <input type="text" name="exchange_country" class="va-input" placeholder="pl. Magyarország" value="<?php echo esc_attr( $exchange_saved( 'exchange_country' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Megye</label>
+                        <input type="text" name="exchange_county" class="va-input" placeholder="pl. Pest" value="<?php echo esc_attr( $exchange_saved( 'exchange_county' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Település</label>
+                        <input type="text" name="exchange_city" class="va-input" placeholder="pl. Gödöllő" value="<?php echo esc_attr( $exchange_saved( 'exchange_city' ) ); ?>">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Csere módja</label>
+                        <?php $v = $exchange_saved( 'exchange_method' ); ?>
+                        <select name="exchange_method" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="szemelyes"<?php selected( $v, 'szemelyes' ); ?>>Személyes</option>
+                            <option value="futar"<?php selected( $v, 'futar' ); ?>>Futár</option>
+                            <option value="fegyverbolt-kozvetites"<?php selected( $v, 'fegyverbolt-kozvetites' ); ?>>Fegyverbolt közvetítés</option>
+                            <option value="postai"<?php selected( $v, 'postai' ); ?>>Postai</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group va-exchange-dynamic-group" data-exchange-categories="fegyver">
+                        <label>Kaliber (ha fegyver)</label>
+                        <input type="text" name="exchange_firearm_caliber" class="va-input" placeholder="pl. 9x19" value="<?php echo esc_attr( $exchange_saved( 'exchange_firearm_caliber' ) ); ?>">
+                    </div>
+                    <div class="va-form-group va-exchange-dynamic-group" data-exchange-categories="fegyver">
+                        <label>Engedélyköteles (ha fegyver)</label>
+                        <?php $v = $exchange_saved( 'exchange_firearm_license' ); ?>
+                        <select name="exchange_firearm_license" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="engedelykoteles"<?php selected( $v, 'engedelykoteles' ); ?>>Engedélyköteles</option>
+                            <option value="csak-hivatalos-atirassal"<?php selected( $v, 'csak-hivatalos-atirassal' ); ?>>Csak hivatalos átírással</option>
+                            <option value="szemelyes-atvetel"<?php selected( $v, 'szemelyes-atvetel' ); ?>>Személyes átvétel</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-exchange-dynamic-group" data-exchange-categories="optika,hokamera">
+                        <label>Nagyítás (ha optika/hőkamera)</label>
+                        <input type="text" name="exchange_optic_zoom" class="va-input" placeholder="pl. 3-12x" value="<?php echo esc_attr( $exchange_saved( 'exchange_optic_zoom' ) ); ?>">
+                    </div>
+                    <div class="va-form-group va-exchange-dynamic-group" data-exchange-categories="optika,hokamera">
+                        <label>Objektív (ha optika/hőkamera)</label>
+                        <input type="text" name="exchange_optic_objective" class="va-input" placeholder="pl. 56 mm" value="<?php echo esc_attr( $exchange_saved( 'exchange_optic_objective' ) ); ?>">
+                    </div>
+                    <div class="va-form-group va-exchange-dynamic-group" data-exchange-categories="kes">
+                        <label>Acél típus (ha kés)</label>
+                        <input type="text" name="exchange_knife_steel" class="va-input" placeholder="pl. D2" value="<?php echo esc_attr( $exchange_saved( 'exchange_knife_steel' ) ); ?>">
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Rövid leírás</label>
+                        <textarea name="exchange_short_desc" class="va-input" rows="2" placeholder="Rövid összefoglaló"><?php echo esc_textarea( $exchange_saved( 'exchange_short_desc' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Részletes leírás</label>
+                        <textarea name="exchange_description" class="va-input" rows="3" placeholder="Részletes paraméterek, tartozékok"><?php echo esc_textarea( $exchange_saved( 'exchange_description' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Hibák</label>
+                        <textarea name="exchange_defects" class="va-input" rows="2" placeholder="Ismert hibák, hiányok"><?php echo esc_textarea( $exchange_saved( 'exchange_defects' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Használati nyomok</label>
+                        <textarea name="exchange_wear_signs" class="va-input" rows="2" placeholder="Karcok, kopások"><?php echo esc_textarea( $exchange_saved( 'exchange_wear_signs' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Jogi részletek</label>
+                        <textarea name="exchange_legal_notes" class="va-input" rows="2" placeholder="pl. engedélyköteles, csak hivatalos átírással"><?php echo esc_textarea( $exchange_saved( 'exchange_legal_notes' ) ); ?></textarea>
+                    </div>
+                    <div class="va-form-group">
+                        <label>18+ tartalom?</label>
+                        <?php $v = $exchange_saved( 'exchange_age_18' ); ?>
+                        <select name="exchange_age_18" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Kötelező képek ellenőrzőlista</label>
+                        <select name="exchange_required_images[]" class="va-select" multiple data-placeholder="Milyen képeket töltesz fel?">
+                            <option value="teljes-nezet"<?php echo in_array( 'teljes-nezet', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Teljes nézet</option>
+                            <option value="allapot"<?php echo in_array( 'allapot', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Állapot</option>
+                            <option value="tartozekok"<?php echo in_array( 'tartozekok', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Tartozékok</option>
+                            <option value="hibak"<?php echo in_array( 'hibak', $exchange_required_images_saved, true ) ? ' selected' : ''; ?>>Hibák</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Videó (opcionális URL)</label>
+                        <input type="url" name="exchange_video_url" class="va-input" placeholder="https://..." value="<?php echo esc_attr( $exchange_saved( 'exchange_video_url' ) ); ?>">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Moderációs jelzők</label>
+                        <select name="exchange_moderation_flags[]" class="va-select" multiple data-placeholder="Automatikus ellenőrzéshez">
+                            <option value="illegalis-csere"<?php echo in_array( 'illegalis-csere', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Illegális csere</option>
+                            <option value="engedely-nelkuli-fegyver"<?php echo in_array( 'engedely-nelkuli-fegyver', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Engedély nélküli fegyver</option>
+                            <option value="tiltott-termek"<?php echo in_array( 'tiltott-termek', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Tiltott termék</option>
+                            <option value="hamis-marka"<?php echo in_array( 'hamis-marka', $exchange_moderation_flags_saved, true ) ? ' selected' : ''; ?>>Hamis márka</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Partner elvárások / biztonság</label>
+                        <textarea name="exchange_partner_requirements" class="va-input" rows="2" placeholder="pl. megbízható partner, ellenőrzött felhasználó"><?php echo esc_textarea( $exchange_saved( 'exchange_partner_requirements' ) ); ?></textarea>
+                    </div>
+                </div>
             </div>
             <div class="va-cat-rule-field" data-categories="takarmany">
                 <div class="va-step2-4col-inner">
@@ -6984,6 +7198,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function applyExchangeDynamicFields() {
+        var offerCategory = (($('#va-exchange-offer-category').val() || '') + '').trim();
+        $('.va-exchange-dynamic-group').each(function(){
+            var list = (($(this).data('exchangeCategories') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(list.indexOf(offerCategory) !== -1);
+        });
+    }
+
     function applyOtherClothingDynamicFields() {
         var type = (($('#va-clothing-type').val() || '') + '').trim();
         $('.va-clothing-dynamic-group').each(function(){
@@ -7092,6 +7314,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-hunt-land-type, #va-hunt-response-time, #va-hunt-contract-type', function(){
         applyVadkarDynamicFields();
     });
+    $(document).on('change', '#va-exchange-offer-category', function(){
+        applyExchangeDynamicFields();
+    });
 
     rebuildHuntingBrandModelDatalists(false);
     applyLearnedCaliberDatalist();
@@ -7112,6 +7337,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyTrophyDynamicFields();
     applyHuntDynamicFields();
     applyVadkarDynamicFields();
+    applyExchangeDynamicFields();
     applyOtherClothingDynamicFields();
     updateStep2CategoryLabel();
     applyVehicleCategoryVisibility();
@@ -7365,6 +7591,13 @@ document.addEventListener('DOMContentLoaded', function() {
             marok_legal_category: 'Jogi kategória',
             marok_cip_marking: 'MKH / CIP jelölés',
             marok_transfer_license_only: 'Csak engedéllyel átvehető',
+            exchange_type: 'Csere típusa',
+            exchange_offer_category: 'Fő kategória (mit kínál?)',
+            exchange_brand: 'Márka',
+            exchange_condition: 'Állapot',
+            exchange_estimated_value: 'Becsült érték (Ft)',
+            exchange_extra_payment_direction: 'Ráfizetés',
+            exchange_county: 'Megye',
         };
         var missing = [];
 
@@ -7446,6 +7679,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(ruházat|ruhazat|nadrág|nadrag|póló|polo|kabát|kabat)/.test(selectedCatText);
         var isHandgunCategory = /maroklofegyver/.test(slug)
             || /(maroklőfegyver|maroklofegyver|pisztoly|revolver)/.test(selectedCatText);
+        var isExchangeCategory = /csere/.test(slug)
+            || /(csere)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -7459,7 +7694,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory));
+
+        $('.va-exchange-fields-grid').toggle(isExchangeCategory);
+        if (isExchangeCategory) {
+            applyExchangeDynamicFields();
+        }
 
         $('.va-service-fields-grid').toggle(isServiceCategory);
         if (isServiceCategory) {
