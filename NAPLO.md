@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 05. 28. – Session #konyv-folyoirat-kategoria-komplex-mezorendszer
+- Kérés: a `Könyv & Folyóirat` (`konyv-folyoirat`) kategória kapjon teljes, gyűjtői fókuszú mezőrendszert (típus, témakör, kiadási adatok, folyóirat specifikus mezők, állapot/hibák, tartalom, gyűjtői és moderációs blokkok).
+- Frontend: új `va-publication-fields-grid` blokk került be a feladási űrlapba, popup-kompatibilis többválasztós mezőkkel (`publication_topics[]`, `publication_defects[]`, `publication_content_flags[]`, `publication_collector_flags[]`, `publication_usage[]`, `publication_moderation_flags[]`).
+- Dinamikus logika: új `applyPublicationDynamicFields()` készült a típus- és kiadástípus-alapú mezőnyitásra:
+  folyóirat/magazin/évkönyv -> évfolyam/lapszám,
+  antikvár -> állapot részletezés + eredetiség,
+  dedikált -> kinek szól + aláírás típusa.
+- Kötelező validáció: frontend + backend required szabály bővítve `konyv-folyoirat` slugra (`publication_type`, `publication_topics`, `publication_title`, `publication_author`, `publication_year`, `publication_language`, `publication_condition`, `publication_collector_value`, `publication_complete_volume`).
+- Backend: mindkét AJAX ágban bekerült a teljes `publication_*` sanitize + `va_publication_*` meta mentés.
+- Szűrőmeták: új dedikált kulcsok mentése (`va_publication_filter_type`, `va_publication_filter_topics`, `va_publication_filter_author`, `va_publication_filter_year`, `va_publication_filter_language`, `va_publication_filter_condition`, `va_publication_filter_collector_item`, `va_publication_filter_complete_volume`).
+- Moderáció: új jelzők mentése és review státusz (`va_publication_moderation_flags`, `va_publication_needs_review`, `va_publication_review_hits`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 28. – Hotfix #csere-jogi-media-blokk-kiveve
 - Kérés: a `Csere` kategória feladási űrlapjából kerüljön ki a túlzott jogi/média/moderáció blokk.
 - Frontend: a csere blokkból eltávolítva: `Jogi részletek`, `18+ tartalom?`, `Kötelező képek ellenőrzőlista`, `Videó (opcionális URL)`, `Moderációs jelzők`, `Partner elvárások / biztonság`.
