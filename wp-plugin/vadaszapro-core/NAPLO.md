@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 28. – Session #disztargyak-kategoria-komplex-mezorendszer
+- Kérés: a `Dísztárgyak` (`disztargyak` / `disztargy`) kategória teljes, részletes mezőrendszerének megvalósítása dinamikus almezőkkel és kötelező validációval.
+- Frontend: bekerült a teljes `va-decor-fields-grid` blokk (típus, anyag, fafaj/ötvözet dinamikák, stílus, motívumok, kivitel, részletesség, korszak, készítés, funkció, tematika, különlegesség, rögzítés, méret, állapot, gyűjtői jelölés, replika-hitelesség mezők).
+- Dinamikus logika: új `applyDecorDynamicFields()` kezeli a típus- és anyagfüggő mezőcsoportokat (`fegyver-replika-disz`, `fa`, `fem`) és a kategória-váltáskor történő megjelenítést/elrejtést.
+- Kötelező validáció: frontend + backend required szabály bővítve (`decor_type`, `decor_material`, `decor_style`, `decor_motif_tags`, `decor_production_type`, `decor_size_class`, `decor_condition`) és label map frissítve.
+- Backend: mindkét AJAX ágban bekerült a teljes `decor_*` sanitize + `va_decor_*` meta mentés, valamint dedikált szűrőmeták (`va_decor_filter_type`, `va_decor_filter_material`, `va_decor_filter_style`, `va_decor_filter_motif`, `va_decor_filter_production`, `va_decor_filter_size`, `va_decor_filter_condition`, `va_decor_filter_collectible_flag`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 28. – Hotfix #vegyescsovu-mezok-egyszerusites
 - Kérés: a `vegyescsovu-puska` űrlapban ne legyen `ország`, `megye`, `település` és `moderációs flag` mező.
 - Frontend: a vegyescsövű blokkból kikerültek az ország/megye/település inputok és a moderációs flag többválasztó mező.

@@ -183,6 +183,8 @@ class VA_Ajax {
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'csere'             => [ 'label' => 'Csere', 'required' => [ 'exchange_type', 'exchange_offer_category', 'exchange_brand', 'exchange_condition', 'exchange_estimated_value', 'exchange_extra_payment_direction', 'exchange_county' ] ],
             'konyv-folyoirat'   => [ 'label' => 'Könyv és folyóirat', 'required' => [ 'publication_type', 'publication_topics', 'publication_title', 'publication_author', 'publication_year', 'publication_language', 'publication_condition', 'publication_collector_value', 'publication_complete_volume' ] ],
+            'disztargyak'       => [ 'label' => 'Dísztárgyak', 'required' => [ 'decor_type', 'decor_material', 'decor_style', 'decor_motif_tags', 'decor_production_type', 'decor_size_class', 'decor_condition' ] ],
+            'disztargy'         => [ 'label' => 'Dísztárgyak', 'required' => [ 'decor_type', 'decor_material', 'decor_style', 'decor_motif_tags', 'decor_production_type', 'decor_size_class', 'decor_condition' ] ],
             'allas'             => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'allas-hirdetes'    => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
             'szolgaltatas'      => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
@@ -476,6 +478,13 @@ class VA_Ajax {
             'equipment_type' => 'Felszerelés típusa',
             'equipment_condition' => 'Állapot',
             'equipment_hunting_usage' => 'Felhasználás',
+            'decor_type' => 'Dísztárgy típusa',
+            'decor_material' => 'Anyag',
+            'decor_style' => 'Stílus',
+            'decor_motif_tags' => 'Motívum',
+            'decor_production_type' => 'Készítés',
+            'decor_size_class' => 'Méret kategória',
+            'decor_condition' => 'Állapot',
         ];
 
         $missing = [];
@@ -1744,6 +1753,26 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
+        $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
+        $decor_wood_type = sanitize_text_field( wp_unslash( $_POST['decor_wood_type'] ?? '' ) );
+        $decor_metal_alloy = sanitize_text_field( wp_unslash( $_POST['decor_metal_alloy'] ?? '' ) );
+        $decor_style = sanitize_key( wp_unslash( $_POST['decor_style'] ?? '' ) );
+        $decor_motif_tags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['decor_motif_tags'] ?? [] ) ) ) );
+        $decor_finish = sanitize_key( wp_unslash( $_POST['decor_finish'] ?? '' ) );
+        $decor_detailing = sanitize_key( wp_unslash( $_POST['decor_detailing'] ?? '' ) );
+        $decor_era = sanitize_key( wp_unslash( $_POST['decor_era'] ?? '' ) );
+        $decor_production_type = sanitize_key( wp_unslash( $_POST['decor_production_type'] ?? '' ) );
+        $decor_function = sanitize_key( wp_unslash( $_POST['decor_function'] ?? '' ) );
+        $decor_thematic_group = sanitize_key( wp_unslash( $_POST['decor_thematic_group'] ?? '' ) );
+        $decor_special_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['decor_special_features'] ?? [] ) ) ) );
+        $decor_mounting = sanitize_key( wp_unslash( $_POST['decor_mounting'] ?? '' ) );
+        $decor_size_class = sanitize_key( wp_unslash( $_POST['decor_size_class'] ?? '' ) );
+        $decor_condition = sanitize_key( wp_unslash( $_POST['decor_condition'] ?? '' ) );
+        $decor_replica_type = sanitize_text_field( wp_unslash( $_POST['decor_replica_type'] ?? '' ) );
+        $decor_authenticity_level = sanitize_key( wp_unslash( $_POST['decor_authenticity_level'] ?? '' ) );
+        $decor_collectible_flag = sanitize_key( wp_unslash( $_POST['decor_collectible_flag'] ?? '' ) );
+        $decor_filter_collectible = $decor_collectible_flag === 'igen' ? '1' : '0';
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -2192,6 +2221,13 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'decor_type' => $decor_type,
+            'decor_material' => $decor_material,
+            'decor_style' => $decor_style,
+            'decor_motif_tags' => $decor_motif_tags,
+            'decor_production_type' => $decor_production_type,
+            'decor_size_class' => $decor_size_class,
+            'decor_condition' => $decor_condition,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -2902,6 +2938,33 @@ class VA_Ajax {
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
+            'va_decor_type' => $decor_type,
+            'va_decor_material' => $decor_material,
+            'va_decor_wood_type' => $decor_wood_type,
+            'va_decor_metal_alloy' => $decor_metal_alloy,
+            'va_decor_style' => $decor_style,
+            'va_decor_motif_tags' => $decor_motif_tags,
+            'va_decor_finish' => $decor_finish,
+            'va_decor_detailing' => $decor_detailing,
+            'va_decor_era' => $decor_era,
+            'va_decor_production_type' => $decor_production_type,
+            'va_decor_function' => $decor_function,
+            'va_decor_thematic_group' => $decor_thematic_group,
+            'va_decor_special_features' => $decor_special_features,
+            'va_decor_mounting' => $decor_mounting,
+            'va_decor_size_class' => $decor_size_class,
+            'va_decor_condition' => $decor_condition,
+            'va_decor_replica_type' => $decor_replica_type,
+            'va_decor_authenticity_level' => $decor_authenticity_level,
+            'va_decor_collectible_flag' => $decor_collectible_flag,
+            'va_decor_filter_type' => $decor_type,
+            'va_decor_filter_material' => $decor_material,
+            'va_decor_filter_style' => $decor_style,
+            'va_decor_filter_motif' => $decor_motif_tags,
+            'va_decor_filter_production' => $decor_production_type,
+            'va_decor_filter_size' => $decor_size_class,
+            'va_decor_filter_condition' => $decor_condition,
+            'va_decor_filter_collectible_flag' => $decor_filter_collectible,
             'va_shoe_size' => $shoe_size,
             'va_shoe_main_type' => $shoe_main_type,
             'va_shoe_condition' => $shoe_condition,
@@ -3923,6 +3986,26 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
+        $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
+        $decor_wood_type = sanitize_text_field( wp_unslash( $_POST['decor_wood_type'] ?? '' ) );
+        $decor_metal_alloy = sanitize_text_field( wp_unslash( $_POST['decor_metal_alloy'] ?? '' ) );
+        $decor_style = sanitize_key( wp_unslash( $_POST['decor_style'] ?? '' ) );
+        $decor_motif_tags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['decor_motif_tags'] ?? [] ) ) ) );
+        $decor_finish = sanitize_key( wp_unslash( $_POST['decor_finish'] ?? '' ) );
+        $decor_detailing = sanitize_key( wp_unslash( $_POST['decor_detailing'] ?? '' ) );
+        $decor_era = sanitize_key( wp_unslash( $_POST['decor_era'] ?? '' ) );
+        $decor_production_type = sanitize_key( wp_unslash( $_POST['decor_production_type'] ?? '' ) );
+        $decor_function = sanitize_key( wp_unslash( $_POST['decor_function'] ?? '' ) );
+        $decor_thematic_group = sanitize_key( wp_unslash( $_POST['decor_thematic_group'] ?? '' ) );
+        $decor_special_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['decor_special_features'] ?? [] ) ) ) );
+        $decor_mounting = sanitize_key( wp_unslash( $_POST['decor_mounting'] ?? '' ) );
+        $decor_size_class = sanitize_key( wp_unslash( $_POST['decor_size_class'] ?? '' ) );
+        $decor_condition = sanitize_key( wp_unslash( $_POST['decor_condition'] ?? '' ) );
+        $decor_replica_type = sanitize_text_field( wp_unslash( $_POST['decor_replica_type'] ?? '' ) );
+        $decor_authenticity_level = sanitize_key( wp_unslash( $_POST['decor_authenticity_level'] ?? '' ) );
+        $decor_collectible_flag = sanitize_key( wp_unslash( $_POST['decor_collectible_flag'] ?? '' ) );
+        $decor_filter_collectible = $decor_collectible_flag === 'igen' ? '1' : '0';
         $vadcamera_camera_type = sanitize_key( wp_unslash( $_POST['vadcamera_camera_type'] ?? '' ) );
         $vadcamera_condition = sanitize_key( wp_unslash( $_POST['vadcamera_condition'] ?? '' ) );
         $vadcamera_warranty = sanitize_key( wp_unslash( $_POST['vadcamera_warranty'] ?? '' ) );
@@ -4339,6 +4422,13 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'decor_type' => $decor_type,
+            'decor_material' => $decor_material,
+            'decor_style' => $decor_style,
+            'decor_motif_tags' => $decor_motif_tags,
+            'decor_production_type' => $decor_production_type,
+            'decor_size_class' => $decor_size_class,
+            'decor_condition' => $decor_condition,
             'estate_main_type' => $estate_main_type,
         ] );
         if ( $rule_error !== '' ) {
@@ -5050,6 +5140,33 @@ class VA_Ajax {
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
+            'va_decor_type' => $decor_type,
+            'va_decor_material' => $decor_material,
+            'va_decor_wood_type' => $decor_wood_type,
+            'va_decor_metal_alloy' => $decor_metal_alloy,
+            'va_decor_style' => $decor_style,
+            'va_decor_motif_tags' => $decor_motif_tags,
+            'va_decor_finish' => $decor_finish,
+            'va_decor_detailing' => $decor_detailing,
+            'va_decor_era' => $decor_era,
+            'va_decor_production_type' => $decor_production_type,
+            'va_decor_function' => $decor_function,
+            'va_decor_thematic_group' => $decor_thematic_group,
+            'va_decor_special_features' => $decor_special_features,
+            'va_decor_mounting' => $decor_mounting,
+            'va_decor_size_class' => $decor_size_class,
+            'va_decor_condition' => $decor_condition,
+            'va_decor_replica_type' => $decor_replica_type,
+            'va_decor_authenticity_level' => $decor_authenticity_level,
+            'va_decor_collectible_flag' => $decor_collectible_flag,
+            'va_decor_filter_type' => $decor_type,
+            'va_decor_filter_material' => $decor_material,
+            'va_decor_filter_style' => $decor_style,
+            'va_decor_filter_motif' => $decor_motif_tags,
+            'va_decor_filter_production' => $decor_production_type,
+            'va_decor_filter_size' => $decor_size_class,
+            'va_decor_filter_condition' => $decor_condition,
+            'va_decor_filter_collectible_flag' => $decor_filter_collectible,
             'va_shoe_size' => $shoe_size,
             'va_shoe_main_type' => $shoe_main_type,
             'va_shoe_condition' => $shoe_condition,
