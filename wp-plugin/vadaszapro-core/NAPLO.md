@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 29. – Hotfix #sportlovo-lathatosag-step2
+- Hiba: a sportlövő mezőblokk (`va-sport-fields-grid`) Step 2-ben nem jelent meg, miközben a kategória címke helyesen `Sportlövő felsz.` volt.
+- Ok: a későbbi általános `.va-cat-rule-field` láthatósági ciklus felülírhatta a sportblokk állapotát, ha a slug-felbontás nem pont egyezett.
+- Javítás frontend: az általános láthatósági ciklus kapott explicit sport-fallbacket (`isSportCategory` + sport meződetektálás), így a sportblokk biztosan látható sport kategóriában.
+- Javítás frontend: a sport kategória bekerült a core mezőblokk tiltólistájába, ezért sportnál már nem marad bent feleslegesen az alap `Márka/Modell/Év` blokk.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` egységesítve, hibakeresés mindkét fájlon `No errors found`.
+- Deploy: `Deploy All` lefutott, commit+push kész (`19d01db4`), live workflow indul.
+
 ## 2026. 05. 29. – Session #sportlovo-felszereles-kategoria-bovites
 - Kérés: a `sportlovo-felsz` kategória teljes mezőrendszerének beépítése a hirdetés feladásba a megadott sportlövő opciólistákkal és dinamikus mezőkkel.
 - Frontend: a `submit-form.php` új `va-sport-fields-grid` blokkot kapott (`gear_type`, `shooting_discipline[]`, `sport_material[]`, `firearm_compatibility[]`, `sport_size`, `sport_color[]`, `sport_ergonomics[]`, `modular`, `handedness`, `competition_level`, `sport_condition`, tartozékok, környezeti ellenállás).
