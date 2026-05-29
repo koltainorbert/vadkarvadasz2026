@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 29. – Session #vadasz-ruhazat-profi-mezorendszer
+- Kérés: a `Vadász ruházat` kategória teljes, profi mezőrendszerének lezárása frontend + backend oldalon a megadott részletes struktúra szerint.
+- Frontend: bekerült a teljes `va-hunting-clothing-fields-grid` blokk (szezon, felhasználás, anyag-technológia, vízállóság, zajszint, camo mintázat, időjárásvédelem, funkcionalitás, illeszkedés, vadászat-specifikus mezők, dinamikus membrán/IR/rétegezhetőség).
+- Dinamikus logika: új `applyHuntingClothingDynamicFields()` kezeli a feltételes mezőket (`waterproof_level`, `material_tech`, `season`) és a kapcsolódó UI csoportok megjelenítését.
+- Kötelező validáció: frontend + backend required szabályok frissítve (`season`, `hunting_usage`, `waterproof_level`, `noise_level`, `material_tech`, `camo_pattern`) és label map bővítve.
+- Backend: mind update, mind submit ágban bekerült a teljes vadász ruházat sanitize, required payload, `va_*` meta mentés, valamint dedikált szűrőmeták (`va_clothing_filter_hunting_usage`, `va_clothing_filter_noise_level`, `va_clothing_filter_material_tech`, `va_clothing_filter_camo_pattern`, `va_clothing_filter_season_mode`).
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 érintett fájlon `No errors found`.
+
 ## 2026. 05. 29. – Session #taskak-kategoria-komplex-mezorendszer
 - Kérés: a `Táskák` kategória teljes, döntéstámogató mezőrendszerének beépítése (típus, űrtartalom, anyag, vízállóság, hordhatóság, moduláris rendszer, fegyver-kompatibilitás, dinamikus almezők).
 - Frontend: új `va-bag-fields-grid` blokk került a feladási űrlapba (`bag_type`, `volume_l`, `bag_size`, `bag_material`, `bag_weather_resistance[]`, `bag_color_pattern[]`, `bag_design_features[]`, `bag_usage[]`, `bag_firearm_compatible[]`, `bag_carrying_system[]`, `bag_condition`, stb.).

@@ -178,7 +178,7 @@ class VA_Ajax {
             'vadkamera'         => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
             'vadaszlampa'       => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
             'vadaszkutya'       => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_working_type', 'dog_breed', 'dog_gender', 'dog_birth_date', 'dog_hunting_specialization', 'dog_training_level' ] ],
-            'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand' ] ],
+            'vadasz-ruhazat'    => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'season', 'hunting_usage', 'waterproof_level', 'noise_level', 'material_tech', 'camo_pattern', 'clothing_size' ] ],
             'egyeb-ruhazat'     => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
             'cipo-bakancs'      => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
             'csere'             => [ 'label' => 'Csere', 'required' => [ 'exchange_type', 'exchange_offer_category', 'exchange_brand', 'exchange_condition', 'exchange_estimated_value', 'exchange_extra_payment_direction', 'exchange_county' ] ],
@@ -379,6 +379,12 @@ class VA_Ajax {
             'clothing_condition' => 'Állapot',
             'clothing_gender' => 'Nem',
             'clothing_size' => 'Ruhaméret',
+            'season' => 'Időjárás / szezon',
+            'hunting_usage' => 'Vadászati használat',
+            'waterproof_level' => 'Vízállósági szint',
+            'noise_level' => 'Hangtulajdonság',
+            'material_tech' => 'Anyagtechnológia',
+            'camo_pattern' => 'Szín / minta',
             'trophy_type' => 'Trófeaalátét típusa',
             'trophy_maker' => 'Készítő / márka',
             'trophy_custom_made' => 'Kézzel készített',
@@ -1409,6 +1415,28 @@ class VA_Ajax {
         $clothing_filter_waterproof = ( strpos( ',' . $clothing_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
         $clothing_filter_camo = ( strpos( ',' . $clothing_colors . ',', ',terepmintas,' ) !== false || strpos( ',' . $clothing_colors . ',', ',realtree,' ) !== false || strpos( ',' . $clothing_colors . ',', ',multicam,' ) !== false ) ? '1' : '0';
         $clothing_filter_silent = ( strpos( ',' . $clothing_special_features . ',', ',hangtalan,' ) !== false ) ? '1' : '0';
+        $season = sanitize_key( wp_unslash( $_POST['season'] ?? '' ) );
+        $hunting_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunting_usage'] ?? [] ) ) ) );
+        $noise_level = sanitize_key( wp_unslash( $_POST['noise_level'] ?? '' ) );
+        $material_tech = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['material_tech'] ?? [] ) ) ) );
+        $waterproof_level = sanitize_key( wp_unslash( $_POST['waterproof_level'] ?? '' ) );
+        $camo_pattern = sanitize_key( wp_unslash( $_POST['camo_pattern'] ?? '' ) );
+        $silence_index = sanitize_key( wp_unslash( $_POST['silence_index'] ?? '' ) );
+        $clothing_weather_protection = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_weather_protection'] ?? [] ) ) ) );
+        $clothing_functional_details = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_functional_details'] ?? [] ) ) ) );
+        $clothing_fit = sanitize_key( wp_unslash( $_POST['clothing_fit'] ?? '' ) );
+        $clothing_size_fit = sanitize_key( wp_unslash( $_POST['clothing_size_fit'] ?? '' ) );
+        $clothing_hunter_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_hunter_features'] ?? [] ) ) ) );
+        $clothing_gear_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_gear_compatibility'] ?? [] ) ) ) );
+        $clothing_durability = sanitize_key( wp_unslash( $_POST['clothing_durability'] ?? '' ) );
+        $clothing_layering = sanitize_key( wp_unslash( $_POST['clothing_layering'] ?? '' ) );
+        $clothing_membrane_type = sanitize_key( wp_unslash( $_POST['clothing_membrane_type'] ?? '' ) );
+        $clothing_ir_reduction = sanitize_key( wp_unslash( $_POST['clothing_ir_reduction'] ?? '' ) );
+        $clothing_filter_hunting_usage = $hunting_usage;
+        $clothing_filter_noise_level = $noise_level;
+        $clothing_filter_material_tech = $material_tech;
+        $clothing_filter_camo_pattern = $camo_pattern;
+        $clothing_filter_season_mode = $season;
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
         $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
@@ -2361,6 +2389,12 @@ class VA_Ajax {
             'clothing_condition' => $clothing_condition,
             'clothing_gender' => $clothing_gender,
             'clothing_size' => $clothing_size,
+            'season' => $season,
+            'hunting_usage' => $hunting_usage,
+            'waterproof_level' => $waterproof_level,
+            'noise_level' => $noise_level,
+            'material_tech' => $material_tech,
+            'camo_pattern' => $camo_pattern,
             'knife_type' => $knife_type,
             'knife_condition' => $knife_condition,
             'knife_blade_length_mm' => $knife_blade_length_mm,
@@ -2897,6 +2931,23 @@ class VA_Ajax {
             'va_clothing_poncho_backpack_compatible' => $clothing_poncho_backpack_compatible,
             'va_clothing_ghillie_type' => $clothing_ghillie_type,
             'va_clothing_ghillie_pattern' => $clothing_ghillie_pattern,
+            'va_season' => $season,
+            'va_hunting_usage' => $hunting_usage,
+            'va_noise_level' => $noise_level,
+            'va_material_tech' => $material_tech,
+            'va_waterproof_level' => $waterproof_level,
+            'va_camo_pattern' => $camo_pattern,
+            'va_silence_index' => $silence_index,
+            'va_clothing_weather_protection' => $clothing_weather_protection,
+            'va_clothing_functional_details' => $clothing_functional_details,
+            'va_clothing_fit' => $clothing_fit,
+            'va_clothing_size_fit' => $clothing_size_fit,
+            'va_clothing_hunter_features' => $clothing_hunter_features,
+            'va_clothing_gear_compatibility' => $clothing_gear_compatibility,
+            'va_clothing_durability' => $clothing_durability,
+            'va_clothing_layering' => $clothing_layering,
+            'va_clothing_membrane_type' => $clothing_membrane_type,
+            'va_clothing_ir_reduction' => $clothing_ir_reduction,
             'va_clothing_filter_type' => $clothing_type,
             'va_clothing_filter_size' => $clothing_size,
             'va_clothing_filter_thermo' => $clothing_filter_thermo,
@@ -2905,6 +2956,11 @@ class VA_Ajax {
             'va_clothing_filter_silent' => $clothing_filter_silent,
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
+            'va_clothing_filter_hunting_usage' => $clothing_filter_hunting_usage,
+            'va_clothing_filter_noise_level' => $clothing_filter_noise_level,
+            'va_clothing_filter_material_tech' => $clothing_filter_material_tech,
+            'va_clothing_filter_camo_pattern' => $clothing_filter_camo_pattern,
+            'va_clothing_filter_season_mode' => $clothing_filter_season_mode,
             'va_knife_type' => $knife_type,
             'va_knife_condition' => $knife_condition,
             'va_knife_manufacture_year' => $knife_manufacture_year,
@@ -3984,6 +4040,28 @@ class VA_Ajax {
         $clothing_filter_waterproof = ( strpos( ',' . $clothing_protections . ',', ',vizallo,' ) !== false ) ? '1' : '0';
         $clothing_filter_camo = ( strpos( ',' . $clothing_colors . ',', ',terepmintas,' ) !== false || strpos( ',' . $clothing_colors . ',', ',realtree,' ) !== false || strpos( ',' . $clothing_colors . ',', ',multicam,' ) !== false ) ? '1' : '0';
         $clothing_filter_silent = ( strpos( ',' . $clothing_special_features . ',', ',hangtalan,' ) !== false ) ? '1' : '0';
+        $season = sanitize_key( wp_unslash( $_POST['season'] ?? '' ) );
+        $hunting_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunting_usage'] ?? [] ) ) ) );
+        $noise_level = sanitize_key( wp_unslash( $_POST['noise_level'] ?? '' ) );
+        $material_tech = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['material_tech'] ?? [] ) ) ) );
+        $waterproof_level = sanitize_key( wp_unslash( $_POST['waterproof_level'] ?? '' ) );
+        $camo_pattern = sanitize_key( wp_unslash( $_POST['camo_pattern'] ?? '' ) );
+        $silence_index = sanitize_key( wp_unslash( $_POST['silence_index'] ?? '' ) );
+        $clothing_weather_protection = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_weather_protection'] ?? [] ) ) ) );
+        $clothing_functional_details = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_functional_details'] ?? [] ) ) ) );
+        $clothing_fit = sanitize_key( wp_unslash( $_POST['clothing_fit'] ?? '' ) );
+        $clothing_size_fit = sanitize_key( wp_unslash( $_POST['clothing_size_fit'] ?? '' ) );
+        $clothing_hunter_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_hunter_features'] ?? [] ) ) ) );
+        $clothing_gear_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['clothing_gear_compatibility'] ?? [] ) ) ) );
+        $clothing_durability = sanitize_key( wp_unslash( $_POST['clothing_durability'] ?? '' ) );
+        $clothing_layering = sanitize_key( wp_unslash( $_POST['clothing_layering'] ?? '' ) );
+        $clothing_membrane_type = sanitize_key( wp_unslash( $_POST['clothing_membrane_type'] ?? '' ) );
+        $clothing_ir_reduction = sanitize_key( wp_unslash( $_POST['clothing_ir_reduction'] ?? '' ) );
+        $clothing_filter_hunting_usage = $hunting_usage;
+        $clothing_filter_noise_level = $noise_level;
+        $clothing_filter_material_tech = $material_tech;
+        $clothing_filter_camo_pattern = $camo_pattern;
+        $clothing_filter_season_mode = $season;
         $shoe_size   = sanitize_text_field( wp_unslash( $_POST['shoe_size'] ?? '' ) );
         $shoe_main_type = sanitize_key( wp_unslash( $_POST['shoe_main_type'] ?? '' ) );
         $shoe_condition = sanitize_key( wp_unslash( $_POST['shoe_condition'] ?? '' ) );
@@ -4881,6 +4959,12 @@ class VA_Ajax {
             'clothing_gender' => $clothing_gender,
             'clothing_size_system' => $clothing_size_system,
             'clothing_size' => $clothing_size,
+            'season' => $season,
+            'hunting_usage' => $hunting_usage,
+            'waterproof_level' => $waterproof_level,
+            'noise_level' => $noise_level,
+            'material_tech' => $material_tech,
+            'camo_pattern' => $camo_pattern,
             'knife_type' => $knife_type,
             'knife_condition' => $knife_condition,
             'knife_blade_length_mm' => $knife_blade_length_mm,
@@ -5411,6 +5495,23 @@ class VA_Ajax {
             'va_clothing_poncho_backpack_compatible' => $clothing_poncho_backpack_compatible,
             'va_clothing_ghillie_type' => $clothing_ghillie_type,
             'va_clothing_ghillie_pattern' => $clothing_ghillie_pattern,
+            'va_season' => $season,
+            'va_hunting_usage' => $hunting_usage,
+            'va_noise_level' => $noise_level,
+            'va_material_tech' => $material_tech,
+            'va_waterproof_level' => $waterproof_level,
+            'va_camo_pattern' => $camo_pattern,
+            'va_silence_index' => $silence_index,
+            'va_clothing_weather_protection' => $clothing_weather_protection,
+            'va_clothing_functional_details' => $clothing_functional_details,
+            'va_clothing_fit' => $clothing_fit,
+            'va_clothing_size_fit' => $clothing_size_fit,
+            'va_clothing_hunter_features' => $clothing_hunter_features,
+            'va_clothing_gear_compatibility' => $clothing_gear_compatibility,
+            'va_clothing_durability' => $clothing_durability,
+            'va_clothing_layering' => $clothing_layering,
+            'va_clothing_membrane_type' => $clothing_membrane_type,
+            'va_clothing_ir_reduction' => $clothing_ir_reduction,
             'va_clothing_filter_type' => $clothing_type,
             'va_clothing_filter_size' => $clothing_size,
             'va_clothing_filter_thermo' => $clothing_filter_thermo,
@@ -5419,6 +5520,11 @@ class VA_Ajax {
             'va_clothing_filter_silent' => $clothing_filter_silent,
             'va_clothing_filter_season' => $clothing_season,
             'va_clothing_filter_brand' => $brand,
+            'va_clothing_filter_hunting_usage' => $clothing_filter_hunting_usage,
+            'va_clothing_filter_noise_level' => $clothing_filter_noise_level,
+            'va_clothing_filter_material_tech' => $clothing_filter_material_tech,
+            'va_clothing_filter_camo_pattern' => $clothing_filter_camo_pattern,
+            'va_clothing_filter_season_mode' => $clothing_filter_season_mode,
             'va_knife_type' => $knife_type,
             'va_knife_condition' => $knife_condition,
             'va_knife_manufacture_year' => $knife_manufacture_year,
