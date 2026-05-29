@@ -13,7 +13,7 @@ class VA_Vehicle_Catalog {
     private static $hunting_product_categories = null;
 
     public static function get_dataset_version(): string {
-        return 'vadaszapro-categories-2026-05-12';
+        return 'vadaszapro-categories-2026-05-29';
     }
 
     public static function get_categories(): array {
@@ -34,6 +34,7 @@ class VA_Vehicle_Catalog {
             [ 'name' => 'Éjjellátó távcső',      'slug' => 'ejjellato-tavcso' ],
             [ 'name' => 'Hőkamerák',             'slug' => 'hokamerak' ],
             [ 'name' => 'Vadkamera',             'slug' => 'vadkamera' ],
+            [ 'name' => 'Fegyverlámpa',          'slug' => 'fegyverlampa' ],
             [ 'name' => 'Vadászati lehetőség',   'slug' => 'vadaszati-lehetoseg' ],
             [ 'name' => 'Vadkárelhárítás',       'slug' => 'vadkarelharitas' ],
             [ 'name' => 'Egyeb ruházat',         'slug' => 'egyeb-ruhazat' ],

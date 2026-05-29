@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 29. – Session #egyeb-kategoria-szintu-mezorendszer
+- Kérés: a top-level `Egyéb` kategória kapjon valódi, látható kategória-mezőt, ne csak rejtett fallback/modál szintű kezelést.
+- Frontend: a `submit-form.php` Step 2-be bekerült a látható `other_category` blokk a `data-categories="egyeb"` feltétellel, így az `Egyéb` választásnál közvetlenül megadható a kategória neve.
+- Validáció: a `validateCategoryRequiredFields()` label map megkapta az `other_category` mezőt, a top-level `egyeb` kategória pedig külön required szabályt kapott.
+- Backend: a `class-ajax.php` required rules mapje és label térképe is megkapta az `egyeb` / `other_category` kezelést, így a mentés és a hibaüzenet is ezt a kategória-szintű logikát használja.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 érintett fájlon `No errors found`.
+- Deploy: `Deploy All` lefutott, commit+push kész (`ff4181be`), live workflow triggerelve.
+- Maradt teendő: ha a következő körben külön taxonómia-alcsoport vagy admin oldali megjelenítés kell az `Egyéb` alá, azt külön kell megtervezni.
+
 ## 2026. 05. 29. – Session #egyeb-fallback-intelligens-atsorolas
 - Kérés: az `Egyéb` ág kapjon frissített altípus-listát, hangsúlyos fallback szerepet és automatikus átsorolási javaslatot (hangtompító / fegyver / lámpa / táska / ruházat).
 - Frontend: a `vadasz-felszereles` űrlapban új, `equipment_type=egyeb` alatt megjelenő blokk készült (`other_equipment_type`, `other_equipment_function`, `other_equipment_material_note`, `other_equipment_compatibility`, `other_hunting_relevance`, `other_uncertain_classification`, auto-javaslat mezők).

@@ -257,6 +257,7 @@ $category_required_rules = [
     'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'thermal_device_type', 'thermal_sensor_resolution', 'thermal_netd', 'thermal_refresh_hz' ] ],
     'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
     'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
+    'fegyverlampa'       => [ 'label' => 'Fegyverlámpa', 'required' => [ 'brand', 'model' ] ],
     'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_working_type', 'dog_breed', 'dog_gender', 'dog_birth_date', 'dog_hunting_specialization', 'dog_training_level' ] ],
     'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'season', 'hunting_usage', 'waterproof_level', 'noise_level', 'material_tech', 'camo_pattern', 'clothing_size' ] ],
     'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
@@ -6260,7 +6261,7 @@ body.va-modal-open {
             $light_optical_props_saved = $equipment_csv( 'light_optical_properties' );
             $light_weapon_types_saved = $equipment_csv( 'light_weapon_type_compatibility' );
             ?>
-            <div class="va-cat-rule-field va-equipment-fields-grid" data-categories="vadasz-felszereles" style="display:none;">
+            <div class="va-cat-rule-field va-equipment-fields-grid" data-categories="vadasz-felszereles,fegyverlampa" style="display:none;">
                 <div class="va-step2-4col-inner">
                     <div class="va-form-group">
                         <label>Felszerelés típusa</label>
@@ -9786,7 +9787,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var callType = (($('#va-equipment-call-type').val() || '') + '').trim();
         var electronicValues = $('#va-equipment-electronic-features').val();
         var electronicFeatures = Array.isArray(electronicValues) ? electronicValues : (electronicValues ? [electronicValues] : []);
-        var lightEquipmentTypes = ['elemlampa', 'fejlampa', 'vadaszlampa', 'kezilampa', 'fegyverre-szerelheto-lampa', 'fegyversin-lampa', 'ir-lampa', 'zold-fenyu-vadaszlampa', 'piros-fenyu-vadaszlampa', 'feher-fenyu-vadaszlampa', 'multifunkcios-lampa', 'uv-lampa'];
+        var lightEquipmentTypes = ['elemlampa', 'fejlampa', 'vadaszlampa', 'fegyverlampa', 'kezilampa', 'fegyverre-szerelheto-lampa', 'fegyversin-lampa', 'ir-lampa', 'zold-fenyu-vadaszlampa', 'piros-fenyu-vadaszlampa', 'feher-fenyu-vadaszlampa', 'multifunkcios-lampa', 'uv-lampa'];
         var isLightEquipment = lightEquipmentTypes.indexOf(equipmentType) !== -1 || !!lightType;
         var needsRuntime = isLightEquipment || ['elemlampa', 'fejlampa', 'akkumulator'].indexOf(equipmentType) !== -1 || callType === 'elektronikus' || electronicFeatures.length > 0;
 
