@@ -282,6 +282,10 @@ $category_required_rules = [
     'svajci-bicska'      => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
     'sportlovo-felsz'    => [ 'label' => 'Sportlövő felszerelés', 'required' => [ 'gear_type', 'shooting_discipline', 'firearm_compatibility', 'sport_size', 'modular', 'competition_level', 'sport_condition' ] ],
+    'taskak'             => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+    'taska'              => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+    'hatizsakok'         => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+    'fegyvertokok'       => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
     'kurtok-sipok'       => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
 ];
 
@@ -1264,6 +1268,7 @@ $cat_icons_map = [
     'hokamerak' => '🌡️', 'vadkamera' => '📷', 'vadaszlampa' => '🔦',
     'vadaszkutya' => '🐕', 'vadasz-ruhazat' => '🧥', 'cipo-bakancs' => '👢',
     'kesek' => '🔪', 'sportlovo-felsz' => '🎯',
+    'taskak' => '🎒', 'taska' => '🎒', 'hatizsakok' => '🎒', 'fegyvertokok' => '🎒',
     'vadasz-felszereles' => '🎒', 'disztargyak' => '🖼️', 'disztargy' => '🖼️', 'egyeb' => '📦',
 ];
 $wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
@@ -6520,6 +6525,265 @@ body.va-modal-open {
                 </div>
             </div>
             <?php
+            $bag_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $bag_csv = static function( string $key ) use ( $bag_meta ): array {
+                return array_filter( array_map( 'trim', explode( ',', $bag_meta( $key ) ) ) );
+            };
+            $bag_weather_saved = $bag_csv( 'bag_weather_resistance' );
+            $bag_color_saved = $bag_csv( 'bag_color_pattern' );
+            $bag_design_saved = $bag_csv( 'bag_design_features' );
+            $bag_usage_saved = $bag_csv( 'bag_usage' );
+            $bag_firearm_saved = $bag_csv( 'bag_firearm_compatible' );
+            $bag_carrying_saved = $bag_csv( 'bag_carrying_system' );
+            $bag_comfort_saved = $bag_csv( 'bag_comfort' );
+            ?>
+            <div class="va-cat-rule-field va-bag-fields-grid" data-categories="taskak,taska,hatizsakok,fegyvertokok" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Táska típusa</label>
+                        <?php $v = $bag_meta( 'bag_type' ); ?>
+                        <select name="bag_type" id="va-bag-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="hatizsak"<?php selected( $v, 'hatizsak' ); ?>>Hátizsák</option>
+                            <option value="vadasztaska"<?php selected( $v, 'vadasztaska' ); ?>>Vadásztáska</option>
+                            <option value="ovtaska"<?php selected( $v, 'ovtaska' ); ?>>Övtáska</option>
+                            <option value="oldaltaska"<?php selected( $v, 'oldaltaska' ); ?>>Oldaltáska</option>
+                            <option value="valltaska"<?php selected( $v, 'valltaska' ); ?>>Válltáska</option>
+                            <option value="loszertaska"<?php selected( $v, 'loszertaska' ); ?>>Lőszertáska</option>
+                            <option value="fegyvertok"<?php selected( $v, 'fegyvertok' ); ?>>Fegyvertok</option>
+                            <option value="puskatok"<?php selected( $v, 'puskatok' ); ?>>Puskatok</option>
+                            <option value="pisztolytaska"<?php selected( $v, 'pisztolytaska' ); ?>>Pisztolytáska</option>
+                            <option value="taktikai-taska"<?php selected( $v, 'taktikai-taska' ); ?>>Taktikai táska</option>
+                            <option value="molle-rendszeru-taska"<?php selected( $v, 'molle-rendszeru-taska' ); ?>>MOLLE rendszerű táska</option>
+                            <option value="trofeaszallito-taska"<?php selected( $v, 'trofeaszallito-taska' ); ?>>Trófeaszállító táska</option>
+                            <option value="hutotaska"<?php selected( $v, 'hutotaska' ); ?>>Hűtőtáska</option>
+                            <option value="kutyas-felszereles-taska"<?php selected( $v, 'kutyas-felszereles-taska' ); ?>>Kutyás felszerelés táska</option>
+                            <option value="admin-pouch"<?php selected( $v, 'admin-pouch' ); ?>>Admin pouch</option>
+                            <option value="range-bag"<?php selected( $v, 'range-bag' ); ?>>Range bag</option>
+                            <option value="dry-bag"<?php selected( $v, 'dry-bag' ); ?>>Dry bag</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Űrtartalom</label>
+                        <?php $v = $bag_meta( 'volume_l' ); ?>
+                        <select name="volume_l" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="0-5"<?php selected( $v, '0-5' ); ?>>5 L alatt</option>
+                            <option value="5-15"<?php selected( $v, '5-15' ); ?>>5-15 L</option>
+                            <option value="15-30"<?php selected( $v, '15-30' ); ?>>15-30 L</option>
+                            <option value="30-50"<?php selected( $v, '30-50' ); ?>>30-50 L</option>
+                            <option value="50-plus"<?php selected( $v, '50-plus' ); ?>>50+ L</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Méret</label>
+                        <?php $v = $bag_meta( 'bag_size' ); ?>
+                        <select name="bag_size" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="kompakt"<?php selected( $v, 'kompakt' ); ?>>Kompakt</option>
+                            <option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option>
+                            <option value="nagy"<?php selected( $v, 'nagy' ); ?>>Nagy</option>
+                            <option value="extra-nagy"<?php selected( $v, 'extra-nagy' ); ?>>Extra nagy</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Anyag</label>
+                        <?php $v = $bag_meta( 'bag_material' ); ?>
+                        <select name="bag_material" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="cordura"<?php selected( $v, 'cordura' ); ?>>Cordura</option>
+                            <option value="nylon"<?php selected( $v, 'nylon' ); ?>>Nylon</option>
+                            <option value="polieszter"<?php selected( $v, 'polieszter' ); ?>>Poliészter</option>
+                            <option value="vaszon"<?php selected( $v, 'vaszon' ); ?>>Vászon</option>
+                            <option value="bor"<?php selected( $v, 'bor' ); ?>>Bőr</option>
+                            <option value="mubor"<?php selected( $v, 'mubor' ); ?>>Műbőr</option>
+                            <option value="pvc"<?php selected( $v, 'pvc' ); ?>>PVC</option>
+                            <option value="vizallo-textil"<?php selected( $v, 'vizallo-textil' ); ?>>Vízálló textil</option>
+                            <option value="gumirozott"<?php selected( $v, 'gumirozott' ); ?>>Gumírozott</option>
+                            <option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Időjárásállóság</label>
+                        <select name="bag_weather_resistance[]" class="va-select" multiple data-placeholder="Válassz jellemzőt">
+                            <option value="vizallo"<?php echo in_array( 'vizallo', $bag_weather_saved, true ) ? ' selected' : ''; ?>>Vízálló</option>
+                            <option value="vizlepergeto"<?php echo in_array( 'vizlepergeto', $bag_weather_saved, true ) ? ' selected' : ''; ?>>Vízlepergető</option>
+                            <option value="porallo"<?php echo in_array( 'porallo', $bag_weather_saved, true ) ? ' selected' : ''; ?>>Porálló</option>
+                            <option value="sarallo"<?php echo in_array( 'sarallo', $bag_weather_saved, true ) ? ' selected' : ''; ?>>Sárálló</option>
+                            <option value="hoallo"<?php echo in_array( 'hoallo', $bag_weather_saved, true ) ? ' selected' : ''; ?>>Hóálló</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Szín / minta</label>
+                        <select name="bag_color_pattern[]" class="va-select" multiple data-placeholder="Válassz színt/mintát">
+                            <option value="zold"<?php echo in_array( 'zold', $bag_color_saved, true ) ? ' selected' : ''; ?>>Zöld</option>
+                            <option value="barna"<?php echo in_array( 'barna', $bag_color_saved, true ) ? ' selected' : ''; ?>>Barna</option>
+                            <option value="fekete"<?php echo in_array( 'fekete', $bag_color_saved, true ) ? ' selected' : ''; ?>>Fekete</option>
+                            <option value="homok"<?php echo in_array( 'homok', $bag_color_saved, true ) ? ' selected' : ''; ?>>Homok</option>
+                            <option value="terepmintas"<?php echo in_array( 'terepmintas', $bag_color_saved, true ) ? ' selected' : ''; ?>>Terepmintás</option>
+                            <option value="realtree"<?php echo in_array( 'realtree', $bag_color_saved, true ) ? ' selected' : ''; ?>>Realtree</option>
+                            <option value="multicam"<?php echo in_array( 'multicam', $bag_color_saved, true ) ? ' selected' : ''; ?>>Multicam</option>
+                            <option value="ho-terepmintas"<?php echo in_array( 'ho-terepmintas', $bag_color_saved, true ) ? ' selected' : ''; ?>>Hó terepminta</option>
+                            <option value="narancs-biztonsagi"<?php echo in_array( 'narancs-biztonsagi', $bag_color_saved, true ) ? ' selected' : ''; ?>>Narancs biztonsági</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Mintázat (SEO/szűrő)</label>
+                        <?php $v = $bag_meta( 'bag_camo_pattern' ); ?>
+                        <select name="bag_camo_pattern" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="nincs"<?php selected( $v, 'nincs' ); ?>>Nincs</option>
+                            <option value="terepmintas"<?php selected( $v, 'terepmintas' ); ?>>Terepmintás</option>
+                            <option value="realtree"<?php selected( $v, 'realtree' ); ?>>Realtree</option>
+                            <option value="multicam"<?php selected( $v, 'multicam' ); ?>>Multicam</option>
+                            <option value="ho-terepmintas"<?php selected( $v, 'ho-terepmintas' ); ?>>Hó terepminta</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Moduláris rendszer</label>
+                        <?php $v = $bag_meta( 'bag_modular' ); ?>
+                        <select name="bag_modular" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Kialakítás</label>
+                        <select name="bag_design_features[]" id="va-bag-design-features" class="va-select" multiple data-placeholder="Válassz kialakítást">
+                            <option value="molle-kompatibilis"<?php echo in_array( 'molle-kompatibilis', $bag_design_saved, true ) ? ' selected' : ''; ?>>MOLLE kompatibilis</option>
+                            <option value="modularis"<?php echo in_array( 'modularis', $bag_design_saved, true ) ? ' selected' : ''; ?>>Moduláris</option>
+                            <option value="gyorsnyitas"<?php echo in_array( 'gyorsnyitas', $bag_design_saved, true ) ? ' selected' : ''; ?>>Gyorsnyitás</option>
+                            <option value="hangtalan-cipzar"<?php echo in_array( 'hangtalan-cipzar', $bag_design_saved, true ) ? ' selected' : ''; ?>>Hangtalan cipzár</option>
+                            <option value="merevitett"<?php echo in_array( 'merevitett', $bag_design_saved, true ) ? ' selected' : ''; ?>>Merevített</option>
+                            <option value="parnazott"<?php echo in_array( 'parnazott', $bag_design_saved, true ) ? ' selected' : ''; ?>>Párnázott</option>
+                            <option value="rejtett-zseb"<?php echo in_array( 'rejtett-zseb', $bag_design_saved, true ) ? ' selected' : ''; ?>>Rejtett zseb</option>
+                            <option value="fegyverrekesz"<?php echo in_array( 'fegyverrekesz', $bag_design_saved, true ) ? ' selected' : ''; ?>>Fegyverrekesz</option>
+                            <option value="laptop-rekesz"<?php echo in_array( 'laptop-rekesz', $bag_design_saved, true ) ? ' selected' : ''; ?>>Laptop rekesz</option>
+                            <option value="hydration-kompatibilis"<?php echo in_array( 'hydration-kompatibilis', $bag_design_saved, true ) ? ' selected' : ''; ?>>Hydration kompatibilis</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Felhasználás</label>
+                        <select name="bag_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást">
+                            <option value="vadaszat"<?php echo in_array( 'vadaszat', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Vadászat</option>
+                            <option value="sportloveszet"<?php echo in_array( 'sportloveszet', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Sportlövészet</option>
+                            <option value="tura"<?php echo in_array( 'tura', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Túra</option>
+                            <option value="bushcraft"<?php echo in_array( 'bushcraft', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Bushcraft</option>
+                            <option value="tuleles"<?php echo in_array( 'tuleles', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Túlélés</option>
+                            <option value="napi-hasznalat"<?php echo in_array( 'napi-hasznalat', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Napi használat</option>
+                            <option value="utazas"<?php echo in_array( 'utazas', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Utazás</option>
+                            <option value="loter"<?php echo in_array( 'loter', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Lőtér</option>
+                            <option value="kutyas-vadaszat"<?php echo in_array( 'kutyas-vadaszat', $bag_usage_saved, true ) ? ' selected' : ''; ?>>Kutyás vadászat</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="fegyvertok,puskatok,pisztolytaska" style="grid-column:1 / -1;">
+                        <label>Fegyver kompatibilitás</label>
+                        <select name="bag_firearm_compatible[]" class="va-select" multiple data-placeholder="Válassz kompatibilitást">
+                            <option value="golyos-puska"<?php echo in_array( 'golyos-puska', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>Golyós puska</option>
+                            <option value="soretes"<?php echo in_array( 'soretes', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>Sörétes</option>
+                            <option value="maroklofegyver"<?php echo in_array( 'maroklofegyver', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>Maroklőfegyver</option>
+                            <option value="ar-platform"<?php echo in_array( 'ar-platform', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>AR platform</option>
+                            <option value="pcc"<?php echo in_array( 'pcc', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>PCC</option>
+                            <option value="legfegyver"<?php echo in_array( 'legfegyver', $bag_firearm_saved, true ) ? ' selected' : ''; ?>>Légfegyver</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="fegyvertok,puskatok,pisztolytaska">
+                        <label>Maximális fegyverhossz (cm)</label>
+                        <input type="text" name="bag_max_firearm_length_cm" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_max_firearm_length_cm' ) ); ?>" placeholder="pl. 125">
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="fegyvertok,puskatok,pisztolytaska">
+                        <label>Belső párnázás</label>
+                        <?php $v = $bag_meta( 'bag_inner_padding' ); ?>
+                        <select name="bag_inner_padding" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="fegyvertok,puskatok,pisztolytaska">
+                        <label>Zárható</label>
+                        <?php $v = $bag_meta( 'bag_lockable' ); ?>
+                        <select name="bag_lockable" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="hatizsak,molle-rendszeru-taska">
+                        <label>Hydration rendszer</label>
+                        <?php $v = $bag_meta( 'bag_hydration_system' ); ?>
+                        <select name="bag_hydration_system" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="hatizsak,molle-rendszeru-taska">
+                        <label>Túra kompatibilis</label>
+                        <?php $v = $bag_meta( 'bag_touring_compatible' ); ?>
+                        <select name="bag_touring_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="range-bag">
+                        <label>Tártartók száma</label>
+                        <input type="text" name="bag_mag_holder_count" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_mag_holder_count' ) ); ?>" placeholder="pl. 6">
+                    </div>
+                    <div class="va-form-group va-bag-dynamic-group" data-bag-types="range-bag">
+                        <label>Lőszer rekeszek száma</label>
+                        <input type="text" name="bag_ammo_compartment_count" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_ammo_compartment_count' ) ); ?>" placeholder="pl. 4">
+                    </div>
+                    <div class="va-form-group"><label>Fő rekeszek száma</label><input type="text" name="bag_main_compartments" id="va-bag-main-compartments" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_main_compartments' ) ); ?>" placeholder="pl. 3"></div>
+                    <div class="va-form-group"><label>Külső zsebek száma</label><input type="text" name="bag_outer_pockets" id="va-bag-outer-pockets" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_outer_pockets' ) ); ?>" placeholder="pl. 6"></div>
+                    <div class="va-form-group"><label>Belső rendszerező</label><?php $v = $bag_meta( 'bag_internal_organizer' ); ?><select name="bag_internal_organizer" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Lőszer tartó</label><?php $v = $bag_meta( 'bag_ammo_holder' ); ?><select name="bag_ammo_holder" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group"><label>Dokumentum rekesz</label><?php $v = $bag_meta( 'bag_document_compartment' ); ?><select name="bag_document_compartment" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Hordhatóság</label>
+                        <select name="bag_carrying_system[]" class="va-select" multiple data-placeholder="Válassz hordrendszert">
+                            <option value="vallpant"<?php echo in_array( 'vallpant', $bag_carrying_saved, true ) ? ' selected' : ''; ?>>Vállpánt</option>
+                            <option value="mellkaspant"<?php echo in_array( 'mellkaspant', $bag_carrying_saved, true ) ? ' selected' : ''; ?>>Mellkaspánt</option>
+                            <option value="derekpant"<?php echo in_array( 'derekpant', $bag_carrying_saved, true ) ? ' selected' : ''; ?>>Derékpánt</option>
+                            <option value="kezifogantyu"<?php echo in_array( 'kezifogantyu', $bag_carrying_saved, true ) ? ' selected' : ''; ?>>Kézifogantyú</option>
+                            <option value="hatpanel-szellozes"<?php echo in_array( 'hatpanel-szellozes', $bag_carrying_saved, true ) ? ' selected' : ''; ?>>Hátpanel szellőzés</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group"><label>Max terhelés (kg)</label><input type="text" name="bag_max_load_kg" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_max_load_kg' ) ); ?>" placeholder="pl. 25"></div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Komfort</label>
+                        <select name="bag_comfort[]" class="va-select" multiple data-placeholder="Válassz komfort elemet">
+                            <option value="ergonomikus"<?php echo in_array( 'ergonomikus', $bag_comfort_saved, true ) ? ' selected' : ''; ?>>Ergonomikus</option>
+                            <option value="szellozo-hatfal"<?php echo in_array( 'szellozo-hatfal', $bag_comfort_saved, true ) ? ' selected' : ''; ?>>Szellőző hátfal</option>
+                            <option value="konnyitett"<?php echo in_array( 'konnyitett', $bag_comfort_saved, true ) ? ' selected' : ''; ?>>Könnyített</option>
+                            <option value="csendes-anyag"<?php echo in_array( 'csendes-anyag', $bag_comfort_saved, true ) ? ' selected' : ''; ?>>Csendes anyag</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Zárás típusa</label>
+                        <?php $v = $bag_meta( 'bag_closure_type' ); ?>
+                        <select name="bag_closure_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="cipzar"<?php selected( $v, 'cipzar' ); ?>>Cipzár</option>
+                            <option value="csat"<?php selected( $v, 'csat' ); ?>>Csat</option>
+                            <option value="magnes"<?php selected( $v, 'magnes' ); ?>>Mágnes</option>
+                            <option value="roll-top"<?php selected( $v, 'roll-top' ); ?>>Roll-top</option>
+                            <option value="gyorscsat"<?php selected( $v, 'gyorscsat' ); ?>>Gyorscsat</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = $bag_meta( 'bag_condition' ); ?>
+                        <select name="bag_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="terephasznalt"<?php selected( $v, 'terephasznalt' ); ?>>Terephasznált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Pakolhatósági index</label>
+                        <input type="text" name="bag_packability_index" id="va-bag-packability-index" class="va-input" value="<?php echo esc_attr( $bag_meta( 'bag_packability_index' ) ); ?>" placeholder="Automatikusan számolva" readonly>
+                    </div>
+                </div>
+            </div>
+            <?php
             $call_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
@@ -8987,6 +9251,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applyBagDynamicFields() {
+        var bagType = (($('#va-bag-type').val() || '') + '').trim();
+        var designValues = $('#va-bag-design-features').val();
+        var designFeatures = Array.isArray(designValues) ? designValues : (designValues ? [designValues] : []);
+
+        $('.va-bag-dynamic-group').each(function(){
+            var list = (($(this).attr('data-bag-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            $(this).toggle(!list.length || list.indexOf(bagType) !== -1);
+        });
+
+        var mainCompartments = parseInt((($('#va-bag-main-compartments').val() || '') + '').replace(/\D+/g, ''), 10);
+        var outerPockets = parseInt((($('#va-bag-outer-pockets').val() || '') + '').replace(/\D+/g, ''), 10);
+        if (Number.isNaN(mainCompartments)) mainCompartments = 0;
+        if (Number.isNaN(outerPockets)) outerPockets = 0;
+        var modularBonus = (designFeatures.indexOf('modularis') !== -1 || designFeatures.indexOf('molle-kompatibilis') !== -1) ? 20 : 0;
+        var index = Math.max(0, Math.min(100, (mainCompartments * 12) + (outerPockets * 4) + modularBonus));
+        $('#va-bag-packability-index').val(index);
+    }
+
     function applyCallDynamicFields() {
         var type = (($('#va-call-type').val() || '') + '').trim();
         var operationMode = (($('#va-call-operation-mode').val() || '') + '').trim();
@@ -9195,6 +9478,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-gear-type, #va-shooting-discipline, #va-sport-ergonomics', function(){
         applySportShootingDynamicFields();
     });
+    $(document).on('change input', '#va-bag-type, #va-bag-design-features, #va-bag-main-compartments, #va-bag-outer-pockets', function(){
+        applyBagDynamicFields();
+    });
     $(document).on('change', '#va-call-type, #va-call-operation-mode, #va-call-style, #va-call-material-type', function(){
         applyCallDynamicFields();
     });
@@ -9238,6 +9524,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyPublicationDynamicFields();
     applyEquipmentDynamicFields();
     applySportShootingDynamicFields();
+    applyBagDynamicFields();
     applyCallDynamicFields();
     applyDecorDynamicFields();
     applyDogDynamicFields();
@@ -9349,9 +9636,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var isJobCategorySlug = ['allas', 'allas-hirdetes', 'munka', 'munkak', 'munkalehetoseg', 'munkalehetosegek'].indexOf(slug) !== -1;
         var isJobCategoryText = /(állás|allas|munka|pozíció|pozicio)/.test(selectedCatText) && !/(szállás|szallas)/.test(selectedCatText);
         var isJobCategory = isJobCategorySlug || isJobCategoryText;
-        if (!rule && !isJobCategory) return '';
+        var isBagCategory = /taska|taskak|hatizsak|fegyvertok|puskatok|pisztolytaska|range-bag|molle/.test(slug)
+            || /(táska|taska|hátizsák|hatizsak|fegyvertok|puskatok|övtáska|ovtaska|range bag|molle|trófeaszállító|trofeaszallito)/.test(selectedCatText);
+        if (!rule && !isJobCategory && !isBagCategory) return '';
         if (!rule) {
-            rule = { label: 'Állás', required: [] };
+            rule = isBagCategory
+                ? { label: 'Táskák', required: [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] }
+                : { label: 'Állás', required: [] };
         }
         if (!Array.isArray(rule.required)) {
             rule.required = [];
@@ -9531,6 +9822,11 @@ document.addEventListener('DOMContentLoaded', function() {
             modular: 'Moduláris',
             competition_level: 'Versenyhasználat',
             sport_condition: 'Állapot',
+            bag_type: 'Táska típusa',
+            volume_l: 'Űrtartalom',
+            bag_material: 'Anyag',
+            bag_weather_resistance: 'Időjárásállóság',
+            bag_condition: 'Állapot',
             call_type: 'Kürt / síp típusa',
             call_target_species: 'Cél vadfaj',
             call_operation_mode: 'Működés',
@@ -9637,6 +9933,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(kürt|kurt|síp|sip|hívó|hivo|szarvasbőgő|szarvasbogo)/.test(selectedCatText);
         var isSportCategory = /sportlovo-felsz/.test(slug)
             || /(sportlövő|sportlovo|ipsc|idpa|prs|benchrest|steel challenge|lövész|lovesz)/.test(selectedCatText);
+        var isBagCategory = /taska|taskak|hatizsak|fegyvertok|puskatok|pisztolytaska|range-bag|molle/.test(slug)
+            || /(táska|taska|hátizsák|hatizsak|fegyvertok|puskatok|övtáska|ovtaska|range bag|molle|trófeaszállító|trofeaszallito)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -9649,8 +9947,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (required.indexOf(field) === -1) required.push(field);
             });
         }
+        if (isBagCategory && !required.length) {
+            required = ['bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition'];
+        }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory || isDecorCategory || isSportCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory || isDecorCategory || isSportCategory || isBagCategory));
 
         $('.va-exchange-fields-grid').toggle(isExchangeCategory);
         if (isExchangeCategory) {
@@ -9683,6 +9984,13 @@ document.addEventListener('DOMContentLoaded', function() {
             applySportShootingDynamicFields();
         } else {
             $('.va-sport-dynamic-group').hide();
+        }
+
+        $('.va-bag-fields-grid').toggle(isBagCategory);
+        if (isBagCategory) {
+            applyBagDynamicFields();
+        } else {
+            $('.va-bag-dynamic-group').hide();
         }
 
         if (isDogCategory) {
@@ -9811,6 +10119,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        if (isBagCategory) {
+            $('.va-bag-fields-grid input, .va-bag-fields-grid select, .va-bag-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
         // Apply required attributes to trophy fields
         if (isTrophyPlateCategory) {
             $('.va-trophy-fields-grid input, .va-trophy-fields-grid select, .va-trophy-fields-grid textarea').each(function(){
@@ -9890,6 +10206,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isSportCategory && ($wrap.hasClass('va-sport-fields-grid') || $wrap.find('[name="gear_type"], [name="shooting_discipline[]"], [name="firearm_compatibility[]"]').length)) {
+                visible = true;
+            }
+            if (!visible && isBagCategory && ($wrap.hasClass('va-bag-fields-grid') || $wrap.find('[name="bag_type"], [name="volume_l"], [name="bag_material"]').length)) {
                 visible = true;
             }
             $wrap.toggle(visible);

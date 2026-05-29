@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 29. – Session #taskak-kategoria-komplex-mezorendszer
+- Kérés: a `Táskák` kategória teljes, döntéstámogató mezőrendszerének beépítése (típus, űrtartalom, anyag, vízállóság, hordhatóság, moduláris rendszer, fegyver-kompatibilitás, dinamikus almezők).
+- Frontend: új `va-bag-fields-grid` blokk került a feladási űrlapba (`bag_type`, `volume_l`, `bag_size`, `bag_material`, `bag_weather_resistance[]`, `bag_color_pattern[]`, `bag_design_features[]`, `bag_usage[]`, `bag_firearm_compatible[]`, `bag_carrying_system[]`, `bag_condition`, stb.).
+- Dinamikus logika: új `applyBagDynamicFields()` kezeli a típusfüggő almezőket (`fegyvertok/puskatok/pisztolytaska`, `hatizsak`, `range-bag`) és számolja a `bag_packability_index` értéket.
+- Kategória felismerés: a láthatóság és validáció slug + felirat fallbacket kapott (`taska/taskak/hatizsak/fegyvertok/range-bag/molle`), így eltérő taxonomy slug esetén is működik.
+- Kötelező validáció: frontend + backend required szabály bővítve (`bag_type`, `volume_l`, `bag_material`, `bag_weather_resistance`, `bag_condition`), label map frissítve.
+- Backend: mind create, mind edit ágban bekerült a teljes `bag_*` sanitize + `va_bag_*` meta mentés és dedikált szűrőmeták (`va_bag_filter_*`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 29. – Hotfix #sportlovo-lathatosag-step2
 - Hiba: a sportlövő mezőblokk (`va-sport-fields-grid`) Step 2-ben nem jelent meg, miközben a kategória címke helyesen `Sportlövő felsz.` volt.
 - Ok: a későbbi általános `.va-cat-rule-field` láthatósági ciklus felülírhatta a sportblokk állapotát, ha a slug-felbontás nem pont egyezett.

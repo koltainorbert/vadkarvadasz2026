@@ -196,6 +196,10 @@ class VA_Ajax {
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
             'sportlovo-felsz'   => [ 'label' => 'Sportlövő felszerelés', 'required' => [ 'gear_type', 'shooting_discipline', 'firearm_compatibility', 'sport_size', 'modular', 'competition_level', 'sport_condition' ] ],
+            'taskak'            => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+            'taska'             => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+            'hatizsakok'        => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
+            'fegyvertokok'      => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
             'kurtok-sipok'      => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
             'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -278,11 +282,17 @@ class VA_Ajax {
 
         $slug = sanitize_title( (string) $term->slug );
         $rules = self::get_category_required_rules();
-        if ( ! isset( $rules[ $slug ] ) ) {
+        if ( isset( $rules[ $slug ] ) ) {
+            $rule = $rules[ $slug ];
+        } elseif ( preg_match( '/taska|taskak|hatizsak|fegyvertok|puskatok|pisztolytaska|range-bag|molle/', $slug ) ) {
+            $rule = [
+                'label' => 'Táskák',
+                'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ],
+            ];
+        } else {
             return '';
         }
 
-        $rule = $rules[ $slug ];
         $required = is_array( $rule['required'] ?? null ) ? $rule['required'] : [];
         if ( empty( $required ) ) {
             return '';
@@ -561,6 +571,11 @@ class VA_Ajax {
             'modular' => 'Moduláris',
             'competition_level' => 'Versenyhasználat',
             'sport_condition' => 'Állapot',
+            'bag_type' => 'Táska típusa',
+            'volume_l' => 'Űrtartalom',
+            'bag_material' => 'Anyag',
+            'bag_weather_resistance' => 'Időjárásállóság',
+            'bag_condition' => 'Állapot',
             'call_type' => 'Kürt / síp típusa',
             'call_target_species' => 'Cél vadfaj',
             'call_operation_mode' => 'Működés',
@@ -1943,6 +1958,41 @@ class VA_Ajax {
         $sport_filter_discipline = $shooting_discipline;
         $sport_filter_compatibility = $firearm_compatibility;
         $sport_filter_modular = $modular === 'igen' ? '1' : '0';
+        $bag_type = sanitize_key( wp_unslash( $_POST['bag_type'] ?? '' ) );
+        $volume_l = sanitize_key( wp_unslash( $_POST['volume_l'] ?? '' ) );
+        $bag_size = sanitize_key( wp_unslash( $_POST['bag_size'] ?? '' ) );
+        $bag_material = sanitize_key( wp_unslash( $_POST['bag_material'] ?? '' ) );
+        $bag_weather_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_weather_resistance'] ?? [] ) ) ) );
+        $bag_color_pattern = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_color_pattern'] ?? [] ) ) ) );
+        $bag_camo_pattern = sanitize_key( wp_unslash( $_POST['bag_camo_pattern'] ?? '' ) );
+        $bag_modular = sanitize_key( wp_unslash( $_POST['bag_modular'] ?? '' ) );
+        $bag_design_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_design_features'] ?? [] ) ) ) );
+        $bag_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_usage'] ?? [] ) ) ) );
+        $bag_firearm_compatible = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_firearm_compatible'] ?? [] ) ) ) );
+        $bag_max_firearm_length_cm = sanitize_text_field( wp_unslash( $_POST['bag_max_firearm_length_cm'] ?? '' ) );
+        $bag_inner_padding = sanitize_key( wp_unslash( $_POST['bag_inner_padding'] ?? '' ) );
+        $bag_lockable = sanitize_key( wp_unslash( $_POST['bag_lockable'] ?? '' ) );
+        $bag_hydration_system = sanitize_key( wp_unslash( $_POST['bag_hydration_system'] ?? '' ) );
+        $bag_touring_compatible = sanitize_key( wp_unslash( $_POST['bag_touring_compatible'] ?? '' ) );
+        $bag_mag_holder_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_mag_holder_count'] ?? '' ) );
+        $bag_ammo_compartment_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_ammo_compartment_count'] ?? '' ) );
+        $bag_main_compartments = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_main_compartments'] ?? '' ) );
+        $bag_outer_pockets = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_outer_pockets'] ?? '' ) );
+        $bag_internal_organizer = sanitize_key( wp_unslash( $_POST['bag_internal_organizer'] ?? '' ) );
+        $bag_ammo_holder = sanitize_key( wp_unslash( $_POST['bag_ammo_holder'] ?? '' ) );
+        $bag_document_compartment = sanitize_key( wp_unslash( $_POST['bag_document_compartment'] ?? '' ) );
+        $bag_carrying_system = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_carrying_system'] ?? [] ) ) ) );
+        $bag_max_load_kg = sanitize_text_field( wp_unslash( $_POST['bag_max_load_kg'] ?? '' ) );
+        $bag_comfort = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_comfort'] ?? [] ) ) ) );
+        $bag_closure_type = sanitize_key( wp_unslash( $_POST['bag_closure_type'] ?? '' ) );
+        $bag_condition = sanitize_key( wp_unslash( $_POST['bag_condition'] ?? '' ) );
+        $bag_packability_index = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_packability_index'] ?? '' ) );
+        $bag_filter_waterproof = ( strpos( ',' . $bag_weather_resistance . ',', ',vizallo,' ) !== false || strpos( ',' . $bag_weather_resistance . ',', ',vizlepergeto,' ) !== false ) ? '1' : '0';
+        $bag_filter_molle = strpos( ',' . $bag_design_features . ',', ',molle-kompatibilis,' ) !== false ? '1' : '0';
+        $bag_filter_modular = ( $bag_modular === 'igen' || strpos( ',' . $bag_design_features . ',', ',modularis,' ) !== false ) ? '1' : '0';
+        $bag_filter_firearm_compatible = $bag_firearm_compatible;
+        $bag_filter_color = $bag_color_pattern;
+        $bag_filter_material = $bag_material;
         $call_fields = self::collect_call_fields_from_request();
         $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
         $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
@@ -2424,6 +2474,11 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'bag_type' => $bag_type,
+            'volume_l' => $volume_l,
+            'bag_material' => $bag_material,
+            'bag_weather_resistance' => $bag_weather_resistance,
+            'bag_condition' => $bag_condition,
             'gear_type' => $gear_type,
             'shooting_discipline' => $shooting_discipline,
             'firearm_compatibility' => $firearm_compatibility,
@@ -3234,6 +3289,44 @@ class VA_Ajax {
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
+            'va_bag_type' => $bag_type,
+            'va_volume_l' => $volume_l,
+            'va_bag_size' => $bag_size,
+            'va_bag_material' => $bag_material,
+            'va_bag_weather_resistance' => $bag_weather_resistance,
+            'va_bag_color_pattern' => $bag_color_pattern,
+            'va_bag_camo_pattern' => $bag_camo_pattern,
+            'va_bag_modular' => $bag_modular,
+            'va_bag_design_features' => $bag_design_features,
+            'va_bag_usage' => $bag_usage,
+            'va_bag_firearm_compatible' => $bag_firearm_compatible,
+            'va_bag_max_firearm_length_cm' => $bag_max_firearm_length_cm,
+            'va_bag_inner_padding' => $bag_inner_padding,
+            'va_bag_lockable' => $bag_lockable,
+            'va_bag_hydration_system' => $bag_hydration_system,
+            'va_bag_touring_compatible' => $bag_touring_compatible,
+            'va_bag_mag_holder_count' => $bag_mag_holder_count,
+            'va_bag_ammo_compartment_count' => $bag_ammo_compartment_count,
+            'va_bag_main_compartments' => $bag_main_compartments,
+            'va_bag_outer_pockets' => $bag_outer_pockets,
+            'va_bag_internal_organizer' => $bag_internal_organizer,
+            'va_bag_ammo_holder' => $bag_ammo_holder,
+            'va_bag_document_compartment' => $bag_document_compartment,
+            'va_bag_carrying_system' => $bag_carrying_system,
+            'va_bag_max_load_kg' => $bag_max_load_kg,
+            'va_bag_comfort' => $bag_comfort,
+            'va_bag_closure_type' => $bag_closure_type,
+            'va_bag_condition' => $bag_condition,
+            'va_bag_packability_index' => $bag_packability_index,
+            'va_bag_filter_type' => $bag_type,
+            'va_bag_filter_volume_l' => $volume_l,
+            'va_bag_filter_waterproof' => $bag_filter_waterproof,
+            'va_bag_filter_molle' => $bag_filter_molle,
+            'va_bag_filter_firearm_compatible' => $bag_filter_firearm_compatible,
+            'va_bag_filter_color_pattern' => $bag_filter_color,
+            'va_bag_filter_material' => $bag_filter_material,
+            'va_bag_filter_condition' => $bag_condition,
+            'va_bag_filter_modular' => $bag_filter_modular,
             'va_gear_type' => $gear_type,
             'va_shooting_discipline' => $shooting_discipline,
             'va_sport_material' => $sport_material,
@@ -4417,6 +4510,41 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $bag_type = sanitize_key( wp_unslash( $_POST['bag_type'] ?? '' ) );
+        $volume_l = sanitize_key( wp_unslash( $_POST['volume_l'] ?? '' ) );
+        $bag_size = sanitize_key( wp_unslash( $_POST['bag_size'] ?? '' ) );
+        $bag_material = sanitize_key( wp_unslash( $_POST['bag_material'] ?? '' ) );
+        $bag_weather_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_weather_resistance'] ?? [] ) ) ) );
+        $bag_color_pattern = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_color_pattern'] ?? [] ) ) ) );
+        $bag_camo_pattern = sanitize_key( wp_unslash( $_POST['bag_camo_pattern'] ?? '' ) );
+        $bag_modular = sanitize_key( wp_unslash( $_POST['bag_modular'] ?? '' ) );
+        $bag_design_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_design_features'] ?? [] ) ) ) );
+        $bag_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_usage'] ?? [] ) ) ) );
+        $bag_firearm_compatible = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_firearm_compatible'] ?? [] ) ) ) );
+        $bag_max_firearm_length_cm = sanitize_text_field( wp_unslash( $_POST['bag_max_firearm_length_cm'] ?? '' ) );
+        $bag_inner_padding = sanitize_key( wp_unslash( $_POST['bag_inner_padding'] ?? '' ) );
+        $bag_lockable = sanitize_key( wp_unslash( $_POST['bag_lockable'] ?? '' ) );
+        $bag_hydration_system = sanitize_key( wp_unslash( $_POST['bag_hydration_system'] ?? '' ) );
+        $bag_touring_compatible = sanitize_key( wp_unslash( $_POST['bag_touring_compatible'] ?? '' ) );
+        $bag_mag_holder_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_mag_holder_count'] ?? '' ) );
+        $bag_ammo_compartment_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_ammo_compartment_count'] ?? '' ) );
+        $bag_main_compartments = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_main_compartments'] ?? '' ) );
+        $bag_outer_pockets = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_outer_pockets'] ?? '' ) );
+        $bag_internal_organizer = sanitize_key( wp_unslash( $_POST['bag_internal_organizer'] ?? '' ) );
+        $bag_ammo_holder = sanitize_key( wp_unslash( $_POST['bag_ammo_holder'] ?? '' ) );
+        $bag_document_compartment = sanitize_key( wp_unslash( $_POST['bag_document_compartment'] ?? '' ) );
+        $bag_carrying_system = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_carrying_system'] ?? [] ) ) ) );
+        $bag_max_load_kg = sanitize_text_field( wp_unslash( $_POST['bag_max_load_kg'] ?? '' ) );
+        $bag_comfort = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['bag_comfort'] ?? [] ) ) ) );
+        $bag_closure_type = sanitize_key( wp_unslash( $_POST['bag_closure_type'] ?? '' ) );
+        $bag_condition = sanitize_key( wp_unslash( $_POST['bag_condition'] ?? '' ) );
+        $bag_packability_index = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['bag_packability_index'] ?? '' ) );
+        $bag_filter_waterproof = ( strpos( ',' . $bag_weather_resistance . ',', ',vizallo,' ) !== false || strpos( ',' . $bag_weather_resistance . ',', ',vizlepergeto,' ) !== false ) ? '1' : '0';
+        $bag_filter_molle = strpos( ',' . $bag_design_features . ',', ',molle-kompatibilis,' ) !== false ? '1' : '0';
+        $bag_filter_modular = ( $bag_modular === 'igen' || strpos( ',' . $bag_design_features . ',', ',modularis,' ) !== false ) ? '1' : '0';
+        $bag_filter_firearm_compatible = $bag_firearm_compatible;
+        $bag_filter_color = $bag_color_pattern;
+        $bag_filter_material = $bag_material;
         $call_fields = self::collect_call_fields_from_request();
         $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
         $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
@@ -4866,6 +4994,11 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'bag_type' => $bag_type,
+            'volume_l' => $volume_l,
+            'bag_material' => $bag_material,
+            'bag_weather_resistance' => $bag_weather_resistance,
+            'bag_condition' => $bag_condition,
             'call_type' => $call_fields['call_type'],
             'call_target_species' => $call_fields['call_target_species'],
             'call_operation_mode' => $call_fields['call_operation_mode'],
@@ -5670,6 +5803,44 @@ class VA_Ajax {
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
+            'va_bag_type' => $bag_type,
+            'va_volume_l' => $volume_l,
+            'va_bag_size' => $bag_size,
+            'va_bag_material' => $bag_material,
+            'va_bag_weather_resistance' => $bag_weather_resistance,
+            'va_bag_color_pattern' => $bag_color_pattern,
+            'va_bag_camo_pattern' => $bag_camo_pattern,
+            'va_bag_modular' => $bag_modular,
+            'va_bag_design_features' => $bag_design_features,
+            'va_bag_usage' => $bag_usage,
+            'va_bag_firearm_compatible' => $bag_firearm_compatible,
+            'va_bag_max_firearm_length_cm' => $bag_max_firearm_length_cm,
+            'va_bag_inner_padding' => $bag_inner_padding,
+            'va_bag_lockable' => $bag_lockable,
+            'va_bag_hydration_system' => $bag_hydration_system,
+            'va_bag_touring_compatible' => $bag_touring_compatible,
+            'va_bag_mag_holder_count' => $bag_mag_holder_count,
+            'va_bag_ammo_compartment_count' => $bag_ammo_compartment_count,
+            'va_bag_main_compartments' => $bag_main_compartments,
+            'va_bag_outer_pockets' => $bag_outer_pockets,
+            'va_bag_internal_organizer' => $bag_internal_organizer,
+            'va_bag_ammo_holder' => $bag_ammo_holder,
+            'va_bag_document_compartment' => $bag_document_compartment,
+            'va_bag_carrying_system' => $bag_carrying_system,
+            'va_bag_max_load_kg' => $bag_max_load_kg,
+            'va_bag_comfort' => $bag_comfort,
+            'va_bag_closure_type' => $bag_closure_type,
+            'va_bag_condition' => $bag_condition,
+            'va_bag_packability_index' => $bag_packability_index,
+            'va_bag_filter_type' => $bag_type,
+            'va_bag_filter_volume_l' => $volume_l,
+            'va_bag_filter_waterproof' => $bag_filter_waterproof,
+            'va_bag_filter_molle' => $bag_filter_molle,
+            'va_bag_filter_firearm_compatible' => $bag_filter_firearm_compatible,
+            'va_bag_filter_color_pattern' => $bag_filter_color,
+            'va_bag_filter_material' => $bag_filter_material,
+            'va_bag_filter_condition' => $bag_condition,
+            'va_bag_filter_modular' => $bag_filter_modular,
             'va_call_type' => $call_fields['call_type'],
             'va_call_target_species' => $call_fields['call_target_species'],
             'va_call_sound_type' => $call_fields['call_sound_type'],
