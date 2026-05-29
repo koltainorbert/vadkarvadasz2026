@@ -2153,7 +2153,6 @@ body.va-modal-open {
                 <?php endforeach; ?>
             </ul>
             <input type="hidden" name="category" id="va-category" value="<?php echo esc_attr((string)($edit_meta['category'] ?? '')); ?>" required>
-            <input type="hidden" name="other_category" id="va-other-category" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
             <div class="va-cond-group">
                 <label class="va-wiz-field-label">Termék állapotának kiválasztása</label>
                 <div class="va-cond-btns" id="va-cond-btns">
@@ -2174,6 +2173,15 @@ body.va-modal-open {
                 <label>Hirdetés címe <span class="required">*</span></label>
                 <input type="text" name="title" id="va-title" class="va-input" list="va-title-list" autocomplete="off" maxlength="150" required placeholder="Rövid, figyelemfelkeltő cím..." value="<?php echo esc_attr((string)($edit_meta['title'] ?? '')); ?>">
                 <datalist id="va-title-list"></datalist>
+            </div>
+            <div class="va-cat-rule-field" data-categories="egyeb" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Egyéb kategória neve</label>
+                        <input type="text" name="other_category" id="va-other-category" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
+                        <p class="va-help-text">Add meg, pontosan milyen egyéb kategóriába tartozik a hirdetés.</p>
+                    </div>
+                </div>
             </div>
             <div class="va-form-row va-core-product-fields">
                 <div class="va-form-group">
@@ -10416,6 +10424,7 @@ document.addEventListener('DOMContentLoaded', function() {
             publication_condition: 'Állapot',
             publication_collector_value: 'Gyűjtői érték',
             publication_complete_volume: 'Komplett évfolyam',
+            other_category: 'Egyéb kategória neve',
             equipment_type: 'Felszerelés típusa',
             equipment_condition: 'Állapot',
             equipment_hunting_usage: 'Felhasználás',
