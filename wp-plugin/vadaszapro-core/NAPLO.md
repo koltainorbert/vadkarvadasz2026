@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 05. 29. – Session #sportlovo-felszereles-kategoria-bovites
+- Kérés: a `sportlovo-felsz` kategória teljes mezőrendszerének beépítése a hirdetés feladásba a megadott sportlövő opciólistákkal és dinamikus mezőkkel.
+- Frontend: a `submit-form.php` új `va-sport-fields-grid` blokkot kapott (`gear_type`, `shooting_discipline[]`, `sport_material[]`, `firearm_compatibility[]`, `sport_size`, `sport_color[]`, `sport_ergonomics[]`, `modular`, `handedness`, `competition_level`, `sport_condition`, tartozékok, környezeti ellenállás).
+- Dinamikus logika: új `applySportShootingDynamicFields()` kezeli a feltételes mezőket:
+  `hallasvedelem` -> aktív füles + `sport_nrr`,
+  `loveszszemuveg` -> szemüveg-specifikus opciók,
+  `long-range` sportág -> precíziós mezők,
+  `ipsc` sportág -> öv kompatibilitás + gyorsasági setup,
+  lövészruha típusok -> merevítés mező.
+- Kötelező validáció: frontend + backend required szabály frissítve `sportlovo-felsz` slugra (`gear_type`, `shooting_discipline`, `firearm_compatibility`, `sport_size`, `modular`, `competition_level`, `sport_condition`), label map bővítve.
+- Backend: a `class-ajax.php` új sportlövő sanitize + mentés logikát kapott, külön technikai/szűrő metakulcsokkal (`va_gear_type`, `va_shooting_discipline`, `va_firearm_compatibility`, `va_modular`, `va_handedness`, `va_competition_level`, `va_sport_filter_*`).
+- Szinkron + ellenőrzés: root és plugin mirror `submit-form.php` + `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+- Deploy: `Deploy All` lefutott.
+- Maradt teendő: listázó/kereső oldalon külön sportlövő szűrő UI bekötése az új `va_sport_filter_*` kulcsokra.
+- Holnap ezzel kezdjük: sportlövő kategóriában végigtesztelni az összes dinamikus ágat (`hallasvedelem`, `loveszszemuveg`, `long-range`, `ipsc`) és utána bekötni a keresőoldali sportlövő szűrőket.
+
 ## 2026. 05. 28. – Hotfix #ingatlan-szallas-slug-egysegesites
 - Hiba: az ingatlan mezoblokk csak a `szallas` slugra volt kotve, mikozben a taxonomyban kulon `ingatlan` es `ingatlan-szallas` slug is aktiv.
 - Tuntet: az `Ingatlan` kategoriaban a teljes ingatlan mezorendszer nem jelent meg (felhasznaloi visszajelzes: "semmi sem kerult bele").

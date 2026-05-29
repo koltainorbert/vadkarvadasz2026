@@ -195,6 +195,7 @@ class VA_Ajax {
             'vadkarelharitas'   => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
             'vadaszati-hagyatek'=> [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
             'vadasz-felszereles'=> [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
+            'sportlovo-felsz'   => [ 'label' => 'Sportlövő felszerelés', 'required' => [ 'gear_type', 'shooting_discipline', 'firearm_compatibility', 'sport_size', 'modular', 'competition_level', 'sport_condition' ] ],
             'kurtok-sipok'      => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
             'kesek'                => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
             'vadaszkes-vadasztor'  => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
@@ -553,6 +554,13 @@ class VA_Ajax {
             'equipment_type' => 'Felszerelés típusa',
             'equipment_condition' => 'Állapot',
             'equipment_hunting_usage' => 'Felhasználás',
+            'gear_type' => 'Felszerelés típusa',
+            'shooting_discipline' => 'Sportág',
+            'firearm_compatibility' => 'Kompatibilitás',
+            'sport_size' => 'Méret',
+            'modular' => 'Moduláris',
+            'competition_level' => 'Versenyhasználat',
+            'sport_condition' => 'Állapot',
             'call_type' => 'Kürt / síp típusa',
             'call_target_species' => 'Cél vadfaj',
             'call_operation_mode' => 'Működés',
@@ -1912,6 +1920,29 @@ class VA_Ajax {
         $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $gear_type = sanitize_key( wp_unslash( $_POST['gear_type'] ?? '' ) );
+        $shooting_discipline = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shooting_discipline'] ?? [] ) ) ) );
+        $sport_material = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_material'] ?? [] ) ) ) );
+        $firearm_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['firearm_compatibility'] ?? [] ) ) ) );
+        $sport_size = sanitize_key( wp_unslash( $_POST['sport_size'] ?? '' ) );
+        $sport_color = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_color'] ?? [] ) ) ) );
+        $sport_ergonomics = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_ergonomics'] ?? [] ) ) ) );
+        $modular = sanitize_key( wp_unslash( $_POST['modular'] ?? '' ) );
+        $handedness = sanitize_key( wp_unslash( $_POST['handedness'] ?? '' ) );
+        $sport_hearing_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_hearing_features'] ?? [] ) ) ) );
+        $sport_nrr = sanitize_text_field( wp_unslash( $_POST['sport_nrr'] ?? '' ) );
+        $sport_eyewear_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_eyewear_features'] ?? [] ) ) ) );
+        $sport_precision_features = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_precision_features'] ?? [] ) ) ) );
+        $sport_clothing_reinforcement = sanitize_text_field( wp_unslash( $_POST['sport_clothing_reinforcement'] ?? '' ) );
+        $sport_belt_compatibility = sanitize_text_field( wp_unslash( $_POST['sport_belt_compatibility'] ?? '' ) );
+        $sport_speed_setup = sanitize_text_field( wp_unslash( $_POST['sport_speed_setup'] ?? '' ) );
+        $sport_accessories = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_accessories'] ?? [] ) ) ) );
+        $sport_env_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_env_resistance'] ?? [] ) ) ) );
+        $sport_condition = sanitize_key( wp_unslash( $_POST['sport_condition'] ?? '' ) );
+        $competition_level = sanitize_key( wp_unslash( $_POST['competition_level'] ?? '' ) );
+        $sport_filter_discipline = $shooting_discipline;
+        $sport_filter_compatibility = $firearm_compatibility;
+        $sport_filter_modular = $modular === 'igen' ? '1' : '0';
         $call_fields = self::collect_call_fields_from_request();
         $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
         $decor_material = sanitize_key( wp_unslash( $_POST['decor_material'] ?? '' ) );
@@ -2393,6 +2424,13 @@ class VA_Ajax {
             'equipment_type' => $equipment_type,
             'equipment_condition' => $equipment_condition,
             'equipment_hunting_usage' => $equipment_hunting_usage,
+            'gear_type' => $gear_type,
+            'shooting_discipline' => $shooting_discipline,
+            'firearm_compatibility' => $firearm_compatibility,
+            'sport_size' => $sport_size,
+            'modular' => $modular,
+            'competition_level' => $competition_level,
+            'sport_condition' => $sport_condition,
             'call_type' => $call_fields['call_type'],
             'call_target_species' => $call_fields['call_target_species'],
             'call_operation_mode' => $call_fields['call_operation_mode'],
@@ -3196,6 +3234,33 @@ class VA_Ajax {
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
+            'va_gear_type' => $gear_type,
+            'va_shooting_discipline' => $shooting_discipline,
+            'va_sport_material' => $sport_material,
+            'va_firearm_compatibility' => $firearm_compatibility,
+            'va_sport_size' => $sport_size,
+            'va_sport_color' => $sport_color,
+            'va_sport_ergonomics' => $sport_ergonomics,
+            'va_modular' => $modular,
+            'va_handedness' => $handedness,
+            'va_sport_hearing_features' => $sport_hearing_features,
+            'va_sport_nrr' => $sport_nrr,
+            'va_sport_eyewear_features' => $sport_eyewear_features,
+            'va_sport_precision_features' => $sport_precision_features,
+            'va_sport_clothing_reinforcement' => $sport_clothing_reinforcement,
+            'va_sport_belt_compatibility' => $sport_belt_compatibility,
+            'va_sport_speed_setup' => $sport_speed_setup,
+            'va_sport_accessories' => $sport_accessories,
+            'va_sport_env_resistance' => $sport_env_resistance,
+            'va_sport_condition' => $sport_condition,
+            'va_competition_level' => $competition_level,
+            'va_sport_filter_gear_type' => $gear_type,
+            'va_sport_filter_discipline' => $sport_filter_discipline,
+            'va_sport_filter_compatibility' => $sport_filter_compatibility,
+            'va_sport_filter_size' => $sport_size,
+            'va_sport_filter_modular' => $sport_filter_modular,
+            'va_sport_filter_competition_level' => $competition_level,
+            'va_sport_filter_condition' => $sport_condition,
             'va_call_type' => $call_fields['call_type'],
             'va_call_target_species' => $call_fields['call_target_species'],
             'va_call_sound_type' => $call_fields['call_sound_type'],

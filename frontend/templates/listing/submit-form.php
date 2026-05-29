@@ -281,6 +281,7 @@ $category_required_rules = [
     'konyhakes'          => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
     'svajci-bicska'      => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
     'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
+    'sportlovo-felsz'    => [ 'label' => 'Sportlövő felszerelés', 'required' => [ 'gear_type', 'shooting_discipline', 'firearm_compatibility', 'sport_size', 'modular', 'competition_level', 'sport_condition' ] ],
     'kurtok-sipok'       => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
 ];
 
@@ -1262,7 +1263,7 @@ $cat_icons_map = [
     'loszer-tolteny' => '💥', 'tavcsovek' => '🔭', 'ejjellato-tavcso' => '🌙',
     'hokamerak' => '🌡️', 'vadkamera' => '📷', 'vadaszlampa' => '🔦',
     'vadaszkutya' => '🐕', 'vadasz-ruhazat' => '🧥', 'cipo-bakancs' => '👢',
-    'kesek' => '🔪',
+    'kesek' => '🔪', 'sportlovo-felsz' => '🎯',
     'vadasz-felszereles' => '🎒', 'disztargyak' => '🖼️', 'disztargy' => '🖼️', 'egyeb' => '📦',
 ];
 $wiz_steps   = [ 'Kategória', 'Termék', 'Ár & Helyszín', 'Leírás & Képek' ];
@@ -6271,6 +6272,254 @@ body.va-modal-open {
                 </div>
             </div>
             <?php
+            $sport_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
+                if ( isset( $edit_meta[ $key ] ) ) {
+                    return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
+                }
+                if ( $edit_post_id > 0 ) {
+                    return (string) get_post_meta( $edit_post_id, 'va_' . $key, true );
+                }
+                return '';
+            };
+            $sport_csv = static function( string $key ) use ( $sport_meta ): array {
+                return array_filter( array_map( 'trim', explode( ',', $sport_meta( $key ) ) ) );
+            };
+            $sport_discipline_saved = $sport_csv( 'shooting_discipline' );
+            $sport_material_saved = $sport_csv( 'sport_material' );
+            $sport_firearm_saved = $sport_csv( 'firearm_compatibility' );
+            $sport_color_saved = $sport_csv( 'sport_color' );
+            $sport_ergonomics_saved = $sport_csv( 'sport_ergonomics' );
+            $sport_hearing_saved = $sport_csv( 'sport_hearing_features' );
+            $sport_eyewear_saved = $sport_csv( 'sport_eyewear_features' );
+            $sport_precision_saved = $sport_csv( 'sport_precision_features' );
+            $sport_accessories_saved = $sport_csv( 'sport_accessories' );
+            $sport_env_saved = $sport_csv( 'sport_env_resistance' );
+            ?>
+            <div class="va-cat-rule-field va-sport-fields-grid" data-categories="sportlovo-felsz" style="display:none;">
+                <div class="va-step2-4col-inner">
+                    <div class="va-form-group">
+                        <label>Felszerelés típusa</label>
+                        <?php $v = $sport_meta( 'gear_type' ); ?>
+                        <select name="gear_type" id="va-gear-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="loveszszemuveg"<?php selected( $v, 'loveszszemuveg' ); ?>>Lövészszemüveg</option>
+                            <option value="hallasvedelem"<?php selected( $v, 'hallasvedelem' ); ?>>Hallásvédelem</option>
+                            <option value="loveszkesztyu"<?php selected( $v, 'loveszkesztyu' ); ?>>Lövészkesztyű</option>
+                            <option value="loveszkabat"<?php selected( $v, 'loveszkabat' ); ?>>Lövészkabát</option>
+                            <option value="lovesznadrag"<?php selected( $v, 'lovesznadrag' ); ?>>Lövésznadrág</option>
+                            <option value="lovoszonyeg"<?php selected( $v, 'lovoszonyeg' ); ?>>Lövőszőnyeg</option>
+                            <option value="bipod"<?php selected( $v, 'bipod' ); ?>>Bipod</option>
+                            <option value="lozsak"<?php selected( $v, 'lozsak' ); ?>>Lőzsák</option>
+                            <option value="fegyvertamasz"<?php selected( $v, 'fegyvertamasz' ); ?>>Fegyvertámasz</option>
+                            <option value="kronograf"<?php selected( $v, 'kronograf' ); ?>>Kronográf</option>
+                            <option value="timer"<?php selected( $v, 'timer' ); ?>>Timer</option>
+                            <option value="spotting-scope-tartozek"<?php selected( $v, 'spotting-scope-tartozek' ); ?>>Spotting scope tartozék</option>
+                            <option value="celtabla-tarto"<?php selected( $v, 'celtabla-tarto' ); ?>>Céltábla tartó</option>
+                            <option value="speedloader"<?php selected( $v, 'speedloader' ); ?>>Speedloader</option>
+                            <option value="tartarto"<?php selected( $v, 'tartarto' ); ?>>Tártartó</option>
+                            <option value="ipsc-felszereles"<?php selected( $v, 'ipsc-felszereles' ); ?>>IPSC felszerelés</option>
+                            <option value="ov-belt-system"<?php selected( $v, 'ov-belt-system' ); ?>>Öv / belt system</option>
+                            <option value="patronfogo"<?php selected( $v, 'patronfogo' ); ?>>Patronfogó</option>
+                            <option value="shell-catcher"<?php selected( $v, 'shell-catcher' ); ?>>Shell catcher</option>
+                            <option value="lovesz-melleny"<?php selected( $v, 'lovesz-melleny' ); ?>>Lövész mellény</option>
+                            <option value="fegyverkocsi"<?php selected( $v, 'fegyverkocsi' ); ?>>Fegyverkocsi</option>
+                            <option value="tisztito-allvany"<?php selected( $v, 'tisztito-allvany' ); ?>>Tisztító állvány</option>
+                            <option value="verseny-felszereles"<?php selected( $v, 'verseny-felszereles' ); ?>>Verseny felszerelés</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Sportág</label>
+                        <select name="shooting_discipline[]" id="va-shooting-discipline" class="va-select" multiple data-placeholder="Válassz sportágat">
+                            <option value="ipsc"<?php echo in_array( 'ipsc', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>IPSC</option>
+                            <option value="idpa"<?php echo in_array( 'idpa', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>IDPA</option>
+                            <option value="ppc"<?php echo in_array( 'ppc', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>PPC</option>
+                            <option value="prs"<?php echo in_array( 'prs', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>PRS</option>
+                            <option value="long-range"<?php echo in_array( 'long-range', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Long range</option>
+                            <option value="benchrest"<?php echo in_array( 'benchrest', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Benchrest</option>
+                            <option value="skeet"<?php echo in_array( 'skeet', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Skeet</option>
+                            <option value="trap"<?php echo in_array( 'trap', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Trap</option>
+                            <option value="sporting"<?php echo in_array( 'sporting', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Sporting</option>
+                            <option value="olimpiai-loveszet"<?php echo in_array( 'olimpiai-loveszet', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Olimpiai lövészet</option>
+                            <option value="dinamikus-loveszet"<?php echo in_array( 'dinamikus-loveszet', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Dinamikus lövészet</option>
+                            <option value="steel-challenge"<?php echo in_array( 'steel-challenge', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Steel challenge</option>
+                            <option value="airsoft-training"<?php echo in_array( 'airsoft-training', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Airsoft training</option>
+                            <option value="air-rifle"<?php echo in_array( 'air-rifle', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Air rifle</option>
+                            <option value="egyeb"<?php echo in_array( 'egyeb', $sport_discipline_saved, true ) ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Anyag</label>
+                        <select name="sport_material[]" class="va-select" multiple data-placeholder="Válassz anyagot">
+                            <option value="aluminium"<?php echo in_array( 'aluminium', $sport_material_saved, true ) ? ' selected' : ''; ?>>Alumínium</option>
+                            <option value="acel"<?php echo in_array( 'acel', $sport_material_saved, true ) ? ' selected' : ''; ?>>Acél</option>
+                            <option value="karbon"<?php echo in_array( 'karbon', $sport_material_saved, true ) ? ' selected' : ''; ?>>Karbon</option>
+                            <option value="cordura"<?php echo in_array( 'cordura', $sport_material_saved, true ) ? ' selected' : ''; ?>>Cordura</option>
+                            <option value="bor"<?php echo in_array( 'bor', $sport_material_saved, true ) ? ' selected' : ''; ?>>Bőr</option>
+                            <option value="muanyag"<?php echo in_array( 'muanyag', $sport_material_saved, true ) ? ' selected' : ''; ?>>Műanyag</option>
+                            <option value="gumi"<?php echo in_array( 'gumi', $sport_material_saved, true ) ? ' selected' : ''; ?>>Gumi</option>
+                            <option value="textil"<?php echo in_array( 'textil', $sport_material_saved, true ) ? ' selected' : ''; ?>>Textil</option>
+                            <option value="kombinalt"<?php echo in_array( 'kombinalt', $sport_material_saved, true ) ? ' selected' : ''; ?>>Kombinált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Kompatibilitás (fegyvertípus)</label>
+                        <select name="firearm_compatibility[]" class="va-select" multiple data-placeholder="Válassz kompatibilitást">
+                            <option value="maroklofegyver"<?php echo in_array( 'maroklofegyver', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>Maroklőfegyver</option>
+                            <option value="ar-platform"<?php echo in_array( 'ar-platform', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>AR platform</option>
+                            <option value="pcc"<?php echo in_array( 'pcc', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>PCC</option>
+                            <option value="golyos-puska"<?php echo in_array( 'golyos-puska', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>Golyós puska</option>
+                            <option value="soretes"<?php echo in_array( 'soretes', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>Sörétes</option>
+                            <option value="legfegyver"<?php echo in_array( 'legfegyver', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>Légfegyver</option>
+                            <option value="univerzalis"<?php echo in_array( 'univerzalis', $sport_firearm_saved, true ) ? ' selected' : ''; ?>>Univerzális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Méret</label>
+                        <?php $v = $sport_meta( 'sport_size' ); ?>
+                        <select name="sport_size" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="s"<?php selected( $v, 's' ); ?>>S</option>
+                            <option value="m"<?php selected( $v, 'm' ); ?>>M</option>
+                            <option value="l"<?php selected( $v, 'l' ); ?>>L</option>
+                            <option value="xl"<?php selected( $v, 'xl' ); ?>>XL</option>
+                            <option value="xxl"<?php selected( $v, 'xxl' ); ?>>XXL</option>
+                            <option value="univerzalis"<?php selected( $v, 'univerzalis' ); ?>>Univerzális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Szín</label>
+                        <select name="sport_color[]" class="va-select" multiple data-placeholder="Válassz színt">
+                            <option value="fekete"<?php echo in_array( 'fekete', $sport_color_saved, true ) ? ' selected' : ''; ?>>Fekete</option>
+                            <option value="barna"<?php echo in_array( 'barna', $sport_color_saved, true ) ? ' selected' : ''; ?>>Barna</option>
+                            <option value="zold"<?php echo in_array( 'zold', $sport_color_saved, true ) ? ' selected' : ''; ?>>Zöld</option>
+                            <option value="szurke"<?php echo in_array( 'szurke', $sport_color_saved, true ) ? ' selected' : ''; ?>>Szürke</option>
+                            <option value="homok"<?php echo in_array( 'homok', $sport_color_saved, true ) ? ' selected' : ''; ?>>Homok</option>
+                            <option value="kek"<?php echo in_array( 'kek', $sport_color_saved, true ) ? ' selected' : ''; ?>>Kék</option>
+                            <option value="piros"<?php echo in_array( 'piros', $sport_color_saved, true ) ? ' selected' : ''; ?>>Piros</option>
+                            <option value="multicam"<?php echo in_array( 'multicam', $sport_color_saved, true ) ? ' selected' : ''; ?>>Multicam</option>
+                            <option value="egyeb"<?php echo in_array( 'egyeb', $sport_color_saved, true ) ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Ergonómia</label>
+                        <select name="sport_ergonomics[]" id="va-sport-ergonomics" class="va-select" multiple data-placeholder="Válassz ergonómiai jellemzőt">
+                            <option value="allithato"<?php echo in_array( 'allithato', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Állítható</option>
+                            <option value="balkezes"<?php echo in_array( 'balkezes', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Balkezes</option>
+                            <option value="jobbkezes"<?php echo in_array( 'jobbkezes', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Jobbkezes</option>
+                            <option value="modularis"<?php echo in_array( 'modularis', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Moduláris</option>
+                            <option value="gyorskioldos"<?php echo in_array( 'gyorskioldos', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Gyorskioldós</option>
+                            <option value="csuszasmentes"<?php echo in_array( 'csuszasmentes', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Csúszásmentes</option>
+                            <option value="konnyitett"<?php echo in_array( 'konnyitett', $sport_ergonomics_saved, true ) ? ' selected' : ''; ?>>Könnyített</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Moduláris</label>
+                        <?php $v = $sport_meta( 'modular' ); ?>
+                        <select name="modular" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option>
+                            <option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kézdominancia</label>
+                        <?php $v = $sport_meta( 'handedness' ); ?>
+                        <select name="handedness" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="balkezes"<?php selected( $v, 'balkezes' ); ?>>Balkezes</option>
+                            <option value="jobbkezes"<?php selected( $v, 'jobbkezes' ); ?>>Jobbkezes</option>
+                            <option value="univerzalis"<?php selected( $v, 'univerzalis' ); ?>>Univerzális</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-gear-types="hallasvedelem" style="grid-column:1 / -1; display:none;">
+                        <label>Hallásvédelem (aktív füles opciók)</label>
+                        <select name="sport_hearing_features[]" class="va-select" multiple data-placeholder="Válassz funkciókat">
+                            <option value="aktiv-zajszures"<?php echo in_array( 'aktiv-zajszures', $sport_hearing_saved, true ) ? ' selected' : ''; ?>>Aktív zajszűrés</option>
+                            <option value="elektronikus"<?php echo in_array( 'elektronikus', $sport_hearing_saved, true ) ? ' selected' : ''; ?>>Elektronikus</option>
+                            <option value="bluetooth"<?php echo in_array( 'bluetooth', $sport_hearing_saved, true ) ? ' selected' : ''; ?>>Bluetooth</option>
+                            <option value="radio-kompatibilis"<?php echo in_array( 'radio-kompatibilis', $sport_hearing_saved, true ) ? ' selected' : ''; ?>>Rádió kompatibilis</option>
+                            <option value="mikrofonos"<?php echo in_array( 'mikrofonos', $sport_hearing_saved, true ) ? ' selected' : ''; ?>>Mikrofonos</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-gear-types="hallasvedelem" style="display:none;">
+                        <label>NRR zajcsillapítás</label>
+                        <input type="text" name="sport_nrr" class="va-input" value="<?php echo esc_attr( $sport_meta( 'sport_nrr' ) ); ?>" placeholder="pl. 23 dB">
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-gear-types="loveszszemuveg" style="grid-column:1 / -1; display:none;">
+                        <label>Lövészszemüveg jellemzők</label>
+                        <select name="sport_eyewear_features[]" class="va-select" multiple data-placeholder="Válassz jellemzőt">
+                            <option value="cserelheto-lencse"<?php echo in_array( 'cserelheto-lencse', $sport_eyewear_saved, true ) ? ' selected' : ''; ?>>Cserélhető lencse</option>
+                            <option value="uv-vedelem"<?php echo in_array( 'uv-vedelem', $sport_eyewear_saved, true ) ? ' selected' : ''; ?>>UV védelem</option>
+                            <option value="paramentes"<?php echo in_array( 'paramentes', $sport_eyewear_saved, true ) ? ' selected' : ''; ?>>Páramentes</option>
+                            <option value="ballisztikai-vedelem"<?php echo in_array( 'ballisztikai-vedelem', $sport_eyewear_saved, true ) ? ' selected' : ''; ?>>Ballisztikai védelem</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-discipline="long-range" style="grid-column:1 / -1; display:none;">
+                        <label>Precíziós felszerelés</label>
+                        <select name="sport_precision_features[]" class="va-select" multiple data-placeholder="Válassz precíziós jellemzőt">
+                            <option value="mil-rendszer"<?php echo in_array( 'mil-rendszer', $sport_precision_saved, true ) ? ' selected' : ''; ?>>Mil rendszer</option>
+                            <option value="moa-rendszer"<?php echo in_array( 'moa-rendszer', $sport_precision_saved, true ) ? ' selected' : ''; ?>>MOA rendszer</option>
+                            <option value="stabilizalo-rendszer"<?php echo in_array( 'stabilizalo-rendszer', $sport_precision_saved, true ) ? ' selected' : ''; ?>>Stabilizáló rendszer</option>
+                            <option value="rezgescsokkentes"<?php echo in_array( 'rezgescsokkentes', $sport_precision_saved, true ) ? ' selected' : ''; ?>>Rezgéscsökkentés</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-gear-types="loveszkesztyu,loveszkabat,lovesznadrag,lovesz-melleny" style="display:none;">
+                        <label>Merevítés</label>
+                        <input type="text" name="sport_clothing_reinforcement" class="va-input" value="<?php echo esc_attr( $sport_meta( 'sport_clothing_reinforcement' ) ); ?>" placeholder="pl. váll, könyök, térd erősítés">
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-discipline="ipsc" style="display:none;">
+                        <label>Öv kompatibilitás</label>
+                        <input type="text" name="sport_belt_compatibility" class="va-input" value="<?php echo esc_attr( $sport_meta( 'sport_belt_compatibility' ) ); ?>" placeholder="pl. DAA, CR Speed, univerzális">
+                    </div>
+                    <div class="va-form-group va-sport-dynamic-group" data-sport-discipline="ipsc" style="display:none;">
+                        <label>Gyorsasági setup</label>
+                        <input type="text" name="sport_speed_setup" class="va-input" value="<?php echo esc_attr( $sport_meta( 'sport_speed_setup' ) ); ?>" placeholder="pl. Open/Production setup">
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Tartozékok</label>
+                        <select name="sport_accessories[]" class="va-select" multiple data-placeholder="Válassz tartozékot">
+                            <option value="tok"<?php echo in_array( 'tok', $sport_accessories_saved, true ) ? ' selected' : ''; ?>>Tok</option>
+                            <option value="potalkatresz"<?php echo in_array( 'potalkatresz', $sport_accessories_saved, true ) ? ' selected' : ''; ?>>Pótalkatrész</option>
+                            <option value="adapter"<?php echo in_array( 'adapter', $sport_accessories_saved, true ) ? ' selected' : ''; ?>>Adapter</option>
+                            <option value="szerulek"<?php echo in_array( 'szerulek', $sport_accessories_saved, true ) ? ' selected' : ''; ?>>Szerelék</option>
+                            <option value="extra-tarzseb"<?php echo in_array( 'extra-tarzseb', $sport_accessories_saved, true ) ? ' selected' : ''; ?>>Extra tárzseb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Környezeti ellenállás</label>
+                        <select name="sport_env_resistance[]" class="va-select" multiple data-placeholder="Válassz jellemzőt">
+                            <option value="vizallo"<?php echo in_array( 'vizallo', $sport_env_saved, true ) ? ' selected' : ''; ?>>Vízálló</option>
+                            <option value="utesallo"<?php echo in_array( 'utesallo', $sport_env_saved, true ) ? ' selected' : ''; ?>>Ütésálló</option>
+                            <option value="porallo"<?php echo in_array( 'porallo', $sport_env_saved, true ) ? ' selected' : ''; ?>>Porálló</option>
+                            <option value="kulteri-hasznalat"<?php echo in_array( 'kulteri-hasznalat', $sport_env_saved, true ) ? ' selected' : ''; ?>>Kültéri használat</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Állapot</label>
+                        <?php $v = $sport_meta( 'sport_condition' ); ?>
+                        <select name="sport_condition" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="uj"<?php selected( $v, 'uj' ); ?>>Új</option>
+                            <option value="ujszeru"<?php selected( $v, 'ujszeru' ); ?>>Újszerű</option>
+                            <option value="hasznalt"<?php selected( $v, 'hasznalt' ); ?>>Használt</option>
+                            <option value="versenyhasznalt"<?php selected( $v, 'versenyhasznalt' ); ?>>Versenyhasznált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Versenyhasználat</label>
+                        <?php $v = $sport_meta( 'competition_level' ); ?>
+                        <select name="competition_level" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="hobbi"<?php selected( $v, 'hobbi' ); ?>>Hobbi</option>
+                            <option value="amator-verseny"<?php selected( $v, 'amator-verseny' ); ?>>Amatőr verseny</option>
+                            <option value="profi-verseny"<?php selected( $v, 'profi-verseny' ); ?>>Profi verseny</option>
+                            <option value="nemzetkozi-verseny"<?php selected( $v, 'nemzetkozi-verseny' ); ?>>Nemzetközi verseny</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <?php
             $call_meta = static function( string $key ) use ( $edit_meta, $edit_post_id ) {
                 if ( isset( $edit_meta[ $key ] ) ) {
                     return is_scalar( $edit_meta[ $key ] ) ? (string) $edit_meta[ $key ] : '';
@@ -8723,6 +8972,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function applySportShootingDynamicFields() {
+        var gearType = (($('#va-gear-type').val() || '') + '').trim();
+        var disciplinesValue = $('#va-shooting-discipline').val();
+        var disciplines = Array.isArray(disciplinesValue) ? disciplinesValue : (disciplinesValue ? [disciplinesValue] : []);
+
+        $('.va-sport-dynamic-group').each(function(){
+            var $group = $(this);
+            var gearList = (($group.attr('data-sport-gear-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var disciplineNeed = (($group.attr('data-sport-discipline') || '') + '').trim();
+            var gearOk = !gearList.length || gearList.indexOf(gearType) !== -1;
+            var disciplineOk = !disciplineNeed || disciplines.indexOf(disciplineNeed) !== -1;
+            $group.toggle(gearOk && disciplineOk);
+        });
+    }
+
     function applyCallDynamicFields() {
         var type = (($('#va-call-type').val() || '') + '').trim();
         var operationMode = (($('#va-call-operation-mode').val() || '') + '').trim();
@@ -8928,6 +9192,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
         applyEquipmentDynamicFields();
     });
+    $(document).on('change', '#va-gear-type, #va-shooting-discipline, #va-sport-ergonomics', function(){
+        applySportShootingDynamicFields();
+    });
     $(document).on('change', '#va-call-type, #va-call-operation-mode, #va-call-style, #va-call-material-type', function(){
         applyCallDynamicFields();
     });
@@ -8970,6 +9237,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyExchangeDynamicFields();
     applyPublicationDynamicFields();
     applyEquipmentDynamicFields();
+    applySportShootingDynamicFields();
     applyCallDynamicFields();
     applyDecorDynamicFields();
     applyDogDynamicFields();
@@ -9256,6 +9524,13 @@ document.addEventListener('DOMContentLoaded', function() {
             equipment_type: 'Felszerelés típusa',
             equipment_condition: 'Állapot',
             equipment_hunting_usage: 'Felhasználás',
+            gear_type: 'Felszerelés típusa',
+            shooting_discipline: 'Sportág',
+            firearm_compatibility: 'Kompatibilitás (fegyvertípus)',
+            sport_size: 'Méret',
+            modular: 'Moduláris',
+            competition_level: 'Versenyhasználat',
+            sport_condition: 'Állapot',
             call_type: 'Kürt / síp típusa',
             call_target_species: 'Cél vadfaj',
             call_operation_mode: 'Működés',
@@ -9360,6 +9635,8 @@ document.addEventListener('DOMContentLoaded', function() {
             || /(dísztárgy|disztargy|dekor|falidísz|falidisz|relief|replika)/.test(selectedCatText);
         var isCallCategory = /kurtok-sipok/.test(slug)
             || /(kürt|kurt|síp|sip|hívó|hivo|szarvasbőgő|szarvasbogo)/.test(selectedCatText);
+        var isSportCategory = /sportlovo-felsz/.test(slug)
+            || /(sportlövő|sportlovo|ipsc|idpa|prs|benchrest|steel challenge|lövész|lovesz)/.test(selectedCatText);
         var rules = VA_Data.category_required_rules || {};
         var required = (rules[slug] && Array.isArray(rules[slug].required)) ? rules[slug].required : [];
         required = required.slice();
@@ -9373,7 +9650,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory || isDecorCategory));
+        $('.va-core-product-fields, .va-core-product-year').toggle(!(isJobCategory || isServiceCategory || isDogCategory || isAccommodationCategory || isHuntOptionCategory || isExchangeCategory || isPublicationCategory || isDecorCategory || isSportCategory));
 
         $('.va-exchange-fields-grid').toggle(isExchangeCategory);
         if (isExchangeCategory) {
@@ -9399,6 +9676,13 @@ document.addEventListener('DOMContentLoaded', function() {
             applyCallDynamicFields();
         } else {
             $('.va-call-dynamic-group').hide();
+        }
+
+        $('.va-sport-fields-grid').toggle(isSportCategory);
+        if (isSportCategory) {
+            applySportShootingDynamicFields();
+        } else {
+            $('.va-sport-dynamic-group').hide();
         }
 
         if (isDogCategory) {
@@ -9519,6 +9803,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        if (isSportCategory) {
+            $('.va-sport-fields-grid input, .va-sport-fields-grid select, .va-sport-fields-grid textarea').each(function(){
+                var fieldName = ($(this).attr('name') || '').trim().replace(/\[\]$/, '');
+                var requiredHere = required.indexOf(fieldName) !== -1;
+                $(this).prop('required', requiredHere);
+            });
+        }
+
         // Apply required attributes to trophy fields
         if (isTrophyPlateCategory) {
             $('.va-trophy-fields-grid input, .va-trophy-fields-grid select, .va-trophy-fields-grid textarea').each(function(){
@@ -9595,6 +9887,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 visible = true;
             }
             if (!visible && isDogCategory && $wrap.find('[name="dog_breed"], [name="dog_gender"], [name="dog_color"], [name="dog_purebred"], [name="dog_age_months"]').length) {
+                visible = true;
+            }
+            if (!visible && isSportCategory && ($wrap.hasClass('va-sport-fields-grid') || $wrap.find('[name="gear_type"], [name="shooting_discipline[]"], [name="firearm_compatibility[]"]').length)) {
                 visible = true;
             }
             $wrap.toggle(visible);
