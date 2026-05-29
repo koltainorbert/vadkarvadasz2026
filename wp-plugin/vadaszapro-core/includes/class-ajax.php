@@ -1959,6 +1959,14 @@ class VA_Ajax {
         $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
         $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
         $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $other_equipment_type = sanitize_key( wp_unslash( $_POST['other_equipment_type'] ?? '' ) );
+        $other_equipment_function = sanitize_text_field( wp_unslash( $_POST['other_equipment_function'] ?? '' ) );
+        $other_equipment_material_note = sanitize_text_field( wp_unslash( $_POST['other_equipment_material_note'] ?? '' ) );
+        $other_equipment_compatibility = sanitize_text_field( wp_unslash( $_POST['other_equipment_compatibility'] ?? '' ) );
+        $other_hunting_relevance = sanitize_key( wp_unslash( $_POST['other_hunting_relevance'] ?? '' ) );
+        $other_uncertain_classification = sanitize_key( wp_unslash( $_POST['other_uncertain_classification'] ?? '' ) );
+        $other_auto_suggested_category = sanitize_key( wp_unslash( $_POST['other_auto_suggested_category'] ?? '' ) );
+        $other_auto_suggested_reason = sanitize_text_field( wp_unslash( $_POST['other_auto_suggested_reason'] ?? '' ) );
         $light_type = sanitize_key( wp_unslash( $_POST['light_type'] ?? '' ) );
         $lumens = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['lumens'] ?? '' ) );
         $light_levels_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_levels_count'] ?? '' ) );
@@ -2379,6 +2387,42 @@ class VA_Ajax {
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
+
+        $category_term = get_term( $category, 'va_category' );
+        $category_slug = ( $category_term instanceof \WP_Term && ! is_wp_error( $category_term ) ) ? sanitize_title( (string) $category_term->slug ) : '';
+        if ( $category_slug === 'vadasz-felszereles' && $equipment_type === '' ) {
+            $equipment_type = 'egyeb';
+        }
+
+        if ( $equipment_type === 'egyeb' ) {
+            $suggestion_source = strtolower( trim( implode( ' ', [
+                (string) $title,
+                wp_strip_all_tags( (string) $description ),
+                (string) $equipment_notes,
+                (string) $other_equipment_function,
+                (string) $other_equipment_material_note,
+                (string) $other_equipment_compatibility,
+                (string) $equipment_weapon_compatibility,
+                (string) $light_type,
+            ] ) ) );
+
+            if ( $other_uncertain_classification === 'hangtompito-gyanus' || preg_match( '/hangtompito|suppressor|silencer/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'hangtompito';
+                $other_auto_suggested_reason = 'Mintafelismeres: hangtompito kulcsszavak';
+            } elseif ( preg_match( '/lampa|feny|ir\s|infra|lumen|beam/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'lampa';
+                $other_auto_suggested_reason = 'Mintafelismeres: lampa/feny kulcsszavak';
+            } elseif ( preg_match( '/taska|tok|hatizsak|molle/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'taska';
+                $other_auto_suggested_reason = 'Mintafelismeres: taska/tok kulcsszavak';
+            } elseif ( preg_match( '/ruhazat|kabat|nadrag|melleny|bakancs|cipo/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'ruhazat';
+                $other_auto_suggested_reason = 'Mintafelismeres: ruhazat kulcsszavak';
+            } elseif ( preg_match( '/fegyver|puska|soretes|golyos|marok/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'fegyver';
+                $other_auto_suggested_reason = 'Mintafelismeres: fegyver kulcsszavak';
+            }
+        }
 
         if ( empty( $title ) ) {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
@@ -3430,6 +3474,14 @@ class VA_Ajax {
             'va_equipment_caliber_compatibility' => $equipment_caliber_compatibility,
             'va_equipment_moderation_flags' => $equipment_moderation_flags,
             'va_equipment_notes' => $equipment_notes,
+            'va_other_equipment_type' => $other_equipment_type,
+            'va_other_equipment_function' => $other_equipment_function,
+            'va_other_equipment_material_note' => $other_equipment_material_note,
+            'va_other_equipment_compatibility' => $other_equipment_compatibility,
+            'va_other_hunting_relevance' => $other_hunting_relevance,
+            'va_other_uncertain_classification' => $other_uncertain_classification,
+            'va_other_auto_suggested_category' => $other_auto_suggested_category,
+            'va_other_auto_suggested_reason' => $other_auto_suggested_reason,
             'va_equipment_filter_type' => $equipment_type,
             'va_equipment_filter_usage' => $equipment_hunting_usage,
             'va_equipment_filter_condition' => $equipment_condition,
@@ -3445,6 +3497,12 @@ class VA_Ajax {
             'va_equipment_filter_battery_type' => $equipment_filter_battery_type,
             'va_equipment_filter_ip_rating' => $equipment_filter_ip_rating,
             'va_equipment_filter_recoil_resistance' => $equipment_filter_recoil_resistance,
+            'va_equipment_filter_other_type' => $other_equipment_type,
+            'va_equipment_filter_other_function' => sanitize_title( $other_equipment_function ),
+            'va_equipment_filter_other_material' => sanitize_title( $other_equipment_material_note ),
+            'va_equipment_filter_other_compatibility' => sanitize_title( $other_equipment_compatibility ),
+            'va_equipment_filter_other_relevance' => $other_hunting_relevance,
+            'va_equipment_filter_other_suggested_category' => $other_auto_suggested_category,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_bag_type' => $bag_type,
@@ -4686,6 +4744,14 @@ class VA_Ajax {
         $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
         $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
         $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $other_equipment_type = sanitize_key( wp_unslash( $_POST['other_equipment_type'] ?? '' ) );
+        $other_equipment_function = sanitize_text_field( wp_unslash( $_POST['other_equipment_function'] ?? '' ) );
+        $other_equipment_material_note = sanitize_text_field( wp_unslash( $_POST['other_equipment_material_note'] ?? '' ) );
+        $other_equipment_compatibility = sanitize_text_field( wp_unslash( $_POST['other_equipment_compatibility'] ?? '' ) );
+        $other_hunting_relevance = sanitize_key( wp_unslash( $_POST['other_hunting_relevance'] ?? '' ) );
+        $other_uncertain_classification = sanitize_key( wp_unslash( $_POST['other_uncertain_classification'] ?? '' ) );
+        $other_auto_suggested_category = sanitize_key( wp_unslash( $_POST['other_auto_suggested_category'] ?? '' ) );
+        $other_auto_suggested_reason = sanitize_text_field( wp_unslash( $_POST['other_auto_suggested_reason'] ?? '' ) );
         $light_type = sanitize_key( wp_unslash( $_POST['light_type'] ?? '' ) );
         $lumens = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['lumens'] ?? '' ) );
         $light_levels_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_levels_count'] ?? '' ) );
@@ -5050,6 +5116,42 @@ class VA_Ajax {
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
+
+        $category_term = get_term( $category, 'va_category' );
+        $category_slug = ( $category_term instanceof \WP_Term && ! is_wp_error( $category_term ) ) ? sanitize_title( (string) $category_term->slug ) : '';
+        if ( $category_slug === 'vadasz-felszereles' && $equipment_type === '' ) {
+            $equipment_type = 'egyeb';
+        }
+
+        if ( $equipment_type === 'egyeb' ) {
+            $suggestion_source = strtolower( trim( implode( ' ', [
+                (string) $title,
+                wp_strip_all_tags( (string) $description ),
+                (string) $equipment_notes,
+                (string) $other_equipment_function,
+                (string) $other_equipment_material_note,
+                (string) $other_equipment_compatibility,
+                (string) $equipment_weapon_compatibility,
+                (string) $light_type,
+            ] ) ) );
+
+            if ( $other_uncertain_classification === 'hangtompito-gyanus' || preg_match( '/hangtompito|suppressor|silencer/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'hangtompito';
+                $other_auto_suggested_reason = 'Mintafelismeres: hangtompito kulcsszavak';
+            } elseif ( preg_match( '/lampa|feny|ir\s|infra|lumen|beam/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'lampa';
+                $other_auto_suggested_reason = 'Mintafelismeres: lampa/feny kulcsszavak';
+            } elseif ( preg_match( '/taska|tok|hatizsak|molle/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'taska';
+                $other_auto_suggested_reason = 'Mintafelismeres: taska/tok kulcsszavak';
+            } elseif ( preg_match( '/ruhazat|kabat|nadrag|melleny|bakancs|cipo/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'ruhazat';
+                $other_auto_suggested_reason = 'Mintafelismeres: ruhazat kulcsszavak';
+            } elseif ( preg_match( '/fegyver|puska|soretes|golyos|marok/', $suggestion_source ) ) {
+                $other_auto_suggested_category = 'fegyver';
+                $other_auto_suggested_reason = 'Mintafelismeres: fegyver kulcsszavak';
+            }
+        }
 
         if ( empty( $title ) ) {
             wp_send_json_error( [ 'message' => 'A cím kötelező.' ] );
@@ -6096,6 +6198,14 @@ class VA_Ajax {
             'va_equipment_caliber_compatibility' => $equipment_caliber_compatibility,
             'va_equipment_moderation_flags' => $equipment_moderation_flags,
             'va_equipment_notes' => $equipment_notes,
+            'va_other_equipment_type' => $other_equipment_type,
+            'va_other_equipment_function' => $other_equipment_function,
+            'va_other_equipment_material_note' => $other_equipment_material_note,
+            'va_other_equipment_compatibility' => $other_equipment_compatibility,
+            'va_other_hunting_relevance' => $other_hunting_relevance,
+            'va_other_uncertain_classification' => $other_uncertain_classification,
+            'va_other_auto_suggested_category' => $other_auto_suggested_category,
+            'va_other_auto_suggested_reason' => $other_auto_suggested_reason,
             'va_equipment_filter_type' => $equipment_type,
             'va_equipment_filter_usage' => $equipment_hunting_usage,
             'va_equipment_filter_condition' => $equipment_condition,
@@ -6111,6 +6221,12 @@ class VA_Ajax {
             'va_equipment_filter_battery_type' => $equipment_filter_battery_type,
             'va_equipment_filter_ip_rating' => $equipment_filter_ip_rating,
             'va_equipment_filter_recoil_resistance' => $equipment_filter_recoil_resistance,
+            'va_equipment_filter_other_type' => $other_equipment_type,
+            'va_equipment_filter_other_function' => sanitize_title( $other_equipment_function ),
+            'va_equipment_filter_other_material' => sanitize_title( $other_equipment_material_note ),
+            'va_equipment_filter_other_compatibility' => sanitize_title( $other_equipment_compatibility ),
+            'va_equipment_filter_other_relevance' => $other_hunting_relevance,
+            'va_equipment_filter_other_suggested_category' => $other_auto_suggested_category,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_bag_type' => $bag_type,

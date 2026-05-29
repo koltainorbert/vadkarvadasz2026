@@ -6298,6 +6298,69 @@ body.va-modal-open {
                             <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
                         </select>
                     </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="grid-column:1 / -1; display:none;">
+                        <label>Egyéb típus (frissítve)</label>
+                        <?php $v = $equipment_meta( 'other_equipment_type' ); ?>
+                        <select name="other_equipment_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="vadaszati-kiegeszito-nem-besorolt"<?php selected( $v, 'vadaszati-kiegeszito-nem-besorolt' ); ?>>Vadászati kiegészítő (nem besorolt)</option>
+                            <option value="ritka-eszkoz"<?php selected( $v, 'ritka-eszkoz' ); ?>>Ritka eszköz</option>
+                            <option value="egyedi-keszites"<?php selected( $v, 'egyedi-keszites' ); ?>>Egyedi készítés</option>
+                            <option value="prototipus"<?php selected( $v, 'prototipus' ); ?>>Prototípus</option>
+                            <option value="barkacs-diy"<?php selected( $v, 'barkacs-diy' ); ?>>Barkács / DIY</option>
+                            <option value="specialis-adapter"<?php selected( $v, 'specialis-adapter' ); ?>>Speciális adapter</option>
+                            <option value="vegyes-felszereles"<?php selected( $v, 'vegyes-felszereles' ); ?>>Vegyes felszerelés</option>
+                            <option value="nem-standard-vadaszati-eszkoz"<?php selected( $v, 'nem-standard-vadaszati-eszkoz' ); ?>>Nem standard vadászati eszköz</option>
+                            <option value="gyujtoi-ismeretlen"<?php selected( $v, 'gyujtoi-ismeretlen' ); ?>>Gyűjtői / ismeretlen</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="grid-column:1 / -1; display:none;">
+                        <label>Megjegyzés a besorolásról</label>
+                        <div class="va-inline-help">Ide kerülhetnek a pontosan nem kategorizált, hiányos adatú vagy bizonytalan besorolású tételek is, beleértve a hangsúlyosan ellenőrzendő hangtompító-jellegű hirdetéseket.</div>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="display:none;">
+                        <label>Funkció</label>
+                        <input type="text" name="other_equipment_function" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'other_equipment_function' ) ); ?>" placeholder="pl. zajcsökkentés, sín-átalakítás, moduláris bővítés">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="display:none;">
+                        <label>Anyag (részletezés)</label>
+                        <input type="text" name="other_equipment_material_note" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'other_equipment_material_note' ) ); ?>" placeholder="pl. CNC alu, acél-mag, polimer ház">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="grid-column:1 / -1; display:none;">
+                        <label>Kompatibilitás</label>
+                        <input type="text" name="other_equipment_compatibility" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'other_equipment_compatibility' ) ); ?>" placeholder="pl. Picatinny, .30 kaliber platformok, univerzális adapter">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="display:none;">
+                        <label>Vadászati relevancia</label>
+                        <?php $v = $equipment_meta( 'other_hunting_relevance' ); ?>
+                        <select name="other_hunting_relevance" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option>
+                            <option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option>
+                            <option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option>
+                            <option value="kritikus"<?php selected( $v, 'kritikus' ); ?>>Kritikus</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="display:none;">
+                        <label>Bizonytalan besorolás</label>
+                        <?php $v = $equipment_meta( 'other_uncertain_classification' ); ?>
+                        <select name="other_uncertain_classification" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="hangtompito-gyanus"<?php selected( $v, 'hangtompito-gyanus' ); ?>>Hangtompító-gyanús</option>
+                            <option value="hianyos-adat"<?php selected( $v, 'hianyos-adat' ); ?>>Hiányos adat</option>
+                            <option value="nem-standard"<?php selected( $v, 'nem-standard' ); ?>>Nem standard eszköz</option>
+                            <option value="manualis-ellenorzes"<?php selected( $v, 'manualis-ellenorzes' ); ?>>Manuális ellenőrzés kell</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="display:none;">
+                        <label>Automatikus átsorolási javaslat</label>
+                        <input type="text" name="other_auto_suggested_category" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'other_auto_suggested_category' ) ); ?>" placeholder="pl. hangtompito / fegyver / lampa / taska / ruhazat" readonly>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="egyeb" style="grid-column:1 / -1; display:none;">
+                        <label>Javaslat indoklása</label>
+                        <input type="text" name="other_auto_suggested_reason" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'other_auto_suggested_reason' ) ); ?>" placeholder="Kulcsszó minták alapján" readonly>
+                    </div>
                     <div class="va-form-group">
                         <label>Állapot</label>
                         <?php $v = $equipment_meta( 'equipment_condition' ); ?>

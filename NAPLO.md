@@ -2,6 +2,14 @@
 
 ---
 
+## 2026. 05. 29. – Session #egyeb-fallback-intelligens-atsorolas
+- Kérés: az `Egyéb` ág kapjon frissített altípus-listát, hangsúlyos fallback szerepet és automatikus átsorolási javaslatot (hangtompító / fegyver / lámpa / táska / ruházat).
+- Frontend: a `vadasz-felszereles` űrlapban új, `equipment_type=egyeb` alatt megjelenő blokk készült (`other_equipment_type`, `other_equipment_function`, `other_equipment_material_note`, `other_equipment_compatibility`, `other_hunting_relevance`, `other_uncertain_classification`, auto-javaslat mezők).
+- Üzleti szabály: backend oldalon, ha a kategória `vadasz-felszereles` és nincs kiválasztott pontos típus, automatikusan `equipment_type=egyeb` lesz.
+- Intelligens javaslat: kulcsszó-alapú mintafelismerés készült `title + description + notes + compatibility` alapján; mentett javaslatok: `hangtompito`, `fegyver`, `lampa`, `taska`, `ruhazat`.
+- Backend: mind update, mind submit ágban bekerült a teljes `other_*` sanitize + `va_other_*` meta mentés és dedikált `va_equipment_filter_other_*` szűrőmeta.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 29. – Session #vadaszlampa-komplex-mezorendszer
 - Kérés: a `vadászlámpa` teljes mezőrendszere kerüljön be a `vadasz-felszereles` kategóriába, kritikus szűrőkkel és típusfüggő dinamikákkal.
 - Frontend: a `submit-form.php` equipment blokkja új lámpa mezőket kapott: `light_type`, `lumens`, `beam_distance_m`, `light_color[]`, `battery_type`, `mount_type`, `light_ip_rating`, üzemidő almezők, funkciók, optikai tulajdonságok, kompatibilitás, méret/súly, célazonosítás index.
