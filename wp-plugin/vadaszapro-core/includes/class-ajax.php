@@ -1959,10 +1959,70 @@ class VA_Ajax {
         $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
         $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
         $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $light_type = sanitize_key( wp_unslash( $_POST['light_type'] ?? '' ) );
+        $lumens = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['lumens'] ?? '' ) );
+        $light_levels_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_levels_count'] ?? '' ) );
+        $light_turbo_mode = sanitize_key( wp_unslash( $_POST['light_turbo_mode'] ?? '' ) );
+        $light_eco_mode = sanitize_key( wp_unslash( $_POST['light_eco_mode'] ?? '' ) );
+        $beam_distance_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['beam_distance_m'] ?? '' ) );
+        $beam_distance_band = sanitize_key( wp_unslash( $_POST['beam_distance_band'] ?? '' ) );
+        $light_color = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_color'] ?? [] ) ) ) );
+        $battery_type = sanitize_key( wp_unslash( $_POST['battery_type'] ?? '' ) );
+        $light_usb_rechargeable = sanitize_key( wp_unslash( $_POST['light_usb_rechargeable'] ?? '' ) );
+        $light_powerbank_compatible = sanitize_key( wp_unslash( $_POST['light_powerbank_compatible'] ?? '' ) );
+        $runtime_hours = sanitize_text_field( wp_unslash( $_POST['runtime_hours'] ?? '' ) );
+        $runtime_eco_hours = sanitize_text_field( wp_unslash( $_POST['runtime_eco_hours'] ?? '' ) );
+        $runtime_turbo_hours = sanitize_text_field( wp_unslash( $_POST['runtime_turbo_hours'] ?? '' ) );
+        $light_material = sanitize_key( wp_unslash( $_POST['light_material'] ?? '' ) );
+        $light_ip_rating = sanitize_key( wp_unslash( $_POST['light_ip_rating'] ?? '' ) );
+        $light_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_resistance'] ?? [] ) ) ) );
+        $mount_type = sanitize_key( wp_unslash( $_POST['mount_type'] ?? '' ) );
+        $light_mount_systems = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_mount_systems'] ?? [] ) ) ) );
+        $hunting_light_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunting_light_usage'] ?? [] ) ) ) );
+        $light_functions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_functions'] ?? [] ) ) ) );
+        $light_optical_properties = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_optical_properties'] ?? [] ) ) ) );
+        $light_weapon_type_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_weapon_type_compatibility'] ?? [] ) ) ) );
+        $light_optics_compatible = sanitize_key( wp_unslash( $_POST['light_optics_compatible'] ?? '' ) );
+        $light_ir_compatible = sanitize_key( wp_unslash( $_POST['light_ir_compatible'] ?? '' ) );
+        $light_weight_g = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_weight_g'] ?? '' ) );
+        $light_length_mm = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_length_mm'] ?? '' ) );
+        $light_size_category = sanitize_key( wp_unslash( $_POST['light_size_category'] ?? '' ) );
+        $recoil_resistance = sanitize_key( wp_unslash( $_POST['recoil_resistance'] ?? '' ) );
+        $rail_compatibility = sanitize_key( wp_unslash( $_POST['rail_compatibility'] ?? '' ) );
+        $ir_wavelength_nm = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['ir_wavelength_nm'] ?? '' ) );
+        $head_tiltable = sanitize_key( wp_unslash( $_POST['head_tiltable'] ?? '' ) );
+        $headband_system = sanitize_text_field( wp_unslash( $_POST['headband_system'] ?? '' ) );
+        $target_identification_index = sanitize_text_field( wp_unslash( $_POST['target_identification_index'] ?? '' ) );
+        if ( $equipment_light_lumen === '' && $lumens !== '' ) {
+            $equipment_light_lumen = $lumens;
+        }
+        if ( $equipment_light_range_m === '' && $beam_distance_m !== '' ) {
+            $equipment_light_range_m = $beam_distance_m;
+        }
+        if ( $equipment_light_battery_type === '' && $battery_type !== '' ) {
+            $equipment_light_battery_type = $battery_type;
+        }
+        if ( $equipment_light_usb_charge === '' && $light_usb_rechargeable !== '' ) {
+            $equipment_light_usb_charge = $light_usb_rechargeable;
+        }
+        if ( $equipment_light_color_modes === '' && $light_color !== '' ) {
+            $equipment_light_color_modes = $light_color;
+        }
+        if ( $equipment_runtime_hours === '' && $runtime_hours !== '' ) {
+            $equipment_runtime_hours = $runtime_hours;
+        }
         $equipment_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $equipment_moderation_flags ) ) ) );
-        $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
+        $equipment_filter_waterproof = ( strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false || $light_ip_rating !== '' ) ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $equipment_filter_light_type = $light_type;
+        $equipment_filter_light_color = $light_color;
+        $equipment_filter_lumens = $lumens;
+        $equipment_filter_beam_distance_m = $beam_distance_m;
+        $equipment_filter_mount_type = $mount_type;
+        $equipment_filter_battery_type = $battery_type;
+        $equipment_filter_ip_rating = $light_ip_rating;
+        $equipment_filter_recoil_resistance = $recoil_resistance;
         $gear_type = sanitize_key( wp_unslash( $_POST['gear_type'] ?? '' ) );
         $shooting_discipline = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['shooting_discipline'] ?? [] ) ) ) );
         $sport_material = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['sport_material'] ?? [] ) ) ) );
@@ -3311,6 +3371,40 @@ class VA_Ajax {
             'va_equipment_light_usb_charge' => $equipment_light_usb_charge,
             'va_equipment_light_color_modes' => $equipment_light_color_modes,
             'va_equipment_light_color_temperature' => $equipment_light_color_temperature,
+            'va_light_type' => $light_type,
+            'va_lumens' => $lumens,
+            'va_light_levels_count' => $light_levels_count,
+            'va_light_turbo_mode' => $light_turbo_mode,
+            'va_light_eco_mode' => $light_eco_mode,
+            'va_beam_distance_m' => $beam_distance_m,
+            'va_beam_distance_band' => $beam_distance_band,
+            'va_light_color' => $light_color,
+            'va_battery_type' => $battery_type,
+            'va_light_usb_rechargeable' => $light_usb_rechargeable,
+            'va_light_powerbank_compatible' => $light_powerbank_compatible,
+            'va_runtime_hours' => $runtime_hours,
+            'va_runtime_eco_hours' => $runtime_eco_hours,
+            'va_runtime_turbo_hours' => $runtime_turbo_hours,
+            'va_light_material' => $light_material,
+            'va_light_ip_rating' => $light_ip_rating,
+            'va_light_resistance' => $light_resistance,
+            'va_mount_type' => $mount_type,
+            'va_light_mount_systems' => $light_mount_systems,
+            'va_hunting_light_usage' => $hunting_light_usage,
+            'va_light_functions' => $light_functions,
+            'va_light_optical_properties' => $light_optical_properties,
+            'va_light_weapon_type_compatibility' => $light_weapon_type_compatibility,
+            'va_light_optics_compatible' => $light_optics_compatible,
+            'va_light_ir_compatible' => $light_ir_compatible,
+            'va_light_weight_g' => $light_weight_g,
+            'va_light_length_mm' => $light_length_mm,
+            'va_light_size_category' => $light_size_category,
+            'va_recoil_resistance' => $recoil_resistance,
+            'va_rail_compatibility' => $rail_compatibility,
+            'va_ir_wavelength_nm' => $ir_wavelength_nm,
+            'va_head_tiltable' => $head_tiltable,
+            'va_headband_system' => $headband_system,
+            'va_target_identification_index' => $target_identification_index,
             'va_equipment_support_height_range_cm' => $equipment_support_height_range_cm,
             'va_equipment_support_legs' => $equipment_support_legs,
             'va_equipment_support_head_swivel' => $equipment_support_head_swivel,
@@ -3343,6 +3437,14 @@ class VA_Ajax {
             'va_equipment_filter_waterproof' => $equipment_filter_waterproof,
             'va_equipment_filter_silent' => $equipment_filter_silent,
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
+            'va_equipment_filter_light_type' => $equipment_filter_light_type,
+            'va_equipment_filter_light_color' => $equipment_filter_light_color,
+            'va_equipment_filter_lumens' => $equipment_filter_lumens,
+            'va_equipment_filter_beam_distance_m' => $equipment_filter_beam_distance_m,
+            'va_equipment_filter_mount_type' => $equipment_filter_mount_type,
+            'va_equipment_filter_battery_type' => $equipment_filter_battery_type,
+            'va_equipment_filter_ip_rating' => $equipment_filter_ip_rating,
+            'va_equipment_filter_recoil_resistance' => $equipment_filter_recoil_resistance,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_bag_type' => $bag_type,
@@ -4584,10 +4686,70 @@ class VA_Ajax {
         $equipment_caliber_compatibility = sanitize_text_field( wp_unslash( $_POST['equipment_caliber_compatibility'] ?? '' ) );
         $equipment_moderation_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['equipment_moderation_flags'] ?? [] ) ) ) );
         $equipment_notes = sanitize_textarea_field( wp_unslash( $_POST['equipment_notes'] ?? '' ) );
+        $light_type = sanitize_key( wp_unslash( $_POST['light_type'] ?? '' ) );
+        $lumens = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['lumens'] ?? '' ) );
+        $light_levels_count = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_levels_count'] ?? '' ) );
+        $light_turbo_mode = sanitize_key( wp_unslash( $_POST['light_turbo_mode'] ?? '' ) );
+        $light_eco_mode = sanitize_key( wp_unslash( $_POST['light_eco_mode'] ?? '' ) );
+        $beam_distance_m = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['beam_distance_m'] ?? '' ) );
+        $beam_distance_band = sanitize_key( wp_unslash( $_POST['beam_distance_band'] ?? '' ) );
+        $light_color = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_color'] ?? [] ) ) ) );
+        $battery_type = sanitize_key( wp_unslash( $_POST['battery_type'] ?? '' ) );
+        $light_usb_rechargeable = sanitize_key( wp_unslash( $_POST['light_usb_rechargeable'] ?? '' ) );
+        $light_powerbank_compatible = sanitize_key( wp_unslash( $_POST['light_powerbank_compatible'] ?? '' ) );
+        $runtime_hours = sanitize_text_field( wp_unslash( $_POST['runtime_hours'] ?? '' ) );
+        $runtime_eco_hours = sanitize_text_field( wp_unslash( $_POST['runtime_eco_hours'] ?? '' ) );
+        $runtime_turbo_hours = sanitize_text_field( wp_unslash( $_POST['runtime_turbo_hours'] ?? '' ) );
+        $light_material = sanitize_key( wp_unslash( $_POST['light_material'] ?? '' ) );
+        $light_ip_rating = sanitize_key( wp_unslash( $_POST['light_ip_rating'] ?? '' ) );
+        $light_resistance = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_resistance'] ?? [] ) ) ) );
+        $mount_type = sanitize_key( wp_unslash( $_POST['mount_type'] ?? '' ) );
+        $light_mount_systems = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_mount_systems'] ?? [] ) ) ) );
+        $hunting_light_usage = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['hunting_light_usage'] ?? [] ) ) ) );
+        $light_functions = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_functions'] ?? [] ) ) ) );
+        $light_optical_properties = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_optical_properties'] ?? [] ) ) ) );
+        $light_weapon_type_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['light_weapon_type_compatibility'] ?? [] ) ) ) );
+        $light_optics_compatible = sanitize_key( wp_unslash( $_POST['light_optics_compatible'] ?? '' ) );
+        $light_ir_compatible = sanitize_key( wp_unslash( $_POST['light_ir_compatible'] ?? '' ) );
+        $light_weight_g = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_weight_g'] ?? '' ) );
+        $light_length_mm = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['light_length_mm'] ?? '' ) );
+        $light_size_category = sanitize_key( wp_unslash( $_POST['light_size_category'] ?? '' ) );
+        $recoil_resistance = sanitize_key( wp_unslash( $_POST['recoil_resistance'] ?? '' ) );
+        $rail_compatibility = sanitize_key( wp_unslash( $_POST['rail_compatibility'] ?? '' ) );
+        $ir_wavelength_nm = preg_replace( '/[^0-9]/', '', (string) wp_unslash( $_POST['ir_wavelength_nm'] ?? '' ) );
+        $head_tiltable = sanitize_key( wp_unslash( $_POST['head_tiltable'] ?? '' ) );
+        $headband_system = sanitize_text_field( wp_unslash( $_POST['headband_system'] ?? '' ) );
+        $target_identification_index = sanitize_text_field( wp_unslash( $_POST['target_identification_index'] ?? '' ) );
+        if ( $equipment_light_lumen === '' && $lumens !== '' ) {
+            $equipment_light_lumen = $lumens;
+        }
+        if ( $equipment_light_range_m === '' && $beam_distance_m !== '' ) {
+            $equipment_light_range_m = $beam_distance_m;
+        }
+        if ( $equipment_light_battery_type === '' && $battery_type !== '' ) {
+            $equipment_light_battery_type = $battery_type;
+        }
+        if ( $equipment_light_usb_charge === '' && $light_usb_rechargeable !== '' ) {
+            $equipment_light_usb_charge = $light_usb_rechargeable;
+        }
+        if ( $equipment_light_color_modes === '' && $light_color !== '' ) {
+            $equipment_light_color_modes = $light_color;
+        }
+        if ( $equipment_runtime_hours === '' && $runtime_hours !== '' ) {
+            $equipment_runtime_hours = $runtime_hours;
+        }
         $equipment_review_hits = array_values( array_filter( array_map( 'trim', explode( ',', $equipment_moderation_flags ) ) ) );
-        $equipment_filter_waterproof = strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false ? '1' : '0';
+        $equipment_filter_waterproof = ( strpos( ',' . $equipment_features . ',', ',vizallo,' ) !== false || $light_ip_rating !== '' ) ? '1' : '0';
         $equipment_filter_silent = ( strpos( ',' . $equipment_features . ',', ',hangtalan,' ) !== false || $equipment_silence_level === 'hangtalan' ) ? '1' : '0';
         $equipment_filter_foldable = ( strpos( ',' . $equipment_features . ',', ',osszecsukhato,' ) !== false || $equipment_seat_foldable === 'igen' ) ? '1' : '0';
+        $equipment_filter_light_type = $light_type;
+        $equipment_filter_light_color = $light_color;
+        $equipment_filter_lumens = $lumens;
+        $equipment_filter_beam_distance_m = $beam_distance_m;
+        $equipment_filter_mount_type = $mount_type;
+        $equipment_filter_battery_type = $battery_type;
+        $equipment_filter_ip_rating = $light_ip_rating;
+        $equipment_filter_recoil_resistance = $recoil_resistance;
         $bag_type = sanitize_key( wp_unslash( $_POST['bag_type'] ?? '' ) );
         $volume_l = sanitize_key( wp_unslash( $_POST['volume_l'] ?? '' ) );
         $bag_size = sanitize_key( wp_unslash( $_POST['bag_size'] ?? '' ) );
@@ -5875,6 +6037,40 @@ class VA_Ajax {
             'va_equipment_light_usb_charge' => $equipment_light_usb_charge,
             'va_equipment_light_color_modes' => $equipment_light_color_modes,
             'va_equipment_light_color_temperature' => $equipment_light_color_temperature,
+            'va_light_type' => $light_type,
+            'va_lumens' => $lumens,
+            'va_light_levels_count' => $light_levels_count,
+            'va_light_turbo_mode' => $light_turbo_mode,
+            'va_light_eco_mode' => $light_eco_mode,
+            'va_beam_distance_m' => $beam_distance_m,
+            'va_beam_distance_band' => $beam_distance_band,
+            'va_light_color' => $light_color,
+            'va_battery_type' => $battery_type,
+            'va_light_usb_rechargeable' => $light_usb_rechargeable,
+            'va_light_powerbank_compatible' => $light_powerbank_compatible,
+            'va_runtime_hours' => $runtime_hours,
+            'va_runtime_eco_hours' => $runtime_eco_hours,
+            'va_runtime_turbo_hours' => $runtime_turbo_hours,
+            'va_light_material' => $light_material,
+            'va_light_ip_rating' => $light_ip_rating,
+            'va_light_resistance' => $light_resistance,
+            'va_mount_type' => $mount_type,
+            'va_light_mount_systems' => $light_mount_systems,
+            'va_hunting_light_usage' => $hunting_light_usage,
+            'va_light_functions' => $light_functions,
+            'va_light_optical_properties' => $light_optical_properties,
+            'va_light_weapon_type_compatibility' => $light_weapon_type_compatibility,
+            'va_light_optics_compatible' => $light_optics_compatible,
+            'va_light_ir_compatible' => $light_ir_compatible,
+            'va_light_weight_g' => $light_weight_g,
+            'va_light_length_mm' => $light_length_mm,
+            'va_light_size_category' => $light_size_category,
+            'va_recoil_resistance' => $recoil_resistance,
+            'va_rail_compatibility' => $rail_compatibility,
+            'va_ir_wavelength_nm' => $ir_wavelength_nm,
+            'va_head_tiltable' => $head_tiltable,
+            'va_headband_system' => $headband_system,
+            'va_target_identification_index' => $target_identification_index,
             'va_equipment_support_height_range_cm' => $equipment_support_height_range_cm,
             'va_equipment_support_legs' => $equipment_support_legs,
             'va_equipment_support_head_swivel' => $equipment_support_head_swivel,
@@ -5907,6 +6103,14 @@ class VA_Ajax {
             'va_equipment_filter_waterproof' => $equipment_filter_waterproof,
             'va_equipment_filter_silent' => $equipment_filter_silent,
             'va_equipment_filter_foldable' => $equipment_filter_foldable,
+            'va_equipment_filter_light_type' => $equipment_filter_light_type,
+            'va_equipment_filter_light_color' => $equipment_filter_light_color,
+            'va_equipment_filter_lumens' => $equipment_filter_lumens,
+            'va_equipment_filter_beam_distance_m' => $equipment_filter_beam_distance_m,
+            'va_equipment_filter_mount_type' => $equipment_filter_mount_type,
+            'va_equipment_filter_battery_type' => $equipment_filter_battery_type,
+            'va_equipment_filter_ip_rating' => $equipment_filter_ip_rating,
+            'va_equipment_filter_recoil_resistance' => $equipment_filter_recoil_resistance,
             'va_equipment_needs_review' => ! empty( $equipment_review_hits ) ? '1' : '0',
             'va_equipment_review_hits' => implode( ',', $equipment_review_hits ),
             'va_bag_type' => $bag_type,

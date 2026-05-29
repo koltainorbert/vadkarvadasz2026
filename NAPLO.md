@@ -2,6 +2,15 @@
 
 ---
 
+## 2026. 05. 29. – Session #vadaszlampa-komplex-mezorendszer
+- Kérés: a `vadászlámpa` teljes mezőrendszere kerüljön be a `vadasz-felszereles` kategóriába, kritikus szűrőkkel és típusfüggő dinamikákkal.
+- Frontend: a `submit-form.php` equipment blokkja új lámpa mezőket kapott: `light_type`, `lumens`, `beam_distance_m`, `light_color[]`, `battery_type`, `mount_type`, `light_ip_rating`, üzemidő almezők, funkciók, optikai tulajdonságok, kompatibilitás, méret/súly, célazonosítás index.
+- Dinamikus logika: az `applyEquipmentDynamicFields()` bővült lámpa-felismeréssel (`data-equipment-light`) és lámpa-típus feltétellel (`data-light-types`) a fegyverlámpa / IR / fejlámpa extra mezőkhöz.
+- Backend: mind update, mind submit ágban bekerült a teljes vadászlámpa sanitize + `va_*` meta mentés (`va_lumens`, `va_beam_distance_m`, `va_light_color`, `va_battery_type`, `va_mount_type`, `va_recoil_resistance`, stb.).
+- Szűrőmeták: új kritikus kulcsok mentése készült (`va_equipment_filter_light_type`, `va_equipment_filter_light_color`, `va_equipment_filter_lumens`, `va_equipment_filter_beam_distance_m`, `va_equipment_filter_mount_type`, `va_equipment_filter_battery_type`, `va_equipment_filter_ip_rating`, `va_equipment_filter_recoil_resistance`).
+- Kompatibilitás: a meglévő régi lámpás mezők (`va_equipment_light_*`) fallback térképezést kaptak az új mezőkből.
+- Szinkron + ellenőrzés: root + plugin mirror `submit-form.php` és `class-ajax.php` egységesítve, hibakeresés mind a 4 fájlon `No errors found`.
+
 ## 2026. 05. 29. – Session #vadasz-ruhazat-profi-mezorendszer
 - Kérés: a `Vadász ruházat` kategória teljes, profi mezőrendszerének lezárása frontend + backend oldalon a megadott részletes struktúra szerint.
 - Frontend: bekerült a teljes `va-hunting-clothing-fields-grid` blokk (szezon, felhasználás, anyag-technológia, vízállóság, zajszint, camo mintázat, időjárásvédelem, funkcionalitás, illeszkedés, vadászat-specifikus mezők, dinamikus membrán/IR/rétegezhetőség).

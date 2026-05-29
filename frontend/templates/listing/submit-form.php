@@ -6244,6 +6244,13 @@ body.va-modal-open {
             $equipment_electronic_saved = $equipment_csv( 'equipment_electronic_features' );
             $equipment_accessories_saved = $equipment_csv( 'equipment_accessories' );
             $equipment_moderation_saved = $equipment_csv( 'equipment_moderation_flags' );
+            $light_color_saved = $equipment_csv( 'light_color' );
+            $light_resistance_saved = $equipment_csv( 'light_resistance' );
+            $light_mount_systems_saved = $equipment_csv( 'light_mount_systems' );
+            $light_usage_saved = $equipment_csv( 'hunting_light_usage' );
+            $light_functions_saved = $equipment_csv( 'light_functions' );
+            $light_optical_props_saved = $equipment_csv( 'light_optical_properties' );
+            $light_weapon_types_saved = $equipment_csv( 'light_weapon_type_compatibility' );
             ?>
             <div class="va-cat-rule-field va-equipment-fields-grid" data-categories="vadasz-felszereles" style="display:none;">
                 <div class="va-step2-4col-inner">
@@ -6275,6 +6282,16 @@ body.va-modal-open {
                             <option value="termosz"<?php selected( $v, 'termosz' ); ?>>Termosz</option>
                             <option value="elemlampa"<?php selected( $v, 'elemlampa' ); ?>>Elemlámpa</option>
                             <option value="fejlampa"<?php selected( $v, 'fejlampa' ); ?>>Fejlámpa</option>
+                            <option value="vadaszlampa"<?php selected( $v, 'vadaszlampa' ); ?>>Vadászlámpa</option>
+                            <option value="kezilampa"<?php selected( $v, 'kezilampa' ); ?>>Kézilámpa</option>
+                            <option value="fegyverre-szerelheto-lampa"<?php selected( $v, 'fegyverre-szerelheto-lampa' ); ?>>Fegyverre szerelhető lámpa</option>
+                            <option value="fegyversin-lampa"<?php selected( $v, 'fegyversin-lampa' ); ?>>Fegyversín lámpa</option>
+                            <option value="ir-lampa"<?php selected( $v, 'ir-lampa' ); ?>>IR lámpa</option>
+                            <option value="zold-fenyu-vadaszlampa"<?php selected( $v, 'zold-fenyu-vadaszlampa' ); ?>>Zöld fényű vadászlámpa</option>
+                            <option value="piros-fenyu-vadaszlampa"<?php selected( $v, 'piros-fenyu-vadaszlampa' ); ?>>Piros fényű vadászlámpa</option>
+                            <option value="feher-fenyu-vadaszlampa"<?php selected( $v, 'feher-fenyu-vadaszlampa' ); ?>>Fehér fényű vadászlámpa</option>
+                            <option value="multifunkcios-lampa"<?php selected( $v, 'multifunkcios-lampa' ); ?>>Multifunkciós lámpa</option>
+                            <option value="uv-lampa"<?php selected( $v, 'uv-lampa' ); ?>>UV lámpa</option>
                             <option value="akkumulator"<?php selected( $v, 'akkumulator' ); ?>>Akkumulátor</option>
                             <option value="vadaszkurt"<?php selected( $v, 'vadaszkurt' ); ?>>Vadászkürt</option>
                             <option value="csapda"<?php selected( $v, 'csapda' ); ?>>Csapda</option>
@@ -6351,6 +6368,251 @@ body.va-modal-open {
                             <option value="modularis"<?php echo in_array( 'modularis', $equipment_features_saved, true ) ? ' selected' : ''; ?>>Moduláris</option>
                             <option value="gyorskioldos"<?php echo in_array( 'gyorskioldos', $equipment_features_saved, true ) ? ' selected' : ''; ?>>Gyorskioldós</option>
                         </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Lámpa típusa</label>
+                        <?php $v = $equipment_meta( 'light_type' ); ?>
+                        <select name="light_type" id="va-light-type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="fejlampa"<?php selected( $v, 'fejlampa' ); ?>>Fejlámpa</option>
+                            <option value="kezilampa"<?php selected( $v, 'kezilampa' ); ?>>Kézilámpa</option>
+                            <option value="fegyverre-szerelheto-lampa"<?php selected( $v, 'fegyverre-szerelheto-lampa' ); ?>>Fegyverre szerelhető lámpa</option>
+                            <option value="fegyversin-lampa"<?php selected( $v, 'fegyversin-lampa' ); ?>>Fegyversín lámpa</option>
+                            <option value="ir-lampa"<?php selected( $v, 'ir-lampa' ); ?>>IR lámpa</option>
+                            <option value="zold-fenyu-vadaszlampa"<?php selected( $v, 'zold-fenyu-vadaszlampa' ); ?>>Zöld fényű vadászlámpa</option>
+                            <option value="piros-fenyu-vadaszlampa"<?php selected( $v, 'piros-fenyu-vadaszlampa' ); ?>>Piros fényű vadászlámpa</option>
+                            <option value="feher-fenyu"<?php selected( $v, 'feher-fenyu' ); ?>>Fehér fényű</option>
+                            <option value="multifunkcios"<?php selected( $v, 'multifunkcios' ); ?>>Multifunkciós</option>
+                            <option value="uv-lampa"<?php selected( $v, 'uv-lampa' ); ?>>UV lámpa</option>
+                            <option value="egyeb"<?php selected( $v, 'egyeb' ); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Lumen (lm)</label>
+                        <input type="text" name="lumens" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'lumens' ) ); ?>" placeholder="pl. 1200">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Fokozatok száma</label>
+                        <input type="text" name="light_levels_count" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'light_levels_count' ) ); ?>" placeholder="pl. 5">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Turbó mód</label>
+                        <?php $v = $equipment_meta( 'light_turbo_mode' ); ?>
+                        <select name="light_turbo_mode" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Eco mód</label>
+                        <?php $v = $equipment_meta( 'light_eco_mode' ); ?>
+                        <select name="light_eco_mode" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Hatótáv (m)</label>
+                        <input type="text" name="beam_distance_m" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'beam_distance_m' ) ); ?>" placeholder="pl. 250">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Hatótáv kategória</label>
+                        <?php $v = $equipment_meta( 'beam_distance_band' ); ?>
+                        <select name="beam_distance_band" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="rovid"<?php selected( $v, 'rovid' ); ?>>Rövid (0-50 m)</option>
+                            <option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes (50-200 m)</option>
+                            <option value="hosszu"<?php selected( $v, 'hosszu' ); ?>>Hosszú (200-500 m)</option>
+                            <option value="extrem"<?php selected( $v, 'extrem' ); ?>>Extrém (500m+)</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Fény színe</label>
+                        <select name="light_color[]" id="va-light-color" class="va-select" multiple data-placeholder="Válassz fény színt">
+                            <option value="feher"<?php echo in_array( 'feher', $light_color_saved, true ) ? ' selected' : ''; ?>>Fehér</option>
+                            <option value="meleg-feher"<?php echo in_array( 'meleg-feher', $light_color_saved, true ) ? ' selected' : ''; ?>>Meleg fehér</option>
+                            <option value="piros"<?php echo in_array( 'piros', $light_color_saved, true ) ? ' selected' : ''; ?>>Piros</option>
+                            <option value="zold"<?php echo in_array( 'zold', $light_color_saved, true ) ? ' selected' : ''; ?>>Zöld</option>
+                            <option value="kek"<?php echo in_array( 'kek', $light_color_saved, true ) ? ' selected' : ''; ?>>Kék</option>
+                            <option value="ir"<?php echo in_array( 'ir', $light_color_saved, true ) ? ' selected' : ''; ?>>IR</option>
+                            <option value="allithato"<?php echo in_array( 'allithato', $light_color_saved, true ) ? ' selected' : ''; ?>>Állítható szín</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Energiaforrás</label>
+                        <?php $v = $equipment_meta( 'battery_type' ); ?>
+                        <select name="battery_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="aa"<?php selected( $v, 'aa' ); ?>>AA elem</option>
+                            <option value="aaa"<?php selected( $v, 'aaa' ); ?>>AAA elem</option>
+                            <option value="18650"<?php selected( $v, '18650' ); ?>>18650 akku</option>
+                            <option value="21700"<?php selected( $v, '21700' ); ?>>21700 akku</option>
+                            <option value="beepitett"<?php selected( $v, 'beepitett' ); ?>>Beépített akkumulátor</option>
+                            <option value="usb-toltheto"<?php selected( $v, 'usb-toltheto' ); ?>>USB tölthető</option>
+                            <option value="powerbank-kompatibilis"<?php selected( $v, 'powerbank-kompatibilis' ); ?>>Powerbank kompatibilis</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>USB tölthető</label>
+                        <?php $v = $equipment_meta( 'light_usb_rechargeable' ); ?>
+                        <select name="light_usb_rechargeable" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Powerbank kompatibilis</label>
+                        <?php $v = $equipment_meta( 'light_powerbank_compatible' ); ?>
+                        <select name="light_powerbank_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Üzemidő (óra)</label>
+                        <input type="text" name="runtime_hours" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'runtime_hours' ) ); ?>" placeholder="pl. 12">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Eco mód üzemidő (óra)</label>
+                        <input type="text" name="runtime_eco_hours" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'runtime_eco_hours' ) ); ?>" placeholder="pl. 40">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Turbo mód üzemidő (óra)</label>
+                        <input type="text" name="runtime_turbo_hours" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'runtime_turbo_hours' ) ); ?>" placeholder="pl. 1.5">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Anyag</label>
+                        <?php $v = $equipment_meta( 'light_material' ); ?>
+                        <select name="light_material" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="aluminium"<?php selected( $v, 'aluminium' ); ?>>Alumínium</option>
+                            <option value="repulogep-aluminium"<?php selected( $v, 'repulogep-aluminium' ); ?>>Repülőgép alumínium</option>
+                            <option value="muanyag"<?php selected( $v, 'muanyag' ); ?>>Műanyag</option>
+                            <option value="gumirozott"<?php selected( $v, 'gumirozott' ); ?>>Gumírozott</option>
+                            <option value="kombinalt"<?php selected( $v, 'kombinalt' ); ?>>Kombinált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Vízállóság</label>
+                        <?php $v = $equipment_meta( 'light_ip_rating' ); ?>
+                        <select name="light_ip_rating" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="ipx4"<?php selected( $v, 'ipx4' ); ?>>IPX4</option>
+                            <option value="ipx5"<?php selected( $v, 'ipx5' ); ?>>IPX5</option>
+                            <option value="ipx6"<?php selected( $v, 'ipx6' ); ?>>IPX6</option>
+                            <option value="ipx7"<?php selected( $v, 'ipx7' ); ?>>IPX7</option>
+                            <option value="ipx8"<?php selected( $v, 'ipx8' ); ?>>IPX8</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Ellenállás</label>
+                        <select name="light_resistance[]" class="va-select" multiple data-placeholder="Válassz ellenállást">
+                            <option value="utesallo"<?php echo in_array( 'utesallo', $light_resistance_saved, true ) ? ' selected' : ''; ?>>Ütésálló</option>
+                            <option value="porallo"<?php echo in_array( 'porallo', $light_resistance_saved, true ) ? ' selected' : ''; ?>>Porálló</option>
+                            <option value="idojarasallo"<?php echo in_array( 'idojarasallo', $light_resistance_saved, true ) ? ' selected' : ''; ?>>Időjárásálló</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Rögzítés típusa</label>
+                        <?php $v = $equipment_meta( 'mount_type' ); ?>
+                        <select name="mount_type" class="va-select">
+                            <option value="">– Válasszon –</option>
+                            <option value="fegyversin-picatinny"<?php selected( $v, 'fegyversin-picatinny' ); ?>>Fegyversín (Picatinny)</option>
+                            <option value="weaver"<?php selected( $v, 'weaver' ); ?>>Weaver</option>
+                            <option value="magneses"<?php selected( $v, 'magneses' ); ?>>Mágneses</option>
+                            <option value="klipszes"<?php selected( $v, 'klipszes' ); ?>>Klipszes</option>
+                            <option value="fejpant"<?php selected( $v, 'fejpant' ); ?>>Fejpánt</option>
+                            <option value="kezi"<?php selected( $v, 'kezi' ); ?>>Kézi</option>
+                            <option value="univerzalis-tarto"<?php selected( $v, 'univerzalis-tarto' ); ?>>Univerzális tartó</option>
+                            <option value="gyorskioldos"<?php selected( $v, 'gyorskioldos' ); ?>>Gyorskioldós</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Rögzítés / szerelés</label>
+                        <select name="light_mount_systems[]" class="va-select" multiple data-placeholder="Válassz szerelési módot">
+                            <option value="fegyversin-picatinny"<?php echo in_array( 'fegyversin-picatinny', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Fegyversín (Picatinny)</option>
+                            <option value="weaver"<?php echo in_array( 'weaver', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Weaver</option>
+                            <option value="magneses"<?php echo in_array( 'magneses', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Mágneses</option>
+                            <option value="klipszes"<?php echo in_array( 'klipszes', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Klipszes</option>
+                            <option value="fejpant"<?php echo in_array( 'fejpant', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Fejpánt</option>
+                            <option value="kezi"<?php echo in_array( 'kezi', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Kézi</option>
+                            <option value="univerzalis-tarto"<?php echo in_array( 'univerzalis-tarto', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Univerzális tartó</option>
+                            <option value="gyorskioldos"<?php echo in_array( 'gyorskioldos', $light_mount_systems_saved, true ) ? ' selected' : ''; ?>>Gyorskioldós</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Felhasználás</label>
+                        <select name="hunting_light_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást">
+                            <option value="vaddiszno-vadaszat"<?php echo in_array( 'vaddiszno-vadaszat', $light_usage_saved, true ) ? ' selected' : ''; ?>>Vaddisznó vadászat</option>
+                            <option value="ejszakai-les"<?php echo in_array( 'ejszakai-les', $light_usage_saved, true ) ? ' selected' : ''; ?>>Éjszakai les</option>
+                            <option value="cserkeles"<?php echo in_array( 'cserkeles', $light_usage_saved, true ) ? ' selected' : ''; ?>>Cserkelés</option>
+                            <option value="keresofeny"<?php echo in_array( 'keresofeny', $light_usage_saved, true ) ? ' selected' : ''; ?>>Keresőfény</option>
+                            <option value="kutyas-vadaszat"<?php echo in_array( 'kutyas-vadaszat', $light_usage_saved, true ) ? ' selected' : ''; ?>>Kutyás vadászat</option>
+                            <option value="taborozas"<?php echo in_array( 'taborozas', $light_usage_saved, true ) ? ' selected' : ''; ?>>Táborozás</option>
+                            <option value="bushcraft"<?php echo in_array( 'bushcraft', $light_usage_saved, true ) ? ' selected' : ''; ?>>Bushcraft</option>
+                            <option value="taktikai"<?php echo in_array( 'taktikai', $light_usage_saved, true ) ? ' selected' : ''; ?>>Taktikai</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Funkciók</label>
+                        <select name="light_functions[]" class="va-select" multiple data-placeholder="Válassz funkciókat">
+                            <option value="zoom"<?php echo in_array( 'zoom', $light_functions_saved, true ) ? ' selected' : ''; ?>>Zoom (fókuszálható)</option>
+                            <option value="strobe"<?php echo in_array( 'strobe', $light_functions_saved, true ) ? ' selected' : ''; ?>>Strobe (villogó)</option>
+                            <option value="sos"<?php echo in_array( 'sos', $light_functions_saved, true ) ? ' selected' : ''; ?>>SOS mód</option>
+                            <option value="memoria"<?php echo in_array( 'memoria', $light_functions_saved, true ) ? ' selected' : ''; ?>>Memória funkció</option>
+                            <option value="fokozatmentes-dimmeles"<?php echo in_array( 'fokozatmentes-dimmeles', $light_functions_saved, true ) ? ' selected' : ''; ?>>Fokozatmentes dimmelés</option>
+                            <option value="ir-kompatibilitas"<?php echo in_array( 'ir-kompatibilitas', $light_functions_saved, true ) ? ' selected' : ''; ?>>IR kompatibilitás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Optikai tulajdonságok</label>
+                        <select name="light_optical_properties[]" class="va-select" multiple data-placeholder="Válassz optikai jellemzőt">
+                            <option value="fix-fokusz"<?php echo in_array( 'fix-fokusz', $light_optical_props_saved, true ) ? ' selected' : ''; ?>>Fix fókusz</option>
+                            <option value="allithato-fokusz"<?php echo in_array( 'allithato-fokusz', $light_optical_props_saved, true ) ? ' selected' : ''; ?>>Állítható fókusz</option>
+                            <option value="szeles-szoras"<?php echo in_array( 'szeles-szoras', $light_optical_props_saved, true ) ? ' selected' : ''; ?>>Széles szórás</option>
+                            <option value="spot-beam"<?php echo in_array( 'spot-beam', $light_optical_props_saved, true ) ? ' selected' : ''; ?>>Spot beam</option>
+                            <option value="flood-beam"<?php echo in_array( 'flood-beam', $light_optical_props_saved, true ) ? ' selected' : ''; ?>>Flood beam</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="grid-column:1 / -1; display:none;">
+                        <label>Fegyver kompatibilitás</label>
+                        <select name="light_weapon_type_compatibility[]" class="va-select" multiple data-placeholder="Válassz fegyvertípust">
+                            <option value="golyos"<?php echo in_array( 'golyos', $light_weapon_types_saved, true ) ? ' selected' : ''; ?>>Golyós</option>
+                            <option value="soretes"<?php echo in_array( 'soretes', $light_weapon_types_saved, true ) ? ' selected' : ''; ?>>Sörétes</option>
+                            <option value="maroklofegyver"<?php echo in_array( 'maroklofegyver', $light_weapon_types_saved, true ) ? ' selected' : ''; ?>>Maroklőfegyver</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Optikai kiegészítőkkel kompatibilis</label>
+                        <?php $v = $equipment_meta( 'light_optics_compatible' ); ?>
+                        <select name="light_optics_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>IR eszközökkel kompatibilis</label>
+                        <?php $v = $equipment_meta( 'light_ir_compatible' ); ?>
+                        <select name="light_ir_compatible" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;"><label>Súly (g)</label><input type="text" name="light_weight_g" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'light_weight_g' ) ); ?>" placeholder="pl. 280"></div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;"><label>Hossz (mm)</label><input type="text" name="light_length_mm" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'light_length_mm' ) ); ?>" placeholder="pl. 155"></div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Méret kategória</label>
+                        <?php $v = $equipment_meta( 'light_size_category' ); ?>
+                        <select name="light_size_category" class="va-select"><option value="">– Válasszon –</option><option value="kompakt"<?php selected( $v, 'kompakt' ); ?>>Kompakt</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="nagy"<?php selected( $v, 'nagy' ); ?>>Nagy</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" data-light-types="fegyverre-szerelheto-lampa,fegyversin-lampa" style="display:none;">
+                        <label>Visszarúgás tűrés</label>
+                        <?php $v = $equipment_meta( 'recoil_resistance' ); ?>
+                        <select name="recoil_resistance" class="va-select"><option value="">– Válasszon –</option><option value="alacsony"<?php selected( $v, 'alacsony' ); ?>>Alacsony</option><option value="kozepes"<?php selected( $v, 'kozepes' ); ?>>Közepes</option><option value="magas"<?php selected( $v, 'magas' ); ?>>Magas</option><option value="kiemelt"<?php selected( $v, 'kiemelt' ); ?>>Kiemelt</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" data-light-types="fegyverre-szerelheto-lampa,fegyversin-lampa" style="display:none;">
+                        <label>Sín kompatibilitás</label>
+                        <?php $v = $equipment_meta( 'rail_compatibility' ); ?>
+                        <select name="rail_compatibility" class="va-select"><option value="">– Válasszon –</option><option value="picatinny"<?php selected( $v, 'picatinny' ); ?>>Picatinny</option><option value="weaver"<?php selected( $v, 'weaver' ); ?>>Weaver</option><option value="picatinny-weaver"<?php selected( $v, 'picatinny-weaver' ); ?>>Picatinny + Weaver</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" data-light-types="ir-lampa" style="display:none;">
+                        <label>Hullámhossz (nm)</label>
+                        <input type="text" name="ir_wavelength_nm" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'ir_wavelength_nm' ) ); ?>" placeholder="pl. 850 vagy 940">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" data-light-types="fejlampa" style="display:none;">
+                        <label>Dönthető fej</label>
+                        <?php $v = $equipment_meta( 'head_tiltable' ); ?>
+                        <select name="head_tiltable" class="va-select"><option value="">– Válasszon –</option><option value="igen"<?php selected( $v, 'igen' ); ?>>Igen</option><option value="nem"<?php selected( $v, 'nem' ); ?>>Nem</option></select>
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" data-light-types="fejlampa" style="display:none;">
+                        <label>Fejpánt rendszer</label>
+                        <input type="text" name="headband_system" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'headband_system' ) ); ?>" placeholder="pl. 3 pántos, szilikoncsíkos, gyorsállító">
+                    </div>
+                    <div class="va-form-group va-equipment-dynamic-group" data-equipment-light="yes" style="display:none;">
+                        <label>Látótáv + célazonosítás index</label>
+                        <input type="text" name="target_identification_index" class="va-input" value="<?php echo esc_attr( $equipment_meta( 'target_identification_index' ) ); ?>" placeholder="pl. 0-100 / 300m-ig biztos célazonosítás">
                     </div>
                     <div class="va-form-group va-equipment-dynamic-group" data-equipment-types="elemlampa,fejlampa">
                         <label>Lumen</label>
@@ -9449,18 +9711,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function applyEquipmentDynamicFields() {
         var equipmentType = (($('#va-equipment-type').val() || '') + '').trim();
+        var lightType = (($('#va-light-type').val() || '') + '').trim();
         var callType = (($('#va-equipment-call-type').val() || '') + '').trim();
         var electronicValues = $('#va-equipment-electronic-features').val();
         var electronicFeatures = Array.isArray(electronicValues) ? electronicValues : (electronicValues ? [electronicValues] : []);
-        var needsRuntime = ['elemlampa', 'fejlampa', 'akkumulator'].indexOf(equipmentType) !== -1 || callType === 'elektronikus' || electronicFeatures.length > 0;
+        var lightEquipmentTypes = ['elemlampa', 'fejlampa', 'vadaszlampa', 'kezilampa', 'fegyverre-szerelheto-lampa', 'fegyversin-lampa', 'ir-lampa', 'zold-fenyu-vadaszlampa', 'piros-fenyu-vadaszlampa', 'feher-fenyu-vadaszlampa', 'multifunkcios-lampa', 'uv-lampa'];
+        var isLightEquipment = lightEquipmentTypes.indexOf(equipmentType) !== -1 || !!lightType;
+        var needsRuntime = isLightEquipment || ['elemlampa', 'fejlampa', 'akkumulator'].indexOf(equipmentType) !== -1 || callType === 'elektronikus' || electronicFeatures.length > 0;
 
         $('.va-equipment-dynamic-group').each(function(){
             var $group = $(this);
             var typeList = (($group.attr('data-equipment-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+            var lightTypeList = (($group.attr('data-light-types') || '') + '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
             var runtimeRequired = (($group.attr('data-equipment-runtime') || '') + '').trim() === 'yes';
+            var lightRequired = (($group.attr('data-equipment-light') || '') + '').trim() === 'yes';
             var typeOk = !typeList.length || typeList.indexOf(equipmentType) !== -1;
+            var lightTypeOk = !lightTypeList.length || lightTypeList.indexOf(lightType) !== -1;
             var runtimeOk = !runtimeRequired || needsRuntime;
-            $group.toggle(typeOk && runtimeOk);
+            var lightOk = !lightRequired || isLightEquipment;
+            $group.toggle(typeOk && runtimeOk && lightOk && lightTypeOk);
         });
     }
 
@@ -9737,7 +10006,7 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).on('change', '#va-publication-type, #va-publication-edition-type, #va-publication-signed-copy', function(){
         applyPublicationDynamicFields();
     });
-    $(document).on('change', '#va-equipment-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
+    $(document).on('change', '#va-equipment-type, #va-light-type, #va-equipment-call-type, #va-equipment-electronic-features', function(){
         applyEquipmentDynamicFields();
     });
     $(document).on('change', '#va-gear-type, #va-shooting-discipline, #va-sport-ergonomics', function(){
