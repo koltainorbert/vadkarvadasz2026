@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #kereso-lathato-altalanos-szurok
+- Felhasználói visszajelzés: "NINCS VÁLTOZÁS" a kereső oldalon (különösen nem-jármű kategóriáknál, pl. `Állás`).
+- Ok: a korábbi bővítés főleg kategóriaspecifikus mezőkre épült, ezért egyes kategóriáknál vizuálisan kevés változás jelent meg.
+- Javítás: általános, minden kategóriában látható szűrők kerültek be a keresősávba:
+  - `Kulcsszó` (`#va-kw`)
+  - `Megye` (`#va-county`)
+  - `Állapot` (`#va-cond`)
+- Érintett fájlok:
+  - [frontend/templates/listing/search.php](frontend/templates/listing/search.php)
+  - [wp-plugin/vadaszapro-core/frontend/templates/listing/search.php](wp-plugin/vadaszapro-core/frontend/templates/listing/search.php)
+- Ellenőrzés: mindkét érintett fájlon `No errors found`.
+- Deploy: élő deploy script lefutott, commit: `7fc1f705`, push OK, GitHub Actions FTP workflow triggerelve.
+
 ## 2026. 06. 02. – Session #hirdetes-kereso-kategoriafuggo-komplexites
 - Kérés: a hirdetéskereső ne csak `jarmu` kategóriában legyen használhatóan részletes, hanem több kategóriában is adjon valódi, releváns szűrőket.
 - Frontend UI: a [frontend/templates/listing/search.php](frontend/templates/listing/search.php) fájlban a márka/modell mezők `brand-model` csoportba kerültek, és bekerült új `Kaliber` keresőmező (`va-caliber-search`) a fegyveres kategóriákhoz.
