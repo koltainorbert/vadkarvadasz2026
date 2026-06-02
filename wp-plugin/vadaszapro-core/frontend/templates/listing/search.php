@@ -200,6 +200,9 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
     <!-- Szűrő sáv -->
     <div class="va-filter-bar">
         <div class="va-filter-bar__title"><?php echo esc_html( $plain_filter_title ); ?></div>
+        <style>
+            #va-filter-form [data-special-filter] { display: none; }
+        </style>
         <form id="va-filter-form" data-post-type="<?php echo esc_attr( $url_post_type ); ?>">
             <div class="va-filter-bar__grid">
                 <input type="search" id="va-kw" class="va-input" placeholder="<?php echo esc_attr( $lp_kw_placeholder ); ?>" value="<?php echo esc_attr( $url_s ); ?>">

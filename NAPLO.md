@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #kereso-felvillanas-megszuntetes
+- Hiba: a `va-hirdetes-kereses` oldalon frissítéskor a kategória-specifikus szűrők egy pillanatra mind megjelentek, majd eltűntek.
+- Ok: a `data-special-filter` mezők alapból láthatóan renderelődtek, és csak később (JS futáskor) kapták meg a végső láthatóságot.
+- Javítás: a kereső template-ben pre-render rejtés került be:
+  - `#va-filter-form [data-special-filter] { display:none; }`
+  Ez még a JS előtt érvényesül, így megszűnik az első render villanás.
+- Érintett fájlok:
+  - [frontend/templates/listing/search.php](frontend/templates/listing/search.php)
+  - [wp-plugin/vadaszapro-core/frontend/templates/listing/search.php](wp-plugin/vadaszapro-core/frontend/templates/listing/search.php)
+- Ellenőrzés: mindkét fájl `No errors found`.
+
 ## 2026. 06. 02. – Hotfix #kereso-minden-kategoria-teljes-lefedes-ellenorzes
 - Felhasználói kérés: "ellenőrizd le, nem minden kategóriánál van teljes szűrő".
 - Audit: a kategória-szabálylista alapján korábban 44 kategóriából 21 volt dedikáltan hiányos keresőszűrő oldalon.
