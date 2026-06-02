@@ -836,7 +836,19 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 .va-filter-bar #va-results-count {
   color: #fff;
 }
-.va-filter-bar .va-input::placeholder { color: rgba(255,255,255,.9); }
+.va-filter-bar,
+.va-filter-bar * {
+  color: #fff !important;
+}
+.va-filter-bar .va-input,
+.va-filter-bar .va-select {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+.va-filter-bar .va-input::placeholder {
+  color: #fff !important;
+  opacity: 1;
+}
 @media (max-width: 600px) { .va-filter-bar { padding: 14px; } .va-filter-bar__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 380px) { .va-filter-bar__grid { grid-template-columns: 1fr; } }
 .va-advanced-toggle {

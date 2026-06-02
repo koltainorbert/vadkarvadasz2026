@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #kereso-minden-szoveg-feher
+
+### Mit csináltunk [x]
+- [x] A kereső blokkra erős, globális fehér szöveg override került (`.va-filter-bar, .va-filter-bar * { color:#fff !important; }`)
+- [x] Input + select mezők explicit fehér színre kényszerítve (`-webkit-text-fill-color`-ral is)
+- [x] Placeholder szöveg is tiszta fehérre állítva (`opacity: 1` mellett)
+- [x] Root + plugin mirror CSS szinkronban módosítva
+
+### Hol tartunk
+A kereső panelen a feliratok, címkék, badge-ek és opciószövegek egységesen fehérek.
+
+### TODO
+- [ ] Frontend ellenőrzés élő oldalon: kategóriaváltás + részletes panel nyitás/zárás mellett vizuális kontroll
+
+---
+
 ## 2026. 05. 18. – Session: Részletes kereső prémium UI + markup hotfix
 
 ### Mit csináltunk [x]
