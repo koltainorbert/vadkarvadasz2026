@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #talalatok-oldalankent-feher
+
+### Mit csináltunk [x]
+- [x] A "Találatok oldalanként" blokk teljes szövege fehérre kényszerítve (`.va-car-per-page, .va-car-per-page * { color:#fff !important; }`)
+- [x] Root + plugin mirror CSS szinkronban frissítve
+
+### Hol tartunk
+A találatok oldali részletes keresőben a "Találatok oldalanként" cím és opciószövegek is fehérek.
+
+### TODO
+- [ ] Gyors vizuális ellenőrzés frontend oldalon cache ürítés után
+
+---
+
 ## 2026. 06. 02. – Hotfix #365-nap-csomag-30-nap-hirdetes
 
 ### Mit csináltunk [x]

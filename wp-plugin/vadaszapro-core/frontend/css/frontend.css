@@ -951,6 +951,10 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   flex-wrap: wrap;
   gap: 10px;
 }
+.va-car-per-page,
+.va-car-per-page * {
+  color: #fff !important;
+}
 .va-car-extra-filters .va-check-label,
 .va-car-per-page .va-check-label {
   position: relative;
