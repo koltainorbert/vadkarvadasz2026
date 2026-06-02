@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #nincs-kotelezo-kategoriamezo
+
+### Mit csináltunk [x]
+- [x] A kategória- és járműspecifikus kötelező mezővalidációk kiiktatva a backendben
+- [x] A submit űrlap JS validációja leegyszerűsítve: csak cím és minimum 1 kép maradt kötelező
+- [x] Root + plugin mirror szinkronban frissítve
+
+### Hol tartunk
+A hirdetésfeladásnál már nem kérünk kategóriafüggő kötelező mezőket, csak a cím és legalább egy kép szükséges.
+
+### TODO
+- [ ] Éles feladás teszt: cím + 1 kép sikeres, üres kategóriafüggő mezők mellett is
+
 ## 2026. 06. 02. – Hotfix #per-page-cim-fix-feher
 
 ### Mit csináltunk [x]
