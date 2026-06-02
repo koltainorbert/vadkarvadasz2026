@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #single-oldal-minden-mezo-lathato
+
+### Mit csináltunk [x]
+- [x] A hirdetés részletek blokkjába dinamikus fallback került: minden kitöltött, de kézzel nem listázott `va_*` meta mező is megjelenik
+- [x] A fallback figyelembe veszi a meződefiníciókat (`VA_Meta_Fields::listing_fields()`), így a checkbox/select/checkboxes értékek emberi olvasható formában jelennek meg
+- [x] Technikai/meta zaj mezők kizárása megtörtént (pl. review/token/hash jellegű kulcsok)
+- [x] Root + theme single template szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs syntax/probléma
+- [x] Deploy lefutott, commit: `ee3bf960`
+
+### Hol tartunk
+A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megadott mezők, nem csak a kézzel válogatott alap specifikációk.
+
+### TODO
+- [ ] Frontend smoke teszt 3-4 különböző kategórián: ellenőrizni, hogy az összes releváns feladott mező ténylegesen megjelenik
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
