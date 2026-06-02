@@ -1530,50 +1530,53 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     return '';
                 }
 
-                $replacements = [
-                    'New Pill Time' => 'Új rögzítési idő',
+                $phrase_replacements = [
                     'new pill time' => 'új rögzítési idő',
-                    'POI shift' => 'Becsapódási pont eltolódás (POI)',
-                    'Dog' => 'Kutya',
-                    'Working' => 'Munkavonal',
-                    'Type' => 'Típus',
-                    'Name' => 'Név',
-                    'Breeder' => 'Tenyésztő',
-                    'Kennel' => 'Kennel',
-                    'Pedigree' => 'Törzskönyv',
-                    'Origin' => 'Származási',
-                    'Country' => 'Ország',
-                    'Bloodline' => 'Vérvonal',
-                    'Documents' => 'Dokumentumok',
-                    'Status' => 'Státusz',
-                    'Postal' => 'Irányítószám',
-                    'Street' => 'Utca',
-                    'Model' => 'Modell',
-                    'Quick detach' => 'Gyorskioldós',
+                    'poi shift' => 'becsapódási pont eltolódás (POI)',
                     'quick detach' => 'gyorskioldós',
-                    'Eye relief' => 'Szemtávolság',
-                    'Reticle' => 'Szálkereszt',
-                    'Target' => 'Sport',
-                    'Low profile' => 'Alacsony profilú',
-                    'Locking' => 'Zárható',
-                    'Capped' => 'Kupakos',
-                    'Coated' => 'Bevonatos',
-                    'Fully coated' => 'Teljesen bevonatos',
-                    'Multi-coated' => 'Többrétegű bevonat',
-                    'Fully multi-coated' => 'Teljes többrétegű bevonat',
-                    'Roof' => 'Tetőél prizmás',
-                    'Porro' => 'Porro prizmás',
-                    'Airsoft' => 'Airsoft',
-                    'Working type' => 'Munkavonal típusa',
-                    'Breeder name' => 'Tenyésztő neve',
-                    'Kennel name' => 'Kennel neve',
-                    'Pedigree status' => 'Törzskönyv státusz',
-                    'Origin country' => 'Származási ország',
-                    'Bloodline type' => 'Vérvonal típusa',
-                    'Documents' => 'Dokumentumok',
+                    'eye relief' => 'szemtávolság',
+                    'low profile' => 'alacsony profilú',
+                    'fully multi-coated' => 'teljes többrétegű bevonat',
+                    'multi-coated' => 'többrétegű bevonat',
+                    'fully coated' => 'teljesen bevonatos',
+                    'working type' => 'munkavonal típusa',
+                    'breeder name' => 'tenyésztő neve',
+                    'kennel name' => 'kennel neve',
+                    'pedigree status' => 'törzskönyv státusz',
+                    'origin country' => 'származási ország',
+                    'bloodline type' => 'vérvonal típusa',
                 ];
+                foreach ( $phrase_replacements as $en => $hu ) {
+                    $text = str_ireplace( $en, $hu, $text );
+                }
 
-                return strtr( $text, $replacements );
+                $token_replacements = [
+                    'dog' => 'kutya',
+                    'type' => 'típus',
+                    'name' => 'név',
+                    'breeder' => 'tenyésztő',
+                    'kennel' => 'kennel',
+                    'pedigree' => 'törzskönyv',
+                    'origin' => 'származási',
+                    'country' => 'ország',
+                    'bloodline' => 'vérvonal',
+                    'documents' => 'dokumentumok',
+                    'status' => 'státusz',
+                    'postal' => 'irányítószám',
+                    'street' => 'utca',
+                    'model' => 'modell',
+                    'reticle' => 'szálkereszt',
+                    'target' => 'sport',
+                    'locking' => 'zárható',
+                    'capped' => 'kupakos',
+                    'coated' => 'bevonatos',
+                    'roof' => 'tetőél',
+                ];
+                foreach ( $token_replacements as $en => $hu ) {
+                    $text = preg_replace( '/\b' . preg_quote( $en, '/' ) . '\b/iu', $hu, $text );
+                }
+
+                return $text;
             };
 
             $blocked_meta_keys = [

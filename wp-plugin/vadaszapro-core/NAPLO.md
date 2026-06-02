@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #global-hu-normalizalas-szigoritas
+
+### Mit csináltunk [x]
+- [x] A `Részletek` fallback HU-normalizáló logika átírva case-insensitive (kis/nagybetű-független) cserére
+- [x] Többlépcsős fordítás: kifejezés-szint + token-szint (dog/working/type/name/breeder/pedigree/origin/country stb.)
+- [x] Cél: ne maradjon angol maradvány címke vagy érték a frontend termékoldalon
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A részletek blokk fordítása agresszívebb és robusztusabb lett, több angol maradvány automatikusan magyarra normalizálódik.
+
 ## 2026. 06. 02. – Hotfix #global-reszletek-minden-kategoria-megjelenites-hu
 
 ### Mit csináltunk [x]
