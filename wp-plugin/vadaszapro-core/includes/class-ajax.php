@@ -6758,9 +6758,9 @@ class VA_Ajax {
         $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
         if ( $plan_slug === 'custom' ) {
             $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
-            return $custom_dur > 0 ? $custom_dur : 365;
+            return $custom_dur > 0 ? $custom_dur : 30;
         }
-        return 365;
+        return 30;
     }
 
     private static function get_plan_price_total_for_slug( string $plan_slug ): int {
@@ -8035,36 +8035,10 @@ class VA_Ajax {
 
         // Egyszerre csak egy aktív termék: csak magasabb csomag írhatja felül a jelenlegit.
         if ( $new_rank > $cur_rank ) {
-            $old_expires_at = (int) get_user_meta( $user_id, 'va_plan_expires_at', true );
-            $old_duration_days = self::get_plan_base_duration_days( $user_id, $cur_plan );
             $new_duration_days = self::get_plan_base_duration_days( $user_id, $new_plan );
 
-            $old_total_price = self::get_plan_price_total_for_slug( $cur_plan );
-            $new_total_price = $amount > 0 ? $amount : self::get_plan_price_total_for_slug( $new_plan );
-            if ( $new_total_price <= 0 ) {
-                $new_total_price = 1;
-            }
-
-            $remaining_seconds = ( $old_expires_at > time() ) ? ( $old_expires_at - time() ) : 0;
-            if ( $cur_rank > 0 && $remaining_seconds > 0 && $old_total_price > 0 ) {
-                $old_daily_value = $old_total_price / max( 1, $old_duration_days );
-                $remaining_days_float = $remaining_seconds / DAY_IN_SECONDS;
-                $carryover_value_ft = (int) round( $old_daily_value * $remaining_days_float );
-
-                if ( $carryover_value_ft > 0 ) {
-                    $new_daily_value = $new_total_price / max( 1, $new_duration_days );
-                    if ( $new_daily_value > 0 ) {
-                        $carryover_days = (int) ceil( $carryover_value_ft / $new_daily_value );
-                        if ( $carryover_days > 0 ) {
-                            $carryover_days = max( 1, $carryover_days );
-                            $carryover_days = min( 365, $carryover_days );
-                        }
-                    }
-                }
-            }
-
             update_user_meta( $user_id, 'va_plan', $new_plan );
-            $final_duration_days = max( 1, $new_duration_days + $carryover_days );
+            $final_duration_days = max( 1, $new_duration_days );
             update_user_meta( $user_id, 'va_plan_expires_at', time() + ( $final_duration_days * DAY_IN_SECONDS ) );
             // Lejárati figyelmeztető flagek törlése az új ciklus kezdetekor.
             foreach ( [ 1, 7, 30 ] as $_t ) {

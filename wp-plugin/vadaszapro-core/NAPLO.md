@@ -2,6 +2,27 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #csomag-limit-es-1-havi-lejarat
+
+### Mit csináltunk [x]
+- [x] Csomag listing limitek backendben fixálva:
+  - Silver: 3 hirdetés / hó
+  - Gold: 5 hirdetés / hó
+  - Platinum: 10 hirdetés / hó
+- [x] A plan configban hard-limit érvényesítés került be, hogy ne tudjon félremenni a számolás (pl. 0/7 jellegű hibás kijelzés)
+- [x] Csomag lejárat logika 30 napos ciklusra állítva (vásárlástól számított 1 hónap)
+- [x] Upgrade carryover-nap jóváírás kikapcsolva, a csomagidő nem görgetődik tovább automatikusan
+- [x] Admin árkártya default feature szövegek igazítva a kért 3/5/10 havi limitre
+- [x] Root + plugin mirror fájlok teljesen szinkronban frissítve
+
+### Hol tartunk
+A csomagkezelés most a kért üzleti szabály szerint működik: havi limit csomagszintenként és 1 hónapos lejárati ciklus.
+
+### TODO
+- [ ] Élő user accounton smoke teszt: Silver user dashboard számláló + submit oldal maradék keret + lejárat dátum viselkedés
+
+---
+
 ## 2026. 06. 02. – Hotfix #kereso-minden-szoveg-feher
 
 ### Mit csináltunk [x]

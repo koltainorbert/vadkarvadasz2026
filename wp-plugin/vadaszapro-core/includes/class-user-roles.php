@@ -4,9 +4,9 @@
  *
  * Tervek:
  *  basic    – Ingyenes, 1 aktív hirdetés egyszerre,          kiemelés 7 naponta
- *  silver   – Fizetős havi,  max 5 hirdetés/hónap,           kiemelés 5 naponta
- *  gold     – Fizetős éves, max 10 hirdetés/hónap,           kiemelés 3 naponta
- *  platinum – Egyedi feltételek, admin állítja a limiteket,  kiemelés 3 naponta (vagy custom)
+ *  silver   – Fizetős havi,  max 3 hirdetés/hónap,           kiemelés 5 naponta
+ *  gold     – Fizetős havi,  max 5 hirdetés/hónap,           kiemelés 3 naponta
+ *  platinum – Fizetős havi,  max 10 hirdetés/hónap,          kiemelés 3 naponta
  *
  * Storage:
  *  wp_usermeta  va_plan                       → plan slug
@@ -42,30 +42,30 @@ class VA_User_Roles {
             'color'         => '#c0c0c0',
             'bg'            => 'rgba(192,192,192,.15)',
             'icon'          => '🥈',
-            'monthly_limit' => 5,
+            'monthly_limit' => 3,
             'boost_cooldown'=> 5,
             'basis'         => 'monthly',
-            'description'   => 'Havi előfizetés – 5 hirdetés/hó',
+            'description'   => 'Havi előfizetés – 3 hirdetés/hó',
         ],
         'gold'     => [
             'label'         => 'Gold',
             'color'         => '#ffd700',
             'bg'            => 'rgba(255,215,0,.15)',
             'icon'          => '🥇',
-            'monthly_limit' => 10,
+            'monthly_limit' => 5,
             'boost_cooldown'=> 3,
             'basis'         => 'monthly',
-            'description'   => 'Éves előfizetés – 10 hirdetés/hó',
+            'description'   => 'Havi előfizetés – 5 hirdetés/hó',
         ],
         'platinum' => [
             'label'         => 'Platinum',
             'color'         => '#e2c6ff',
             'bg'            => 'rgba(226,198,255,.15)',
             'icon'          => '💎',
-            'monthly_limit' => 20,      // felülírja va_plan_listing_limit
+            'monthly_limit' => 10,
             'boost_cooldown'=> 3,       // felülírja va_plan_boost_cooldown
             'basis'         => 'monthly',
-            'description'   => 'Egyedi feltételek – admin határozza meg',
+            'description'   => 'Havi előfizetés – 10 hirdetés/hó',
             'seller_label'  => '',      // egyedi feladó rang címke (pl. Kereskedő)
         ],
         'custom'   => [
@@ -271,7 +271,7 @@ class VA_User_Roles {
 
             // Legacy user migracio: ha nincs lejárat, kapjon alapértelmezett ciklust.
             if ( $expires_at <= 0 ) {
-                $duration_days = 365; // 1 éves lejárat minden csomagra
+                $duration_days = 30; // 1 havi lejárat minden fizetős csomagra
                 $expires_at = time() + ( $duration_days * DAY_IN_SECONDS );
                 update_user_meta( $user_id, 'va_plan_expires_at', $expires_at );
             }
@@ -293,6 +293,17 @@ class VA_User_Roles {
         $all = self::get_all_plan_configs();
         $cfg = ( isset( $all[ $plan ] ) && $plan !== '_global' ) ? $all[ $plan ] : $all['basic'];
 
+        // Üzleti szabály: fix havi listing limitek csomagszinten.
+        $fixed_limits = [
+            'basic'    => 1,
+            'silver'   => 3,
+            'gold'     => 5,
+            'platinum' => 10,
+        ];
+        if ( isset( $fixed_limits[ $plan ] ) ) {
+            $cfg['monthly_limit'] = $fixed_limits[ $plan ];
+        }
+
         // Alap mindig a kártya: ha van kártyához kötött kiemelési idő, ez a default.
         $card_cd = self::get_card_cooldown_for_plan( $plan );
         if ( $card_cd > 0 ) {
@@ -308,7 +319,7 @@ class VA_User_Roles {
         if ( $user_id > 0 ) {
             // A kiemelési újratöltés mindig a csomag (árkártya) cooldownja szerint működik.
             // Havi limit override továbbra is csak platinum/custom csomagnál értelmezett.
-            if ( in_array( $plan, [ 'platinum', 'custom' ], true ) ) {
+            if ( $plan === 'custom' ) {
                 $custom_limit = (int) get_user_meta( $user_id, 'va_plan_listing_limit', true );
                 if ( $custom_limit > 0 ) {
                     $cfg['monthly_limit'] = $custom_limit;

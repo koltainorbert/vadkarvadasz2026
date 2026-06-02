@@ -1085,9 +1085,9 @@ class VA_Settings_Page {
 
         $default_card_features = [
             1 => [ 'Max 1 aktív hirdetés', 'Előre tétel újratöltés: 7 nap' ],
-            2 => [ '5 hirdetés / hó', 'Előre tétel újratöltés: 5 nap' ],
-            3 => [ '10 hirdetés / hó', 'Előre tétel újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés' ],
-            4 => [ '20 hirdetés / hó', 'Előre tétel újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport' ],
+            2 => [ '3 hirdetés / hó', 'Előre tétel újratöltés: 5 nap' ],
+            3 => [ '5 hirdetés / hó', 'Előre tétel újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés' ],
+            4 => [ '10 hirdetés / hó', 'Előre tétel újratöltés: 3 nap', 'Hirdetés statisztika hozzáférés', 'Geo megtekintési riport' ],
         ];
 
         $price_card_opts = [
