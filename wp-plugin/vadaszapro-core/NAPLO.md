@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #hangtompito-reszletek-magyar-label
+
+### Mit csináltunk [x]
+- [x] A single oldal fallback mezőtérképe kibővítve a teljes `va_suppressor_*` készlettel
+- [x] Magyar címkék és opció-feloldások kerültek be (típus, menet, szerelés, kaliber, anyag, felépítés, jogi státusz, felhasználás, kompatibilitás)
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A `Hangtompító` részletek blokk már magyar feliratokkal és értékekkel jelenik meg a hirdetés oldalon, nem technikai kulcsokkal.
+
+### TODO
+- [ ] Frontend smoke teszt: legalább 1 meglévő és 1 új `Hangtompító` hirdetés részleteinek ellenőrzése
+
 ## 2026. 06. 02. – Hotfix #hangtompito-fokategoria
 
 ### Mit csináltunk [x]
