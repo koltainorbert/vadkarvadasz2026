@@ -244,51 +244,7 @@ if ( is_array( $categories ) ) {
         $category_slug_map[ (int) $cat_term->term_id ] = sanitize_title( (string) ( $cat_term->slug ?? '' ) );
     }
 }
-$category_required_rules = [
-    'golyos-puska'       => [ 'label' => 'Golyós lőfegyver', 'required' => [ 'brand', 'model', 'rifle_type', 'rifle_caliber', 'rifle_barrel_length_cm', 'rifle_condition', 'rifle_optic_compatibility' ] ],
-    'soretes-puska'      => [ 'label' => 'Sörétes lőfegyver', 'required' => [ 'brand', 'caliber' ] ],
-    'vegyescsovu-puska'  => [ 'label' => 'Vegyescsövű lőfegyver', 'required' => [ 'brand', 'model', 'mixed_type', 'mixed_barrel_count', 'mixed_rifle_caliber', 'mixed_shotgun_caliber', 'mixed_condition' ] ],
-    'maroklofegyver'     => [ 'label' => 'Maroklőfegyver', 'required' => [ 'brand', 'model', 'caliber', 'marok_type', 'marok_condition', 'marok_action_type', 'marok_magazine_capacity', 'marok_license_required', 'marok_legal_category', 'marok_cip_marking', 'marok_transfer_license_only' ] ],
-    'hatastalanitott'    => [ 'label' => 'Hatástalanított lőfegyver', 'required' => [ 'brand', 'model', 'hatastalanitott_weapon_type', 'hatastalanitott_is_deactivated', 'hatastalanitott_deactivation_type', 'hatastalanitott_certificate', 'hatastalanitott_mkh_cip', 'hatastalanitott_condition' ] ],
-    'egyeb-fegyverek'    => [ 'label' => 'Egyéb fegyverek', 'required' => [ 'brand', 'other_weapon_kind' ] ],
-    'loszer-tolteny'     => [ 'label' => 'Lőszer-Töltény', 'required' => [ 'brand', 'caliber', 'loszer_category', 'loszer_condition' ] ],
-            'tavcsovek'          => [ 'label' => 'Távcsövek', 'required' => [ 'brand', 'model', 'optic_type', 'optic_objective' ] ],
-    'ejjellato-tavcso'   => [ 'label' => 'Éjjellátó távcső', 'required' => [ 'brand', 'model', 'optic_zoom', 'scope_type', 'twilight_value' ] ],
-    'hokamerak'          => [ 'label' => 'Hőkamerák', 'required' => [ 'brand', 'model', 'optic_zoom', 'thermal_device_type', 'thermal_sensor_resolution', 'thermal_netd', 'thermal_refresh_hz' ] ],
-    'vadkamera'          => [ 'label' => 'Vadkamera', 'required' => [ 'brand', 'model', 'vadcamera_camera_type', 'vadcamera_connectivity', 'vadcamera_trigger_speed', 'vadcamera_ir_type', 'vadcamera_night_range_m', 'vadcamera_video_resolution', 'vadcamera_ip_rating', 'vadcamera_sim_slot' ] ],
-    'vadaszlampa'        => [ 'label' => 'Vadászlámpa', 'required' => [ 'brand', 'model' ] ],
-    'fegyverlampa'       => [ 'label' => 'Fegyverlámpa', 'required' => [ 'brand', 'model' ] ],
-    'vadaszkutya'        => [ 'label' => 'Vadászkutya', 'required' => [ 'dog_working_type', 'dog_breed', 'dog_gender', 'dog_birth_date', 'dog_hunting_specialization', 'dog_training_level' ] ],
-    'vadasz-ruhazat'     => [ 'label' => 'Vadász ruházat', 'required' => [ 'brand', 'clothing_type', 'season', 'hunting_usage', 'waterproof_level', 'noise_level', 'material_tech', 'camo_pattern', 'clothing_size' ] ],
-    'egyeb-ruhazat'      => [ 'label' => 'Egyéb ruházat', 'required' => [ 'brand', 'clothing_type', 'clothing_condition', 'clothing_gender', 'clothing_size' ] ],
-    'cipo-bakancs'       => [ 'label' => 'Cipő, bakancs', 'required' => [ 'brand', 'shoe_main_type', 'shoe_eu_size', 'shoe_condition', 'shoe_boot_height' ] ],
-    'csere'              => [ 'label' => 'Csere', 'required' => [ 'exchange_type', 'exchange_offer_category', 'exchange_brand', 'exchange_condition', 'exchange_estimated_value', 'exchange_extra_payment_direction', 'exchange_county' ] ],
-    'konyv-folyoirat'    => [ 'label' => 'Könyv és folyóirat', 'required' => [ 'publication_type', 'publication_topics', 'publication_title', 'publication_author', 'publication_year', 'publication_language', 'publication_condition', 'publication_collector_value', 'publication_complete_volume' ] ],
-    'disztargyak'        => [ 'label' => 'Dísztárgyak', 'required' => [ 'decor_type', 'decor_material', 'decor_style', 'decor_motif_tags', 'decor_production_type', 'decor_size_class', 'decor_condition' ] ],
-    'disztargy'          => [ 'label' => 'Dísztárgyak', 'required' => [ 'decor_type', 'decor_material', 'decor_style', 'decor_motif_tags', 'decor_production_type', 'decor_size_class', 'decor_condition' ] ],
-    'allas'              => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-    'allas-hirdetes'     => [ 'label' => 'Állás', 'required' => [ 'job_location', 'job_type' ] ],
-    'szolgaltatas'       => [ 'label' => 'Szolgáltatás', 'required' => [ 'service_type', 'service_provider_type', 'service_country', 'service_county', 'service_town', 'service_area', 'service_pricing_type' ] ],
-    'szallas'            => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
-    'ingatlan'           => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
-    'ingatlan-szallas'   => [ 'label' => 'Szállás / Ingatlan', 'required' => [ 'accommodation_type', 'accommodation_county_text', 'accommodation_land_size_sqm', 'accommodation_building_size_sqm', 'accommodation_utilities', 'accommodation_accessibility', 'accommodation_hunting_features', 'accommodation_property_condition' ] ],
-    'vadaszati-lehetoseg'=> [ 'label' => 'Vadászati lehetőség', 'required' => [ 'hunt_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_price_type', 'hunt_price_min', 'hunt_methods', 'hunt_has_accommodation', 'hunt_guide_type', 'hunt_difficulty_level', 'hunt_season_start', 'hunt_season_end' ] ],
-    'vadkarelharitas'    => [ 'label' => 'Vadkárelhárítás', 'required' => [ 'hunt_damage_main_type', 'hunt_game_species', 'hunt_country', 'hunt_county', 'hunt_land_type', 'hunt_response_time', 'hunt_availability_mode', 'hunt_pricing_model', 'hunt_contract_type', 'hunt_methods' ] ],
-    'vadaszati-hagyatek' => [ 'label' => 'Vadászati hagyaték', 'required' => [ 'estate_main_type' ] ],
-    'trofea-aletet'      => [ 'label' => 'Trófeaalátét', 'required' => [ 'trophy_type', 'trophy_material_type', 'trophy_style', 'trophy_mounting_type', 'trophy_attachment_type', 'trophy_height_cm', 'trophy_width_cm', 'trophy_thickness_cm', 'trophy_compatible_species' ] ],
-    'kesek'              => [ 'label' => 'Kések', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
-    'vadaszkes-vadasztor' => [ 'label' => 'Vadászkés, vadásztőr', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
-    'taktikai-kes-taktikai-tor' => [ 'label' => 'Taktikai kés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
-    'konyhakes'          => [ 'label' => 'Konyhakés', 'required' => [ 'knife_type', 'knife_condition', 'knife_blade_length_mm', 'knife_steel_type' ] ],
-    'svajci-bicska'      => [ 'label' => 'Svájci bicska', 'required' => [ 'knife_type', 'knife_condition', 'knife_steel_type' ] ],
-    'vadasz-felszereles' => [ 'label' => 'Vadász felszerelés', 'required' => [ 'brand', 'equipment_type', 'equipment_condition', 'equipment_hunting_usage' ] ],
-    'sportlovo-felsz'    => [ 'label' => 'Sportlövő felszerelés', 'required' => [ 'gear_type', 'shooting_discipline', 'firearm_compatibility', 'sport_size', 'modular', 'competition_level', 'sport_condition' ] ],
-    'taskak'             => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
-    'taska'              => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
-    'hatizsakok'         => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
-    'fegyvertokok'       => [ 'label' => 'Táskák', 'required' => [ 'bag_type', 'volume_l', 'bag_material', 'bag_weather_resistance', 'bag_condition' ] ],
-    'kurtok-sipok'       => [ 'label' => 'Kürtök és sípok', 'required' => [ 'call_type', 'call_target_species', 'call_operation_mode', 'call_material_type', 'call_volume_level', 'call_style' ] ],
-];
+$category_required_rules = [];
 
 /* ── Edit mód felismerés ───────────────────────────── */
 $edit_post_id = 0;
@@ -308,7 +264,6 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'price'       => get_post_meta( $maybe_id, 'va_price',       true ),
             'price_type'  => get_post_meta( $maybe_id, 'va_price_type',  true ),
             'phone'       => get_post_meta( $maybe_id, 'va_phone',       true ),
-        $category_required_rules = [];
             'optic_recommended_use' => get_post_meta( $maybe_id, 'va_optic_recommended_use', true ),
             'optic_moderation_flags' => get_post_meta( $maybe_id, 'va_optic_moderation_flags', true ),
             'thermal_device_type' => get_post_meta( $maybe_id, 'va_thermal_device_type', true ),
