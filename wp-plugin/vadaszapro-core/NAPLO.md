@@ -4,6 +4,17 @@
 
 ## 2026. 06. 02. – Hotfix #single-oldal-minden-mezo-lathato
 
+### Session zárás [x]
+- [x] A részletek blokk egységesítése elkészült: kategóriafüggetlen fallback mutatja a mentett, nem technikai `va_*` mezőket
+- [x] Fake profil incidens kezelve: gyanús userek törölve, regisztrációs védelem megerősítve (honeypot + timestamp + IP limit + domain szűrés)
+- [x] Utolsó biztonsági deploy commitok: `8411b174`, `4028d0ee`
+
+### Mi maradt nyitva
+- [ ] 1 hónapos monitor: új fake regisztrációk figyelése (domain, IP, napi darabszám)
+
+### Holnap ezzel kezdünk
+- [ ] Ha bármilyen gyanús visszatérés látszik, azonnali CAPTCHA bekötés regisztráció + login + jelszó-visszaállítás formokra
+
 ### Mit csináltunk [x]
 - [x] A hirdetés részletek blokkjába dinamikus fallback került: minden kitöltött, de kézzel nem listázott `va_*` meta mező is megjelenik
 - [x] A fallback figyelembe veszi a meződefiníciókat (`VA_Meta_Fields::listing_fields()`), így a checkbox/select/checkboxes értékek emberi olvasható formában jelennek meg
