@@ -926,6 +926,9 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
   text-transform: uppercase;
   color: rgba(255,255,255,.82);
 }
+.va-advanced-group--paging .va-advanced-group__title {
+  color: #fff !important;
+}
 .va-advanced-group__tag {
   display: inline-flex;
   align-items: center;

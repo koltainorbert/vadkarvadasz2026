@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #talalatok-oldalankent-cim-feher
+
+### Mit csináltunk [x]
+- [x] A "Találatok oldalanként" címsor explicit fehérre állítva (`.va-advanced-group--paging .va-advanced-group__title`)
+- [x] A "sebesség" badge eltávolítva a részletes kereső per-page blokkjából
+- [x] Root + plugin mirror template és CSS szinkronban frissítve
+
+### Hol tartunk
+A per-page blokk címe tiszta fehér, a felesleges "sebesség" felirat eltűnt.
+
+### TODO
+- [ ] Cache purge + frontend hard refresh vizuális ellenőrzés
+
+---
+
 ## 2026. 06. 02. – Hotfix #talalatok-oldalankent-feher
 
 ### Mit csináltunk [x]
