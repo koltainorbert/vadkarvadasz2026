@@ -452,6 +452,95 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
                     <option value="nem-szukseges">Nem szükséges</option>
                 </select>
 
+                <select id="va-accommodation-type" class="va-select" data-special-filter="accommodation">
+                    <option value="">Ingatlan típus: Mindegy</option>
+                    <option value="vadaszhaz">Vadászház</option>
+                    <option value="szallashely">Szálláshely</option>
+                    <option value="tanya">Tanya</option>
+                    <option value="telek">Telek</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <input type="text" id="va-accommodation-county" class="va-input" placeholder="Ingatlan megye (szöveg)" data-special-filter="accommodation">
+
+                <select id="va-accommodation-condition" class="va-select" data-special-filter="accommodation">
+                    <option value="">Ingatlan állapot: Mindegy</option>
+                    <option value="uj">Új</option>
+                    <option value="ujszeru">Újszerű</option>
+                    <option value="jo">Jó</option>
+                    <option value="felujitando">Felújítandó</option>
+                </select>
+
+                <select id="va-knife-type" class="va-select" data-special-filter="knife">
+                    <option value="">Kés típusa: Mindegy</option>
+                    <option value="vadaszkes">Vadászkés</option>
+                    <option value="taktikai-kes">Taktikai kés</option>
+                    <option value="konyhakes">Konyhakés</option>
+                    <option value="bicska">Bicska</option>
+                    <option value="svajci-bicska">Svájci bicska</option>
+                </select>
+
+                <input type="text" id="va-knife-steel" class="va-input" placeholder="Kés acél típusa" data-special-filter="knife">
+
+                <select id="va-knife-condition" class="va-select" data-special-filter="knife">
+                    <option value="">Kés állapot: Mindegy</option>
+                    <option value="uj">Új</option>
+                    <option value="ujszeru">Újszerű</option>
+                    <option value="hasznalt">Használt</option>
+                </select>
+
+                <select id="va-bag-type" class="va-select" data-special-filter="bag">
+                    <option value="">Táska típusa: Mindegy</option>
+                    <option value="hatizsak">Hátizsák</option>
+                    <option value="fegyvertok">Fegyvertok</option>
+                    <option value="valltaska">Válltáska</option>
+                    <option value="range-bag">Range bag</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <input type="text" id="va-bag-material" class="va-input" placeholder="Táska anyaga" data-special-filter="bag">
+
+                <select id="va-bag-condition" class="va-select" data-special-filter="bag">
+                    <option value="">Táska állapot: Mindegy</option>
+                    <option value="uj">Új</option>
+                    <option value="ujszeru">Újszerű</option>
+                    <option value="hasznalt">Használt</option>
+                </select>
+
+                <select id="va-publication-type" class="va-select" data-special-filter="collectibles">
+                    <option value="">Kiadvány típus: Mindegy</option>
+                    <option value="konyv">Könyv</option>
+                    <option value="folyoirat">Folyóirat</option>
+                    <option value="album">Album</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <select id="va-decor-type" class="va-select" data-special-filter="collectibles">
+                    <option value="">Dísztárgy típus: Mindegy</option>
+                    <option value="trofea">Trófea</option>
+                    <option value="faragas">Faragás</option>
+                    <option value="szobor">Szobor</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <select id="va-call-type" class="va-select" data-special-filter="collectibles">
+                    <option value="">Kürt/síp típusa: Mindegy</option>
+                    <option value="kezihivo">Kézi hívó</option>
+                    <option value="elektronikus-hivo">Elektronikus hívó</option>
+                    <option value="kurt">Kürt</option>
+                    <option value="sip">Síp</option>
+                </select>
+
+                <input type="text" id="va-trophy-material" class="va-input" placeholder="Trófeaalátét anyaga" data-special-filter="collectibles">
+
+                <select id="va-equipment-type" class="va-select" data-special-filter="equipment">
+                    <option value="">Felszerelés típus: Mindegy</option>
+                    <option value="vadaszlampa">Vadászlámpa</option>
+                    <option value="fegyverlampa">Fegyverlámpa</option>
+                    <option value="hatizsak">Hátizsák</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
                 <input type="number" id="va-mileage-min" class="va-input" min="0" placeholder="Kilométer -tól" data-special-filter="vehicle">
                 <input type="number" id="va-mileage-max" class="va-input" min="0" placeholder="Kilométer -ig" data-special-filter="vehicle">
 

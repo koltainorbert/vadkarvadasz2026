@@ -8548,6 +8548,20 @@ class VA_Ajax {
         $exchange_type      = sanitize_key( wp_unslash( $_POST['exchange_type'] ?? '' ) );
         $exchange_condition = sanitize_key( wp_unslash( $_POST['exchange_condition'] ?? '' ) );
         $exchange_extra_payment_direction = sanitize_key( wp_unslash( $_POST['exchange_extra_payment_direction'] ?? '' ) );
+        $accommodation_property_type = sanitize_key( wp_unslash( $_POST['accommodation_property_type'] ?? '' ) );
+        $accommodation_county = sanitize_text_field( wp_unslash( $_POST['accommodation_county'] ?? '' ) );
+        $accommodation_condition = sanitize_key( wp_unslash( $_POST['accommodation_condition'] ?? '' ) );
+        $knife_type = sanitize_key( wp_unslash( $_POST['knife_type'] ?? '' ) );
+        $knife_steel_type = sanitize_text_field( wp_unslash( $_POST['knife_steel_type'] ?? '' ) );
+        $knife_condition = sanitize_key( wp_unslash( $_POST['knife_condition'] ?? '' ) );
+        $bag_type = sanitize_key( wp_unslash( $_POST['bag_type'] ?? '' ) );
+        $bag_material = sanitize_text_field( wp_unslash( $_POST['bag_material'] ?? '' ) );
+        $bag_condition = sanitize_key( wp_unslash( $_POST['bag_condition'] ?? '' ) );
+        $publication_type = sanitize_key( wp_unslash( $_POST['publication_type'] ?? '' ) );
+        $decor_type = sanitize_key( wp_unslash( $_POST['decor_type'] ?? '' ) );
+        $call_type = sanitize_key( wp_unslash( $_POST['call_type'] ?? '' ) );
+        $trophy_material_type = sanitize_text_field( wp_unslash( $_POST['trophy_material_type'] ?? '' ) );
+        $equipment_type = sanitize_key( wp_unslash( $_POST['equipment_type'] ?? '' ) );
         $body_type         = sanitize_key( $_POST['body_type'] ?? '' );
         $fuel_type         = sanitize_key( $_POST['fuel_type'] ?? '' );
         $optic_zoom        = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
@@ -8591,6 +8605,10 @@ class VA_Ajax {
             'service_type','service_area','service_pricing_type','service_verified_provider','service_available_weekend','service_sos_service',
             'hunt_game_species','hunt_method','hunt_land_type','hunt_contract_type','hunt_pricing_model','hunt_availability_mode',
             'exchange_offer_category','exchange_type','exchange_condition','exchange_extra_payment_direction',
+            'accommodation_property_type','accommodation_county','accommodation_condition',
+            'knife_type','knife_steel_type','knife_condition',
+            'bag_type','bag_material','bag_condition',
+            'publication_type','decor_type','call_type','trophy_material_type','equipment_type',
             'body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
             'engine_min','engine_max','vehicle_condition','doors','passengers','opt_automatic','opt_awd','opt_service_book','extras'
         ) ) );
@@ -8765,6 +8783,90 @@ class VA_Ajax {
             $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_exchange_extra ON (pm_exchange_extra.post_id = p.ID AND pm_exchange_extra.meta_key = 'va_exchange_filter_extra_payment_direction')";
             $where[] = 'pm_exchange_extra.meta_value = %s';
             $params[] = $exchange_extra_payment_direction;
+        }
+
+        if ( $accommodation_property_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_acc_type ON (pm_acc_type.post_id = p.ID AND pm_acc_type.meta_key = 'va_accommodation_filter_property_type')";
+            $where[] = 'pm_acc_type.meta_value = %s';
+            $params[] = $accommodation_property_type;
+        }
+
+        if ( $accommodation_county !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_acc_county ON (pm_acc_county.post_id = p.ID AND pm_acc_county.meta_key = 'va_accommodation_filter_county')";
+            $where[] = 'pm_acc_county.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $accommodation_county ) . '%';
+        }
+
+        if ( $accommodation_condition !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_acc_cond ON (pm_acc_cond.post_id = p.ID AND pm_acc_cond.meta_key = 'va_accommodation_filter_condition')";
+            $where[] = 'pm_acc_cond.meta_value = %s';
+            $params[] = $accommodation_condition;
+        }
+
+        if ( $knife_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_knife_type ON (pm_knife_type.post_id = p.ID AND pm_knife_type.meta_key = 'va_knife_filter_type')";
+            $where[] = 'pm_knife_type.meta_value = %s';
+            $params[] = $knife_type;
+        }
+
+        if ( $knife_steel_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_knife_steel ON (pm_knife_steel.post_id = p.ID AND pm_knife_steel.meta_key = 'va_knife_filter_steel_type')";
+            $where[] = 'pm_knife_steel.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $knife_steel_type ) . '%';
+        }
+
+        if ( $knife_condition !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_knife_cond ON (pm_knife_cond.post_id = p.ID AND pm_knife_cond.meta_key = 'va_knife_filter_condition')";
+            $where[] = 'pm_knife_cond.meta_value = %s';
+            $params[] = $knife_condition;
+        }
+
+        if ( $bag_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_bag_type ON (pm_bag_type.post_id = p.ID AND pm_bag_type.meta_key = 'va_bag_filter_type')";
+            $where[] = 'pm_bag_type.meta_value = %s';
+            $params[] = $bag_type;
+        }
+
+        if ( $bag_material !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_bag_mat ON (pm_bag_mat.post_id = p.ID AND pm_bag_mat.meta_key = 'va_bag_filter_material')";
+            $where[] = 'pm_bag_mat.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $bag_material ) . '%';
+        }
+
+        if ( $bag_condition !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_bag_cond ON (pm_bag_cond.post_id = p.ID AND pm_bag_cond.meta_key = 'va_bag_filter_condition')";
+            $where[] = 'pm_bag_cond.meta_value = %s';
+            $params[] = $bag_condition;
+        }
+
+        if ( $publication_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_pub_type ON (pm_pub_type.post_id = p.ID AND pm_pub_type.meta_key = 'va_publication_filter_type')";
+            $where[] = 'pm_pub_type.meta_value = %s';
+            $params[] = $publication_type;
+        }
+
+        if ( $decor_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_decor_type ON (pm_decor_type.post_id = p.ID AND pm_decor_type.meta_key = 'va_decor_filter_type')";
+            $where[] = 'pm_decor_type.meta_value = %s';
+            $params[] = $decor_type;
+        }
+
+        if ( $call_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_call_type ON (pm_call_type.post_id = p.ID AND pm_call_type.meta_key = 'va_call_filter_type')";
+            $where[] = 'pm_call_type.meta_value = %s';
+            $params[] = $call_type;
+        }
+
+        if ( $trophy_material_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_trophy_mat ON (pm_trophy_mat.post_id = p.ID AND pm_trophy_mat.meta_key = 'va_trophy_filter_material_type')";
+            $where[] = 'pm_trophy_mat.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $trophy_material_type ) . '%';
+        }
+
+        if ( $equipment_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_eq_type ON (pm_eq_type.post_id = p.ID AND pm_eq_type.meta_key = 'va_equipment_filter_type')";
+            $where[] = 'pm_eq_type.meta_value = %s';
+            $params[] = $equipment_type;
         }
 
         if ( $body_type !== '' ) {

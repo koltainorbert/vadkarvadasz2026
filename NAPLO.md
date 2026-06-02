@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #kereso-minden-kategoria-teljes-lefedes-ellenorzes
+- Felhasználói kérés: "ellenőrizd le, nem minden kategóriánál van teljes szűrő".
+- Audit: a kategória-szabálylista alapján korábban 44 kategóriából 21 volt dedikáltan hiányos keresőszűrő oldalon.
+- Javítás (UI + JS + backend SQL) a hiányzó csoportokra:
+  - Szállás/Ingatlan: `accommodation_property_type`, `accommodation_county`, `accommodation_condition`
+  - Kések: `knife_type`, `knife_steel_type`, `knife_condition`
+  - Táskák: `bag_type`, `bag_material`, `bag_condition`
+  - Gyűjthető/egyéb: `publication_type`, `decor_type`, `call_type`, `trophy_material_type`
+  - Vadász felszerelés/lámpa: `equipment_type`
+- Frontend: új mezők és kategória-csoport láthatósági szabályok kerültek a keresőbe.
+- Backend: új POST paraméterek, cache kulcs bővítés, és meta JOIN/WHERE feltételek kerültek a `filter_listings()` függvénybe.
+- Új audit eredmény: `OSSZES_KATEGORIA=44`, `LEFEDETT=44`, `HIANYZO=0`.
+- Ellenőrzés: minden érintett fájl `No errors found`.
+
 ## 2026. 06. 02. – Hotfix #kereso-minden-kategoria-lefedes
 - Felhasználói kérés: „MINDEN EGYES KATEGÓRIÁRA”.
 - Ok: a korábbi special filter láthatóság túl szűk slug-felismerést használt, így bizonyos kategóriákban nem jelentek meg az új blokkok.

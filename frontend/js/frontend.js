@@ -390,6 +390,21 @@
     var exchangeExact = [
       'csere'
     ];
+    var accommodationExact = [
+      'szallas', 'ingatlan', 'ingatlan-szallas'
+    ];
+    var knifeExact = [
+      'kesek', 'vadaszkes-vadasztor', 'taktikai-kes-taktikai-tor', 'konyhakes', 'svajci-bicska'
+    ];
+    var bagExact = [
+      'taska', 'taskak', 'hatizsakok', 'fegyvertokok'
+    ];
+    var collectiblesExact = [
+      'disztargy', 'disztargyak', 'konyv-folyoirat', 'kurtok-sipok', 'trofea-aletet'
+    ];
+    var equipmentExact = [
+      'vadasz-felszereles', 'vadaszlampa', 'fegyverlampa'
+    ];
 
     var showVehicle = slug === 'jarmu';
     var showBrandModel = showVehicle || Object.keys(brandModelMap).length > 0 || va_slug_matches_any(slug, firearmAliases.concat(opticAliases, ['ruhazat', 'felszereles']));
@@ -400,8 +415,13 @@
     var showService = va_slug_in_list(slug, serviceExact) || va_slug_matches_any(slug, ['szolgaltatas', 'munka', 'allas']);
     var showHunt = va_slug_in_list(slug, huntExact) || va_slug_matches_any(slug, ['vadaszati', 'vadkar', 'hagyatek']);
     var showExchange = va_slug_in_list(slug, exchangeExact) || va_slug_matches_any(slug, ['csere']);
+    var showAccommodation = va_slug_in_list(slug, accommodationExact);
+    var showKnife = va_slug_in_list(slug, knifeExact);
+    var showBag = va_slug_in_list(slug, bagExact);
+    var showCollectibles = va_slug_in_list(slug, collectiblesExact);
+    var showEquipment = va_slug_in_list(slug, equipmentExact) || va_slug_matches_any(slug, ['felszereles', 'lampa']);
 
-    var hasAnySpecial = showVehicle || showBrandModel || showOptic || showDog || showFirearm || showClothing || showService || showHunt || showExchange;
+    var hasAnySpecial = showVehicle || showBrandModel || showOptic || showDog || showFirearm || showClothing || showService || showHunt || showExchange || showAccommodation || showKnife || showBag || showCollectibles || showEquipment;
     var showFallbackAll = !!slug && !hasAnySpecial;
     if (showFallbackAll) {
       showBrandModel = true;
@@ -409,6 +429,11 @@
       showService = true;
       showHunt = true;
       showExchange = true;
+      showAccommodation = true;
+      showKnife = true;
+      showBag = true;
+      showCollectibles = true;
+      showEquipment = true;
     }
 
     var $vehicleFields = $('[data-special-filter="vehicle"]');
@@ -420,6 +445,11 @@
     var $serviceFields = $('[data-special-filter="service"]');
     var $huntFields = $('[data-special-filter="hunt"]');
     var $exchangeFields = $('[data-special-filter="exchange"]');
+    var $accommodationFields = $('[data-special-filter="accommodation"]');
+    var $knifeFields = $('[data-special-filter="knife"]');
+    var $bagFields = $('[data-special-filter="bag"]');
+    var $collectiblesFields = $('[data-special-filter="collectibles"]');
+    var $equipmentFields = $('[data-special-filter="equipment"]');
 
     $vehicleFields.toggle(showVehicle);
     $brandModelFields.toggle(showBrandModel);
@@ -430,6 +460,11 @@
     $serviceFields.toggle(showService);
     $huntFields.toggle(showHunt);
     $exchangeFields.toggle(showExchange);
+    $accommodationFields.toggle(showAccommodation);
+    $knifeFields.toggle(showKnife);
+    $bagFields.toggle(showBag);
+    $collectiblesFields.toggle(showCollectibles);
+    $equipmentFields.toggle(showEquipment);
 
     va_update_brand_and_model_options('', '');
 
@@ -475,6 +510,26 @@
 
     if (!showExchange) {
       $('#va-exchange-offer-category, #va-exchange-type, #va-exchange-condition, #va-exchange-extra-payment').val('');
+    }
+
+    if (!showAccommodation) {
+      $('#va-accommodation-type, #va-accommodation-county, #va-accommodation-condition').val('');
+    }
+
+    if (!showKnife) {
+      $('#va-knife-type, #va-knife-steel, #va-knife-condition').val('');
+    }
+
+    if (!showBag) {
+      $('#va-bag-type, #va-bag-material, #va-bag-condition').val('');
+    }
+
+    if (!showCollectibles) {
+      $('#va-publication-type, #va-decor-type, #va-call-type, #va-trophy-material').val('');
+    }
+
+    if (!showEquipment) {
+      $('#va-equipment-type').val('');
     }
   }
 
@@ -647,6 +702,20 @@
       exchange_type: $('#va-exchange-type').val() || '',
       exchange_condition: $('#va-exchange-condition').val() || '',
       exchange_extra_payment_direction: $('#va-exchange-extra-payment').val() || '',
+      accommodation_property_type: $('#va-accommodation-type').val() || '',
+      accommodation_county: ($('#va-accommodation-county').val() || '').trim(),
+      accommodation_condition: $('#va-accommodation-condition').val() || '',
+      knife_type: $('#va-knife-type').val() || '',
+      knife_steel_type: ($('#va-knife-steel').val() || '').trim(),
+      knife_condition: $('#va-knife-condition').val() || '',
+      bag_type: $('#va-bag-type').val() || '',
+      bag_material: ($('#va-bag-material').val() || '').trim(),
+      bag_condition: $('#va-bag-condition').val() || '',
+      publication_type: $('#va-publication-type').val() || '',
+      decor_type: $('#va-decor-type').val() || '',
+      call_type: $('#va-call-type').val() || '',
+      trophy_material_type: ($('#va-trophy-material').val() || '').trim(),
+      equipment_type: $('#va-equipment-type').val() || '',
       body_type:  $('#va-body-type').val() || '',
       fuel_type:  $('#va-fuel-type').val() || '',
       optic_zoom: ($('#va-optic-zoom-search').val() || '').trim(),
@@ -684,7 +753,7 @@
   }
 
   // filter esemény
-  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, #va-clothing-size, #va-clothing-season, #va-clothing-noise, #va-clothing-waterproof, #va-service-type, #va-service-area, #va-service-pricing, #va-service-verified, #va-service-weekend, #va-service-sos, #va-hunt-species, #va-hunt-method, #va-hunt-land-type, #va-hunt-contract, #va-hunt-pricing, #va-hunt-availability, #va-exchange-offer-category, #va-exchange-type, #va-exchange-condition, #va-exchange-extra-payment, input[name="va-per-page"]', function() {
+  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, #va-clothing-size, #va-clothing-season, #va-clothing-noise, #va-clothing-waterproof, #va-service-type, #va-service-area, #va-service-pricing, #va-service-verified, #va-service-weekend, #va-service-sos, #va-hunt-species, #va-hunt-method, #va-hunt-land-type, #va-hunt-contract, #va-hunt-pricing, #va-hunt-availability, #va-exchange-offer-category, #va-exchange-type, #va-exchange-condition, #va-exchange-extra-payment, #va-accommodation-type, #va-accommodation-county, #va-accommodation-condition, #va-knife-type, #va-knife-steel, #va-knife-condition, #va-bag-type, #va-bag-material, #va-bag-condition, #va-publication-type, #va-decor-type, #va-call-type, #va-trophy-material, #va-equipment-type, input[name="va-per-page"]', function() {
     if (this.id === 'va-cat') {
       va_apply_category_specific_search_filters();
     }
