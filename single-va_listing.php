@@ -1471,6 +1471,10 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     $display_value = '';
                     $field_def     = is_array( $known_fields ) ? ( $known_fields[ $meta_key ] ?? null ) : null;
 
+                    if ( ! is_array( $field_def ) || empty( $field_def['label'] ) ) {
+                        continue;
+                    }
+
                     if ( is_array( $raw ) ) {
                         if ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'checkboxes' && ! empty( $field_def['options'] ) ) {
                             $mapped = [];
@@ -1484,6 +1488,10 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     } else {
                         $raw_str = is_scalar( $raw ) ? trim( (string) $raw ) : '';
                         if ( $raw_str === '' ) {
+                            continue;
+                        }
+
+                        if ( ( $field_def['type'] ?? '' ) === 'checkbox' && ! in_array( strtolower( $raw_str ), [ '1', 'true', 'yes', 'on' ], true ) ) {
                             continue;
                         }
 
