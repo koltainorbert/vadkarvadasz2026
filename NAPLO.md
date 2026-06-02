@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #autos-fejlec-eltavolitva-vadasz-oldalrol
+
+### Mit csináltunk [x]
+- [x] A kereső landing fallback autós szövegezése lecserélve vadászos alapértelmezésre
+- [x] Biztonsági guard beépítve: ha autós cím/szöveg jönne nem-jármű kontextusban, automatikusan vadászos szövegre vált
+- [x] Root + plugin mirror template szinkronban frissítve
+
+### Hol tartunk
+A vadász keresőoldalon az autós fejléc és leírás nem jelenik meg többé.
+
+### TODO
+- [ ] Frontend hard refresh + cache purge után vizuális ellenőrzés
+
+---
+
 ## 2026. 06. 02. – Hotfix #talalatok-oldalankent-cim-feher
 
 ### Mit csináltunk [x]

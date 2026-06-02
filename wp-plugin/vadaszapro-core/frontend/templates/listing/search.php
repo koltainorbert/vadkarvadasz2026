@@ -61,13 +61,14 @@ $vehicle_fuel_types   = [
 $vehicle_conditions   = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_vehicle_condition_options() : [];
 $search_page         = get_page_by_path( 'va-hirdetes-kereses' );
 $search_url          = $search_page ? get_permalink( $search_page ) : home_url( '/va-hirdetes-kereses/' );
-$landing_context     = class_exists( 'VA_SEO' ) ? VA_SEO::get_search_landing_context() : [
-    'title'       => 'Eladó autók és motorok',
-    'intro'       => 'Böngészd a friss autó- és motorhirdetéseket részletes szűrőkkel, aktuális árakkal és járműadatokkal.',
-    'seo_heading' => 'Autó- és motorhirdetések országosan',
-    'seo_text'    => 'Részletes szűrés márka, modell, ár és futásteljesítmény szerint.',
+$default_landing_context = [
+    'title'       => 'Vadász hirdetések',
+    'intro'       => 'Böngészd a friss vadász hirdetéseket részletes szűrőkkel, aktuális árakkal és termékadatokkal.',
+    'seo_heading' => 'Vadász hirdetések országosan',
+    'seo_text'    => 'Részletes szűrés kategória, márka, ár és állapot szerint.',
     'seo_points'  => [],
 ];
+$landing_context     = class_exists( 'VA_SEO' ) ? VA_SEO::get_search_landing_context() : $default_landing_context;
 $landing_title       = (string) $landing_context['title'];
 $landing_intro       = (string) $landing_context['intro'];
 $landing_seo_heading = (string) $landing_context['seo_heading'];
@@ -86,6 +87,16 @@ if ( $url_cat > 0 ) {
         $active_category_name = (string) $active_category->name;
         $active_category_slug = sanitize_title( (string) $active_category->slug );
     }
+}
+
+$landing_has_auto_copy = ( mb_stripos( $landing_title, 'autó' ) !== false ) || ( mb_stripos( $landing_title, 'motor' ) !== false );
+$is_vehicle_context    = ( $active_category_slug === 'jarmu' ) || ( $url_brand !== '' ) || ( $url_model !== '' );
+if ( $landing_has_auto_copy && ! $is_vehicle_context ) {
+    $landing_title       = (string) $default_landing_context['title'];
+    $landing_intro       = (string) $default_landing_context['intro'];
+    $landing_seo_heading = (string) $default_landing_context['seo_heading'];
+    $landing_seo_text    = (string) $default_landing_context['seo_text'];
+    $landing_seo_points  = [];
 }
 $active_brand_models = [];
 if ( $active_category_slug === 'jarmu' ) {
