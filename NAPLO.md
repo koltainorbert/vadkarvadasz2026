@@ -2,6 +2,18 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #hangtompito-reszletek-celzott-szures
+
+### Mit csináltunk [x]
+- [x] `hangtompito` kategóriánál a single fallback most már csak a releváns hangtompító kulcsokat listázza
+- [x] Ezzel kikerültek a kategória-idegen maradvány mezők (pl. ruházat/jobbára technikai zaj)
+- [x] A `POI shift` felirat magyarítva a feladási űrlapon: `Becsapódási pont eltolódás (POI)`
+- [x] Root + theme single + root/plugin submit form szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A single `Részletek` blokk `hangtompito` hirdetésnél már nem kever kategória-idegen mezőket, és a POI felirat mindenhol magyar.
+
 ## 2026. 06. 02. – Hotfix #single-reszletek-postal-street-poi-magyar
 
 ### Mit csináltunk [x]

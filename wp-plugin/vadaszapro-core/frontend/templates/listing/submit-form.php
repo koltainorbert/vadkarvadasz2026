@@ -2304,7 +2304,7 @@ body.va-modal-open {
                         </select>
                     </div>
                     <div class="va-form-group">
-                        <label>POI shift</label>
+                        <label>Becsapódási pont eltolódás (POI)</label>
                         <input type="text" name="suppressor_poi_shift" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_poi_shift'] ?? '')); ?>" placeholder="pl. 0.6 MOA">
                     </div>
                     <div class="va-form-group">

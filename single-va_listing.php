@@ -1489,6 +1489,38 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
 
             $known_fields = array_merge( $known_fields, $single_extra_fields );
 
+            $category_slugs = [];
+            if ( is_array( $categories ) ) {
+                foreach ( $categories as $cat_term ) {
+                    if ( isset( $cat_term->slug ) ) {
+                        $category_slugs[] = (string) $cat_term->slug;
+                    }
+                }
+            }
+            $is_suppressor_listing = in_array( 'hangtompito', $category_slugs, true );
+            $suppressor_fallback_allowed = [
+                'va_suppressor_type',
+                'va_suppressor_thread_type',
+                'va_suppressor_mount_type',
+                'va_suppressor_caliber_compatibility',
+                'va_suppressor_material',
+                'va_suppressor_build_type',
+                'va_suppressor_regulation',
+                'va_suppressor_noise_reduction_db',
+                'va_suppressor_recoil_reduction',
+                'va_suppressor_flash_reduction',
+                'va_suppressor_length_mm',
+                'va_suppressor_diameter_mm',
+                'va_suppressor_weight_g',
+                'va_suppressor_usage',
+                'va_suppressor_weapon_compatibility',
+                'va_suppressor_poi_shift',
+                'va_suppressor_return_to_zero',
+                'va_suppressor_heat_load',
+                'va_postal_code',
+                'va_street',
+            ];
+
             $format_fallback_token = static function ( string $token ): string {
                 $token = trim( $token );
                 if ( $token === '' ) {
@@ -1521,6 +1553,9 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                         continue;
                     }
                     if ( in_array( $meta_key, $already_rendered_meta_keys, true ) ) {
+                        continue;
+                    }
+                    if ( $is_suppressor_listing && ! in_array( $meta_key, $suppressor_fallback_allowed, true ) ) {
                         continue;
                     }
                     if ( strpos( $meta_key, '_filter_' ) !== false ) {
