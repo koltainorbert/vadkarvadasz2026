@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #global-reszletek-minden-kategoria-megjelenites-hu
+
+### Mit csináltunk [x]
+- [x] Visszaállítottuk a kategóriafüggetlen fallback mezőmegjelenítést, hogy minden valósan mentett részlet látható legyen
+- [x] Megmaradt a technikai szemét kulcsok globális tiltása (`new_pill_time` variánsok, `_filter_` kulcsok)
+- [x] Ismeretlen mezőkhöz visszakerült a humanizált címkeképzés, majd HU-normalizálás
+- [x] Központi HU token-csere bővítve (kutyás angol címkerészletek ellen is)
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A termékoldali `Részletek` blokkban minden kategóriában a beállított mezők megjelennek, miközben az angol technikai zajmezők ki vannak szűrve.
+
 ## 2026. 06. 02. – Hotfix #global-reszletek-csak-magyar
 
 ### Mit csináltunk [x]
