@@ -46,6 +46,13 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 - [x] Ismeretlen mezők emberibb címkével és alap értékformázással jelennek meg, a zajos `0/false/off/no` értékek szűrve
 - [x] Deploy lefutott, commit: `10d33543`
 
+### Hatodik finomítás [x]
+- [x] Biztonsági incidens: fake/spam profilok tömeges regisztrációja
+- [x] Regisztráció védelem erősítve: honeypot mező + űrlap-időbélyeg ellenőrzés + IP alapú limit (6/óra)
+- [x] Eldobható/gyanús e-mail domainek tiltása + DNS ellenőrzés (MX/A)
+- [x] Javítás tükrözve root + plugin példányban
+- [x] Deploy lefutott, commit: `8411b174`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
