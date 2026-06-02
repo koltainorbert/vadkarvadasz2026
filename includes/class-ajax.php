@@ -8528,6 +8528,26 @@ class VA_Ajax {
         $brand             = sanitize_text_field( wp_unslash( $_POST['brand'] ?? '' ) );
         $model             = sanitize_text_field( wp_unslash( $_POST['model'] ?? '' ) );
         $caliber           = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
+        $clothing_size     = sanitize_key( wp_unslash( $_POST['clothing_size'] ?? '' ) );
+        $clothing_season   = sanitize_key( wp_unslash( $_POST['clothing_season'] ?? '' ) );
+        $clothing_noise_level = sanitize_key( wp_unslash( $_POST['clothing_noise_level'] ?? '' ) );
+        $clothing_waterproof_level = sanitize_key( wp_unslash( $_POST['clothing_waterproof_level'] ?? '' ) );
+        $service_type      = sanitize_key( wp_unslash( $_POST['service_type'] ?? '' ) );
+        $service_area      = sanitize_key( wp_unslash( $_POST['service_area'] ?? '' ) );
+        $service_pricing_type = sanitize_key( wp_unslash( $_POST['service_pricing_type'] ?? '' ) );
+        $service_verified_provider = sanitize_key( wp_unslash( $_POST['service_verified_provider'] ?? '' ) );
+        $service_available_weekend = sanitize_key( wp_unslash( $_POST['service_available_weekend'] ?? '' ) );
+        $service_sos_service = sanitize_key( wp_unslash( $_POST['service_sos_service'] ?? '' ) );
+        $hunt_game_species  = sanitize_key( wp_unslash( $_POST['hunt_game_species'] ?? '' ) );
+        $hunt_method        = sanitize_key( wp_unslash( $_POST['hunt_method'] ?? '' ) );
+        $hunt_land_type     = sanitize_key( wp_unslash( $_POST['hunt_land_type'] ?? '' ) );
+        $hunt_contract_type = sanitize_key( wp_unslash( $_POST['hunt_contract_type'] ?? '' ) );
+        $hunt_pricing_model = sanitize_key( wp_unslash( $_POST['hunt_pricing_model'] ?? '' ) );
+        $hunt_availability_mode = sanitize_key( wp_unslash( $_POST['hunt_availability_mode'] ?? '' ) );
+        $exchange_offer_category = sanitize_key( wp_unslash( $_POST['exchange_offer_category'] ?? '' ) );
+        $exchange_type      = sanitize_key( wp_unslash( $_POST['exchange_type'] ?? '' ) );
+        $exchange_condition = sanitize_key( wp_unslash( $_POST['exchange_condition'] ?? '' ) );
+        $exchange_extra_payment_direction = sanitize_key( wp_unslash( $_POST['exchange_extra_payment_direction'] ?? '' ) );
         $body_type         = sanitize_key( $_POST['body_type'] ?? '' );
         $fuel_type         = sanitize_key( $_POST['fuel_type'] ?? '' );
         $optic_zoom        = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
@@ -8567,7 +8587,11 @@ class VA_Ajax {
         // ── Transient cache kulcs ─────────────────────────
         $cache_key = 'va_fl_' . md5( serialize( compact(
             'paged','category','county','condition','min_price','max_price','keyword','sort','post_type','per_page',
-            'brand','model','caliber','body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
+            'brand','model','caliber','clothing_size','clothing_season','clothing_noise_level','clothing_waterproof_level',
+            'service_type','service_area','service_pricing_type','service_verified_provider','service_available_weekend','service_sos_service',
+            'hunt_game_species','hunt_method','hunt_land_type','hunt_contract_type','hunt_pricing_model','hunt_availability_mode',
+            'exchange_offer_category','exchange_type','exchange_condition','exchange_extra_payment_direction',
+            'body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
             'engine_min','engine_max','vehicle_condition','doors','passengers','opt_automatic','opt_awd','opt_service_book','extras'
         ) ) );
         $cached = get_transient( $cache_key );
@@ -8621,6 +8645,126 @@ class VA_Ajax {
             $params[] = $caliber_like;
             $params[] = $caliber_like;
             $params[] = $caliber_like;
+        }
+
+        if ( $clothing_size !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_clothing_size ON (pm_clothing_size.post_id = p.ID AND pm_clothing_size.meta_key = 'va_clothing_filter_size')";
+            $where[] = 'pm_clothing_size.meta_value = %s';
+            $params[] = $clothing_size;
+        }
+
+        if ( $clothing_season !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_clothing_season ON (pm_clothing_season.post_id = p.ID AND pm_clothing_season.meta_key = 'va_clothing_filter_season_mode')";
+            $where[] = 'pm_clothing_season.meta_value = %s';
+            $params[] = $clothing_season;
+        }
+
+        if ( $clothing_noise_level !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_clothing_noise ON (pm_clothing_noise.post_id = p.ID AND pm_clothing_noise.meta_key = 'va_clothing_filter_noise_level')";
+            $where[] = 'pm_clothing_noise.meta_value = %s';
+            $params[] = $clothing_noise_level;
+        }
+
+        if ( $clothing_waterproof_level !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_clothing_wproof ON (pm_clothing_wproof.post_id = p.ID AND pm_clothing_wproof.meta_key = 'va_waterproof_level')";
+            $where[] = 'pm_clothing_wproof.meta_value = %s';
+            $params[] = $clothing_waterproof_level;
+        }
+
+        if ( $service_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_type ON (pm_service_type.post_id = p.ID AND pm_service_type.meta_key = 'va_service_filter_type')";
+            $where[] = 'pm_service_type.meta_value = %s';
+            $params[] = $service_type;
+        }
+
+        if ( $service_area !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_area ON (pm_service_area.post_id = p.ID AND pm_service_area.meta_key = 'va_service_filter_area')";
+            $where[] = 'pm_service_area.meta_value = %s';
+            $params[] = $service_area;
+        }
+
+        if ( $service_pricing_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_pricing ON (pm_service_pricing.post_id = p.ID AND pm_service_pricing.meta_key = 'va_service_filter_pricing_type')";
+            $where[] = 'pm_service_pricing.meta_value = %s';
+            $params[] = $service_pricing_type;
+        }
+
+        if ( $service_verified_provider !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_verified ON (pm_service_verified.post_id = p.ID AND pm_service_verified.meta_key = 'va_service_filter_verified_provider')";
+            $where[] = 'pm_service_verified.meta_value = %s';
+            $params[] = $service_verified_provider;
+        }
+
+        if ( $service_available_weekend !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_weekend ON (pm_service_weekend.post_id = p.ID AND pm_service_weekend.meta_key = 'va_service_filter_available_weekend')";
+            $where[] = 'pm_service_weekend.meta_value = %s';
+            $params[] = $service_available_weekend;
+        }
+
+        if ( $service_sos_service !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_service_sos ON (pm_service_sos.post_id = p.ID AND pm_service_sos.meta_key = 'va_service_filter_sos_service')";
+            $where[] = 'pm_service_sos.meta_value = %s';
+            $params[] = $service_sos_service;
+        }
+
+        if ( $hunt_game_species !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_species ON (pm_hunt_species.post_id = p.ID AND pm_hunt_species.meta_key = 'va_hunt_filter_game_species')";
+            $where[] = 'pm_hunt_species.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $hunt_game_species ) . '%';
+        }
+
+        if ( $hunt_method !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_method ON (pm_hunt_method.post_id = p.ID AND pm_hunt_method.meta_key = 'va_hunt_filter_methods')";
+            $where[] = 'pm_hunt_method.meta_value LIKE %s';
+            $params[] = '%' . $wpdb->esc_like( $hunt_method ) . '%';
+        }
+
+        if ( $hunt_land_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_land ON (pm_hunt_land.post_id = p.ID AND pm_hunt_land.meta_key = 'va_hunt_filter_land_type')";
+            $where[] = 'pm_hunt_land.meta_value = %s';
+            $params[] = $hunt_land_type;
+        }
+
+        if ( $hunt_contract_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_contract ON (pm_hunt_contract.post_id = p.ID AND pm_hunt_contract.meta_key = 'va_hunt_filter_contract_type')";
+            $where[] = 'pm_hunt_contract.meta_value = %s';
+            $params[] = $hunt_contract_type;
+        }
+
+        if ( $hunt_pricing_model !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_pricing ON (pm_hunt_pricing.post_id = p.ID AND pm_hunt_pricing.meta_key = 'va_hunt_filter_pricing_model')";
+            $where[] = 'pm_hunt_pricing.meta_value = %s';
+            $params[] = $hunt_pricing_model;
+        }
+
+        if ( $hunt_availability_mode !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_hunt_avail ON (pm_hunt_avail.post_id = p.ID AND pm_hunt_avail.meta_key = 'va_hunt_filter_availability_mode')";
+            $where[] = 'pm_hunt_avail.meta_value = %s';
+            $params[] = $hunt_availability_mode;
+        }
+
+        if ( $exchange_offer_category !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_exchange_category ON (pm_exchange_category.post_id = p.ID AND pm_exchange_category.meta_key = 'va_exchange_filter_offer_category')";
+            $where[] = 'pm_exchange_category.meta_value = %s';
+            $params[] = $exchange_offer_category;
+        }
+
+        if ( $exchange_type !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_exchange_type ON (pm_exchange_type.post_id = p.ID AND pm_exchange_type.meta_key = 'va_exchange_filter_exchange_type')";
+            $where[] = 'pm_exchange_type.meta_value = %s';
+            $params[] = $exchange_type;
+        }
+
+        if ( $exchange_condition !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_exchange_cond ON (pm_exchange_cond.post_id = p.ID AND pm_exchange_cond.meta_key = 'va_exchange_filter_condition')";
+            $where[] = 'pm_exchange_cond.meta_value = %s';
+            $params[] = $exchange_condition;
+        }
+
+        if ( $exchange_extra_payment_direction !== '' ) {
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_exchange_extra ON (pm_exchange_extra.post_id = p.ID AND pm_exchange_extra.meta_key = 'va_exchange_filter_extra_payment_direction')";
+            $where[] = 'pm_exchange_extra.meta_value = %s';
+            $params[] = $exchange_extra_payment_direction;
         }
 
         if ( $body_type !== '' ) {

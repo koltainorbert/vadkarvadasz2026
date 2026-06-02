@@ -2,6 +2,31 @@
 
 ---
 
+## 2026. 06. 02. – Session #kereso-full-komplex-teljes-kategoria
+- Kérés: a kereső legyen maximálisan komplex, ne csak jármű fókuszú; ruházat, szolgáltatás, vadászati lehetőség és csere kategóriákban is legyenek azonnal használható gyorsszűrők.
+- Frontend UI: a [frontend/templates/listing/search.php](frontend/templates/listing/search.php) fájlba bekerült 24 új kategória-specifikus mező:
+  - Ruházat: méret, szezon, hangtulajdonság, vízállóság
+  - Szolgáltatás: típus, kiszállási terület, ártípus, ellenőrzött, hétvégi, SOS
+  - Vadászati lehetőség: vadfaj, módszer, terület típus, szerződés típus, árazási modell, elérhetőség
+  - Csere: fő kategória, csere típus, állapot, ráfizetés iránya
+- Frontend logika: a [frontend/js/frontend.js](frontend/js/frontend.js) fájl bővült:
+  - új slug-illesztő helper (`va_slug_matches_any`)
+  - új dinamikus csoportok (`clothing`, `service`, `hunt`, `exchange`) show/hide + reset logikával
+  - AJAX payload bővítés az összes új mezőre
+  - eseménykezelők bővítése az új szűrőmezőkhöz
+- Backend szűrés: az [includes/class-ajax.php](includes/class-ajax.php) `filter_listings()` bővítve lett:
+  - új POST paraméterek sanitize
+  - cache kulcs bővítés az új filter mezőkkel
+  - új SQL JOIN + WHERE feltételek `va_clothing_filter_*`, `va_service_filter_*`, `va_hunt_filter_*`, `va_exchange_filter_*` meta kulcsokra
+  - listás mezők (vadfaj, módszer) `LIKE` alapú kereséssel
+- Mirror szinkron: minden módosítás átvezetve a plugin tükörbe is:
+  - [wp-plugin/vadaszapro-core/frontend/templates/listing/search.php](wp-plugin/vadaszapro-core/frontend/templates/listing/search.php)
+  - [wp-plugin/vadaszapro-core/frontend/js/frontend.js](wp-plugin/vadaszapro-core/frontend/js/frontend.js)
+  - [wp-plugin/vadaszapro-core/includes/class-ajax.php](wp-plugin/vadaszapro-core/includes/class-ajax.php)
+- Ellenőrzés: mind a 6 érintett fájlon `No errors found`.
+- Maradt teendő: élő QA kategóriánként (legalább 1-1 teszt a `vadasz-ruhazat`, `szolgaltatas`, `vadaszati-lehetoseg`, `csere`, `jarmu` ágakon).
+- Holnap ezzel kezdjük: finomhangolni a slug-csoport felismerést valós taxonomy slug-lista alapján (ha szükséges), és opcionálisan külön sport/ingatlan/csomag-specifikus gyorsszűrő panellel tovább bővíteni.
+
 ## 2026. 06. 02. – Hotfix #kereso-lathato-altalanos-szurok
 - Felhasználói visszajelzés: "NINCS VÁLTOZÁS" a kereső oldalon (különösen nem-jármű kategóriáknál, pl. `Állás`).
 - Ok: a korábbi bővítés főleg kategóriaspecifikus mezőkre épült, ezért egyes kategóriáknál vizuálisan kevés változás jelent meg.

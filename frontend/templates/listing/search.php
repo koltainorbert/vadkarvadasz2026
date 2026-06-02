@@ -265,6 +265,193 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
                 <input type="number" id="va-dog-age-min" class="va-input" min="1" max="300" placeholder="Kutya kor -tól (hó)" data-special-filter="dog">
                 <input type="number" id="va-dog-age-max" class="va-input" min="1" max="300" placeholder="Kutya kor -ig (hó)" data-special-filter="dog">
 
+                <select id="va-clothing-size" class="va-select" data-special-filter="clothing">
+                    <option value="">Ruhaméret: Mindegy</option>
+                    <option value="xs">XS</option>
+                    <option value="s">S</option>
+                    <option value="m">M</option>
+                    <option value="l">L</option>
+                    <option value="xl">XL</option>
+                    <option value="xxl">XXL</option>
+                    <option value="xxxl">XXXL</option>
+                    <option value="egyedi">Egyedi</option>
+                </select>
+
+                <select id="va-clothing-season" class="va-select" data-special-filter="clothing">
+                    <option value="">Szezon: Mindegy</option>
+                    <option value="nyari">Nyári</option>
+                    <option value="atmeneti">Átmeneti</option>
+                    <option value="teli">Téli</option>
+                    <option value="negyevszakos">4 évszakos</option>
+                    <option value="extrem-hideg">Extrém hideg</option>
+                    <option value="esos-ido">Esős idő</option>
+                    <option value="szelallo">Szélálló</option>
+                </select>
+
+                <select id="va-clothing-noise" class="va-select" data-special-filter="clothing">
+                    <option value="">Hangtulajdonság: Mindegy</option>
+                    <option value="ultra-csendes">Ultra csendes</option>
+                    <option value="halk">Halk</option>
+                    <option value="normal">Normál</option>
+                    <option value="noise-reduction-fabric">Noise reduction</option>
+                </select>
+
+                <select id="va-clothing-waterproof" class="va-select" data-special-filter="clothing">
+                    <option value="">Vízállóság: Mindegy</option>
+                    <option value="vizallo">Vízálló</option>
+                    <option value="vizlepergeto">Vízlepergető</option>
+                    <option value="szelallo">Szélálló</option>
+                    <option value="hoallo">Hóálló</option>
+                    <option value="gyorsan-szarado">Gyorsan száradó</option>
+                    <option value="legzo">Lélegző</option>
+                </select>
+
+                <select id="va-service-type" class="va-select" data-special-filter="service">
+                    <option value="">Szolgáltatás típusa: Mindegy</option>
+                    <option value="vadaszati-szolgaltatas">Vadászati szolgáltatás</option>
+                    <option value="fegyvermusz">Fegyver / optika</option>
+                    <option value="preparator">Trófea / preparálás</option>
+                    <option value="kutyas-szolgaltatas">Kutyás szolgáltatás</option>
+                    <option value="terulet-erdo">Terület / erdő</option>
+                    <option value="oktatas">Oktatás</option>
+                    <option value="szallitas">Szállítás</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <select id="va-service-area" class="va-select" data-special-filter="service">
+                    <option value="">Kiszállási terület: Mindegy</option>
+                    <option value="helyi">Helyi</option>
+                    <option value="megyei">Megyei</option>
+                    <option value="orszagos">Országos</option>
+                    <option value="nemzetkozi">Nemzetközi</option>
+                </select>
+
+                <select id="va-service-pricing" class="va-select" data-special-filter="service">
+                    <option value="">Ártípus: Mindegy</option>
+                    <option value="oradij">Óradíj</option>
+                    <option value="fix">Fix</option>
+                    <option value="km-alapu">Km alapú</option>
+                    <option value="projekt">Projekt alapú</option>
+                    <option value="egyedi-ajanlat">Egyedi ajánlat</option>
+                </select>
+
+                <select id="va-service-verified" class="va-select" data-special-filter="service">
+                    <option value="">Ellenőrzött szolgáltató: Mindegy</option>
+                    <option value="igen">Igen</option>
+                    <option value="nem">Nem</option>
+                </select>
+
+                <select id="va-service-weekend" class="va-select" data-special-filter="service">
+                    <option value="">Hétvégi elérhetőség: Mindegy</option>
+                    <option value="igen">Igen</option>
+                    <option value="nem">Nem</option>
+                </select>
+
+                <select id="va-service-sos" class="va-select" data-special-filter="service">
+                    <option value="">SOS szolgáltatás: Mindegy</option>
+                    <option value="igen">Igen</option>
+                    <option value="nem">Nem</option>
+                </select>
+
+                <select id="va-hunt-species" class="va-select" data-special-filter="hunt">
+                    <option value="">Vadfaj: Mindegy</option>
+                    <option value="gimszarvas">Gímszarvas</option>
+                    <option value="damszarvas">Dámszarvas</option>
+                    <option value="oz">Őz</option>
+                    <option value="muflon">Muflon</option>
+                    <option value="vaddiszno">Vaddisznó</option>
+                    <option value="facan">Fácán</option>
+                    <option value="roka">Róka</option>
+                    <option value="sakal">Sakál</option>
+                </select>
+
+                <select id="va-hunt-method" class="va-select" data-special-filter="hunt">
+                    <option value="">Vadászati módszer: Mindegy</option>
+                    <option value="les">Les</option>
+                    <option value="cserkeles">Cserkelés</option>
+                    <option value="hajtas">Hajtás</option>
+                    <option value="lesvadaszat">Lesvadászat</option>
+                    <option value="dronos-megfigyeles">Drónos megfigyelés</option>
+                </select>
+
+                <select id="va-hunt-land-type" class="va-select" data-special-filter="hunt">
+                    <option value="">Terület típusa: Mindegy</option>
+                    <option value="szantofold">Szántóföld</option>
+                    <option value="kukorica">Kukorica</option>
+                    <option value="napraforgo">Napraforgó</option>
+                    <option value="erdo">Erdő</option>
+                    <option value="legelo">Legelő</option>
+                    <option value="vegyes-mezogazdasagi">Vegyes mezőgazdasági</option>
+                </select>
+
+                <select id="va-hunt-contract" class="va-select" data-special-filter="hunt">
+                    <option value="">Szerződés típusa: Mindegy</option>
+                    <option value="eseti">Eseti</option>
+                    <option value="szezonalis">Szezonális</option>
+                    <option value="eves">Éves</option>
+                    <option value="folyamatos">Folyamatos</option>
+                </select>
+
+                <select id="va-hunt-pricing" class="va-select" data-special-filter="hunt">
+                    <option value="">Árazás modell: Mindegy</option>
+                    <option value="oradij">Óradíj</option>
+                    <option value="napidij">Napidíj</option>
+                    <option value="hektar-alapu">Hektár alapú</option>
+                    <option value="szerzodeses">Szerződéses</option>
+                    <option value="sikerdijas">Sikerdíjas</option>
+                    <option value="egyedi-ajanlat">Egyedi ajánlat</option>
+                </select>
+
+                <select id="va-hunt-availability" class="va-select" data-special-filter="hunt">
+                    <option value="">Elérhetőség: Mindegy</option>
+                    <option value="0-24">0-24</option>
+                    <option value="nappali">Nappali</option>
+                    <option value="ejszakai">Éjszakai</option>
+                    <option value="elore-egyeztetett">Előre egyeztetett</option>
+                </select>
+
+                <select id="va-exchange-offer-category" class="va-select" data-special-filter="exchange">
+                    <option value="">Csere fő kategória: Mindegy</option>
+                    <option value="fegyver">Fegyver</option>
+                    <option value="optika">Optika</option>
+                    <option value="hokamera">Hőkamera</option>
+                    <option value="kes">Kés</option>
+                    <option value="ruhazat">Ruházat</option>
+                    <option value="elektronika">Elektronika</option>
+                    <option value="vadaszati-felszereles">Vadászati felszerelés</option>
+                    <option value="trofea">Trófea</option>
+                    <option value="jarmu">Jármű</option>
+                    <option value="szolgaltatas">Szolgáltatás</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+
+                <select id="va-exchange-type" class="va-select" data-special-filter="exchange">
+                    <option value="">Csere típusa: Mindegy</option>
+                    <option value="termek-csere">Termék csere</option>
+                    <option value="rafizeteses-csere">Ráfizetéses csere</option>
+                    <option value="ertekegyezteteses-csere">Értékegyeztetéses csere</option>
+                    <option value="szolgaltatas-csere">Szolgáltatás csere</option>
+                    <option value="gyujtoi-csere">Gyűjtői csere</option>
+                    <option value="tobb-termek-egyre">Több termék egyre</option>
+                    <option value="egy-termek-tobbre">Egy termék többre</option>
+                </select>
+
+                <select id="va-exchange-condition" class="va-select" data-special-filter="exchange">
+                    <option value="">Csere állapot: Mindegy</option>
+                    <option value="uj">Új</option>
+                    <option value="ujszeru">Újszerű</option>
+                    <option value="hasznalt">Használt</option>
+                    <option value="hibas">Hibás</option>
+                    <option value="gyujtoi">Gyűjtői</option>
+                </select>
+
+                <select id="va-exchange-extra-payment" class="va-select" data-special-filter="exchange">
+                    <option value="">Ráfizetés iránya: Mindegy</option>
+                    <option value="kerek-ra">Kérek rá</option>
+                    <option value="adok-ra">Adok rá</option>
+                    <option value="nem-szukseges">Nem szükséges</option>
+                </select>
+
                 <input type="number" id="va-mileage-min" class="va-input" min="0" placeholder="Kilométer -tól" data-special-filter="vehicle">
                 <input type="number" id="va-mileage-max" class="va-input" min="0" placeholder="Kilométer -ig" data-special-filter="vehicle">
 

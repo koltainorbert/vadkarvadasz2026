@@ -336,6 +336,14 @@
     return String(slug || '').trim();
   }
 
+  function va_slug_matches_any(slug, needles) {
+    var safeSlug = String(slug || '').toLowerCase();
+    if (!safeSlug) return false;
+    return (needles || []).some(function(needle) {
+      return safeSlug.indexOf(String(needle || '').toLowerCase()) !== -1;
+    });
+  }
+
   function va_apply_category_specific_search_filters() {
     var slug = va_get_selected_category_slug();
     var brandModelMap = va_get_brand_model_map_for_slug(slug);
@@ -359,18 +367,30 @@
     var showOptic = !!opticSlugs[slug];
     var showDog = slug === 'vadaszkutya';
     var showFirearm = !!firearmSlugs[slug];
+    var showClothing = va_slug_matches_any(slug, ['vadasz-ruhazat', 'ruhazat', 'bakancs']);
+    var showService = va_slug_matches_any(slug, ['szolgaltatas', 'fegyvermusz', 'preparator', 'kutyas']);
+    var showHunt = va_slug_matches_any(slug, ['vadaszati-lehetoseg', 'bervadaszat', 'vadkar']);
+    var showExchange = va_slug_matches_any(slug, ['csere']);
 
     var $vehicleFields = $('[data-special-filter="vehicle"]');
     var $brandModelFields = $('[data-special-filter="brand-model"]');
     var $opticFields = $('[data-special-filter="optic"]');
     var $dogFields = $('[data-special-filter="dog"]');
     var $firearmFields = $('[data-special-filter="firearm"]');
+    var $clothingFields = $('[data-special-filter="clothing"]');
+    var $serviceFields = $('[data-special-filter="service"]');
+    var $huntFields = $('[data-special-filter="hunt"]');
+    var $exchangeFields = $('[data-special-filter="exchange"]');
 
     $vehicleFields.toggle(showVehicle);
     $brandModelFields.toggle(showBrandModel);
     $opticFields.toggle(showOptic);
     $dogFields.toggle(showDog);
     $firearmFields.toggle(showFirearm);
+    $clothingFields.toggle(showClothing);
+    $serviceFields.toggle(showService);
+    $huntFields.toggle(showHunt);
+    $exchangeFields.toggle(showExchange);
 
     va_update_brand_and_model_options('', '');
 
@@ -400,6 +420,22 @@
     }
     if (!showDog) {
       $('#va-dog-age-min, #va-dog-age-max').val('');
+    }
+
+    if (!showClothing) {
+      $('#va-clothing-size, #va-clothing-season, #va-clothing-noise, #va-clothing-waterproof').val('');
+    }
+
+    if (!showService) {
+      $('#va-service-type, #va-service-area, #va-service-pricing, #va-service-verified, #va-service-weekend, #va-service-sos').val('');
+    }
+
+    if (!showHunt) {
+      $('#va-hunt-species, #va-hunt-method, #va-hunt-land-type, #va-hunt-contract, #va-hunt-pricing, #va-hunt-availability').val('');
+    }
+
+    if (!showExchange) {
+      $('#va-exchange-offer-category, #va-exchange-type, #va-exchange-condition, #va-exchange-extra-payment').val('');
     }
   }
 
@@ -552,6 +588,26 @@
       brand:      $('#va-brand-search').val() || '',
       model:      $('#va-model-search').val() || '',
       caliber:    ($('#va-caliber-search').val() || '').trim(),
+      clothing_size: $('#va-clothing-size').val() || '',
+      clothing_season: $('#va-clothing-season').val() || '',
+      clothing_noise_level: $('#va-clothing-noise').val() || '',
+      clothing_waterproof_level: $('#va-clothing-waterproof').val() || '',
+      service_type: $('#va-service-type').val() || '',
+      service_area: $('#va-service-area').val() || '',
+      service_pricing_type: $('#va-service-pricing').val() || '',
+      service_verified_provider: $('#va-service-verified').val() || '',
+      service_available_weekend: $('#va-service-weekend').val() || '',
+      service_sos_service: $('#va-service-sos').val() || '',
+      hunt_game_species: $('#va-hunt-species').val() || '',
+      hunt_method: $('#va-hunt-method').val() || '',
+      hunt_land_type: $('#va-hunt-land-type').val() || '',
+      hunt_contract_type: $('#va-hunt-contract').val() || '',
+      hunt_pricing_model: $('#va-hunt-pricing').val() || '',
+      hunt_availability_mode: $('#va-hunt-availability').val() || '',
+      exchange_offer_category: $('#va-exchange-offer-category').val() || '',
+      exchange_type: $('#va-exchange-type').val() || '',
+      exchange_condition: $('#va-exchange-condition').val() || '',
+      exchange_extra_payment_direction: $('#va-exchange-extra-payment').val() || '',
       body_type:  $('#va-body-type').val() || '',
       fuel_type:  $('#va-fuel-type').val() || '',
       optic_zoom: ($('#va-optic-zoom-search').val() || '').trim(),
@@ -589,7 +645,7 @@
   }
 
   // filter esemény
-  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, input[name="va-per-page"]', function() {
+  $(document).on('change', '#va-cat, #va-county, #va-cond, #va-sort, #va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-vehicle-condition, #va-doors, #va-passengers, #va-optic-objective-min, #va-optic-objective-max, #va-dog-age-min, #va-dog-age-max, #va-clothing-size, #va-clothing-season, #va-clothing-noise, #va-clothing-waterproof, #va-service-type, #va-service-area, #va-service-pricing, #va-service-verified, #va-service-weekend, #va-service-sos, #va-hunt-species, #va-hunt-method, #va-hunt-land-type, #va-hunt-contract, #va-hunt-pricing, #va-hunt-availability, #va-exchange-offer-category, #va-exchange-type, #va-exchange-condition, #va-exchange-extra-payment, input[name="va-per-page"]', function() {
     if (this.id === 'va-cat') {
       va_apply_category_specific_search_filters();
     }
