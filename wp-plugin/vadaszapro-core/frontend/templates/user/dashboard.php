@@ -672,6 +672,7 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                         $valid_views = (int) get_post_meta( $l->ID, 'va_views', true );
                         $is_suspended    = get_post_meta( $l->ID, 'va_is_suspended', true ) === '1';
                         $suspended_by_plan = get_post_meta( $l->ID, 'va_suspended_by_plan', true ) === '1';
+                        $stopped_by_runtime = get_post_meta( $l->ID, 'va_stopped_by_runtime', true ) === '1';
                         $suspended_at    = (int) get_post_meta( $l->ID, 'va_suspended_at', true );
                         $active_since_ts = isset( $active_sinces[ $l->ID ] ) ? $active_sinces[ $l->ID ] : (int) get_post_meta( $l->ID, 'va_active_since', true );
                         if ( ! $active_since_ts ) $active_since_ts = strtotime( $l->post_date );
@@ -689,9 +690,11 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                             'draft'   => '<span style="color:#888">● Piszkozat</span>',
                             'private' => $suspended_by_plan
                                 ? '<span style="color:#ff4444;font-weight:600;">● Leállítva</span>'
-                                : ( $is_suspended
+                                : ( $stopped_by_runtime
+                                    ? '<span style="color:#ffb400;font-weight:600;">● Lejárt (30 nap)</span>'
+                                    : ( $is_suspended
                                     ? '<span style="color:#ff9900">● Szüneteltetve</span>'
-                                    : '<span style="color:#888">● Privát</span>' ),
+                                    : '<span style="color:#888">● Privát</span>' ) ),
                         ];
                     ?>
                     <tr style="border-bottom:1px solid rgba(255,255,255,0.05);" class="va-listing-row" data-post-id="<?php echo esc_attr( (string) $l->ID ); ?>">
@@ -728,6 +731,8 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                     <div style="margin-top:3px;font-size:11px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                                     <?php if ( $suspended_by_plan ): ?>
                                         <span style="color:#ff4444;">Limit felett – kredit szükséges</span>
+                                    <?php elseif ( $stopped_by_runtime ): ?>
+                                        <span style="color:#ffb400;">30 nap letelt – újraindításhoz 1 kredit szükséges</span>
                                     <?php elseif ( $is_suspended && $suspended_at ): ?>
                                         <span style="color:#ff9900;">● Szüneteltetve: <?php echo esc_html( date_i18n( 'Y.m.d', $suspended_at ) ); ?></span>
                                     <?php else: ?>
@@ -910,13 +915,13 @@ $membership_days = (int) floor( ( time() - strtotime( $user->user_registered ) )
                                 <a href="<?php echo esc_url( $edit_url ); ?>" class="va-btn va-btn--sm" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;white-space:nowrap;">Szerkesztés</a>
                                 <?php if ( $l->post_status === 'publish' ): ?>
                                 <?php endif; ?>
-                                <?php if ( $can_suspend && in_array( $l->post_status, [ 'publish', 'private' ], true ) ): ?>
+                                <?php if ( ( $can_suspend || ( $is_suspended && $stopped_by_runtime ) ) && in_array( $l->post_status, [ 'publish', 'private' ], true ) ): ?>
                                 <form method="post" style="margin:0;">
                                     <?php wp_nonce_field( 'va_suspend_listing', 'va_suspend_listing_nonce' ); ?>
                                     <input type="hidden" name="va_action" value="suspend_listing">
                                     <input type="hidden" name="listing_id" value="<?php echo esc_attr( (string) $l->ID ); ?>">
                                     <?php if ( $is_suspended ): ?>
-                                        <button type="submit" class="va-btn va-btn--sm" style="background:rgba(0,200,80,.12);border:1px solid rgba(0,200,80,.4);color:#00c850;white-space:nowrap;"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="8,5 19,12 8,19"/></svg> Indítás</button>
+                                        <button type="submit" class="va-btn va-btn--sm" style="background:rgba(0,200,80,.12);border:1px solid rgba(0,200,80,.4);color:#00c850;white-space:nowrap;"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="8,5 19,12 8,19"/></svg> <?php echo $stopped_by_runtime ? 'Újraindítás (1 kredit)' : 'Indítás'; ?></button>
                                     <?php else: ?>
                                         <button type="submit" class="va-btn va-btn--sm" style="background:rgba(255,153,0,.12);border:1px solid rgba(255,153,0,.4);color:#ff9900;white-space:nowrap;"><svg class="va-ico" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg> Szünet</button>
                                     <?php endif; ?>

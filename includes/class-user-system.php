@@ -1092,14 +1092,6 @@ class VA_User_System {
         $post_id = (int) ( $_POST['listing_id'] ?? 0 );
         if ( ! $post_id ) return;
 
-        // Csak gold / platinum jogosult
-        $plan = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
-        if ( ! in_array( $plan, [ 'gold', 'platinum' ], true ) ) {
-            va_set_flash( 'error', 'Ez a funkció Gold és Platinum csomagoknál érhető el.' );
-            wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
-            exit;
-        }
-
         $post = get_post( $post_id );
         if ( ! $post || (int) $post->post_author !== $user_id || $post->post_type !== 'va_listing' ) {
             va_set_flash( 'error', 'Nincs jogosultságod ehhez a hirdetéshez.' );
@@ -1108,15 +1100,49 @@ class VA_User_System {
         }
 
         $is_suspended = get_post_meta( $post_id, 'va_is_suspended', true ) === '1';
+        $stopped_by_runtime = get_post_meta( $post_id, 'va_stopped_by_runtime', true ) === '1';
+
+        // Kézi szüneteltetés továbbra is csak gold/platinum. A 30 nap miatt leállt hirdetés
+        // újraindítása kredit alapon minden csomagnál mehet.
+        if ( ! $is_suspended ) {
+            $plan = class_exists( 'VA_User_Roles' ) ? VA_User_Roles::get_user_plan( $user_id ) : 'basic';
+            if ( ! in_array( $plan, [ 'gold', 'platinum' ], true ) ) {
+                va_set_flash( 'error', 'Ez a funkció Gold és Platinum csomagoknál érhető el.' );
+                wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
+                exit;
+            }
+        }
 
         if ( $is_suspended ) {
+            if ( $stopped_by_runtime ) {
+                if ( ! class_exists( 'VA_User_Roles' ) ) {
+                    va_set_flash( 'error', 'Technikai hiba: kreditrendszer nem elérhető.' );
+                    wp_safe_redirect( get_permalink( get_page_by_path( 'va-fiok' ) ) );
+                    exit;
+                }
+
+                $remaining = VA_User_Roles::get_gift_credits_remaining( $user_id );
+                if ( $remaining <= 0 ) {
+                    va_set_flash( 'error', 'A hirdetés újraindításához nincs elérhető kredited. Vásárolj új csomagot.' );
+                    wp_safe_redirect( get_permalink( get_page_by_path( 'va-kredit-vasarlas' ) ) );
+                    exit;
+                }
+
+                VA_User_Roles::consume_gift_credit( $user_id, 1 );
+            }
+
             // Újraindítás
             wp_update_post( [ 'ID' => $post_id, 'post_status' => 'publish' ] );
             delete_post_meta( $post_id, 'va_is_suspended' );
             delete_post_meta( $post_id, 'va_suspended_at' );
+            delete_post_meta( $post_id, 'va_stopped_by_runtime' );
             // active_since újraindul a jelenlegi időtől
             update_post_meta( $post_id, 'va_active_since', current_time( 'timestamp' ) );
-            va_set_flash( 'success', 'A hirdetés újra aktív.' );
+            if ( $stopped_by_runtime ) {
+                va_set_flash( 'success', 'A hirdetés újra aktív. 1 kredit levonva.' );
+            } else {
+                va_set_flash( 'success', 'A hirdetés újra aktív.' );
+            }
         } else {
             // Felfüggesztés – csak publish-ból
             if ( $post->post_status !== 'publish' ) {
@@ -1127,6 +1153,7 @@ class VA_User_System {
             wp_update_post( [ 'ID' => $post_id, 'post_status' => 'private' ] );
             update_post_meta( $post_id, 'va_is_suspended', '1' );
             update_post_meta( $post_id, 'va_suspended_at', current_time( 'timestamp' ) );
+            delete_post_meta( $post_id, 'va_stopped_by_runtime' );
             va_set_flash( 'success', 'A hirdetés felfüggesztve – bármikor újraindíthatod.' );
         }
 

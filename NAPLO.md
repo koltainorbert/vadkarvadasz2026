@@ -2,6 +2,26 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #365-nap-csomag-30-nap-hirdetes
+
+### Mit csináltunk [x]
+- [x] Csomag felhasználhatósági idő visszaállítva 365 napra (nem 30 nap)
+- [x] Legacy lejárat migráció fizetős csomagnál 365 napos alapciklusra állítva
+- [x] Hirdetés futási ablak szétválasztva: max 30 nap aktív futás, utána automatikus leállítás
+- [x] Automatikus leállítás: óránkénti cron + bejelentkezett usernél napi enforce körben is lefut
+- [x] 30 nap miatt leállt hirdetés újraindításánál 1 kredit kötelező levonás
+- [x] Ha nincs kredit, újraindítás tiltva és csomagvásárlás oldalra irányítás történik
+- [x] Dashboard jelölések és gombszöveg frissítve: "Lejárt (30 nap)", "Újraindítás (1 kredit)"
+- [x] Root + plugin mirror szinkronban módosítva
+
+### Hol tartunk
+A logika külön kezeli a két életciklust: csomagkredit 365 napig használható, egy hirdetés aktív futása viszont 30 napra korlátozott.
+
+### TODO
+- [ ] Éles smoke teszt: 30+ napos hirdetés automatikus leállás, majd újraindításkor kreditfogyás és no-kredit hibaüzenet
+
+---
+
 ## 2026. 06. 02. – Hotfix #csomag-limit-es-1-havi-lejarat
 
 ### Mit csináltunk [x]

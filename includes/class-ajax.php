@@ -6758,9 +6758,9 @@ class VA_Ajax {
         $plan_slug = self::normalize_purchase_plan_slug( $plan_slug );
         if ( $plan_slug === 'custom' ) {
             $custom_dur = (int) get_user_meta( $user_id, 'va_plan_custom_duration_days', true );
-            return $custom_dur > 0 ? $custom_dur : 30;
+            return $custom_dur > 0 ? $custom_dur : 365;
         }
-        return 30;
+        return 365;
     }
 
     private static function get_plan_price_total_for_slug( string $plan_slug ): int {

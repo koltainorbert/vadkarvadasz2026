@@ -108,6 +108,12 @@ class VA_User_Roles {
             wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'va_cleanup_plan_suspended_listings' );
         }
 
+        // 30 napnál régebben futó hirdetések automatikus leállítása.
+        add_action( 'va_stop_expired_listings', [ __CLASS__, 'stop_expired_listings' ] );
+        if ( ! wp_next_scheduled( 'va_stop_expired_listings' ) ) {
+            wp_schedule_event( time() + HOUR_IN_SECONDS, 'hourly', 'va_stop_expired_listings' );
+        }
+
         // Ha bármi (admin, webhook, WC) frissíti a va_plan metát → azonnal enforce
         // updated_user_meta (nem update_user_meta!) hogy a DB-mentés UTÁN fusson, friss értékkel.
         add_action( 'updated_user_meta', [ __CLASS__, 'on_plan_meta_updated' ], 10, 4 );
@@ -148,7 +154,101 @@ class VA_User_Roles {
         $key = 'va_enforce_ok_' . $uid;
         if ( get_transient( $key ) ) return;
         self::enforce_plan_limits( $uid );
+        self::stop_user_expired_listings( $uid );
         set_transient( $key, 1, DAY_IN_SECONDS );
+    }
+
+    private static function get_listing_runtime_days(): int {
+        return max( 1, absint( get_option( 'va_listing_runtime_days', 30 ) ) );
+    }
+
+    public static function stop_user_expired_listings( int $user_id ): int {
+        if ( $user_id <= 0 ) {
+            return 0;
+        }
+
+        $runtime_days = self::get_listing_runtime_days();
+        $now_ts       = current_time( 'timestamp' );
+
+        $q = new WP_Query([
+            'post_type'           => 'va_listing',
+            'post_status'         => [ 'publish', 'pending' ],
+            'posts_per_page'      => 200,
+            'fields'              => 'ids',
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'author'              => $user_id,
+        ]);
+
+        $stopped = 0;
+        foreach ( $q->posts as $post_id ) {
+            $post_id = (int) $post_id;
+            if ( $post_id <= 0 ) {
+                continue;
+            }
+
+            $active_since = (int) get_post_meta( $post_id, 'va_active_since', true );
+            if ( $active_since <= 0 ) {
+                $active_since = (int) get_post_time( 'U', true, $post_id );
+            }
+            if ( $active_since <= 0 ) {
+                continue;
+            }
+
+            $expires_at = $active_since + ( $runtime_days * DAY_IN_SECONDS );
+            if ( $expires_at > $now_ts ) {
+                continue;
+            }
+
+            wp_update_post( [ 'ID' => $post_id, 'post_status' => 'private' ] );
+            update_post_meta( $post_id, 'va_is_suspended', '1' );
+            update_post_meta( $post_id, 'va_suspended_at', $now_ts );
+            update_post_meta( $post_id, 'va_stopped_by_runtime', '1' );
+            $stopped++;
+        }
+
+        return $stopped;
+    }
+
+    public static function stop_expired_listings(): void {
+        $runtime_days = self::get_listing_runtime_days();
+        $cutoff       = current_time( 'timestamp' ) - ( $runtime_days * DAY_IN_SECONDS );
+
+        $q = new WP_Query([
+            'post_type'           => 'va_listing',
+            'post_status'         => [ 'publish', 'pending' ],
+            'posts_per_page'      => 200,
+            'fields'              => 'ids',
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'date_query'          => [
+                [ 'before' => gmdate( 'Y-m-d H:i:s', $cutoff ) ],
+            ],
+        ]);
+
+        foreach ( $q->posts as $post_id ) {
+            $post_id = (int) $post_id;
+            if ( $post_id <= 0 ) {
+                continue;
+            }
+
+            $active_since = (int) get_post_meta( $post_id, 'va_active_since', true );
+            if ( $active_since <= 0 ) {
+                $active_since = (int) get_post_time( 'U', true, $post_id );
+            }
+            if ( $active_since <= 0 ) {
+                continue;
+            }
+
+            if ( ( $active_since + ( $runtime_days * DAY_IN_SECONDS ) ) > current_time( 'timestamp' ) ) {
+                continue;
+            }
+
+            wp_update_post( [ 'ID' => $post_id, 'post_status' => 'private' ] );
+            update_post_meta( $post_id, 'va_is_suspended', '1' );
+            update_post_meta( $post_id, 'va_suspended_at', current_time( 'timestamp' ) );
+            update_post_meta( $post_id, 'va_stopped_by_runtime', '1' );
+        }
     }
 
     /* ══ Plan config – options overlay ════════════════════════ */
@@ -271,7 +371,7 @@ class VA_User_Roles {
 
             // Legacy user migracio: ha nincs lejárat, kapjon alapértelmezett ciklust.
             if ( $expires_at <= 0 ) {
-                $duration_days = 30; // 1 havi lejárat minden fizetős csomagra
+                $duration_days = 365; // csomagkreditek 365 napig használhatók
                 $expires_at = time() + ( $duration_days * DAY_IN_SECONDS );
                 update_user_meta( $user_id, 'va_plan_expires_at', $expires_at );
             }
