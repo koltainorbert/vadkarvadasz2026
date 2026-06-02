@@ -34,6 +34,12 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 - [x] A single oldali magyar label map ezekhez is kibővítve
 - [x] Deploy lefutott, commit: `5eaf62ad`
 
+### Negyedik finomítás [x]
+- [x] Kiderült, hogy edit módban a submit form csak kézi whitelistből töltötte vissza a meta mezőket
+- [x] Emiatt sok kategória-specifikus, köztük optikás mező üresen jelent meg szerkesztéskor és mentéskor el tudott veszni
+- [x] Javítva: edit módban minden mentett `va_*` meta automatikusan bekerül az `edit_meta` tömbbe root + plugin formban
+- [x] Deploy lefutott, commit: `b6fad5e0`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
