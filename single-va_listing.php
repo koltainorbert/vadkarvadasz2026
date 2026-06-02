@@ -1480,9 +1480,11 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                 'va_suppressor_weight_g' => [ 'label' => 'Súly (g)', 'type' => 'text' ],
                 'va_suppressor_usage' => [ 'label' => 'Felhasználás', 'type' => 'checkboxes', 'options' => [ 'vadaszat' => 'Vadászat', 'sportloveszet' => 'Sportlövészet', 'precizios' => 'Precíziós lövészet', 'taktikai' => 'Taktikai', 'trening' => 'Tréning' ] ],
                 'va_suppressor_weapon_compatibility' => [ 'label' => 'Fegyver kompatibilitás', 'type' => 'select', 'options' => [ 'golyos' => 'Golyós fegyver', 'pcc' => 'PCC', 'pisztoly' => 'Pisztoly', 'egyeb' => 'Egyéb' ] ],
-                'va_suppressor_poi_shift' => [ 'label' => 'POI shift', 'type' => 'text' ],
+                'va_suppressor_poi_shift' => [ 'label' => 'Becsapódási pont eltolódás (POI)', 'type' => 'text' ],
                 'va_suppressor_return_to_zero' => [ 'label' => 'Visszaállási pontosság', 'type' => 'text' ],
                 'va_suppressor_heat_load' => [ 'label' => 'Hőterhelés', 'type' => 'text' ],
+                'va_postal_code' => [ 'label' => 'Irányítószám', 'type' => 'text' ],
+                'va_street' => [ 'label' => 'Utca', 'type' => 'text' ],
             ];
 
             $known_fields = array_merge( $known_fields, $single_extra_fields );

@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #single-reszletek-postal-street-poi-magyar
+
+### Mit csináltunk [x]
+- [x] A `va_suppressor_poi_shift` mező magyar címkét kapott: `Becsapódási pont eltolódás (POI)`
+- [x] A `va_postal_code` és `va_street` mezők explicit magyar címkére kötve: `Irányítószám`, `Utca`
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A frontend single `Részletek` blokkban a korábban angolul megjelenő `Postal Code`, `Street`, `POI shift` címkék magyarul jelennek meg.
+
 ## 2026. 06. 02. – Hotfix #single-reszletek-visszaallitas-filter-zaj-szures
 
 ### Mit csináltunk [x]
