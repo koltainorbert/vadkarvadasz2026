@@ -1431,6 +1431,42 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                 $known_fields = (array) VA_Meta_Fields::listing_fields();
             }
 
+            $single_extra_fields = [
+                'va_optic_magnification_min' => [ 'label' => 'Nagyítás minimum', 'type' => 'text' ],
+                'va_optic_magnification_max' => [ 'label' => 'Nagyítás maximum', 'type' => 'text' ],
+                'va_optic_magnification_fixed' => [ 'label' => 'Fix nagyítás', 'type' => 'text' ],
+                'va_optic_tube_diameter' => [ 'label' => 'Csőátmérő (mm)', 'type' => 'select', 'options' => [ '25.4' => '25.4 mm (1 inch)', '30' => '30 mm', '34' => '34 mm', '35' => '35 mm', '36' => '36 mm', '40' => '40 mm' ] ],
+                'va_optic_exit_pupil' => [ 'label' => 'Kilépő pupilla (mm)', 'type' => 'text' ],
+                'va_optic_field_of_view' => [ 'label' => 'Látómező 100 m-en (m)', 'type' => 'text' ],
+                'va_optic_eye_relief' => [ 'label' => 'Eye relief (mm)', 'type' => 'text' ],
+                'va_optic_reticle_type' => [ 'label' => 'Reticle típus', 'type' => 'select', 'options' => [ 'duplex' => 'Duplex', 'mil-dot' => 'Mil-Dot', 'moa' => 'MOA', 'bdc' => 'BDC', '4a' => '4A', 'german-4' => 'German #4', 'horseshoe' => 'Horseshoe', 'dot' => 'Dot', 'egyeb' => 'Egyéb' ] ],
+                'va_optic_reticle_plane' => [ 'label' => 'Reticle sík', 'type' => 'select', 'options' => [ 'ffp' => 'FFP', 'sfp' => 'SFP' ] ],
+                'va_optic_illumination' => [ 'label' => 'Megvilágítás', 'type' => 'select', 'options' => [ 'nincs' => 'Nincs', 'piros' => 'Piros', 'zold' => 'Zöld', 'piros-zold' => 'Piros + zöld' ] ],
+                'va_optic_illumination_color' => [ 'label' => 'Megvilágítás színe', 'type' => 'text' ],
+                'va_optic_click_value' => [ 'label' => 'Klikk érték', 'type' => 'select', 'options' => [ '1-4-moa' => '1/4 MOA', '1-8-moa' => '1/8 MOA', '0-1-mrad' => '0.1 MRAD' ] ],
+                'va_optic_parallax_adjustment' => [ 'label' => 'Parallax állítás', 'type' => 'select', 'options' => [ 'fix' => 'Fix', 'ao' => 'AO', 'oldalso' => 'Oldalsó tekerő', 'nincs' => 'Nincs' ] ],
+                'va_optic_turret_type' => [ 'label' => 'Torony típus', 'type' => 'select', 'options' => [ 'low-profile' => 'Low profile', 'target' => 'Target', 'locking' => 'Locking', 'capped' => 'Capped' ] ],
+                'va_optic_body_material' => [ 'label' => 'Test anyag', 'type' => 'select', 'options' => [ 'aluminium' => 'Alumínium', 'magnzium' => 'Magnézium', 'acel' => 'Acél', 'polymer' => 'Polimer' ] ],
+                'va_optic_coating_type' => [ 'label' => 'Bevonat típusa', 'type' => 'select', 'options' => [ 'coated' => 'Coated', 'fully-coated' => 'Fully coated', 'multi-coated' => 'Multi-coated', 'fully-multi-coated' => 'Fully multi-coated' ] ],
+                'va_optic_waterproof_flags' => [ 'label' => 'Vízállóság', 'type' => 'checkboxes', 'options' => [ 'vizallo' => 'Vízálló', 'paramentes' => 'Páramentes', 'nitrogen' => 'Nitrogén töltés', 'argon' => 'Argon töltés', 'shockproof' => 'Ütésálló' ] ],
+                'va_optic_prism_system' => [ 'label' => 'Prizma rendszer', 'type' => 'select', 'options' => [ 'roof' => 'Roof', 'porro' => 'Porro' ] ],
+                'va_optic_glass_type' => [ 'label' => 'Üvegtípus', 'type' => 'select', 'options' => [ 'ed' => 'ED', 'hd' => 'HD', 'apokromat' => 'Apokromát', 'standard' => 'Standard' ] ],
+                'va_optic_dot_size' => [ 'label' => 'Pontméret (MOA)', 'type' => 'text' ],
+                'va_optic_rail_compatibility' => [ 'label' => 'Sín kompatibilitás', 'type' => 'checkboxes', 'options' => [ '11mm' => '11 mm', 'weaver' => 'Weaver', 'picatinny' => 'Picatinny', 'zeiss' => 'Zeiss' ] ],
+                'va_optic_rangefinder_max_m' => [ 'label' => 'Távmérő max (m)', 'type' => 'text' ],
+                'va_optic_ballistic_calc' => [ 'label' => 'Ballisztikai kalkulátor', 'type' => 'select', 'options' => [ 'nincs' => 'Nincs', 'van' => 'Van' ] ],
+                'va_optic_spektiv_zoom_range' => [ 'label' => 'Spektív zoom tartomány', 'type' => 'select', 'options' => [ '15-45' => '15-45x', '20-60' => '20-60x', '25-75' => '25-75x', '30-90' => '30-90x' ] ],
+                'va_optic_eyepiece_type' => [ 'label' => 'Okulár típus', 'type' => 'select', 'options' => [ '45-fok' => '45°', 'egyenes' => 'Egyenes', 'cserelheto' => 'Cserélhető' ] ],
+                'va_optic_weapon_compatibility' => [ 'label' => 'Fegyver kompatibilitás', 'type' => 'checkboxes', 'options' => [ 'legpuska' => 'Légpuska', '22lr' => '.22 LR', 'kozepkaliber' => 'Közepes kaliber', 'nagyvadu' => 'Nagyvad', 'airsoft' => 'Airsoft' ] ],
+                'va_scope_accessories' => [ 'label' => 'Tartozékok', 'type' => 'text' ],
+                'va_scope_accessories_flags' => [ 'label' => 'Tartozék jelölők', 'type' => 'checkboxes', 'options' => [ 'doboz' => 'Doboz', 'kupak' => 'Lencsevédő kupak', 'napellenzo' => 'Napellenző', 'szelelek' => 'Szerelék', 'garancia' => 'Garancia' ] ],
+                'va_optic_mount_type' => [ 'label' => 'Szerelék típusa', 'type' => 'select', 'options' => [ 'fix' => 'Fix', 'quick-detach' => 'Quick detach', 'cantilever' => 'Cantilever', 'ring' => 'Gyűrűs' ] ],
+                'va_optic_shipping_methods' => [ 'label' => 'Szállítás módja', 'type' => 'checkboxes', 'options' => [ 'szemelyes' => 'Személyes átvétel', 'futar' => 'Futár', 'foxpost' => 'Foxpost', 'posta' => 'Posta' ] ],
+                'va_optic_recommended_use' => [ 'label' => 'Ajánlott felhasználás', 'type' => 'checkboxes', 'options' => [ 'hajtas' => 'Hajtás', 'lesen' => 'Les', 'sportloveszet' => 'Sportlövészet', 'tura' => 'Túra', 'airsoft' => 'Airsoft' ] ],
+            ];
+
+            $known_fields = array_merge( $known_fields, $single_extra_fields );
+
             $already_rendered_meta_keys = [
                 'va_vehicle_type','va_brand','va_model','va_caliber','va_year','va_first_reg','va_mileage','va_fuel_type',
                 'va_performance_kw','va_engine_size','va_transmission','va_body_type','va_color','va_doors','va_owners','va_keys',
