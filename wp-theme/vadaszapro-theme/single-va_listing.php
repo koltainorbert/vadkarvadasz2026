@@ -1500,6 +1500,14 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                 'va_suppressor_heat_load' => [ 'label' => 'Hőterhelés', 'type' => 'text' ],
                 'va_postal_code' => [ 'label' => 'Irányítószám', 'type' => 'text' ],
                 'va_street' => [ 'label' => 'Utca', 'type' => 'text' ],
+                'va_dog_name' => [ 'label' => 'Kutya neve', 'type' => 'text' ],
+                'va_dog_working_type' => [ 'label' => 'Munkavonal típusa', 'type' => 'text' ],
+                'va_dog_breeder_name' => [ 'label' => 'Tenyésztő neve', 'type' => 'text' ],
+                'va_dog_kennel_name' => [ 'label' => 'Kennel neve', 'type' => 'text' ],
+                'va_dog_pedigree_status' => [ 'label' => 'Törzskönyv státusz', 'type' => 'text' ],
+                'va_dog_origin_country' => [ 'label' => 'Származási ország', 'type' => 'text' ],
+                'va_dog_bloodline_type' => [ 'label' => 'Vérvonal típusa', 'type' => 'text' ],
+                'va_dog_documents' => [ 'label' => 'Dokumentumok', 'type' => 'text' ],
             ];
 
             $known_fields = array_merge( $known_fields, $single_extra_fields );
@@ -1547,6 +1555,50 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                 return ucwords( str_replace( [ '-', '_' ], ' ', $token ) );
             };
 
+            // Globális HU-normalizálás a maradék angol címkék/értékek ellen.
+            $localize_hu = static function ( string $text ): string {
+                $text = trim( $text );
+                if ( $text === '' ) {
+                    return '';
+                }
+
+                $replacements = [
+                    'New Pill Time' => 'Új rögzítési idő',
+                    'new pill time' => 'új rögzítési idő',
+                    'POI shift' => 'Becsapódási pont eltolódás (POI)',
+                    'Quick detach' => 'Gyorskioldós',
+                    'quick detach' => 'gyorskioldós',
+                    'Eye relief' => 'Szemtávolság',
+                    'Reticle' => 'Szálkereszt',
+                    'Target' => 'Sport',
+                    'Low profile' => 'Alacsony profilú',
+                    'Locking' => 'Zárható',
+                    'Capped' => 'Kupakos',
+                    'Coated' => 'Bevonatos',
+                    'Fully coated' => 'Teljesen bevonatos',
+                    'Multi-coated' => 'Többrétegű bevonat',
+                    'Fully multi-coated' => 'Teljes többrétegű bevonat',
+                    'Roof' => 'Tetőél prizmás',
+                    'Porro' => 'Porro prizmás',
+                    'Airsoft' => 'Airsoft',
+                    'Working type' => 'Munkavonal típusa',
+                    'Breeder name' => 'Tenyésztő neve',
+                    'Kennel name' => 'Kennel neve',
+                    'Pedigree status' => 'Törzskönyv státusz',
+                    'Origin country' => 'Származási ország',
+                    'Bloodline type' => 'Vérvonal típusa',
+                    'Documents' => 'Dokumentumok',
+                ];
+
+                return strtr( $text, $replacements );
+            };
+
+            $blocked_meta_keys = [
+                'va_new_pill_time',
+                'va_new_pill_timestamp',
+                'va_new_pill_ts',
+            ];
+
             $already_rendered_meta_keys = [
                 'va_vehicle_type','va_brand','va_model','va_caliber','va_year','va_first_reg','va_mileage','va_fuel_type',
                 'va_performance_kw','va_engine_size','va_transmission','va_body_type','va_color','va_doors','va_owners','va_keys',
@@ -1568,6 +1620,9 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                         continue;
                     }
                     if ( in_array( $meta_key, $already_rendered_meta_keys, true ) ) {
+                        continue;
+                    }
+                    if ( in_array( $meta_key, $blocked_meta_keys, true ) ) {
                         continue;
                     }
                     if ( $is_suppressor_listing && ! in_array( $meta_key, $suppressor_fallback_allowed, true ) ) {
@@ -1660,19 +1715,16 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     if ( $display_value === '' ) {
                         continue;
                     }
+                    $display_value = $localize_hu( $display_value );
 
                     if ( is_array( $field_def ) && ! empty( $field_def['label'] ) ) {
                         $label = (string) $field_def['label'];
                     } else {
-                        $label_key = (string) preg_replace( '/^va_/', '', $meta_key );
-                        $label_key = str_replace( '_', ' ', $label_key );
-                        $label_key = str_ireplace(
-                            [ 'optic ', 'scope ', 'thermal ', 'dog ', 'vehicle ', 'trophy ', 'clothing ', 'shoe ' ],
-                            [ 'Optika ', 'Távcső ', 'Hőkamera ', 'Kutya ', 'Jármű ', 'Trófea ', 'Ruházat ', 'Lábbeli ' ],
-                            $label_key
-                        );
-                        $label = ucwords( $label_key );
+                        // Ismeretlen mezőt ne jelenítsünk meg, hogy ne kerüljön angol/technikai címke a frontendbe.
+                        continue;
                     }
+
+                    $label = $localize_hu( (string) $label );
 
                     $specs[] = [ html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ), $display_value, false ];
                 }

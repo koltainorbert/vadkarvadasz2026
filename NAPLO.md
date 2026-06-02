@@ -2,6 +2,19 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #global-reszletek-csak-magyar
+
+### Mit csináltunk [x]
+- [x] Globális tiltás került a technikai `new_pill_time` kulcsokra a single `Részletek` fallbackben
+- [x] Kutyás angol kulcsokhoz magyar címkék felvéve (`va_dog_name`, `va_dog_working_type`, `va_dog_breeder_name`, `va_dog_kennel_name`, `va_dog_pedigree_status`, `va_dog_origin_country`, `va_dog_bloodline_type`, `va_dog_documents`)
+- [x] Ismeretlen fallback mezők eldobása: ne kerülhessen ki angol/technikai címke a frontendre
+- [x] Maradék angol címke/érték tokenekre HU-normalizáló csere bevezetve
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A termékoldali `Részletek` blokkban kategóriafüggetlenül a technikai/angol zajmezők ki vannak szűrve, a támogatott mezők magyarul jelennek meg.
+
 ## 2026. 06. 02. – Hotfix #frontpage-tab-cim-weingartner-eltavolitas
 
 ### Mit csináltunk [x]
