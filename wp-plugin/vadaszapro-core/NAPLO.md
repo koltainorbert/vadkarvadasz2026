@@ -2,6 +2,21 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #hangtompito-fokategoria
+
+### Mit csináltunk [x]
+- [x] A `Hangtompító` felkerült a központi fő kategória listába külön sluggal (`hangtompito`)
+- [x] A kategória-dataset verzió emelve lett, hogy a taxonomy sync biztosan újraépítse a termeket
+- [x] Root + plugin mirror `includes/class-vehicle-catalog.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott az érintett fájlokra: nincs új hiba
+
+### Hol tartunk
+A `Hangtompító` már önálló főkategóriaként szinkronizálódik, nem csak az `Egyéb` alatti névként.
+
+### TODO
+- [ ] Frontend smoke teszt: Step1 kategória csempék között megjelenik-e a `Hangtompító`
+- [ ] Smoke teszt: `Hangtompító` kategóriában új hirdetés sikeres feladása
+
 ## 2026. 06. 02. – Hotfix #egyeb-popup-allapot-ui-polish
 
 ### Mit csináltunk [x]

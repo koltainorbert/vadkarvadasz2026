@@ -2162,6 +2162,182 @@ body.va-modal-open {
                         <input type="text" name="other_category" id="va-other-category" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
                         <p class="va-help-text">Add meg, pontosan milyen egyéb kategóriába tartozik a hirdetés.</p>
                     </div>
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Egyéb típus (intelligens gyűjtő)</label>
+                        <?php $v = (string)($edit_meta['other_general_type'] ?? ''); ?>
+                        <select name="other_general_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="vadaszati-kiegeszito"<?php selected($v, 'vadaszati-kiegeszito'); ?>>Vadászati kiegészítő (nem besorolt)</option>
+                            <option value="ritka-eszkoz"<?php selected($v, 'ritka-eszkoz'); ?>>Ritka eszköz</option>
+                            <option value="egyedi-keszites"<?php selected($v, 'egyedi-keszites'); ?>>Egyedi készítés</option>
+                            <option value="prototipus"<?php selected($v, 'prototipus'); ?>>Prototípus</option>
+                            <option value="barkacs-diy"<?php selected($v, 'barkacs-diy'); ?>>Barkács / DIY</option>
+                            <option value="specialis-adapter"<?php selected($v, 'specialis-adapter'); ?>>Speciális adapter</option>
+                            <option value="vegyes-felszereles"<?php selected($v, 'vegyes-felszereles'); ?>>Vegyes felszerelés</option>
+                            <option value="nem-standard"<?php selected($v, 'nem-standard'); ?>>Nem standard vadászati eszköz</option>
+                            <option value="gyujtoi-ismeretlen"<?php selected($v, 'gyujtoi-ismeretlen'); ?>>Gyűjtői / ismeretlen</option>
+                            <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1; margin-top:8px;">
+                        <label style="font-size:18px;">🔇 Hangtompító specifikációk</label>
+                        <p class="va-help-text">Ha az Egyéb hirdetés valójában hangtompító, itt add meg részletesen.</p>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Típus</label>
+                        <?php $v = (string)($edit_meta['suppressor_type'] ?? ''); ?>
+                        <select name="suppressor_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="menetes"<?php selected($v, 'menetes'); ?>>Menetes hangtompító</option>
+                            <option value="qd"<?php selected($v, 'qd'); ?>>QD (quick detach)</option>
+                            <option value="integralt"<?php selected($v, 'integralt'); ?>>Integrált hangtompító</option>
+                            <option value="modularis"<?php selected($v, 'modularis'); ?>>Moduláris rendszer</option>
+                            <option value="vadasz"<?php selected($v, 'vadasz'); ?>>Vadász hangtompító</option>
+                            <option value="sportlovesz"<?php selected($v, 'sportlovesz'); ?>>Sportlövész hangtompító</option>
+                            <option value="taktikai"<?php selected($v, 'taktikai'); ?>>Taktikai hangtompító</option>
+                            <option value="rimfire-22"<?php selected($v, 'rimfire-22'); ?>>Rimfire (.22) hangtompító</option>
+                            <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Menet / csatlakozás</label>
+                        <?php $v = (string)($edit_meta['suppressor_thread_type'] ?? ''); ?>
+                        <select name="suppressor_thread_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="m14x1"<?php selected($v, 'm14x1'); ?>>M14x1</option>
+                            <option value="m15x1"<?php selected($v, 'm15x1'); ?>>M15x1</option>
+                            <option value="m18x1"<?php selected($v, 'm18x1'); ?>>M18x1</option>
+                            <option value="1-2x20-unf"<?php selected($v, '1-2x20-unf'); ?>>1/2x20 UNF</option>
+                            <option value="1-2x28-unef"<?php selected($v, '1-2x28-unef'); ?>>1/2x28 UNEF</option>
+                            <option value="5-8x24"<?php selected($v, '5-8x24'); ?>>5/8x24</option>
+                            <option value="egyedi"<?php selected($v, 'egyedi'); ?>>Egyedi</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Szerelés típusa</label>
+                        <?php $v = (string)($edit_meta['suppressor_mount_type'] ?? ''); ?>
+                        <select name="suppressor_mount_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="menetes"<?php selected($v, 'menetes'); ?>>Menetes</option>
+                            <option value="qd"<?php selected($v, 'qd'); ?>>QD</option>
+                            <option value="egyedi"<?php selected($v, 'egyedi'); ?>>Egyedi</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Kaliber kompatibilitás</label>
+                        <?php $sv = array_filter(array_map('trim', explode(',', (string)($edit_meta['suppressor_caliber_compatibility'] ?? '')))); ?>
+                        <select name="suppressor_caliber_compatibility[]" class="va-select" multiple data-placeholder="Válassz kalibereket">
+                            <option value="17-22"<?php echo in_array('17-22', $sv, true) ? ' selected' : ''; ?>>.17 - .22</option>
+                            <option value="223-rem"<?php echo in_array('223-rem', $sv, true) ? ' selected' : ''; ?>>.223 Rem</option>
+                            <option value="243-win"<?php echo in_array('243-win', $sv, true) ? ' selected' : ''; ?>>.243 Win</option>
+                            <option value="6-5-creedmoor"<?php echo in_array('6-5-creedmoor', $sv, true) ? ' selected' : ''; ?>>6.5 Creedmoor</option>
+                            <option value="7x64-7x65r"<?php echo in_array('7x64-7x65r', $sv, true) ? ' selected' : ''; ?>>7x64 / 7x65R</option>
+                            <option value="308-win"<?php echo in_array('308-win', $sv, true) ? ' selected' : ''; ?>>.308 Win</option>
+                            <option value="30-06"<?php echo in_array('30-06', $sv, true) ? ' selected' : ''; ?>>.30-06</option>
+                            <option value="300-win-mag"<?php echo in_array('300-win-mag', $sv, true) ? ' selected' : ''; ?>>.300 Win Mag</option>
+                            <option value="shotgun-12ga"<?php echo in_array('shotgun-12ga', $sv, true) ? ' selected' : ''; ?>>Shotgun 12ga</option>
+                            <option value="egyeb"<?php echo in_array('egyeb', $sv, true) ? ' selected' : ''; ?>>Egyéb</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Anyag</label>
+                        <?php $v = (string)($edit_meta['suppressor_material'] ?? ''); ?>
+                        <select name="suppressor_material" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="aluminium"<?php selected($v, 'aluminium'); ?>>Alumínium</option>
+                            <option value="repulogep-aluminium"<?php selected($v, 'repulogep-aluminium'); ?>>Repülőgép alumínium</option>
+                            <option value="titan"<?php selected($v, 'titan'); ?>>Titán</option>
+                            <option value="rozsdamentes-acel"<?php selected($v, 'rozsdamentes-acel'); ?>>Rozsdamentes acél</option>
+                            <option value="acel"<?php selected($v, 'acel'); ?>>Acél</option>
+                            <option value="kombinalt"<?php selected($v, 'kombinalt'); ?>>Kombinált</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Felépítés</label>
+                        <?php $v = (string)($edit_meta['suppressor_build_type'] ?? ''); ?>
+                        <select name="suppressor_build_type" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="monolit"<?php selected($v, 'monolit'); ?>>Monolit</option>
+                            <option value="modularis"<?php selected($v, 'modularis'); ?>>Moduláris</option>
+                            <option value="szetszedheto"<?php selected($v, 'szetszedheto'); ?>>Szétszedhető</option>
+                            <option value="tobbkamras"<?php selected($v, 'tobbkamras'); ?>>Többkamrás</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>Jogi státusz</label>
+                        <?php $v = (string)($edit_meta['suppressor_regulation'] ?? ''); ?>
+                        <select name="suppressor_regulation" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="engedelykoteles"<?php selected($v, 'engedelykoteles'); ?>>Engedélyköteles</option>
+                            <option value="atiras-koteles"<?php selected($v, 'atiras-koteles'); ?>>Átírás köteles</option>
+                            <option value="csak-fegyverrel"<?php selected($v, 'csak-fegyverrel'); ?>>Csak fegyverrel együtt</option>
+                            <option value="eu-kompatibilis"<?php selected($v, 'eu-kompatibilis'); ?>>EU kompatibilitás</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Zajcsökkentés (dB)</label>
+                        <input type="text" name="suppressor_noise_reduction_db" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_noise_reduction_db'] ?? '')); ?>" placeholder="pl. 28">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Visszarúgás csökkentés</label>
+                        <input type="text" name="suppressor_recoil_reduction" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_recoil_reduction'] ?? '')); ?>" placeholder="pl. 35%">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Csőtorkolat villanás csökkentés</label>
+                        <input type="text" name="suppressor_flash_reduction" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_flash_reduction'] ?? '')); ?>" placeholder="pl. magas">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hossz (mm)</label>
+                        <input type="text" name="suppressor_length_mm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_length_mm'] ?? '')); ?>" placeholder="pl. 180">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Átmérő (mm)</label>
+                        <input type="text" name="suppressor_diameter_mm" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_diameter_mm'] ?? '')); ?>" placeholder="pl. 44">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Súly (g)</label>
+                        <input type="text" name="suppressor_weight_g" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_weight_g'] ?? '')); ?>" placeholder="pl. 420">
+                    </div>
+
+                    <div class="va-form-group" style="grid-column:1 / -1;">
+                        <label>Felhasználás</label>
+                        <?php $su = array_filter(array_map('trim', explode(',', (string)($edit_meta['suppressor_usage'] ?? '')))); ?>
+                        <select name="suppressor_usage[]" class="va-select" multiple data-placeholder="Válassz felhasználást">
+                            <option value="vadaszat"<?php echo in_array('vadaszat', $su, true) ? ' selected' : ''; ?>>Vadászat</option>
+                            <option value="sportloveszet"<?php echo in_array('sportloveszet', $su, true) ? ' selected' : ''; ?>>Sportlövészet</option>
+                            <option value="precizios"<?php echo in_array('precizios', $su, true) ? ' selected' : ''; ?>>Precíziós lövészet</option>
+                            <option value="taktikai"<?php echo in_array('taktikai', $su, true) ? ' selected' : ''; ?>>Taktikai</option>
+                            <option value="trening"<?php echo in_array('trening', $su, true) ? ' selected' : ''; ?>>Tréning</option>
+                        </select>
+                    </div>
+
+                    <div class="va-form-group">
+                        <label>Fegyver kompatibilitás</label>
+                        <?php $v = (string)($edit_meta['suppressor_weapon_compatibility'] ?? ''); ?>
+                        <select name="suppressor_weapon_compatibility" class="va-select">
+                            <option value="">- Válasszon -</option>
+                            <option value="golyos"<?php selected($v, 'golyos'); ?>>Golyós fegyver</option>
+                            <option value="pcc"<?php selected($v, 'pcc'); ?>>PCC</option>
+                            <option value="pisztoly"<?php selected($v, 'pisztoly'); ?>>Pisztoly</option>
+                            <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
+                        </select>
+                    </div>
+                    <div class="va-form-group">
+                        <label>POI shift</label>
+                        <input type="text" name="suppressor_poi_shift" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_poi_shift'] ?? '')); ?>" placeholder="pl. 0.6 MOA">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Visszaállási pontosság</label>
+                        <input type="text" name="suppressor_return_to_zero" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_return_to_zero'] ?? '')); ?>" placeholder="pl. kiváló">
+                    </div>
+                    <div class="va-form-group">
+                        <label>Hőterhelés</label>
+                        <input type="text" name="suppressor_heat_load" class="va-input" value="<?php echo esc_attr((string)($edit_meta['suppressor_heat_load'] ?? '')); ?>" placeholder="pl. magas sorozat terhelés">
+                    </div>
                 </div>
             </div>
             <div class="va-form-row va-core-product-fields">
