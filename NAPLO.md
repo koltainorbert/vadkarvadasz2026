@@ -40,6 +40,12 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 - [x] Javítva: edit módban minden mentett `va_*` meta automatikusan bekerül az `edit_meta` tömbbe root + plugin formban
 - [x] Deploy lefutott, commit: `b6fad5e0`
 
+### Ötödik finomítás [x]
+- [x] A single fallback korábban csak előre definiált mező-definícióval rendelkező `va_*` kulcsokat jelenített meg
+- [x] Javítva: minden nem üres, nem technikai `va_*` mező megjelenik a Részletek blokkban kategóriafüggetlenül
+- [x] Ismeretlen mezők emberibb címkével és alap értékformázással jelennek meg, a zajos `0/false/off/no` értékek szűrve
+- [x] Deploy lefutott, commit: `10d33543`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
