@@ -23,6 +23,11 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 - [x] A hamis checkbox/nullás zajértékek (`0`) kiszűrésre kerültek a fallback listából
 - [x] Deploy lefutott, commit: `e5f46c17`
 
+### Második finomítás [x]
+- [x] Az optikás `va_optic_*` mezőkhöz helyi magyar címketérkép és opció-feloldás került a single fallbackbe
+- [x] Így a korábban eltűnt, de valójában mentett optikai mezők újra megjelennek a termékoldalon
+- [x] Deploy lefutott, commit: `e35e414d`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
