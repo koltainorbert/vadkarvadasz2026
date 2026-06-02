@@ -1469,6 +1469,17 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
 
             $known_fields = array_merge( $known_fields, $single_extra_fields );
 
+            $format_fallback_token = static function ( string $token ): string {
+                $token = trim( $token );
+                if ( $token === '' ) {
+                    return '';
+                }
+                if ( preg_match( '/^[0-9]+(?:[\.,][0-9]+)?$/', $token ) ) {
+                    return $token;
+                }
+                return ucwords( str_replace( [ '-', '_' ], ' ', $token ) );
+            };
+
             $already_rendered_meta_keys = [
                 'va_vehicle_type','va_brand','va_model','va_caliber','va_year','va_first_reg','va_mileage','va_fuel_type',
                 'va_performance_kw','va_engine_size','va_transmission','va_body_type','va_color','va_doors','va_owners','va_keys',
@@ -1509,10 +1520,6 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     $display_value = '';
                     $field_def     = is_array( $known_fields ) ? ( $known_fields[ $meta_key ] ?? null ) : null;
 
-                    if ( ! is_array( $field_def ) || empty( $field_def['label'] ) ) {
-                        continue;
-                    }
-
                     if ( is_array( $raw ) ) {
                         if ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'checkboxes' && ! empty( $field_def['options'] ) ) {
                             $mapped = [];
@@ -1521,11 +1528,17 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                             }
                             $display_value = implode( ', ', array_filter( $mapped, static function( $v ) { return $v !== ''; } ) );
                         } else {
-                            $display_value = implode( ', ', $raw );
+                            $display_value = implode( ', ', array_map( static function ( $v ) use ( $format_fallback_token ) {
+                                return $format_fallback_token( (string) $v );
+                            }, $raw ) );
                         }
                     } else {
                         $raw_str = is_scalar( $raw ) ? trim( (string) $raw ) : '';
                         if ( $raw_str === '' ) {
+                            continue;
+                        }
+
+                        if ( in_array( strtolower( $raw_str ), [ '0', 'false', 'no', 'off' ], true ) ) {
                             continue;
                         }
 
@@ -1556,7 +1569,16 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                             } elseif ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'select' && ! empty( $field_def['options'] ) ) {
                                 $display_value = (string) ( $field_def['options'][ $raw_str ] ?? $raw_str );
                             } else {
-                                $display_value = $raw_str;
+                                if ( strpos( $raw_str, ',' ) !== false ) {
+                                    $parts = array_values( array_filter( array_map( 'trim', explode( ',', $raw_str ) ), static function ( $v ) {
+                                        return $v !== '';
+                                    } ) );
+                                    $display_value = implode( ', ', array_map( static function ( $v ) use ( $format_fallback_token ) {
+                                        return $format_fallback_token( (string) $v );
+                                    }, $parts ) );
+                                } else {
+                                    $display_value = $raw_str;
+                                }
                             }
                         }
                     }
@@ -1566,9 +1588,18 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                         continue;
                     }
 
-                    $label = is_array( $field_def ) && ! empty( $field_def['label'] )
-                        ? (string) $field_def['label']
-                        : ucwords( str_replace( '_', ' ', preg_replace( '/^va_/', '', $meta_key ) ) );
+                    if ( is_array( $field_def ) && ! empty( $field_def['label'] ) ) {
+                        $label = (string) $field_def['label'];
+                    } else {
+                        $label_key = (string) preg_replace( '/^va_/', '', $meta_key );
+                        $label_key = str_replace( '_', ' ', $label_key );
+                        $label_key = str_ireplace(
+                            [ 'optic ', 'scope ', 'thermal ', 'dog ', 'vehicle ', 'trophy ', 'clothing ', 'shoe ' ],
+                            [ 'Optika ', 'Távcső ', 'Hőkamera ', 'Kutya ', 'Jármű ', 'Trófea ', 'Ruházat ', 'Lábbeli ' ],
+                            $label_key
+                        );
+                        $label = ucwords( $label_key );
+                    }
 
                     $specs[] = [ html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ), $display_value, false ];
                 }
