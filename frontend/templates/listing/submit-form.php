@@ -8531,7 +8531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var slug = getSelectedCategorySlug();
             if (slug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
-                openOtherCategoryModal();
+                openOtherCategoryModal('step1-next');
                 showSubmitError('Add meg az egyéb kategóriát.');
                 return false;
             }
@@ -8557,7 +8557,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
     $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
     // Kategória listaelement választás
-    function openOtherCategoryModal() {
+    var _otherCategoryModalSource = '';
+    function openOtherCategoryModal(source) {
+        _otherCategoryModalSource = source || '';
         var $modal = $('#va-other-cat-modal');
         var $input = $('#va-other-cat-input');
         $input.val((($('#va-other-category').val() || '') + '').trim());
@@ -8659,7 +8661,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var slug = (($(this).data('slug') || '') + '').toLowerCase();
         if (slug === 'egyeb') {
-            openOtherCategoryModal();
+            openOtherCategoryModal('category-select');
         } else {
             $('#va-other-category').val('');
         }
@@ -8675,7 +8677,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         $('#va-other-category').val(val);
+        var source = _otherCategoryModalSource;
+        _otherCategoryModalSource = '';
         closeOtherCategoryModal();
+
+        // Ha blokkolt lépés/feladás miatt nyílt meg, folytassuk automatikusan.
+        if (source === 'submit') {
+            setTimeout(function(){ $('#va-submit-btn').trigger('click'); }, 0);
+        } else if (source === 'step1-next' && _wStep === 1) {
+            setTimeout(function(){ wizGoTo(2); }, 0);
+        }
     });
     $('#va-other-cat-modal').on('click', function(e){
         if (e.target === this) closeOtherCategoryModal();

@@ -8531,7 +8531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             var slug = getSelectedCategorySlug();
             if (slug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
-                openOtherCategoryModal();
+                openOtherCategoryModal('step1-next');
                 showSubmitError('Add meg az egyéb kategóriát.');
                 return false;
             }
@@ -8557,7 +8557,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#va-wizard-next').on('click', function() { if (_wStep < _wTotal) wizGoTo(_wStep + 1); });
     $('#va-wizard-prev').on('click', function() { if (_wStep > 1)       wizGoTo(_wStep - 1); });
     // Kategória listaelement választás
-    function openOtherCategoryModal() {
+    var _otherCategoryModalSource = '';
+    function openOtherCategoryModal(source) {
+        _otherCategoryModalSource = source || '';
         var $modal = $('#va-other-cat-modal');
         var $input = $('#va-other-cat-input');
         $input.val((($('#va-other-category').val() || '') + '').trim());
@@ -8659,7 +8661,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var slug = (($(this).data('slug') || '') + '').toLowerCase();
         if (slug === 'egyeb') {
-            openOtherCategoryModal();
+            openOtherCategoryModal('category-select');
         } else {
             $('#va-other-category').val('');
         }
@@ -10556,7 +10558,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var selectedSlug = getSelectedCategorySlug();
         if (selectedSlug === 'egyeb' && !(($('#va-other-category').val() || '') + '').trim()) {
-            openOtherCategoryModal();
+            openOtherCategoryModal('submit');
             return;
         }
 
@@ -10674,6 +10676,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#va-submit-notice-content').html('<div class="va-notice va-notice--error" style="margin:0;">Hálózati hiba. Próbálja újra.</div>');
                 openSubmitNoticeModal();
             }
+        }); // $.ajax end
+        }); // $.when end
+    }); // button click end
+})(jQuery);
+}); // DOMContentLoaded
+</script>
+
+
         }); // $.ajax end
         }); // $.when end
     }); // button click end

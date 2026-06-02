@@ -2,6 +2,23 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #egyeb-modal-mentes-folytatas
+
+### Mit csináltunk [x]
+- [x] Javítva az `Egyéb kategória megadása` modal UX folyamat: mentés után már nem áll meg a flow
+- [x] A modal megjegyzi, hogy `Tovább` vagy `Feladás` közben nyílt-e meg
+- [x] Mentés után automatikusan folytatja a blokkolt műveletet:
+  - [x] `step1-next` esetén továbblép a következő wizard lépésre
+  - [x] `submit` esetén újraindítja a feladás folyamatát
+- [x] Root + plugin mirror `frontend/templates/listing/submit-form.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+Az `Egyéb` kategóriánál a modal `Mentés` gomb már ténylegesen folytatja a feladást, nem marad „semmi nem történik” állapotban.
+
+### TODO
+- [ ] Élő smoke teszt: `Egyéb` kategória + saját megnevezés (pl. hangtompító) teljes feladás végigfut-e
+
 ## 2026. 06. 02. – Hotfix #egyeb-kategoria-submit-fix
 
 ### Mit csináltunk [x]
