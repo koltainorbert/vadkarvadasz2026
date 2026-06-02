@@ -1425,6 +1425,109 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
 
 
 
+            // Fallback: minden kitoltott, de fent kulon nem listazott va_* mezot jelenitsunk meg.
+            $known_fields = [];
+            if ( class_exists( 'VA_Meta_Fields' ) && method_exists( 'VA_Meta_Fields', 'listing_fields' ) ) {
+                $known_fields = (array) VA_Meta_Fields::listing_fields();
+            }
+
+            $already_rendered_meta_keys = [
+                'va_vehicle_type','va_brand','va_model','va_caliber','va_year','va_first_reg','va_mileage','va_fuel_type',
+                'va_performance_kw','va_engine_size','va_transmission','va_body_type','va_color','va_doors','va_owners','va_keys',
+                'va_tech_inspect','va_drive','va_vehicle_condition','va_doc_type','va_doc_validity','va_ac_type','va_eco_class',
+                'va_cylinder_layout','va_own_weight','va_gross_weight','va_passengers','va_trunk_liters','va_roof_type',
+                'va_color_metallic','va_upholstery_1','va_upholstery_2','va_range_gearbox','va_summer_tire_front','va_summer_tire_rear',
+                'va_winter_tire_front','va_winter_tire_rear','va_area_m2','va_rooms','va_floor','va_lot_size','va_building_year',
+                'va_parking','va_furnished','va_heating','va_balcony','va_optic_type','va_optic_zoom','va_optic_objective',
+                'va_dog_breed','va_dog_gender','va_dog_color','va_dog_purebred','va_dog_age_months','va_extras',
+                'va_price','va_price_type','va_sale_price','va_sale_price_end','va_phone','va_location','va_views','va_expires',
+                'va_featured','va_verified','va_license_req','va_email_show','va_gallery_ids','va_demo_image'
+            ];
+
+            $all_meta_keys = get_post_custom_keys( $post_id );
+            if ( is_array( $all_meta_keys ) ) {
+                foreach ( $all_meta_keys as $meta_key ) {
+                    $meta_key = (string) $meta_key;
+                    if ( strpos( $meta_key, 'va_' ) !== 0 ) {
+                        continue;
+                    }
+                    if ( in_array( $meta_key, $already_rendered_meta_keys, true ) ) {
+                        continue;
+                    }
+                    if ( preg_match( '/(?:needs_review|review_hits|moderation|_nonce$|_token$|_hash$)/', $meta_key ) ) {
+                        continue;
+                    }
+
+                    $raw = get_post_meta( $post_id, $meta_key, true );
+                    if ( is_array( $raw ) ) {
+                        $raw = array_filter( array_map( 'strval', $raw ), static function( $v ) {
+                            return $v !== '';
+                        } );
+                        if ( empty( $raw ) ) {
+                            continue;
+                        }
+                    }
+
+                    $display_value = '';
+                    $field_def     = is_array( $known_fields ) ? ( $known_fields[ $meta_key ] ?? null ) : null;
+
+                    if ( is_array( $raw ) ) {
+                        if ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'checkboxes' && ! empty( $field_def['options'] ) ) {
+                            $mapped = [];
+                            foreach ( $raw as $opt_key ) {
+                                $mapped[] = (string) ( $field_def['options'][ $opt_key ] ?? $opt_key );
+                            }
+                            $display_value = implode( ', ', array_filter( $mapped, static function( $v ) { return $v !== ''; } ) );
+                        } else {
+                            $display_value = implode( ', ', $raw );
+                        }
+                    } else {
+                        $raw_str = is_scalar( $raw ) ? trim( (string) $raw ) : '';
+                        if ( $raw_str === '' ) {
+                            continue;
+                        }
+
+                        $json = json_decode( $raw_str, true );
+                        if ( is_array( $json ) ) {
+                            $vals = array_values( array_filter( array_map( 'strval', $json ), static function( $v ) {
+                                return $v !== '';
+                            } ) );
+                            if ( empty( $vals ) ) {
+                                continue;
+                            }
+                            if ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'checkboxes' && ! empty( $field_def['options'] ) ) {
+                                $mapped = [];
+                                foreach ( $vals as $opt_key ) {
+                                    $mapped[] = (string) ( $field_def['options'][ $opt_key ] ?? $opt_key );
+                                }
+                                $display_value = implode( ', ', array_filter( $mapped, static function( $v ) { return $v !== ''; } ) );
+                            } else {
+                                $display_value = implode( ', ', $vals );
+                            }
+                        } else {
+                            if ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'checkbox' ) {
+                                $display_value = in_array( strtolower( $raw_str ), [ '1', 'true', 'yes', 'on' ], true ) ? 'Igen' : 'Nem';
+                            } elseif ( is_array( $field_def ) && ( $field_def['type'] ?? '' ) === 'select' && ! empty( $field_def['options'] ) ) {
+                                $display_value = (string) ( $field_def['options'][ $raw_str ] ?? $raw_str );
+                            } else {
+                                $display_value = $raw_str;
+                            }
+                        }
+                    }
+
+                    $display_value = trim( $display_value );
+                    if ( $display_value === '' ) {
+                        continue;
+                    }
+
+                    $label = is_array( $field_def ) && ! empty( $field_def['label'] )
+                        ? (string) $field_def['label']
+                        : ucwords( str_replace( '_', ' ', preg_replace( '/^va_/', '', $meta_key ) ) );
+
+                    $specs[] = [ html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ), $display_value, false ];
+                }
+            }
+
             $badges = [];
 
 
