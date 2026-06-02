@@ -2,6 +2,28 @@
 
 ---
 
+## 2026. 05. 18. – Session: Részletes kereső prémium UI + markup hotfix
+
+### Mit csináltunk [x]
+- [x] Javítva a hibás HTML zárás a részletes kereső panelben (`</div>` → `</section>`)
+- [x] Root + plugin mirror `search.php` struktúra egységesítve (lead szöveg + csoportosított blokkok)
+- [x] A „Részletes kereső” UI teljesen újrastilizálva prémium kinézetre:
+  - erős toggle gomb (gradient, border, hover, state)
+  - advanced panel háttér és csoportkártyák
+  - cím/tag fejlécek
+  - checkbox/radio chip stílus, kiválasztott állapot hangsúly
+  - mobil töréspontok (900px, 620px)
+- [x] Root + mirror CSS szinkronban frissítve
+- [x] Hibavizsgálat lefuttatva a módosított fájlokra (template oldalon hiba nincs)
+
+### Hol tartunk
+A részletes kereső most vizuálisan markánsabb, strukturáltabb és használhatóbban szegmentált. A korábbi markup hiba megszűnt.
+
+### TODO
+- [ ] Valós eszközön (mobil + desktop) gyors vizuális QA a panel nyitás/zárásra és a radio kiválasztásra
+
+---
+
 ## 2026. 06. 02. – Hotfix #kereso-felvillanas-megszuntetes
 - Hiba: a `va-hirdetes-kereses` oldalon frissítéskor a kategória-specifikus szűrők egy pillanatra mind megjelentek, majd eltűntek.
 - Ok: a `data-special-filter` mezők alapból láthatóan renderelődtek, és csak később (JS futáskor) kapták meg a végső láthatóságot.

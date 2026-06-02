@@ -598,23 +598,37 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
             </button>
 
             <div class="va-advanced-panel is-collapsed" id="va-advanced-panel">
-                <div class="va-car-extra-filters" data-special-filter="vehicle">
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-automatic"> automata</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="tempomat"> tempomat</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-awd"> összkerékmeghajtás</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="alloy_wheels"> alufelni</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="elec_window_front"> elektromos ablak</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="towbar"> vonóhorog</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="isofix"> ISOFIX rendszer</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="esp"> ESP (menetstabilizátor)</label>
-                    <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-service-book"> szervizkönyv</label>
-                </div>
+                <div class="va-advanced-panel__lead">Professzionális szűrés: finomhangold a találatokat kategória-specifikus opciókkal.</div>
 
-                <div class="va-car-per-page">
-                    <label class="va-check-label"><input type="radio" name="va-per-page" value="25" checked> 25 találat oldalanként</label>
-                    <label class="va-check-label"><input type="radio" name="va-per-page" value="50"> 50 találat oldalanként</label>
-                    <label class="va-check-label"><input type="radio" name="va-per-page" value="100"> 100 találat oldalanként</label>
-                </div>
+                <section class="va-advanced-group" data-special-filter="vehicle">
+                    <div class="va-advanced-group__head">
+                        <h3 class="va-advanced-group__title">Jármű extrák</h3>
+                        <span class="va-advanced-group__tag">pro szint</span>
+                    </div>
+                    <div class="va-car-extra-filters">
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-automatic"> automata</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="tempomat"> tempomat</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-awd"> összkerékmeghajtás</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="alloy_wheels"> alufelni</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="elec_window_front"> elektromos ablak</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="towbar"> vonóhorog</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="isofix"> ISOFIX rendszer</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" data-extra="esp"> ESP (menetstabilizátor)</label>
+                        <label class="va-check-label"><input type="checkbox" class="va-car-filter" id="va-opt-service-book"> szervizkönyv</label>
+                    </div>
+                </section>
+
+                <section class="va-advanced-group va-advanced-group--paging">
+                    <div class="va-advanced-group__head">
+                        <h3 class="va-advanced-group__title">Találatok oldalanként</h3>
+                        <span class="va-advanced-group__tag">sebesség</span>
+                    </div>
+                    <div class="va-car-per-page">
+                        <label class="va-check-label"><input type="radio" name="va-per-page" value="25" checked> 25 találat oldalanként</label>
+                        <label class="va-check-label"><input type="radio" name="va-per-page" value="50"> 50 találat oldalanként</label>
+                        <label class="va-check-label"><input type="radio" name="va-per-page" value="100"> 100 találat oldalanként</label>
+                    </div>
+                </section>
             </div>
 
             <div class="va-filter-bar__actions">

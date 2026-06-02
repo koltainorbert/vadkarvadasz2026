@@ -839,56 +839,173 @@ html > .os-scrollbar-vertical:active .os-scrollbar-handle {
 .va-filter-bar .va-input::placeholder { color: rgba(255,255,255,.9); }
 @media (max-width: 600px) { .va-filter-bar { padding: 14px; } .va-filter-bar__grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 380px) { .va-filter-bar__grid { grid-template-columns: 1fr; } }
-.va-car-extra-filters {
-  margin-top: 14px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px 14px;
-}
 .va-advanced-toggle {
-  margin-top: 14px;
-  display: inline-flex;
+  margin-top: 16px;
+  display: inline-grid;
+  grid-auto-flow: column;
   align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.12);
+  gap: 10px;
+  background: linear-gradient(145deg, rgba(44,8,8,.85), rgba(20,20,20,.92));
+  border: 1px solid rgba(255,34,34,.45);
   color: #fff;
-  border-radius: 10px;
-  padding: 9px 14px;
-  font-size: 14px;
-  font-weight: 700;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: border-color .2s, background .2s;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .va-advanced-toggle:hover,
 .va-advanced-toggle[aria-expanded="true"] {
-  border-color: rgba(255,0,0,.6);
-  background: rgba(255,0,0,.12);
+  border-color: rgba(255,70,70,.85);
+  background: linear-gradient(145deg, rgba(70,10,10,.95), rgba(28,28,28,.95));
+  box-shadow: 0 10px 28px rgba(255,0,0,.16);
+  transform: translateY(-1px);
 }
 .va-advanced-toggle::after {
   content: '▾';
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
-  transition: transform .2s;
+  transition: transform .2s ease;
 }
 .va-advanced-toggle[aria-expanded="true"]::after {
   transform: rotate(180deg);
 }
+.va-advanced-panel {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  background:
+    radial-gradient(120% 130% at 100% 0%, rgba(255,24,24,.15), rgba(255,24,24,0) 48%),
+    linear-gradient(180deg, rgba(22,22,22,.94), rgba(13,13,13,.98));
+}
 .va-advanced-panel.is-collapsed {
   display: none;
 }
+.va-advanced-panel__lead {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: rgba(255,255,255,.78);
+  line-height: 1.45;
+}
+.va-advanced-group {
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+}
+.va-advanced-group + .va-advanced-group {
+  margin-top: 12px;
+}
+.va-advanced-group__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.va-advanced-group__title {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.82);
+}
+.va-advanced-group__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #ffd7d7;
+  background: rgba(255,26,26,.18);
+  border: 1px solid rgba(255,64,64,.4);
+}
+.va-car-extra-filters {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px 12px;
+}
 .va-car-per-page {
-  margin-top: 10px;
+  margin-top: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 20px;
+  gap: 10px;
 }
 .va-car-extra-filters .va-check-label,
 .va-car-per-page .va-check-label {
-  border: 1px solid rgba(255,255,255,.08);
+  position: relative;
+  border: 1px solid rgba(255,255,255,.14);
   border-radius: 10px;
-  padding: 8px 10px;
-  background: rgba(255,255,255,.02);
+  padding: 10px 12px;
+  background: rgba(255,255,255,.025);
+  transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.va-car-extra-filters .va-check-label:hover,
+.va-car-per-page .va-check-label:hover {
+  border-color: rgba(255,76,76,.58);
+  background: rgba(255,42,42,.1);
+  transform: translateY(-1px);
+}
+.va-car-per-page .va-check-label {
+  min-width: 190px;
+}
+.va-car-per-page .va-check-label input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+  background: transparent;
+  margin: 0;
+  position: relative;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.va-car-per-page .va-check-label input[type="radio"]::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #ff2d2d;
+  transform: scale(0);
+  transition: transform .16s ease;
+}
+.va-car-per-page .va-check-label input[type="radio"]:checked {
+  border-color: rgba(255,86,86,.95);
+  box-shadow: 0 0 0 3px rgba(255,0,0,.18);
+}
+.va-car-per-page .va-check-label input[type="radio"]:checked::after {
+  transform: scale(1);
+}
+.va-car-per-page .va-check-label:has(input[type="radio"]:checked) {
+  border-color: rgba(255,86,86,.9);
+  background: linear-gradient(180deg, rgba(255,40,40,.2), rgba(255,40,40,.08));
+  box-shadow: 0 10px 20px rgba(255,0,0,.14);
+}
+@media (max-width: 900px) {
+  .va-car-per-page .va-check-label {
+    min-width: 0;
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+@media (max-width: 620px) {
+  .va-advanced-panel {
+    padding: 12px;
+  }
+  .va-advanced-group {
+    padding: 10px;
+  }
+  .va-car-per-page .va-check-label {
+    flex-basis: 100%;
+  }
 }
 /* ── Ár csúszka szűrő ───────────────────────────────── */
 .va-price-slider-wrap {
