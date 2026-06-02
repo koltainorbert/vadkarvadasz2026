@@ -28,6 +28,12 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 - [x] Így a korábban eltűnt, de valójában mentett optikai mezők újra megjelennek a termékoldalon
 - [x] Deploy lefutott, commit: `e35e414d`
 
+### Harmadik finomítás [x]
+- [x] Kiderült, hogy néhány optikai mező (`scope_type`, `scope_accessories`, `scope_coatings`) eddig a backendben egyáltalán nem mentődött el
+- [x] Ezek mentése bekötve root + plugin AJAX handlerben
+- [x] A single oldali magyar label map ezekhez is kibővítve
+- [x] Deploy lefutott, commit: `5eaf62ad`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
