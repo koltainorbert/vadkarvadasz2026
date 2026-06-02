@@ -2157,29 +2157,6 @@ body.va-modal-open {
             </div>
             <div class="va-cat-rule-field" data-categories="egyeb,hangtompito" style="display:none;">
                 <div class="va-step2-4col-inner">
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Alkategória neve (opcionális)</label>
-                        <input type="text" name="other_category" id="va-other-category" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb" value="<?php echo esc_attr((string)($edit_meta['other_category'] ?? '')); ?>">
-                        <p class="va-help-text">Igény esetén add meg pontosabban a típust (pl. gyártói sorozat).</p>
-                    </div>
-                    <div class="va-form-group" style="grid-column:1 / -1;">
-                        <label>Típuscsoport (opcionális)</label>
-                        <?php $v = (string)($edit_meta['other_general_type'] ?? ''); ?>
-                        <select name="other_general_type" class="va-select">
-                            <option value="">- Válasszon -</option>
-                            <option value="vadaszati-kiegeszito"<?php selected($v, 'vadaszati-kiegeszito'); ?>>Vadászati kiegészítő (nem besorolt)</option>
-                            <option value="ritka-eszkoz"<?php selected($v, 'ritka-eszkoz'); ?>>Ritka eszköz</option>
-                            <option value="egyedi-keszites"<?php selected($v, 'egyedi-keszites'); ?>>Egyedi készítés</option>
-                            <option value="prototipus"<?php selected($v, 'prototipus'); ?>>Prototípus</option>
-                            <option value="barkacs-diy"<?php selected($v, 'barkacs-diy'); ?>>Barkács / DIY</option>
-                            <option value="specialis-adapter"<?php selected($v, 'specialis-adapter'); ?>>Speciális adapter</option>
-                            <option value="vegyes-felszereles"<?php selected($v, 'vegyes-felszereles'); ?>>Vegyes felszerelés</option>
-                            <option value="nem-standard"<?php selected($v, 'nem-standard'); ?>>Nem standard vadászati eszköz</option>
-                            <option value="gyujtoi-ismeretlen"<?php selected($v, 'gyujtoi-ismeretlen'); ?>>Gyűjtői / ismeretlen</option>
-                            <option value="egyeb"<?php selected($v, 'egyeb'); ?>>Egyéb</option>
-                        </select>
-                    </div>
-
                     <div class="va-form-group" style="grid-column:1 / -1; margin-top:8px;">
                         <label style="font-size:18px;">🔇 Hangtompító specifikációk</label>
                         <p class="va-help-text">A Hangtompító fő kategória részletes paraméterei.</p>
