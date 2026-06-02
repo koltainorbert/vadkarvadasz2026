@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #single-reszletek-visszaallitas-filter-zaj-szures
+
+### Mit csináltunk [x]
+- [x] Visszaállítottuk a single fallback megjelenítést az ismeretlen, de valós `va_*` mezőkre
+- [x] A túl szigorú szűrés (`csak ismert mező`) kivezetve, így a hiányzó részletek újra látszanak
+- [x] Célzott zajszűrés maradt: `*_filter_*` technikai mezők továbbra sem jelennek meg a frontendben
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+
+### Hol tartunk
+A hiányzó részletek visszakerültek, miközben a technikai filter kulcsok ki vannak szűrve.
+
 ## 2026. 06. 02. – Hotfix #single-reszletek-csak-magyar
 
 ### Mit csináltunk [x]
