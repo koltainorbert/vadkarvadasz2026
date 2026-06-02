@@ -631,7 +631,7 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
 
                 <section class="va-advanced-group va-advanced-group--paging">
                     <div class="va-advanced-group__head">
-                        <h3 class="va-advanced-group__title">Találatok oldalanként</h3>
+                        <h3 class="va-advanced-group__title" style="color:#fff !important;">Találatok oldalanként</h3>
                     </div>
                     <div class="va-car-per-page">
                         <label class="va-check-label"><input type="radio" name="va-per-page" value="25" checked> 25 találat oldalanként</label>

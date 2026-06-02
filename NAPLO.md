@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #per-page-cim-fix-feher
+
+### Mit csináltunk [x]
+- [x] A Részletes kereső "Találatok oldalanként" címe közvetlen inline stílussal fehérre kényszerítve
+- [x] Root + plugin mirror template szinkronban frissítve
+
+### Hol tartunk
+A "Találatok oldalanként" cím lenyitott részletes keresőben fixen fehér.
+
+### TODO
+- [ ] Frontend vizuális ellenőrzés hard refresh után
+
+---
+
 ## 2026. 06. 02. – Hotfix #autos-fejlec-eltavolitva-vadasz-oldalrol
 
 ### Mit csináltunk [x]
