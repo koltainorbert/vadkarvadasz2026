@@ -35,6 +35,8 @@ $register_enabled = get_option( 'va_enable_register', '1' ) === '1';
             <?php wp_nonce_field( 'va_register', 'va_register_nonce' ); ?>
             <input type="hidden" name="va_action" value="register">
             <input type="hidden" name="reg_account_type" id="va-account-type" value="private">
+            <input type="hidden" name="va_reg_ts" value="<?php echo esc_attr( (string) time() ); ?>">
+            <input type="text" name="reg_website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;pointer-events:none;">
 
         <div class="va-register-grid">
             <?php

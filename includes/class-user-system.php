@@ -24,6 +24,61 @@ class VA_User_System {
         return get_option( 'va_enable_register', '1' ) === '1';
     }
 
+    private static function get_client_ip(): string {
+        foreach ( [ 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' ] as $key ) {
+            $raw = (string) ( $_SERVER[ $key ] ?? '' );
+            if ( $raw === '' ) {
+                continue;
+            }
+            $parts = array_map( 'trim', explode( ',', $raw ) );
+            foreach ( $parts as $ip ) {
+                if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+                    return $ip;
+                }
+            }
+        }
+        return '0.0.0.0';
+    }
+
+    private static function is_email_domain_blocked( string $email ): bool {
+        $domain = strtolower( (string) substr( strrchr( $email, '@' ), 1 ) );
+        if ( $domain === '' ) {
+            return true;
+        }
+
+        $blocked_raw = (string) get_option( 'va_register_blocked_domains', '' );
+        $blocked_opt = preg_split( '/[\s,;]+/', $blocked_raw );
+        $blocked_opt = is_array( $blocked_opt ) ? $blocked_opt : [];
+
+        $default_blocked = [
+            'mailinator.com',
+            'guerrillamail.com',
+            '10minutemail.com',
+            'tempmail.com',
+            'sharklasers.com',
+            'dispostable.com',
+            'immenseignite.info',
+        ];
+
+        $blocked = array_unique( array_filter( array_map( static function ( $v ) {
+            return strtolower( trim( (string) $v ) );
+        }, array_merge( $default_blocked, $blocked_opt ) ) ) );
+
+        if ( in_array( $domain, $blocked, true ) ) {
+            return true;
+        }
+
+        if ( function_exists( 'checkdnsrr' ) ) {
+            $has_mx = checkdnsrr( $domain, 'MX' );
+            $has_a  = checkdnsrr( $domain, 'A' );
+            if ( ! $has_mx && ! $has_a ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static function get_login_page_url( array $args = [] ): string {
         $page = get_page_by_path( 'va-bejelentkezes' );
         $url  = $page ? get_permalink( $page ) : home_url();
@@ -471,6 +526,28 @@ class VA_User_System {
             return;
         }
 
+        $hp_field = trim( (string) wp_unslash( $_POST['reg_website'] ?? '' ) );
+        if ( $hp_field !== '' ) {
+            va_set_flash( 'error', 'Érvénytelen regisztrációs kérés.' );
+            return;
+        }
+
+        $form_ts = absint( $_POST['va_reg_ts'] ?? 0 );
+        $now_ts  = time();
+        if ( $form_ts < 1 || ( $now_ts - $form_ts ) < 3 || ( $now_ts - $form_ts ) > DAY_IN_SECONDS ) {
+            va_set_flash( 'error', 'A regisztrációs űrlap lejárt vagy hibás. Kérjük próbáld újra.' );
+            return;
+        }
+
+        $reg_ip = self::get_client_ip();
+        $reg_ip_key = 'va_reg_rl_' . md5( $reg_ip );
+        $reg_attempts = (int) get_transient( $reg_ip_key );
+        if ( $reg_attempts >= 6 ) {
+            va_set_flash( 'error', 'Túl sok regisztrációs próbálkozás erről az IP címről. Próbáld újra 1 óra múlva.' );
+            return;
+        }
+        set_transient( $reg_ip_key, $reg_attempts + 1, HOUR_IN_SECONDS );
+
         $username  = sanitize_user( wp_unslash( $_POST['reg_username'] ?? '' ) );
         $email     = sanitize_email( wp_unslash( $_POST['reg_email']    ?? '' ) );
         $pass      = wp_unslash( $_POST['reg_password'] ?? '' );
@@ -489,6 +566,11 @@ class VA_User_System {
 
         if ( empty( $username ) || empty( $email ) || empty( $pass ) ) {
             va_set_flash( 'error', 'Kérjük töltse ki a kötelező mezőket.' );
+            return;
+        }
+
+        if ( ! is_email( $email ) || self::is_email_domain_blocked( $email ) ) {
+            va_set_flash( 'error', 'Kérjük valós, fogadóképes e-mail címet adjon meg.' );
             return;
         }
 
