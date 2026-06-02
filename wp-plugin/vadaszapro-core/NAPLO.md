@@ -2,6 +2,36 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
+
+### Mit csináltunk [x]
+- [x] Feladás után a redirect URL rövid életű tokent kap (`va_real_views`, `va_rv_token`)
+- [x] A submit AJAX válasz permalinkje tokenes URL-re áll át
+- [x] A nézettség kijelzés logikája bővítve: tokennel és saját hirdetésnél valós `va_views` jelenik meg
+- [x] Token nélkül marad a meglévő megjelenített nézettség logika (base + floor)
+- [x] Root + plugin mirror fájlok szinkronban frissítve
+
+### Hol tartunk
+Feladás után azonnal valós nézettséget lát a hirdető, a normál (eddigi) kijelzés pedig token nélküli nézetben automatikusan visszaáll.
+
+### TODO
+- [ ] Frontend smoke teszt: új hirdetés feladás után valós nézettség látszik, majd token nélküli megnyitásnál visszaáll a normál logika
+
+## 2026. 06. 02. – Hotfix #submit-form-parse-fix
+
+### Mit csináltunk [x]
+- [x] A submit form template-ben maradt véletlenül beszúrt `$category_required_rules = [];` sort eltávolítottuk az edit meta tömbből
+- [x] A kategória-kötelező szabálytömböt ténylegesen üresre állítottuk a root submit template-ben
+- [x] A plugin mirror submit template-et a javított root verzióval szinkronizáltuk
+- [x] A két érintett fájl szintaktikai ellenőrzése zöld lett
+- [x] Deploy lefutott és a változás felkerült a main ágra
+
+### Hol tartunk
+A feladási oldal parse hibája megszűnt, a submit template újra betöltődhet.
+
+### TODO
+- [ ] Élő frontend smoke teszt: feladás oldal megnyitás, majd cím + 1 kép feltöltéssel sikeres mentés
+
 ## 2026. 06. 02. – Hotfix #nincs-kotelezo-kategoriamezo
 
 ### Mit csináltunk [x]

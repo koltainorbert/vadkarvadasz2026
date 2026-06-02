@@ -57,9 +57,40 @@ function va_apply_views_floor( int $post_id, int $display_views ): int {
     return $final;
 }
 
+function va_should_show_real_views( int $post_id ): bool {
+    $show_real = isset( $_GET['va_real_views'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['va_real_views'] ) ) : '';
+    if ( $show_real !== '1' || ! is_user_logged_in() || $post_id <= 0 ) {
+        return false;
+    }
+
+    $author_id = (int) get_post_field( 'post_author', $post_id );
+    $user_id   = get_current_user_id();
+    if ( $author_id <= 0 || $author_id !== $user_id ) {
+        return false;
+    }
+
+    $token = isset( $_GET['va_rv_token'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['va_rv_token'] ) ) : '';
+    if ( $token === '' ) {
+        return false;
+    }
+
+    $key          = 'va_real_views_' . $user_id . '_' . $post_id;
+    $stored_token = (string) get_transient( $key );
+    if ( $stored_token === '' ) {
+        return false;
+    }
+
+    return hash_equals( $stored_token, $token );
+}
+
 function va_display_views( int $post_id ): int {
+    $real_views = intval( get_post_meta( $post_id, 'va_views', true ) );
+    if ( va_should_show_real_views( $post_id ) ) {
+        return max( 0, $real_views );
+    }
+
     $base = 30 + ( $post_id % 70 );
-    $display_views = intval( get_post_meta( $post_id, 'va_views', true ) ) + $base;
+    $display_views = $real_views + $base;
     return va_apply_views_floor( $post_id, $display_views );
 }
 

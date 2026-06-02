@@ -6361,10 +6361,24 @@ class VA_Ajax {
             ? 'Hirdetés sikeresen feladva!'
             : 'Hirdetés mentve – jóváhagyásra vár.';
 
+        $permalink = get_permalink( $post_id );
+        if ( is_user_logged_in() && $permalink ) {
+            $real_views_token = wp_generate_password( 24, false, false );
+            $real_views_key   = 'va_real_views_' . get_current_user_id() . '_' . $post_id;
+            set_transient( $real_views_key, $real_views_token, MINUTE_IN_SECONDS * 20 );
+            $permalink = add_query_arg(
+                [
+                    'va_real_views' => '1',
+                    'va_rv_token'   => $real_views_token,
+                ],
+                $permalink
+            );
+        }
+
         wp_send_json_success([
             'message'    => $msg,
             'post_id'    => $post_id,
-            'permalink'  => get_permalink( $post_id ),
+            'permalink'  => $permalink,
             'img_errors' => $img_errors,
         ]);
     }
