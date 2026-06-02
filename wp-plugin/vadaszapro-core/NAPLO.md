@@ -17,6 +17,11 @@ A `Hangtompító` már önálló főkategóriaként szinkronizálódik, nem csak
 - [ ] Frontend smoke teszt: Step1 kategória csempék között megjelenik-e a `Hangtompító`
 - [ ] Smoke teszt: `Hangtompító` kategóriában új hirdetés sikeres feladása
 
+### Kiegészítés [x]
+- [x] A hangtompító specifikációs mezőblokk látható lett `hangtompito` fő kategóriára is (`data-categories="egyeb,hangtompito"`)
+- [x] A hangtompító mezők mentése bekötve backendben submit + update flow-ba (root + plugin mirror)
+- [x] A blokk szövegezése általánosítva lett, hogy fő kategóriában is értelmes legyen
+
 ## 2026. 06. 02. – Hotfix #egyeb-popup-allapot-ui-polish
 
 ### Mit csináltunk [x]

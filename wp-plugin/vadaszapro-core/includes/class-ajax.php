@@ -3935,6 +3935,62 @@ class VA_Ajax {
             update_post_meta( $post_id, $k, $v );
         }
 
+        // Hangtompito specifikus mezok (fo kategoriaban is hasznalt).
+        $suppressor_key_fields = [
+            'suppressor_type',
+            'suppressor_thread_type',
+            'suppressor_mount_type',
+            'suppressor_material',
+            'suppressor_build_type',
+            'suppressor_regulation',
+            'suppressor_weapon_compatibility',
+        ];
+        foreach ( $suppressor_key_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $value = sanitize_key( wp_unslash( $_POST[ $field ] ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+        }
+
+        $suppressor_text_fields = [
+            'suppressor_noise_reduction_db',
+            'suppressor_recoil_reduction',
+            'suppressor_flash_reduction',
+            'suppressor_length_mm',
+            'suppressor_diameter_mm',
+            'suppressor_weight_g',
+            'suppressor_poi_shift',
+            'suppressor_return_to_zero',
+            'suppressor_heat_load',
+        ];
+        foreach ( $suppressor_text_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $value = sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+        }
+
+        $suppressor_multi_fields = [
+            'suppressor_caliber_compatibility',
+            'suppressor_usage',
+        ];
+        foreach ( $suppressor_multi_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $raw = (array) wp_unslash( $_POST[ $field ] );
+                $value = implode( ',', array_filter( array_map( 'sanitize_key', $raw ) ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+        }
+
         // va_extras – JSON tömb
         if ( isset( $_POST['extras'] ) ) {
             $raw_extras   = is_array( $_POST['extras'] ) ? (array) $_POST['extras'] : [];
@@ -6625,6 +6681,62 @@ class VA_Ajax {
         }
         foreach ( $metas as $k => $v ) {
             update_post_meta( $post_id, $k, $v );
+        }
+
+        // Hangtompito specifikus mezok (fo kategoriaban is hasznalt).
+        $suppressor_key_fields = [
+            'suppressor_type',
+            'suppressor_thread_type',
+            'suppressor_mount_type',
+            'suppressor_material',
+            'suppressor_build_type',
+            'suppressor_regulation',
+            'suppressor_weapon_compatibility',
+        ];
+        foreach ( $suppressor_key_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $value = sanitize_key( wp_unslash( $_POST[ $field ] ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+        }
+
+        $suppressor_text_fields = [
+            'suppressor_noise_reduction_db',
+            'suppressor_recoil_reduction',
+            'suppressor_flash_reduction',
+            'suppressor_length_mm',
+            'suppressor_diameter_mm',
+            'suppressor_weight_g',
+            'suppressor_poi_shift',
+            'suppressor_return_to_zero',
+            'suppressor_heat_load',
+        ];
+        foreach ( $suppressor_text_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $value = sanitize_text_field( wp_unslash( $_POST[ $field ] ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
+        }
+
+        $suppressor_multi_fields = [
+            'suppressor_caliber_compatibility',
+            'suppressor_usage',
+        ];
+        foreach ( $suppressor_multi_fields as $field ) {
+            $meta_key = 'va_' . $field;
+            if ( isset( $_POST[ $field ] ) ) {
+                $raw = (array) wp_unslash( $_POST[ $field ] );
+                $value = implode( ',', array_filter( array_map( 'sanitize_key', $raw ) ) );
+                update_post_meta( $post_id, $meta_key, $value );
+            } else {
+                delete_post_meta( $post_id, $meta_key );
+            }
         }
 
         // va_extras – JSON tömb
