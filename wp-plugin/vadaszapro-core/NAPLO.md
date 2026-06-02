@@ -2,6 +2,16 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #kereso-minden-kategoria-lefedes
+- Felhasználói kérés: „MINDEN EGYES KATEGÓRIÁRA”.
+- Ok: a korábbi special filter láthatóság túl szűk slug-felismerést használt, így bizonyos kategóriákban nem jelentek meg az új blokkok.
+- Javítás: a [frontend/js/frontend.js](frontend/js/frontend.js) kategória-detektálása teljeskörűsítve lett:
+  - explicit alias listák: fegyver/optika/kutya/ruházat/szolgáltatás/vadászati/csere
+  - pontos slug lista ellenőrzés (`va_slug_in_list`) + kulcsszavas alias egyezés
+  - „no special match” fallback: ha egy kiválasztott kategória egyik csoportba sem esik, automatikusan bekapcsol több filter panelt (`brand-model`, `clothing`, `service`, `hunt`, `exchange`), hogy ne maradjon üres
+- Mirror szinkron: ugyanaz átvezetve a [wp-plugin/vadaszapro-core/frontend/js/frontend.js](wp-plugin/vadaszapro-core/frontend/js/frontend.js) fájlba.
+- Ellenőrzés: mindkét JS fájlon `No errors found`.
+
 ## 2026. 06. 02. – Session #kereso-full-komplex-teljes-kategoria
 - Kérés: a kereső legyen maximálisan komplex, ne csak jármű fókuszú; ruházat, szolgáltatás, vadászati lehetőség és csere kategóriákban is legyenek azonnal használható gyorsszűrők.
 - Frontend UI: a [frontend/templates/listing/search.php](frontend/templates/listing/search.php) fájlba bekerült 24 új kategória-specifikus mező:

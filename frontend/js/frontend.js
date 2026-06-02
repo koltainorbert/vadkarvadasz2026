@@ -344,6 +344,12 @@
     });
   }
 
+  function va_slug_in_list(slug, list) {
+    var safeSlug = String(slug || '').toLowerCase();
+    if (!safeSlug) return false;
+    return (list || []).indexOf(safeSlug) !== -1;
+  }
+
   function va_apply_category_specific_search_filters() {
     var slug = va_get_selected_category_slug();
     var brandModelMap = va_get_brand_model_map_for_slug(slug);
@@ -362,15 +368,48 @@
       'loszer-tolteny': 1,
       'sportlovo-felsz': 1
     };
+
+    var firearmAliases = [
+      'fegyver', 'fegyverek', 'fegyver-loszer', 'vadaszfegyver'
+    ];
+    var opticAliases = [
+      'optika', 'optikak', 'tavcso', 'ejjellato', 'hoking', 'hokamera', 'vadkamera'
+    ];
+    var dogAliases = [
+      'vadaszkutya', 'kutya', 'kutyak'
+    ];
+    var clothingExact = [
+      'vadasz-ruhazat', 'egyeb-ruhazat', 'cipo-bakancs', 'bakancs-felcipo', 'ruhazat-labbeli'
+    ];
+    var serviceExact = [
+      'szolgaltatas', 'allas', 'allas-hirdetes', 'munka', 'munkak', 'munkalehetoseg', 'munkalehetosegek'
+    ];
+    var huntExact = [
+      'vadaszati-lehetoseg', 'vadkarelharitas', 'vadaszati-hagyatek'
+    ];
+    var exchangeExact = [
+      'csere'
+    ];
+
     var showVehicle = slug === 'jarmu';
-    var showBrandModel = showVehicle || Object.keys(brandModelMap).length > 0;
-    var showOptic = !!opticSlugs[slug];
-    var showDog = slug === 'vadaszkutya';
-    var showFirearm = !!firearmSlugs[slug];
-    var showClothing = va_slug_matches_any(slug, ['vadasz-ruhazat', 'ruhazat', 'bakancs']);
-    var showService = va_slug_matches_any(slug, ['szolgaltatas', 'fegyvermusz', 'preparator', 'kutyas']);
-    var showHunt = va_slug_matches_any(slug, ['vadaszati-lehetoseg', 'bervadaszat', 'vadkar']);
-    var showExchange = va_slug_matches_any(slug, ['csere']);
+    var showBrandModel = showVehicle || Object.keys(brandModelMap).length > 0 || va_slug_matches_any(slug, firearmAliases.concat(opticAliases, ['ruhazat', 'felszereles']));
+    var showOptic = !!opticSlugs[slug] || va_slug_matches_any(slug, opticAliases);
+    var showDog = slug === 'vadaszkutya' || va_slug_matches_any(slug, dogAliases);
+    var showFirearm = !!firearmSlugs[slug] || va_slug_matches_any(slug, firearmAliases);
+    var showClothing = va_slug_in_list(slug, clothingExact) || va_slug_matches_any(slug, ['ruhazat', 'bakancs', 'cipo']);
+    var showService = va_slug_in_list(slug, serviceExact) || va_slug_matches_any(slug, ['szolgaltatas', 'munka', 'allas']);
+    var showHunt = va_slug_in_list(slug, huntExact) || va_slug_matches_any(slug, ['vadaszati', 'vadkar', 'hagyatek']);
+    var showExchange = va_slug_in_list(slug, exchangeExact) || va_slug_matches_any(slug, ['csere']);
+
+    var hasAnySpecial = showVehicle || showBrandModel || showOptic || showDog || showFirearm || showClothing || showService || showHunt || showExchange;
+    var showFallbackAll = !!slug && !hasAnySpecial;
+    if (showFallbackAll) {
+      showBrandModel = true;
+      showClothing = true;
+      showService = true;
+      showHunt = true;
+      showExchange = true;
+    }
 
     var $vehicleFields = $('[data-special-filter="vehicle"]');
     var $brandModelFields = $('[data-special-filter="brand-model"]');
