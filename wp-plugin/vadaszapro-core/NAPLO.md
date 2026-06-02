@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #egyeb-popup-allapot-ui-polish
+
+### Mit csináltunk [x]
+- [x] Az `Egyéb kategória` popup állapotgombjai teljes egyedi stílust kaptak (pill forma, spacing, hover, selected)
+- [x] A kiválasztott állapot vizuálisan kiemelt (narancs aktív chip + árnyék)
+- [x] Mobil nézetre is finomhangolva lett a popup kártya és gombtördelés
+- [x] Root + plugin mirror `submit-form.php` CSS szinkronban frissítve
+
+### Hol tartunk
+A popup állapotválasztó része már egységes, modern és jól olvasható, nem böngésző-alap megjelenésű.
+
 ## 2026. 06. 02. – Hotfix #egyeb-popup-tovabb-allapot-nev
 
 ### Mit csináltunk [x]

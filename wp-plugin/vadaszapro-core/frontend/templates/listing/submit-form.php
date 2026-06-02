@@ -1982,11 +1982,58 @@ body.va-modal-open {
     color: rgba(255,255,255,.9);
     font-weight: 700;
 }
+.va-other-cat-condition .va-cond-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.va-other-cat-condition .va-cond-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.24);
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+.va-other-cat-condition .va-cond-btn:hover,
+.va-other-cat-condition .va-cond-btn:focus-visible {
+    border-color: rgba(255,138,0,.65);
+    background: rgba(255,138,0,.16);
+    color: #fff;
+    outline: none;
+    transform: translateY(-1px);
+}
+.va-other-cat-condition .va-cond-btn.is-selected {
+    background: #ff8a00;
+    border-color: #ff8a00;
+    color: #111;
+    box-shadow: 0 10px 24px rgba(255,138,0,.28);
+}
 .va-other-cat-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
     margin-top: 12px;
+}
+@media (max-width: 640px) {
+    .va-other-cat-card {
+        max-width: calc(100vw - 20px);
+        border-radius: 16px;
+        padding: 20px 16px;
+    }
+    .va-other-cat-condition .va-cond-btn {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 140px;
+    }
 }
 
 /* Submit Notice Modal - Teljes overlay */
