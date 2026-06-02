@@ -18,6 +18,11 @@ A termékoldalon minden kategóriában láthatóvá váltak a feladáskor megado
 ### TODO
 - [ ] Frontend smoke teszt 3-4 különböző kategórián: ellenőrizni, hogy az összes releváns feladott mező ténylegesen megjelenik
 
+### Utólagos finomítás [x]
+- [x] A fallback már csak hivatalos meződefinícióval rendelkező kulcsokat jeleníti meg, így az angol technikai/filter kulcsok nem kerülnek ki a single oldalra
+- [x] A hamis checkbox/nullás zajértékek (`0`) kiszűrésre kerültek a fallback listából
+- [x] Deploy lefutott, commit: `e5f46c17`
+
 ## 2026. 06. 02. – Hotfix #feladas-utan-valos-nezettseg
 
 ### Mit csináltunk [x]
