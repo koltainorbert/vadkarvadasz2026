@@ -2099,6 +2099,7 @@ class VA_Ajax {
         $loszer_powder_sealed = sanitize_key( wp_unslash( $_POST['loszer_powder_sealed'] ?? '' ) );
         $loszer_powder_weight = sanitize_text_field( wp_unslash( $_POST['loszer_powder_weight'] ?? '' ) );
         $loszer_primer_type = sanitize_key( wp_unslash( $_POST['loszer_primer_type'] ?? '' ) );
+        $other_category = sanitize_text_field( wp_unslash( $_POST['other_category'] ?? '' ) );
         $category    = intval( $_POST['category'] ?? 0 );
         $county      = intval( $_POST['county']   ?? 0 );
         $condition   = intval( $_POST['condition'] ?? 0 );
@@ -2204,6 +2205,7 @@ class VA_Ajax {
             'service_urgent_repair' => $service_urgent_repair,
             'service_full_prep' => $service_full_prep,
             'service_night_work' => $service_night_work,
+            'other_category' => $other_category,
             'clothing_type' => $clothing_type,
             'clothing_condition' => $clothing_condition,
             'clothing_gender' => $clothing_gender,

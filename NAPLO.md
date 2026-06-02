@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #egyeb-kategoria-submit-fix
+
+### Mit csináltunk [x]
+- [x] Az `Egyéb` kategória backend validációja javítva: a submit path most már beolvassa az `other_category` mezőt
+- [x] Az `other_category` átadása bekerült a `validate_category_required_fields()` hívás mezőtömbjébe, így az `egyeb` slug esetén nem akad el tévesen a mentés
+- [x] Root + plugin mirror `includes/class-ajax.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba a módosított fájlokban
+
+### Hol tartunk
+Az `Egyéb` kategória feladás már nem bukik el a hiányzó `other_category` validációs átadás miatt.
+
+### TODO
+- [ ] Frontend smoke teszt: `Egyéb` kategória + kitöltött `Egyéb kategória neve` mezővel sikeres feladás ellenőrzése
+
 ## 2026. 06. 02. – Hotfix #single-oldal-minden-mezo-lathato
 
 ### Session zárás [x]
