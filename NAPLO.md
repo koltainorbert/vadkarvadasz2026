@@ -2,6 +2,22 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #egyeb-popup-tovabb-allapot-nev
+
+### Mit csináltunk [x]
+- [x] Az `Egyéb kategória` popupba bekerült a `Termék állapota` választás (`Új`, `Használt`, stb. a meglévő állapot taxonómiából)
+- [x] A popup fő gomb felirata `Mentés` helyett `Tovább`
+- [x] `Tovább` után azonnal a `Termék adatai` (2. lépés) oldalra visz, nem marad meg az 1. lépésen
+- [x] Az állapotválasztás popup és fő állapotgombok között kétirányúan szinkronban marad
+- [x] A 2. lépés címkéjén `Egyéb` helyett a felhasználó által megadott egyedi név jelenik meg
+- [x] Root + plugin mirror `frontend/templates/listing/submit-form.php` szinkronban frissítve
+
+### Hol tartunk
+Az `Egyéb` kategória UX most a kért működést követi: popupban név + állapot, `Tovább` gombbal azonnali továbblépés, és egyedi név megjelenítés.
+
+### TODO
+- [ ] Frontend smoke teszt: `Egyéb` kategória (pl. "Hangtompító") felvitele, állapot kiválasztás popupból, automatikus Step2 váltás és egyedi címke ellenőrzése
+
 ## 2026. 06. 02. – Hotfix #egyeb-modal-mentes-folytatas
 
 ### Mit csináltunk [x]

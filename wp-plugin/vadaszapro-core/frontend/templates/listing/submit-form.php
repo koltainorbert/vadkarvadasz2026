@@ -1973,6 +1973,15 @@ body.va-modal-open {
     margin: 0 0 12px;
     color: rgba(255,255,255,.7);
 }
+.va-other-cat-condition {
+    margin-top: 14px;
+}
+.va-other-cat-condition .va-wiz-field-label {
+    display: block;
+    margin: 0 0 8px;
+    color: rgba(255,255,255,.9);
+    font-weight: 700;
+}
 .va-other-cat-actions {
     display: flex;
     gap: 10px;
@@ -7830,9 +7839,17 @@ body.va-modal-open {
             <h4 id="va-other-cat-title">Egyéb kategória megadása</h4>
             <p>Írd be pontosan, milyen kategóriát szeretnél megadni.</p>
             <input type="text" id="va-other-cat-input" class="va-input" maxlength="80" placeholder="pl. Vadász kiegészítő egyéb">
+            <div class="va-other-cat-condition">
+                <label class="va-wiz-field-label">Termék állapota</label>
+                <div class="va-cond-btns" id="va-other-cond-btns">
+                    <?php foreach ( $conditions as $cond ): ?>
+                    <button type="button" class="va-cond-btn va-other-cond-btn" data-term-id="<?php echo esc_attr( $cond->term_id ); ?>"><?php echo esc_html( $cond->name ); ?></button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             <div class="va-other-cat-actions">
                 <button type="button" class="va-btn va-btn--ghost" id="va-other-cat-cancel">Mégse</button>
-                <button type="button" class="va-btn va-btn--primary" id="va-other-cat-save">Mentés</button>
+                <button type="button" class="va-btn va-btn--primary" id="va-other-cat-save">Tovább</button>
             </div>
         </div>
     </div>
@@ -8562,7 +8579,12 @@ document.addEventListener('DOMContentLoaded', function() {
         _otherCategoryModalSource = source || '';
         var $modal = $('#va-other-cat-modal');
         var $input = $('#va-other-cat-input');
+        var selectedCondition = parseInt($('#va-condition-hidden').val() || 0, 10);
         $input.val((($('#va-other-category').val() || '') + '').trim());
+        $('#va-other-cond-btns .va-other-cond-btn').removeClass('is-selected');
+        if (selectedCondition > 0) {
+            $('#va-other-cond-btns .va-other-cond-btn[data-term-id="' + selectedCondition + '"]').addClass('is-selected');
+        }
         $('body').addClass('va-modal-open');
         $modal.addClass('is-open').attr('aria-hidden', 'false');
         setTimeout(function(){ $input.trigger('focus'); }, 30);
@@ -8677,7 +8699,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         $('#va-other-category').val(val);
+        updateStep2CategoryLabel();
+        var source = _otherCategoryModalSource;
+        _otherCategoryModalSource = '';
         closeOtherCategoryModal();
+
+        if (source === 'submit') {
+            setTimeout(function(){ $('#va-submit-btn').trigger('click'); }, 0);
+            return;
+        }
+        if (_wStep === 1) {
+            setTimeout(function(){ wizGoTo(2); }, 0);
+        }
     });
     $('#va-other-cat-modal').on('click', function(e){
         if (e.target === this) closeOtherCategoryModal();
@@ -8686,10 +8719,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape') closeOtherCategoryModal();
     });
     // Állapot gomb választás
-    $(document).on('click', '.va-cond-btn', function() {
-        $('.va-cond-btn').removeClass('is-selected');
+    $(document).on('click', '#va-cond-btns .va-cond-btn', function() {
+        var termId = $(this).data('term-id');
+        $('#va-cond-btns .va-cond-btn').removeClass('is-selected');
         $(this).addClass('is-selected');
-        $('#va-condition-hidden').val($(this).data('term-id'));
+        $('#va-other-cond-btns .va-other-cond-btn').removeClass('is-selected');
+        $('#va-other-cond-btns .va-other-cond-btn[data-term-id="' + termId + '"]').addClass('is-selected');
+        $('#va-condition-hidden').val(termId);
+    });
+    $(document).on('click', '#va-other-cond-btns .va-other-cond-btn', function() {
+        var termId = $(this).data('term-id');
+        $('#va-other-cond-btns .va-other-cond-btn').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        $('#va-cond-btns .va-cond-btn').removeClass('is-selected');
+        $('#va-cond-btns .va-cond-btn[data-term-id="' + termId + '"]').addClass('is-selected');
+        $('#va-condition-hidden').val(termId);
     });
     // Step dot kattintás
     $(document).on('click', '.va-wdot', function() {
@@ -9153,6 +9197,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getSelectedCategoryLabel() {
+        var slug = (getSelectedCategorySlug() || '').toLowerCase();
+        if (slug === 'egyeb') {
+            var otherName = (($('#va-other-category').val() || '') + '').trim();
+            if (otherName) return otherName;
+        }
+
         var cardLabel = (($('.va-cat-item[data-selected="1"]').text() || '') + '').trim();
         if (cardLabel) return cardLabel;
 
