@@ -2,6 +2,17 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #frontpage-tab-cim-weingartner-eltavolitas
+
+### Mit csináltunk [x]
+- [x] Kiderült, hogy a front page böngészőfül címe hardcode volt SEO szűrőben: `Eladó autók és motorok | Weingartner Autó`
+- [x] A hardcode eltávolítva, helyette dinamikus oldalnév kerül a tab címbe (`va_site_name`, fallback: blog name)
+- [x] Root + plugin mirror `includes/class-seo.php` szinkronban frissítve
+- [x] Hibavizsgálat lefutott: nincs új hiba
+
+### Hol tartunk
+A régi Weingartneres frontpage tab-cím megszűnt, helyette a projekt aktuális oldalneve jelenik meg.
+
 ## 2026. 06. 02. – Hotfix #hangtompito-reszletek-celzott-szures
 
 ### Mit csináltunk [x]

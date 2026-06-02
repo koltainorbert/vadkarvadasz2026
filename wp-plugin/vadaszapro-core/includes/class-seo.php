@@ -158,7 +158,11 @@ class VA_SEO {
         }
 
         if ( is_front_page() ) {
-            $parts['title'] = 'Eladó autók és motorok | Weingartner Autó';
+            $site_name = trim( (string) get_option( 'va_site_name', '' ) );
+            if ( $site_name === '' ) {
+                $site_name = get_bloginfo( 'name' );
+            }
+            $parts['title'] = $site_name;
             unset( $parts['tagline'] );
             return $parts;
         }
