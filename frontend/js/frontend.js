@@ -272,13 +272,46 @@
     $('#va-range-fill').css({ left: left + '%', right: right + '%' });
   }
 
-  function va_update_model_options(selectedModel) {
+  function va_get_brand_model_map_for_slug(slug) {
+    var vehicleMap = (typeof VA_Data !== 'undefined' && VA_Data.vehicle_brand_models) ? VA_Data.vehicle_brand_models : {};
+    var huntingMapByCategory = (typeof VA_Data !== 'undefined' && VA_Data.hunting_brand_models) ? VA_Data.hunting_brand_models : {};
+    var safeSlug = String(slug || '').trim();
+
+    if (safeSlug === 'jarmu') {
+      return vehicleMap;
+    }
+    if (safeSlug && huntingMapByCategory && huntingMapByCategory[safeSlug] && typeof huntingMapByCategory[safeSlug] === 'object') {
+      return huntingMapByCategory[safeSlug];
+    }
+    return {};
+  }
+
+  function va_update_brand_and_model_options(selectedBrand, selectedModel) {
     var $brand = $('#va-brand-search');
     var $model = $('#va-model-search');
     if (!$brand.length || !$model.length) return;
 
-    var map = (typeof VA_Data !== 'undefined' && VA_Data.vehicle_brand_models) ? VA_Data.vehicle_brand_models : {};
-    var brand = ($brand.val() || '').trim();
+    var slug = va_get_selected_category_slug();
+    var map = va_get_brand_model_map_for_slug(slug);
+    var availableBrands = Object.keys(map || {});
+
+    var brand = (typeof selectedBrand === 'string' && selectedBrand.trim() !== '')
+      ? selectedBrand.trim()
+      : (($brand.val() || '').trim());
+
+    if (availableBrands.length) {
+      var brandHtml = '<option value="">Márka: Mindegy</option>';
+      availableBrands.forEach(function(b) {
+        var safeB = $('<div>').text(b).html();
+        var selB = (brand && brand === b) ? ' selected' : '';
+        brandHtml += '<option value="' + safeB + '"' + selB + '>' + safeB + '</option>';
+      });
+      $brand.html(brandHtml);
+    } else {
+      $brand.html('<option value="">Márka: Mindegy</option>');
+      brand = '';
+    }
+
     var models = (brand && map[brand] && Array.isArray(map[brand])) ? map[brand] : [];
 
     var html = '<option value="">Modell: Mindegy</option>';
@@ -305,25 +338,44 @@
 
   function va_apply_category_specific_search_filters() {
     var slug = va_get_selected_category_slug();
+    var brandModelMap = va_get_brand_model_map_for_slug(slug);
     var opticSlugs = {
       'tavcsovek': 1,
       'ejjellato-tavcso': 1,
       'hokamerak': 1
     };
+    var firearmSlugs = {
+      'golyos-puska': 1,
+      'soretes-puska': 1,
+      'vegyescsovu-puska': 1,
+      'maroklofegyver': 1,
+      'hatastalanitott': 1,
+      'egyeb-fegyverek': 1,
+      'loszer-tolteny': 1,
+      'sportlovo-felsz': 1
+    };
     var showVehicle = slug === 'jarmu';
+    var showBrandModel = showVehicle || Object.keys(brandModelMap).length > 0;
     var showOptic = !!opticSlugs[slug];
     var showDog = slug === 'vadaszkutya';
+    var showFirearm = !!firearmSlugs[slug];
 
     var $vehicleFields = $('[data-special-filter="vehicle"]');
+    var $brandModelFields = $('[data-special-filter="brand-model"]');
     var $opticFields = $('[data-special-filter="optic"]');
     var $dogFields = $('[data-special-filter="dog"]');
+    var $firearmFields = $('[data-special-filter="firearm"]');
 
     $vehicleFields.toggle(showVehicle);
+    $brandModelFields.toggle(showBrandModel);
     $opticFields.toggle(showOptic);
     $dogFields.toggle(showDog);
+    $firearmFields.toggle(showFirearm);
+
+    va_update_brand_and_model_options('', '');
 
     if (!showVehicle) {
-      $('#va-brand-search, #va-model-search, #va-body-type, #va-fuel-type, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-vehicle-condition, #va-doors, #va-passengers').val('');
+      $('#va-body-type, #va-fuel-type, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-vehicle-condition, #va-doors, #va-passengers').val('');
       $('.va-car-filter').prop('checked', false);
 
       var $panel = $('#va-advanced-panel');
@@ -332,8 +384,14 @@
         $panel.stop(true, true).slideUp(180).addClass('is-collapsed');
         $btn.attr('aria-expanded', 'false');
       }
+    }
 
-      va_update_model_options('');
+    if (!showBrandModel) {
+      $('#va-brand-search, #va-model-search').val('');
+    }
+
+    if (!showFirearm) {
+      $('#va-caliber-search').val('');
     }
 
     if (!showOptic) {
@@ -493,6 +551,7 @@
       author_id:  $form.data('author-id') || 0,
       brand:      $('#va-brand-search').val() || '',
       model:      $('#va-model-search').val() || '',
+      caliber:    ($('#va-caliber-search').val() || '').trim(),
       body_type:  $('#va-body-type').val() || '',
       fuel_type:  $('#va-fuel-type').val() || '',
       optic_zoom: ($('#va-optic-zoom-search').val() || '').trim(),
@@ -535,12 +594,12 @@
       va_apply_category_specific_search_filters();
     }
     if (this.id === 'va-brand-search') {
-      va_update_model_options('');
+      va_update_brand_and_model_options('', '');
     }
     va_load_listings(1);
   });
 
-  $(document).on('input', '#va-kw, #va-min-price, #va-max-price, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-optic-zoom-search', function() {
+  $(document).on('input', '#va-kw, #va-min-price, #va-max-price, #va-year-min, #va-year-max, #va-mileage-min, #va-mileage-max, #va-engine-min, #va-engine-max, #va-optic-zoom-search, #va-caliber-search', function() {
     clearTimeout(filterTimeout);
     filterTimeout = setTimeout(function() { va_load_listings(1); }, 450);
   });
@@ -552,7 +611,7 @@
 
   $(document).on('click', '#va-filter-reset', function() {
     $('#va-filter-form')[0].reset();
-    va_update_model_options('');
+    va_update_brand_and_model_options('', '');
     va_apply_category_specific_search_filters();
     va_update_range();
     va_load_listings(1);
@@ -763,11 +822,9 @@
       if (parseInt(VA_Data.initial_cat) > 0)        { $('#va-cat').val(VA_Data.initial_cat); }
       if (VA_Data.initial_author_id)  { $('#va-filter-form').data('author-id', VA_Data.initial_author_id); }
       if (VA_Data.initial_post_type)  { $('#va-filter-form').data('post-type', VA_Data.initial_post_type); }
-      if (VA_Data.initial_brand)      { $('#va-brand-search').val(VA_Data.initial_brand); }
-      va_update_model_options(VA_Data.initial_model || '');
-      if (VA_Data.initial_model)      { $('#va-model-search').val(VA_Data.initial_model); }
+      va_update_brand_and_model_options(VA_Data.initial_brand || '', VA_Data.initial_model || '');
     } else {
-      va_update_model_options('');
+      va_update_brand_and_model_options('', '');
     }
     va_apply_category_specific_search_filters();
     va_load_listings(1);

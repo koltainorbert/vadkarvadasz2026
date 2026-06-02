@@ -8527,6 +8527,7 @@ class VA_Ajax {
         // Jármű specifikus részletes szűrők
         $brand             = sanitize_text_field( wp_unslash( $_POST['brand'] ?? '' ) );
         $model             = sanitize_text_field( wp_unslash( $_POST['model'] ?? '' ) );
+        $caliber           = sanitize_text_field( wp_unslash( $_POST['caliber'] ?? '' ) );
         $body_type         = sanitize_key( $_POST['body_type'] ?? '' );
         $fuel_type         = sanitize_key( $_POST['fuel_type'] ?? '' );
         $optic_zoom        = sanitize_text_field( wp_unslash( $_POST['optic_zoom'] ?? '' ) );
@@ -8566,7 +8567,7 @@ class VA_Ajax {
         // ── Transient cache kulcs ─────────────────────────
         $cache_key = 'va_fl_' . md5( serialize( compact(
             'paged','category','county','condition','min_price','max_price','keyword','sort','post_type','per_page',
-            'brand','model','body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
+            'brand','model','caliber','body_type','fuel_type','optic_zoom','optic_objective_min','optic_objective_max','dog_age_min','dog_age_max','year_min','year_max','mileage_min','mileage_max',
             'engine_min','engine_max','vehicle_condition','doors','passengers','opt_automatic','opt_awd','opt_service_book','extras'
         ) ) );
         $cached = get_transient( $cache_key );
@@ -8605,6 +8606,21 @@ class VA_Ajax {
             $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_model ON (pm_model.post_id = p.ID AND pm_model.meta_key = 'va_model')";
             $where[] = 'pm_model.meta_value = %s';
             $params[] = $model;
+        }
+
+        if ( $caliber !== '' ) {
+            $caliber_like = '%' . $wpdb->esc_like( $caliber ) . '%';
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_caliber ON (pm_caliber.post_id = p.ID AND pm_caliber.meta_key = 'va_caliber')";
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_rifle_caliber ON (pm_rifle_caliber.post_id = p.ID AND pm_rifle_caliber.meta_key = 'va_rifle_caliber')";
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_mixed_rifle_caliber ON (pm_mixed_rifle_caliber.post_id = p.ID AND pm_mixed_rifle_caliber.meta_key = 'va_mixed_rifle_caliber')";
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_mixed_shotgun_caliber ON (pm_mixed_shotgun_caliber.post_id = p.ID AND pm_mixed_shotgun_caliber.meta_key = 'va_mixed_shotgun_caliber')";
+            $meta_joins[] = "LEFT JOIN {$wpdb->postmeta} pm_loszer_caliber_custom ON (pm_loszer_caliber_custom.post_id = p.ID AND pm_loszer_caliber_custom.meta_key = 'va_loszer_caliber_custom')";
+            $where[] = '(pm_caliber.meta_value LIKE %s OR pm_rifle_caliber.meta_value LIKE %s OR pm_mixed_rifle_caliber.meta_value LIKE %s OR pm_mixed_shotgun_caliber.meta_value LIKE %s OR pm_loszer_caliber_custom.meta_value LIKE %s)';
+            $params[] = $caliber_like;
+            $params[] = $caliber_like;
+            $params[] = $caliber_like;
+            $params[] = $caliber_like;
+            $params[] = $caliber_like;
         }
 
         if ( $body_type !== '' ) {

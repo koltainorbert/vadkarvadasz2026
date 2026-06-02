@@ -2,6 +2,30 @@
 
 ---
 
+## 2026. 06. 02. – Session #hirdetes-kereso-kategoriafuggo-komplexites
+- Kérés: a hirdetéskereső ne csak `jarmu` kategóriában legyen használhatóan részletes, hanem több kategóriában is adjon valódi, releváns szűrőket.
+- Frontend UI: a [frontend/templates/listing/search.php](frontend/templates/listing/search.php) fájlban a márka/modell mezők `brand-model` csoportba kerültek, és bekerült új `Kaliber` keresőmező (`va-caliber-search`) a fegyveres kategóriákhoz.
+- Kategóriafüggő adatforrás: a kereső oldal most lokalizálja a `hunting_brand_models` adatot is, így a márka/modell lista nem csak autós márkákat ad, hanem kategória-specifikus vadász/fegyver/optika márkákat.
+- Frontend logika: a [frontend/js/frontend.js](frontend/js/frontend.js) fájlban új kategóriafüggő márka/modell töltés készült (`va_get_brand_model_map_for_slug`, `va_update_brand_and_model_options`), plusz bővült a show/hide szabályrendszer (`brand-model`, `firearm`, `optic`, `dog`, `vehicle`).
+- AJAX payload: a kereső most elküldi a `caliber` paramétert is, és input eseményre élőben szűr rá.
+- Backend szűrés: az [includes/class-ajax.php](includes/class-ajax.php) `filter_listings()` függvénye új `caliber` szűrést kapott több releváns meta kulcson (`va_caliber`, `va_rifle_caliber`, `va_mixed_rifle_caliber`, `va_mixed_shotgun_caliber`, `va_loszer_caliber_custom`) OR-logikával.
+- Cache kulcs: a filter cache hash most már tartalmazza a `caliber` értéket is, így nincs hibás cache új kaliber-szűrésnél.
+- Szinkron: a módosítások mirrorban is egységesítve:
+  - [wp-plugin/vadaszapro-core/frontend/templates/listing/search.php](wp-plugin/vadaszapro-core/frontend/templates/listing/search.php)
+  - [wp-plugin/vadaszapro-core/frontend/js/frontend.js](wp-plugin/vadaszapro-core/frontend/js/frontend.js)
+  - [wp-plugin/vadaszapro-core/includes/class-ajax.php](wp-plugin/vadaszapro-core/includes/class-ajax.php)
+- Ellenőrzés: hibakeresés lefutott az összes érintett fájlon, `No errors found`.
+- Maradt teendő: élő QA 4 fő ágon: `jarmu`, `golyos-puska/soretes-puska`, `tavcsovek/hokamerak`, `vadaszkutya`.
+
+## 2026. 05. 29. – Session #fegyverlampa-kategoria-szintu-javitas
+- Kérés: a `Fegyverlámpa` ne csak altípus / light value legyen, hanem ténylegesen megjelenjen top-level kategóriaként is.
+- Catalog seed: a kategória seedlistába bekerült a `fegyverlampa` slug, a dataset verzió frissült, így a taxonomy frissítés létrehozza a termet.
+- Frontend: a formban a lámpás blokk immár a `fegyverlampa` kategóriára is látható, és az `applyEquipmentDynamicFields()` is feloldja ezt a slugot lámpás típusnak.
+- Backend: a required rules map mind a root, mind a plugin mirror oldalon külön kezeli a `fegyverlampa` kategóriát ugyanazzal az alap validációval, mint a többi lámpás kategóriát.
+- Szinkron + ellenőrzés: root + plugin mirror `class-vehicle-catalog.php`, `submit-form.php`, `class-ajax.php` egységesítve, hibakeresés mind a 6 érintett fájlon `No errors found`.
+- Deploy: `Deploy All` lefutott, commit+push kész (`4a5a5580`), live workflow triggerelve.
+- Maradt teendő: ha a későbbiekben külön Fegyverlámpa-specifikus almezők kellenek, azokat külön a lámpás blokkhoz kell felvenni.
+
 ## 2026. 05. 29. – Session #egyeb-kategoria-szintu-mezorendszer
 - Kérés: a top-level `Egyéb` kategória kapjon valódi, látható kategória-mezőt, ne csak rejtett fallback/modál szintű kezelést.
 - Frontend: a `submit-form.php` Step 2-be bekerült a látható `other_category` blokk a `data-categories="egyeb"` feltétellel, így az `Egyéb` választásnál közvetlenül megadható a kategória neve.

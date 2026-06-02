@@ -47,6 +47,7 @@ $lp_empty_text      = (string) get_option( 'va_lp_empty_text', 'Nincs találat.'
 
 $vehicle_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_brand_models() : [];
 $vehicle_brands       = array_keys( $vehicle_brand_models );
+$hunting_brand_models = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_hunting_brand_models_by_category() : [];
 $vehicle_body_types   = class_exists( 'VA_Vehicle_Catalog' ) ? VA_Vehicle_Catalog::get_body_type_options() : [];
 $vehicle_fuel_types   = [
     'benzin'   => 'Benzin',
@@ -78,11 +79,24 @@ if ( $url_brand !== '' && ! empty( $vehicle_brand_models[ $url_brand ] ) && is_a
     $top_model_links = array_slice( $vehicle_brand_models[ $url_brand ], 0, 24 );
 }
 $active_category_name = '';
+$active_category_slug = '';
 if ( $url_cat > 0 ) {
     $active_category = get_term( $url_cat, 'va_category' );
     if ( $active_category instanceof WP_Term && ! is_wp_error( $active_category ) ) {
         $active_category_name = (string) $active_category->name;
+        $active_category_slug = sanitize_title( (string) $active_category->slug );
     }
+}
+$active_brand_models = [];
+if ( $active_category_slug === 'jarmu' ) {
+    $active_brand_models = $vehicle_brand_models;
+} elseif ( $active_category_slug !== '' && isset( $hunting_brand_models[ $active_category_slug ] ) && is_array( $hunting_brand_models[ $active_category_slug ] ) ) {
+    $active_brand_models = $hunting_brand_models[ $active_category_slug ];
+}
+$active_brands = array_keys( $active_brand_models );
+$active_models = [];
+if ( $url_brand !== '' && isset( $active_brand_models[ $url_brand ] ) && is_array( $active_brand_models[ $url_brand ] ) ) {
+    $active_models = $active_brand_models[ $url_brand ];
 }
 $heading_parts = [];
 if ( $url_brand !== '' ) {
@@ -165,6 +179,7 @@ wp_localize_script( 'va-frontend', 'VA_Data', [
     'slider_step'      => $lp_slider_step,
     'empty_text'       => $lp_empty_text,
     'vehicle_brand_models' => $vehicle_brand_models,
+    'hunting_brand_models' => $hunting_brand_models,
     'category_slugs'   => $category_slug_map,
 ]);
 wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', [], VA_VERSION );
@@ -187,6 +202,22 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
         <div class="va-filter-bar__title"><?php echo esc_html( $plain_filter_title ); ?></div>
         <form id="va-filter-form" data-post-type="<?php echo esc_attr( $url_post_type ); ?>">
             <div class="va-filter-bar__grid">
+                <input type="search" id="va-kw" class="va-input" placeholder="<?php echo esc_attr( $lp_kw_placeholder ); ?>" value="<?php echo esc_attr( $url_s ); ?>">
+
+                <select id="va-county" class="va-select">
+                    <option value=""><?php echo esc_html( $lp_co_placeholder ); ?></option>
+                    <?php foreach ( $counties as $county_term ): ?>
+                        <option value="<?php echo esc_attr( (string) $county_term->term_id ); ?>"><?php echo esc_html( (string) $county_term->name ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <select id="va-cond" class="va-select">
+                    <option value=""><?php echo esc_html( $lp_cond_placeholder ); ?></option>
+                    <?php foreach ( $conditions as $cond_term ): ?>
+                        <option value="<?php echo esc_attr( (string) $cond_term->term_id ); ?>"><?php echo esc_html( (string) $cond_term->name ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+
                 <select id="va-cat" class="va-select">
                     <option value=""><?php echo esc_html( $lp_cat_placeholder ); ?></option>
                     <?php foreach ( $categories as $cat ): ?>
@@ -194,16 +225,21 @@ wp_enqueue_style( 'va-frontend', VA_PLUGIN_URL . 'frontend/css/frontend.css', []
                     <?php endforeach; ?>
                 </select>
 
-                <select id="va-brand-search" class="va-select" data-special-filter="vehicle">
+                <select id="va-brand-search" class="va-select" data-special-filter="brand-model">
                     <option value="">Márka: Mindegy</option>
-                    <?php foreach ( $vehicle_brands as $brand ): ?>
+                    <?php foreach ( $active_brands as $brand ): ?>
                         <option value="<?php echo esc_attr( (string) $brand ); ?>"<?php selected( $url_brand, (string) $brand ); ?>><?php echo esc_html( (string) $brand ); ?></option>
                     <?php endforeach; ?>
                 </select>
 
-                <select id="va-model-search" class="va-select" data-special-filter="vehicle">
+                <select id="va-model-search" class="va-select" data-special-filter="brand-model">
                     <option value="">Modell: Mindegy</option>
+                    <?php foreach ( $active_models as $model ): ?>
+                        <option value="<?php echo esc_attr( (string) $model ); ?>"<?php selected( $url_model, (string) $model ); ?>><?php echo esc_html( (string) $model ); ?></option>
+                    <?php endforeach; ?>
                 </select>
+
+                <input type="text" id="va-caliber-search" class="va-input" placeholder="Kaliber (pl. 30-06, 12/70)" data-special-filter="firearm">
 
                 <select id="va-body-type" class="va-select" data-special-filter="vehicle">
                     <option value="">Kivitel: Mindegy</option>
