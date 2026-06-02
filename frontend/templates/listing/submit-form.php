@@ -1057,6 +1057,20 @@ if ( is_user_logged_in() && isset( $_GET['edit'] ) ) {
             'county'      => (int) ( wp_get_post_terms( $maybe_id, 'va_county',   ['fields'=>'ids'] )[0] ?? 0 ),
             'condition'   => (int) ( wp_get_post_terms( $maybe_id, 'va_condition',['fields'=>'ids'] )[0] ?? 0 ),
         ];
+
+        foreach ( (array) get_post_meta( $maybe_id ) as $meta_key => $meta_values ) {
+            if ( strpos( (string) $meta_key, 'va_' ) !== 0 ) {
+                continue;
+            }
+
+            $form_key = substr( (string) $meta_key, 3 );
+            if ( $form_key === '' || array_key_exists( $form_key, $edit_meta ) ) {
+                continue;
+            }
+
+            $edit_meta[ $form_key ] = get_post_meta( $maybe_id, (string) $meta_key, true );
+        }
+
         // Meglévő képek betöltése (új + legacy meta kompatibilitás)
         $edit_thumb = (int) get_post_thumbnail_id( $maybe_id );
 
