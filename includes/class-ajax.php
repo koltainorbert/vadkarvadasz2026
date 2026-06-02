@@ -953,7 +953,10 @@ class VA_Ajax {
         $optic_spektiv_zoom_range = sanitize_key( wp_unslash( $_POST['optic_spektiv_zoom_range'] ?? '' ) );
         $optic_eyepiece_type = sanitize_key( wp_unslash( $_POST['optic_eyepiece_type'] ?? '' ) );
         $optic_weapon_compatibility = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_weapon_compatibility'] ?? [] ) ) ) );
+        $scope_type = sanitize_text_field( wp_unslash( $_POST['scope_type'] ?? '' ) );
+        $scope_accessories = sanitize_text_field( wp_unslash( $_POST['scope_accessories'] ?? '' ) );
         $scope_accessories_flags = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['scope_accessories_flags'] ?? [] ) ) ) );
+        $scope_coatings = sanitize_text_field( wp_unslash( $_POST['scope_coatings'] ?? '' ) );
         $optic_mount_type = sanitize_key( wp_unslash( $_POST['optic_mount_type'] ?? '' ) );
         $optic_shipping_methods = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_shipping_methods'] ?? [] ) ) ) );
         $optic_recommended_use = implode( ',', array_filter( array_map( 'sanitize_key', (array) wp_unslash( $_POST['optic_recommended_use'] ?? [] ) ) ) );
@@ -2579,7 +2582,10 @@ class VA_Ajax {
             'va_optic_spektiv_zoom_range' => $optic_spektiv_zoom_range,
             'va_optic_eyepiece_type' => $optic_eyepiece_type,
             'va_optic_weapon_compatibility' => $optic_weapon_compatibility,
+            'va_scope_type' => $scope_type,
+            'va_scope_accessories' => $scope_accessories,
             'va_scope_accessories_flags' => $scope_accessories_flags,
+            'va_scope_coatings' => $scope_coatings,
             'va_optic_mount_type' => $optic_mount_type,
             'va_optic_shipping_methods' => $optic_shipping_methods,
             'va_optic_recommended_use' => $optic_recommended_use,
