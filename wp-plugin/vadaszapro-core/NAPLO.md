@@ -2,6 +2,20 @@
 
 ---
 
+## 2026. 06. 02. – Hotfix #single-reszletek-csak-magyar
+
+### Mit csináltunk [x]
+- [x] A single oldali `Részletek` fallback szigorítva lett: ismeretlen (`va_*`) kulcsok többé nem jelennek meg
+- [x] Csak olyan mező marad listázva, amihez van hivatalos (magyar) meződefiníciós label
+- [x] Ezzel az angol/technikai kulcsok (pl. `...filter...`, `postal`, `street`, stb.) kikerültek a frontend részletekből
+- [x] Root + theme `single-va_listing.php` szinkronban frissítve
+
+### Hol tartunk
+A frontend single product oldalon a `Részletek` blokkban mostantól csak magyar feliratú mezők jelennek meg.
+
+### TODO
+- [ ] Smoke teszt: 3-5 különböző kategória single oldalán ellenőrizni, hogy minden látható mező magyar
+
 ## 2026. 06. 02. – Hotfix #hangtompito-reszletek-magyar-label
 
 ### Mit csináltunk [x]

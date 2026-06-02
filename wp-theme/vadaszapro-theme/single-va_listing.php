@@ -1624,14 +1624,8 @@ if ( $wpdb->get_var( "SHOW TABLES LIKE '$wl_table'" ) === $wl_table ) {
                     if ( is_array( $field_def ) && ! empty( $field_def['label'] ) ) {
                         $label = (string) $field_def['label'];
                     } else {
-                        $label_key = (string) preg_replace( '/^va_/', '', $meta_key );
-                        $label_key = str_replace( '_', ' ', $label_key );
-                        $label_key = str_ireplace(
-                            [ 'optic ', 'scope ', 'thermal ', 'dog ', 'vehicle ', 'trophy ', 'clothing ', 'shoe ' ],
-                            [ 'Optika ', 'Távcső ', 'Hőkamera ', 'Kutya ', 'Jármű ', 'Trófea ', 'Ruházat ', 'Lábbeli ' ],
-                            $label_key
-                        );
-                        $label = ucwords( $label_key );
+                        // Csak ismert, magyar cimkevel rendelkezo mezok jelenjenek meg.
+                        continue;
                     }
 
                     $specs[] = [ html_entity_decode( $label, ENT_QUOTES, 'UTF-8' ), $display_value, false ];
